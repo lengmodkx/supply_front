@@ -8,11 +8,20 @@
     </div>
 
     <div class="menu">
-      <a @click="push(menu.prefix)" v-for="(menu, index) in menus" :key="index" :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''" v-if="menu.open">{{menu.funcName}}</a>
+      <a
+        @click="push(menu.prefix)"
+        v-for="(menu, index) in menus"
+        :key="index"
+        :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''"
+        v-if="menu.open"
+      >{{menu.funcName}}</a>
     </div>
 
     <div class="fr">
-      <a :class="{activeHeaderTag:show==1}" @click="$emit('showBox',1);">
+      <a
+        :class="{activeHeaderTag:show==1}"
+        @click="$emit('showBox',1);"
+      >
         <Icon type="android-people"></Icon>
         3
       </a>
@@ -20,7 +29,11 @@
         <Icon type="eye"></Icon>
         视图
       </a>
-      <a :class="{activeHeaderTag:show==2}" @click="$emit('showBox',2);" class="last">
+      <a
+        :class="{activeHeaderTag:show==2}"
+        @click="$emit('showBox',2);"
+        class="last"
+      >
         <Icon type="navicon"></Icon>
         菜单
       </a>
@@ -29,53 +42,53 @@
 </template>
 
 <script>
-import { menus } from '../../axios/api2.js'
+import { menus } from "../../axios/api.js";
 export default {
-  props: ['show'],
+  props: ["show"],
   data() {
     return {
       on: false,
       path: this.$route.path,
       id: this.$route.params.id,
       menus: []
-    }
+    };
   },
   mounted() {
     menus(this.$route.params.id).then(res => {
       this.menus = res.data.map((item, index) => {
         switch (item.funcName) {
-          case '任务':
-            item.prefix = '/tasks/group/' + this.$route.params.groupId
-            item.pre = 'tasks'
-            break
-          case '分享':
-            item.prefix = '/shares'
-            item.pre = 'shares'
-            break
-          case '文件':
-            item.prefix = '/files/' + item.suffix
-            item.pre = 'files'
-            break
-          case '日程':
-            item.prefix = '/schedules'
-            item.pre = 'schedules'
-            break
-          case '统计':
-            item.prefix = '/statistics'
-            item.pre = 'statistics'
-            break
+          case "任务":
+            item.prefix = "/tasks/group/" + this.$route.params.groupId;
+            item.pre = "tasks";
+            break;
+          case "分享":
+            item.prefix = "/shares";
+            item.pre = "shares";
+            break;
+          case "文件":
+            item.prefix = "/files/" + item.suffix;
+            item.pre = "files";
+            break;
+          case "日程":
+            item.prefix = "/schedules";
+            item.pre = "schedules";
+            break;
+          case "统计":
+            item.prefix = "/statistics";
+            item.pre = "statistics";
+            break;
         }
-        return item
-      })
-    })
+        return item;
+      });
+    });
   },
   methods: {
     push(u) {
-      this.path = '/project/' + this.id + u
-      this.$router.push(this.path)
+      this.path = "/project/" + this.id + u;
+      this.$router.push(this.path);
     }
   }
-}
+};
 </script>
 <style lang="less">
 .activeHeaderTag {

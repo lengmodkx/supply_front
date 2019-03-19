@@ -1,0 +1,598 @@
+.clearfix::after {
+  content: '';
+  display: block;
+  height: 0;
+  clear: both;
+}
+.taskwarn{
+  /deep/.ivu-modal{
+    width:600px!important;
+  }
+}
+.headerTool {
+  overflow: hidden;
+  padding: 15px;
+  .toolLeft {
+    float: left;
+    background: #eee;
+    font-size: 14px;
+    line-height: 24px;
+    padding: 0 5px;
+    .right {
+      float: right;
+      vertical-align: center;
+      width: 20px;
+    }
+    .proName {
+      cursor: pointer;
+      &:hover {
+        color: #2d8cf0;
+      }
+    }
+  }
+  .toolRight {
+    float: right;
+    margin-right: 30px;
+    .zan {
+      margin-right: 10px;
+      cursor: pointer;
+      color: #a6a6a6;
+      i:hover {
+        transform: scale(1.2);
+      }
+      .zanNum {
+        margin-left: 4px;
+        font-size: 14px;
+      }
+    }
+    .zan_blue {
+      color: #2d8cf0;
+    }
+    .down {
+      cursor: pointer;
+      color: #a6a6a6;
+      &:hover {
+        color: #2d8cf0;
+      }
+    }
+  }
+}
+
+.task_info {
+  overflow: hidden;
+  padding: 18px 16px;
+  display: flex;
+  .checkbox {
+    margin-top: 2px;
+    margin-left: 2px;
+  }
+  .content {
+    flex: 1;
+    font-size: 16px;
+    word-break: break-word;
+    .ivu-tooltip-rel {
+      width: 100% !important;
+    }
+    div:focus {
+      outline: none;
+      background: #eee;
+    }
+    &:hover {
+      background: #eee;
+    }
+  }
+}
+.task_info.done{
+  /deep/.ivu-checkbox-wrapper {
+    .ivu-checkbox-checked{
+      .ivu-checkbox-inner {
+        background-color: #a6a6a6;
+        border-color: #a6a6a6;
+      }
+    }
+  } 
+} 
+
+.task_attr {
+  line-height: 40px;
+  font-size: 15px;
+  color: gray;
+  padding: 0 16px 15px 16px;
+  border-bottom: 1px solid #eee;
+  .executor {
+    .conText {
+      cursor: pointer;
+      &:hover {
+        color: #2d8cf0;
+      }
+      img{
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        vertical-align: middle;
+      }
+    }
+    svg {
+      width: 28px;
+      height: 26px;
+      vertical-align: middle;
+    }
+  }
+  .timer {
+    margin-left: 20px;
+    .init{
+      &:hover{
+        color:#2d8cf0;
+      }
+    }
+    .setTime{
+      padding:0 5px;
+      position:relative;
+      &:hover{
+        border-radius: 20px;
+        background-color: #eee;
+        color:#2d8cf0;
+        span{
+          display: block;
+        }
+      }
+      span{
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        color:#fff;
+        line-height: 16px;
+        font-size:20px;
+        top:-5px;
+        right:0;
+        background-color: gray;
+        text-align: center;
+        display: none;
+      }
+    }
+
+  }
+  .repeat {
+    cursor: pointer;
+    margin: 0 30px;
+    &:hover {
+      color: #2d8cf0;
+    }
+  }
+  .alarm {
+    cursor: pointer;
+    &:hover {
+      color: #2d8cf0;
+    }
+  }
+}
+.remark {
+  overflow: hidden;
+  // line-height: 40px;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  padding: 0 16px;
+
+  .editor {
+    font-size: 14px;
+    float: left;
+    line-height:22px;
+    width: calc(100% - 90px);
+    &:hover {
+      background: #eee;
+    }
+   
+  }
+  .waitAdd {
+    float: left;
+    flex: 1;
+    &:hover {
+      color: #2d8cf0;
+      background: #eee;
+      cursor: pointer;
+    }
+  }
+}
+ .name {
+    float: left;
+    width: 70px;
+    color: #a6a6a6;
+    margin-right: 20px;
+    i {
+      font-size: 20px;
+      margin-right: 8px;
+      // vertical-align: text-top;
+    }
+  }
+.editBox {
+  width: 420px;
+  margin-left: 20px;
+  
+}
+.priority,
+.tags {
+  overflow: hidden;
+  line-height: 40px;
+  padding: 0 16px 10px 16px;
+}
+.priority {
+  .urgentButton {
+    float: left;
+    width: calc(100% - 90px);
+  }
+}
+.tags {
+  border-bottom: 1px solid #eee;
+  .tagList {
+    width: calc(100% - 90px);
+    float: left;
+    height: 40px;
+    line-height: 40px;
+  }
+}
+.childTask{
+  line-height: 40px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    padding: 0 16px 18px 16px;
+    border-bottom:1px solid #eee;
+    .addChildTask{
+      color:#2d8cf0;
+      cursor: pointer;
+      font-size:14px;
+      i{
+        font-size:16px;
+        margin-right:10px;
+      }
+      
+
+    }
+    .sonBox{
+      /deep/.ivu-tooltip-rel{
+        vertical-align: middle;
+      }
+      /deep/.ivu-tooltip-inner{
+        white-space: nowrap;
+      }
+      .newSon{
+        display:flex;
+        .addicon{
+          flex:0 0 auto;
+        }
+        .sonInput{
+          flex:1 1;
+        }
+        .sonDate,.sonManager{
+          flex:0 0 auto;
+        }
+        .sonDate{
+          margin:0 10px;
+        }
+        .sonManager{
+          margin-right:28px;
+          .ava{
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            img{
+              display: block;
+              border-radius: 50%;
+              width: 24px;
+              height: 24px;
+            }
+          }
+        }
+      }
+      
+      
+      /deep/.ivu-checkbox-wrapper{
+        margin-right:0px;
+      }
+      /deep/.ivu-poptip-rel{
+        .icon{
+          vertical-align: middle;
+        }
+      }
+
+
+
+      .btns{
+        text-align: right;
+        button{
+          margin:10px 8px;
+        }
+      }
+      .addicon{
+          color:#a6a6a6;
+          font-size:16px;
+          margin-right:15px;
+          
+      }
+      .sonInput{
+        /deep/.ivu-input{
+          &:hover{
+           border: 1px solid #dddee1;
+          }
+          &:focus{
+            border: 1px solid #dddee1;
+            box-shadow: 0 0 0 0;
+          }
+        }
+      }
+      .sonDate{
+        color:#a6a6a6;
+        font-size:12px;
+          margin:0 15px;
+          cursor: pointer;
+       
+      }
+      .sonManager{
+        cursor: pointer;
+        .svg-people{
+          vertical-align: middle;
+        }
+
+      }
+    }
+}
+.sontask_list{
+   /deep/.ivu-checkbox-wrapper{
+        margin-right:0px;
+      }
+    /deep/.ivu-tooltip-rel{
+      vertical-align: middle;
+    }
+    /deep/.ivu-tooltip-inner{
+      white-space: nowrap;
+    }
+      .btns{
+        text-align: right;
+        button{
+          margin:10px 8px;
+        }
+      }
+      .addicon{
+          color:#a6a6a6;
+          font-size:16px;
+          margin-right:15px;
+          line-height:20px;
+          margin-top:8px;
+          flex:0 0 auto;
+      }
+      .sonInput{
+        flex:1 1;
+        /deep/.ivu-tooltip{
+          width:100%;
+        }
+        /deep/.ivu-tooltip-rel{
+          width:100%;
+        }
+        .sonCon{
+          width:100%;
+        }
+      }
+      .sonDate{
+        color:#a6a6a6;
+          font-size:12px;
+          margin:0 10px;
+          cursor: pointer;
+          flex:0 0 auto;
+          /deep/.ivu-poptip-rel{
+            .icon{
+              vertical-align: middle;
+            }
+          }
+      }
+       .sonManager{
+        cursor: pointer;
+        .svg-people{
+          vertical-align: middle;
+        }
+        .ava{
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          img{
+            display: block;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+      }
+      .enterDetail{
+        cursor: pointer;
+        font-size:20px;
+        margin:3px 10px;
+        color:#a6a6a6;
+        &:hover{
+          color:#2d8cf0;
+        }
+      }
+  .sonCon{
+    cursor: pointer;
+    &:hover{
+       background-color: #eee;
+    }
+  }
+  /deep/.ivu-input{
+    font-size:14px;
+  }
+}
+.Conbox {
+  height: calc(100% - 56px - 112px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.relevance{
+  padding:0 16px;
+  .name{
+    width:90px;
+  }
+  .addLink{
+    color: #2d8cf0;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top:15px;
+    i{
+      font-size: 16px;
+      margin-right: 10px;
+    }
+  }
+}
+.accessory{
+  padding:10px 16px;
+  margin-top:15px;
+  border-top:1px solid #eee;
+  .name{
+    i{
+      font-size:20px;
+      }
+    }
+  .addfile{
+    color: #2d8cf0;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+    i{
+      font-size: 16px;
+    margin-right: 10px;
+    }
+  }
+}
+.participator{
+  padding:10px 16px;
+  background-color: #f6f6f6;
+  border-bottom:1px solid #eee;
+  h5 {
+      font-size: 14px;
+      color:gray;
+    }
+     .involve-list {
+      margin-top: 12px;
+       .member-avatar{
+         .ava{
+            margin-right: 5px;
+            cursor: pointer;
+            border:2px solid transparent;
+           img {
+            display: block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+          }
+          .close{
+            display: none;
+          }
+         }
+       }
+      .member-avatar:not(:nth-child(1)) {
+        .ava {
+          margin-right: 5px;
+          cursor: pointer;
+          border:2px solid transparent;
+           border-radius: 50%;
+          &:hover{
+            border:2px solid #a6a6a6;
+            .close{
+              display: block;
+            }
+          }
+          img {
+            display: block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+          }
+          .close{
+            position: absolute;
+            font-size: 14px;
+            top: -3px;
+            right: 1px;
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            border-radius: 50%;
+            color: #fff;
+            text-align: center;
+            background-color: #a6a6a6;
+            display: none;
+            &:hover{
+              background-color: #3da8f5;
+              
+            }
+          }
+        }
+      }
+    }
+
+}
+footer {
+  background: #e5e5e5;
+}
+.talk {
+  position: relative;
+  border: 1px solid #e5e5e5;
+  .talkinner {
+    position: relative;
+    min-height: 40px;
+    margin: 14px 20px 13px 15px;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    .talkUp {
+      position: relative;
+      z-index: 1;
+      max-height: 290px;
+      background-color: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      #input {
+        input:hover {
+          border-color: #dddee1;
+        }
+      }
+    }
+    .talkDown {
+      line-height: 40px;
+      height: 40px;
+
+      .send {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.executor{
+  padding:0 4px;
+  position:relative;
+  &:hover{
+    border-radius: 20px;
+    background-color: #eee;
+    color: #2d8cf0;
+    .close{
+      display: block;
+    }
+  }
+  .close{
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    color:#fff;
+    line-height: 16px;
+    font-size:20px;
+    top:-5px;
+    right:-4px;
+    background-color: gray;
+    text-align: center;
+    display: none;
+    cursor:pointer;
+  }
+}
+
+#warnModal {
+  z-index: 9999999 !important;
+}

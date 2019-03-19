@@ -1,37 +1,44 @@
 <template>
-  <DatePicker type="date"
-              :open="visible"
-              :value="date"
-              confirm
-              class="datatimeinline"
-              @on-open-change="pickerOpenchange"
-              @on-change="dateChange"
-              style="width:216px">
+  <DatePicker
+    :open="visible"
+    :value="date"
+    confirm
+    class="datatimeinline"
+    @on-open-change="pickerOpenchange"
+    @on-change="dateChange"
+    style="width:216px"
+  >
     <Row class="picker-input">
       <iCol span="14">
         <input v-model="date" />
       </iCol>
       <iCol span="10">
-        <TimePicker format="HH:mm"
-                    :value="time"
-                    class="mytimepicker"
-                    @on-change="timeChange"
-                    ref='timePicker'>
+        <TimePicker
+          format="HH:mm"
+          :value="time"
+          class="mytimepicker"
+          @on-change="timeChange"
+          ref='timePicker'
+        >
         </TimePicker>
       </iCol>
     </Row>
     <Row class="footer">
       <iCol span="11">
-        <Button type="ghost"
-                long
-                @click="clear">清除</Button>
+        <Button
+          ghost
+          long
+          @click="clear"
+        >清除</Button>
       </iCol>
       <iCol span="2"></iCol>
       <iCol span="11">
-        <Button type="primary"
-                long
-                @click="confirm"
-                :disabled="disabled">确定</Button>
+        <Button
+          type="primary"
+          long
+          @click="confirm"
+          :disabled="disabled"
+        >确定</Button>
       </iCol>
     </Row>
   </DatePicker>
@@ -39,14 +46,14 @@
 
 <script>
 export default {
-  name: 'mydatepicker',
+  name: "mydatepicker",
   props: {
     datetime: {
       type: String
     },
     type: {
       type: String,
-      default: 'end'
+      default: "end"
     },
     max: {},
     min: {},
@@ -55,69 +62,68 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       date: null,
       time: null,
-      realDateTime: ''
-    }
+      realDateTime: ""
+    };
   },
   computed: {
-    disabled () {
-      if (this.type == 'start') {
-        return this.max ? this.realDateTime > this.max : false
+    disabled() {
+      if (this.type == "start") {
+        return this.max ? this.realDateTime > this.max : false;
       } else {
-        return this.min ? this.realDateTime < this.min : false
+        return this.min ? this.realDateTime < this.min : false;
       }
     }
   },
   watch: {
-    date () {
-      this.pickerDate = this.date
+    date() {
+      this.pickerDate = this.date;
     }
   },
   methods: {
-    pickerOpenchange (a) {
-      if (!this.visible) return
+    pickerOpenchange(a) {
+      if (!this.visible) return;
       if (!a) {
-        this.$emit("close")
+        this.$emit("close");
       }
     },
-    dateChange (date) {
-      this.date = date
-      this.realDateTime = this.date + ' ' + this.time
+    dateChange(date) {
+      this.date = date;
+      this.realDateTime = this.date + " " + this.time;
     },
-    timeChange (time) {
-      this.time = time
-      this.realDateTime = this.date + ' ' + this.time
-      this.$refs.timePicker.visible = false
+    timeChange(time) {
+      this.time = time;
+      this.realDateTime = this.date + " " + this.time;
+      this.$refs.timePicker.visible = false;
     },
-    init () {
+    init() {
       if (this.datetime) {
-        var date = this.datetime.split(' ')
-        this.date = date[0]
-        this.time = date[1]
-
+        var date = this.datetime.split(" ");
+        this.date = date[0];
+        this.time = date[1];
       } else {
-        this.date = this.$moment(new Date()).format('YYYY-MM-DD')
-        this.time = this.type == 'end' ? '18:00' : '09:00'
+        this.date = this.$moment(new Date()).format("YYYY-MM-DD");
+        this.time = this.type == "end" ? "18:00" : "09:00";
       }
-      this.realDateTime = this.date + ' ' + this.time
+      this.realDateTime = this.date + " " + this.time;
     },
-    clear () {
-      this.date = this.$moment(new Date()).format('YYYY-MM-DD')
-      this.time = this.type == 'end' ? '18:00' : '09:00'
-      this.realDateTime = this.date + ' ' + this.time
-      this.$emit('clear')
+    clear() {
+      this.date = this.$moment(new Date()).format("YYYY-MM-DD");
+      this.time = this.type == "end" ? "18:00" : "09:00";
+      this.realDateTime = this.date + " " + this.time;
+      this.$emit("clear");
     },
-    confirm () {
-      this.$emit('confirm', this.realDateTime)
+    confirm() {
+      this.$emit("confirm", this.realDateTime);
     }
   },
-  mounted () {
-    this.init()
+  mounted() {
+    this.init();
   }
-}
+};
 </script>
 
 <style lang="less">

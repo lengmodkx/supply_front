@@ -8,7 +8,7 @@ import Home from "../views/Home.vue";
 //import management from "./management";
 
 //路由懒加载
-const _import = file => () => import("@/views/" + file + ".vue");
+const _import = file => () => import("@/components/" + file + ".vue");
 Vue.use(Router);
 
 export default new Router({

@@ -1,0 +1,163 @@
+<template>
+  <div class="add-share" :class="active">
+    <div class="context">
+      <div class="input">
+        <Input v-model="title" placeholder="输入文档标题"></Input>
+      </div>
+      <div class="html">
+        <textarea class="SimditorPublic" ref="editor" placeholder="请输入..." autofocus></textarea>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="fl" v-if="isPrivacy===1" @click="isPrivacy=2">
+        <p class="skt">
+          <i class="ivu-icon ivu-icon-unlocked"></i> 隐私模式</p>
+        <p class="ig">所有成员可见</p>
+      </div>
+      <div class="fl" v-if="isPrivacy===2" @click="isPrivacy=1">
+        <p class="skt">
+          <i class="ivu-icon ivu-icon-locked"></i> 隐私模式</p>
+        <p class="ig">仅参与者可见</p>
+      </div>
+      <button type="button" class="fr ivu-btn ivu-btn-info ivu-btn-large" @click="publishShare" :loading="loading">
+        <span v-if="!loading">立即发布</span>
+        <span v-else>Loading...</span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import Simditor from 'simditor'
+import { shareAdd } from '../../../axios/api2.js'
+export default {
+  props: ['projectId', 'shareTitle', 'shareContent'],
+  data() {
+    return {
+      loading: false,
+      isPrivacy: 1,
+      active: '',
+      title: this.shareTitle,
+      content: this.shareContent
+    }
+  },
+
+  mounted() {
+    this.$refs.editor.value = this.shareContent
+    var editor = new Simditor({
+      textarea: this.$refs.editor,
+      upload: {
+        url: '/upload',
+        params: {},
+        fileKey: 'file',
+        connectionCount: 3,
+        leaveConfirm: '正在上传文件'
+      }
+      //optional options
+    })
+    editor.on('valuechanged', () => {
+      this.content = editor.getValue()
+    })
+  },
+  methods: {
+    publishShare() {
+      if (this.title == null || this.title == '') {
+        this.$Notice.warning({
+          title: '请输入分享标题'
+        })
+        return false
+      }
+
+      if (this.content == null || this.content == '') {
+        this.$Notice.warning({
+          title: '请输入分享内容'
+        })
+        return false
+      }
+
+      this.loading = true
+      let params = {
+        projectId: this.projectId,
+        title: this.title,
+        content: this.content,
+        isPrivacy: this.isPrivacy
+      }
+
+      shareAdd(params).then(res => {
+        console.log(res)
+        if (res.result === 1) {
+          this.title = ''
+          this.content = ''
+          this.loading = false
+          this.$emit('close')
+        }
+      })
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less">
+.simditor {
+  border: 0;
+  .simditor-body {
+    height: 539px;
+  }
+}
+.add-share {
+  overflow: hidden;
+  width: 100%;
+  background-color: #fff;
+  &.active {
+    opacity: 1;
+    top: 0;
+  }
+  .context {
+    width: 1100px;
+    margin: 0 auto;
+    .input input {
+      width: 100%;
+      font-size: 18px;
+      border: none;
+      height: 40px;
+      line-height: 26px;
+      margin-top: 20px;
+    }
+    .html {
+      padding-top: 20px;
+      height: 600px;
+      overflow-y: auto;
+    }
+  }
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    padding: 16px;
+    border-top: 1px solid rgb(226, 226, 226);
+    background-color: #fff;
+    .fl {
+      color: gray;
+      &:hover {
+        .skt {
+          color: #2d8cf0;
+        }
+      }
+    }
+  }
+  .title {
+    height: 48px;
+    line-height: 48px;
+    font-size: 16px;
+    padding: 0 16px;
+    border-bottom: 1px solid rgb(226, 226, 226);
+    .fr {
+      margin-top: 16px;
+      cursor: pointer;
+    }
+  }
+}
+</style>
