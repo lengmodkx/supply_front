@@ -105,7 +105,7 @@ export default {
               sessionStorage.token = res.accessToken;
               console.log(res);
               this.$Message.success("登录成功!");
-              this.$router.push("/");
+              this.$router.push("/home");
             }
           });
         } else {

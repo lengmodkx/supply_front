@@ -3,7 +3,7 @@ import Router from "vue-router";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Forget from "../views/Forget.vue";
-
+import Home from "../views/Home.vue";
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -43,9 +43,9 @@ export default new Router({
       ]
     },
     {
-      path: "/",
-      name: "index",
-      component: _import("index/index"),
+      path: "/home",
+      name: "Home",
+      component: Home,
       meta: {
         title: "阿拉丁BIM5D云平台"
       }
@@ -84,7 +84,7 @@ export default new Router({
     // },
     //...management,
     {
-      path: "/login",
+      path: "/",
       name: "login",
       meta: {
         title: "登录"
