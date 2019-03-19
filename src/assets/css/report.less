@@ -1,0 +1,54 @@
+
+.report {
+  .main {
+    .title {
+      padding: 0 15px;
+    }
+    .two {
+      padding: 0;
+      .click {
+        border-radius: 0;
+        a.fr {
+          color: #999;
+          opacity: 0;
+          //transition-duration: 0.3s;
+          transition: all 0.3s;
+          &:hover {
+            color: #2d8cf0;
+          }
+        }
+        &:hover {
+          a.fr {
+            opacity: 1;
+          }
+        }
+      }
+      .logo {
+        width: 24px;
+        height: 24px;
+        float: left;
+        margin-right: 10px;
+        margin-top: 8px;
+        border-radius: 3px;
+      }
+    }
+
+    .table {
+      padding: 0 15px;
+      table {
+        width: 100%;
+        td {
+          padding: 8px;
+          text-align: right;
+        }
+        .t-ie {
+          width: 156px;
+          padding-bottom: 5px;
+        }
+      }
+    }
+    .right + .right {
+      margin-top: 20px;
+    }
+  }
+}
