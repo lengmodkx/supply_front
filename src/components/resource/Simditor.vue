@@ -1,50 +1,52 @@
+
 <template>
-  <textarea
-    class="Simditor"
-    ref="editor"
-    placeholder="请输入..."
-    autofocus
-  ></textarea>
+  <div class="edit_container">
+    <quill-editor
+            v-model="content"
+            ref="myQuillEditor"
+            :options="editorOption"
+            @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+            @change="onEditorChange($event)">
+    </quill-editor>
+  </div>
 </template>
-
 <script>
-//import Simditor from 'simditor'
-export default {
-  name: '',
-  data() {
-    return {}
-  },
-  props: {
-    value: {
-      type: String,
-      default: ''
-    }
-  },
-  mounted() {
-    // this.$refs.editor.value = this.value
-    // var editor = new Simditor({
-    //   textarea: this.$refs.editor,
-    //   upload: {
-    //     url: '/upload',
-    //     params: {},
-    //     fileKey: 'file',
-    //     connectionCount: 3,
-    //     leaveConfirm: '正在上传文件'
-    //   }
-    //   //optional options
-    // })
-    // editor.on('blur', () => {
-    //   this.$emit('value', editor.getValue())
-    // })
-  },
-  components: {},
-  methods: {}
-}
-</script>
+  import { quillEditor } from "vue-quill-editor"
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+  export default {
+    components: {
+      quillEditor
+    },
+    data () {
+      return {
+        content: `<p>请输入</p>`,
+        editorOption: {
+        }
+      }
+    },
+    methods: {
+      onEditorReady (editor) { // 准备编辑器
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less">
-.simditor {
-  border: 0;
-}
+      },
+      onEditorBlur (val) {}, // 失去焦点事件
+      onEditorFocus () {
+        console.log(1)
+      }, // 获得焦点事件
+      onEditorChange () {
+      } // 内容改变事件
+
+    },
+    computed: {
+      editor () {
+        return this.$refs.myQuillEditor.quill
+      }
+    }
+  }
+</script>
+<style>
+  .quill-editor{
+    height: 400px;
+  }
 </style>

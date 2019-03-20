@@ -5,7 +5,7 @@
         <Input v-model="title" placeholder="输入文档标题"></Input>
       </div>
       <div class="html">
-        <textarea class="SimditorPublic" ref="editor" placeholder="请输入..." autofocus></textarea>
+        <editor ref="editor"></editor>
       </div>
     </div>
     <div class="footer">
@@ -28,12 +28,13 @@
 </template>
 
 <script>
-import Simditor from 'simditor'
+import editor from '../../resource/Simditor'
 import { shareAdd } from '../../../axios/api2.js'
 export default {
   props: ['projectId', 'shareTitle', 'shareContent'],
   data() {
     return {
+      value: '',
       loading: false,
       isPrivacy: 1,
       active: '',
@@ -41,26 +42,20 @@ export default {
       content: this.shareContent
     }
   },
+  components: {
+    editor
+  },
 
   mounted() {
-    this.$refs.editor.value = this.shareContent
-    var editor = new Simditor({
-      textarea: this.$refs.editor,
-      upload: {
-        url: '/upload',
-        params: {},
-        fileKey: 'file',
-        connectionCount: 3,
-        leaveConfirm: '正在上传文件'
-      }
-      //optional options
-    })
-    editor.on('valuechanged', () => {
-      this.content = editor.getValue()
-    })
+    console.log(this.$refs.editor)
+    this.$refs.editor.content = this.shareContent
+    // editor.on('valuechanged', () => {
+    //   this.content = editor.getValue()
+    // })
   },
   methods: {
     publishShare() {
+      this.content=this.$refs.editor.content
       if (this.title == null || this.title == '') {
         this.$Notice.warning({
           title: '请输入分享标题'
