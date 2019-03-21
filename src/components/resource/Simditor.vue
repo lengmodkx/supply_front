@@ -31,9 +31,7 @@
 
       },
       onEditorBlur (val) {}, // 失去焦点事件
-      onEditorFocus () {
-        console.log(1)
-      }, // 获得焦点事件
+      onEditorFocus () {}, // 获得焦点事件
       onEditorChange () {
       } // 内容改变事件
 

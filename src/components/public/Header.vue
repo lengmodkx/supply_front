@@ -23,7 +23,7 @@
         @click="clickHeaderTag(2)"
       >
         <span class="text">
-          <Badge dot><span>日志</span></Badge>
+          <Badge dot :offset=[5,0]><span>日志</span></Badge>
         </span>
       </a>
       <a
@@ -34,7 +34,7 @@
           class="text"
           style="border-right:none;"
         >
-          <Badge dot><span>消息</span></Badge>
+          <Badge dot :offset=[5,0]><span>消息</span></Badge>
         </span>
       </a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
