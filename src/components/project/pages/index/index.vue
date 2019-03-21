@@ -1,143 +1,73 @@
 <template>
-  <div
-    class="task"
-    :class="{show:show}"
-  >
+  <div class="task" :class="{show:show}">
     <!-- 任务伸缩框 -->
-    <div
-      class="side"
-      :class="showTaskDetailInfo?'active':''"
-    >
-      <div
-        class="nav"
-        @click="showTaskDetailInfo=!showTaskDetailInfo"
-      >
+    <div class="side" :class="showTaskDetailInfo?'active':''">
+      <div class="nav" @click="showTaskDetailInfo=!showTaskDetailInfo">
         {{curTaskGroup.name}}
         <span class="drop">
-          <Icon
-            type="ios-arrow-down"
-            style="color:gray;"
-          ></Icon>
+          <Icon type="ios-arrow-down" style="color:gray;"></Icon>
         </span>
       </div>
       <left-task-info class="leftTaskInfo"></left-task-info>
       <div class="tab_nav">
         <ButtonGroup>
 
-          <Button
-            @click="active='a'"
-            :class="{tabon:active=='a'}"
-          >
+          <Button @click="active='a'" :class="{tabon:active=='a'}">
             <Icon type="funnel"></Icon>筛选
           </Button>
-          <Button
-            @click="active='b'"
-            :class="{tabon:active=='b'}"
-          >
+          <Button @click="active='b'" :class="{tabon:active=='b'}">
             <Icon type="android-funnel"></Icon>排序
           </Button>
         </ButtonGroup>
       </div>
       <div class="tab_container">
 
-        <div
-          class="tabcon2"
-          v-if="active=='a'"
-        >
+        <div class="tabcon2" v-if="active=='a'">
           <FilterBox></FilterBox>
         </div>
-        <div
-          class="tabcon3"
-          v-if="active=='b'"
-        >
+        <div class="tabcon3" v-if="active=='b'">
           <SortBox></SortBox>
         </div>
 
       </div>
 
       <div class="board-left-panel-indicator">
-        <div
-          class="root__3UYM"
-          @click="show=!show"
-          :class="show?'left':'right'"
-        >
+        <div class="root__3UYM" @click="show=!show" :class="show?'left':'right'">
           <i class="left__1DdF"></i>
           <i class="indicator__1TO8"></i>
         </div>
       </div>
     </div>
     <!-- 右边可拖拽盒子 -->
-    <draggable
-      class="column-main dragscroll"
-      v-model="data.data"
-      :options="{
+    <draggable class="column-main dragscroll" v-model="data.data" :options="{
                   handle:'.handle',
                   chosenClass: 'boxChosenClass',
                   dragClass: 'boxDragClass',
                   fallbackClass: 'boxFallbackClass',
                   forceFallback: true,
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
-                   }"
-      @end="dragBox"
-    >
+                   }" @end="dragBox">
 
-      <div
-        class="column"
-        :key="k"
-        v-for="(i, k) in data.data"
-      >
-        <div
-          style="height:100%;position:relative;"
-          :data-index="k"
-        >
+      <div class="column" :key="k" v-for="(i, k) in data.data">
+        <div style="height:100%;position:relative;" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
             <!-- 点击三角形出来的任务列表菜单组件 -->
-            <TaskMenu
-              class="fr"
-              :data=i
-            ></TaskMenu>
+            <TaskMenu class="fr" :data=i></TaskMenu>
           </p>
-          <div
-            class="scrum-stage-tasks"
-            :ref="`scrollbox${i.relationId}`"
-            :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''"
-          >
-            <draggable
-              :list="i.taskList"
-              :options="{group:'uncheckedTask',
+          <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''">
+            <draggable :list="i.taskList" :options="{group:'uncheckedTask',
                         forceFallback: true,
                         chosenClass: 'chosenClass',
                         dragClass: 'dragClass',
-                        fallbackClass: 'fallbackClass'}"
-              class="ul"
-              @end="dragList"
-            >
-              <div
-                class="li"
-                v-for="(a, b) in i.taskList"
-                v-if="!a.checkStatus"
-                :key="b"
-                :data-id="a.taskId"
-                @click="initTask(a.taskId)"
-              >
+                        fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
+              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.checkStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
-                <div
-                  class="task-mod"
-                  :class="renderTaskStatu(a.priority)"
-                >
+                <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="check">
-                    <Checkbox
-                      v-model="a.checkStatus"
-                      @on-change="changeStatus($event,k,b,a.taskId)"
-                    ></Checkbox>
+                    <Checkbox v-model="a.checkStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     <div class="cont">{{a.taskName}}</div>
-                    <img
-                      :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`"
-                      class="ava"
-                      v-if="a.executorImg!=null"
-                      alt=""
-                    >
+                    <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -145,39 +75,19 @@
                       <span class="label time-label">9月12日 截止</span>
                       <span class="label repeat-label">每周重复</span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="ios-alarm-outline"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="ios-alarm-outline" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="document"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="document" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="ios-list-outline"
-                          size="16"
-                        ></Icon><span class="sonTask">0/1</span>
+                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">0/1</span>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="link"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="link" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="android-attach"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
                     </div>
                   </div>
@@ -185,48 +95,17 @@
               </div>
             </draggable>
 
-            <CurrentAdd
-              v-if="currentEditId==i.relationId"
-              v-click-outside="resetCurrentEditId"
-              :ref="`currentadd${i.relationId}`"
-              :taskMenuId="taskMenuId"
-              :taskGroupId="taskGroupId"
-              :projectId="$route.params.id"
-              @createComplete="pushTask($event,i.taskList)"
-            ></CurrentAdd>
+            <CurrentAdd v-if="currentEditId==i.relationId" v-click-outside="resetCurrentEditId" :ref="`currentadd${i.relationId}`" :taskMenuId="taskMenuId" :taskGroupId="taskGroupId" :projectId="$route.params.id" @createComplete="pushTask($event,i.taskList)"></CurrentAdd>
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
-            <draggable
-              :list="i.taskList"
-              :options="{group:'checkedTask'}"
-              class="ul"
-              @end="dragList"
-            >
-              <div
-                class="li done"
-                v-if="a.checkStatus"
-                v-for="(a, b) in i.taskList"
-                :key="b"
-                :data-id="a.taskId"
-                @click="initTask(a.taskId)"
-              >
+            <draggable :list="i.taskList" :options="{group:'checkedTask'}" class="ul" @end="dragList">
+              <div class="li done" v-if="a.checkStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
-                <div
-                  class="task-mod"
-                  :class="renderTaskStatu(a.priority)"
-                >
+                <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="check">
-                    <Checkbox
-                      v-model="a.checkStatus"
-                      @on-change="changeStatus($event,k,b,a.taskId)"
-                    ></Checkbox>
+                    <Checkbox v-model="a.checkStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     <div class="cont">{{a.taskName}}</div>
-                    <img
-                      :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`"
-                      class="ava"
-                      v-if="a.executorImg!=null"
-                      alt=""
-                    >
+                    <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -234,39 +113,19 @@
                       <span class="label time-label">9月12日 截止</span>
                       <span class="label repeat-label">每周重复</span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="ios-alarm-outline"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="ios-alarm-outline" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="document"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="document" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="ios-list-outline"
-                          size="16"
-                        ></Icon><span class="sonTask">0/1</span>
+                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">0/1</span>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="link"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="link" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon
-                          class="icon"
-                          type="android-attach"
-                          size="16"
-                        ></Icon>
+                        <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
                     </div>
                   </div>
@@ -275,11 +134,7 @@
               </div>
 
             </draggable>
-            <span
-              class="add"
-              @click="addCurTask(i.parentId,i.relationId,i.taskList)"
-              v-if="currentEditId!=i.relationId"
-            >
+            <span class="add" @click="addCurTask(i.parentId,i.relationId,i.taskList)" v-if="currentEditId!=i.relationId">
               <Icon type="android-add-circle"></Icon>
               添加任务
             </span>
@@ -289,34 +144,16 @@
       </div>
 
       <!-- 新建任务列表 -->
-      <draggable
-        class="column addList"
-        :options="{sort:false}"
-      >
-        <div
-          class="title"
-          v-if="showAdd"
-          @click="showAdd=false"
-        >
+      <draggable class="column addList" :options="{sort:false}">
+        <div class="title" v-if="showAdd" @click="showAdd=false">
           <Icon type="plus-round"></Icon>
           新建任务列表...
         </div>
-        <div
-          class="newTask"
-          v-if="!showAdd"
-        >
-          <Input
-            v-model="newProTitle"
-            placeholder="新建任务列表..."
-            style="width:268px"
-          />
+        <div class="newTask" v-if="!showAdd">
+          <Input v-model="newProTitle" placeholder="新建任务列表..." style="width:268px" />
           <div style="margin-top:12px;text-align:right;">
             <Button @click="showAdd=true;newProTitle='';">取消</Button>
-            <Button
-              type="primary"
-              @click="saveNewPro"
-              :disabled="newProTitle==''"
-            >保存</Button>
+            <Button type="primary" @click="saveNewPro" :disabled="newProTitle==''">保存</Button>
           </div>
         </div>
 
@@ -324,14 +161,8 @@
 
     </draggable>
     <!-- 点击列表出来的弹框。编辑列表 -->
-    <Modal
-      v-model="showModal"
-      class="myModal"
-    >
-      <my-modal
-        ref="myModal"
-        :data="activeModalData"
-      ></my-modal>
+    <Modal v-model="showModal" class="myModal">
+      <my-modal ref="myModal" :data="activeModalData"></my-modal>
     </Modal>
   </div>
 </template>
@@ -416,8 +247,9 @@ export default {
     ...mapMutations("task", ["updateCurrentProjectId"]),
     ...mapActions("user", ["updateUserId"]),
     resetCurrentEditId() {
+      console.log("xxxxxxxxxxxxxxxx");
       if (!this.$refs[`currentadd${this.currentEditId}`][0].focus) {
-        this.currentEditId = "";
+        //this.currentEditId = "";
       }
     },
     initData() {

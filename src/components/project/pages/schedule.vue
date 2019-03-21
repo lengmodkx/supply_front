@@ -1,7 +1,10 @@
 <template>
   <div class="schedule">
     <div class="main">
-      <div class="handler" @click="addSchedule=true">
+      <div
+        class="handler"
+        @click="addSchedule=true"
+      >
         <a class="link-add">
           <Icon type="plus-circled"></Icon> 添加日程
         </a>
@@ -24,10 +27,20 @@
           </div>
         </div>
       </div> -->
-      <div class="loading" v-if='loading'>
-        <Spin size="large" fix></Spin>
+      <div
+        class="loading"
+        v-if='loading'
+      >
+        <Spin
+          size="large"
+          fix
+        ></Spin>
       </div>
-      <div class="handler" v-for="(i, k) in data" :key="k">
+      <div
+        class="handler"
+        v-for="(i, k) in data"
+        :key="k"
+      >
         <div class="title">{{new Date(i.startTime).Format('MM月dd日')}}</div>
         <div class="item">
           <div class="leftTime">
@@ -37,10 +50,18 @@
           </div>
           <div class="offside">
             <p class="headline">{{i.scheduleName}}</p>
-            <div class="participant">
-              <p class="cyu">参与者 · {{i.memberIds.split(',').length}}</p>
+            <div
+              class="participant"
+              v-if="i.joinInfo"
+            >
+              <p class="cyu">参与者 · {{i.joinInfo.length}}</p>
               <p class="user">
-                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+m.defaultImage" v-for="m in i.joinInfo" v-if="i.joinInfo" :key="m" alt="">
+                <img
+                  :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+m.defaultImage"
+                  v-for="(m,n) in i.joinInfo"
+                  :key="n"
+                  alt=""
+                >
                 <!-- <Icon type="plus-circled"></Icon> -->
                 <userList :id='parameter.projectId'></userList>
               </p>
@@ -55,17 +76,20 @@
         添加新日程，安排会议或其他活动，添加参与者即可通知其他成员参加。
       </div>
     </div>
-    <AddSchedule v-model="addSchedule" :id="parameter.projectId"></AddSchedule>
+    <AddSchedule
+      v-model="addSchedule"
+      :id="parameter.projectId"
+    ></AddSchedule>
   </div>
 </template>
 
 <script>
-import AddSchedule from '../../public/AddSchedule.vue'
-import ajax from '@/axios/fetch'
-import api from '@/axios/url'
-import userList from '@/components/resource/userList.vue'
+import AddSchedule from "../../public/AddSchedule.vue";
+import { schedules } from "@/axios/api";
+import userList from "@/components/resource/userList.vue";
 export default {
-  name: '',
+  name: "",
+  components: { AddSchedule, userList },
   data() {
     return {
       addSchedule: false,
@@ -74,23 +98,21 @@ export default {
       parameter: {
         projectId: this.$route.params.id
       }
-    }
+    };
   },
-  components: { AddSchedule, userList },
   methods: {
     getData() {
-      ajax({ url: api.schedules, method: 'GET', params: this.parameter }).then(res => {
-        console.log(res)
-        this.loading = false
-        this.data = res.after
-      })
+      schedules(this.parameter).then(res => {
+        this.loading = false;
+        this.data = res.after;
+      });
     }
   },
   mounted() {
-    console.log(this.$route)
-    this.getData()
+    console.log(this.$route);
+    this.getData();
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -114,7 +136,6 @@ export default {
     margin: 0 auto;
     padding-bottom: 50px;
     .handler {
-      cursor: pointer;
       background-color: #fff;
       box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.0470588);
       padding: 13px;

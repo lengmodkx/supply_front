@@ -18,22 +18,19 @@
       </div>
     </header>
 
-    <div style="border-bottom: 1px solid #e9e9e9;padding:20px">
-      <Checkbox :indeterminate="indeterminate" :value="checkAll" @click.prevent.native="handleCheckAll" size='default'>全选</Checkbox>
+    <div style="border-bottom: 1px solid #e9e9e9;padding:10px 20px 10px 20px;">
+      <Input search enter-button placeholder="请输入文件名搜索" style="width:500px" @on-search="searchFile" />
     </div>
     <loading v-if="loading"></loading>
     <ul class="file-content-wrap">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId)">
         <div class="file-content-view">
           <Icon type="folder" size="60" color="#2d8cf0" v-if="file.catalog==1"></Icon>
+          <img src='../../../assets/images/folder.png' style="height:64px;width:80px">
           <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" v-if="file.catalog==0" />
           <div class="file-content-opt">
-            <Tooltip content="下载" placement="top" v-if="file.catalog==0">
-              <svg-icon name="arrow_down" class="arrow_down" @click.stop.native="download(file.fileId)"></svg-icon>
-            </Tooltip>
-            <Tooltip content="更多" placement="top">
-              <svg-icon name="arrow-down-thin" class="arrow_down_thin" @click.stop.native="showMore(file.fileName+file.ext,file.fileId,file.catalog)"></svg-icon>
-            </Tooltip>
+            <p></p>
+            <Icon type="md-arrow-dropdown" size=22 ref="arrow" @click.stop="menuShow(file.catalog, file.fileId,$event)" />
           </div>
         </div>
         <div class="file-content-filename" v-if="file.catalog==1">{{file.fileName}}</div>
@@ -48,13 +45,13 @@
     </Modal>
     <Modal v-model="showAddFolder" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
       <div class="drop-munu-content">
-        <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input"></Input>
+        <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" />
       </div>
       <div slot="footer">
         <Button type="primary" size="large" long @click="handleSave">确定</Button>
       </div>
     </Modal>
-    <Modal v-model="showMove" width="800" @on-visible-change="changeVisible">
+    <Modal v-model="showMove" width="800" @on-visible-change="changeVisible" class="show-move">
       <div slot="header">
         <span style="font-size:18px">移动文件{{fileName}}至</span>
       </div>
@@ -62,17 +59,13 @@
         <div class="column-projects flex-static thin-scroll">
           <div class="project-title">项目</div>
           <ul>
-            <li v-for="(project, index) in projects" :key="index" v-if="project.projectDel==0" :class="{ selected:project.projectId==projectId,unselected:project.projectId!=projectId }" @click="changeProject(project.projectId)">
+            <li v-for="(project, index) in projects" :key="index" :class="{ selected:project.projectId==projectId,unselected:project.projectId!=projectId }" @click="changeProject(project.projectId)">
               <span>{{project.projectName}}</span>
             </li>
           </ul>
         </div>
         <div class="picker-column thin-scroll flex-fill flex-vert">
-          <div class="file-picker-view">
-            <ul class="file-picker">
-              <component ref="component" :is="item.component" v-for="(item,index) in items" :key="item.index" :projectId="item.projectId" :parentId="item.fileId" :index="index" @childByValue="childByValue"></component>
-            </ul>
-          </div>
+          <v-jstree :data="asyncData" show-checkbox :multiple=false allow-batch whole-row @item-click="itemClick"></v-jstree>
         </div>
 
       </div>
@@ -84,13 +77,13 @@
         </div>
       </div>
     </Modal>
-    <Modal v-model="menu1Show" width="240" class-name="file-vertical-center-modal">
+    <Modal v-model="menu1Show" width="240" :styles="{top: top,left:left,margin:0}" :mask=false>
       <div slot="header" style="text-align:center;font-size:16px">
         <span>文件菜单</span>
       </div>
       <section class="file-folder-opt">
         <ul>
-          <li>更新文件</li>
+          <li @click="download">下载文件</li>
           <li @click="moveFile">移动文件</li>
           <li>复制文件</li>
           <li>收藏文件</li>
@@ -100,16 +93,16 @@
       <div class="footer" slot="footer">
         <div class="footer-left">
           <i class="ivu-icon ivu-icon-unlocked"></i>
-          <div @click="changePrivacy" class="footer-privacy-text">
+          <div class="footer-privacy-text">
             <span>隐私模式</span>
             <span>{{privacyTxt}}</span>
           </div>
         </div>
-        <span style="color:#3da8f5">{{privacyStatus}}</span>
+        <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
       </div>
     </Modal>
 
-    <Modal v-model="menu2Show" width="240" class-name="file-vertical-center-modal">
+    <Modal v-model="menu2Show" width="240" :styles="{top: top, left:left,margin:0}" :mask=false>
       <div slot="header" style="text-align:center;font-size:16px">
         <span>文件菜单</span>
       </div>
@@ -124,31 +117,37 @@
       <div class="footer" slot="footer">
         <div class="footer-left">
           <i class="ivu-icon ivu-icon-unlocked"></i>
-          <div @click="changePrivacy" class="footer-privacy-text">
+          <div class="footer-privacy-text">
             <span>隐私模式</span>
             <span>{{privacyTxt}}</span>
           </div>
         </div>
-        <span style="color:#3da8f5">{{privacyStatus}}</span>
+        <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
       </div>
     </Modal>
   </div>
 
 </template>
 <script>
-import model from './model.vue'
-import commonFile from './commonfile.vue'
-import Loading from '../../public/common/Loading.vue'
-import myLi from './move.vue'
-import { mapState, mapActions } from 'vuex'
-import { files, createFolder, getProjectList } from '../../../axios/api.js'
+import model from "./model.vue";
+import commonFile from "./commonfile.vue";
+import Loading from "../../public/common/Loading.vue";
+import { mapState, mapActions } from "vuex";
+import {
+  files,
+  createFolder,
+  getProjectList,
+  folderChild
+} from "../../../axios/api.js";
+import { truncate } from "fs";
+import VJstree from "vue-jstree";
 export default {
-  inject: ['reload'],
+  inject: ["reload"],
   components: {
     model,
     commonFile,
     Loading,
-    myLi
+    VJstree
   },
   data() {
     return {
@@ -159,141 +158,172 @@ export default {
       showMove: false,
       menu1Show: false,
       menu2Show: false,
-      folderName: '',
+      folderName: "",
       fileId: this.$route.params.fileId,
       projectId: this.$route.params.id,
       isPrivacy: 1,
-      privacyTxt: '所有成员可见',
-      privacyStatus: '未开启',
-      footerTxt: '跨项目移动时，部分信息不会被保留。',
+      privacyTxt: "所有成员可见",
+      privacyStatus: "未开启",
+      footerTxt: "跨项目移动时，部分信息不会被保留。",
       isActive: false,
       isNotActive: true,
-      fileName: '',
+      fileName: "",
       projects: [],
       items: [],
       catalog: 0,
       indeterminate: true,
-      checkAll: false
-    }
+      checkAll: false,
+      top: 0,
+      left: 0,
+      fileIdParam: "",
+      asyncData: []
+    };
   },
   computed: {
-    ...mapState('file', ['files', 'loading'])
+    ...mapState("file", ["files", "loading"])
   },
   mounted: function() {
-    let params = { fileId: this.fileId }
-    this.initFile(params)
+    let params = { fileId: this.fileId };
+    this.initFile(params);
+    folderChild(params).then(res => {
+      console.log(res.data);
+      this.asyncData = res.data;
+    });
   },
   methods: {
-    ...mapActions('file', ['initFile']),
-    handleCheckAll() {},
+    ...mapActions("file", ["initFile"]),
+    itemClick(node) {
+      console.log(node.model.id + " clicked !");
+      console.log(this.projectId);
+    },
+
+    searchFile() {},
+    menuShow(catalog, fileId, e) {
+      if (catalog == 0) {
+        this.menu1Show = true;
+        this.menu2Show = false;
+      } else {
+        this.menu2Show = true;
+        this.menu1Show = false;
+      }
+      this.top = e.clientY + "px";
+      this.left = e.clientX + "px";
+      this.fileIdParam = fileId;
+    },
     handleSave() {
-      if (this.folderName == null || this.folderName == '') {
+      if (this.folderName == null || this.folderName == "") {
         this.$Notice.warning({
-          title: '请输入文件夹名称'
-        })
-        this.$refs.input.focus()
-        return false
+          title: "请输入文件夹名称"
+        });
+        this.$refs.input.focus();
+        return false;
       }
       let params = {
         projectId: this.projectId,
         folderName: this.folderName
-      }
+      };
       createFolder(this.fileId, params).then(res => {
         if (res.result == 1) {
           this.$Notice.success({
-            title: '创建成功'
-          })
-          this.showAddFolder = false
+            title: "创建成功"
+          });
+          this.showAddFolder = false;
         }
-      })
+      });
     },
 
     showFileChoose(data) {
-      console.log(data)
-      if (data === 'model') {
-        this.showModel = !this.showModel
+      console.log(data);
+      if (data === "model") {
+        this.showModel = !this.showModel;
       } else {
-        this.showCommon = !this.showCommon
+        this.showCommon = !this.showCommon;
       }
     },
-    download(fileId) {
-      window.location.href = `http://192.168.31.118:8090/files/${fileId}/download`
+    download() {
+      window.location.href = `http://192.168.31.120:8090/files/${
+        this.fileIdParam
+      }/download`;
     },
 
     fileDetail(catalog, id) {
       if (catalog == 1) {
         this.$router.push({
           path: `/project/${this.$route.params.id}/files/${id}`
-        })
+        });
       }
     },
     changePrivacy() {
       if (this.isPrivacy == 1) {
-        this.privacyTxt = '所有成员可见'
-        this.isPrivacy = 2
-        this.privacyStatus = '未开启'
+        this.privacyTxt = "所有成员可见";
+        this.isPrivacy = 2;
+        this.privacyStatus = "未开启";
       } else {
-        this.privacyTxt = '仅参与者可见'
-        this.isPrivacy = 1
-        this.privacyStatus = '已开启'
+        this.privacyTxt = "仅参与者可见";
+        this.isPrivacy = 1;
+        this.privacyStatus = "已开启";
       }
     },
     showMore(fileName, fileId, catalog) {
-      this.fileName = fileName
-      this.catalog = catalog
+      this.fileName = fileName;
+      this.catalog = catalog;
       if (catalog == 0) {
-        this.menu1Show = !this.menu1Show
+        this.menu1Show = !this.menu1Show;
       } else {
-        this.menu2Show = !this.menu2Show
+        this.menu2Show = !this.menu2Show;
       }
     },
     copyFile() {
-      this.showMove = true
-      this.footerTxt = '跨项目复制时，部分信息不会被保留。'
+      this.showMove = true;
+      this.footerTxt = "跨项目复制时，部分信息不会被保留。";
     },
 
     moveFile() {
       if (this.catalog == 0) {
-        this.menu1Show = !this.menu1Show
+        this.menu1Show = !this.menu1Show;
       } else {
-        this.menu2Show = !this.menu2Show
+        this.menu2Show = !this.menu2Show;
       }
-      this.showMove = true
-      this.footerTxt = '跨项目移动时，部分信息不会被保留。'
+      this.showMove = true;
+      this.footerTxt = "跨项目移动时，部分信息不会被保留。";
     },
 
     projectList() {
       getProjectList().then(res => {
         if (res.result == 1) {
-          this.projects = res.data
-          this.items.splice(0, 0, { component: 'my-li', projectId: this.projectId, fileId: '', index: new Date().getTime() })
+          this.projects = res.data;
         }
-      })
+      });
     },
     changeVisible(bool) {
       if (bool) {
-        this.projectList()
+        this.projectList();
       } else {
-        this.projects = []
-        this.items = []
+        this.projects = [];
+        this.items = [];
       }
     },
     changeProject(projectId) {
-      this.items = []
-      this.projectId = projectId
-      this.projectList()
+      this.items = [];
+      this.projectId = projectId;
+      this.projectList();
     },
     childByValue(childValue, index) {
-      this.items.splice(index + 1, this.items.length - 1, { component: 'my-li', projectId: this.projectId, fileId: childValue, index: new Date().getTime() })
-      console.log(this.$refs.component)
+      this.items.splice(index + 1, this.items.length - 1, {
+        component: "my-li",
+        projectId: this.projectId,
+        fileId: childValue,
+        index: new Date().getTime()
+      });
+      console.log(this.$refs.component);
     }
   },
   watch: {
     $route(to, from) {
-      this.reload()
+      this.reload();
     }
   }
-}
+};
 </script>
 <style lang="less">
 .project-main {
@@ -414,20 +444,15 @@ export default {
     }
     .file-content-opt {
       position: absolute;
-      bottom: 0;
-      display: none;
+      display: flex;
       width: 160px;
       height: 25px;
-      text-align: center;
-      .arrow_down {
-        margin-right: 10px;
-      }
-      svg {
-        width: 20px;
-        height: 20px;
+      justify-content: space-between;
+      i {
+        display: none;
       }
     }
-    &:hover > * {
+    &:hover i {
       display: block;
     }
   }
@@ -501,7 +526,7 @@ export default {
     font-weight: 700;
     height: 40px;
     line-height: 40px;
-    padding-left: 10px;
+    padding-left: 14px;
   }
   .project-list {
     height: 30px;
@@ -510,7 +535,7 @@ export default {
     white-space: nowrap;
     cursor: pointer;
     line-height: 30px;
-    padding-left: 10px;
+    padding-left: 14px;
   }
 }
 .selected {
@@ -556,6 +581,9 @@ export default {
 }
 .flex-fill {
   flex: 1 1 auto;
+}
+.show-move .ivu-modal-body {
+  padding: 0;
 }
 </style>
 

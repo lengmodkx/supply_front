@@ -6,14 +6,10 @@ export default {
   code: "/code", //获取验证码
   forget: "/forget", //忘记密码
   logout: "/logout", //用户退出
-  projects: "/projects",
-  tasks: "/tasks",
-  tags: "/tags",
-  relations: "/relations"
-  // projects: function (projectId) { //项目api 具体看api说明
-  //   return '/projetcs/' + projectId;
-  // },
-  // tasks: function (taskId, todo) {
-  //   return '/tasks/' + taskId + '/' + todo
-  // }
+  projects: "/projects", //所有项目
+  tasks: "/tasks", //所有任务
+  tags: "/tags", //所有标签
+  relations: "/relations", //关联关系
+  schedules: "/schedules", //所有日程
+  members: "/members" // 所有成员
 };

@@ -9,7 +9,7 @@
         <Checkbox v-model="checkbox">
           <span>全天</span>
         </Checkbox>
-        <Icon type="calendar"></Icon>
+        <Icon type="md-calendar" />
         <DatePicker v-if="checkbox" confirm class="datePicker" @on-ok="openDate=!openDate" @on-change="DatePicker" :open="openDate" v-model="datetime" type="daterange" format="yyyy-MM-dd">
           <span class="timeText" @click="openDate=!openDate">{{datetime[0]?datetime[0].Format('yyyy-MM-dd'):'选择开始日期'}}</span>
           <span class="timeText">-</span>
@@ -41,16 +41,17 @@
           </DropdownMenu>
         </Dropdown>
       </div>
-      <div class="examine">
+      <!-- <div class="examine">
         <Icon type="checkmark-circled"></Icon> 所有人都有时间
-      </div>
+      </div> -->
       <div class="participant">
         <p class="title">参与者 · {{memberIds.length}}</p>
         <div class="user">
-          <!-- <img src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200" alt=""> -->
           <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+tx[k]" alt="" :key="k" v-for="(i, k) in memberIds">
-          <!-- <Icon type="plus-circled"></Icon> -->
-          <userList :id='id' @select='select'></userList>
+          <Icon type="md-add-circle" @click.native="showUserList=!showUserList" />
+          <Modal v-model="showUserList" transfer mask-closable>
+            <userList :id='id' @select='select'></userList>
+          </Modal>
         </div>
       </div>
     </div>
@@ -73,19 +74,34 @@
 </template>
 
 <script>
-import ajax from '@/axios/fetch'
-import api from '@/axios/url'
-import userList from '@/components/resource/userList.vue'
+import { addSchedule } from "@/axios/api";
+import userList from "@/components/resource/userList.vue";
 export default {
-  name: '',
+  name: "",
   components: { userList },
   data() {
     return {
-      title: '',
-      repetition: ['不重复', '每天重复', '每周重复', '每月重复', '每年重复', '工作日重复'],
-      repetition_data: '不重复',
-      remind: ['不提醒', '5分钟前', '15分钟前', '30分钟前', '1小时前', '2小时前', '1天前'],
-      remind_data: '不提醒',
+      showUserList: false,
+      title: "",
+      repetition: [
+        "不重复",
+        "每天重复",
+        "每周重复",
+        "每月重复",
+        "每年重复",
+        "工作日重复"
+      ],
+      repetition_data: "不重复",
+      remind: [
+        "不提醒",
+        "5分钟前",
+        "15分钟前",
+        "30分钟前",
+        "1小时前",
+        "2小时前",
+        "1天前"
+      ],
+      remind_data: "不提醒",
       locked: false,
       modal: false,
       loading: false,
@@ -93,8 +109,8 @@ export default {
       openDate: false,
       memberIds: [],
       tx: [],
-      datetime: ['', '']
-    }
+      datetime: ["", ""]
+    };
   },
   props: {
     id: String,
@@ -104,65 +120,70 @@ export default {
     }
   },
   mounted() {
-    this.init()
+    this.init();
   },
   watch: {
     value(newValue, oldValue) {
-      console.log(newValue)
-      this.modal = newValue
+      console.log(">>>>>>", newValue);
+      this.modal = newValue;
     }
   },
   methods: {
     select(i) {
-      console.log(i)
+      console.log(i);
       if (this.memberIds.indexOf(i.userId) === -1) {
-        this.tx.push(i.defaultImage)
-        this.memberIds.push(i.userId)
+        this.tx.push(i.defaultImage);
+        this.memberIds.push(i.userId);
       }
     },
     DatePicker(time) {
-      console.log('time', time)
+      console.log("time", time);
     },
     Dropdown(name) {
       // console.log(name)
-      this.repetition_data = name
+      this.repetition_data = name;
     },
     init() {
-      this.modal = this.value
+      this.modal = this.value;
+      console.log("<<<<<<<<<<", this.modal);
     },
     clone() {
-      this.$emit('input', false)
+      this.$emit("input", false);
     },
     addSchedules() {
-      this.loading = true
+      this.loading = true;
       let data = {
         projectId: this.id,
         scheduleName: this.title,
-        startTime: this.datetime[0] ? this.datetime[0].getTime().toString() : new Date().getTime().toString(),
-        endTime: this.datetime[1] ? this.datetime[1].getTime().toString() : new Date().getTime().toString(),
+        startTime: this.datetime[0]
+          ? this.datetime[0].getTime().toString()
+          : new Date().getTime().toString(),
+        endTime: this.datetime[1]
+          ? this.datetime[1].getTime().toString()
+          : new Date().getTime().toString(),
         repeat: this.repetition_data,
         remind: this.remind_data,
-        memberIds: this.memberIds.join(','),
-        privacy: this.locked ? '1' : '0'
-      }
-      console.log(this.datetime)
-      ajax({ url: api.schedules, method: 'POST', data })
+        memberIds: this.memberIds.join(","),
+        privacy: this.locked ? "1" : "0"
+      };
+      console.log(this.datetime);
+      addSchedule(data)
         .then(res => {
-          console.log(res)
-          this.loading = false
-          this.$Message.info('成功')
-          this.clone()
+          console.log(res);
+          this.loading = false;
+          this.$Message.info("成功");
+          this.clone();
           setTimeout(() => {
-            window.location.reload()
-          }, 10)
+            window.location.reload();
+          }, 10);
         })
         .catch(err => {
-          this.loading = false
-          this.$Message.info('失败')
-        })
+          this.loading = false;
+          this.$Message.info("失败");
+        });
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
