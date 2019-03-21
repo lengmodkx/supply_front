@@ -2,6 +2,7 @@
   <div
     class="task"
     :class="{show:show}"
+    @click="hideAddTask"
   >
     <!-- 任务伸缩框 -->
     <div
@@ -87,7 +88,7 @@
         v-for="(i, k) in data.data"
       >
         <div
-          style="height:100%;position:relative;"
+          style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto"
           :data-index="k"
         >
           <p class="title handle">
@@ -185,15 +186,12 @@
               </div>
             </draggable>
 
-            <CurrentAdd
-              v-if="currentEditId==i.relationId"
-              v-click-outside="resetCurrentEditId"
-              :ref="`currentadd${i.relationId}`"
-              :taskMenuId="taskMenuId"
-              :taskGroupId="taskGroupId"
-              :projectId="$route.params.id"
-              @createComplete="pushTask($event,i.taskList)"
-            ></CurrentAdd>
+            <div @click.stop class="add-task-box" v-show="currentEditId==i.relationId" ref="currentadd">
+              <textarea placeholder="任务内容" v-model="textarea"></textarea>
+              <div class="add-task-btn">
+                <Button @click="createTask()"  type="primary">创建</Button>
+              </div>
+            </div>
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
             <draggable
@@ -275,9 +273,11 @@
               </div>
 
             </draggable>
+
+
             <span
               class="add"
-              @click="addCurTask(i.parentId,i.relationId,i.taskList)"
+              @click.stop="addCurTask(i.parentId,i.relationId,i.taskList, k)"
               v-if="currentEditId!=i.relationId"
             >
               <Icon type="android-add-circle"></Icon>
@@ -386,6 +386,7 @@ export default {
       showModal: false,
       taskMenuvisible: false,
       wHeight: window.outerHeight - 261,
+      textarea: '',
       arr: [1, 2, 3],
       data: {
         data: []
@@ -405,6 +406,7 @@ export default {
 
     this.initData();
     this.updateCurrentProjectId(this.$route.params.id);
+    console.log(this.currentEditId)
   },
   watch: {
     sort(n, o) {
@@ -415,11 +417,6 @@ export default {
   methods: {
     ...mapMutations("task", ["updateCurrentProjectId"]),
     ...mapActions("user", ["updateUserId"]),
-    resetCurrentEditId() {
-      if (!this.$refs[`currentadd${this.currentEditId}`][0].focus) {
-        this.currentEditId = "";
-      }
-    },
     initData() {
       //初始化任务列表数据
       let projectId = this.$route.params.id;
@@ -436,6 +433,9 @@ export default {
         this.menuGroupId = res.munus[0].parentId;
         this.data.data = res.munus;
       });
+    },
+    hideAddTask () {
+      this.currentEditId = ''
     },
     pushTask(data, tasklist) {
       this.currentEditId = "";
@@ -479,24 +479,38 @@ export default {
     //     }
     //   ])
     // },
-    addCurTask(groupId, id, taskList) {
-      this.$nextTick(_ => {
-        this.currentEditId = id;
-        this.$nextTick(_ => {
-          let ele = this.$refs[`currentadd${id}`][0].$el;
-          scrollTo(
-            this.$refs[`scrollbox${id}`][0],
-            ele.offsetTop - ele.offsetHeight + 190,
-            200
-          );
-        });
-      });
+    addCurTask(groupId, id, taskList, index) {
+      this.currentEditId = id;
+      // this.$nextTick(_ => {
+      //
+      //   this.$nextTick(_ => {
+      //     let ele = this.$refs.currentadd[index]
+      //     scrollTo(
+      //       this.$refs[`scrollbox${id}`][0],
+      //       ele.offsetTop - ele.offsetHeight + 190,
+      //       200
+      //     );
+      //   });
+      // });
       this.taskGroupId = groupId;
       this.taskMenuId = id;
       // console.log(groupId)
       // taskList.push({
 
       // });
+    },
+      // 创建任务
+    createTask () {
+        let data = {
+            taskName: this.textarea,
+            projectId: this.projectId,
+            taskMenuId: this.taskMenuId,
+            taskGroupId: this.taskGroupId,
+        }
+        this.$post('/tasks', data).then(res => {
+            console.log(res)
+        })
+
     },
     dragBox(evt) {
       //拖拽大盒子
@@ -605,4 +619,24 @@ export default {
 
 <style lang="less">
 @import "./index";
+  .add-task-box{
+    width: 272px;
+    height: 125px;
+    background-color: white;
+    margin: 8px;
+    padding: 8px;
+    textarea{
+      width: 100%;
+      min-height: 60px;
+      border: 1px solid #D2D2D2;
+      padding: 10px;
+      border-radius: 3px;
+    }
+    .add-task-btn{
+      width: 100%;
+      display: flex;
+      flex-direction: row-reverse;
+      margin-top: 10px;
+    }
+  }
 </style>

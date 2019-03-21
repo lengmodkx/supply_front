@@ -1,63 +1,29 @@
 <template>
   <div class="container index">
-    <div v-if="starProject.length>0">
-      <h2 class="oh">星标项目</h2>
-      <div>
-        <Row>
-          <iCol
-            span="6"
-            v-for="(item,index) in starProject"
-            :key="index"
-          >
-            <div
-              @click="path(item.projectId,item.groupId)"
-              class="col"
-              :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
-            >
-              <h2>{{item.projectName}}</h2>
-              <p>{{item.projectDes}}</p>
-              <div class="iconPic">
-                <Tooltip
-                  class="iconpic1"
-                  content="打开项目设置"
-                  placement="top"
-                >
-                  <span @click.stop="setProject(item)">
-                    <Icon
-                      type="edit"
-                      size="18"
-                    ></Icon>
-                  </span>
 
-                </Tooltip>
-                <Tooltip
-                  class="iconpic2"
-                  :class="{showStar:item.collect}"
-                  content="星标"
-                  placement="top"
-                >
-                  <span @click.stop="setStar(item.projectId)">
-                    <Icon
-                      type="android-star"
-                      size="18"
-                      :class="{starOn:item.collect}"
-                    ></Icon>
-                  </span>
-                </Tooltip>
-              </div>
-            </div>
-          </iCol>
-        </Row>
+    <div class="container-title">
+      <div class="search-box">
+        <Input search enter-button placeholder="搜索" />
+      </div>
+      <div class="filtrate-box">
+        <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
+          <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <RadioGroup class="select-view" v-model="selectView" type="button">
+          <Radio label="卡片视图"></Radio>
+          <Radio label="列表视图"></Radio>
+        </RadioGroup>
       </div>
     </div>
 
+
     <div>
-      <h2 class="oh">我创建的项目</h2>
+      <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
         <Row>
           <iCol
             span="6"
-            v-for="(item,index) in mineCreateProject"
+            v-for="(item,index) in project"
             :key="index"
           >
             <div
@@ -100,7 +66,7 @@
             </div>
 
           </iCol>
-          <iCol span="6">
+          <iCol span="6" v-show="projectType=='我创建的项目'">
             <div
               class="col add-project"
               @click="showproject=true"
@@ -112,200 +78,17 @@
             </div>
           </iCol>
         </Row>
+        <div
+                class="noList"
+                v-if="project.length==0"
+        >
+          <img src="../assets/images/noproject.png">
+          <p>暂无项目</p>
+        </div>
       </div>
     </div>
 
-    <div v-if="participationProject.length>0">
-      <h2 class="oh">我参与的项目</h2>
-      <div>
-        <Row>
-          <iCol
-            span="6"
-            v-for="(item,index) in participationProject"
-            :key="index"
-          >
-            <div
-              @click="path(item.projectId,item.groupId)"
-              class="col"
-              :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
-            >
-              <h2>{{item.projectName}}</h2>
-              <p>{{item.projectDes}}</p>
-              <div class="iconPic">
-                <Tooltip
-                  class="iconpic1"
-                  content="打开项目设置"
-                  placement="top"
-                >
-                  <span @click.stop="setProject(item)">
-                    <Icon
-                      type="edit"
-                      size="18"
-                    ></Icon>
-                  </span>
 
-                </Tooltip>
-                <Tooltip
-                  class="iconpic2"
-                  :class="{showStar:item.collect}"
-                  content="星标"
-                  placement="top"
-                >
-                  <span @click.stop="setStar(item.projectId)">
-                    <Icon
-                      type="android-star"
-                      size="18"
-                      :class="{starOn:item.collect}"
-                    ></Icon>
-                  </span>
-                </Tooltip>
-
-              </div>
-            </div>
-
-          </iCol>
-        </Row>
-      </div>
-    </div>
-
-    <div style="min-height:300px;">
-      <h2 class="oh">
-        更多项目
-        <span
-          class="showOrhide"
-          @click="showMore"
-        >{{tabBox?'隐藏':'显示'}}</span>
-      </h2>
-      <div
-        class="moreProject"
-        v-show="tabBox"
-      >
-
-        <Row style="margin-top:10px;">
-          <iCol
-            span="24"
-            class="demo-tabs-style1"
-            style=""
-          >
-            <Tabs type="card">
-              <TabPane label="已归档">
-                <Row v-if="guiDangList.length>0">
-                  <iCol
-                    span="6"
-                    v-for="(item,index) in guiDangList"
-                    :key="index"
-                  >
-                    <div
-                      @click="path(item.projectId,item.groupId)"
-                      class="col"
-                      :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
-                    >
-                      <h2>{{item.projectName}}</h2>
-                      <p>{{item.projectDes}}</p>
-                      <div class="iconPic">
-                        <Tooltip
-                          content="取消归档"
-                          placement="top"
-                        >
-                          <span
-                            style="margin-right:6px;"
-                            @click.stop="guidangModal = true;cancelID=item.projectId;cancelStatus=item.projectStatus;"
-                          >
-                            <Icon
-                              type="ios-refresh-empty"
-                              size="22"
-                            ></Icon>
-                          </span>
-
-                        </Tooltip>
-                        <Tooltip
-                          content="移至回收站"
-                          placement="top"
-                        >
-                          <span
-                            class=""
-                            @click.stop="modal3 = true;delId=item.projectId;delName=item.projectName;"
-                          >
-                            <Icon
-                              type="ios-trash-outline"
-                              size="20"
-                            />
-                          </span>
-                        </Tooltip>
-                      </div>
-                    </div>
-
-                  </iCol>
-                </Row>
-
-                <div
-                  class="noList"
-                  v-if="guiDangList.length==0"
-                >
-                  <img src="../assets/images/noproject.png">
-                  <p>暂无已归档项目</p>
-                </div>
-              </TabPane>
-              <TabPane label="回收站">
-                <Row v-if="delLIst.length>0">
-                  <iCol
-                    span="6"
-                    v-for="(item,index) in delLIst"
-                    :key="index"
-                  >
-                    <div
-                      @click="path(item.projectId,item.groupId)"
-                      class="col"
-                      :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
-                    >
-                      <h2>{{item.projectName}}</h2>
-                      <p>{{item.projectDes}}</p>
-                      <div class="iconPic">
-                        <Tooltip
-                          content="恢复项目"
-                          placement="top"
-                        >
-                          <span
-                            style="margin-right:5px;"
-                            @click.stop="cancelModal=true;recoverId=item.projectId;"
-                          >
-                            <Icon
-                              type="ios-refresh-empty"
-                              size="22"
-                            ></Icon>
-                          </span>
-
-                        </Tooltip>
-                        <Tooltip
-                          content="归档项目"
-                          placement="top"
-                        >
-                          <span @click.stop="modal4=true;guiName=item.projectName;guiId=item.projectId;">
-                            <Icon
-                              type="archive"
-                              size="18"
-                            ></Icon>
-                          </span>
-                        </Tooltip>
-                      </div>
-                    </div>
-
-                  </iCol>
-                </Row>
-                <div
-                  class="noList"
-                  v-if="delLIst.length==0"
-                >
-                  <img src="../assets/images/noproject.png">
-                  <p>回收站暂无项目</p>
-                </div>
-              </TabPane>
-
-            </Tabs>
-          </iCol>
-        </Row>
-      </div>
-    </div>
     <!-- 创建企业 -->
     <Modal
       v-model="showproject"
@@ -416,18 +199,63 @@ export default {
       projectSet: false,
       deleteList: [],
       projectdata: "",
+      project: [],//总共的项目
       starProject: [], //星标项目
       mineCreateProject: [], //我创建的
       participationProject: [], //我参与的
       guiDangList: [], //已归档
       delLIst: [], //回收站
-      user: sessionStorage.userInfo
+      user: sessionStorage.userInfo,
+      projectType: '我创建的项目',
+      selectView: '卡片视图',
+      projectList: [
+        {
+          value: '我创建的项目',
+          label: '我创建的项目'
+        },
+        {
+          value: '我参与的项目',
+          label: '我参与的项目'
+        },
+        {
+          value: '星标项目',
+          label: '星标项目'
+        },
+        {
+          value: '已归档的项目',
+          label: '已归档的项目'
+        },
+        {
+          value: '回收站的项目',
+          label: '回收站的项目'
+        }
+      ],
     };
   },
   mounted() {
     this.getData();
   },
   methods: {
+    // 选择项目类型
+    selectProjectType (value) {
+      switch (value) {
+        case '我创建的项目':
+          this.project = this.mineCreateProject
+              break;
+        case '我参与的项目':
+          this.project = this.participationProject
+          break;
+        case '星标项目':
+          this.project = this.starProject
+          break;
+        case '已归档的项目':
+          this.project = this.guiDangList
+          break;
+        case '回收站的项目':
+          this.project = this.delLIst
+          break;
+      }
+    },
     path(projectId, groupId) {
       this.$router.push(`/project/${projectId}/tasks/group/${groupId}`);
     },
@@ -484,6 +312,7 @@ export default {
         this.delLIst = res.data.filter(v => {
           return v.projectDel == 1;
         });
+        this.project = this.mineCreateProject
       });
     },
     setStar(id) {
@@ -502,6 +331,7 @@ export default {
         this.mineCreateProject = res.data.filter(v => {
           return v.memberLabel == 1;
         });
+        this.project = this.mineCreateProject
       });
     },
     setProject(data) {
@@ -548,6 +378,28 @@ export default {
     width: 90%;
     margin: 0 auto;
     font-size: 14px;
+  }
+}
+.container-title{
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .search-box{
+    width: 400px;
+    height: 32px;
+    margin-left: 12px;
+  }
+  .filtrate-box{
+    height: 32px;
+    display: flex;
+    .select-view{
+      margin-left: 10px;
+      label{
+        margin-left: 10px;
+      }
+    }
   }
 }
 </style>
