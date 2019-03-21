@@ -13,6 +13,14 @@ import VTree from 'vue-tree-halower'
 
 Vue.use(VTree)
 moment.locale("zh-cn");
+
+import axios from 'axios'
+import {get, post, put, deletes} from './axios/http'
+Vue.prototype.$get = get
+Vue.prototype.$post = post
+Vue.prototype.$put = put
+Vue.prototype.$delete = deletes
+
 Vue.prototype.$moment = moment;
 Vue.prototype.$containStr = (text, str) => {
     if (!text || !str) return true;

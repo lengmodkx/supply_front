@@ -1,5 +1,6 @@
 <template>
   <div class="container index">
+<<<<<<< HEAD
     <div v-if="starProject.length>0">
       <h2 class="oh">星标项目</h2>
       <div>
@@ -24,15 +25,44 @@
             </div>
           </iCol>
         </Row>
+=======
+
+    <div class="container-title">
+      <div class="search-box">
+        <Input search enter-button placeholder="搜索" />
+      </div>
+      <div class="filtrate-box">
+        <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
+          <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <RadioGroup class="select-view" v-model="selectView" type="button">
+          <Radio label="卡片视图"></Radio>
+          <Radio label="列表视图"></Radio>
+        </RadioGroup>
+>>>>>>> master
       </div>
     </div>
 
+
     <div>
-      <h2 class="oh">我创建的项目</h2>
+      <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
         <Row>
+<<<<<<< HEAD
           <iCol span="6" v-for="(item,index) in mineCreateProject" :key="index">
             <div @click="path(item.projectId,item.groupId)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
+=======
+          <iCol
+            span="6"
+            v-for="(item,index) in project"
+            :key="index"
+          >
+            <div
+              @click="path(item.projectId,item.groupId)"
+              class="col"
+              :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
+            >
+>>>>>>> master
               <h2> {{item.projectName}}</h2>
               <p>{{item.projectDes}}</p>
               <div class="iconPic">
@@ -52,8 +82,16 @@
             </div>
 
           </iCol>
+<<<<<<< HEAD
           <iCol span="6">
             <div class="col add-project" @click="showproject=true">
+=======
+          <iCol span="6" v-show="projectType=='我创建的项目'">
+            <div
+              class="col add-project"
+              @click="showproject=true"
+            >
+>>>>>>> master
               <h1 class="center">
                 <Icon type="android-add-circle"></Icon>
               </h1>
@@ -61,9 +99,17 @@
             </div>
           </iCol>
         </Row>
+        <div
+                class="noList"
+                v-if="project.length==0"
+        >
+          <img src="../assets/images/noproject.png">
+          <p>暂无项目</p>
+        </div>
       </div>
     </div>
 
+<<<<<<< HEAD
     <div v-if="participationProject.length>0">
       <h2 class="oh">我参与的项目</h2>
       <div>
@@ -160,12 +206,9 @@
                   <p>回收站暂无项目</p>
                 </div>
               </TabPane>
+=======
+>>>>>>> master
 
-            </Tabs>
-          </iCol>
-        </Row>
-      </div>
-    </div>
     <!-- 创建企业 -->
     <Modal v-model="showproject" class="newPro-modal">
       <CreateProject @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
@@ -236,18 +279,63 @@ export default {
       projectSet: false,
       deleteList: [],
       projectdata: "",
+      project: [],//总共的项目
       starProject: [], //星标项目
       mineCreateProject: [], //我创建的
       participationProject: [], //我参与的
       guiDangList: [], //已归档
       delLIst: [], //回收站
-      user: sessionStorage.userInfo
+      user: sessionStorage.userInfo,
+      projectType: '我创建的项目',
+      selectView: '卡片视图',
+      projectList: [
+        {
+          value: '我创建的项目',
+          label: '我创建的项目'
+        },
+        {
+          value: '我参与的项目',
+          label: '我参与的项目'
+        },
+        {
+          value: '星标项目',
+          label: '星标项目'
+        },
+        {
+          value: '已归档的项目',
+          label: '已归档的项目'
+        },
+        {
+          value: '回收站的项目',
+          label: '回收站的项目'
+        }
+      ],
     };
   },
   mounted() {
     this.getData();
   },
   methods: {
+    // 选择项目类型
+    selectProjectType (value) {
+      switch (value) {
+        case '我创建的项目':
+          this.project = this.mineCreateProject
+              break;
+        case '我参与的项目':
+          this.project = this.participationProject
+          break;
+        case '星标项目':
+          this.project = this.starProject
+          break;
+        case '已归档的项目':
+          this.project = this.guiDangList
+          break;
+        case '回收站的项目':
+          this.project = this.delLIst
+          break;
+      }
+    },
     path(projectId, groupId) {
       this.$router.push(`/project/${projectId}/tasks/group/${groupId}`);
     },
@@ -304,6 +392,7 @@ export default {
         this.delLIst = res.data.filter(v => {
           return v.projectDel == 1;
         });
+        this.project = this.mineCreateProject
       });
     },
     setStar(id) {
@@ -322,6 +411,7 @@ export default {
         this.mineCreateProject = res.data.filter(v => {
           return v.memberLabel == 1;
         });
+        this.project = this.mineCreateProject
       });
     },
     setProject(data) {
@@ -368,6 +458,28 @@ export default {
     width: 90%;
     margin: 0 auto;
     font-size: 14px;
+  }
+}
+.container-title{
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .search-box{
+    width: 400px;
+    height: 32px;
+    margin-left: 12px;
+  }
+  .filtrate-box{
+    height: 32px;
+    display: flex;
+    .select-view{
+      margin-left: 10px;
+      label{
+        margin-left: 10px;
+      }
+    }
   }
 }
 </style>

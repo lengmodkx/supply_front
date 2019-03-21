@@ -132,6 +132,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     .column {
+      overflow: hidden;
       position: relative;
       display: -webkit-inline-flex;
       display: -ms-inline-flexbox;
@@ -148,6 +149,14 @@
       > div {
         border-radius: 4px;
         background-color: rgb(236, 236, 236);
+        &::-webkit-scrollbar {
+          width: 6px;
+          height: 8px;
+          background-color: #e5e5e5;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #cecece;
+        }
       }
       .title {
         padding: 14px 18px;
@@ -175,11 +184,6 @@
       padding: 10px;
     }
     .scrum-stage-tasks {
-      position: absolute;
-      left: 0;
-      top: 50px;
-      right: 0;
-      bottom: 0;
       overflow-x: hidden;
       overflow-y: auto;
       &::-webkit-scrollbar {
