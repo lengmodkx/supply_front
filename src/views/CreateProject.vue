@@ -6,7 +6,7 @@
     <Input
       class="inputbox"
       v-model.trim="proName"
-      maxlength="20"
+      :maxlength="20"
       placeholder="项目名称（必填）"
     />
     <Input
@@ -14,7 +14,7 @@
       :rows="2"
       class="inputbox"
       v-model="proDes"
-      maxlength="50"
+      :maxlength="50"
       placeholder="项目简介（选填）"
     />
     <Button
