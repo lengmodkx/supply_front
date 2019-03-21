@@ -8,14 +8,16 @@ import "./icons";
 import "./components/public/common"; //挂载common下组件到全局
 import moment from "moment";
 import gobal from "./global";
-import 'vue-tree-halower/dist/halower-tree.min.css' // you can customize the style of the tree
-import VTree from 'vue-tree-halower'
 
-Vue.use(VTree)
 moment.locale("zh-cn");
 
 import axios from 'axios'
-import {get, post, put, deletes} from './axios/http'
+import {
+    get,
+    post,
+    put,
+    deletes
+} from './axios/http'
 Vue.prototype.$get = get
 Vue.prototype.$post = post
 Vue.prototype.$put = put

@@ -1,13 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <div class="task" :class="{show:show}">
-=======
-  <div
-    class="task"
-    :class="{show:show}"
-    @click="hideAddTask"
-  >
->>>>>>> master
+  <div class="task" :class="{show:show}" @click="hideAddTask">
     <!-- 任务伸缩框 -->
     <div class="side" :class="showTaskDetailInfo?'active':''">
       <div class="nav" @click="showTaskDetailInfo=!showTaskDetailInfo">
@@ -56,20 +48,8 @@
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
-<<<<<<< HEAD
       <div class="column" :key="k" v-for="(i, k) in data.data">
-        <div style="height:100%;position:relative;" :data-index="k">
-=======
-      <div
-        class="column"
-        :key="k"
-        v-for="(i, k) in data.data"
-      >
-        <div
-          style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto"
-          :data-index="k"
-        >
->>>>>>> master
+        <div style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
             <!-- 点击三角形出来的任务列表菜单组件 -->
@@ -115,16 +95,12 @@
               </div>
             </draggable>
 
-<<<<<<< HEAD
-            <CurrentAdd v-if="currentEditId==i.relationId" v-click-outside="resetCurrentEditId" :ref="`currentadd${i.relationId}`" :taskMenuId="taskMenuId" :taskGroupId="taskGroupId" :projectId="$route.params.id" @createComplete="pushTask($event,i.taskList)"></CurrentAdd>
-=======
             <div @click.stop class="add-task-box" v-show="currentEditId==i.relationId" ref="currentadd">
               <textarea placeholder="任务内容" v-model="textarea"></textarea>
               <div class="add-task-btn">
-                <Button @click="createTask()"  type="primary">创建</Button>
+                <Button @click="createTask()" type="primary">创建</Button>
               </div>
             </div>
->>>>>>> master
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
             <draggable :list="i.taskList" :options="{group:'checkedTask'}" class="ul" @end="dragList">
@@ -163,17 +139,8 @@
               </div>
 
             </draggable>
-<<<<<<< HEAD
-            <span class="add" @click="addCurTask(i.parentId,i.relationId,i.taskList)" v-if="currentEditId!=i.relationId">
-=======
 
-
-            <span
-              class="add"
-              @click.stop="addCurTask(i.parentId,i.relationId,i.taskList, k)"
-              v-if="currentEditId!=i.relationId"
-            >
->>>>>>> master
+            <span class="add" @click.stop="addCurTask(i.parentId,i.relationId,i.taskList, k)" v-if="currentEditId!=i.relationId">
               <Icon type="android-add-circle"></Icon>
               添加任务
             </span>
@@ -256,7 +223,7 @@ export default {
       showModal: false,
       taskMenuvisible: false,
       wHeight: window.outerHeight - 261,
-      textarea: '',
+      textarea: "",
       arr: [1, 2, 3],
       data: {
         data: []
@@ -276,7 +243,7 @@ export default {
 
     this.initData();
     this.updateCurrentProjectId(this.$route.params.id);
-    console.log(this.currentEditId)
+    console.log(this.currentEditId);
   },
   watch: {
     sort(n, o) {
@@ -287,15 +254,6 @@ export default {
   methods: {
     ...mapMutations("task", ["updateCurrentProjectId"]),
     ...mapActions("user", ["updateUserId"]),
-<<<<<<< HEAD
-    resetCurrentEditId() {
-      console.log("xxxxxxxxxxxxxxxx");
-      if (!this.$refs[`currentadd${this.currentEditId}`][0].focus) {
-        //this.currentEditId = "";
-      }
-    },
-=======
->>>>>>> master
     initData() {
       //初始化任务列表数据
       let projectId = this.$route.params.id;
@@ -313,8 +271,8 @@ export default {
         this.data.data = res.munus;
       });
     },
-    hideAddTask () {
-      this.currentEditId = ''
+    hideAddTask() {
+      this.currentEditId = "";
     },
     pushTask(data, tasklist) {
       this.currentEditId = "";
@@ -378,18 +336,17 @@ export default {
 
       // });
     },
-      // 创建任务
-    createTask () {
-        let data = {
-            taskName: this.textarea,
-            projectId: this.projectId,
-            taskMenuId: this.taskMenuId,
-            taskGroupId: this.taskGroupId,
-        }
-        this.$post('/tasks', data).then(res => {
-            console.log(res)
-        })
-
+    // 创建任务
+    createTask() {
+      let data = {
+        taskName: this.textarea,
+        projectId: this.projectId,
+        taskMenuId: this.taskMenuId,
+        taskGroupId: this.taskGroupId
+      };
+      this.$post("/tasks", data).then(res => {
+        console.log(res);
+      });
     },
     dragBox(evt) {
       //拖拽大盒子
@@ -498,24 +455,24 @@ export default {
 
 <style lang="less">
 @import "./index";
-  .add-task-box{
-    width: 272px;
-    height: 125px;
-    background-color: white;
-    margin: 8px;
-    padding: 8px;
-    textarea{
-      width: 100%;
-      min-height: 60px;
-      border: 1px solid #D2D2D2;
-      padding: 10px;
-      border-radius: 3px;
-    }
-    .add-task-btn{
-      width: 100%;
-      display: flex;
-      flex-direction: row-reverse;
-      margin-top: 10px;
-    }
+.add-task-box {
+  width: 272px;
+  height: 125px;
+  background-color: white;
+  margin: 8px;
+  padding: 8px;
+  textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid #d2d2d2;
+    padding: 10px;
+    border-radius: 3px;
   }
+  .add-task-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 10px;
+  }
+}
 </style>
