@@ -258,17 +258,20 @@ export default {
       //初始化任务列表数据
       let projectId = this.$route.params.id;
       enterTask(projectId).then(res => {
-        console.log(res.munus);
-        this.updateUserId(res.user); //获取当前用户信息
-        res.munus.map(v => {
-          v.taskList.map(vv => {
-            vv.checkStatus = vv.taskStatus != "未完成";
-            return vv;
+        if (res.result == 1) {
+          this.updateUserId(res.user); //获取当前用户信息
+          res.menus.map(v => {
+            if (v.taskList) {
+              v.taskList.map(vv => {
+                vv.checkStatus = vv.taskStatus != "未完成";
+                return vv;
+              });
+            }
+            return v;
           });
-          return v;
-        });
-        this.menuGroupId = res.munus[0].parentId;
-        this.data.data = res.munus;
+          this.menuGroupId = res.groupId;
+          this.data.data = res.menus;
+        }
       });
     },
     hideAddTask() {
