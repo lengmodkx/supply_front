@@ -10,8 +10,6 @@ import moment from "moment";
 import gobal from "./global";
 
 moment.locale("zh-cn");
-
-import axios from 'axios'
 import {
     get,
     post,
