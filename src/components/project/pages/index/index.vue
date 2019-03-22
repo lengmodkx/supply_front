@@ -235,6 +235,7 @@ export default {
     };
   },
   mounted() {
+    this.taskGroupId = this.$route.params.groupId
     // this.initStore()
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
@@ -332,7 +333,7 @@ export default {
       //     );
       //   });
       // });
-      this.taskGroupId = groupId;
+      //this.taskGroupId = groupId;
       this.taskMenuId = id;
       // console.log(groupId)
       // taskList.push({
@@ -347,6 +348,7 @@ export default {
         taskMenuId: this.taskMenuId,
         taskGroupId: this.taskGroupId
       };
+      console.log(this.taskGroupId)
       this.$post("/tasks", data).then(res => {
         console.log(res);
       });
