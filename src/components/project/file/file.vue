@@ -65,7 +65,7 @@
           </ul>
         </div>
         <div class="picker-column thin-scroll flex-fill flex-vert">
-          <v-jstree :data="asyncData" show-checkbox :multiple=false allow-batch whole-row @item-click="itemClick"></v-jstree>
+          <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row @item-click="itemClick" ref="jstree" children-field-name="child"></v-jstree>
         </div>
 
       </div>
@@ -139,7 +139,6 @@ import {
   getProjectList,
   folderChild
 } from "../../../axios/api.js";
-import { truncate } from "fs";
 import VJstree from "vue-jstree";
 export default {
   inject: ["reload"],
@@ -185,10 +184,19 @@ export default {
   mounted: function() {
     let params = { fileId: this.fileId };
     this.initFile(params);
-    folderChild(params).then(res => {
-      console.log(res.data);
-      this.asyncData = res.data;
-    });
+    var data = [
+      {
+        id: "80fdc0eaea0a4da28c2498ab4c01fd56",
+        text: "公共模型库",
+        child: [
+          {
+            id: "7d1fbe2cb9894517868939d8693104a7",
+            text: "111"
+          }
+        ]
+      }
+    ];
+    console.log(data[0]["child"]);
   },
   methods: {
     ...mapActions("file", ["initFile"]),
@@ -286,6 +294,12 @@ export default {
       }
       this.showMove = true;
       this.footerTxt = "跨项目移动时，部分信息不会被保留。";
+      this.asyncData = [this.$refs.jstree.initializeLoading()];
+      folderChild(this.projectId).then(res => {
+        console.info(res.data);
+        this.asyncData = res.data;
+      });
+      this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
     },
 
     projectList() {

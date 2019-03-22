@@ -238,8 +238,8 @@ export function files(params) {
     return $get("/files", params);
 }
 //项目所有子文件夹
-export function folderChild(params) {
-    return $get(`/files/folder/child`, params);
+export function folderChild(projectId) {
+    return $get(`/files/${projectId}/folder/all`, '');
 }
 
 //上传模型

@@ -28,7 +28,7 @@
               <Icon type="android-add-circle"></Icon>
               添加分享
             </a>
-            <Modal v-model="showAddshare" title="projectName" transfer :styles="{top: '0px',left:'0px',right:'0px',bottom:'0px',width:'100%',height:'100%'}" footer-hide class-name="ivu-modal-wrap">
+            <Modal v-model="showAddshare" title="projectName" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
               <add-share ref="addshare" @close="showAddshare=false" :projectId="projectId" :shareTitle="shareTitle" :shareContent="shareContent"></add-share>
             </Modal>
           </div>
@@ -113,11 +113,11 @@
 </template>
 
 <script>
-import publish from '../../public/Publish.vue'
-import addShare from './AddShare.vue'
-import Loading from '../../public/common/Loading.vue'
-import tag from './Tags.vue'
-import { shares } from '../../../axios/api2.js'
+import publish from "../../public/Publish.vue";
+import addShare from "./AddShare.vue";
+import Loading from "../../public/common/Loading.vue";
+import tag from "./Tags.vue";
+import { shares } from "../../../axios/api2.js";
 
 export default {
   components: {
@@ -131,54 +131,54 @@ export default {
       loading: true,
       type: 1,
       showAddshare: false,
-      projectName: '',
+      projectName: "",
       projectId: this.$route.params.id,
-      shareTitle: '',
-      shareContent: '',
+      shareTitle: "",
+      shareContent: "",
       shareList: [],
       indexNow: 0,
       share: null,
       showmenu: false,
       isPrivacy: 1,
-      privacyTxt: '所有成员可见',
-      privacyStatus: '未开启',
+      privacyTxt: "所有成员可见",
+      privacyStatus: "未开启",
       showTag: false,
       tagList: []
-    }
+    };
   },
   mounted() {
     shares(this.$route.params.id).then(res => {
       if (res.result == 1) {
-        console.log(res)
-        this.shareList = res.data
-        this.loading = false
+        console.log(res);
+        this.shareList = res.data;
+        this.loading = false;
         if (this.shareList != null && this.shareList.length > 0) {
-          this.share = this.shareList[0]
+          this.share = this.shareList[0];
         }
       }
-    })
+    });
   },
   methods: {
     clickEvent(parameter) {},
     changePrivacy() {
-      console.log(111)
+      console.log(111);
       if (this.isPrivacy == 1) {
-        this.privacyTxt = '所有成员可见'
-        this.isPrivacy = 2
-        this.privacyStatus = '未开启'
+        this.privacyTxt = "所有成员可见";
+        this.isPrivacy = 2;
+        this.privacyStatus = "未开启";
       } else {
-        this.privacyTxt = '仅参与者可见'
-        this.isPrivacy = 1
-        this.privacyStatus = '已开启'
+        this.privacyTxt = "仅参与者可见";
+        this.isPrivacy = 1;
+        this.privacyStatus = "已开启";
       }
     },
     changeContent(index) {
-      this.indexNow = index
-      this.share = this.shareList[index]
+      this.indexNow = index;
+      this.share = this.shareList[index];
     },
     closeTag(event, name) {}
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

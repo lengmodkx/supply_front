@@ -28,68 +28,68 @@
 </template>
 
 <script>
-import editor from '../../resource/Simditor'
-import { shareAdd } from '../../../axios/api2.js'
+import editor from "../../resource/Simditor.vue";
+import { shareAdd } from "../../../axios/api.js";
 export default {
-  props: ['projectId', 'shareTitle', 'shareContent'],
+  props: ["projectId", "shareTitle", "shareContent"],
   data() {
     return {
-      value: '',
+      value: "",
       loading: false,
       isPrivacy: 1,
-      active: '',
+      active: "",
       title: this.shareTitle,
       content: this.shareContent
-    }
+    };
   },
   components: {
     editor
   },
 
   mounted() {
-    console.log(this.$refs.editor)
-    this.$refs.editor.content = this.shareContent
+    console.log(this.$refs.editor);
+    this.$refs.editor.content = this.shareContent;
     // editor.on('valuechanged', () => {
     //   this.content = editor.getValue()
     // })
   },
   methods: {
     publishShare() {
-      this.content=this.$refs.editor.content
-      if (this.title == null || this.title == '') {
+      this.content = this.$refs.editor.content;
+      if (this.title == null || this.title == "") {
         this.$Notice.warning({
-          title: '请输入分享标题'
-        })
-        return false
+          title: "请输入分享标题"
+        });
+        return false;
       }
 
-      if (this.content == null || this.content == '') {
+      if (this.content == null || this.content == "") {
         this.$Notice.warning({
-          title: '请输入分享内容'
-        })
-        return false
+          title: "请输入分享内容"
+        });
+        return false;
       }
 
-      this.loading = true
+      this.loading = true;
       let params = {
         projectId: this.projectId,
         title: this.title,
         content: this.content,
         isPrivacy: this.isPrivacy
-      }
+      };
 
       shareAdd(params).then(res => {
-        console.log(res)
+        console.log(res);
         if (res.result === 1) {
-          this.title = ''
-          this.content = ''
-          this.loading = false
-          this.$emit('close')
+          this.title = "";
+          this.content = "";
+          this.loading = false;
+          this.$emit("close");
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
