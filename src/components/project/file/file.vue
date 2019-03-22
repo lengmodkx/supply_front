@@ -44,9 +44,7 @@
       <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
     </Modal>
     <Modal v-model="showAddFolder" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
-      <div class="drop-munu-content">
-        <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" />
-      </div>
+      <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" />
       <div slot="footer">
         <Button type="primary" size="large" long @click="handleSave">确定</Button>
       </div>
@@ -184,20 +182,8 @@ export default {
   mounted: function() {
     let params = { fileId: this.fileId };
     this.initFile(params);
-    var data = [
-      {
-        id: "80fdc0eaea0a4da28c2498ab4c01fd56",
-        text: "公共模型库",
-        child: [
-          {
-            id: "7d1fbe2cb9894517868939d8693104a7",
-            text: "111"
-          }
-        ]
-      }
-    ];
-    console.log(data[0]["child"]);
   },
+
   methods: {
     ...mapActions("file", ["initFile"]),
     itemClick(node) {
@@ -219,6 +205,7 @@ export default {
       this.fileIdParam = fileId;
     },
     handleSave() {
+      //创建文件夹
       if (this.folderName == null || this.folderName == "") {
         this.$Notice.warning({
           title: "请输入文件夹名称"
@@ -236,6 +223,7 @@ export default {
             title: "创建成功"
           });
           this.showAddFolder = false;
+          this.folderName = "";
         }
       });
     },
@@ -321,15 +309,6 @@ export default {
       this.items = [];
       this.projectId = projectId;
       this.projectList();
-    },
-    childByValue(childValue, index) {
-      this.items.splice(index + 1, this.items.length - 1, {
-        component: "my-li",
-        projectId: this.projectId,
-        fileId: childValue,
-        index: new Date().getTime()
-      });
-      console.log(this.$refs.component);
     }
   },
   watch: {
@@ -339,7 +318,7 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .project-main {
   background: #f7f7f7;
 }
@@ -395,16 +374,6 @@ export default {
 }
 .ivu-dropdown-menu {
   width: 180px;
-}
-
-.drop-munu-content {
-  width: 150px;
-  margin-left: 15px;
-  text-align: center;
-  .create-folder-title {
-    border-bottom: 1px solid #e5e5e5;
-    font-size: 18px;
-  }
 }
 .folderName {
   width: 320px;
@@ -595,9 +564,6 @@ export default {
 }
 .flex-fill {
   flex: 1 1 auto;
-}
-.show-move .ivu-modal-body {
-  padding: 0;
 }
 </style>
 
