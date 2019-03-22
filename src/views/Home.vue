@@ -138,6 +138,7 @@
 <script>
 import CreateProject from "./CreateProject";
 import ProjectSettings from "./projectSettings";
+import {mapMutations, mapState} from 'vuex'
 import {
   getProjectList,
   setStarProject,
@@ -208,6 +209,8 @@ export default {
     this.mountDate();
   },
   methods: {
+    ...mapMutations("project", ['updateProject']),
+    ...mapState("project", ['vxproject']),
     // 选择项目类型
     selectProjectType(value) {
       switch (value) {
@@ -312,6 +315,9 @@ export default {
             this.project = this.delLIst;
             break;
         }
+        this.updateProject(res.data)
+        console.log(this.vxproject())
+
 
       });
     },

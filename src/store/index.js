@@ -4,6 +4,7 @@ import user from './modules/user'
 import task from './modules/task'
 import app from './modules/app'
 import file from './modules/file'
+import project from './modules/project'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -11,7 +12,8 @@ const store = new Vuex.Store({
     app,
     user,
     task,
-    file
+    file,
+    project
   }
 })
 
