@@ -16,7 +16,53 @@
       </div>
     </div>
 
-    <div>
+    <!--列表视图-->
+    <div v-show="selectView=='列表视图'">
+      <h2 class="oh" v-text="projectType">我创建的项目</h2>
+      <ul>
+        <li class="project-list" v-for="(item,index) in project" :key="index" @click="path(item.projectId,item.groupId)">
+          <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
+          <div class="project-body">
+            <div class="project-con">
+              <p>{{item.projectName}}</p>
+              <span>{{item.projectDes}}</span>
+            </div>
+            <div class="operate-box">
+              <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
+                  <span @click.stop="setStar(item.projectId)">
+                    <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
+                  </span>
+              </Tooltip>
+              <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                  <span @click.stop="setProject(item)">
+                    <Icon type="ios-settings-outline" size="22"></Icon>
+                  </span>
+              </Tooltip>
+              <Tooltip class="iconpic2" content="删除项目" placement="top">
+                  <span @click.stop="confirmHuishou(item)">
+                    <Icon type="ios-trash-outline" size="22"/>
+                  </span>
+              </Tooltip>
+            </div>
+
+          </div>
+        </li>
+        <li v-show="projectType=='我创建的项目'" class="project-list add-project" @click="showproject=true">
+          <div class="bj-img add-img">
+            <Icon type="md-add" />
+          </div>
+          <div class="add-project-body">创建新项目</div>
+        </li>
+      </ul>
+      <div class="noList" v-if="project.length==0 && projectType!='我创建的项目'">
+        <img src="../assets/images/noproject.png">
+        <p>暂无项目</p>
+      </div>
+    </div>
+
+
+    <!--卡片式图-->
+    <div v-show="selectView=='卡片视图'">
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
         <Row>
@@ -29,14 +75,12 @@
                   <span @click.stop="setProject(item)">
                     <Icon type="md-settings" size="18"></Icon>
                   </span>
-
                 </Tooltip>
                 <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
                   <span @click.stop="setStar(item.projectId)">
                     <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
                   </span>
                 </Tooltip>
-
               </div>
             </div>
 
@@ -44,13 +88,13 @@
           <iCol span="6" v-show="projectType=='我创建的项目'">
             <div class="col add-project" @click="showproject=true">
               <h1 class="center">
-                <Icon type="android-add-circle"></Icon>
+                <Icon type="md-add-circle" />
               </h1>
               <h2 class="center">创建新项目</h2>
             </div>
           </iCol>
         </Row>
-        <div class="noList" v-if="project.length==0">
+        <div class="noList" v-if="project.length==0 && projectType!='我创建的项目'">
           <img src="../assets/images/noproject.png">
           <p>暂无项目</p>
         </div>
@@ -94,6 +138,7 @@
 <script>
 import CreateProject from "./CreateProject";
 import ProjectSettings from "./projectSettings";
+import {mapMutations, mapState} from 'vuex'
 import {
   getProjectList,
   setStarProject,
@@ -164,6 +209,8 @@ export default {
     this.mountDate();
   },
   methods: {
+    ...mapMutations("project", ['updateProject']),
+    ...mapState("project", ['vxproject']),
     // 选择项目类型
     selectProjectType(value) {
       switch (value) {
@@ -251,6 +298,27 @@ export default {
         this.delLIst = res.data.filter(v => {
           return v.projectDel == 1;
         });
+        switch (this.projectType) {
+          case "我创建的项目":
+            this.project = this.mineCreateProject;
+            break;
+          case "我参与的项目":
+            this.project = this.participationProject;
+            break;
+          case "星标项目":
+            this.project = this.starProject;
+            break;
+          case "已归档的项目":
+            this.project = this.guiDangList;
+            break;
+          case "回收站的项目":
+            this.project = this.delLIst;
+            break;
+        }
+        this.updateProject(res.data)
+        console.log(this.vxproject())
+
+
       });
     },
     setStar(id) {
@@ -269,7 +337,8 @@ export default {
         this.mineCreateProject = res.data.filter(v => {
           return v.memberLabel == 1;
         });
-        this.project = this.mineCreateProject;
+        this.getData()
+
       });
     },
     setProject(data) {
@@ -339,5 +408,97 @@ export default {
       }
     }
   }
+}
+  .project-list{
+    width: 1080px;
+    height: 72px;
+    padding: 0 20px;
+    display: flex;
+    margin-top: 15px;
+    margin-left: 100px;
+    cursor: pointer;
+    &:hover .operate-box{
+      display: flex !important;
+    }
+    &:hover p{
+      color: #3da8f5;
+    }
+    .add-project-body{
+      width: 900px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      transition: color .218s ease;
+    }
+    .bj-img{
+      margin: 16px 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      background-position: center;
+      background-size: cover;
+    }
+    .add-img{
+      background-color: #F6F5F4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      i{
+        color: #AEA4A1;
+        font-size: 24px;
+      }
+    }
+    .project-body{
+      width: 900px;
+      padding: 16px 0;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #E7E6E3;
+      .project-con{
+        max-width: 750px;
+        p{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 100%;
+          font-size: 16px;
+          line-height: 24px;
+        }
+        span{
+          font-size: 12px;
+          line-height: 20px;
+          color: #a6a6a6;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 100%;
+        }
+      }
+      .operate-box{
+        width: 150px;
+        height: 100%;
+        display: none;
+        flex-direction: row-reverse;
+        align-items: center;
+        transition: all 0.3s;
+        i{
+          margin-left: 10px;
+          color: gray;
+          &:hover{
+            color: #3da8f5;
+          }
+        }
+      }
+    }
+  }
+  .add-project:hover .add-img{
+    background-color: #E8F6FE;
+  }
+.add-project:hover .add-img i{
+  color: #4BAAF6;
+}
+.add-project:hover .add-project-body{
+  color: #3da8f5;
 }
 </style>

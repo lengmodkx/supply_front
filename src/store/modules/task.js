@@ -1,8 +1,8 @@
-
-import {getmemberList,gettagList} from '@/axios/api'
+import { enterTask,getmemberList,gettagList,addTask } from "../../axios/api.js";
 const store = {
   namespaced: true,
   state: {
+    tasks:[],
     currentProjectId:null,
     sort: '1',
     curTaskGroupId: 1,
@@ -44,8 +44,11 @@ const store = {
     }
   },
   mutations: {
-    updateCurrentProjectId(state, id){
-      state.currentProjectId=id
+    initTask(state,data){
+      state.tasks = data
+    },
+    addTask(state,data){
+      state.tasks = data
     },
     updateSort (state, data) {
       state.sort = data
@@ -66,6 +69,27 @@ const store = {
     }
   },
   actions: {
+    init({commit},data){
+      enterTask(data).then(res => {
+        if (res.result === 1) {
+          res.menus.map(v => {
+            if (v.taskList) {
+              v.taskList.map(vv => {
+                vv.checkStatus = vv.taskStatus != "未完成";
+                return vv;
+              });
+            }
+            return v;
+          });
+          console.log(res.menus)
+          commit('initTask', res.menus)
+        }
+      });
+    },
+    addTask({commit},data){
+      console.log('>>>>>',data)
+      commit('addTask', data)
+    },
     updateSort ({
       commit
     }, data) {
@@ -81,8 +105,6 @@ const store = {
         // console.log(res.tagList)
         callback()
       })
-     
-     
     },
     initMemberList({
       commit,state
