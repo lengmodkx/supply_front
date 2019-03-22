@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- 右边可拖拽盒子 -->
-    <draggable class="column-main dragscroll" v-model="data.data" :options="{
+    <draggable class="column-main dragscroll" v-model="tasks" :options="{
                   handle:'.handle',
                   chosenClass: 'boxChosenClass',
                   dragClass: 'boxDragClass',
@@ -48,7 +48,7 @@
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
-      <div class="column" :key="k" v-for="(i, k) in data.data">
+      <div class="column" :key="k" v-for="(i, k) in tasks">
         <div style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
@@ -190,7 +190,8 @@ import {
   completeTask,
   cancelcompleteTask,
   dragTask,
-  initEditTask
+  initEditTask,
+  addTask
 } from "@/axios/api";
 export default {
   name: "",
@@ -205,7 +206,7 @@ export default {
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup"]),
-    ...mapState("task", ["sort"])
+    ...mapState("task", ["tasks","sort"])
   },
   data() {
     return {
@@ -225,9 +226,6 @@ export default {
       wHeight: window.outerHeight - 261,
       textarea: "",
       arr: [1, 2, 3],
-      data: {
-        data: []
-      },
       showTaskDetailInfo: false, //左侧任务三角下拉详情
       activeModalData: {
         //是数据里面的arr里面的每一项
@@ -241,10 +239,7 @@ export default {
       this.wHeight = window.outerHeight - 261;
     };
     dragscroll(["column-main", "scrum-stage-tasks"]);
-
-    this.initData();
-    this.updateCurrentProjectId(this.$route.params.id);
-    console.log(this.currentEditId);
+    this.init(this.projectId);
   },
   watch: {
     sort(n, o) {
@@ -253,28 +248,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations("task", ["updateCurrentProjectId"]),
-    ...mapActions("user", ["updateUserId"]),
-    initData() {
-      //初始化任务列表数据
-      let projectId = this.$route.params.id;
-      enterTask(projectId).then(res => {
-        if (res.result == 1) {
-          this.updateUserId(res.user); //获取当前用户信息
-          res.menus.map(v => {
-            if (v.taskList) {
-              v.taskList.map(vv => {
-                vv.checkStatus = vv.taskStatus != "未完成";
-                return vv;
-              });
-            }
-            return v;
-          });
-          this.menuGroupId = res.groupId;
-          this.data.data = res.menus;
-        }
-      });
-    },
+    ...mapActions("task", ["init"]),
     hideAddTask() {
       this.currentEditId = "";
     },
@@ -349,9 +323,13 @@ export default {
         taskGroupId: this.taskGroupId
       };
       console.log(this.taskGroupId)
-      this.$post("/tasks", data).then(res => {
-        console.log(res);
-      });
+      addTask(data).then(res=>{
+        if(res.result===1){
+          this.$Notice.success({
+            title: "创建成功"
+          });
+        }
+      })
     },
     dragBox(evt) {
       //拖拽大盒子

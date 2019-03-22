@@ -18,6 +18,7 @@ import ProjectMember from '@/components/public/ProjectMember.vue'
 import ProjectMenu from '@/components/public/ProjectMenu.vue'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
+import { mapActions } from "vuex";
 export default {
   name: '',
   components: {
@@ -36,6 +37,7 @@ export default {
     this.initSocket(this.$route.params.id)
   },
   methods: {
+    ...mapActions("task", ["addTask"]),
     showBox(i) {
       let old = this.show
       this.show = old == i ? -1 : i
@@ -59,7 +61,7 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var socket = new SockJS('http://localhost:8090/webSocketServer') //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      var socket = new SockJS('http://192.168.31.238:8090/webSocketServer') //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket)
       this.stompClient.connect(
@@ -69,7 +71,8 @@ export default {
             var result = JSON.parse(msg.body)
             switch (result.type) {
               case 'A1':
-
+                this.addTask(result.object);
+                break
               case 'C1':
               case 'C2':
               case 'C3':

@@ -54,7 +54,7 @@ export default {
     };
   },
   mounted() {
-    menus(this.$route.params.id).then(res => {
+    menus(this.id).then(res => {
       this.menus = res.data.map((item, index) => {
         switch (item.funcName) {
           case "任务":
