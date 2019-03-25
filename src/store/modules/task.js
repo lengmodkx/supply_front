@@ -2,11 +2,13 @@ import {
     enterTask,
     getmemberList,
     gettagList,
-    addTask
+    addTask,
+    initEditTask
 } from "../../axios/api.js";
 const store = {
     namespaced: true,
     state: {
+        simpleTasks: [],
         tasks: [],
         currentProjectId: null,
         sort: '1',
@@ -45,14 +47,52 @@ const store = {
         },
         getTaskByName: (state) => (name) => {
             return state.taskGroup.filter(v => v.name.indexOf(name) >= 0)
+        },
+        getTaskById:(state) => (data) =>{
+            for (var i = 0;i < state.tasks.length;i++){
+                if(state.tasks[i].task.taskId === data){
+                    return state.tasks[i]
+                }
+            }
+            // return state.tasks.filter(taskvo => {
+            //     return taskvo.task.taskId === data
+            // })
+        },
+        abc: (state) =>(num) =>{
+            return state.sort+num
         }
     },
     mutations: {
         initTask(state, data) {
-            state.tasks = data
+            state.simpleTasks = data
+        },
+        initEditTask(state, data){
+            state.tasks.push(data)
         },
         changeTask(state, data) {
-            state.tasks = data
+            state.simpleTasks = data
+        },
+        changeProperty(state,data) {
+            for(var i = 0;i < state.tasks.length;i++){
+                if(state.tasks[i].task.taskId === data.taskId){
+                    state.tasks[i].task.priority = data.priority
+                }
+            }
+            console.log(">>>>>>>>>>>>>>>>>", data.taskId);
+            for(var i = 0;i < state.simpleTasks.length;i++){
+                for(var j = 0;i < state.simpleTasks[j].taskList.length;j++){
+                    if(state.simpleTasks[i].taskList[j].taskId === data.taskId){
+                        state.simpleTasks[i].taskList[j].priority = data.priority
+                    }
+                }
+            }
+        },
+        deleteTask(state, data) {
+          state.simpleTasks.map(item => {
+              const a =item.taskList.filter(task => {
+                  return task.taskId !== data
+              });
+          })
         },
         updateSort(state, data) {
             state.sort = data
@@ -87,15 +127,35 @@ const store = {
                         }
                         return v;
                     });
-                    console.log(res.menus)
                     commit('initTask', res.menus)
                 }
             });
+        },
+        initEditTask({commit},data){
+            return new Promise((resolve,reject) =>{
+                initEditTask(data).then(res => {
+                    if (res.data.task.taskStatus === "未完成") {
+                        res.data.task.taskStatus = false
+                    } else {
+                        res.data.task.taskStatus = true
+                    }
+                    commit('initEditTask',res.data)
+                    resolve()
+                })
+            })
+
         },
         changeTask({
             commit
         }, data) { //任务数据改变时调用
             commit('changeTask', data)
+        },
+        changeProperty({commit},data) {
+            commit('changeProperty',data)
+        },
+        //删除任务时候调用
+        deleteTask({commit},data){
+          commit('deleteTask',data)
         },
         updateSort({
             commit
@@ -110,7 +170,6 @@ const store = {
             gettagList(state.currentProjectId).then(res => {
 
                 commit('updateTags', res.tagList)
-                    // console.log(res.tagList)
                 callback()
             })
         },

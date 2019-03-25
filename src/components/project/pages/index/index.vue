@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- 右边可拖拽盒子 -->
-    <draggable class="column-main dragscroll" v-model="tasks" :options="{
+    <draggable class="column-main dragscroll" v-model="simpleTasks" :options="{
                   handle:'.handle',
                   chosenClass: 'boxChosenClass',
                   dragClass: 'boxDragClass',
@@ -48,7 +48,7 @@
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
-      <div class="column" :key="k" v-for="(i, k) in tasks">
+      <div class="column" :key="k" v-for="(i, k) in simpleTasks">
         <div style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
@@ -205,8 +205,8 @@ export default {
     CurrentAdd
   },
   computed: {
-    ...mapGetters("task", ["curTaskGroup"]),
-    ...mapState("task", ["tasks","sort"])
+    ...mapGetters("task", ["curTaskGroup","getTaskById","abc"]),
+    ...mapState("task", ["simpleTasks","sort"])
   },
   data() {
     return {
@@ -257,17 +257,28 @@ export default {
       tasklist.push(data);
     },
     initTask(taskId) {
-      initEditTask(taskId).then(res => {
-        if (res.task.taskStatus == "未完成") {
-          res.task.taskStatus = false;
-        } else {
-          res.task.taskStatus = true;
-        }
 
-        this.activeModalData = res.task;
-        // console.log(res.task)
-        this.showModal = true;
-      });
+        this.$store.dispatch('task/initEditTask',taskId).then(() =>{
+            // this.activeModalData = this.getTaskById(taskId)
+            this.activeModalData = this.getTaskById(taskId)
+            console.log(">>>>>>>>>",this.activeModalData)
+            this.showModal = true
+        })
+
+
+
+
+      // initEditTask(taskId).then(res => {
+      //   if (res.data.task.taskStatus == "未完成") {
+      //     res.data.task.taskStatus = false;
+      //   } else {
+      //     res.data.task.taskStatus = true;
+      //   }
+      //
+      //   this.activeModalData = res.data.task;
+      //   // console.log(res.task)
+      //   this.showModal = true;
+      // });
     },
     // initStore () {
     //   //发请求获取task store中的标签列表，任务列表，人员列表
@@ -297,7 +308,6 @@ export default {
     addCurTask(groupId, id, taskList, index) {
       this.currentEditId = id;
       // this.$nextTick(_ => {
-      //
       //   this.$nextTick(_ => {
       //     let ele = this.$refs.currentadd[index]
       //     scrollTo(
@@ -322,7 +332,6 @@ export default {
         taskMenuId: this.taskMenuId,
         taskGroupId: this.taskGroupId
       };
-      console.log(this.taskGroupId)
       addTask(data).then(res=>{
         if(res.result===1){
           this.$Notice.success({

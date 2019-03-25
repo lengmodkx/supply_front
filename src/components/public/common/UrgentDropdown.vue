@@ -19,8 +19,8 @@
   export default{
     data () {
       return{
+        data:'',
         checkedId:null,  //到时候要通过Props取
-        checkedName:'普通', //到时候要通过props取
         urgentList:[
           {
           id: 1,
@@ -36,6 +36,9 @@
         }
         ]
       }
+    },
+    props:{
+      checkedName:''
     },
     methods:{
       choose(id,name){

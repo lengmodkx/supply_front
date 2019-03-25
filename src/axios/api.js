@@ -109,6 +109,27 @@ export function addTask(data) {
         data: data
     });
 }
+
+// 修改任务名称
+export function updateTaskName(data) {
+    return fetch({
+        url: `${api.tasks}/${data.taskId}/name`,
+        method: "put", // 请求方法
+        data: data
+    });
+}
+
+// 修改任务优先级
+export function updatePriority(taskId,priority) {
+    return fetch({
+        url: `${api.tasks}/${taskId}/priority`,
+        method: "put", // 请求方法
+        params:{
+            priority:priority
+        }
+    });
+}
+
 //获取参与者列表
 export function getmemberList(projectId) {
     return fetch({
