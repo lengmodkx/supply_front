@@ -338,6 +338,8 @@ export default {
             title: "创建成功"
           });
         }
+        this.init(this.projectId);
+        this.currentEditId=''
       })
     },
     dragBox(evt) {

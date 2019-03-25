@@ -4,7 +4,7 @@
           transfer
           v-model="visible"
           @on-popper-hide="popHide">
-    <Icon type="android-settings" size="20"></Icon>
+    <Icon type="ios-arrow-down" size="20" />
     <!-- <Icon type="ios-arrow-down"
           size="20"></Icon> -->
     <div slot="content"

@@ -1,6 +1,23 @@
 <template>
   <div class="task-detail"
        style="height:100%;">
+      <!--固定顶部-->
+      <div class="toolRight">
+          <Tooltip content="点个赞"
+                   placement="bottom-start">
+          <span class="zan"
+                :class="{zan_blue:zan}"
+                @click="dianZan">
+            <Icon type="md-thumbs-up" size="20" />
+            <span class="zanNum"
+                  v-if="zan">1</span>
+          </span>
+          </Tooltip>
+
+          <span class="down">
+              <SingleTaskMenu :data=data></SingleTaskMenu>
+          </span>
+      </div>
     <div class="headerTool">
       <div class="toolLeft">
         <span>{{data.task.project.projectName}}</span>
@@ -33,23 +50,6 @@
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
-      </div>
-      <div class="toolRight">
-        <Tooltip content="点个赞"
-                 placement="bottom-start">
-          <span class="zan"
-                :class="{zan_blue:zan}"
-                @click="dianZan">
-            <Icon type="thumbsup"
-                  size="20"></Icon>
-            <span class="zanNum"
-                  v-if="zan">1</span>
-          </span>
-        </Tooltip>
-
-        <span class="down">
-          <SingleTaskMenu :data=data></SingleTaskMenu>
-        </span>
       </div>
     </div>
     <div class="Conbox">
@@ -146,7 +146,7 @@
 
       <div class="remark">
         <span class="name">
-          <Icon type="document"></Icon>备注</span>
+          <Icon type="ios-document-outline" />备注</span>
         <div class="editor"
              @click="showEditor=true"
              v-if="!showEditor"
@@ -161,7 +161,7 @@
       </div>
       <div class="priority clearfix">
         <span class="name">
-          <Icon type="ios-circle-outline"></Icon>优先级</span>
+         <Icon type="ios-microphone-outline" />优先级</span>
         <div class="urgentButton">
           <UrgentDropdown v-on:priority="changePriority" v-bind:checked-name="data.task.priority"></UrgentDropdown>
         </div>
@@ -175,7 +175,7 @@
       </div>
       <div class="childTask clearfix">
         <p class="name" style="float:none;">
-          <Icon type="ios-list-outline"></Icon>子任务</p>
+            <Icon type="ios-options-outline" />子任务</p>
         <!-- 已添加的子任务列表 -->
         <ul>
           <li class="sontask_list" v-for="(i,index) in data.task.sonTask" :key="index">
@@ -267,7 +267,7 @@
 
           </li>
         </ul>
-        <div class="addChildTask" @click="showSontask=false;" v-if="showSontask"><Icon type="plus-circled"></Icon>添加子任务</div>
+        <div class="addChildTask" @click="showSontask=false;" v-if="showSontask"><Icon type="ios-add-circle-outline" />添加子任务</div>
     <!-- 添加子任务 -->
         <div class="sonBox clearfix" v-if="!showSontask">
           <div class="newSon clearfix">
@@ -314,8 +314,8 @@
       </div>
   <!-- 添加关联 -->
   <div class="relevance">
-    <p class="name" style="float: none;"><Icon type="link"></Icon>关联内容</p>
-    <div class="addLink" @click="relationModal=true;"><Icon type="plus-circled"></Icon>添加关联</div>
+    <p class="name" style="float: none;"><Icon type="ios-link-outline" />关联内容</p>
+    <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
     <Modal v-model="relationModal" class="relationModal" id="relationModal">
         <AddRelation></AddRelation>
     </Modal>
@@ -323,8 +323,8 @@
   </div>
  <!-- 上传附件 -->
   <div class="accessory">
-    <p class="name" style="float: none;"><Icon type="android-attach"></Icon>上传附件</p>
-    <div class="addfile"><Icon type="plus-circled"></Icon>添加附件</div>
+    <!--<p class="name" style="float: none;width: 90px"><Icon type="ios-cloud-upload-outline" size="14" />上传附件</p>-->
+    <div class="addfile"><Icon type="ios-add-circle-outline" />添加附件</div>
   </div>
   <!-- 设置参与者 -->
   <div class="participator">
@@ -518,6 +518,7 @@ export default {
     },
   },
   mounted () {
+     console.log(1111111111,this.data)
     document.getElementById("editCon").parentNode.style.width = '100%';
    
   }
@@ -525,5 +526,33 @@ export default {
 </script>
 <style scoped lang="less">
 @import './EditList.less';
+.toolRight {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 13px;
+    right: 10px;
+    margin-right: 30px;
+    .zan {
+        display: flex;
+        margin-right: 10px;
+        cursor: pointer;
+        color: #ABA6A1;
+        i:hover {
+            transform: scale(1.2);
+        }
+        .zanNum {
+            margin-left: 4px;
+            font-size: 14px;
+        }
+    }
+    .zan_blue {
+        color: #7fd4fb;
+    }
+    .down {
+        cursor: pointer;
+        color: #ABA6A1;
+    }
+}
 </style>
 
