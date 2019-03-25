@@ -61,11 +61,11 @@
                         chosenClass: 'chosenClass',
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
-              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.checkStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
+              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="check">
-                    <Checkbox v-model="a.checkStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                    <Checkbox v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
@@ -104,11 +104,11 @@
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
             <draggable :list="i.taskList" :options="{group:'checkedTask'}" class="ul" @end="dragList">
-              <div class="li done" v-if="a.checkStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
+              <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="check">
-                    <Checkbox v-model="a.checkStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                    <Checkbox v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>

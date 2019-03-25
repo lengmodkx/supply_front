@@ -91,6 +91,8 @@ const store = {
             for(var i = 0;i < state.simpleTasks.length;i++){
                 for(var j = 0;j < state.simpleTasks[i].taskList.length;j++){
                     if(state.simpleTasks[i].taskList[j].taskId === data.task.taskId){
+                        console.log(pro)
+                        console.log(data.property)
                         state.simpleTasks[i].taskList[j][data.property] = pro
                     }
                 }
@@ -127,15 +129,24 @@ const store = {
         }, data) {
             enterTask(data).then(res => {
                 if (res.result === 1) {
-                    res.menus.map(v => {
-                        if (v.taskList) {
-                            v.taskList.map(vv => {
-                                vv.checkStatus = vv.taskStatus != "未完成";
-                                return vv;
-                            });
+                    // res.menus.map(v => {
+                    //     if (v.taskList) {
+                    //         v.taskList.map(vv => {
+                    //             vv.checkStatus = vv.taskStatus != "未完成";
+                    //             return vv;
+                    //         });
+                    //     }
+                    //     return v;
+                    // });
+                    for (var i = 0;i < res.menus.length;i++){
+                        for(var j = 0;j < res.menus[i].taskList.length;j++){
+                            if(res.menus[i].taskList[j].taskStatus === '完成'){
+                                res.menus[i].taskList[j].taskStatus = true
+                            } else{
+                                res.menus[i].taskList[j].taskStatus = false
+                            }
                         }
-                        return v;
-                    });
+                    }
                     commit('initTask', res.menus)
                 }
             });
