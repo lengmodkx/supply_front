@@ -72,17 +72,26 @@ const store = {
         changeTask(state, data) {
             state.simpleTasks = data
         },
+        //这是更改打开任务详情时的数据修改
         changeProperty(state,data) {
-            for(var i = 0;i < state.tasks.length;i++){
-                if(state.tasks[i].task.taskId === data.taskId){
-                    state.tasks[i].task.priority = data.priority
+            var pro = null
+            for(var obj in data.task){
+                if(obj === data.property){
+                    pro = data.task[obj]
                 }
             }
-            console.log(">>>>>>>>>>>>>>>>>", data.taskId);
+
+            for(var i = 0;i < state.tasks.length;i++){
+                if(state.tasks[i].task.taskId === data.task.taskId){
+                    state.tasks[i].task[data.property] = pro
+                }
+            }
+
+            //这里是更改进入项目主页面后的菜单任务列表的数据
             for(var i = 0;i < state.simpleTasks.length;i++){
-                for(var j = 0;i < state.simpleTasks[j].taskList.length;j++){
-                    if(state.simpleTasks[i].taskList[j].taskId === data.taskId){
-                        state.simpleTasks[i].taskList[j].priority = data.priority
+                for(var j = 0;j < state.simpleTasks[i].taskList.length;j++){
+                    if(state.simpleTasks[i].taskList[j].taskId === data.task.taskId){
+                        state.simpleTasks[i].taskList[j][data.property] = pro
                     }
                 }
             }
@@ -156,6 +165,10 @@ const store = {
         //删除任务时候调用
         deleteTask({commit},data){
           commit('deleteTask',data)
+        },
+        //更新任务名称时候调用
+        updateTaskName({commit},data){
+
         },
         updateSort({
             commit

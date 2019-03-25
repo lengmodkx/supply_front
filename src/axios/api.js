@@ -111,11 +111,13 @@ export function addTask(data) {
 }
 
 // 修改任务名称
-export function updateTaskName(data) {
+export function updateTaskName(taskId,taskName) {
     return fetch({
-        url: `${api.tasks}/${data.taskId}/name`,
+        url: `${api.tasks}/${taskId}/name`,
         method: "put", // 请求方法
-        data: data
+        params:{
+          taskName:taskName
+        }
     });
 }
 

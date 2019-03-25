@@ -10,7 +10,7 @@
                 @click="dianZan">
             <Icon type="md-thumbs-up" size="20" />
             <span class="zanNum"
-                  v-if="zan">1</span>
+                  v-if="data.task.fabulousCount != 0">{{data.task.fabulousCount}}</span>
           </span>
           </Tooltip>
 
@@ -54,16 +54,14 @@
     </div>
     <div class="Conbox">
       <div class="task_info done clearfix" :class="{done:data.task.taskStatus}">
-        <Checkbox v-model="data.task.taskStatus"
+        <Checkbox v-model="data.task.taskStatus" @on-change="updateTaskStatus"
                   class="checkbox"
                   size="large"></Checkbox>
         <Tooltip content="点击即可编辑"
                  placement="top"
                  class="content">
-          <div id="editCon" @blur="updateTaskName()"
-               contenteditable="true"
-               style="width:100%;">
-            {{data.task.taskName}}
+          <div id="editCon" style="width:100%;">
+              <input v-model="data.task.taskName" @blur="updateTaskName()" type="text"  style="width: 100%;height: 100%;border: 0 none;outline-style: none">
           </div>
         </Tooltip>
 
@@ -99,20 +97,20 @@
           <Icon type="ios-calendar-outline"
                 size="18"
                 style="margin-right:5px;"></Icon>
-          <DateTimePicker type="start" :max="data.task.endDate" @confirm="confirm1">
-            <div class="init" v-if="!data.task.startDate">设置开始时间</div>
-            <div class="setTime" v-if="data.task.startDate">
-              {{$moment(data.task.startDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+          <DateTimePicker type="start" :max="data.task.endTime" @confirm="confirm1">
+            <div class="init" v-if="!data.task.startTime">设置开始时间</div>
+            <div class="setTime" v-if="data.task.startTime">
+              {{$moment(data.task.startTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
               <span @click.stop="deleteStart">&times;</span>
             </div>
           </DateTimePicker>
 
 
           <span>-</span>
-           <DateTimePicker type="end" :min="data.task.startDate" @confirm="confirm2">
-             <div class="init" v-if="!data.task.endDate">设置截止时间</div>
-             <div class="setTime" v-if="data.task.endDate">
-               {{$moment(data.task.endDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+           <DateTimePicker type="end" :min="data.task.startTime" @confirm="confirm2">
+             <div class="init" v-if="!data.task.startTime">设置截止时间</div>
+             <div class="setTime" v-if="data.task.startTime">
+               {{$moment(data.task.startTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
                <!-- {{data.endDate}} -->
                 <span @click.stop="deleteEnd">&times;</span>
              </div>
@@ -170,8 +168,8 @@
         <span class="name">
           <Icon type="ios-pricetags-outline"></Icon>标签</span>
         <!-- 取到data.tag了再添加孙子辈组件 -->
-        <Tags :taglist="data.task.tag"
-              v-if="data.task.tag"></Tags>
+        <Tags :taglist="data.task.tagList"
+              v-if="data.task.tagList"></Tags>
       </div>
       <div class="childTask clearfix">
         <p class="name" style="float:none;">
@@ -329,7 +327,7 @@
   <!-- 设置参与者 -->
   <div class="participator">
      <h5>
-        参与者 · {{involveDataList.length}}
+        参与者 · {{data.task.joinInfo?data.task.joinInfo.length:0}}
         <Tooltip content="参与者将会收到评论和任务更新通知"
                  placement="right"
                  transfer>
@@ -338,20 +336,20 @@
       </h5>
     <div class="involve-list clearfix">
         <div class="member-avatar fl"
-             v-for="(item,index) in involveDataList"
+             v-for="(item,index) in data.task.joinInfo"
              :key="index">
-          <Tooltip :content="item.name"
+          <Tooltip :content="item.userName"
                    placement="top"
                    transfer>
             <div class="ava">
               <!-- 删除需要加在关闭按钮上 -->
-              <img v-if="item.avatar"
-                   :src="item.avatar"
+              <img v-if="item.image"
+                   :src="prefix + item.image"
                    alt="">
               <svg-icon v-else
                         style="width:24px;height:24px;display:block;"
                         name="allMember"></svg-icon>
-             <span class="close" @click="deleteInvolve(item.id)">×</span>
+             <span class="close" @click="deleteInvolve(item.userId)">×</span>
             </div>
           </Tooltip>
 
@@ -400,7 +398,7 @@ import Emoji from '@/components/public/common/emoji/Emoji'
 import SingleTaskMenu from './SingleTaskMenu'
 import SetExecutor from './SetExecutor'
 
-import {updateTaskName,updatePriority} from '@/axios/api'
+import {updateTaskName,updatePriority,cancelcompleteTask,completeTask} from '@/axios/api'
 
 export default {
   props: ['data'],
@@ -415,7 +413,9 @@ export default {
   },
   data () {
     return {
+      prefix:"https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       zan: false,
+      taskName: "",
       complete: false,
       hoverExecutor:false,
       editorValue: '123',
@@ -440,14 +440,22 @@ export default {
   },
   methods: {
     updateTaskName() {
-        console.log(this.data.task.taskName)
-        updateTaskName(this.data.task.taskId).then(data => {
-            console.log(data)
+        updateTaskName(this.data.task.taskId,this.data.task.taskName).then(data => {
+            //console.log(data)
         })
     },
     changePriority(priority) {
         updatePriority(this.data.task.taskId,priority).then(item => {
         })
+    },
+    //更改任务的状态
+    updateTaskStatus(){
+        if(this.data.task.taskStatus){
+            completeTask(this.data.task.taskId)
+        } else{
+            cancelcompleteTask(this.data.task.taskId)
+        }
+
     },
     confirmSonDate (date) {
        this.data.task.sontaskDate = date
@@ -468,6 +476,7 @@ export default {
       this.data.task.endDate = ''
     },
     dianZan () {
+        this.data.task.fabulousCount++
       this.zan = !this.zan
       if (this.zan) {
         //发请求点赞
@@ -518,7 +527,8 @@ export default {
     },
   },
   mounted () {
-     console.log(1111111111,this.data)
+      console.log(this.data.task.taskName)
+      this.taskName=this.data.task.taskName
     document.getElementById("editCon").parentNode.style.width = '100%';
    
   }

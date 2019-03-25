@@ -21,6 +21,7 @@
       return{
         data:'',
         checkedId:null,  //到时候要通过Props取
+        checkedNames:'',
         urgentList:[
           {
           id: 1,
@@ -37,9 +38,7 @@
         ]
       }
     },
-    props:{
-      checkedName:''
-    },
+    props:['checkedName'],
     methods:{
       choose(id,name){
         this.checkedId = id

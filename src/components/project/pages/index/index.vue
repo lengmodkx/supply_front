@@ -257,11 +257,9 @@ export default {
       tasklist.push(data);
     },
     initTask(taskId) {
-
         this.$store.dispatch('task/initEditTask',taskId).then(() =>{
             // this.activeModalData = this.getTaskById(taskId)
             this.activeModalData = this.getTaskById(taskId)
-            console.log(">>>>>>>>>",this.activeModalData)
             this.showModal = true
         })
 

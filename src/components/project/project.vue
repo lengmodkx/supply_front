@@ -74,8 +74,12 @@ export default {
               case "A2":
                 this.$store.dispatch("task/deleteTask",result.object)
                 break;
+              case "A5":
+                console.log("?????");
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskName"})
+                break;
               case "A12":
-                this.$store.dispatch("task/changeProperty",result.object.task)
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"priority"})
                 break;
               case "C1":
               case "C2":
