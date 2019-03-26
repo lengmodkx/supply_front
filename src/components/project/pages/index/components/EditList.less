@@ -11,7 +11,7 @@
 }
 .headerTool {
   overflow: hidden;
-  padding: 15px;
+  padding-left: 15px;
   .toolLeft {
     float: left;
     background: #eee;
@@ -30,32 +30,7 @@
       }
     }
   }
-  .toolRight {
-    float: right;
-    margin-right: 30px;
-    .zan {
-      margin-right: 10px;
-      cursor: pointer;
-      color: #a6a6a6;
-      i:hover {
-        transform: scale(1.2);
-      }
-      .zanNum {
-        margin-left: 4px;
-        font-size: 14px;
-      }
-    }
-    .zan_blue {
-      color: #2d8cf0;
-    }
-    .down {
-      cursor: pointer;
-      color: #a6a6a6;
-      &:hover {
-        color: #2d8cf0;
-      }
-    }
-  }
+
 }
 
 .task_info {
@@ -199,6 +174,8 @@
     width: 70px;
     color: #a6a6a6;
     margin-right: 20px;
+   display: flex;
+   align-items: center;
     i {
       font-size: 20px;
       margin-right: 8px;
@@ -422,7 +399,7 @@
   }
 }
 .Conbox {
-  height: calc(100% - 56px - 112px);
+  height: calc(100% - 24px - 112px);
   overflow-x: hidden;
   overflow-y: auto;
 }

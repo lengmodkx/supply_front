@@ -2,11 +2,13 @@ import {
     enterTask,
     getmemberList,
     gettagList,
-    addTask
+    addTask,
+    initEditTask
 } from "../../axios/api.js";
 const store = {
     namespaced: true,
     state: {
+        simpleTasks: [],
         tasks: [],
         currentProjectId: null,
         sort: '1',
@@ -45,14 +47,63 @@ const store = {
         },
         getTaskByName: (state) => (name) => {
             return state.taskGroup.filter(v => v.name.indexOf(name) >= 0)
+        },
+        getTaskById:(state) => (data) =>{
+            for (var i = 0;i < state.tasks.length;i++){
+                if(state.tasks[i].task.taskId === data){
+                    return state.tasks[i]
+                }
+            }
+            // return state.tasks.filter(taskvo => {
+            //     return taskvo.task.taskId === data
+            // })
+        },
+        abc: (state) =>(num) =>{
+            return state.sort+num
         }
     },
     mutations: {
         initTask(state, data) {
-            state.tasks = data
+            state.simpleTasks = data
+        },
+        initEditTask(state, data){
+            state.tasks.push(data)
         },
         changeTask(state, data) {
-            state.tasks = data
+            state.simpleTasks = data
+        },
+        //这是更改打开任务详情时的数据修改
+        changeProperty(state,data) {
+            var pro = null
+            for(var obj in data.task){
+                if(obj === data.property){
+                    pro = data.task[obj]
+                }
+            }
+
+            for(var i = 0;i < state.tasks.length;i++){
+                if(state.tasks[i].task.taskId === data.task.taskId){
+                    state.tasks[i].task[data.property] = pro
+                }
+            }
+
+            //这里是更改进入项目主页面后的菜单任务列表的数据
+            for(var i = 0;i < state.simpleTasks.length;i++){
+                for(var j = 0;j < state.simpleTasks[i].taskList.length;j++){
+                    if(state.simpleTasks[i].taskList[j].taskId === data.task.taskId){
+                        console.log(pro)
+                        console.log(data.property)
+                        state.simpleTasks[i].taskList[j][data.property] = pro
+                    }
+                }
+            }
+        },
+        deleteTask(state, data) {
+          state.simpleTasks.map(item => {
+              const a =item.taskList.filter(task => {
+                  return task.taskId !== data
+              });
+          })
         },
         updateSort(state, data) {
             state.sort = data
@@ -78,24 +129,57 @@ const store = {
         }, data) {
             enterTask(data).then(res => {
                 if (res.result === 1) {
-                    res.menus.map(v => {
-                        if (v.taskList) {
-                            v.taskList.map(vv => {
-                                vv.checkStatus = vv.taskStatus != "未完成";
-                                return vv;
-                            });
+                    // res.menus.map(v => {
+                    //     if (v.taskList) {
+                    //         v.taskList.map(vv => {
+                    //             vv.checkStatus = vv.taskStatus != "未完成";
+                    //             return vv;
+                    //         });
+                    //     }
+                    //     return v;
+                    // });
+                    for (var i = 0;i < res.menus.length;i++){
+                        for(var j = 0;j < res.menus[i].taskList.length;j++){
+                            if(res.menus[i].taskList[j].taskStatus === '完成'){
+                                res.menus[i].taskList[j].taskStatus = true
+                            } else{
+                                res.menus[i].taskList[j].taskStatus = false
+                            }
                         }
-                        return v;
-                    });
-                    console.log(res.menus)
+                    }
                     commit('initTask', res.menus)
                 }
             });
+        },
+        initEditTask({commit},data){
+            return new Promise((resolve,reject) =>{
+                initEditTask(data).then(res => {
+                    if (res.data.task.taskStatus === "未完成") {
+                        res.data.task.taskStatus = false
+                    } else {
+                        res.data.task.taskStatus = true
+                    }
+                    commit('initEditTask',res.data)
+                    resolve()
+                })
+            })
+
         },
         changeTask({
             commit
         }, data) { //任务数据改变时调用
             commit('changeTask', data)
+        },
+        changeProperty({commit},data) {
+            commit('changeProperty',data)
+        },
+        //删除任务时候调用
+        deleteTask({commit},data){
+          commit('deleteTask',data)
+        },
+        //更新任务名称时候调用
+        updateTaskName({commit},data){
+
         },
         updateSort({
             commit
@@ -110,7 +194,6 @@ const store = {
             gettagList(state.currentProjectId).then(res => {
 
                 commit('updateTags', res.tagList)
-                    // console.log(res.tagList)
                 callback()
             })
         },

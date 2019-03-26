@@ -1,9 +1,26 @@
 <template>
   <div class="task-detail"
        style="height:100%;">
+      <!--固定顶部-->
+      <div class="toolRight">
+          <Tooltip content="点个赞"
+                   placement="bottom-start">
+          <span class="zan"
+                :class="{zan_blue:zan}"
+                @click="dianZan">
+            <Icon type="md-thumbs-up" size="20" />
+            <span class="zanNum"
+                  v-if="data.task.fabulousCount != 0">{{data.task.fabulousCount}}</span>
+          </span>
+          </Tooltip>
+
+          <span class="down">
+              <SingleTaskMenu :data=data></SingleTaskMenu>
+          </span>
+      </div>
     <div class="headerTool">
       <div class="toolLeft">
-        <span>项目名称</span>
+        <span>{{data.task.project.projectName}}</span>
         <span>·</span>
         <Dropdown trigger="click">
           <span class="proName">任务组名</span>
@@ -21,7 +38,7 @@
 
         <span>·</span>
         <Dropdown trigger="click">
-          <span class="proName">任务名称</span>
+          <span class="proName">{{data.task.taskName}}</span>
           <DropdownMenu slot="list">
             <DropdownItem>任务1
               <svg-icon class="right"
@@ -34,36 +51,17 @@
           </DropdownMenu>
         </Dropdown>
       </div>
-      <div class="toolRight">
-        <Tooltip content="点个赞"
-                 placement="bottom-start">
-          <span class="zan"
-                :class="{zan_blue:zan}"
-                @click="dianZan">
-            <Icon type="thumbsup"
-                  size="20"></Icon>
-            <span class="zanNum"
-                  v-if="zan">1</span>
-          </span>
-        </Tooltip>
-
-        <span class="down">
-          <SingleTaskMenu :data=data></SingleTaskMenu>
-        </span>
-      </div>
     </div>
     <div class="Conbox">
-      <div class="task_info done clearfix" :class="{done:data.taskStatus}">
-        <Checkbox v-model="data.taskStatus"
+      <div class="task_info done clearfix" :class="{done:data.task.taskStatus}">
+        <Checkbox v-model="data.task.taskStatus" @on-change="updateTaskStatus"
                   class="checkbox"
                   size="large"></Checkbox>
         <Tooltip content="点击即可编辑"
                  placement="top"
                  class="content">
-          <div id="editCon"
-               contenteditable="true"
-               style="width:100%;">
-            {{data.taskName}}
+          <div id="editCon" style="width:100%;">
+              <input v-model="data.task.taskName" @blur="updateTaskName()" type="text"  style="width: 100%;height: 100%;border: 0 none;outline-style: none">
           </div>
         </Tooltip>
 
@@ -72,8 +70,8 @@
         <div class="executor fl">
           <!-- 设置认领者 -->
       <SetExecutor ref="executor"
-                   v-model="data.executor"
-                   v-if="data.executor"
+                   v-model="data.task.executor"
+                   v-if="data.task.executor"
                    >
         <template slot-scope="scope">
           <div class="executor">
@@ -99,20 +97,20 @@
           <Icon type="ios-calendar-outline"
                 size="18"
                 style="margin-right:5px;"></Icon>
-          <DateTimePicker type="start" :max="data.endDate" @confirm="confirm1">
-            <div class="init" v-if="!data.startDate">设置开始时间</div>
-            <div class="setTime" v-if="data.startDate">
-              {{$moment(data.startDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+          <DateTimePicker type="start" :max="data.task.endTime" @confirm="confirm1">
+            <div class="init" v-if="!data.task.startTime">设置开始时间</div>
+            <div class="setTime" v-if="data.task.startTime">
+              {{$moment(data.task.startTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
               <span @click.stop="deleteStart">&times;</span>
             </div>
           </DateTimePicker>
 
 
           <span>-</span>
-           <DateTimePicker type="end" :min="data.startDate" @confirm="confirm2">
-             <div class="init" v-if="!data.endDate">设置截止时间</div>
-             <div class="setTime" v-if="data.endDate">
-               {{$moment(data.endDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+           <DateTimePicker type="end" :min="data.task.startTime" @confirm="confirm2">
+             <div class="init" v-if="!data.task.startTime">设置截止时间</div>
+             <div class="setTime" v-if="data.task.startTime">
+               {{$moment(data.task.startTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
                <!-- {{data.endDate}} -->
                 <span @click.stop="deleteEnd">&times;</span>
              </div>
@@ -146,7 +144,7 @@
 
       <div class="remark">
         <span class="name">
-          <Icon type="document"></Icon>备注</span>
+          <Icon type="ios-document-outline" />备注</span>
         <div class="editor"
              @click="showEditor=true"
              v-if="!showEditor"
@@ -161,24 +159,24 @@
       </div>
       <div class="priority clearfix">
         <span class="name">
-          <Icon type="ios-circle-outline"></Icon>优先级</span>
+         <Icon type="ios-microphone-outline" />优先级</span>
         <div class="urgentButton">
-          <UrgentDropdown></UrgentDropdown>
+          <UrgentDropdown v-on:priority="changePriority" v-bind:checked-name="data.task.priority"></UrgentDropdown>
         </div>
       </div>
       <div class="tags clearfix">
         <span class="name">
           <Icon type="ios-pricetags-outline"></Icon>标签</span>
         <!-- 取到data.tag了再添加孙子辈组件 -->
-        <Tags :taglist="data.tag"
-              v-if="data.tag"></Tags>
+        <Tags :taglist="data.task.tagList"
+              v-if="data.task.tagList"></Tags>
       </div>
       <div class="childTask clearfix">
         <p class="name" style="float:none;">
-          <Icon type="ios-list-outline"></Icon>子任务</p>
+            <Icon type="ios-options-outline" />子任务</p>
         <!-- 已添加的子任务列表 -->
         <ul>
-          <li class="sontask_list" v-for="(i,index) in data.sonTask" :key="index">
+          <li class="sontask_list" v-for="(i,index) in data.task.sonTask" :key="index">
             <!-- 点击之前 -->
             <div class="clearfix" v-show="isEdit" style="display:flex;">
                 <div class="addicon fl"> <Checkbox v-model="sonComplete"></Checkbox></div>
@@ -187,17 +185,17 @@
                       <div class="sonCon" ref="sonCon" style="" @click="editson">{{i.title}}</div>
                   </Tooltip>
                 </div>
-                <DateTimePicker  class="sonDate fl" type="start" :max="data.endDate" @confirm="confirmSonDate" @clear="clearSonDate">
+                <DateTimePicker  class="sonDate fl" type="start" :max="data.task.endDate" @confirm="confirmSonDate" @clear="clearSonDate">
                  <div>
-                   <Icon class="icon" type="calendar" v-if="!data.sontaskDate" size="20"></Icon>
+                   <Icon class="icon" type="calendar" v-if="!data.task.sontaskDate" size="20"></Icon>
                    <span v-else class="timeBox">
-                    {{$moment(data.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+                    {{$moment(data.task.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
                    </span>
                   </div>
               </DateTimePicker>
 
                <SetExecutor ref="executor"
-                          v-model="data.sontaskExecutor"
+                          v-model="data.task.sontaskExecutor"
                            class="sonManager fl">
                 <template slot-scope="scope">
                   <div>
@@ -228,17 +226,17 @@
                       <Input v-model.trim="i.title" style="width:410px;" autofocus/>
                   </div>
 
-                  <DateTimePicker  class="sonDate fl" type="start" :max="data.endDate" @confirm="confirmSonDate" @clear="clearSonDate">
+                  <DateTimePicker  class="sonDate fl" type="start" :max="data.task.endDate" @confirm="confirmSonDate" @clear="clearSonDate">
                     <div>
-                      <Icon class="icon" type="calendar" v-if="!data.sontaskDate" size="20"></Icon>
+                      <Icon class="icon" type="calendar" v-if="!data.task.sontaskDate" size="20"></Icon>
                       <span v-else class="timeBox">
-                        {{$moment(data.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+                        {{$moment(data.task.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
                       </span>
                       </div>
                  </DateTimePicker>
 
                    <SetExecutor ref="executor"
-                          v-model="data.sontaskExecutor"
+                          v-model="data.task.sontaskExecutor"
                            class="sonManager fl">
                       <template slot-scope="scope">
                         <div>
@@ -267,24 +265,24 @@
 
           </li>
         </ul>
-        <div class="addChildTask" @click="showSontask=false;" v-if="showSontask"><Icon type="plus-circled"></Icon>添加子任务</div>
+        <div class="addChildTask" @click="showSontask=false;" v-if="showSontask"><Icon type="ios-add-circle-outline" />添加子任务</div>
     <!-- 添加子任务 -->
         <div class="sonBox clearfix" v-if="!showSontask">
           <div class="newSon clearfix">
               <div class="addicon fl"><Icon type="plus-circled"></Icon></div>
               <div class="sonInput fl"><Input v-model="son" placeholder="输入子任务内容..." autofocus @keyup.enter.native = "submitSontask"/></div>
 
-               <DateTimePicker  class="sonDate fl" type="start" :max="data.endDate" @confirm="confirmSonDate" @clear="clearSonDate">
+               <DateTimePicker  class="sonDate fl" type="start" :max="data.task.endDate" @confirm="confirmSonDate" @clear="clearSonDate">
                     <div>
-                      <Icon class="icon" type="calendar" v-if="!data.sontaskDate" size="20"></Icon>
+                      <Icon class="icon" type="calendar" v-if="!data.task.sontaskDate" size="20"></Icon>
                       <span v-else class="timeBox">
-                        {{$moment(data.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+                        {{$moment(data.task.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
                       </span>
                       </div>
               </DateTimePicker>
 
                <SetExecutor ref="executor"
-                          v-model="data.sontaskExecutor"
+                          v-model="data.task.sontaskExecutor"
                            class="sonManager fl">
                 <template slot-scope="scope">
                   <div>
@@ -314,8 +312,8 @@
       </div>
   <!-- 添加关联 -->
   <div class="relevance">
-    <p class="name" style="float: none;"><Icon type="link"></Icon>关联内容</p>
-    <div class="addLink" @click="relationModal=true;"><Icon type="plus-circled"></Icon>添加关联</div>
+    <p class="name" style="float: none;"><Icon type="ios-link-outline" />关联内容</p>
+    <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
     <Modal v-model="relationModal" class="relationModal" id="relationModal">
         <AddRelation></AddRelation>
     </Modal>
@@ -323,13 +321,13 @@
   </div>
  <!-- 上传附件 -->
   <div class="accessory">
-    <p class="name" style="float: none;"><Icon type="android-attach"></Icon>上传附件</p>
-    <div class="addfile"><Icon type="plus-circled"></Icon>添加附件</div>
+    <!--<p class="name" style="float: none;width: 90px"><Icon type="ios-cloud-upload-outline" size="14" />上传附件</p>-->
+    <div class="addfile"><Icon type="ios-add-circle-outline" />添加附件</div>
   </div>
   <!-- 设置参与者 -->
   <div class="participator">
      <h5>
-        参与者 · {{involveDataList.length}}
+        参与者 · {{data.task.joinInfo?data.task.joinInfo.length:0}}
         <Tooltip content="参与者将会收到评论和任务更新通知"
                  placement="right"
                  transfer>
@@ -338,28 +336,28 @@
       </h5>
     <div class="involve-list clearfix">
         <div class="member-avatar fl"
-             v-for="(item,index) in involveDataList"
+             v-for="(item,index) in data.task.joinInfo"
              :key="index">
-          <Tooltip :content="item.name"
+          <Tooltip :content="item.userName"
                    placement="top"
                    transfer>
             <div class="ava">
               <!-- 删除需要加在关闭按钮上 -->
-              <img v-if="item.avatar"
-                   :src="item.avatar"
+              <img v-if="item.image"
+                   :src="prefix + item.image"
                    alt="">
               <svg-icon v-else
                         style="width:24px;height:24px;display:block;"
                         name="allMember"></svg-icon>
-             <span class="close" @click="deleteInvolve(item.id)">×</span>
+             <span class="close" @click="deleteInvolve(item.userId)">×</span>
             </div>
           </Tooltip>
 
         </div>
         <div class="addButton fl">
           <InvolveMember ref="involveMember"
-                         :checkedList="data.involveList"
-                         v-if="data.involveList"
+                         :checkedList="data.task.involveList"
+                         v-if="data.task.involveList"
                          @save="saveInvolveMember"></InvolveMember>
         </div>
       </div>
@@ -400,6 +398,8 @@ import Emoji from '@/components/public/common/emoji/Emoji'
 import SingleTaskMenu from './SingleTaskMenu'
 import SetExecutor from './SetExecutor'
 
+import {updateTaskName,updatePriority,cancelcompleteTask,completeTask} from '@/axios/api'
+
 export default {
   props: ['data'],
   components: {
@@ -413,7 +413,9 @@ export default {
   },
   data () {
     return {
+      prefix:"https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       zan: false,
+      taskName: "",
       complete: false,
       hoverExecutor:false,
       editorValue: '123',
@@ -437,26 +439,44 @@ export default {
     }
   },
   methods: {
+    updateTaskName() {
+        updateTaskName(this.data.task.taskId,this.data.task.taskName).then(data => {
+            //console.log(data)
+        })
+    },
+    changePriority(priority) {
+        updatePriority(this.data.task.taskId,priority).then(item => {
+        })
+    },
+    //更改任务的状态
+    updateTaskStatus(){
+        if(this.data.task.taskStatus){
+            completeTask(this.data.task.taskId)
+        } else{
+            cancelcompleteTask(this.data.task.taskId)
+        }
 
+    },
     confirmSonDate (date) {
-       this.data.sontaskDate = date
+       this.data.task.sontaskDate = date
     },
     clearSonDate () {
-      this.data.sontaskDate = ''
+      this.data.task.sontaskDate = ''
     },
     confirm1 (date) {
-      this.data.startDate = date
+      this.data.task.startDate = date
     },
      confirm2 (date) {
-      this.data.endDate = date
+      this.data.task.endDate = date
     },
     deleteStart (){
-      this.data.startDate = ''
+      this.data.task.startDate = ''
     },
      deleteEnd (){
-      this.data.endDate = ''
+      this.data.task.endDate = ''
     },
     dianZan () {
+        this.data.task.fabulousCount++
       this.zan = !this.zan
       if (this.zan) {
         //发请求点赞
@@ -468,7 +488,7 @@ export default {
 
     },
     submitSontask () {
-      
+
     },
      saveInvolveMember (ids, list) {
       this.data.involveList = ids
@@ -507,6 +527,8 @@ export default {
     },
   },
   mounted () {
+      console.log(this.data.task.taskName)
+      this.taskName=this.data.task.taskName
     document.getElementById("editCon").parentNode.style.width = '100%';
    
   }
@@ -514,5 +536,33 @@ export default {
 </script>
 <style scoped lang="less">
 @import './EditList.less';
+.toolRight {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 13px;
+    right: 10px;
+    margin-right: 30px;
+    .zan {
+        display: flex;
+        margin-right: 10px;
+        cursor: pointer;
+        color: #ABA6A1;
+        i:hover {
+            transform: scale(1.2);
+        }
+        .zanNum {
+            margin-left: 4px;
+            font-size: 14px;
+        }
+    }
+    .zan_blue {
+        color: #7fd4fb;
+    }
+    .down {
+        cursor: pointer;
+        color: #ABA6A1;
+    }
+}
 </style>
 

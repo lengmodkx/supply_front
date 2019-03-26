@@ -59,7 +59,7 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var socket = new SockJS("http://192.168.31.120:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      var socket = new SockJS("http://192.168.31.238:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
@@ -69,7 +69,24 @@ export default {
             var result = JSON.parse(msg.body);
             switch (result.type) {
               case "A1":
-                this.$$store.dispatch("task/changeTask", result.object);
+                this.$store.dispatch("task/changeTask", result.object);
+                break;
+              case "A2":
+                this.$store.dispatch("task/deleteTask",result.object)
+                break;
+              case "A3":
+                result.object.task.taskStatus = true
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskStatus"})
+                    break;
+              case "A4":
+                result.object.task.taskStatus = false
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskStatus"})
+                    break;
+              case "A5":
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskName"})
+                break;
+              case "A12":
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"priority"})
                 break;
               case "C1":
               case "C2":
