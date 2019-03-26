@@ -76,10 +76,7 @@ const store = {
         changeTask(state, data) {
             state.simpleTasks = data
         },
-        // 更新开始时间
-        updateStartTime(state, data){
-            state.tasks=data
-        },
+
         //这是更改打开任务详情时的数据修改
         changeProperty(state,data) {
             var pro = null
@@ -175,7 +172,6 @@ const store = {
         updateStartTime({commit}, value){
             upStartTime(value.taskId, value.date).then(res => {
                 if (res.result ==1){
-
                 }
             })
         },
