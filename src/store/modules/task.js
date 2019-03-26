@@ -1,9 +1,13 @@
+
 import {
     enterTask,
     getmemberList,
     gettagList,
     addTask,
-    initEditTask
+    initEditTask,
+    upStartTime,
+    upEndTime,
+    addChildTask
 } from "../../axios/api.js";
 const store = {
     namespaced: true,
@@ -72,6 +76,7 @@ const store = {
         changeTask(state, data) {
             state.simpleTasks = data
         },
+
         //这是更改打开任务详情时的数据修改
         changeProperty(state,data) {
             var pro = null
@@ -119,9 +124,7 @@ const store = {
             // })
             state.tags = data
         },
-        updateMemberList(state, data) {
-            state.members = data
-        }
+        updateMemberList(){}
     },
     actions: {
         init({
@@ -164,6 +167,27 @@ const store = {
                 })
             })
 
+        },
+        // 更新任务开始时间
+        updateStartTime({commit}, value){
+            upStartTime(value.taskId, value.date).then(res => {
+                if (res.result ==1){
+                }
+            })
+        },
+        // 更新任务结束时间
+        updateEndTime({commit}, value){
+            upEndTime(value.taskId, value.date).then(res => {
+                if (res.result ==1){
+
+                }
+            })
+        },
+        // 添加子任务
+        addChildrenTask({commit}, value){
+            addChildTask(value.taskId, value.taskName).then(res => {
+                console.log(res)
+            })
         },
         changeTask({
             commit

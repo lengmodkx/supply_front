@@ -4,6 +4,15 @@
   height: 0;
   clear: both;
 }
+#editCon input{
+  width: 506px;
+  height: 24px;
+  border: 0px none;
+  outline-style: none;
+  &:hover{
+    background-color: #EFEEEC;
+  }
+}
 .taskwarn{
   /deep/.ivu-modal{
     width:600px!important;
@@ -94,15 +103,17 @@
     }
   }
   .timer {
-    margin-left: 20px;
+    display: flex;
+    align-items: center;
     .init{
       &:hover{
         color:#2d8cf0;
       }
     }
     .setTime{
-      padding:0 5px;
+      padding:2px 8px;
       position:relative;
+      cursor: pointer;
       &:hover{
         border-radius: 20px;
         background-color: #eee;
