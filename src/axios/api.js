@@ -289,7 +289,14 @@ export function folder(projectId, params) {
 export function members(projectId) {
     return $get(`/members/${projectId}/member`, "");
 }
-
+// 更新任务开始时间
+export function upStartTime(taskId, startTime) {
+    return $put(`tasks/${taskId}/starttime`,{startTime:startTime})
+}
+// 更新任务结束时间
+export function upEndTime(taskId, endtime) {
+    return $put(`tasks/${taskId}/endtime`,{endtime:endtime})
+}
 export function $post(url, params) {
     return fetch({
         url: url,
@@ -310,7 +317,7 @@ function $put(url, params) {
     return fetch({
         url: url,
         method: "put", // 请求方法
-        data: params
+        params: params
     });
 }
 
