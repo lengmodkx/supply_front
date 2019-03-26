@@ -64,7 +64,7 @@
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check">
+                  <div class="check" @click.stop>
                     <Checkbox v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
@@ -107,8 +107,8 @@
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check">
-                    <Checkbox v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                  <div class="check" @click.stop>
+                    <Checkbox v-model="a.taskStatus" @click.stop @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
@@ -368,7 +368,7 @@ export default {
       });
     },
     changeStatus(flag, i, j, taskId) {
-      this.showModal = false; //阻止模态框出来
+
       //i是外层循环的索引，j是嵌套循环的索引
       if (flag) {
         //第一种方法 先处理好了再发请求
