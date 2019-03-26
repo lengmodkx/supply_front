@@ -373,14 +373,14 @@ export default {
       if (flag) {
         //第一种方法 先处理好了再发请求
         let savedCheck = true;
-        if (this.data.data[i].taskList[j + 1]) {
-          savedCheck = this.data.data[i].taskList[j + 1].checkStatus;
+        if (this.simpleTasks[i].taskList[j + 1]) {
+          savedCheck = this.simpleTasks[i].taskList[j + 1].taskStatus;
         }
-        let tmp = this.data.data[i].taskList.splice(j, 1);
-        this.data.data[i].taskList.push(tmp[0]);
-        this.$set(this.data.data[i].taskList[j], "checkStatus", true);
+        let tmp = this.simpleTasks[i].taskList.splice(j, 1);
+        this.simpleTasks[i].taskList.push(tmp[0]);
+        this.$set(this.simpleTasks[i].taskList[j], "taskStatus", true);
         this.$nextTick(_ => {
-          this.$set(this.data.data[i].taskList[j], "checkStatus", savedCheck);
+          this.$set(this.simpleTasks[i].taskList[j], "taskStatus", savedCheck);
         });
 
         //完成任务  请求
