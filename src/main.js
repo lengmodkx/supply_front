@@ -22,13 +22,13 @@ Vue.prototype.$put = put
 Vue.prototype.$delete = deletes
 
 Vue.prototype.$moment = moment;
-Vue.prototype.$containStr = (text, str) => {
-    if (!text || !str) return true;
-    return (
-        str.indexOf(text) >= 0 ||
-        pinyin.convertToPinyin(str, "", true).indexOf(text.split(" ").join("")) >= 0
-    );
-};
+// Vue.prototype.$containStr = (text, str) => {
+// //     if (!text || !str) return true;
+// //     return (
+// //         str.indexOf(text) >= 0 ||
+// //         pinyin.convertToPinyin(str, "", true).indexOf(text.split(" ").join("")) >= 0
+// //     );
+// // };
 
 import clickoutside from "@/directives/clickoutside";
 Vue.directive("click-outside", clickoutside);
