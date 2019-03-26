@@ -47,8 +47,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.$refs.editor);
-    this.$refs.editor.content = this.shareContent;
+    this.$refs.editor.content = this.content;
     // editor.on('valuechanged', () => {
     //   this.content = editor.getValue()
     // })

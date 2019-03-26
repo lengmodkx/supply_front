@@ -46,7 +46,7 @@
           </div>
         </iCol>
         <iCol span="18" class="right">
-          <div class="share-view" v-if="this.share=null">
+          <div class="share-view" v-if="share!=null">
             <div class="share-text">
               <div class="rng">
                 <div class="share-title">
@@ -80,7 +80,7 @@
                     </div>
                     <div>
                       <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag>
-                      <tag :taglist="share.tagList"></tag>
+                      <tag :taglist="share.tagList" :projectId="projectId"></tag>
                     </div>
                   </div>
                   <p class="p">
@@ -149,7 +149,7 @@ export default {
   mounted() {
     shares(this.$route.params.id).then(res => {
       if (res.result == 1) {
-        console.log(res);
+        console.log("xxxxxxxx", res);
         this.shareList = res.data;
         this.loading = false;
         if (this.shareList != null && this.shareList.length > 0) {
@@ -240,7 +240,7 @@ export default {
     display: flex;
 
     .ol {
-      width: 80px;
+      width: 45px;
     }
     a {
       color: gray;
