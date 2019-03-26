@@ -1,5 +1,26 @@
+const path = require('path');
+
+function resolve(dir) {
+    return path.join(__dirname, '.', dir);
+}
 module.exports = {
-    // 如果您不需要生产时的源映射，那么将此设置为false可以加速生产构建
+    chainWebpack: config => {
+        config.module
+            .rule('svg')
+            .exclude.add(resolve('src/icons'))
+            .end();
+
+        config.module
+            .rule('icons')
+            .test(/\.svg$/)
+            .include.add(resolve('src/icons'))
+            .end()
+            .use('svg-sprite-loader')
+            .loader('svg-sprite-loader')
+            .options({
+                symbolId: 'svg-[name]'
+            });
+    },
     lintOnSave: false,
     productionSourceMap: false,
     devServer: {
