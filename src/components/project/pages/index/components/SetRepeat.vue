@@ -12,11 +12,11 @@
       </slot>
       <DropdownMenu slot="list"
                     class="aaaaaab">
-        <DropdownItem v-for="item in list"
-                      :key="item.id"
+        <DropdownItem v-for="item in list" :selected="item.name === repeat"
+                      :key="item.name"
                       :name="item.name">
           {{item.name}}
-          <svg-icon v-if="item.id==curRepeat.id"
+          <svg-icon v-if="item.id===curRepeat.id"
                     class="right"
                     name="right"></svg-icon>
         </DropdownItem>
@@ -36,18 +36,17 @@ export default {
   },
   methods: {
     itemClick (name) {
-      this.curRepeat = this.list.find(v => v.name == name)
-      this.$emit('update:repeat', this.curRepeat.name)
+      this.$emit('updateRepeat', name)
     },
     visibleChange (visible) {
       this.$nextTick(_ => {
         this.visible = visible
       })
     }
-  },
-  mounted () {
-    this.repeat && this.itemClick(this.repeat)
   }
+  // mounted () {
+  //   this.repeat && this.itemClick(this.repeat)
+  // }
 }
 </script>
 <style scoped lang="less">

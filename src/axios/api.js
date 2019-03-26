@@ -121,6 +121,17 @@ export function updateTaskName(taskId,taskName) {
     });
 }
 
+// 修改任务名称
+export function updateRepeat(taskId,repeat) {
+    return fetch({
+        url: `${api.tasks}/${taskId}/repeat`,
+        method: "put", // 请求方法
+        params:{
+            repeat:repeat
+        }
+    });
+}
+
 // 修改任务优先级
 export function updatePriority(taskId,priority) {
     return fetch({

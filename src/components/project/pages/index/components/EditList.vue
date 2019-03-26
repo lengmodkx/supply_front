@@ -95,10 +95,10 @@
         </div>
 
         <div class="repeat fl">
-          <SetRepeat></SetRepeat>
+          <SetRepeat :repeat="data.task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
         </div>
 
-        <div class="alarm fl" @click="modal1=true">
+        <div class="alarm fl" @click="modal1=true" >
           <Tooltip content="点击设置任务提醒" placement="top">
             <Icon type="ios-alarm-outline" size="20"></Icon>
           </Tooltip>
@@ -344,7 +344,8 @@ import {
   updateTaskName,
   updatePriority,
   cancelcompleteTask,
-  completeTask
+  completeTask,
+  updateRepeat
 } from "@/axios/api";
 
 export default {
@@ -396,6 +397,10 @@ export default {
     },
     changePriority(priority) {
       updatePriority(this.data.task.taskId, priority).then(item => {});
+    },
+    //更改任务的重复性
+    updateRepeat(repeat){
+      updateRepeat(this.data.task.taskId,repeat).then(item => {})
     },
     //更改任务的状态
     updateTaskStatus() {
