@@ -51,7 +51,7 @@ export default {
       }
     }
     span {
-      display: inline-block;
+      display: flex;
       // font-size:20px;
       float: right;
       margin-right: 20px;

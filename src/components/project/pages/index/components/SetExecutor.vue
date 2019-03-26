@@ -173,8 +173,6 @@ export default {
         line-height: 32px;
         margin-left: 12px;
       }
-      .tick {
-      }
     }
     .disable {
       cursor: not-allowed;
