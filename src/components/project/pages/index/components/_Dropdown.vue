@@ -1,23 +1,15 @@
 <template>
-  <Dropdown trigger="custom"
-            :visible="visible"
-            class="dropBox">
-    <DropdownMenu slot="list"
-                  class="aaa">
+  <Dropdown trigger="custom" :visible="visible" class="dropBox">
+    <DropdownMenu slot="list" class="aaa">
       <div class="dropdownTitle">
         添加筛选
         <span @click="$emit('update:visible',false)">
-          <svg-icon class="closePop"
-                    name="close"></svg-icon>
+          <svg-icon class="closePop" name="close"></svg-icon>
         </span>
       </div>
-      <DropdownItem v-for="(item,i) in list"
-                    :key="i"
-                    @click.native="item.checked=!item.checked">
+      <DropdownItem v-for="(item,i) in list" :key="i" @click.native="item.checked=!item.checked">
         {{item.name}}
-        <svg-icon v-if="item.checked"
-                  class="right"
-                  name="right"></svg-icon>
+        <svg-icon v-if="item.checked" class="right" name="right"></svg-icon>
       </DropdownItem>
     </DropdownMenu>
   </Dropdown>
@@ -25,14 +17,10 @@
 <script>
 export default {
   props: ["visible", "list"],
-  data () {
-    return {
-
-    };
+  data() {
+    return {};
   },
-  methods: {
-
-  }
+  methods: {}
 };
 </script>
 <style scoped lang="less">

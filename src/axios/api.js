@@ -111,23 +111,23 @@ export function addTask(data) {
 }
 
 // 修改任务名称
-export function updateTaskName(taskId,taskName) {
+export function updateTaskName(taskId, taskName) {
     return fetch({
         url: `${api.tasks}/${taskId}/name`,
         method: "put", // 请求方法
-        params:{
-          taskName:taskName
+        params: {
+            taskName: taskName
         }
     });
 }
 
 // 修改任务优先级
-export function updatePriority(taskId,priority) {
+export function updatePriority(taskId, priority) {
     return fetch({
         url: `${api.tasks}/${taskId}/priority`,
         method: "put", // 请求方法
-        params:{
-            priority:priority
+        params: {
+            priority: priority
         }
     });
 }
@@ -141,40 +141,25 @@ export function getmemberList(projectId) {
     });
 }
 //获取项目中总标签列表
-export function gettagList(projectId) {
-    return fetch({
-        url: `/tags/${projectId}/checkProjectTag`,
-        method: "get",
-        params: {}
-    });
+export function allTags(projectId, params) {
+    return $get(`/tags/${projectId}`, params);
 }
 //创建新标签
-export function addnewTag(data) {
-    return fetch({
-        url: api.tags,
-        method: "post", // 请求方法
-        data: data
-    });
+export function addnewTag(params) {
+    return $post(`/tags`, params)
 }
 //删除标签
 export function delTag(tagId) {
-    return fetch({
-        url: `${api.tags}/${tagId}`,
-        method: "delete", // 请求方法
-        params: {}
-    });
+    return $delete(`/tags/${tagId}`, null);
 }
 //修改标签
-export function modifyTag(projectId, tagId, tagName, bgColor) {
-    return fetch({
-        url: `${api.tags}/${tagId}`,
-        method: "put", // 请求方法
-        params: {
-            projectId: projectId,
-            tagName: tagName,
-            bgColor: bgColor
-        }
-    });
+export function modifyTag(tagId, params) {
+    return $put(`/tags/${tagId}`, params);
+}
+
+//搜索标签
+export function searchTags(params) {
+    return $get(`/tags/search`, params)
 }
 //拖拽任务大盒子 排序菜单
 export function sortTaskMenu(idList) {
@@ -289,14 +274,7 @@ export function folder(projectId, params) {
 export function members(projectId) {
     return $get(`/members/${projectId}/member`, "");
 }
-// 更新任务开始时间
-export function upStartTime(taskId, startTime) {
-    return $put(`tasks/${taskId}/starttime`,{startTime:startTime})
-}
-// 更新任务结束时间
-export function upEndTime(taskId, endtime) {
-    return $put(`tasks/${taskId}/endtime`,{endtime:endtime})
-}
+
 export function $post(url, params) {
     return fetch({
         url: url,

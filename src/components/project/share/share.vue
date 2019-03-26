@@ -79,8 +79,8 @@
                       标签
                     </div>
                     <div>
-                      <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag>
-                      <tag :taglist="share.tagList" :projectId="projectId"></tag>
+                      <!-- <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag> -->
+                      <tag :taglist="share.tagList" :projectId="projectId" :publicId="share.shareId" :publicType="publicType"></tag>
                     </div>
                   </div>
                   <p class="p">
@@ -143,7 +143,8 @@ export default {
       privacyTxt: "所有成员可见",
       privacyStatus: "未开启",
       showTag: false,
-      tagList: []
+      tagList: [],
+      publicType: "分享"
     };
   },
   mounted() {
