@@ -88,11 +88,17 @@ export default {
               case "A7":
                 this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"startTime"})
                 break;
+              case "A8":
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"endTime"})
+                break;
               case "A9":
                 this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"repeat"})
                 break;
               case "A12":
                 this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"priority"})
+                break;
+              case "A13":
+                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskName"})
                 break;
               case "C1":
               case "C2":

@@ -295,7 +295,11 @@ export function upStartTime(taskId, startTime) {
 }
 // 更新任务结束时间
 export function upEndTime(taskId, endtime) {
-    return $put(`tasks/${taskId}/endtime`,{endtime:endtime})
+    return $put(`tasks/${taskId}/endtime`,{endTime:endtime})
+}
+// 添加子任务
+export function addChildTask(taskId, params) {
+    return $post(`tasks/${taskId}/addchild`, {taskName:params})
 }
 export function $post(url, params) {
     return fetch({

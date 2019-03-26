@@ -4,29 +4,12 @@
     :value="date"
     confirm
     class="datatimeinline"
-    @on-open-change="pickerOpenchange"
     @on-change="dateChange"
     style="width:216px"
   >
-    <Row class="picker-input">
-      <iCol span="14">
-        <input v-model="date" />
-      </iCol>
-      <iCol span="10">
-        <TimePicker
-          format="HH:mm"
-          :value="time"
-          class="mytimepicker"
-          @on-change="timeChange"
-          ref='timePicker'
-        >
-        </TimePicker>
-      </iCol>
-    </Row>
     <Row class="footer">
       <iCol span="11">
         <Button
-          ghost
           long
           @click="clear"
         >清除</Button>
@@ -84,20 +67,12 @@ export default {
     }
   },
   methods: {
-    pickerOpenchange(a) {
-      if (!this.visible) return;
-      if (!a) {
-        this.$emit("close");
-      }
+    selectTimeOk(data){
+      console.log(data)
     },
     dateChange(date) {
       this.date = date;
-      this.realDateTime = this.date + " " + this.time;
-    },
-    timeChange(time) {
-      this.time = time;
-      this.realDateTime = this.date + " " + this.time;
-      this.$refs.timePicker.visible = false;
+      this.realDateTime = new Date(date).getTime()
     },
     init() {
       if (this.datetime) {
@@ -112,8 +87,7 @@ export default {
     },
     clear() {
       this.date = this.$moment(new Date()).format("YYYY-MM-DD");
-      this.time = this.type == "end" ? "18:00" : "09:00";
-      this.realDateTime = this.date + " " + this.time;
+      this.realDateTime = new Date(this.date).getTime()
       this.$emit("clear");
     },
     confirm() {

@@ -4,7 +4,7 @@
           transfer>
     <slot>选择时间</slot>
     <div slot="content">
-      <DateTimeInline :visible="visible"
+      <DateTimeInline
                       :datetime="datetime"
                       :type="type"
                       :max="max"
