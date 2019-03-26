@@ -64,8 +64,8 @@
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check" @click.stop>
-                    <Checkbox v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                  <div class="check" >
+                    <div @click.stop class="checkbox-wrap"><Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox></div>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
@@ -107,8 +107,8 @@
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check" @click.stop>
-                    <Checkbox v-model="a.taskStatus" @click.stop @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                  <div class="check" >
+                    <div class="checkbox-wrap" @click.stop><Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox></div>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
