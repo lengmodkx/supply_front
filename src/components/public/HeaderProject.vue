@@ -2,7 +2,7 @@
   <div class="header-project">
     <div class="fl">
       <Breadcrumb separator="<i class='breadcrumb-separator ivu-icon ivu-icon-chevron-right'></i>">
-        <BreadcrumbItem to="/">首页</BreadcrumbItem>
+        <BreadcrumbItem to="/home">首页</BreadcrumbItem>
         <BreadcrumbItem>研发</BreadcrumbItem>
       </Breadcrumb>
     </div>
@@ -58,7 +58,7 @@ export default {
       this.menus = res.data.map((item, index) => {
         switch (item.funcName) {
           case "任务":
-            item.prefix = "/tasks/group/" + this.$route.params.groupId;
+            item.prefix = "/tasks/group/" + item.suffix; //this.$route.params.groupId;
             item.pre = "tasks";
             break;
           case "分享":

@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- 右边可拖拽盒子 -->
-    <draggable class="column-main dragscroll" v-model="tasks" :options="{
+    <draggable class="column-main dragscroll" v-model="simpleTasks" :options="{
                   handle:'.handle',
                   chosenClass: 'boxChosenClass',
                   dragClass: 'boxDragClass',
@@ -48,7 +48,7 @@
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
-      <div class="column" :key="k" v-for="(i, k) in tasks">
+      <div class="column" :key="k" v-for="(i, k) in simpleTasks">
         <div style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
@@ -61,11 +61,11 @@
                         chosenClass: 'chosenClass',
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
-              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.checkStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
+              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check">
-                    <Checkbox v-model="a.checkStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                  <div class="check" >
+                    <div @click.stop class="checkbox-wrap"><Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox></div>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
@@ -104,11 +104,11 @@
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
             <draggable :list="i.taskList" :options="{group:'checkedTask'}" class="ul" @end="dragList">
-              <div class="li done" v-if="a.checkStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
+              <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check">
-                    <Checkbox v-model="a.checkStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                  <div class="check" >
+                    <div class="checkbox-wrap" @click.stop><Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox></div>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
@@ -205,8 +205,8 @@ export default {
     CurrentAdd
   },
   computed: {
-    ...mapGetters("task", ["curTaskGroup"]),
-    ...mapState("task", ["tasks","sort"])
+    ...mapGetters("task", ["curTaskGroup","getTaskById","abc"]),
+    ...mapState("task", ["simpleTasks","sort"])
   },
   data() {
     return {
@@ -257,17 +257,26 @@ export default {
       tasklist.push(data);
     },
     initTask(taskId) {
-      initEditTask(taskId).then(res => {
-        if (res.task.taskStatus == "未完成") {
-          res.task.taskStatus = false;
-        } else {
-          res.task.taskStatus = true;
-        }
+        this.$store.dispatch('task/initEditTask',taskId).then(() =>{
+            // this.activeModalData = this.getTaskById(taskId)
+            this.activeModalData = this.getTaskById(taskId)
+            this.showModal = true
+        })
 
-        this.activeModalData = res.task;
-        // console.log(res.task)
-        this.showModal = true;
-      });
+
+
+
+      // initEditTask(taskId).then(res => {
+      //   if (res.data.task.taskStatus == "未完成") {
+      //     res.data.task.taskStatus = false;
+      //   } else {
+      //     res.data.task.taskStatus = true;
+      //   }
+      //
+      //   this.activeModalData = res.data.task;
+      //   // console.log(res.task)
+      //   this.showModal = true;
+      // });
     },
     // initStore () {
     //   //发请求获取task store中的标签列表，任务列表，人员列表
@@ -297,7 +306,6 @@ export default {
     addCurTask(groupId, id, taskList, index) {
       this.currentEditId = id;
       // this.$nextTick(_ => {
-      //
       //   this.$nextTick(_ => {
       //     let ele = this.$refs.currentadd[index]
       //     scrollTo(
@@ -322,13 +330,14 @@ export default {
         taskMenuId: this.taskMenuId,
         taskGroupId: this.taskGroupId
       };
-      console.log(this.taskGroupId)
       addTask(data).then(res=>{
         if(res.result===1){
           this.$Notice.success({
             title: "创建成功"
           });
         }
+        this.init(this.projectId);
+        this.currentEditId=''
       })
     },
     dragBox(evt) {
@@ -359,19 +368,19 @@ export default {
       });
     },
     changeStatus(flag, i, j, taskId) {
-      this.showModal = false; //阻止模态框出来
+
       //i是外层循环的索引，j是嵌套循环的索引
       if (flag) {
         //第一种方法 先处理好了再发请求
         let savedCheck = true;
-        if (this.data.data[i].taskList[j + 1]) {
-          savedCheck = this.data.data[i].taskList[j + 1].checkStatus;
+        if (this.simpleTasks[i].taskList[j + 1]) {
+          savedCheck = this.simpleTasks[i].taskList[j + 1].taskStatus;
         }
-        let tmp = this.data.data[i].taskList.splice(j, 1);
-        this.data.data[i].taskList.push(tmp[0]);
-        this.$set(this.data.data[i].taskList[j], "checkStatus", true);
+        let tmp = this.simpleTasks[i].taskList.splice(j, 1);
+        this.simpleTasks[i].taskList.push(tmp[0]);
+        this.$set(this.simpleTasks[i].taskList[j], "taskStatus", true);
         this.$nextTick(_ => {
-          this.$set(this.data.data[i].taskList[j], "checkStatus", savedCheck);
+          this.$set(this.simpleTasks[i].taskList[j], "taskStatus", savedCheck);
         });
 
         //完成任务  请求
