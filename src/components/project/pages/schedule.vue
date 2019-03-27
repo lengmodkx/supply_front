@@ -42,11 +42,11 @@
         :key="k"
       >
         <div class="title">{{new Date(i.startTime).Format('MM月dd日')}}</div>
-        <div class="item">
+        <div class="item" @click="showEditRC(i)">
           <div class="leftTime">
-            <p>{{new Date(i.startTime).Format('yyyy-MM-dd hh:mm')}}</p>
+            <p>{{new Date(i.startTime).Format('yyyy-MM-dd')}}</p>
             <p>-</p>
-            <p>{{new Date(i.endTime).Format('yyyy-MM-dd hh:mm')}}</p>
+            <p>{{new Date(i.endTime).Format('yyyy-MM-dd')}}</p>
           </div>
           <div class="offside">
             <p class="headline">{{i.scheduleName}}</p>
@@ -80,21 +80,32 @@
       v-model="addSchedule"
       :id="parameter.projectId"
     ></AddSchedule>
+    <Modal
+            v-model="editrc"
+            footer-hide=true
+            transfer
+            >
+      <editRicheng :data="richengData"></editRicheng>
+    </Modal>
+
   </div>
 </template>
 
 <script>
 import AddSchedule from "../../public/AddSchedule.vue";
+import editRicheng from "../../public/common/EditRicheng"
 import { schedules } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 export default {
   name: "",
-  components: { AddSchedule, userList },
+  components: { AddSchedule, userList, editRicheng },
   data() {
     return {
       addSchedule: false,
       data: [],
+      editrc: false,
       loading: true,
+      richengData:null,
       parameter: {
         projectId: this.$route.params.id
       }
@@ -105,7 +116,13 @@ export default {
       schedules(this.parameter).then(res => {
         this.loading = false;
         this.data = res.after;
+        console.log("初始化88888",res.after)
       });
+    },
+    // 编辑日程
+    showEditRC(item){
+      this.richengData = item
+      this.editrc=true
     }
   },
   mounted() {
@@ -117,6 +134,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+  .ivu-modal-body{
+    padding: 0 !important;
+  }
 .schedule {
   position: absolute;
   overflow-x: hidden;
@@ -126,6 +146,7 @@ export default {
   top: 50px;
   bottom: 0;
   background-color: rgb(244, 244, 244);
+
   .loading {
     height: 300px;
     width: 100%;
@@ -151,8 +172,10 @@ export default {
       .item {
         display: flex;
         width: 100%;
+        cursor: pointer;
         .leftTime {
           width: 180px;
+          flex: none;
           color: #a6a6a6;
           padding-top: 15px;
           p {
