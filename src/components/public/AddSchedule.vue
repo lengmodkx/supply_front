@@ -11,18 +11,18 @@
         </Checkbox>
         <Icon type="md-calendar" />
         <DatePicker v-if="checkbox" confirm class="datePicker" @on-ok="openDate=!openDate" @on-change="DatePicker" :open="openDate" v-model="datetime" type="daterange" format="yyyy-MM-dd">
-          <span class="timeText" @click="openDate=!openDate">{{datetime[0]?datetime[0].Format('yyyy-MM-dd'):'选择开始日期'}}</span>
+          <span class="timeText" @click="openDate=!openDate">{{datetime[0]?datetime[0].Format('yyyy-MM-dd'):'开始日期'}}</span>
           <span class="timeText">-</span>
-          <span class="timeText" @click="openDate=!openDate">{{datetime[1]?datetime[1].Format('yyyy-MM-dd'):'选择结束日期'}}</span>
+          <span class="timeText" @click="openDate=!openDate">{{datetime[1]?datetime[1].Format('yyyy-MM-dd'):'结束日期'}}</span>
         </DatePicker>
         <DatePicker v-if="!checkbox" class="datePicker" @on-ok="openDate=!openDate" @on-change="DatePicker" :open="openDate" v-model="datetime" type="datetimerange" format="yyyy-MM-dd hh:mm">
-          <span class="timeText" @click="openDate=!openDate">{{datetime[0]?datetime[0].Format('yyyy-MM-dd hh:mm'):'选择开始日期'}}</span>
+          <span class="timeText" @click="openDate=!openDate">{{datetime[0]?datetime[0].Format('yyyy-MM-dd hh:mm'):'开始日期'}}</span>
           <span class="timeText">-</span>
-          <span class="timeText" @click="openDate=!openDate">{{datetime[1]?datetime[1].Format('yyyy-MM-dd hh:mm'):'选择结束日期'}}</span>
+          <span class="timeText" @click="openDate=!openDate">{{datetime[1]?datetime[1].Format('yyyy-MM-dd hh:mm'):'结束日期'}}</span>
         </DatePicker>
         <Dropdown trigger="click" @on-click='Dropdown'>
           <a href="javascript:void(0)" class='repetition'>
-            <Icon type="android-refresh"></Icon> <span>{{repetition_data}}</span>
+             <span>{{repetition_data}}</span>
           </a>
           <DropdownMenu slot="list">
             <DropdownItem v-for='(i, k) in repetition' :name='i' :key="k">{{i}}
@@ -49,7 +49,7 @@
         <div class="user">
           <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+tx[k]" alt="" :key="k" v-for="(i, k) in memberIds">
           <Icon type="md-add-circle" @click.native="showUserList=!showUserList" />
-          <Modal v-model="showUserList" transfer mask-closable>
+          <Modal v-model="showUserList" transfer mask-closable width="300">
             <userList :id='id' @select='select'></userList>
           </Modal>
         </div>
@@ -263,7 +263,7 @@ export default {
       font-size: 20px;
       float: left;
       cursor: pointer;
-      margin-top: 2.5px;
+      margin-top: 1px;
     }
     .ivu-date-picker {
       float: left;
