@@ -162,11 +162,17 @@ export default {
         });
       }
     },
-    handleClose() {
-      console.log("xxxxxxxxxxxx");
-      // this.popShow()
-      //  Object.assign(this.$data, this.$options.data())
-      //  console.log(this.showList(this.taglist))
+    handleClose(event, name) {
+      console.log(name);
+      let that = this;
+      this.taglist = this.taglist.filter(v => {
+        if (v.tagId !== name) {
+          this.$nextTick(() => {
+            this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+          });
+          return v;
+        }
+      });
     },
     editTag(data) {
       this.isEdit = true;
