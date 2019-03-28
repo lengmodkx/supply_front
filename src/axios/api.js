@@ -34,7 +34,7 @@ export function createProject(data) {
 
 export function getProjectList() {
     return fetch({
-        url: api.projects,
+        url: `${api.members}/star`,
         method: "get", // 请求方法
         params: {}
     });
@@ -246,6 +246,17 @@ export function initEditTask(taskId) {
         params: {}
     });
 }
+
+/**获取项目下的所有分组 */
+export function getGroupList(projectId) {
+    return $get(`/relations/${projectId}`, {projectId:projectId});
+}
+
+/**获取分组下的所有菜单 */
+export function getMenuList(groupId) {
+    return $get(`/relations/${groupId}/menus`);
+}
+
 /**日程初始化 */
 export function schedules(projectId) {
     return $get(`/schedules/`, projectId);
