@@ -71,7 +71,20 @@ const store = {
             state.simpleTasks = data
         },
         initEditTask(state, data){
-            state.tasks.push(data)
+            let has= false;
+            if(state.tasks.length !== 0){
+                state.tasks.forEach((item, index) => {
+                    if(item.task.taskId === data.task.taskId){
+                        has=true;
+                        state.tasks[index]=data
+                    }
+                    if (!has) {
+                        state.tasks.push(data)
+                    }
+                })
+            } else{
+                state.tasks.push(data)
+            }
         },
         changeTask(state, data) {
             state.simpleTasks = data
@@ -103,6 +116,24 @@ const store = {
                 }
             }
         },
+        updateChildTask(state, data){
+            let task = data.task.task
+            for(var i = 0;i < state.tasks.length;i++){
+                if(state.tasks[i].task.taskId === task.parentId){
+
+                    state.tasks[i].task.taskList.unshift(task)
+                }
+            }
+
+            //这里是更改进入项目主页面后的菜单任务列表的数据
+            for(var i = 0;i < state.simpleTasks.length;i++){
+                for(var j = 0;j < state.simpleTasks[i].taskList.length;j++){
+                    if(state.simpleTasks[i].taskList[j].taskId === task.parentId){
+                        state.simpleTasks[i].taskList[j].childCount++
+                    }
+                }
+            }
+        },
         deleteTask(state, data) {
           state.simpleTasks.map(item => {
               const a =item.taskList.filter(task => {
@@ -125,6 +156,22 @@ const store = {
             state.tags = data
         },
         updateMemberList(){}
+        ,
+        recycle(state,data){
+            state.simpleTasks.forEach((menu,menuIndex) => {
+                menu.taskList.forEach((task,taskIndex) => {
+                    if(task.taskId === data.taskId){
+                        state.simpleTasks[menuIndex].taskList.splice(taskIndex,1)
+                    }
+                })
+            })
+
+            state.tasks.forEach((item,index) => {
+                if(item.task.taskId === data.taskId){
+                    state.tasks[index].task.taskDel = 1
+                }
+            })
+        }
     },
     actions: {
         init({
@@ -166,7 +213,6 @@ const store = {
                     resolve()
                 })
             })
-
         },
         // 更新任务开始时间
         updateStartTime({commit}, value){
@@ -201,9 +247,8 @@ const store = {
         deleteTask({commit},data){
           commit('deleteTask',data)
         },
-        //更新任务名称时候调用
-        updateTaskName({commit},data){
-
+        recycle({commit},data){
+            commit('recycle',data)
         },
         updateSort({
             commit
@@ -231,6 +276,9 @@ const store = {
                 callback()
             })
 
+        },
+        updateChildTask({commit},data){
+            commit('updateChildTask',data)
         }
     }
 }

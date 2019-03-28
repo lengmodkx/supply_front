@@ -38,9 +38,9 @@
              @click="listItemClick('a','移动到')">
           <svg-icon class="svgicon"
                     name="moveTo"></svg-icon>移动任务</div>
-        <div class="menuItem">
+        <div class="menuItem" @click="collectTask">
           <svg-icon class="svgicon"
-                    name="collect"></svg-icon>收藏任务</div>
+                    name="collect"></svg-icon>{{data.collect ? '取消收藏':'收藏任务'}}</div>
 
         <div class="menuItem"
              @click="listItemClick('c','移到回收站')">
@@ -268,7 +268,7 @@
         <div class="con7"
              v-if="active=='c'">
           <div class="ask">您确定要把列表下的所有任务移到回收站吗？</div>
-          <Button type="error"
+          <Button type="error" @click="recycle"
                   long>移到回收站</Button>
 
         </div>
@@ -282,6 +282,7 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
+import {collectTask,cancelCollect,taskToRecycle} from "@/axios/api";
 
 export default {
   props: ['data'],
@@ -338,6 +339,29 @@ export default {
     },
     createNew () {
       this.active = '';
+    },
+    collectTask() {
+      if(this.data.collect){
+          cancelCollect(this.data.task.taskId).then(res => {
+              if(res.result === 1){
+                  this.$Message.success(res.msg)
+                  this.data.collect = false
+              }
+          })
+      } else{
+          collectTask(this.data.task.projectId,this.data.task.taskId,'任务').then(res => {
+              if(res.result === 1){
+                  this.$Message.success(res.msg)
+                  this.data.collect = true
+              }
+          })
+      }
+    },
+    //任务移入回收站
+    recycle() {
+        taskToRecycle(this.data.task.taskId).then(res => {
+            console.log(this.data.task)
+        })
     },
     reset (flag) {
       Object.assign(this.$data, this.$options.data())

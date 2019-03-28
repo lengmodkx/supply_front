@@ -81,7 +81,7 @@
                         <Icon class="icon" type="document" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">0/1</span>
+                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.childCount}}</span>
                       </span>
                       <span class="label">
                         <Icon class="icon" type="link" size="16"></Icon>
@@ -124,7 +124,7 @@
                         <Icon class="icon" type="document" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">0/1</span>
+                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.childCount}}</span>
                       </span>
                       <span class="label">
                         <Icon class="icon" type="link" size="16"></Icon>
@@ -183,6 +183,7 @@ import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
 import { scrollTo, dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import Loading from "@/components/public/common/Loading";
 import {
   enterTask,
   sortTaskMenu,
@@ -222,6 +223,7 @@ export default {
       active: "a",
       priority: "1",
       showModal: false,
+      loadingShow:true,
       taskMenuvisible: false,
       wHeight: window.outerHeight - 261,
       textarea: "",
@@ -239,7 +241,7 @@ export default {
       this.wHeight = window.outerHeight - 261;
     };
     dragscroll(["column-main", "scrum-stage-tasks"]);
-    this.init(this.projectId);
+    this.init(this.projectId)
   },
   watch: {
     sort(n, o) {

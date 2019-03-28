@@ -143,6 +143,11 @@ export function updatePriority(taskId, priority) {
     });
 }
 
+// 任务移入回收站
+export function taskToRecycle(taskId) {
+    return $put(`/tasks/${taskId}/recyclebin`);
+}
+
 //获取参与者列表
 export function getmemberList(projectId) {
     return fetch({
@@ -191,6 +196,17 @@ export function addnewTask(projectId, groupId, menuName) {
         }
     });
 }
+
+//收藏任务
+export function collectTask(projectId, publicId,collectType) {
+    return $post('/collections',{projectId:projectId,publicId:publicId,collectType})
+}
+
+//取消收藏
+export function cancelCollect(publicId) {
+    return $delete(`/collections/${publicId}`)
+}
+
 //完成任务
 export function completeTask(taskId) {
     return fetch({
