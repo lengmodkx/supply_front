@@ -80,38 +80,14 @@
              v-if="active=='a'">
           <div class="con5item1">
             <span>项目</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前项目
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content">
-                <Input class="findInput"
-                       v-model="findPro"
-                       :autofocus="true"
-                       placeholder="查找项目" />
-                <div class="star">
-                  <h5>星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
-                <div class="nostar">
-                  <h5>非星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
-
-              </div>
-            </Poptip>
+            <Select v-model="model7" style="width:100px">
+              <OptionGroup label="星标项目">
+                <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </OptionGroup>
+              <OptionGroup label="非星标项目">
+                <Option v-for="item in cityList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </OptionGroup>
+            </Select>
 
           </div>
           <div class="con5item2">
@@ -171,87 +147,84 @@
              v-if="active=='b'">
           <div class="con5item1">
             <span>项目</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前项目
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content">
-                <Input class="findInput"
-                       v-model="findPro"
-                       :autofocus="true"
-                       placeholder="查找项目" />
-                <div class="star">
-                  <h5>星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
-                <div class="nostar">
-                  <h5>非星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
+            <Select v-model="model7" style="width:150px" placeholder="当前项目">
+              <OptionGroup label="星标项目">
+                <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </OptionGroup>
+              <OptionGroup label="非星标项目">
+                <Option v-for="item in cityList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </OptionGroup>
+            </Select>
+            <!--<Poptip placement="bottom-end"-->
+                    <!--class="innerRight">-->
+              <!--<div class="inTitle">-->
+                <!--<span>当前项目-->
+                  <!--<Icon type="ios-arrow-down"-->
+                        <!--size="18"-->
+                        <!--style="margin-left:4px;"></Icon>-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div slot="content"-->
+                   <!--class="content">-->
+                <!--<Input class="findInput"-->
+                       <!--v-model="findPro"-->
+                       <!--:autofocus="true"-->
+                       <!--placeholder="查找项目" />-->
+                <!--<div class="star">-->
+                  <!--<h5>星标项目</h5>-->
+                  <!--<div class="item">项目1-->
+                    <!--<svg-icon class="right"-->
+                              <!--name="right"></svg-icon>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div class="nostar">-->
+                  <!--<h5>非星标项目</h5>-->
+                  <!--<div class="item">项目1-->
+                    <!--<svg-icon class="right"-->
+                              <!--name="right"></svg-icon>-->
+                  <!--</div>-->
+                <!--</div>-->
 
-              </div>
-            </Poptip>
+              <!--</div>-->
+            <!--</Poptip>-->
 
           </div>
           <div class="con5item2">
             <span>分组</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前任务
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">任务1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">任务2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model7" style="width:150px" placeholder="当前分组">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </template>
+            <!--<Poptip placement="bottom-end"-->
+                    <!--class="innerRight">-->
+              <!--<div class="inTitle">-->
+                <!--<span>当前任务-->
+                  <!--<Icon type="ios-arrow-down"-->
+                        <!--size="18"-->
+                        <!--style="margin-left:4px;"></Icon>-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div slot="content"-->
+                   <!--class="content2">-->
+                <!--<div class="item">任务1-->
+                  <!--<svg-icon class="right"-->
+                            <!--name="right"></svg-icon>-->
+                <!--</div>-->
+                <!--<div class="item">任务2-->
+                  <!--<svg-icon class="right"-->
+                            <!--name="right"></svg-icon>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</Poptip>-->
           </div>
           <div class="con5item3">
             <span>列表</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前列表
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">大列表1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">大列表2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model7" style="width:150px" placeholder="当前列表">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </template>
           </div>
           <CheckboxGroup v-model="notice"
                          style="margin-top:5px;">
@@ -298,7 +271,62 @@ export default {
       title: this.data.title,
       findMember: '',
       findPro: '',
-      notice: []
+      notice: [],
+      cityList: [
+        {
+          value: 'New York',
+          label: 'New York'
+        },
+        {
+          value: 'London',
+          label: 'London'
+        },
+        {
+          value: 'Sydney',
+          label: 'Sydney'
+        },
+        {
+          value: 'Ottawa',
+          label: 'Ottawa'
+        },
+        {
+          value: 'Paris',
+          label: 'Paris'
+        },
+        {
+          value: 'Canberra',
+          label: 'Canberra'
+        }
+      ],
+      cityList1: [
+        {
+          value: 'New York',
+          label: 'New York'
+        },
+        {
+          value: 'London',
+          label: 'London'
+        },
+        {
+          value: 'Sydney',
+          label: 'Sydney'
+        }
+      ],
+      cityList2: [
+        {
+          value: 'Ottawa',
+          label: 'Ottawa'
+        },
+        {
+          value: 'Paris',
+          label: 'Paris'
+        },
+        {
+          value: 'Canberra',
+          label: 'Canberra'
+        }
+      ],
+      model7: ''
     }
   },
   computed: {
