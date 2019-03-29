@@ -45,8 +45,8 @@ export function getCaptcha(data) {
     return fetch({
         url: api.captcha,
         method: "get" // 请求方法
-            // params: {
-            //   captcha: data,
+        // params: {
+        //   captcha: data,
 
         // }
     });
@@ -122,12 +122,12 @@ export function updateTaskName(taskId, taskName) {
 }
 
 // 修改任务名称
-export function updateRepeat(taskId,repeat) {
+export function updateRepeat(taskId, repeat) {
     return fetch({
         url: `${api.tasks}/${taskId}/repeat`,
         method: "put", // 请求方法
-        params:{
-            repeat:repeat
+        params: {
+            repeat: repeat
         }
     });
 }
@@ -145,11 +145,7 @@ export function updatePriority(taskId, priority) {
 
 //获取参与者列表
 export function getmemberList(projectId) {
-    return fetch({
-        url: `/members/${projectId}/member`,
-        method: "get",
-        params: {}
-    });
+    return $get(`/members/${projectId}/member`, '');
 }
 //获取项目中总标签列表
 export function allTags(projectId, params) {
@@ -287,15 +283,21 @@ export function members(projectId) {
 }
 // 更新任务开始时间
 export function upStartTime(taskId, startTime) {
-    return $put(`tasks/${taskId}/starttime`,{startTime:startTime})
+    return $put(`tasks/${taskId}/starttime`, {
+        startTime: startTime
+    })
 }
 // 更新任务结束时间
 export function upEndTime(taskId, endtime) {
-    return $put(`tasks/${taskId}/endtime`,{endTime:endtime})
+    return $put(`tasks/${taskId}/endtime`, {
+        endTime: endtime
+    })
 }
 // 添加子任务
 export function addChildTask(taskId, params) {
-    return $post(`tasks/${taskId}/addchild`, {taskName:params})
+    return $post(`tasks/${taskId}/addchild`, {
+        taskName: params
+    })
 }
 export function $post(url, params) {
     return fetch({
