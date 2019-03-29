@@ -98,7 +98,10 @@ export default {
                 this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"priority"})
                 break;
               case "A13":
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskName"})
+                  this.$store.dispatch("task/updateChildTask",{task:result.object})
+                break;
+              case "A17":
+                this.$store.dispatch("task/recycle",result.object.task)
                 break;
               case "C1":
               case "C2":

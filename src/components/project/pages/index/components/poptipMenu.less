@@ -106,6 +106,21 @@
       line-height: 44px;
       font-size: 14px;
       border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /deep/ .ivu-select-selection{
+        border: 0 none !important;
+        box-shadow: 0 0 0 0;
+      }
+      /deep/ .ivu-select-single .ivu-select-selection .ivu-select-placeholder{
+        text-align: right;
+        margin-right: 5px;
+      }
+      /deep/ .ivu-select-single .ivu-select-selection .ivu-select-selected-value{
+        text-align: right;
+        margin-right: 5px;
+      }
       .innerRight {
         float: right;
         font-weight: normal;
