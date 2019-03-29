@@ -192,7 +192,7 @@
           <div class="con5item2">
             <span>分组</span>
             <template>
-              <Select v-model="model99" style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+              <Select v-model="model9" style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
                 <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
               </Select>
             </template>
@@ -221,7 +221,7 @@
           <div class="con5item3">
             <span>列表</span>
             <template>
-              <Select v-model="model7" style="width:150px" placeholder="当前列表">
+              <Select v-model="model10" style="width:150px" placeholder="当前列表" @on-change="getMenuId">
                 <Option v-for="item in menuList" :value="item.relationId" :key="item.relationName">{{ item.relationName }}</Option>
               </Select>
             </template>
@@ -235,7 +235,7 @@
           </CheckboxGroup>
           <div class="con5tip">标题、子任务、备注将被复制</div>
           <Button type="primary"
-                  long>确定</Button>
+                  long @click="copyTask">确定</Button>
 
         </div>
         <div class="con7"
@@ -255,7 +255,7 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import {collectTask,cancelCollect,taskToRecycle,getProjectList,getGroupList,getMenuList} from "@/axios/api";
+import {collectTask,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask} from "@/axios/api";
 
 export default {
   props: ['data'],
@@ -274,10 +274,14 @@ export default {
       notice: [],
       starProject: [],
       notStarProject: [],
+      currProjectId:'',
+      currGroupId:'',
+      currMenuId:'',
       groupList: [],
       menuList:[],
       model7: '',
-        model99:''
+      model9:'',
+      model10:''
     }
   },
   computed: {
@@ -308,7 +312,7 @@ export default {
     },
     //获取项目数据
     getProjectList(){
-        getProjectList().then(res => {
+      getStarProjectList().then(res => {
             if(res.result === 1){
                 this.notStarProject = res.notStarProject
                 this.starProject = res.starProject
@@ -317,7 +321,8 @@ export default {
     },
     //获取分组数据
     getGroupList(projectId){
-        getGroupList(projectId).then(res => {
+      this.currProjectId = projectId
+      getGroupList(projectId).then(res => {
           if(res.result === 1){
               this.groupList = res.data
           }
@@ -325,11 +330,16 @@ export default {
     },
     //获取菜单数据
     getMenuLists(groupId){
+       this.currGroupId = groupId
         getMenuList(groupId).then(res => {
             if(res.result === 1){
                 this.menuList = res.data
             }
         })
+    },
+    //获取选中菜单id
+    getMenuId(menuId){
+       this.currMenuId = menuId
     },
     listItemClick (index, title) {
       this.active = index
@@ -361,6 +371,16 @@ export default {
               }
           })
       }
+    },
+    //复制任务
+    copyTask(){
+
+      console.log(">>>>>>>", "coyp");
+      copyTask(this.data.task.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+        if(res.result === 1){
+          this.$Message.success(res.msg)
+        }
+      })
     },
     //任务移入回收站
     recycle() {

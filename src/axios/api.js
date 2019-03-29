@@ -30,9 +30,18 @@ export function createProject(data) {
         data: data
     });
 }
-//获取项目列表
 
+//获取项目列表
 export function getProjectList() {
+    return fetch({
+        url: api.projects,
+        method: "get", // 请求方法
+        params: {}
+    });
+}
+
+//获取项目列表
+export function getStarProjectList() {
     return fetch({
         url: `${api.members}/star`,
         method: "get", // 请求方法
@@ -146,6 +155,11 @@ export function updatePriority(taskId, priority) {
 // 任务移入回收站
 export function taskToRecycle(taskId) {
     return $put(`/tasks/${taskId}/recyclebin`);
+}
+
+// 复制任务
+export function copyTask(taskId,projectId,groupId,menuId) {
+    return $post(`/tasks/${taskId}/copy`,{projectId:projectId,groupId:groupId,menuId:menuId});
 }
 
 //获取参与者列表
