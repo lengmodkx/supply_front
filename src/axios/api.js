@@ -30,11 +30,20 @@ export function createProject(data) {
         data: data
     });
 }
-//获取项目列表
 
+//获取项目列表
 export function getProjectList() {
     return fetch({
         url: api.projects,
+        method: "get", // 请求方法
+        params: {}
+    });
+}
+
+//获取项目列表
+export function getStarProjectList() {
+    return fetch({
+        url: `${api.members}/star`,
         method: "get", // 请求方法
         params: {}
     });
@@ -148,6 +157,11 @@ export function taskToRecycle(taskId) {
     return $put(`/tasks/${taskId}/recyclebin`);
 }
 
+// 复制任务
+export function copyTask(taskId,projectId,groupId,menuId) {
+    return $post(`/tasks/${taskId}/copy`,{projectId:projectId,groupId:groupId,menuId:menuId});
+}
+
 //获取参与者列表
 export function getmemberList(projectId) {
     return $get(`/members/${projectId}/member`, '');
@@ -242,6 +256,17 @@ export function initEditTask(taskId) {
         params: {}
     });
 }
+
+/**获取项目下的所有分组 */
+export function getGroupList(projectId) {
+    return $get(`/relations/${projectId}`, {projectId:projectId});
+}
+
+/**获取分组下的所有菜单 */
+export function getMenuList(groupId) {
+    return $get(`/relations/${groupId}/menus`);
+}
+
 /**日程初始化 */
 export function schedules(projectId) {
     return $get(`/schedules/`, projectId);

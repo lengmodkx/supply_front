@@ -141,6 +141,13 @@ const store = {
               });
           })
         },
+        copyTask(state,data){
+          state.simpleTasks.forEach((menu,index) => {
+              if(menu.relationId === data.relationId){
+                  state.simpleTasks[index].tasks.unshift(data)
+              }
+          })
+        },
         updateSort(state, data) {
             state.sort = data
         },
@@ -254,6 +261,9 @@ const store = {
             commit
         }, data) {
             commit('updateSort', data)
+        },
+        copyTask({commit},data){
+            commit('copyTask',data)
         },
         initTags({ //初始化标签列表
             commit,

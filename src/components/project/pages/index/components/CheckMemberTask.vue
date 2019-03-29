@@ -57,8 +57,9 @@ export default {
   },
   computed: {
     computedMemberList () {
-      return this.data.member.filter(v => this.$containStr(this.searchMember, v.username))
+      return 1
     }
+    // return this.data.member.filter(v => this.$containStr(this.searchMember, v.username))
   },
   methods: {
     popHide () {
