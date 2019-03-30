@@ -451,7 +451,7 @@
       vertical-align: text-top;
     }
     .time-label {
-      margin: 2px 6px 0 0;
+      margin: 2px 6px 5px 0;
       padding-left: 6px;
       color: #fff;
       background-color: gray;
@@ -459,8 +459,28 @@
     .repeat-label {
       background-color: #3da8f5;
       color: #fff;
-      margin: 2px 6px 0 0;
+      margin: 2px 6px 5px 0;
       padding-left: 6px;
+    }
+  }
+}
+.tag-box{
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 20px;
+  .tag-list{
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+    i{
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: red;
+      margin-right: 5px;
+    }
+    span{
+      font-size: 12px;
     }
   }
 }

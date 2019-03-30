@@ -107,7 +107,9 @@ import {
   addnewTag,
   modifyTag,
   searchTags,
-  delTag
+  delTag,
+  removeInfoTag,
+  bindingTag
 } from "../../../axios/api.js";
 export default {
   props: ["taglist", "publicId", "publicType", "projectId"],
@@ -165,18 +167,22 @@ export default {
         });
       }
     },
-    handleClose(event, name) {
-      console.log(name);
-      let that = this;
-      this.taglist = this.taglist.filter(v => {
-        if (v.tagId !== name) {
-          this.$nextTick(() => {
-            this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-            console.log(this.offsetLeft)
-          });
-          return v;
+    handleClose(event, id) {
+      removeInfoTag(id,this.publicId,this.publicType).then(res => {
+        if(res.result === 1){
+          // let that = this;
+          // this.taglist = this.taglist.filter(v => {
+          //   if (v.tagId !== id) {
+          //     this.$nextTick(() => {
+          //       this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+          //     });
+          //     return v;
+          //   }
+          //
+          // });
+          this.$Message.success(res.msg)
         }
-      });
+      })
     },
     editTag(data) {
       this.isEdit = true;
@@ -243,22 +249,23 @@ export default {
       }, 300);
     },
     chooseTag(tag) {
-      let i = this.taglist.indexOf(tag);
-      if (i >= 0) {
-        this.taglist.splice(i, 1);
-        this.$nextTick(() => {
-          console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
-          this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-          console.log(this.offsetLeft)
-        });
-      } else {
-        this.taglist.push(tag);
-        this.$nextTick(() => {
-          console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
-          this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-          console.log(this.offsetLeft)
-        });
-      }
+      bindingTag(tag.tagId,this.publicId,this.publicType).then(res => {
+        if(res.result === 1){
+          // let i = this.taglist.indexOf(tag);
+          // if (i >= 0) {
+          //   this.taglist.splice(i, 1);
+          //   this.$nextTick(() => {
+          //     this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+          //   });
+          // } else {
+          //   this.taglist.push(tag);
+          //   this.$nextTick(() => {
+          //     this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+          //   });
+          // }
+          this.$Message.success(res.msg)
+        }
+      })
     },
     finish() {
       if (this.isEdit) {
@@ -458,6 +465,7 @@ export default {
   border: 1px solid #eeeeee;
   background-color: #fff;
   border-radius: 5px;
+  z-index: 999;
 }
 </style>
 
