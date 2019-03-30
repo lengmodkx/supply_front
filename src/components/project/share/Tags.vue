@@ -140,7 +140,10 @@ export default {
   watch: {
     searchTag() {
       this.search();
-    }
+    },
+    offsetLeft(newl, oldl){
+  console.log(oldl,newl)
+}
   },
   methods: {
     search() {
@@ -169,6 +172,7 @@ export default {
         if (v.tagId !== name) {
           this.$nextTick(() => {
             this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+            console.log(this.offsetLeft)
           });
           return v;
         }
@@ -207,6 +211,7 @@ export default {
             this.$nextTick(() => {
               console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
               this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+              console.log(this.offsetLeft)
             });
           }
         }
@@ -230,6 +235,7 @@ export default {
         });
       }
       this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+      console.log(this.offsetLeft)
     },
     popHide() {
       setTimeout(_ => {
@@ -243,12 +249,14 @@ export default {
         this.$nextTick(() => {
           console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
           this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+          console.log(this.offsetLeft)
         });
       } else {
         this.taglist.push(tag);
         this.$nextTick(() => {
           console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
           this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+          console.log(this.offsetLeft)
         });
       }
     },
@@ -339,7 +347,10 @@ export default {
     }
   }
 }
-
+.list{
+  display: flex;
+  align-items: center;
+}
 .createTag {
   text-align: center;
 }

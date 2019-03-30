@@ -1,11 +1,10 @@
 <template>
-  <Tooltip content="点击设置任务重复"
+  <Tooltip :content="repeat? repeat:'添加重复规则'"
            placement="top"
            transfer>
     <Dropdown trigger="click"
               transfer
-              @on-click="itemClick"
-              @on-visible-change="visibleChange">
+              @on-click="selectReapeat">
       <slot :repeat="curRepeat">
         <Icon type="ios-color-filter-outline"
               size="20"></Icon>
@@ -37,6 +36,9 @@ export default {
   methods: {
     itemClick (name) {
       this.$emit('updateRepeat', name)
+    },
+    selectReapeat(data){
+      this.$emit('changeRepeat', data)
     },
     visibleChange (visible) {
       this.$nextTick(_ => {

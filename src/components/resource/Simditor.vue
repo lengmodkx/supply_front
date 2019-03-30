@@ -14,9 +14,10 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 export default {
+  props:['contents'],
   data() {
     return {
-      content: ""
+      content:''
     };
   },
   methods: {
@@ -40,6 +41,7 @@ export default {
     }
   },
   mounted() {
+    this.content=this.contents
     var editor = new E(this.$refs.editor);
     // 关闭粘贴样式的过滤
     editor.customConfig.pasteFilterStyle = false;
@@ -112,5 +114,8 @@ export default {
 <style>
 .quill-editor {
   height: 400px;
+}
+.w-e-toolbar{
+  flex-wrap: wrap;
 }
 </style>
