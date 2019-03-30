@@ -168,7 +168,7 @@
     </draggable>
     <!-- 点击列表出来的弹框。编辑列表 -->
     <Modal v-model="showModal" class="myModal">
-      <my-modal ref="myModal" :data="activeModalData"></my-modal>
+      <my-modal v-if="showmodal" :data="activeModalData"></my-modal>
     </Modal>
   </div>
 </template>
@@ -212,6 +212,7 @@ export default {
   data() {
     return {
       show: false,
+      showmodal:false,
       showAdd: true,
       beforeClick: true,
       currentEditId: "",
@@ -263,6 +264,7 @@ export default {
             // this.activeModalData = this.getTaskById(taskId)
             this.activeModalData = this.getTaskById(taskId)
             this.showModal = true
+            this.showmodal=true
         })
 
 

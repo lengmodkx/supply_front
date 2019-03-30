@@ -343,7 +343,6 @@ export default {
     return {
       prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       zan: false,
-      taskName: "",
       aa: false,
       childTaskData:null,
       complete: false,
@@ -470,8 +469,7 @@ export default {
     }
   },
   mounted() {
-    this.taskName = this.data.task.taskName;
-    document.getElementById("editCon").parentNode.style.width = "100%";
+    // document.getElementById("editCon").parentNode.style.width = "100%"
   },
   computed:{
     ...mapGetters("task", ["curTaskGroup","getTaskById","abc"]),

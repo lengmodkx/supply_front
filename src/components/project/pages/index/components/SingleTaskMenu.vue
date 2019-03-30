@@ -80,12 +80,12 @@
              v-if="active=='a'">
           <div class="con5item1">
             <span>项目</span>
-            <Select v-model="model7" style="width:100px">
+            <Select v-model="model7" style="width:100px" >
               <OptionGroup label="星标项目">
-                <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName}}</Option>
               </OptionGroup>
               <OptionGroup label="非星标项目">
-                <Option v-for="item in cityList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
               </OptionGroup>
             </Select>
 
@@ -147,12 +147,12 @@
              v-if="active=='b'">
           <div class="con5item1">
             <span>项目</span>
-            <Select v-model="model7" style="width:150px" placeholder="当前项目">
+            <Select v-model="model7" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
               <OptionGroup label="星标项目">
-                <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
               </OptionGroup>
               <OptionGroup label="非星标项目">
-                <Option v-for="item in cityList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
               </OptionGroup>
             </Select>
             <!--<Poptip placement="bottom-end"-->
@@ -192,8 +192,8 @@
           <div class="con5item2">
             <span>分组</span>
             <template>
-              <Select v-model="model7" style="width:150px" placeholder="当前分组">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="model9" style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
               </Select>
             </template>
             <!--<Poptip placement="bottom-end"-->
@@ -221,8 +221,8 @@
           <div class="con5item3">
             <span>列表</span>
             <template>
-              <Select v-model="model7" style="width:150px" placeholder="当前列表">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="model10" style="width:150px" placeholder="当前列表" @on-change="getMenuId">
+                <Option v-for="item in menuList" :value="item.relationId" :key="item.relationName">{{ item.relationName }}</Option>
               </Select>
             </template>
           </div>
@@ -235,7 +235,7 @@
           </CheckboxGroup>
           <div class="con5tip">标题、子任务、备注将被复制</div>
           <Button type="primary"
-                  long>确定</Button>
+                  long @click="copyTask">确定</Button>
 
         </div>
         <div class="con7"
@@ -255,7 +255,7 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import {collectTask,cancelCollect,taskToRecycle} from "@/axios/api";
+import {collectTask,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask} from "@/axios/api";
 
 export default {
   props: ['data'],
@@ -272,61 +272,16 @@ export default {
       findMember: '',
       findPro: '',
       notice: [],
-      cityList: [
-        {
-          value: 'New York',
-          label: 'New York'
-        },
-        {
-          value: 'London',
-          label: 'London'
-        },
-        {
-          value: 'Sydney',
-          label: 'Sydney'
-        },
-        {
-          value: 'Ottawa',
-          label: 'Ottawa'
-        },
-        {
-          value: 'Paris',
-          label: 'Paris'
-        },
-        {
-          value: 'Canberra',
-          label: 'Canberra'
-        }
-      ],
-      cityList1: [
-        {
-          value: 'New York',
-          label: 'New York'
-        },
-        {
-          value: 'London',
-          label: 'London'
-        },
-        {
-          value: 'Sydney',
-          label: 'Sydney'
-        }
-      ],
-      cityList2: [
-        {
-          value: 'Ottawa',
-          label: 'Ottawa'
-        },
-        {
-          value: 'Paris',
-          label: 'Paris'
-        },
-        {
-          value: 'Canberra',
-          label: 'Canberra'
-        }
-      ],
-      model7: ''
+      starProject: [],
+      notStarProject: [],
+      currProjectId:'',
+      currGroupId:'',
+      currMenuId:'',
+      groupList: [],
+      menuList:[],
+      model7: '',
+      model9:'',
+      model10:''
     }
   },
   computed: {
@@ -355,6 +310,37 @@ export default {
       this.visible = false;
       //发请求修改标题
     },
+    //获取项目数据
+    getProjectList(){
+      getStarProjectList().then(res => {
+            if(res.result === 1){
+                this.notStarProject = res.notStarProject
+                this.starProject = res.starProject
+            }
+        })
+    },
+    //获取分组数据
+    getGroupList(projectId){
+      this.currProjectId = projectId
+      getGroupList(projectId).then(res => {
+          if(res.result === 1){
+              this.groupList = res.data
+          }
+      })
+    },
+    //获取菜单数据
+    getMenuLists(groupId){
+       this.currGroupId = groupId
+        getMenuList(groupId).then(res => {
+            if(res.result === 1){
+                this.menuList = res.data
+            }
+        })
+    },
+    //获取选中菜单id
+    getMenuId(menuId){
+       this.currMenuId = menuId
+    },
     listItemClick (index, title) {
       this.active = index
       this.curTopTitle = title
@@ -365,6 +351,7 @@ export default {
     changeTitle () {
       this.active = '';
     },
+    //项目选择框触发时间
     createNew () {
       this.active = '';
     },
@@ -384,6 +371,16 @@ export default {
               }
           })
       }
+    },
+    //复制任务
+    copyTask(){
+
+      console.log(">>>>>>>", "coyp");
+      copyTask(this.data.task.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+        if(res.result === 1){
+          this.$Message.success(res.msg)
+        }
+      })
     },
     //任务移入回收站
     recycle() {

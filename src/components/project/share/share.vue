@@ -87,15 +87,15 @@
                     <Icon type="link"></Icon>关联内容
                   </p>
                   <p style="color:#3da8f5">
-                    <Icon type="ios-plus"></Icon>添加关联
+                    <Icon type="md-add-circle"></Icon>添加关联
                   </p>
                 </div>
               </div>
-              <div class="omg" v-if="share.joinInfo">
-                <p class="ot">参与者 · {{share.joinInfo.length}}</p>
-                <p class="oc" v-for="user in share.joinInfo" :key="user.id">
+              <div class="omg" v-if="members">
+                <p class="ot">参与者 · {{members.length}}</p>
+                <p class="oc" v-for="user in members" :key="user.id">
                   <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`" :title="user.userName">
-                  <Icon type="ios-plus" size="28" color="#2d8cf0"></Icon>
+                  <Icon type="md-add-circle" size="28" color="#2d8cf0" @click.native="showMember"></Icon>
                 </p>
                 <div class="hr">
                   <p v-for="log in share.logList" :key="log.id">
@@ -109,6 +109,11 @@
         </iCol>
       </Row>
     </div>
+    <Modal v-model="showAddMember" width="252" footer-hide transfer :mask="false" :closable="false">
+
+      <user-list :projectId="projectId"></user-list>
+
+    </Modal>
   </div>
 </template>
 
@@ -118,13 +123,15 @@ import addShare from "./AddShare.vue";
 import Loading from "../../public/common/Loading.vue";
 import tag from "./Tags.vue";
 import { shares } from "../../../axios/api2.js";
-
+import userList from "../../resource/userList.vue";
+import { mapState } from "vuex";
 export default {
   components: {
     publish,
     addShare,
     Loading,
-    tag
+    tag,
+    userList
   },
   data() {
     return {
@@ -144,17 +151,21 @@ export default {
       privacyStatus: "未开启",
       showTag: false,
       tagList: [],
-      publicType: "分享"
+      publicType: "分享",
+      showAddMember: false
     };
+  },
+  computed: {
+    ...mapState("member", ["members"])
   },
   mounted() {
     shares(this.$route.params.id).then(res => {
       if (res.result == 1) {
-        console.log("xxxxxxxx", res);
         this.shareList = res.data;
         this.loading = false;
         if (this.shareList != null && this.shareList.length > 0) {
           this.share = this.shareList[0];
+          this.$store.dispatch("member/init", this.shareList[0].joinInfo);
         }
       }
     });
@@ -176,8 +187,11 @@ export default {
     changeContent(index) {
       this.indexNow = index;
       this.share = this.shareList[index];
+      this.$store.dispatch("member/init", this.shareList[index].joinInfo);
     },
-    closeTag(event, name) {}
+    showMember() {
+      this.showAddMember = !this.showAddMember;
+    }
   }
 };
 </script>
@@ -187,6 +201,7 @@ export default {
 .ivu-modal-wrap {
   background-color: #fff;
 }
+
 .share {
   position: absolute;
   left: 0;
