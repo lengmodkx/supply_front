@@ -3,12 +3,7 @@
     <div class="title">创建项目</div>
     <div class="pic"></div>
     <p class="myindex">为不同的事物建立各自的项目</p>
-    <Input
-      class="inputbox"
-      v-model.trim="proName"
-      :maxlength="20"
-      placeholder="项目名称（必填）"
-    />
+    <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）"/>
     <Input
       type="textarea"
       :rows="2"
@@ -21,9 +16,13 @@
       class="submitBtn"
       type="primary"
       size="large"
+      :loading="loading"
       :disabled="proName==''"
       @click="create"
-    >完成并创建</Button>
+    >
+      <span v-if="!loading">完成并创建</span>
+      <span v-else>正在创建...</span>
+    </Button>
   </div>
 </template>
 <script>
@@ -33,7 +32,8 @@ export default {
     return {
       disabled: true,
       proName: "",
-      proDes: ""
+      proDes: "",
+      loading: false
     };
   },
   methods: {
@@ -45,10 +45,11 @@ export default {
 
       createProject(data).then(msg => {
         if (msg.result == 1) {
+          this.loading = true;
           this.$emit("hideModal");
           this.proName = "";
           this.proDes = "";
-          this.$emit("getNewList");
+          this.$emit("getNewList", "我创建的项目");
         }
         //创建成功后关闭modal this.$emit("hideModal")  再次请求获取项目列表
       });

@@ -1,73 +1,49 @@
 <template>
-  <div>
+  <div v-if="project!=null">
     <div class="title">项目设置</div>
     <div class="tabPage clearfix">
       <div class="tabs fl">
         <ul>
-          <li
-            :class="{tabactive:active==1}"
-            @click="choose(1)"
-          >
+          <li :class="{tabactive:active==1}" @click="choose(1)">
             <Icon type="ios-eye-outline"></Icon>概览
           </li>
-          <li
-            :class="{tabactive:active==2}"
-            @click="choose(2)"
-          >
+          <li :class="{tabactive:active==2}" @click="choose(2)">
             <Icon type="android-checkbox-outline"></Icon>任务权限
           </li>
-          <li
-            :class="{tabactive:active==3}"
-            @click="choose(3)"
-          >
+          <li :class="{tabactive:active==3}" @click="choose(3)">
             <Icon type="ios-more"></Icon>更多
           </li>
         </ul>
       </div>
       <div class="content fl">
-        <div
-          class="div1"
-          v-if="active==1"
-        >
+        <div class="div1" v-if="active==1">
           <div class="div1-box">
             <div class="div1-title">项目封面</div>
             <div class="coverBox clearfix">
               <div class="cover fl">
                 <img
-                  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${data.projectCover}`"
-                  alt=""
-                ></div>
+                  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`"
+                  alt
+                >
+              </div>
               <div class="upload fl">
-                <input type="file" />
+                <input type="file">
                 <Button class="upLoadButton">上传新封面</Button>
               </div>
-
             </div>
           </div>
           <div class="div1-box">
             <div class="div1-title">项目名称</div>
-            <Input v-model="data.projectName" />
+            <Input v-model="project.projectName"/>
           </div>
           <div class="div1-box">
             <div class="div1-title">项目简介</div>
-            <Input
-              v-model="data.projectDes"
-              type="textarea"
-              placeholder="介绍一个这个项目"
-            />
+            <Input v-model="project.projectDes" type="textarea" placeholder="介绍一个这个项目"/>
           </div>
           <div class="div1-box">
             <div class="div1-title">项目公开性</div>
-            <Select
-              v-model="priority"
-              size="large"
-              style="width:100%;"
-            >
-              <Option
-                v-for="item in List"
-                :value="item.value"
-                :key="item.value"
-              >{{ item.label }}</Option>
+            <Select v-model="priority" size="large" style="width:100%;">
+              <Option v-for="item in List" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
           <div class="div1-box">
@@ -76,7 +52,7 @@
               <div class="owner fl">
                 <img
                   src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"
-                  alt=""
+                  alt
                 >
                 <span>拥有人</span>
               </div>
@@ -86,62 +62,37 @@
             </div>
           </div>
           <div class="save clearfix">
-            <Button
-              type="primary"
-              :disabled="true"
-            >保存</Button>
+            <Button type="primary" :disabled="true">保存</Button>
           </div>
         </div>
-        <div
-          class="div2 clearfix"
-          v-if="active==2"
-        >
+        <div class="div2 clearfix" v-if="active==2">
           <div class="text fl">文字</div>
           <div class="switch fl">
-            <i-Switch
-              v-model="switch1"
-              @on-change="changeSwitch"
-            ></i-Switch>
+            <i-Switch v-model="switch1" @on-change="changeSwitch"></i-Switch>
           </div>
         </div>
-        <div
-          class="div3"
-          v-if="active==3"
-        >
+        <div class="div3" v-if="active==3">
           <div class="div3-box">
             <div class="div1-title">项目操作</div>
             <p>您可以执行以下操作</p>
             <div class="btns">
               <Button @click="modal1=true;">归档项目</Button>
-              <Button
-                type="error"
-                @click="modal2=true;"
-              >移至回收站</Button>
+              <Button type="error" @click="modal2=true;">移至回收站</Button>
             </div>
-            <Modal
-              class="confirmModal"
-              v-model="modal1"
-              title="归档项目"
-            >
-              <p style="padding:10px;font-size:15px;">一旦将项目「{{data.projectName}}」归档，本项目和所含信息将会被移到「归档项目」内，其中的内容依然会被统计和搜索收录，归档项目可以随时恢复并继续使用。</p>
+            <Modal class="confirmModal" v-model="modal1" title="归档项目">
+              <p
+                style="padding:10px;font-size:15px;"
+              >一旦将项目「{{project.projectName}}」归档，本项目和所含信息将会被移到「归档项目」内，其中的内容依然会被统计和搜索收录，归档项目可以随时恢复并继续使用。</p>
               <div class="doBtn">
-                <Button
-                  type="error"
-                  @click="okGuidang"
-                >归档</Button>
+                <Button type="error" @click="okGuidang">归档</Button>
               </div>
             </Modal>
-            <Modal
-              class="confirmModal"
-              v-model="modal2"
-              title="移到回收站"
-            >
-              <p style="padding:10px;font-size:15px;">一旦将项目「{{data.projectName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
+            <Modal class="confirmModal" v-model="modal2" title="移到回收站">
+              <p
+                style="padding:10px;font-size:15px;"
+              >一旦将项目「{{project.projectName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
               <div class="doBtn">
-                <Button
-                  type="error"
-                  @click="okHuishou"
-                >移到回收站</Button>
+                <Button type="error" @click="okHuishou">移到回收站</Button>
               </div>
             </Modal>
           </div>
@@ -151,13 +102,11 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
-  props: ["data"],
   data() {
     return {
       active: 1,
-      // proname:data.projectName,
-      // prodes:data.projectDes,
       priority: "",
       switch1: false,
       modal1: false,
@@ -174,10 +123,8 @@ export default {
       ]
     };
   },
-  mounted() {
-    console.log(this.data);
-    this.proname = this.data.projectName;
-    this.prodes = this.data.projectDes;
+  computed: {
+    ...mapState("project", ["project"])
   },
   methods: {
     choose(flag) {
