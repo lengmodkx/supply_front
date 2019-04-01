@@ -162,6 +162,11 @@ export function copyTask(taskId,projectId,groupId,menuId) {
     return $post(`/tasks/${taskId}/copy`,{projectId:projectId,groupId:groupId,menuId:menuId});
 }
 
+// 移动任务
+export function moveTask(taskId,projectId,groupId,menuId) {
+    return $put(`/tasks/${taskId}/move`,{projectId:projectId,groupId:groupId,menuId:menuId});
+}
+
 //获取参与者列表
 export function getmemberList(projectId) {
     return $get(`/members/${projectId}/member`, '');
@@ -181,6 +186,16 @@ export function delTag(tagId) {
 //修改标签
 export function modifyTag(tagId, params) {
     return $put(`/tags/${tagId}`, params);
+}
+
+//移除一项信息上的标签
+export function removeInfoTag(tagId,publicId,publicType) {
+    return $delete(`/tags/${tagId}/remove/tag`, {publicId:publicId,publicType:publicType});
+}
+
+//在一项信息上添加标签
+export function bindingTag(tagId,publicId, publicType) {
+    return $post(`/tags/binding`, {tagId:tagId,publicId:publicId,publicType:publicType});
 }
 
 //搜索标签

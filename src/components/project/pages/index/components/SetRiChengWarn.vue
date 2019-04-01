@@ -1,10 +1,10 @@
 <template>
-  <Tooltip content="添加提醒"
+  <Tooltip :content="remind? remind:'添加提醒'"
            placement="top"
            transfer>
     <Dropdown trigger="click"
               transfer
-              @on-click="itemClick"
+              @on-click="clickRemind"
               @on-visible-change="visibleChange">
       <slot :repeat="curRepeat">
         <Icon type="ios-alarm-outline"
@@ -26,7 +26,7 @@
 </template>
 <script>
 export default {
-  props: ['repeat'],
+  props: ['remind'],
   data () {
     return {
       visible: false,
@@ -35,9 +35,9 @@ export default {
     }
   },
   methods: {
-    itemClick (id) {
+    clickRemind (id) {
       this.curRepeat = this.list.find(v => v.id == id)
-      this.$emit('update:repeat', this.curRepeat.id)
+      this.$emit("changeRemind", this.curRepeat.name)
     },
     visibleChange (visible) {
       this.$nextTick(_ => {

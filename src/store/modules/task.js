@@ -17,31 +17,10 @@ const store = {
         currentProjectId: null,
         sort: '1',
         curTaskGroupId: 1,
-        taskGroup: [{
-                id: 1,
-                name: '任务1',
-                desc: '描述任务1',
-                urgency1: 2,
-                urgency2: 1,
-                urgency3: 1,
-                urgency4: 1,
-                total: 5,
-                done: 1
-            },
-            {
-                id: 2,
-                name: '任务2',
-                desc: '2222222222222222222222222222222222222222',
-                urgency1: 0,
-                urgency2: 1,
-                urgency3: 1,
-                urgency4: 0,
-                total: 2,
-                done: 0
-            }
-        ],
+        taskGroup: [],
         tags: [],
-        members: []
+        members: [],
+        task:{}
     },
     getters: {
         curTaskGroup: (state, getters) => {
@@ -70,21 +49,8 @@ const store = {
         initTask(state, data) {
             state.simpleTasks = data
         },
-        initEditTask(state, data){
-            let has= false;
-            if(state.tasks.length !== 0){
-                state.tasks.forEach((item, index) => {
-                    if(item.task.taskId === data.task.taskId){
-                        has=true;
-                        state.tasks[index]=data
-                    }
-                    if (!has) {
-                        state.tasks.push(data)
-                    }
-                })
-            } else{
-                state.tasks.push(data)
-            }
+        editTask(state, data){
+            state.task = data
         },
         changeTask(state, data) {
             state.simpleTasks = data
@@ -99,11 +65,14 @@ const store = {
                 }
             }
 
-            for(var i = 0;i < state.tasks.length;i++){
-                if(state.tasks[i].task.taskId === data.task.taskId){
-                    state.tasks[i].task[data.property] = pro
-                }
+            if(state.task.taskId === data.task.taskId){
+               state.task[data.property] = pro
             }
+            // for(var i = 0;i < state.tasks.length;i++){
+            //     if(state.tasks[i].task.taskId === data.task.taskId){
+            //         state.tasks[i].task[data.property] = pro
+            //     }
+            // }
 
             //这里是更改进入项目主页面后的菜单任务列表的数据
             for(var i = 0;i < state.simpleTasks.length;i++){
@@ -117,18 +86,14 @@ const store = {
             }
         },
         updateChildTask(state, data){
-            let task = data.task.task
-            for(var i = 0;i < state.tasks.length;i++){
-                if(state.tasks[i].task.taskId === task.parentId){
-
-                    state.tasks[i].task.taskList.unshift(task)
-                }
+            if(state.task.taskId === data.parentId){
+                state.task.taskList.unshift(data)
             }
 
             //这里是更改进入项目主页面后的菜单任务列表的数据
             for(var i = 0;i < state.simpleTasks.length;i++){
                 for(var j = 0;j < state.simpleTasks[i].taskList.length;j++){
-                    if(state.simpleTasks[i].taskList[j].taskId === task.parentId){
+                    if(state.simpleTasks[i].taskList[j].taskId === data.parentId){
                         state.simpleTasks[i].taskList[j].childCount++
                     }
                 }
@@ -143,10 +108,27 @@ const store = {
         },
         copyTask(state,data){
           state.simpleTasks.forEach((menu,index) => {
-              if(menu.relationId === data.relationId){
-                  state.simpleTasks[index].tasks.unshift(data)
+              if(menu.relationId === data.taskMenuId){
+                  if(data.taskStatus === '未完成'){
+                      data.taskStatus = false
+                  } else{
+                      data.taskStatus = true
+                  }
+                  state.simpleTasks[index].taskList.unshift(data)
               }
           })
+        },
+        moveTask(state,data){
+            state.simpleTasks.forEach((menu,mIndex) => {
+                menu.taskList.forEach((task,tIndex) => {
+                    if(data.taskId === task.taskId) {
+                        state.simpleTasks[mIndex].taskList.splice(tIndex, 1)
+                    }
+                })
+                if(data.taskMenuId === menu.relationId){
+                    state.simpleTasks[mIndex].taskList.unshift(data)
+                }
+            })
         },
         updateSort(state, data) {
             state.sort = data
@@ -178,6 +160,38 @@ const store = {
                     state.tasks[index].task.taskDel = 1
                 }
             })
+        },
+        bindingTag(state,data){
+            console.log(">>>>", data.tag);
+            state.simpleTasks.forEach((menu,menuIndex) => {
+                menu.taskList.forEach((task,taskIndex) => {
+                    if(task.taskId === data.taskId){
+                        state.simpleTasks[menuIndex].taskList[taskIndex].tagList.unshift(data.tag)
+                        return
+                    }
+                })
+            })
+            state.task.tagList.unshift(data.tag)
+        },
+        removeTag(state,data){
+            state.simpleTasks.forEach((menu,menuIndex) => {
+                menu.taskList.forEach((task,taskIndex) => {
+                    if(task.taskId === data.taskId){
+                        task.tagList.forEach((tag,tIndex) => {
+                            if(tag.tagId === data.tagId){
+                                state.simpleTasks[menuIndex].taskList[taskIndex].tagList.splice(tIndex,1)
+                            }
+                        })
+                    }
+                })
+            })
+            state.task.tagList.forEach((tag,tIndex) => {
+                if(tag.tagId === data.tagId){
+                    state.task.tagList.splice(tIndex,1)
+                }
+            })
+
+
         }
     },
     actions: {
@@ -208,17 +222,20 @@ const store = {
                 }
             });
         },
-        initEditTask({commit},data){
-            return new Promise((resolve,reject) =>{
+        editTask({commit},data){
+            return new Promise((resolve, reject) => {
                 initEditTask(data).then(res => {
-                    if (res.data.task.taskStatus === "未完成") {
-                        res.data.task.taskStatus = false
+                    if (res.data.taskStatus === "未完成") {
+                        res.data.taskStatus = false
                     } else {
-                        res.data.task.taskStatus = true
+                        res.data.taskStatus = true
                     }
-                    commit('initEditTask',res.data)
-                    resolve()
+                    if(res.result===1){
+                        commit('editTask',res.data)
+                    }
+                    resolve();
                 })
+
             })
         },
         // 更新任务开始时间
@@ -265,6 +282,9 @@ const store = {
         copyTask({commit},data){
             commit('copyTask',data)
         },
+        moveTask({commit},data){
+          commit('moveTask',data)
+        },
         initTags({ //初始化标签列表
             commit,
             state
@@ -275,6 +295,12 @@ const store = {
                 commit('updateTags', res.tagList)
                 callback()
             })
+        },
+        bindingTag({commit},data){
+            commit('bindingTag',data)
+        },
+        removeTag({commit},data){
+            commit('removeTag',data)
         },
         initMemberList({
             commit,

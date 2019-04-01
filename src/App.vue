@@ -101,4 +101,15 @@ export default {
     }
   }
 }
+.demo-spin-container{
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  border: 1px solid #eee;
+  z-index: 999999999;
+}
 </style>

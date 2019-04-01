@@ -8,7 +8,7 @@
           <Icon type="ios-arrow-down" style="color:gray;"></Icon>
         </span>
       </div>
-      <left-task-info class="leftTaskInfo"></left-task-info>
+      <!--<left-task-info class="leftTaskInfo"></left-task-info>-->
       <div class="tab_nav">
         <ButtonGroup>
 
@@ -80,7 +80,7 @@
                       <span class="label">
                         <Icon class="icon" type="document" size="16"></Icon>
                       </span>
-                      <span class="label">
+                      <span class="label" style="margin-bottom: 5px">
                         <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.childCount}}</span>
                       </span>
                       <span class="label">
@@ -89,6 +89,9 @@
                       <span class="label">
                         <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
+                        <div class="tag-box" v-if="a.tagList.length > 0">
+                            <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -115,6 +118,7 @@
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
                     <div class="task-infos">
+
                       <span class="label time-label">9月12日 截止</span>
                       <span class="label repeat-label">每周重复</span>
                       <span class="label">
@@ -168,8 +172,12 @@
     </draggable>
     <!-- 点击列表出来的弹框。编辑列表 -->
     <Modal v-model="showModal" class="myModal">
-      <my-modal v-if="showmodal" :data="activeModalData"></my-modal>
+      <my-modal></my-modal>
     </Modal>
+    <!--加载中-->
+    <div class="demo-spin-container" v-if="!simpleTasks.length">
+      <Spin fix size="large"></Spin>
+    </div>
   </div>
 </template>
 
@@ -206,7 +214,7 @@ export default {
     CurrentAdd
   },
   computed: {
-    ...mapGetters("task", ["curTaskGroup","getTaskById","abc"]),
+    ...mapGetters("task", ["curTaskGroup","abc"]),
     ...mapState("task", ["simpleTasks","sort"])
   },
   data() {
@@ -260,16 +268,10 @@ export default {
       tasklist.push(data);
     },
     initTask(taskId) {
-        this.$store.dispatch('task/initEditTask',taskId).then(() =>{
-            // this.activeModalData = this.getTaskById(taskId)
-            this.activeModalData = this.getTaskById(taskId)
-            this.showModal = true
-            this.showmodal=true
-        })
-
-
-
-
+      this.$store.dispatch('task/editTask', taskId).then(() => {
+          this.showModal = true
+      })
+    },
       // initEditTask(taskId).then(res => {
       //   if (res.data.task.taskStatus == "未完成") {
       //     res.data.task.taskStatus = false;
@@ -281,7 +283,7 @@ export default {
       //   // console.log(res.task)
       //   this.showModal = true;
       // });
-    },
+    //},
     // initStore () {
     //   //发请求获取task store中的标签列表，任务列表，人员列表
     //   this.updateTags([

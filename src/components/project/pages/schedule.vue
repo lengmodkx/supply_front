@@ -38,7 +38,7 @@
       </div>
       <div
         class="handler"
-        v-for="(i, k) in data"
+        v-for="(i, k) in schedules"
         :key="k"
       >
         <div class="title">{{new Date(i.startTime).Format('MM月dd日')}}</div>
@@ -62,8 +62,8 @@
                   :key="n"
                   alt=""
                 >
-                <!-- <Icon type="plus-circled"></Icon> -->
-                <userList :id='parameter.projectId'></userList>
+                 <Icon type="plus-circled"></Icon>
+                <!--<userList :id='parameter.projectId'></userList>-->
               </p>
             </div>
           </div>
@@ -82,11 +82,12 @@
     ></AddSchedule>
     <Modal
             v-model="editrc"
-            footer-hide=true
+            :footer-hide='true'
             transfer
             >
-      <editRicheng :data="richengData"></editRicheng>
+      <editRicheng></editRicheng>
     </Modal>
+
 
   </div>
 </template>
@@ -96,38 +97,35 @@ import AddSchedule from "../../public/AddSchedule.vue";
 import editRicheng from "../../public/common/EditRicheng"
 import { schedules } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
+import {mapState,mapActions,mapMutations} from 'vuex'
 export default {
   name: "",
   components: { AddSchedule, userList, editRicheng },
   data() {
     return {
       addSchedule: false,
-      data: [],
       editrc: false,
-      loading: true,
       richengData:null,
       parameter: {
         projectId: this.$route.params.id
       }
     };
   },
+  computed:{
+    ...mapState("schedule", ['loading','schedules',])
+  },
   methods: {
-    getData() {
-      schedules(this.parameter).then(res => {
-        this.loading = false;
-        this.data = res.after;
-        console.log("初始化88888",res.after)
-      });
-    },
+    ...mapActions("schedule", ['init']),
+    ...mapMutations("schedule", ['oneSchedule']),
     // 编辑日程
     showEditRC(item){
-      this.richengData = item
+      this.oneSchedule(item);
       this.editrc=true
     }
   },
   mounted() {
     console.log(this.$route);
-    this.getData();
+    this.init(this.parameter)
   }
 };
 </script>

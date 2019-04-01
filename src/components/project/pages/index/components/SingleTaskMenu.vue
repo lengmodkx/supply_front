@@ -40,7 +40,7 @@
                     name="moveTo"></svg-icon>移动任务</div>
         <div class="menuItem" @click="collectTask">
           <svg-icon class="svgicon"
-                    name="collect"></svg-icon>{{data.collect ? '取消收藏':'收藏任务'}}</div>
+                    name="collect"></svg-icon>{{data.isCollect ? '取消收藏':'收藏任务'}}</div>
 
         <div class="menuItem"
              @click="listItemClick('c','移到回收站')">
@@ -80,9 +80,9 @@
              v-if="active=='a'">
           <div class="con5item1">
             <span>项目</span>
-            <Select v-model="model7" style="width:100px" >
+            <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
               <OptionGroup label="星标项目">
-                <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName}}</Option>
+                <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
               </OptionGroup>
               <OptionGroup label="非星标项目">
                 <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
@@ -92,56 +92,24 @@
           </div>
           <div class="con5item2">
             <span>分组</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前任务
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">任务1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">任务2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model9" style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+              </Select>
+            </template>
           </div>
           <div class="con5item3">
             <span>列表</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前列表
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">大列表1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">大列表2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model3" style="width:150px" placeholder="当前列表" @on-change="getMenuId">
+                <Option v-for="item in menuList" :value="item.relationId" :key="item.relationName">{{ item.relationName }}</Option>
+              </Select>
+            </template>
           </div>
           <div class="con5tip">跨项目移动时，部分参与者信息不会保留</div>
           <Button type="primary"
                   long
-                  style="margin-top:8px;">确定</Button>
+                  style="margin-top:8px;" @click="moveTask">确定</Button>
         </div>
         <div class="con6"
              v-if="active=='b'">
@@ -255,7 +223,7 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import {collectTask,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask} from "@/axios/api";
+import {collectTask,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
 
 export default {
   props: ['data'],
@@ -281,7 +249,10 @@ export default {
       menuList:[],
       model7: '',
       model9:'',
-      model10:''
+      model10:'',
+      model1: '',
+      model2:'',
+      model3:''
     }
   },
   computed: {
@@ -357,26 +328,32 @@ export default {
     },
     collectTask() {
       if(this.data.collect){
-          cancelCollect(this.data.task.taskId).then(res => {
+          cancelCollect(this.data.taskId).then(res => {
               if(res.result === 1){
                   this.$Message.success(res.msg)
                   this.data.collect = false
               }
           })
       } else{
-          collectTask(this.data.task.projectId,this.data.task.taskId,'任务').then(res => {
+          collectTask(this.data.projectId,this.data.taskId,'任务').then(res => {
               if(res.result === 1){
                   this.$Message.success(res.msg)
-                  this.data.collect = true
+                  this.data.isCollect = true
               }
           })
       }
     },
     //复制任务
     copyTask(){
-
-      console.log(">>>>>>>", "coyp");
-      copyTask(this.data.task.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+      copyTask(this.data.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+        if(res.result === 1){
+          this.$Message.success(res.msg)
+        }
+      })
+    },
+    //移动任务
+    moveTask(){
+      moveTask(this.data.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
         if(res.result === 1){
           this.$Message.success(res.msg)
         }
@@ -384,7 +361,7 @@ export default {
     },
     //任务移入回收站
     recycle() {
-        taskToRecycle(this.data.task.taskId).then(res => {
+        taskToRecycle(this.data.taskId).then(res => {
             console.log(this.data.task)
         })
     },

@@ -98,10 +98,18 @@ export default {
                 this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"priority"})
                 break;
               case "A13":
-                  this.$store.dispatch("task/updateChildTask",{task:result.object})
+                  this.$store.dispatch("task/updateChildTask",result.object.task)
                 break;
                 case "A15":
                   this.$store.dispatch("task/copyTask",result.object.task)
+                break;
+              case "A16":
+                if(result.object.task.taskStatus === '完成'){
+                  result.object.task.taskStatus = true
+                } else{
+                  result.object.task.taskStatus = false
+                }
+                this.$store.dispatch("task/moveTask",result.object.task)
                 break;
               case "A17":
                 this.$store.dispatch("task/recycle",result.object.task)
@@ -113,6 +121,15 @@ export default {
                   fileId: result.object.parentId
                 });
                 break;
+              case "E1":
+                if(result.object.publicType === '任务'){
+                  this.$store.dispatch("task/bindingTag",{tag:result.object.tag,taskId:result.object.publicId})
+                }
+                break;
+              case "E2":
+                if(result.object.publicType === '任务'){
+                  this.$store.dispatch("task/removeTag",{tagId:result.object.tagId,taskId:result.object.publicId})
+                }
             }
           });
         },
