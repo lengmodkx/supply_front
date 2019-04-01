@@ -327,11 +327,11 @@ export default {
       this.active = '';
     },
     collectTask() {
-      if(this.data.collect){
+      if(this.data.isCollect){
           cancelCollect(this.data.taskId).then(res => {
               if(res.result === 1){
                   this.$Message.success(res.msg)
-                  this.data.collect = false
+                  this.data.isCollect = false
               }
           })
       } else{
