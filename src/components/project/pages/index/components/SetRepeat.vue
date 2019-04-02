@@ -4,7 +4,7 @@
            transfer>
     <Dropdown trigger="click"
               transfer
-              @on-click="selectReapeat">
+              @on-click="itemClick">
       <slot :repeat="curRepeat">
         <Icon type="ios-color-filter-outline"
               size="20"></Icon>

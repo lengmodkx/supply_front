@@ -282,6 +282,11 @@ export function getMenuList(groupId) {
     return $get(`/relations/${groupId}/menus`);
 }
 
+/** 更新任务的参与者 */
+export function updateTaskJoin(taskId,joinIds) {
+    return $put(`/tasks/${taskId}/members`, {taskUids:joinIds});
+}
+
 /**日程初始化 */
 export function schedules(projectId) {
     return $get(`/schedules/`, projectId);

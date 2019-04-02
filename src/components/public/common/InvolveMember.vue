@@ -131,7 +131,7 @@ export default {
       let detailList=list1.join(',')
 
       console.log(detailList)
-      this.$emit('save', detailList,list)
+      this.$emit('save', detailList)
       this.visible=false
       // let all = this.memberList.find(v => v.userId == -1)
       // let allChecked = all.checked

@@ -282,10 +282,9 @@
 
           </div>
           <div class="addButton fl">
-            <InvolveMember ref="involveMember" :checkedList="task.involveList" v-if="task.involveList" @save="saveInvolveMember"></InvolveMember>
+            <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId" @save="saveInvolveMember"></InvolveMember>
           </div>
         </div>
-
       </div>
     </div>
     <footer>
@@ -327,7 +326,8 @@ import {
   updatePriority,
   cancelcompleteTask,
   completeTask,
-  updateRepeat
+  updateRepeat,
+  updateTaskJoin
 } from "@/axios/api";
 export default {
   name: "myModel",
@@ -339,7 +339,7 @@ export default {
     SingleTaskMenu,
     SetExecutor,
     AddRelation,
-    myModel
+    myModel,
   },
   props:["data"],
   data() {
@@ -445,15 +445,13 @@ export default {
       }
     },
     deleteExecutor() {},
-    saveInvolveMember(ids, list) {
-      this.data.involveList = ids;
-      this.involveDataList = list;
-    },
     deleteInvolve(id) {
-      if (id == 3) return; //需获取当前登录用户id判断
-      let index = this.data.involveList.indexOf(id);
-      this.data.involveList.splice(index, 1);
-      this.involveDataList.splice(index, 1);
+      // if (id == 3) return; //需获取当前登录用户id判断
+      let index = this.joinInfoIds.indexOf(id);
+      this.joinInfoIds.splice(index, 1);
+      updateTaskJoin(this.task.taskId,this.joinInfoIds.join(',')).then(res => {
+
+      })
     },
     editorSave(val) {
       this.editorValue = val;
@@ -476,7 +474,15 @@ export default {
       this.$nextTick(_ => {
         this.modal1 = false;
       });
-    }
+    },
+    // 添加参与者
+    saveInvolveMember (detailList) {
+      updateTaskJoin(this.task.taskId,detailList).then(res => {
+        if(res.result === 1){
+          // this.task.joinInfo.unshift(res.data)
+        }
+      })
+    },
   },
   mounted() {
     this.aa=false
@@ -486,8 +492,11 @@ export default {
     this.loading=false
   },
   computed:{
-    ...mapState("task",["task"])
-  }
+    ...mapState("task",["task",'joinInfoIds']),
+    vuexTask(){
+      return this.$store.state.task.joinInfo
+    }
+  },
 };
 </script>
 <style scoped lang="less">

@@ -20,7 +20,8 @@ const store = {
         taskGroup: [],
         tags: [],
         members: [],
-        task:{}
+        task:{},
+        joinInfoIds:[]
     },
     getters: {
         curTaskGroup: (state, getters) => {
@@ -51,6 +52,14 @@ const store = {
         },
         editTask(state, data){
             state.task = data
+            if (data.joinInfo) {
+                state.joinInfoIds = data.joinInfo.map((v) => {
+                    return v.userId
+                })
+            }else {
+                state.joinInfoIds=[]
+            }
+
         },
         changeTask(state, data) {
             state.simpleTasks = data
@@ -147,6 +156,16 @@ const store = {
         },
         updateMemberList(){}
         ,
+        updateJoinInfo(state,data){
+            state.task.joinInfo = data
+            if (data) {
+                state.joinInfoIds = data.map((v) => {
+                    return v.userId
+                })
+            }else {
+                state.joinInfoIds=[]
+            }
+        },
         recycle(state,data){
             state.simpleTasks.forEach((menu,menuIndex) => {
                 menu.taskList.forEach((task,taskIndex) => {
@@ -163,7 +182,6 @@ const store = {
             })
         },
         bindingTag(state,data){
-            console.log(">>>>", data.tag);
             state.simpleTasks.forEach((menu,menuIndex) => {
                 menu.taskList.forEach((task,taskIndex) => {
                     if(task.taskId === data.taskId){
@@ -313,6 +331,9 @@ const store = {
                 callback()
             })
 
+        },
+        updateJoinInfo({commit},data){
+          commit('updateJoinInfo',data)
         },
         updateChildTask({commit},data){
             commit('updateChildTask',data)

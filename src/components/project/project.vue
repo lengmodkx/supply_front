@@ -100,6 +100,9 @@ export default {
               case "A13":
                   this.$store.dispatch("task/updateChildTask",result.object.task)
                 break;
+              case "A14":
+                this.$store.dispatch("task/updateJoinInfo",result.object.members)
+                break;
                 case "A15":
                   this.$store.dispatch("task/copyTask",result.object.task)
                 break;
