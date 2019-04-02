@@ -19,7 +19,7 @@
         </Tooltip>
 
         <span class="down">
-          <SingleRiChengMenu :data=schedule></SingleRiChengMenu>
+          <SingleRiChengMenu :data=schedule :name="publicType"></SingleRiChengMenu>
         </span>
       </div>
     </div>
@@ -136,7 +136,7 @@
   <div class="relevance">
     <p class="name" style="float: none;"><Icon type="ios-link-outline"></Icon>关联内容</p>
     <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
-    <Modal v-model="relationModal" class="relationModal" id="relationModal">
+    <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
         <AddRelation></AddRelation>
     </Modal>
 
@@ -145,7 +145,7 @@
   <!-- 设置参与者 -->
   <div class="participator">
      <h5>
-        参与者 · {{schedule.joinInfo.length}}
+        参与者 · {{schedule.joinInfo.length?schedule.joinInfo.length:0}}
         <Tooltip content="参与者将会收到评论和任务更新通知"
                  placement="right"
                  transfer>
@@ -179,32 +179,12 @@
                          @save="saveInvolveMember"></InvolveMember>
         </div>
       </div>
-      <log></log>
-
+      <log :logs="schedule.logs"></log>
   </div>
 
 </div>
     <footer>
-      <div class="talk">
-        <div class="talkinner">
-          <div class="talkUp"
-               contenteditable="true">
-            <Input id="input"
-                   v-model.trim="talkvalue"
-                   ref="textarea"
-                   placeholder="按Enter快速发布" />
-          </div>
-          <div class="talkDown clearfix">
-            <!-- 表情包组件 -->
-            <Emoji @choose="chooseEmoji"
-                   ref="emoji"></Emoji>
-
-            <div class="send fr">
-              <Button type="primary">发布</Button>
-            </div>
-          </div>
-        </div>
-      </div>
+        <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId"></publick>
     </footer>
   </div>
 </template>
@@ -213,13 +193,14 @@ import SetRepeat from '@/components/project/pages/index/components/SetRepeat'
 import SetRCWarn from '@/components/project/pages/index/components/SetRiChengWarn'
 import AddRelation from '@/components/public/common/AddRelation'
 import Tags from '@/components/project/share/Tags'
-import insertText from '@/utils/insertText'
 import Emoji from '@/components/public/common/emoji/Emoji'
 import SingleRiChengMenu from './SingleRiChengMenu'
 import SetExecutor from '@/components/project/pages/index/components/SetExecutor'
 import editor from '@/components/resource/Simditor'
 import log from '@/components/public/log'
+import publick from '@/components/public/Publish'
 import {mapState,mapMutations,mapActions} from 'vuex'
+import {sendMsg} from '@/axios/api'
 import {upRichengName, beginDate, endDate,changeRepeat,changeRemind,changeAddress,changeRemarks,playPeople} from '@/axios/scheduleApi'
 
 export default {
@@ -232,7 +213,8 @@ export default {
     SingleRiChengMenu,
     editor,
     SetExecutor,
-    AddRelation
+    AddRelation,
+      publick
   },
   data () {
     return {
@@ -351,6 +333,7 @@ export default {
               }
           })
     },
+
     deleteStart (){
       this.schedule.startTime = ''
     },
@@ -401,13 +384,10 @@ export default {
     showwaitAdd () {
       this.showEditor = true
     },
-    chooseEmoji (name) {
-      insertText(this.$refs.textarea.$el.children[1], name)
-    }
    
   },
   mounted () {
-
+      console.log(this.schedule)
     // document.getElementById("editCon").parentNode.style.width = '100%';
   }
 }

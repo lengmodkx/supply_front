@@ -15,7 +15,6 @@ const store ={
         // 单个日程 赋值
         oneSchedule (state, data){
             state.schedule=data
-            console.log(2222222222,state.schedule)
         },
         // 更新日程名称
         updateScheduleName(state, data){
@@ -82,13 +81,15 @@ const store ={
                     state.schedules[index]=state.schedule
                 }
             })
+        },
+        msg(state, data){
+            state.schedule.logs.unshift(data)
         }
     },
     actions: {
         // 初始化所有日程
         init({commit},params){
             schedules(params).then(res=>{
-                console.log('res888888888888',res)
                     commit('init',res.after);
             })
 

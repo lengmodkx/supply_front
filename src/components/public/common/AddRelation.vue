@@ -9,10 +9,10 @@
         <div class="div1 fl">
           <ul class="type">
             <li :class="{on:active=='a'}" @click="active='a'">
-              <Icon type="android-checkbox-outline"></Icon>任务
+                <Icon type="ios-open-outline" />任务
             </li>
             <li :class="{on:active=='b'}" @click="active='b'">
-              <Icon type="ios-paper-outline"></Icon>分享
+                <Icon type="ios-paper-outline" />分享
             </li>
             <li :class="{on:active=='c'}" @click="active='c'">
               <Icon type="ios-calendar-outline"></Icon>日程
@@ -25,62 +25,120 @@
         <div class="div2 fl">
           <h4>个人项目</h4>
           <ul class="project">
-            <li>项目项目一</li>
-            <li>项目项目二</li>
-            <li>项目项目三</li>
-            <li>项目项目四</li>
+              <li @click="showTask(index, item.projectId)" :class="{checked:projectI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
           </ul>
         </div>
-        <div class="div3 fl clearfix">
-          <!-- 选中任务的时候 -->
-            <div class="task-group fl" v-if="active=='a'">
-                <div class="taskList">
+        <div class="complex-div fl" ref="scrollX">
+            <!--点击任务，显示的-->
+            <div class="renwu-div" v-show="active=='a'">
+                <!--任务分组-->
+                <div class="renwu1 scrolly">
+                    <loading v-if="loading"></loading>
                     <h4>任务分组</h4>
-                    <ul class="project">
-                      <li>项目项目一</li>
-                      <li>项目项目二</li>
-                      <li>项目项目三</li>
-                      <li>项目项目四</li>
-                    </ul>
-                </div>
-                <div class="smart-group">
+                    <p v-for="(item, index) in taskDataFenzu" :class="{check:checkTAsk==index}" :key="index" @click="showAllTask(item.relationId,index)">{{item.relationName}}</p>
                     <h4>智能分组</h4>
-                    <ul class="project">
-                      <li>今天的任务</li>
-                      <li>未完成的任务</li>
-                      <li>已完成的任务</li>
+                    <p>今天的任务</p>
+                    <p>未完成的任务</p>
+                    <p>已完成的任务</p>
+                </div>
+                <!--分组中具体的任务/子任务-->
+                <div class="definite-renwu scrolly" v-if="showRenwu">
+                    <loading v-if="taskLoading"></loading>
+                    <div class="renwu-wrap"  v-for="(i,n) in taskData" :key="n">
+                        <div>{{i.relationName}}</div>
+                        <ul>
+                            <li :class="{checked:checkedOneTask.n==n&&checkedOneTask.nn==nn}" v-for="(ii,nn) in i.taskList" :key="nn" class="renwu-list" @click="showChild(n,nn,ii.taskId)">
+                                <span></span>
+                                <img :src="ii.executorImg?'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ii.executorImg:morenImg" alt="">
+                                <p>{{ii.taskName}}</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="definite-renwu scrolly" v-if="showZirenwu">
+                    <ul>
+                        <li @click="checkedZirenwu(index)" :class="{checked:checkZirenwu==index}" class="renwu-list" v-for="(item,index) in zirenwuData" :key="index">
+                            <span></span>
+                            <img :src="item.executorImg?'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.executorImg:morenImg" alt="">
+                            <p>{{item.taskName}}</p>
+                        </li>
                     </ul>
                 </div>
             </div>
-          <div class="task-item fl" v-if="active=='a'"></div>
-        <!-- 选中分享的时候 -->
-          <div class="share" v-if="active=='b'">
-              <div class="addShare"><Icon type="plus-circled"></Icon>创建新分享</div>
-              <ul class="shareList">
-                <li><Icon type="ios-paper-outline"></Icon>用 Teambition 为新产品发布计划建立一个公示板吧</li>
-              </ul>
-          </div>
-
-        <!-- 选中日程的时候 -->
-          <div class="schedule" v-if="active=='c'">
-            <div class="addSchedule"><Icon type="plus-circled"></Icon>创建新日程</div>
-            <div class="schedule-count">过去的日程 · 10<span class="toggleHide" @click="showMore">{{tabBox?'隐藏':'显示'}}</span></div>
-            <div class="schedule-box" v-show="tabBox">
-                这里面放日程list
-            </div>
-          </div>
-        <!-- 选中文件的时候 -->
-          <div class="file clearfix" v-if="active=='d'">
-            <div class="file-inner1 fl">
-                <div class="file-picker-handlers">
-                  上传文件 创建文件夹
+            <!--点击分享 显示的-->
+            <div class="fenxiang-div scrolly" v-show="active=='b'">
+                <div class="create-task">
+                    <Icon type="md-add-circle" size="20" />
+                    <span>创建新分享</span>
                 </div>
+                <ul>
+                    <li class="fenxiang-list">
+                        <Icon type="ios-paper-outline" size="20" />
+                        <span>分享分享</span>
+                    </li>
+                </ul>
             </div>
-            <div class="file-inner2 fl"></div>
-          </div>
-
-
+            <!--点击日程 显示的-->
+            <div class="richeng-div scrolly" v-show="active=='c'">
+                <div class="create-task">
+                    <Icon type="md-add-circle" size="20" />
+                    <span>创建新日程</span>
+                </div>
+                <div class="weilai">未来的日程 · 1</div>
+                <ul>
+                    <li class="richeng-list">
+                        <Icon type="ios-calendar-outline" size="20" />
+                        <p>日程日程</p>
+                        <div class="rc-time">
+                            <Time :time="new Date().getTime()-8000000000" />
+                            <span>-</span>
+                            <Time :time="new Date().getTime()-900000000" />
+                        </div>
+                    </li>
+                </ul>
+                <div class="guoqu">过去的日程 · 1  <span @click="showOldRc=!showOldRc">{{showOldRc?'隐藏':'显示'}}</span></div>
+                <Collapse v-show="showOldRc" simple>
+                    <Panel name="1">
+                        2019年3月
+                        <div slot="content">
+                            <ul>
+                                <li class="richeng-list">
+                                    <Icon type="ios-calendar-outline" size="20" />
+                                    <p>日程日程</p>
+                                    <div class="rc-time">
+                                        <Time :time="new Date().getTime()-8000000000" />
+                                        <span>-</span>
+                                        <Time :time="new Date().getTime()-900000000" />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </Panel>
+                    <Panel name="2">
+                        2019年2月
+                        <div slot="content">
+                            <ul>
+                                <li class="richeng-list">
+                                    <Icon type="ios-calendar-outline" size="20" />
+                                    <p>日程日程</p>
+                                    <div class="rc-time">
+                                        <Time :time="new Date().getTime()-8000000000" />
+                                        <span>-</span>
+                                        <Time :time="new Date().getTime()-900000000" />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </Panel>
+                </Collapse>
+            </div>
+            <!--点击文件 显示的-->
+            <div class="wenjain-div scrolly" v-show="active=='d'">
+                <Tree show-checkbox multiple expand></Tree>
+            </div>
         </div>
+
     </div>
     <div class="footer">
       <Button type="primary" size="large" style="padding:6px 20px;">确定</Button>
@@ -88,29 +146,101 @@
   </div>
 </template>
 <script>
+    import loading from './Loading'
+    import {getProjectList} from '@/axios/api'
+    import {getFenzu, getTask,getZirenwu} from '@/axios/relevanceApi'
   export default{
     name:"",
     data () {
       return{
         searchVal:'',
+        loading: false,
+        taskLoading:false,
+        showRenwu:false,
+        showZirenwu:false,
         active:'a',
-        tabBox: false
-        
+        tabBox: false,
+        showOldRc:false,
+        projectData:[],
+        projectI:1,
+        projectId:'',
+        taskDataFenzu: [],
+        checkTAsk:null,
+        checkedOneTask:{n:'',nn:''},
+        morenImg:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==',
+        taskData:[],
+        zirenwuData:[],
+        checkZirenwu:null
       }
       
     },
+    components: {loading},
     methods:{
       showMore() {
       this.tabBox = !this.tabBox;
-    }
+    },
+  // 点击具体任务 显示子任务
+      showChild(n,nn,taskId){
+          this.checkedOneTask.n=n
+          this.checkedOneTask.nn=nn
+          getZirenwu(taskId).then(res => {
+             if (res.result){
+                 this.showZirenwu=res.data.length
+                 this.zirenwuData=res.data
+                 this.$nextTick(() => {
+                     this.$refs.scrollX.scrollLeft=260
+                 })
+             }
+          })
+
+
+      },
+        // 点击某个项目
+      showTask(index, projectId){
+          this.projectI=index
+          this.projectId=projectId
+          this.loading=true
+          getFenzu(this.projectId).then(res => {
+              this.showRenwu=true
+              this.loading=false
+              console.log(res)
+              if (res.result){
+                  this.taskDataFenzu=res.data
+              }
+          })
+      },
+        // 点击任务分组
+      showAllTask(groupId,index){
+          this.taskLoading=true
+          this.checkTAsk=index
+          console.log(groupId)
+          getTask(groupId).then(res => {
+              this.taskLoading=false
+              console.log(2222222,res)
+              this.taskData=res.data
+          })
+      },
+      // 点击子任务、
+      checkedZirenwu(index){
+          this.checkZirenwu=index
+      }
     },
     mounted () {
+        // this.projectI=''
+        // this.checkTAsk=''
+        // this.checkedOneTask.n=''
+        // this.checkedOneTask.nn=''
       document.getElementById('relationModal').children[1].style.zIndex = '1010';
       document.getElementById('relationModal').children[0].style.zIndex = '1010';
+        getProjectList().then(res => {
+           this.projectData=res.data
+            console.log(res.data)
+        })
     }
   }
 </script>
 <style scoped lang="less">
+ @import "./AddRelation";
 .relationBox{
   height:100%;
   .title{
@@ -160,6 +290,16 @@
       }
     }
     .div2{
+        overflow-x: hidden;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 6px;
+            height: 8px;
+            background-color: #e5e5e5;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #cecece;
+        }
       .action{
         background-color: #eee;
         color: #3da8f5;
@@ -178,118 +318,27 @@
             color: #3da8f5;
           }
         }
+        .checked{
+            background-color: #eee;
+            color: #3da8f5;
+          }
       }
     }
 
-  .div3{
+  .complex-div{
     width:calc(100% - 360px);
     height:100%;
-    overflow-y: auto;
-    .task-group{
-      width: 180px;
-      height:100%;
-      border-right:1px solid rgba(0,0,0,.12);
-      overflow-y: auto;
-      .taskList{
-        margin-bottom:30px;
-      }
-      .taskList,.smart-group{
-        
-        h4{
-        padding-top:10px;
-        padding-left:15px;
-       }
-      .project{
-        li{
-          line-height: 30px;
-          padding-left:15px;
-          cursor: pointer;
-          &:hover{
-            background-color: #eee;
-            color: #3da8f5;
-          }
-        }
-      }
-      }
+    overflow-x: auto;
+    overflow-y: hidden;
+    transition: all 0.3s;
+    display: flex;
+    &::-webkit-scrollbar {
+          width: 10px;
+          height: 12px;
+          background-color: #e5e5e5;
     }
-    .task-item{
-      width: calc(100% - 180px);
-      height:100%;
-      overflow-y: auto;
-    }
-
-    .share{
-      height:100%;
-      font-size:14px;
-      .addShare{
-        line-height: 30px;
-        padding-top: 10px;
-        margin-bottom:15px;
-        padding-left:15px;
-        color: #3da8f5;
-        cursor: pointer;
-        i{
-           font-size: 22px;
-            margin-top:2px;
-            margin-right:10px;
-            vertical-align: text-bottom;
-        }
-      }
-      .shareList{
-        li{
-          line-height: 36px;
-          padding-left:15px;
-          color:#555;
-          cursor: pointer;
-           &:hover{
-            background-color: #eee;
-            color: #3da8f5;
-          }
-          i{
-            margin-right:10px;
-            font-size:20px;
-          }
-        }
-      }
-    }
-    .schedule{
-      height:100%;
-      font-size:14px;
-      .addSchedule{
-        line-height: 30px;
-        padding-top: 10px;
-        margin-bottom:15px;
-        padding-left:15px;
-        color: #3da8f5;
-        cursor: pointer;
-        i{
-           font-size: 22px;
-            margin-top:2px;
-            margin-right:10px;
-            vertical-align: text-bottom;
-        }
-      }
-      .schedule-count{
-        font-size:12px;
-        padding-left:15px;
-        .toggleHide{
-          color:#3da8f5;
-          cursor: pointer;
-          margin-left:10px;
-        }
-      }
-    }
-    .file{
-       height:100%;
-      font-size:14px;
-      .file-inner1,.file-inner2{
-        width:50%;
-        height:100%;
-        overflow-y: auto;
-      }
-      .file-inner1{
-        border-right:1px solid rgba(0, 0, 0, 0.12)
-      }
+    &::-webkit-scrollbar-thumb {
+          background-color: #cecece;
     }
   }
   }

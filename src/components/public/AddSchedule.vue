@@ -45,14 +45,34 @@
         <Icon type="checkmark-circled"></Icon> 所有人都有时间
       </div> -->
       <div class="participant">
-        <p class="title">参与者 · {{memberIds.length}}</p>
-        <div class="user">
-          <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+tx[k]" alt="" :key="k" v-for="(i, k) in memberIds">
-          <Icon type="md-add-circle" @click.native="showUserList=!showUserList" />
-          <Modal v-model="showUserList" transfer mask-closable width="300">
-            <userList :id='id' @select='select'></userList>
-          </Modal>
+        <p class="title">参与者 · {{membeiList.length}}</p>
+        <div class="cyz">
+          <div class="member-avatar fl"
+               v-for="(item,index) in membeiList"
+               :key="index">
+            <Tooltip :content="item.userName"
+                     placement="top"
+                     transfer>
+              <div class="ava">
+                <!-- 删除需要加在关闭按钮上 -->
+                <img v-if="item.image"
+                     :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image"
+                     alt="">
+                <svg-icon v-else
+                          style="width:24px;height:24px;display:block;"
+                          name="allMember"></svg-icon>
+                <span class="close" @click="deleteInvolve(index)">×</span>
+              </div>
+            </Tooltip>
+
+          </div>
+          <InvolveMember ref="involveMember"
+                         :checkedList="[]"
+                         :projectId="id"
+                         @save="saveInvolveMember">
+          </InvolveMember>
         </div>
+
       </div>
     </div>
     <div slot="footer">
@@ -76,6 +96,7 @@
 <script>
 import { addSchedule } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
+import {mapActions} from 'vuex'
 export default {
   name: "",
   components: { userList },
@@ -109,7 +130,8 @@ export default {
       openDate: false,
       memberIds: [],
       tx: [],
-      datetime: ["", ""]
+      datetime: ["", ""],
+      membeiList:[]
     };
   },
   props: {
@@ -120,7 +142,7 @@ export default {
     }
   },
   mounted() {
-    this.init();
+    this.inits();
   },
   watch: {
     value(newValue, oldValue) {
@@ -129,6 +151,14 @@ export default {
     }
   },
   methods: {
+    ...mapActions("schedule", ['init']),
+    saveInvolveMember(dataList, list){
+      this.memberIds=dataList.split(",")
+      this.membeiList=list
+    },
+    deleteInvolve(index){
+      this.membeiList.splice(index,1)
+    },
     select(i) {
       console.log(i);
       if (this.memberIds.indexOf(i.userId) === -1) {
@@ -143,7 +173,7 @@ export default {
       // console.log(name)
       this.repetition_data = name;
     },
-    init() {
+    inits() {
       this.modal = this.value;
       console.log("<<<<<<<<<<", this.modal);
     },
@@ -173,9 +203,13 @@ export default {
           this.loading = false;
           this.$Message.info("成功");
           this.clone();
-          setTimeout(() => {
-            window.location.reload();
-          }, 10);
+          let id={
+            projectId: this.id
+          }
+          this.init(id)
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 10);
         })
         .catch(err => {
           this.loading = false;
@@ -188,6 +222,64 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+  .cyz{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .member-avatar{
+    .ava{
+      margin-right: 5px;
+      cursor: pointer;
+      border:2px solid transparent;
+      img {
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+      }
+      .close{
+        display: none;
+      }
+    }
+  }
+  .member-avatar:not(:nth-child(1)) {
+    .ava {
+      margin-right: 5px;
+      cursor: pointer;
+      border:2px solid transparent;
+      border-radius: 50%;
+      &:hover{
+        border:2px solid #a6a6a6;
+        .close{
+          display: block;
+        }
+      }
+      img {
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+      }
+      .close{
+        position: absolute;
+        font-size: 14px;
+        top: -3px;
+        right: 1px;
+        width: 12px;
+        height: 12px;
+        line-height: 12px;
+        border-radius: 50%;
+        color: #fff;
+        text-align: center;
+        background-color: #a6a6a6;
+        display: none;
+        &:hover{
+          background-color: #3da8f5;
+
+        }
+      }
+    }
+  }
 .addSchedule {
   .repetition span {
     font-size: 12px;

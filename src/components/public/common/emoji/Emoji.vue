@@ -3,7 +3,7 @@
           class="emoji fl"
           v-model="showpop">
     <span class="smileFace">
-      <Icon type="happy-outline"></Icon>
+      <Icon type="md-happy" />
     </span>
     <div slot="content">
       <Carousel v-model="value"

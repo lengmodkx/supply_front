@@ -36,6 +36,7 @@
           fix
         ></Spin>
       </div>
+      <loading v-if="load"></loading>
       <div
         class="handler"
         v-for="(i, k) in schedules"
@@ -94,17 +95,20 @@
 
 <script>
 import AddSchedule from "../../public/AddSchedule.vue";
+import loading from '../../public/common/Loading'
 import editRicheng from "../../public/common/EditRicheng"
 import { schedules } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 import {mapState,mapActions,mapMutations} from 'vuex'
+import {getRicheng} from '@/axios/scheduleApi'
 export default {
   name: "",
-  components: { AddSchedule, userList, editRicheng },
+  components: { AddSchedule, userList, editRicheng, loading },
   data() {
     return {
       addSchedule: false,
       editrc: false,
+      load:false,
       richengData:null,
       parameter: {
         projectId: this.$route.params.id
@@ -119,8 +123,14 @@ export default {
     ...mapMutations("schedule", ['oneSchedule']),
     // 编辑日程
     showEditRC(item){
-      this.oneSchedule(item);
-      this.editrc=true
+      this.load=true
+      getRicheng(item.scheduleId).then(res => {
+        console.log(res.data)
+        this.oneSchedule(res.data);
+        this.editrc=true
+        this.load=false
+      })
+
     }
   },
   mounted() {

@@ -453,9 +453,17 @@
   }
 }
 .Conbox {
-  height: calc(100% - 56px - 112px);
+  height: calc(90vh - 56px - 112px);
   overflow-x: hidden;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
+  }
 }
 .relevance{
   padding:0 16px;

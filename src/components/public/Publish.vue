@@ -1,104 +1,93 @@
 <template>
-  <div class="publish">
-    <div class="wrap">
-      <div class="top">
-        <div class="box">
-          <div class="input">{{data}}</div>
-          <textarea v-model="data" placeholder="@提及他人，按 Enter 快速发布"></textarea>
+  <div class="talk">
+    <div class="talkinner">
+      <div class="talkUp" @keyup.enter="sendMsg"
+           contenteditable="true">
+        <Input id="input"
+               v-model.trim="talkvalue"
+               ref="textarea"
+               placeholder="按Enter快速发布" />
+      </div>
+      <div class="talkDown clearfix">
+        <!-- 表情包组件 -->
+        <Emoji @choose="chooseEmoji"
+               ref="emoji"></Emoji>
+        <div class="send fr" >
+          <Button type="primary" @click="sendMsg">发布</Button>
         </div>
-        <div class="zd"></div>
       </div>
-      <div class="bottom">
-        <Icon type="android-attach"></Icon>
-        <Icon type="happy-outline"></Icon>
-        <Button class="fr" type="info">发布</Button>
-      </div>
-    </div> 
+    </div>
   </div>
 </template>
 
 <script>
+  import Emoji from '@/components/public/common/emoji/Emoji'
+  import insertText from '@/utils/insertText'
+  import {sendMsg} from '@/axios/api'
 export default {
   name: '',
+  props: ['publicId','projectId'],
   data() {
     return {
-      data: ''
+      data: '',
+      talkvalue: ''
     }
   },
-  methods: {}
+  components: {Emoji},
+  methods: {
+    // 发送消息
+    sendMsg(){
+      if (this.talkvalue){
+        let datas={
+          'publicId':this.publicId,
+          'projectId':this.projectId,
+          'content':this.talkvalue
+        }
+        console.log(datas)
+        sendMsg(datas).then(res => {
+          this.talkvalue=''
+        })
+      }
+    },
+    chooseEmoji (name) {
+      insertText(this.$refs.textarea.$el.children[1], name)
+    },
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.publish {
-  background-color: #e5e5e5;
-  border-top: 1px solid #d9d9d9;
-  width: 100%;
-  .wrap {
+  .talk {
     position: relative;
-    min-height: 40px;
-    margin: 14px 20px 13px 15px;
-    background-color: #fff;
-    border: 1px solid #d9d9d9;
-    border-radius: 3px;
-    overflow: hidden;
-    .bottom {
-      padding: 3px 10px;
-      overflow: hidden;
-      .ivu-icon {
-        margin-top: 6px;
-        margin-right: 10px;
-        font-size: 20px;
-        cursor: pointer;
-      }
-    }
-    .top {
+    border: 1px solid #e5e5e5;
+    .talkinner {
       position: relative;
-      z-index: 1;
-      padding: 10px;
-      /*border-color: #d9d9d9;*/
-      border-bottom: 1px solid #d9d9d9;
-      border-top-left-radius: 3px;
-      border-top-right-radius: 3px;
-      overflow: hidden;
-      .input {
-        min-height: 20px;
-        width: 100%;
-        visibility: hidden;
+      min-height: 40px;
+      margin: 14px 20px 13px 15px;
+      background-color: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 3px;
+      .talkUp {
         position: relative;
-        word-break: break-word;
-        white-space: pre-wrap;
-        font-size: 13px;
-      }
-      .box {
-        min-height: 20px;
-        width: 100%;
-        position: relative;
+        z-index: 1;
         max-height: 290px;
-        overflow: hidden;
-      }
-      .zd {
-        position: absolute;
-        z-index: 100;
-        width: 20px;
-        height: 100%;
-        right: 0;
-        top: 0;
         background-color: #fff;
+        border-bottom: 1px solid #e8e8e8;
+        #input {
+          input:hover {
+            border-color: #dddee1;
+          }
+        }
       }
-      textarea {
-        width: 100%;
-        height: 100%;
-        line-height: 20px;
-        font-size: 13px;
-        border: 0;
-        position: absolute;
-        top: 0;
-        z-index: 99;
-        left: 0;
+      .talkDown {
+        line-height: 40px;
+        height: 40px;
+
+        .send {
+          margin-right: 10px;
+        }
       }
     }
   }
-}
 </style>

@@ -2,7 +2,14 @@ import fetch from "./fetch"; // 引用fetch.js
 import api from "./url"; // 引用url.js
 
 // 所有发请求的方法：
-
+// 发送消息
+export function sendMsg(data) {
+    return fetch({
+        url: '/logs/chat',
+        method: "post",
+        data: data
+    });
+}
 //用户登录：
 export function userlogin(data) {
     // userName,password是参数

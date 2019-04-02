@@ -1,6 +1,13 @@
 import fetch from "./fetch"; // 引用fetch.js
 import api from "./url"; // 引用url.js
 
+// 根据id获取日程
+export function getRicheng(scheduleId) {
+    return fetch({
+        url: `/schedules/${scheduleId}`,
+        method: "get"
+    });
+}
 // 更新日程名称
 export function upRichengName(scheduleId, scheduleName) {
     return fetch({
