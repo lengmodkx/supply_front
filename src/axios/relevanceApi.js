@@ -24,7 +24,20 @@ export function getZirenwu(taskId) {
         method: "get"
     });
 }
-
+// 获取 分享
+export function getShare(projectId) {
+    return fetch({
+        url: `/shares/${projectId}/bind`,
+        method: "get"
+    });
+}
+// 获取日程
+export function getSchedule(projectId) {
+    return fetch({
+        url: `/schedules/${projectId}/bind`,
+        method: "get"
+    });
+}
 // 更新日程名称
 export function upRichengName(scheduleId, scheduleName) {
     return fetch({
