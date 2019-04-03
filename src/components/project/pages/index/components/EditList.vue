@@ -6,7 +6,7 @@
     <!--固定顶部-->
     <div class="toolRight">
       <Tooltip content="点个赞" placement="bottom-start">
-        <span class="zan" :class="{zan_blue:zan}" @click="dianZan">
+        <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
           <Icon type="md-thumbs-up" size="20" />
           <span class="zanNum" v-if="task.fabulousCount !== 0">{{task.fabulousCount}}</span>
         </span>
@@ -316,7 +316,9 @@ import {
   cancelcompleteTask,
   completeTask,
   updateRepeat,
-  updateTaskJoin
+  updateTaskJoin,
+  fabulous,
+  cancelFabulous
 } from "@/axios/api";
 export default {
   name: "myModel",
@@ -428,12 +430,23 @@ export default {
       this.task.endDate = "";
     },
     dianZan() {
-      this.task.fabulousCount++;
-      this.zan = !this.zan;
-      if (this.zan) {
+      if (!this.task.isFabulous) {
         //发请求点赞
+        fabulous(this.task.taskId).then(res => {
+          if(res.result === 1){
+            this.task.isFabulous = true
+            this.task.fabulousCount++
+          }
+
+        })
       } else {
         //发请求取消点赞
+        cancelFabulous(this.task.taskId).then(res => {
+          if(res.result === 1){
+            this.task.isFabulous = false
+            this.task.fabulousCount--
+          }
+        })
       }
     },
     deleteExecutor() {},

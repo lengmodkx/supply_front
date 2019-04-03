@@ -229,6 +229,16 @@ export function addnewTask(projectId, groupId, menuName) {
     });
 }
 
+//点赞
+export function fabulous(publicId) {
+    return $post('/public/fabulous',{publicId:publicId})
+}
+
+//取消点赞
+export function cancelFabulous(publicId) {
+    return $delete(`/public/${publicId}/cancle_fabulous`,{publicId:publicId})
+}
+
 //收藏任务
 export function collectTask(projectId, publicId,collectType) {
     return $post('/collections',{projectId:projectId,publicId:publicId,collectType})
