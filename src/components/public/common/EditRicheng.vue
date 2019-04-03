@@ -179,7 +179,7 @@
                          @save="saveInvolveMember"></InvolveMember>
         </div>
       </div>
-      <log :logs="schedule.logs"></log>
+      <log :logs="schedule.logs" :unReadMsg="schedule.unReadMsg" :publicId="schedule.scheduleId"></log>
   </div>
 
 </div>
@@ -206,7 +206,7 @@ import {upRichengName, beginDate, endDate,changeRepeat,changeRemind,changeAddres
 export default {
   components: {
     SetRepeat,
-      log,
+    log,
     SetRCWarn,
     Tags,
     Emoji,
@@ -214,7 +214,7 @@ export default {
     editor,
     SetExecutor,
     AddRelation,
-      publick
+    publick
   },
   data () {
     return {

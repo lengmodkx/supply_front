@@ -72,7 +72,37 @@ export function playPeople(scheduleId, memberIds) {
         params: {memberIds:memberIds}
     });
 }
-
+// 复制日程
+export function copyRc(scheduleId,projectId) {
+    return fetch({
+        url: `/schedules/${scheduleId}/copy`,
+        method: "post",
+        params: {projectId:projectId}
+    });
+}
+// 移动日程
+export function removeRc(scheduleId,projectId) {
+    return fetch({
+        url: `/schedules/${scheduleId}/move`,
+        method: "put",
+        params: {projectId:projectId}
+    });
+}
+// 移动到回收站
+export function recycleRc(scheduleId) {
+    return fetch({
+        url: `/schedules/${scheduleId}/recyclebin`,
+        method: "put"
+    });
+}
+// 更新隐私模式
+export function privacy(scheduleId,privacy) {
+    return fetch({
+        url: `/schedules/${scheduleId}/privacy`,
+        method: "put",
+        params: {privacy:privacy}
+    });
+}
 function $post(url, params) {
     return fetch({
         url: url,

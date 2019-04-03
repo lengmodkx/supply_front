@@ -22,15 +22,15 @@
             </li>
           </ul>
         </div>
-        <div class="div2 fl">
-          <h4>个人项目</h4>
-          <ul class="project">
-              <li @click="showTask(index, item.projectId)" :class="{checked:projectI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
-          </ul>
-        </div>
         <div class="complex-div fl" ref="scrollX">
             <!--点击任务，显示的-->
             <div class="renwu-div" v-show="active=='a'">
+                <div class="div2 fl">
+                    <h4>个人项目</h4>
+                    <ul class="project">
+                        <li @click="showTask(index, item.projectId, '任务')" :class="{checked:projectI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
+                    </ul>
+                </div>
                 <!--任务分组-->
                 <div class="renwu1 scrolly">
                     <loading v-if="loading"></loading>
@@ -68,74 +68,88 @@
             </div>
             <!--点击分享 显示的-->
             <div class="fenxiang-div scrolly" v-show="active=='b'">
-                <div class="create-task">
-                    <Icon type="md-add-circle" size="20" />
-                    <span>创建新分享</span>
+                <div class="div2 fl">
+                    <h4>个人项目</h4>
+                    <ul class="project">
+                        <li @click="showTask(index, item.projectId, '分享')" :class="{checked:shareI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
+                    </ul>
                 </div>
-                <ul>
-                    <li class="fenxiang-list">
-                        <Icon type="ios-paper-outline" size="20" />
-                        <span>分享分享</span>
-                    </li>
-                </ul>
+                <div style="width: 440px;padding: 10px 0">
+                    <loading v-if="loading"></loading>
+                    <!--<div class="create-task">-->
+                    <!--<Icon type="md-add-circle" size="20" />-->
+                    <!--<span>创建新分享</span>-->
+                    <!--</div>-->
+                    <ul v-show="showShare">
+                        <li :class="{checkeds:checkedShare==n}" class="fenxiang-list" v-for="(i,n) in shareData" :key="n" @click="checkShare(n)">
+                            <Icon type="ios-paper-outline" size="20" />
+                            <span>{{i.title}}</span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
             <!--点击日程 显示的-->
             <div class="richeng-div scrolly" v-show="active=='c'">
-                <div class="create-task">
-                    <Icon type="md-add-circle" size="20" />
-                    <span>创建新日程</span>
+                <div class="div2 fl">
+                    <h4>个人项目</h4>
+                    <ul class="project">
+                        <li @click="showTask(index, item.projectId, '日程')" :class="{checked:scheduleI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
+                    </ul>
                 </div>
-                <div class="weilai">未来的日程 · 1</div>
-                <ul>
-                    <li class="richeng-list">
-                        <Icon type="ios-calendar-outline" size="20" />
-                        <p>日程日程</p>
-                        <div class="rc-time">
-                            <Time :time="new Date().getTime()-8000000000" />
-                            <span>-</span>
-                            <Time :time="new Date().getTime()-900000000" />
-                        </div>
-                    </li>
-                </ul>
-                <div class="guoqu">过去的日程 · 1  <span @click="showOldRc=!showOldRc">{{showOldRc?'隐藏':'显示'}}</span></div>
-                <Collapse v-show="showOldRc" simple>
-                    <Panel name="1">
-                        2019年3月
-                        <div slot="content">
-                            <ul>
-                                <li class="richeng-list">
-                                    <Icon type="ios-calendar-outline" size="20" />
-                                    <p>日程日程</p>
-                                    <div class="rc-time">
-                                        <Time :time="new Date().getTime()-8000000000" />
-                                        <span>-</span>
-                                        <Time :time="new Date().getTime()-900000000" />
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </Panel>
-                    <Panel name="2">
-                        2019年2月
-                        <div slot="content">
-                            <ul>
-                                <li class="richeng-list">
-                                    <Icon type="ios-calendar-outline" size="20" />
-                                    <p>日程日程</p>
-                                    <div class="rc-time">
-                                        <Time :time="new Date().getTime()-8000000000" />
-                                        <span>-</span>
-                                        <Time :time="new Date().getTime()-900000000" />
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </Panel>
-                </Collapse>
+                <div style="width: 440px">
+                    <loading v-if="loading"></loading>
+                    <div v-show="showSchedule" style="width: 440px;padding: 10px 0">
+                        <!--<div class="create-task">-->
+                            <!--<Icon type="md-add-circle" size="20" />-->
+                            <!--<span>创建新日程</span>-->
+                        <!--</div>-->
+                        <div class="weilai">未来的日程</div>
+                        <ul>
+                            <li class="richeng-list" v-for="(i,n) in shceduleAfterData" :key="n">
+                                <Icon type="ios-calendar-outline" size="20" />
+                                <p>{{i.scheduleName}}</p>
+                                <div class="rc-time">
+                                    <Time :time="i.startTime" />
+                                    <span>-</span>
+                                    <Time :time="i.endTime" />
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="guoqu">过去的日程  <span @click="showOldRc=!showOldRc">{{showOldRc?'隐藏':'显示'}}</span></div>
+                        <Collapse v-show="showOldRc" simple v-for="(i,n) in shceduleBeforData" :key="n">
+                            <Panel name="1">
+                                {{i.date}}
+                                <div slot="content">
+                                    <ul>
+                                        <li class="richeng-list" @click="checkSchedule($event)" v-for="(item,index) in i.scheduleList" :key="index">
+                                            <Icon type="ios-calendar-outline" size="20" />
+                                            <p>{{item.scheduleName}}</p>
+                                            <div class="rc-time">
+                                                <Time :time="item.startTime" />
+                                                <span>-</span>
+                                                <Time :time="item.endTime" />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Panel>
+                        </Collapse>
+                    </div>
+                </div>
             </div>
             <!--点击文件 显示的-->
             <div class="wenjain-div scrolly" v-show="active=='d'">
-                <Tree show-checkbox multiple expand></Tree>
+                <div class="div2 fl">
+                    <h4>个人项目</h4>
+                    <ul class="project">
+                        <li @click="showTask(index, item.projectId)" :class="{checked:projectI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
+                    </ul>
+                </div>
+                <div>
+                    <Tree show-checkbox multiple expand></Tree>
+                </div>
+
             </div>
         </div>
 
@@ -148,7 +162,7 @@
 <script>
     import loading from './Loading'
     import {getProjectList} from '@/axios/api'
-    import {getFenzu, getTask,getZirenwu} from '@/axios/relevanceApi'
+    import {getFenzu, getTask,getZirenwu,getShare,getSchedule} from '@/axios/relevanceApi'
   export default{
     name:"",
     data () {
@@ -162,15 +176,30 @@
         tabBox: false,
         showOldRc:false,
         projectData:[],
-        projectI:1,
+        projectI:null,
+        shareI:null,
+        scheduleI:null,
+        fileI:null,
         projectId:'',
         taskDataFenzu: [],
         checkTAsk:null,
         checkedOneTask:{n:'',nn:''},
+        checkedShare:null,
+        checkedAfterSchedule:[{'ok':false}],
+        checkedBeforeSchedule:[],
+        checkedFile:null,
         morenImg:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==',
         taskData:[],
+        shareData:[],
+        shceduleBeforData:[],
+        shceduleAfterData:[],
+        fileData:[],
         zirenwuData:[],
-        checkZirenwu:null
+        checkZirenwu:null,
+        showShare:false,
+        showSchedule:false,
+        showFile:false,
+
       }
       
     },
@@ -196,18 +225,52 @@
 
       },
         // 点击某个项目
-      showTask(index, projectId){
-          this.projectI=index
+      showTask(index, projectId, type){
           this.projectId=projectId
-          this.loading=true
-          getFenzu(this.projectId).then(res => {
-              this.showRenwu=true
-              this.loading=false
-              console.log(res)
-              if (res.result){
-                  this.taskDataFenzu=res.data
-              }
-          })
+          switch(type) {
+              case '任务':
+                  this.projectI=index
+                  this.loading=true
+                  getFenzu(this.projectId).then(res => {
+                      this.showRenwu=true
+                      this.loading=false
+                      if (res.result){
+                          this.taskDataFenzu=res.data
+                      }
+                  })
+                  break;
+              case '分享':
+                  this.shareI=index
+                  this.loading=true
+                  getShare(projectId).then(res => {
+                      this.shareData=res.data
+                      this.loading=false
+                      this.showShare=true
+                  })
+                  break;
+              case '日程':
+                  this.scheduleI=index
+                  this.loading=true
+                  getSchedule(projectId).then(res => {
+                      console.log(res)
+                      if (res.result){
+                          this.shceduleBeforData=res.data.before
+                          this.shceduleAfterData=res.data.after
+                          this.checkedAfterSchedule=new Array(res.data.after.length).fill({'ok':false})
+                          this.checkedBeforeSchedule==new Array(res.data.before.length).fill([])
+
+                          for (let j=0;j<res.data.before.length;j++){
+                              for (let k=0; k<res.data.before[i])
+                          }
+                          this.loading=false
+                          this.showSchedule=true
+                      }
+                  })
+                  break;
+              case '文件':
+                  break;
+          }
+
       },
         // 点击任务分组
       showAllTask(groupId,index){
@@ -216,13 +279,20 @@
           console.log(groupId)
           getTask(groupId).then(res => {
               this.taskLoading=false
-              console.log(2222222,res)
               this.taskData=res.data
           })
       },
       // 点击子任务、
       checkedZirenwu(index){
           this.checkZirenwu=index
+      },
+        // 选中 具体 分享
+      checkShare (n) {
+          this.checkedShare=n
+      },
+        // 选中 日程
+      checkSchedule(e){
+          console.log(e.target)
       }
     },
     mounted () {
@@ -326,7 +396,7 @@
     }
 
   .complex-div{
-    width:calc(100% - 360px);
+    width:calc(100% - 180px);
     height:100%;
     overflow-x: auto;
     overflow-y: hidden;

@@ -15,6 +15,7 @@ const store ={
         // 单个日程 赋值
         oneSchedule (state, data){
             state.schedule=data
+            console.log(2222222,state.schedule)
         },
         // 更新日程名称
         updateScheduleName(state, data){
