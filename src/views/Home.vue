@@ -186,7 +186,7 @@
 import CreateProject from "./CreateProject.vue";
 import ProjectSettings from "./projectSettings.vue";
 import Loading from "../components/public/common/Loading.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import {
   setStarProject,
   guidangProject,
@@ -260,6 +260,7 @@ export default {
   },
   methods: {
     ...mapActions("project", ["init", "updateProject"]),
+    ...mapMutations("project", ["openSet"]),
     // 选择项目类型
     selectProjectType(value) {
       this.projectType = value;
@@ -314,9 +315,11 @@ export default {
     getNewList(value) {
       this.init(value);
     },
-    setProject(index) {
+    setProject(item) {
       this.projectSet = true;
-      this.project = this.item;
+      this.openSet(item)
+      // this.project = this.item;
+      console.log(item)
     },
     confirmguiDang(data) {
       this.projectSet = false;

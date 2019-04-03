@@ -184,7 +184,7 @@
 
 </div>
     <footer>
-        <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId" :publicType="schedule"></publick>
+        <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId" :publicType="typeFont"></publick>
     </footer>
   </div>
 </template>
@@ -228,6 +228,7 @@ export default {
       editorValue: '123',
       showEditor: false,
       publicType: '日程',
+      typeFont:'schedule',
       relationModal:false,
       beizhuContent:'',
       talkvalue: '',

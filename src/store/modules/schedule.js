@@ -82,6 +82,7 @@ const store ={
                 }
             })
         },
+        // 发送消息
         msg(state, data){
             state.schedule.logs.unshift(data)
         }

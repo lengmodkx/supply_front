@@ -15,6 +15,10 @@ const store = {
         },
         updateProject(state, data) {
             state.projects = data
+        },
+        // 打开项目设置
+        openSet(state, data){
+            state.project=data
         }
     },
     actions: {
