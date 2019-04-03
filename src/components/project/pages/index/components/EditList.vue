@@ -289,7 +289,7 @@
       </div>
     </div>
     <footer>
-      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="task"></publick>
+      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="type"></publick>
     </footer>
     <div class="demo-spin-container"  style="width: 100%;height: 100%" v-show="loading">
       <Spin fix size="large"></Spin>
@@ -344,6 +344,7 @@ export default {
       hoverExecutor: false,
       editorValue: "123",
       showEditor: false,
+      type:'task',
       modal1: false,
       relationModal: false,
       talkvalue: "",
