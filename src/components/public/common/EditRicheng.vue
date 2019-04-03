@@ -184,7 +184,7 @@
 
 </div>
     <footer>
-        <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId"></publick>
+        <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId" :publicType="schedule"></publick>
     </footer>
   </div>
 </template>

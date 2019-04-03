@@ -26,7 +26,7 @@
   import {sendMsg} from '@/axios/api'
 export default {
   name: '',
-  props: ['publicId','projectId'],
+  props: ['publicId','projectId','publicType'],
   data() {
     return {
       data: '',
@@ -41,6 +41,7 @@ export default {
         let datas={
           'publicId':this.publicId,
           'projectId':this.projectId,
+          'publicType':this.publicType,
           'content':this.talkvalue
         }
         console.log(datas)

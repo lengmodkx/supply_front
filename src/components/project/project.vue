@@ -133,6 +133,11 @@ export default {
                 if(result.object.publicType === '任务'){
                   this.$store.dispatch("task/removeTag",{tagId:result.object.tagId,taskId:result.object.publicId})
                 }
+                case "F1":
+                    if(result.object.type === 'task'){
+                        this.$store.dispatch("task/publish",result.object.log)
+                    }
+                    break;
             }
           });
         },

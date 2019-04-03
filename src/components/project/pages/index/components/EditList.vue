@@ -285,24 +285,11 @@
             <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId" @save="saveInvolveMember"></InvolveMember>
           </div>
         </div>
+        <log :logs="task.logs"></log>
       </div>
     </div>
     <footer>
-      <div class="talk">
-        <div class="talkinner">
-          <div class="talkUp" contenteditable="true">
-            <Input id="input" v-model.trim="talkvalue" ref="textarea" placeholder="按Enter快速发布" />
-          </div>
-          <div class="talkDown clearfix">
-            <!-- 表情包组件 -->
-            <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
-
-            <div class="send fr">
-              <Button type="primary">发布</Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="task"></publick>
     </footer>
     <div class="demo-spin-container"  style="width: 100%;height: 100%" v-show="loading">
       <Spin fix size="large"></Spin>
@@ -319,6 +306,8 @@ import Emoji from "@/components/public/common/emoji/Emoji";
 import SingleTaskMenu from "./SingleTaskMenu";
 import SetExecutor from "./SetExecutor";
 import myModel from "./EditList"
+import log from '@/components/public/log'
+import publick from '@/components/public/Publish'
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 import {
@@ -340,6 +329,8 @@ export default {
     SetExecutor,
     AddRelation,
     myModel,
+    publick,
+    log
   },
   props:["data"],
   data() {

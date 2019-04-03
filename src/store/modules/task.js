@@ -209,8 +209,11 @@ const store = {
                     state.task.tagList.splice(tIndex,1)
                 }
             })
-
-
+        },
+        publish(state,data){
+            if(state.task && state.task.taskId === data.publicId){
+                state.task.logs.push(data)
+            }
         }
     },
     actions: {
@@ -337,6 +340,9 @@ const store = {
         },
         updateChildTask({commit},data){
             commit('updateChildTask',data)
+        },
+        publish({commit},data){
+            commit('publish',data)
         }
     }
 }
