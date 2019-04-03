@@ -285,7 +285,7 @@
             <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId" @save="saveInvolveMember"></InvolveMember>
           </div>
         </div>
-        <log :logs="task.logs"></log>
+        <log :logs="task.logs" :unReadMsg="task.unReadMsg"></log>
       </div>
     </div>
     <footer>

@@ -1,8 +1,8 @@
 <template>
   <div class="log-wrap">
       <div style="height: 50px;line-height: 50px;width: 100%;font-size: 16px">所有动态</div>
-      <div class="more-msg" v-if="logs.length>10">
-          <span v-if="!jiazai" @click="loadMore">更多消息</span><span v-else style="color: #3da8f5">loading...</span>
+      <div class="more-msg" v-if="logs.length>9">
+          <span v-if="!jiazai" @click="loadMore">查看剩余的{{this.unReadMsg}}条消息...</span><span v-else style="color: #3da8f5">loading...</span>
       </div>
       <div class="log-list" v-for="(item, index) in logs" :key="index">
           <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
@@ -13,7 +13,7 @@
 </template>
 <script>
   export default {
-      props: ['logs'],
+      props: ['logs','unReadMsg'],
       components: {
       },
       data() {
@@ -63,9 +63,7 @@
         width: 100%;
         cursor: pointer;
         text-align: center;
-        &:hover{
-            color: #3da8f5;
-        }
+        color: #3da8f5;
     }
 </style>
 
