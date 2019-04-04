@@ -54,7 +54,9 @@ export function updateProject(data) {
             'projectName':data.projectName,
             'projectDes':data.projectDes,
             'isPublic':data.isPublic,
-            'projectCover':data.projectCover
+            'projectDel':data.projectDel,
+            'projectStatus':data.projectStatus
+            // 'projectCover':data.projectCover
         }
     });
 }
