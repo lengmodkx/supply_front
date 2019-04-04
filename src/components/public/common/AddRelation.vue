@@ -36,10 +36,10 @@
                     <loading v-if="loading"></loading>
                     <h4>任务分组</h4>
                     <p v-for="(item, index) in taskDataFenzu" :class="{check:checkTAsk==index}" :key="index" @click="showAllTask(item.relationId,index)">{{item.relationName}}</p>
-                    <h4>智能分组</h4>
-                    <p>今天的任务</p>
-                    <p>未完成的任务</p>
-                    <p>已完成的任务</p>
+                    <!--<h4>智能分组</h4>-->
+                    <!--<p>今天的任务</p>-->
+                    <!--<p>未完成的任务</p>-->
+                    <!--<p>已完成的任务</p>-->
                 </div>
                 <!--分组中具体的任务/子任务-->
                 <div class="definite-renwu scrolly" v-if="showRenwu">
@@ -47,7 +47,10 @@
                     <div class="renwu-wrap"  v-for="(i,n) in taskData" :key="n">
                         <div>{{i.relationName}}</div>
                         <ul>
-                            <li :class="{checked:checkedOneTask.n==n&&checkedOneTask.nn==nn}" v-for="(ii,nn) in i.taskList" :key="nn" class="renwu-list" @click="showChild(n,nn,ii.taskId)">
+                            <li :class="{checked:checkedOneTask.n==n&&checkedOneTask.nn==nn}"
+                                v-for="(ii,nn) in i.taskList" :key="nn"
+                                class="renwu-list"
+                                @click="showChild(n,nn,ii.taskId)">
                                 <span></span>
                                 <img :src="ii.executorImg?'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ii.executorImg:morenImg" alt="">
                                 <p>{{ii.taskName}}</p>
@@ -58,7 +61,10 @@
                 </div>
                 <div class="definite-renwu scrolly" v-if="showZirenwu">
                     <ul>
-                        <li @click="checkedZirenwu(index)" :class="{checked:checkZirenwu==index}" class="renwu-list" v-for="(item,index) in zirenwuData" :key="index">
+                        <li @click="checkedZirenwu(index, item.taskId)"
+                            :class="{checked:checkZirenwu==index}"
+                            class="renwu-list"
+                            v-for="(item,index) in zirenwuData" :key="index">
                             <span></span>
                             <img :src="item.executorImg?'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.executorImg:morenImg" alt="">
                             <p>{{item.taskName}}</p>
@@ -81,7 +87,10 @@
                     <!--<span>创建新分享</span>-->
                     <!--</div>-->
                     <ul v-show="showShare">
-                        <li :class="{checkeds:checkedShare==n}" class="fenxiang-list" v-for="(i,n) in shareData" :key="n" @click="checkShare(n)">
+                        <li :class="{checkeds:checkedShare[n].ok}"
+                            class="fenxiang-list"
+                            v-for="(i,n) in shareData" :key="n"
+                            @click="checkShare(n, i)">
                             <Icon type="ios-paper-outline" size="20" />
                             <span>{{i.title}}</span>
                         </li>
@@ -106,7 +115,10 @@
                         <!--</div>-->
                         <div class="weilai">未来的日程</div>
                         <ul>
-                            <li class="richeng-list" v-for="(i,n) in shceduleAfterData" :key="n">
+                            <li :class="{checks:checkedAfterSchedule[n].ok}"
+                                @click="weilaiRc(n,i.scheduleId)"
+                                class="richeng-list"
+                                v-for="(i,n) in shceduleAfterData" :key="n">
                                 <Icon type="ios-calendar-outline" size="20" />
                                 <p>{{i.scheduleName}}</p>
                                 <div class="rc-time">
@@ -122,7 +134,10 @@
                                 {{i.date}}
                                 <div slot="content">
                                     <ul>
-                                        <li class="richeng-list" @click="checkSchedule($event)" v-for="(item,index) in i.scheduleList" :key="index">
+                                        <li :class="{checks:checkedBeforeSchedule[n][index].ok}"
+                                            class="richeng-list"
+                                            @click="checkSchedule(n,index, item.scheduleId)"
+                                            v-for="(item,index) in i.scheduleList" :key="index">
                                             <Icon type="ios-calendar-outline" size="20" />
                                             <p>{{item.scheduleName}}</p>
                                             <div class="rc-time">
@@ -139,36 +154,56 @@
                 </div>
             </div>
             <!--点击文件 显示的-->
-            <div class="wenjain-div scrolly" v-show="active=='d'">
-                <div class="div2 fl">
+            <div class="wenjain-div " v-show="active=='d'">
+                <div class="div2 fl scrolly">
                     <h4>个人项目</h4>
                     <ul class="project">
-                        <li @click="showTask(index, item.projectId)" :class="{checked:projectI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
+                        <li :class="{checked:fileI==index}" @click="showTask(index, item.projectId,'文件')"  v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
                     </ul>
                 </div>
-                <div>
-                    <Tree show-checkbox multiple expand></Tree>
-                </div>
+                <div class="wenjian-wrap">
+                    <loading v-if="loading" style="position: absolute;top: 0;left: 50%;margin-left: -30px"></loading>
+                    <div class="all-files scrolly" v-show="showFile">
+                        <div :class="{checked:item.ok}"
+                             class="folder"
+                             v-for="(item,index) in fileData" :key="index"
+                             @click="showZiwenjian(index,item.catalog, item.fileId, -1)">
+                            <img v-if="item.catalog" src="@/icons/img/wjj.png" alt=""><img v-else src="@/icons/img/moren.png" alt="">
+                            <span>{{item.fileName}}</span>
+                        </div>
+                    </div>
+                    <!--子文件，文件夹-->
+                    <div class="zi-files scrolly" v-for="(item,index) in ziwenjain" :key="index">
+                        <div :class="{checked:i.ok}" class="folder" v-for="(i,n) in item" :key="n" @click="showZiwenjian(n,item.catalog, item.fileId, index)">
+                            <img v-if="i.catalog" src="@/icons/img/wjj.png" alt=""><img v-else src="@/icons/img/moren.png" alt="">
+                            <span>{{i.fileName}}</span>
+                        </div>
+                    </div>
 
+                </div>
             </div>
         </div>
 
     </div>
     <div class="footer">
-      <Button type="primary" size="large" style="padding:6px 20px;">确定</Button>
+      <Button type="primary" size="large" style="padding:6px 20px;" @click="relation">
+          <span v-if="relationing">loading...</span><span v-else>确定</span>
+      </Button>
     </div>
   </div>
 </template>
 <script>
     import loading from './Loading'
     import {getProjectList} from '@/axios/api'
-    import {getFenzu, getTask,getZirenwu,getShare,getSchedule} from '@/axios/relevanceApi'
+    import {getFenzu, getTask,getZirenwu,getShare,getSchedule,getFile,addRelation} from '@/axios/relevanceApi'
   export default{
+    props:['publicId'],
     name:"",
     data () {
       return{
         searchVal:'',
         loading: false,
+        relationing:false,
         taskLoading:false,
         showRenwu:false,
         showZirenwu:false,
@@ -184,7 +219,7 @@
         taskDataFenzu: [],
         checkTAsk:null,
         checkedOneTask:{n:'',nn:''},
-        checkedShare:null,
+        checkedShare:[],
         checkedAfterSchedule:[{'ok':false}],
         checkedBeforeSchedule:[],
         checkedFile:null,
@@ -199,6 +234,46 @@
         showShare:false,
         showSchedule:false,
         showFile:false,
+        ziwenjain:[],
+        imgData:[
+            {
+                name:'.jpg.png.jpeg',
+                src:'@/icons/img/tp.png'
+            },
+            {
+                name:'.doc.docx',
+                src:'@/icons/img/word.png'
+            },
+            {
+                name:'.xls.xlsx.xlsm.xltx.xltm.xlsb.xlam',
+                src:'@/icons/img/excel.png'
+            },
+            {
+                name:'.pptx.pptm.ppsx.ppam',
+                src:'@/icons/img/ppt.png'
+            },
+            {
+                name:'.pdf',
+                src:'@/icons/img/pdf.png'
+            },
+            {
+                name:'.rar.zip',
+                src:'@/icons/img/zip.png'
+            },
+            {
+                name:'.txt',
+                src:'@/icons/img/txt.png'
+            },
+
+        ],
+        shareIdArr:[],
+        scheduleIdArr:[],
+        fileIdArr:[],
+        guanlianData:{
+            'publicId':'',
+            'bindId':'',
+            'publicType':''
+        }
 
       }
       
@@ -210,23 +285,32 @@
     },
   // 点击具体任务 显示子任务
       showChild(n,nn,taskId){
+          this.taskLoading=true
           this.checkedOneTask.n=n
           this.checkedOneTask.nn=nn
+          this.guanlianData.bindId=taskId
           getZirenwu(taskId).then(res => {
              if (res.result){
                  this.showZirenwu=res.data.length
                  this.zirenwuData=res.data
                  this.$nextTick(() => {
+                     this.taskLoading=false
                      this.$refs.scrollX.scrollLeft=260
                  })
              }
           })
-
-
       },
+        // 点击子任务、
+        checkedZirenwu(index, id){
+            this.checkZirenwu=index
+            this.guanlianData.bindId=id
+        },
         // 点击某个项目
       showTask(index, projectId, type){
           this.projectId=projectId
+          this.guanlianData.publicId=this.publicId
+          this.guanlianData.bindId=''
+          this.guanlianData.publicType=type
           switch(type) {
               case '任务':
                   this.projectI=index
@@ -244,6 +328,9 @@
                   this.loading=true
                   getShare(projectId).then(res => {
                       this.shareData=res.data
+                      for (let j=0;j<res.data.length;j++){
+                          this.checkedShare.push({'ok':false})
+                      }
                       this.loading=false
                       this.showShare=true
                   })
@@ -256,50 +343,122 @@
                       if (res.result){
                           this.shceduleBeforData=res.data.before
                           this.shceduleAfterData=res.data.after
-                          this.checkedAfterSchedule=new Array(res.data.after.length).fill({'ok':false})
-                          this.checkedBeforeSchedule==new Array(res.data.before.length).fill([])
-
+                          // this.checkedAfterSchedule=new Array(res.data.after.length).fill({'ok':false})
+                         for (let j=0;j<res.data.after.length;j++){
+                             this.checkedAfterSchedule.push({'ok':false})
+                         }
                           for (let j=0;j<res.data.before.length;j++){
-                              for (let k=0; k<res.data.before[i])
+                              this.checkedBeforeSchedule.push([])
+                              for (let k=0; k<res.data.before[j].scheduleList.length;k++){
+                                  this.checkedBeforeSchedule[j].push({'ok':false})
+                              }
                           }
+                          console.log(this.checkedAfterSchedule)
                           this.loading=false
                           this.showSchedule=true
                       }
                   })
                   break;
               case '文件':
+                  this.fileI=index
+                  this.loading=true
+                  getFile(projectId).then(res => {
+                     if (res.result){
+                         this.fileData=res.data
+                         this.loading=false
+                         this.showFile=true
+                         this.fileData.forEach(i => {
+                             this.$set(i,'ok',false)
+                         })
+                         console.log(this.fileData)
+                     }
+                  })
                   break;
           }
 
+      },
+        // 点击子文件夹
+        showZiwenjian(index, type, fileId,n){
+          if (type){
+              // 是文件夹
+              this.loading=true
+              getFile(fileId).then(res => {
+                  if (res.data.length){
+                      res.data.forEach(i => {
+                          this.$set(i,'ok',false)
+                      })
+                      if (this.ziwenjain.length==0){
+                          this.ziwenjain.push(res.data)
+                      } else if (this.ziwenjain.length==n+1) {
+                          this.ziwenjain.pop()
+                          this.ziwenjain.push(res.data)
+
+                      }else {
+                          this.ziwenjain.slice(0,n+2)
+                      }
+                  this.loading=false
+                  }
+              })
+          }else {
+              if (n=='-1'){
+                  this.fileData[index].ok=!this.fileData[index].ok
+              } else {
+                  this.ziwenjain[n][index].ok=!this.ziwenjain[n][index].ok
+              }
+              this.getBindId(this.fileIdArr,fileId)
+          }
       },
         // 点击任务分组
       showAllTask(groupId,index){
           this.taskLoading=true
           this.checkTAsk=index
-          console.log(groupId)
           getTask(groupId).then(res => {
               this.taskLoading=false
               this.taskData=res.data
           })
       },
-      // 点击子任务、
-      checkedZirenwu(index){
-          this.checkZirenwu=index
+        // bindId赋值
+      getBindId(arr,id){
+          if (arr.includes(id)){
+              let index=arr.findIndex(val => {
+                  return val==id
+              })
+              arr.splice(index,1)
+          }else {
+              arr.push(id)
+          }
+          this.guanlianData.bindId=arr.join(',')
       },
         // 选中 具体 分享
-      checkShare (n) {
-          this.checkedShare=n
+      checkShare (n, i) {
+          this.checkedShare[n].ok=!this.checkedShare[n].ok
+          this.getBindId(this.shareIdArr,i.id)
       },
-        // 选中 日程
-      checkSchedule(e){
-          console.log(e.target)
+        // 选中 过去 日程
+      checkSchedule(n,nn,id){
+          this.checkedBeforeSchedule[n][nn].ok=!this.checkedBeforeSchedule[n][nn].ok
+          this.getBindId(this.scheduleIdArr,id)
+      },
+      // 选中未来 日程
+      weilaiRc(n,id){
+          this.checkedAfterSchedule[n].ok=!this.checkedAfterSchedule[n].ok
+          this.getBindId(this.scheduleIdArr,id)
+      },
+        // 点击关联 确定按钮
+      relation(){
+          this.relationing=true
+          addRelation(this.guanlianData).then(res => {
+              if (res.result){
+                  this.$Message.success('关联成功');
+              }
+              else {
+                  this.$Message.error('关联失败，请重新选择');
+              }
+              this.relationing=false
+          })
       }
     },
     mounted () {
-        // this.projectI=''
-        // this.checkTAsk=''
-        // this.checkedOneTask.n=''
-        // this.checkedOneTask.nn=''
       document.getElementById('relationModal').children[1].style.zIndex = '1010';
       document.getElementById('relationModal').children[0].style.zIndex = '1010';
         getProjectList().then(res => {

@@ -137,7 +137,7 @@
     <p class="name" style="float: none;"><Icon type="ios-link-outline"></Icon>关联内容</p>
     <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
     <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-        <AddRelation></AddRelation>
+        <AddRelation :publicId="schedule.scheduleId"></AddRelation>
     </Modal>
 
   </div>

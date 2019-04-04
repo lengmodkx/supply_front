@@ -38,11 +38,18 @@ export function getSchedule(projectId) {
         method: "get"
     });
 }
-// 更新日程名称
-export function upRichengName(scheduleId, scheduleName) {
+// 获取文件
+export function getFile(projectId) {
     return fetch({
-        url: `/schedules/${scheduleId}/schedule_name`,
-        method: "put",
-        params: {scheduleName:scheduleName}
+        url: `/files/${projectId}/bind`,
+        method: "get"
+    });
+}
+// 添加关联
+export function addRelation(data) {
+    return fetch({
+        url: '/bindings',
+        method: "post",
+        data: data
     });
 }
