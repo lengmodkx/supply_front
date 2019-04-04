@@ -10,6 +10,14 @@ export function sendMsg(data) {
         data: data
     });
 }
+// 剩余消息
+export function restMsg(publicId,surpluscount) {
+    return fetch({
+        url: `/logs/${publicId}/surplus_msg`,
+        method: "get",
+        params: {'surpluscount':surpluscount}
+    });
+}
 //用户登录：
 export function userlogin(data) {
     // userName,password是参数
@@ -37,7 +45,19 @@ export function createProject(data) {
         data: data
     });
 }
-
+// 局部更新项目
+export function updateProject(data) {
+    return fetch({
+        url: `/projects/${data.projectId}`,
+        method: "put", // 请求方法
+        params: {
+            'projectName':data.projectName,
+            'projectDes':data.projectDes,
+            'isPublic':data.isPublic,
+            'projectCover':data.projectCover
+        }
+    });
+}
 //获取项目列表
 export function getProjectList() {
     return fetch({
