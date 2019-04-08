@@ -4,7 +4,7 @@
       <div class="more-msg" v-if="unReadMsg" >
           <span v-if="!restData.length" @click="loadMore">查看剩余{{unReadMsg}}条消息...</span><span v-else @click="shouqi" style="color: #3da8f5">收起</span>
       </div>
-      <div class="log-list" v-for="(item, index) in logs.slice(0,10)" :key="index">
+      <div class="log-list" v-for="(item, index) in logs" :key="index">
           <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
           <p class="things">{{item.content}}</p>
           <p class="time"><Time :time="item.createTime-1000*60" :interval="60" /></p>

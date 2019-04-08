@@ -145,7 +145,7 @@
   <!-- 设置参与者 -->
   <div class="participator">
      <h5>
-        参与者 · {{schedule.joinInfo.length?schedule.joinInfo.length:0}}
+        参与者 · {{schedule.joinInfo?schedule.joinInfo.length:0}}
         <Tooltip content="参与者将会收到评论和任务更新通知"
                  placement="right"
                  transfer>

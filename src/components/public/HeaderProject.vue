@@ -73,6 +73,10 @@ export default {
             item.prefix = "/schedules";
             item.pre = "schedules";
             break;
+          case "群聊":
+            item.prefix = "/groupChat";
+            item.pre = "groupChat";
+            break;
           case "统计":
             item.prefix = "/statistics";
             item.pre = "statistics";

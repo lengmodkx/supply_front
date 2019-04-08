@@ -106,6 +106,9 @@
       line-height: 44px;
       font-size: 14px;
       border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       .innerRight {
         float: right;
         font-weight: normal;
@@ -186,6 +189,10 @@
     font-weight: normal;
     &:hover {
       background: #eee;
+    }
+    i{
+      font-size: 18px;
+      margin-right: 5px;
     }
   }
   .back {
@@ -311,5 +318,29 @@
   }
   ::-webkit-scrollbar-thumb {
     background-color: #cecece;
+  }
+}
+.xiala{
+  cursor: pointer;
+  &:hover{
+    color: #0DA9F5;
+  }
+}
+.task-menu-detail{
+  /deep/ .ivu-select-selection{
+    text-align: right;
+    border: 0 none;
+  }
+  /deep/ .ivu-select-selection{
+    box-shadow: 0 0 0 0;
+  }
+}
+.addLink{
+  cursor: pointer;
+  color: #0DA9F5;
+  margin-top: 5px;
+  i{
+    font-size: 18px;
+    margin-right: 3px;
   }
 }

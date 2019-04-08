@@ -2,7 +2,7 @@
   <div class="add-share" :class="active">
     <div class="context">
       <div class="input">
-        <Input v-model="title" placeholder="输入文档标题"></Input>
+        <Input v-model="title" placeholder="输入文档标题" value="0011" />
       </div>
       <div class="html">
         <editor ref="editor"></editor>

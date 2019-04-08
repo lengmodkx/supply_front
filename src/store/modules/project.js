@@ -6,7 +6,8 @@ const store = {
     state: {
         projects: [],
         loading: true,
-        project: null
+        project: null,
+        projectName:null
     },
     mutations: {
         _init(state, data) {
@@ -15,6 +16,9 @@ const store = {
         },
         updateProject(state, data) {
             state.projects = data
+        },
+        setName (state, data){
+            state.projectName=data
         },
         // 打开项目设置
         openSet(state, data){

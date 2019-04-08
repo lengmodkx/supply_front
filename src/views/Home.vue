@@ -89,7 +89,7 @@
         <Row>
           <iCol span="6" v-for="(item,index) in projects" :key="index" v-if="item.projectDel==0">
             <div
-              @click="path(item.projectId,item.groupId)"
+              @click="path(item.projectId,item.groupId, item.projectName)"
               class="col"
               :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
             >
@@ -261,14 +261,15 @@ export default {
   },
   methods: {
     ...mapActions("project", ["init", "updateProject"]),
-    ...mapMutations("project", ["openSet"]),
+    ...mapMutations("project", ["openSet",'setName']),
     // 选择项目类型
     selectProjectType(value) {
       this.projectType = value;
       this.$store.state.project.loading = true;
       this.init(value);
     },
-    path(projectId, groupId) {
+    path(projectId, groupId,name) {
+      this.setName(name)
       this.$router.push(`/project/${projectId}/tasks/group/${groupId}`);
     },
     showMore() {

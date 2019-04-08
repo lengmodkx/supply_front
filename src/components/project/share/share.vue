@@ -28,8 +28,8 @@
               <Icon type="android-add-circle"></Icon>
               添加分享
             </a>
-            <Modal v-model="showAddshare" title="projectName" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
-              <add-share ref="addshare" @close="showAddshare=false" :projectId="projectId" :shareTitle="shareTitle" :shareContent="shareContent"></add-share>
+            <Modal v-model="showAddshare" :title="projectName" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
+              <add-share ref="addshare" @close="addShares" :projectId="projectId" :shareTitle="shareTitle" :shareContent="shareContent"></add-share>
             </Modal>
           </div>
           <div class="share-list">
@@ -50,7 +50,29 @@
             <div class="share-text">
               <div class="rng">
                 <div class="share-title">
-                  <span>·{{this.share.title}}</span>
+                  <div class="left-title">
+                    <div>
+                      <Icon type="ios-list-box-outline" size="18" />
+                      分享
+                    </div>
+                    <span>{{this.share.title}}</span>
+                  </div>
+                  <div class="right-icons">
+                    <Tooltip content="复制分享链接" placement="bottom">
+                      <Icon type="ios-link" />
+                    </Tooltip>
+
+                    <Tooltip content="点个赞" placement="bottom">
+                      <span class="zan" :class="{zan_blue:zan}" >
+                        <Icon type="md-thumbs-up"></Icon>
+                        <!--<span class="zanNum" v-if="zan">1</span>-->
+                      </span>
+                    </Tooltip>
+                    <span class="down">
+                      <singleFenxiangMenu :data="share" :name="publicType"></singleFenxiangMenu>
+                    </span>
+                  </div>
+
                   <div>
                     <Icon type="chevron-down" size="18" @click.native="showmenu=true"></Icon>
                     <Modal v-model="showmenu" width="250">
@@ -74,21 +96,21 @@
                 <div class="html">
                   <div class="share-content" v-html="share.content"></div>
                   <div class="label">
-                    <div class="ol">
-                      <Icon type="pricetag"></Icon>
+                    <div class="ol" style="width: 55px">
+                      <Icon type="ios-pricetags-outline" size="18" />
                       标签
                     </div>
                     <div>
                       <!-- <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag> -->
-                      <tag :taglist="share.tagList" :projectId="projectId" :publicId="share.shareId" :publicType="publicType"></tag>
+                      <tag :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"></tag>
                     </div>
                   </div>
-                  <p class="p">
-                    <Icon type="link"></Icon>关联内容
-                  </p>
-                  <p style="color:#3da8f5">
-                    <Icon type="md-add-circle"></Icon>添加关联
-                  </p>
+                  <!--关联-->
+                  <p class="name" style="margin-top: 5px"><Icon type="ios-link-outline" style="font-size: 18px;margin-right: 3px"></Icon>关联内容</p>
+                  <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
+                  <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
+                    <AddRelation :publicId="share.id"></AddRelation>
+                  </Modal>
                 </div>
               </div>
               <div class="omg" v-if="members">
@@ -97,14 +119,11 @@
                   <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`" :title="user.userName">
                   <Icon type="md-add-circle" size="28" color="#2d8cf0" @click.native="showMember"></Icon>
                 </p>
-                <div class="hr">
-                  <p v-for="log in share.logList" :key="log.id">
-                    <span class="fr">{{log.createTimeStr}}</span>
-                  </p>
-                </div>
+
+                <log :logs="share.logs" :unReadMsg="share.unReadMsg" :publicId="share.id"></log>
               </div>
             </div>
-            <publish></publish>
+            <publish :publicId="share.id" :projectId="share.projectId" :publicType="publicType"></publish>
           </div>
         </iCol>
       </Row>
@@ -114,6 +133,10 @@
       <user-list :projectId="projectId"></user-list>
 
     </Modal>
+    <!--编辑分享-->
+    <Modal v-model="editShare" :title="projectName" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
+      <add-share ref="editshare" @close="editShare=false" :projectId="projectId" :shareTitle="share.title" :shareContent="share.content"></add-share>
+    </Modal>
   </div>
 </template>
 
@@ -122,29 +145,36 @@ import publish from "../../public/Publish.vue";
 import addShare from "./AddShare.vue";
 import Loading from "../../public/common/Loading.vue";
 import tag from "./Tags.vue";
-import { shares } from "../../../axios/api2.js";
+// import { shares } from "../../../axios/api2.js";
 import userList from "../../resource/userList.vue";
-import { mapState } from "vuex";
+import log from "../../public/log"
+import singleFenxiangMenu from '../../public/common/SingleFenxiangMenu'
+import AddRelation from '@/components/public/common/AddRelation'
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
   components: {
     publish,
     addShare,
     Loading,
     tag,
-    userList
+    userList,
+    singleFenxiangMenu,
+    log,
+    AddRelation
   },
   data() {
     return {
       loading: true,
       type: 1,
+      editShare:false,
       showAddshare: false,
-      projectName: "",
       projectId: this.$route.params.id,
       shareTitle: "",
+      relationModal:false,
       shareContent: "",
-      shareList: [],
+      // shareList: [],
       indexNow: 0,
-      share: null,
+      // share: null,
       showmenu: false,
       isPrivacy: 1,
       privacyTxt: "所有成员可见",
@@ -152,28 +182,36 @@ export default {
       showTag: false,
       tagList: [],
       publicType: "分享",
-      showAddMember: false
+      showAddMember: false,
+      zan:0
     };
   },
   computed: {
-    ...mapState("member", ["members"])
+    ...mapState("member", ["members"]),
+    ...mapState("project", ["projectName"]),
+    ...mapState("share", ["shareList","share"])
   },
   mounted() {
-    shares(this.$route.params.id).then(res => {
-      if (res.result == 1) {
-        this.shareList = res.data;
-        this.loading = false;
-        if (this.shareList != null && this.shareList.length > 0) {
-          this.share = this.shareList[0];
-          this.$store.dispatch("member/init", this.shareList[0].joinInfo);
-        }
-      }
-    });
+    this.init(this.$route.params.id).then(res => {
+      this.loading = false;
+      this.$store.dispatch("member/init", this.shareList[0].joinInfo);
+    })
+    // shares(this.$route.params.id).then(res => {
+    //   if (res.result == 1) {
+    //     this.shareList = res.data;
+    //     this.loading = false;
+    //     if (this.shareList != null && this.shareList.length > 0) {
+    //       this.share = this.shareList[0];
+    //       this.$store.dispatch("member/init", this.shareList[0].joinInfo);
+    //     }
+    //   }
+    // });
   },
   methods: {
+    ...mapActions('share',['init']),
+    ...mapMutations('share',['changeShare']),
     clickEvent(parameter) {},
     changePrivacy() {
-      console.log(111);
       if (this.isPrivacy == 1) {
         this.privacyTxt = "所有成员可见";
         this.isPrivacy = 2;
@@ -186,11 +224,20 @@ export default {
     },
     changeContent(index) {
       this.indexNow = index;
-      this.share = this.shareList[index];
+      this.changeShare(index)
+      // this.share = this.shareList[index];
       this.$store.dispatch("member/init", this.shareList[index].joinInfo);
     },
     showMember() {
       this.showAddMember = !this.showAddMember;
+    },
+    addShares(){
+      this.showAddshare=false
+      this.loading=true
+      this.init(this.$route.params.id).then(res => {
+        this.loading = false;
+        this.$store.dispatch("member/init", this.shareList[0].joinInfo);
+      })
     }
   }
 };
@@ -244,6 +291,7 @@ export default {
   .rng {
     background-color: #fff;
     padding: 20px;
+    position: relative;
   }
   .p {
     margin-top: 20px;
@@ -278,6 +326,39 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 28px;
+        .left-title{
+          display: flex;
+          align-items: center;
+          div{
+            display: flex;
+            width: 64px;
+            height: 28px;
+            padding: 4px;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #EFF9FE;
+            color: #77c2f8;
+            font-size: 14px;
+            margin-right: 15px;
+          }
+        }
+        .right-icons{
+          position: absolute;
+          right: 20px;
+          top: 20px;
+          display: flex;
+          align-items: center;
+          height: 28px;
+          i{
+            cursor: pointer;
+            font-size: 18px;
+            margin-right: 10px;
+            &:hover{
+              color: #3da8f5;
+            }
+          }
+        }
       }
     }
   }

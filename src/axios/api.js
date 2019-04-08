@@ -390,14 +390,14 @@ export function recovery(shareId) {
     return $put(`/shares/${shareId}/recovery`, "");
 }
 //复制分享
-export function copyShare(projectId) {
+export function copyShare(shareId, projectId) {
     return $post(`/shares/${shareId}/copy`, {
         projectId: projectId
     });
 }
 
 //移动分享
-export function moveShare(projectId) {
+export function moveShare(shareId, projectId) {
     return $post(`/shares/${shareId}/move`, {
         projectId: projectId
     });
