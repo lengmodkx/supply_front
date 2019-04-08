@@ -11,11 +11,13 @@ export function sendMsg(data) {
     });
 }
 // 剩余消息
-export function restMsg(publicId,surpluscount) {
+export function restMsg(publicId, surpluscount) {
     return fetch({
         url: `/logs/${publicId}/surplus_msg`,
         method: "get",
-        params: {'surpluscount':surpluscount}
+        params: {
+            'surpluscount': surpluscount
+        }
     });
 }
 //用户登录：
@@ -51,10 +53,10 @@ export function updateProject(data) {
         url: `/projects/${data.projectId}`,
         method: "put", // 请求方法
         params: {
-            'projectName':data.projectName,
-            'projectDes':data.projectDes,
-            'isPublic':data.isPublic,
-            'projectCover':data.projectCover
+            'projectName': data.projectName,
+            'projectDes': data.projectDes,
+            'isPublic': data.isPublic,
+            'projectCover': data.projectCover
         }
     });
 }
@@ -185,13 +187,21 @@ export function taskToRecycle(taskId) {
 }
 
 // 复制任务
-export function copyTask(taskId,projectId,groupId,menuId) {
-    return $post(`/tasks/${taskId}/copy`,{projectId:projectId,groupId:groupId,menuId:menuId});
+export function copyTask(taskId, projectId, groupId, menuId) {
+    return $post(`/tasks/${taskId}/copy`, {
+        projectId: projectId,
+        groupId: groupId,
+        menuId: menuId
+    });
 }
 
 // 移动任务
-export function moveTask(taskId,projectId,groupId,menuId) {
-    return $put(`/tasks/${taskId}/move`,{projectId:projectId,groupId:groupId,menuId:menuId});
+export function moveTask(taskId, projectId, groupId, menuId) {
+    return $put(`/tasks/${taskId}/move`, {
+        projectId: projectId,
+        groupId: groupId,
+        menuId: menuId
+    });
 }
 
 //获取参与者列表
@@ -216,13 +226,20 @@ export function modifyTag(tagId, params) {
 }
 
 //移除一项信息上的标签
-export function removeInfoTag(tagId,publicId,publicType) {
-    return $delete(`/tags/${tagId}/remove/tag`, {publicId:publicId,publicType:publicType});
+export function removeInfoTag(tagId, publicId, publicType) {
+    return $delete(`/tags/${tagId}/remove/tag`, {
+        publicId: publicId,
+        publicType: publicType
+    });
 }
 
 //在一项信息上添加标签
-export function bindingTag(tagId,publicId, publicType) {
-    return $post(`/tags/binding`, {tagId:tagId,publicId:publicId,publicType:publicType});
+export function bindingTag(tagId, publicId, publicType) {
+    return $post(`/tags/binding`, {
+        tagId: tagId,
+        publicId: publicId,
+        publicType: publicType
+    });
 }
 
 //搜索标签
@@ -251,17 +268,25 @@ export function addnewTask(projectId, groupId, menuName) {
 
 //点赞
 export function fabulous(publicId) {
-    return $post('/public/fabulous',{publicId:publicId})
+    return $post('/public/fabulous', {
+        publicId: publicId
+    })
 }
 
 //取消点赞
 export function cancelFabulous(publicId) {
-    return $delete(`/public/${publicId}/cancle_fabulous`,{publicId:publicId})
+    return $delete(`/public/${publicId}/cancle_fabulous`, {
+        publicId: publicId
+    })
 }
 
 //收藏任务
-export function collectTask(projectId, publicId,collectType) {
-    return $post('/collections',{projectId:projectId,publicId:publicId,collectType})
+export function collectTask(projectId, publicId, collectType) {
+    return $post('/collections', {
+        projectId: projectId,
+        publicId: publicId,
+        collectType
+    })
 }
 
 //取消收藏
@@ -311,7 +336,9 @@ export function initEditTask(taskId) {
 
 /**获取项目下的所有分组 */
 export function getGroupList(projectId) {
-    return $get(`/relations/${projectId}`, {projectId:projectId});
+    return $get(`/relations/${projectId}`, {
+        projectId: projectId
+    });
 }
 
 /**获取分组下的所有菜单 */
@@ -320,8 +347,10 @@ export function getMenuList(groupId) {
 }
 
 /** 更新任务的参与者 */
-export function updateTaskJoin(taskId,joinIds) {
-    return $put(`/tasks/${taskId}/members`, {taskUids:joinIds});
+export function updateTaskJoin(taskId, joinIds) {
+    return $put(`/tasks/${taskId}/members`, {
+        taskUids: joinIds
+    });
 }
 
 /**日程初始化 */
@@ -346,6 +375,43 @@ export function share(shareId) {
 export function shareAdd(params) {
     return $post("/shares", params);
 }
+//删除分享
+export function deleteShare(shareId) {
+    return $delete(`/shares/${shareId}`, "");
+}
+//将分享移入回收站
+export function recycleShare(shareId) {
+    return $put(`/shares/${shareId}/recyclebin`, "");
+}
+//恢复分享
+export function recovery(shareId) {
+    return $put(`/shares/${shareId}/recovery`, "");
+}
+//复制分享
+export function copyShare(projectId) {
+    return $post(`/shares/${shareId}/copy`, {
+        projectId: projectId
+    });
+}
+
+//移动分享
+export function moveShare(projectId) {
+    return $post(`/shares/${shareId}/move`, {
+        projectId: projectId
+    });
+}
+
+//更换分享隐私模式
+export function privacyShare(shareId) {
+    return $post(`/shares/${shareId}/privacy`, "");
+}
+
+//置顶分享
+export function topShare(shareId) {
+    return $post(`/shares/${shareId}/top`, "");
+}
+
+
 //所有文件
 export function files(params) {
     return $get("/files", params);

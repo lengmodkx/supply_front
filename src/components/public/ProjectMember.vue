@@ -8,7 +8,7 @@
     </div>
     <!-- 列表 -->
     <Input class="search" v-model="keyword" placeholder="搜索成员，或输入邮箱直接邀请"/>
-    <div class="invite">
+    <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请新成员
     </div>
     <ul class="programMember">
@@ -22,7 +22,17 @@
         </div>
       </li>
     </ul>
-    <Modal></Modal>
+    <Modal v-model="modal" width="360" footer-hide>
+      <p slot="header" style="color:#000;text-align:center">
+        <span>邀请新成员</span>
+      </p>
+      <div style="text-align:center;height:450px">
+        <div>
+          <Input search enter-button placeholder="请输入手机号/邮箱查找"/>
+        </div>
+        <p>Will you delete it?</p>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -31,7 +41,8 @@ export default {
   name: "",
   data() {
     return {
-      keyword: ""
+      keyword: "",
+      modal: false
     };
   },
   computed: {
