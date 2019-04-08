@@ -29,6 +29,7 @@
           class="project-list"
           v-for="(item,index) in projects"
           :key="index"
+          v-if="item.projectDel==0"
           @click="path(item.projectId,item.groupId)"
         >
           <div
@@ -86,7 +87,7 @@
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
         <Row>
-          <iCol span="6" v-for="(item,index) in projects" :key="index">
+          <iCol span="6" v-for="(item,index) in projects" :key="index" v-if="item.projectDel==0">
             <div
               @click="path(item.projectId,item.groupId)"
               class="col"

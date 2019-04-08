@@ -19,6 +19,16 @@ const store = {
         // 打开项目设置
         openSet(state, data){
             state.project=data
+        },
+        // 局部更新项目
+        updatePro(state, data){
+            state.projects.forEach((i,n) => {
+                if (i.projectId==data.projectId){
+                    state.projects[n]=data
+                }
+                console.log(state.projects)
+            })
+
         }
     },
     actions: {

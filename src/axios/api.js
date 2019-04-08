@@ -53,10 +53,12 @@ export function updateProject(data) {
         url: `/projects/${data.projectId}`,
         method: "put", // 请求方法
         params: {
-            'projectName': data.projectName,
-            'projectDes': data.projectDes,
-            'isPublic': data.isPublic,
-            'projectCover': data.projectCover
+            'projectName':data.projectName,
+            'projectDes':data.projectDes,
+            'isPublic':data.isPublic,
+            'projectDel':data.projectDel,
+            'projectStatus':data.projectStatus
+            // 'projectCover':data.projectCover
         }
     });
 }
