@@ -9,6 +9,7 @@ import project from './modules/project'
 import schedule from './modules/schedule'
 import member from './modules/member'
 import share from './modules/share'
+import chat from './modules/chat'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -21,7 +22,8 @@ const store = new Vuex.Store({
         member,
         schedule,
         tag,
-        share
+        share,
+        chat
     }
 })
 

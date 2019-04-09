@@ -39,6 +39,10 @@ export default new Router({
         {
           path: "files/:fileId",
           component: _import("project/file/file")
+        },
+        {
+          path: "statistics",
+          component: _import("project/pages/statistics")
         }
       ]
     },

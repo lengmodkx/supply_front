@@ -5,37 +5,109 @@
         <div class="title">阿拉丁bug管理系统
           <Icon type="more" class="fr"></Icon>
         </div>
-        <div class="chat-text">
-          <div v-for="i in [1,2,3,4,5,6]" :key="i">
-            <div class="other">
-              <img src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200" alt="">
-              <div class="content">1111111111111111111111111</div>
+        <div class="chat-text" >
+          <div v-for="(item, index) in chatData" :key="index">
+            <div  v-if="item.isOwn && item.chatDel==0">
+              <div class="me">
+                <div class="content">{{item.content}}</div>
+              </div>
+              <div class="time me-time">
+                <Time :time="item.createTime" />
+                <span v-if="item.fileList.length">下载附件</span>
+                <span @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+              </div>
             </div>
-            <p class="time">王世汉，2017年9月5日</p>
-          </div>
-          <div v-for="i in [1,2,3,4,5,6]" :key="i">
-            <div class="me">
-              <div class="content">1111111111111111111111111</div>
+            <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
+            <div v-else>
+              <div class="other">
+                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
+                <div class="content">{{item.content}}</div>
+              </div>
+              <div class="time">
+                <Time :time="item.createTime" />
+                <span v-if="item.fileList.length">下载附件</span>
+              </div>
             </div>
-            <p class="time me-time">王世汉，2017年9月5日</p>
+
           </div>
         </div>
-        <publish></publish>
+        <!--发消息-->
+        <div class="talk">
+          <div class="talkinner">
+            <div class="talkUp" @keyup.enter="sendChat"
+                 contenteditable="true">
+              <Input id="input"
+                     v-model.trim="talkvalue"
+                     ref="textarea"
+                     placeholder="按Enter快速发布" />
+            </div>
+            <div class="talkDown clearfix">
+              <Tooltip content="上传附件" class="fl">
+                <Icon @click="showCommon=true" class="up-file" type="md-attach" />
+              </Tooltip>
+              <!-- 表情包组件 -->
+              <Emoji @choose="chooseEmoji"
+                     ref="emoji"></Emoji>
+              <div class="send fr" >
+                <Button type="primary" @click="sendChat">发布</Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
+      <up-file @close="showCommon=false" :projectId="this.$route.params.id"></up-file>
+    </Modal>
   </div>
 </template>
 
 <script>
-import publish from '../../public/Publish.vue'
+import Emoji from '@/components/public/common/emoji/Emoji'
+import insertText from '@/utils/insertText'
+import upFile from './chatStatistics/upfile'
+import {sendChat, getChat,recall} from '@/axios/api'
+import {mapActions, mapState} from 'vuex'
 export default {
   name: 'App',
-  components: { publish },
+  components: { Emoji,upFile },
   data() {
-    return {}
+    return {
+      talkvalue: '',
+      showCommon: false,
+    }
   },
-  created() {},
-  methods: {}
+  mounted() {
+    this.getChat()
+  },
+  computed: {
+    ...mapState('chat',['chatData'])
+  },
+  methods: {
+    ...mapActions('chat',['initChat']),
+    // 获取消息
+    getChat(){
+      this.initChat(this.$route.params.id)
+    },
+    // 发送消息
+    sendChat(){
+      if (this.talkvalue){
+        sendChat(this.$route.params.id,this.talkvalue).then(res => {
+          console.log(res)
+          this.talkvalue=''
+        })
+      }
+    },
+    chooseEmoji (name) {
+      insertText(this.$refs.textarea.$el.children[1], name)
+    },
+    // 撤回消息
+    chehui (chatId) {
+      recall(chatId,this.$route.params.id).then(res => {
+        console.log(res)
+      })
+    }
+  }
 }
 </script>
 
@@ -52,8 +124,15 @@ export default {
     font-size: 11px;
     padding: 0 15px 0 62px;
     margin-top: 5px;
+    display: flex;
+    align-items: center;
+    span{
+      cursor: pointer;
+      margin: 0 5px;
+    }
     &.me-time {
       text-align: right;
+      flex-direction: row-reverse;
     }
   }
   .other,
@@ -117,6 +196,14 @@ export default {
       overflow-x: hidden;
       overflow-y: scroll;
       padding-bottom: 25px;
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 8px;
+        background-color: #e5e5e5;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #cecece;
+      }
     }
   }
   .group-chat-view,
@@ -131,4 +218,61 @@ export default {
     flex-direction: column;
   }
 }
+.talk {
+  position: relative;
+  border: 1px solid #e5e5e5;
+  .talkinner {
+    position: relative;
+    min-height: 40px;
+    margin: 14px 20px 13px 15px;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    .talkUp {
+      position: relative;
+      z-index: 1;
+      max-height: 290px;
+      background-color: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      #input {
+        input:hover {
+          border-color: #dddee1;
+        }
+      }
+    }
+    .talkDown {
+      line-height: 40px;
+      height: 40px;
+
+      .send {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+  .up-file{
+    float: left;
+    font-size: 20px;
+    transform: rotate(90deg);
+    cursor: pointer;
+    color: gray;
+    margin-top: 15px;
+    margin-left: 5px;
+    &:hover{
+      color: #3da8f5;
+    }
+  }
+  .chehui{
+    width: 330px;
+    margin: 0 auto;
+    margin-top: 25px;
+    text-align: center;
+    font-size: 12px;
+    padding: 0 10px;
+    height: 28px;
+    line-height: 28px;
+    background-color: #EFEEEC;
+    color: #a6a6a6;
+    border-radius: 8px;
+  }
 </style>

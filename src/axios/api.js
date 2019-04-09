@@ -465,6 +465,30 @@ export function addChildTask(taskId, params) {
         taskName: params
     })
 }
+// 群聊发送消息
+export function sendChat(projectId,content) {
+    return fetch({
+        url: '/groupchat/',
+        method: "post", // 请求方法
+        params: {projectId:projectId,content:content}
+    });
+}
+// 获取群聊消息
+export function getChat(projectId) {
+    return fetch({
+        url: '/groupchat',
+        method: "get", // 请求方法
+        params: {projectId:projectId}
+    });
+}
+// 撤回群聊消息
+export function recall(chatId,projectId) {
+    return fetch({
+        url: `/groupchat/${chatId}/revoke`,
+        method: "put", // 请求方法
+        params: {projectId:projectId}
+    });
+}
 export function $post(url, params) {
     return fetch({
         url: url,
