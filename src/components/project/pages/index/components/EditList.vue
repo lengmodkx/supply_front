@@ -251,7 +251,7 @@
         <div class="addLink" @click="relationModal=true;">
           <Icon type="ios-add-circle-outline" />添加关联</div>
         <Modal v-model="relationModal" class="relationModal" id="relationModal">
-          <AddRelation></AddRelation>
+          <AddRelation :publicId="task.taskId"></AddRelation>
         </Modal>
 
       </div>
@@ -285,7 +285,7 @@
             <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId" @save="saveInvolveMember"></InvolveMember>
           </div>
         </div>
-        <log :logs="task.logs" :unReadMsg="task.unReadMsg"></log>
+        <log :logs="task.logs" :publicId="task.taskId" :unReadMsg="task.unReadMsg"></log>
       </div>
     </div>
     <footer>
@@ -300,7 +300,7 @@
 import SetRepeat from "./SetRepeat";
 import TaskWarn from "./TaskWarn";
 import AddRelation from "@/components/public/common/AddRelation";
-import Tags from "@/components/project/share/Tags";
+import Tags from "@/components/project/pages/index/components/task/Tags";
 import insertText from "@/utils/insertText";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import SingleTaskMenu from "./SingleTaskMenu";

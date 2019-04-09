@@ -446,6 +446,7 @@
       },
         // 点击关联 确定按钮
       relation(){
+          console.log(">>>>>>>>>", this.guanlianData);
           this.relationing=true
           addRelation(this.guanlianData).then(res => {
               if (res.result){
