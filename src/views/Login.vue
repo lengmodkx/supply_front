@@ -90,20 +90,21 @@ export default {
     ...mapState("app", ["loading"])
   },
   methods: {
-    ...mapActions("user", ["updateUserInfo"]),
+    ...mapActions("user", ["updateUserInfo","updateUserId"]),
     login: function(name) {
       this.userInfo = this.formValidate;
 
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.updateUserInfo(this.userInfo); //存储、更新用户信息
           //发请求的方法
           userlogin(this.formValidate).then(res => {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
               sessionStorage.token = res.accessToken;
-              console.log(res);
+              this.updateUserId(res.userInfo); //存储、更新用户信息
+              localStorage.userId=res.userInfo.userId
+              alert(localStorage.userId)
               this.$Message.success("登录成功!");
               this.$router.push("/home");
             }

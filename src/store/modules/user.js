@@ -10,16 +10,17 @@ const store = {
   namespaced: true,
   state: {
     userInfo:userData,
-    user:{}
+    users:{}
   },
   mutations: {
     updateUserInfo(state, data) {
+      // state.userInfo = data
+      // sessionStorage.userInfo = JSON.stringify(data)
       state.userInfo = data
-      sessionStorage.userInfo = JSON.stringify(data)
     },
     updateUserId(state, data) {
-      // console.log(data)
-      state.user = data
+      console.log('我是ueserinfo啊',data)
+      state.users = data
     },
   },
   actions: {

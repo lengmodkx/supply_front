@@ -5,30 +5,32 @@
         <div class="title">阿拉丁bug管理系统
           <Icon type="more" class="fr"></Icon>
         </div>
-        <div class="chat-text" >
-          <div v-for="(item, index) in chatData" :key="index">
-            <div  v-if="item.isOwn && item.chatDel==0">
-              <div class="me">
-                <div class="content">{{item.content}}</div>
+        <div class="chat-text" ref="scrollbox">
+          <div ref="heightbox">
+            <div v-for="(item, index) in chatData" :key="index">
+              <div  v-if="item.isOwn && item.chatDel==0">
+                <div class="me">
+                  <div class="content">{{item.content}}</div>
+                </div>
+                <div class="time me-time">
+                  <Time :time="item.createTime" />
+                  <span v-if="item.fileList.length">下载附件</span>
+                  <span @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+                </div>
               </div>
-              <div class="time me-time">
-                <Time :time="item.createTime" />
-                <span v-if="item.fileList.length">下载附件</span>
-                <span @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+              <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
+              <div v-else>
+                <div class="other">
+                  <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
+                  <div class="content">{{item.content}}</div>
+                </div>
+                <div class="time">
+                  <Time :time="item.createTime" />
+                  <span v-if="item.fileList.length">下载附件</span>
+                </div>
               </div>
-            </div>
-            <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
-            <div v-else>
-              <div class="other">
-                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
-                <div class="content">{{item.content}}</div>
-              </div>
-              <div class="time">
-                <Time :time="item.createTime" />
-                <span v-if="item.fileList.length">下载附件</span>
-              </div>
-            </div>
 
+            </div>
           </div>
         </div>
         <!--发消息-->
@@ -87,14 +89,18 @@ export default {
     ...mapActions('chat',['initChat']),
     // 获取消息
     getChat(){
-      this.initChat(this.$route.params.id)
+      this.initChat(this.$route.params.id).then(res => {
+        this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight
+      })
     },
     // 发送消息
     sendChat(){
       if (this.talkvalue){
         sendChat(this.$route.params.id,this.talkvalue).then(res => {
-          console.log(res)
           this.talkvalue=''
+          this.$nextTick(() => {
+            this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight
+          })
         })
       }
     },
