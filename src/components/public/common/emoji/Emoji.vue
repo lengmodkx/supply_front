@@ -17,9 +17,8 @@
           <div class="emojiItem"
                v-for="i of item"
                :key="i.title"
-               @click="showpop=false;$emit('choose',`[${i.title}]`)">
-            <img :src="i.url"
-                 alt="i.url" />
+               @click="showpop=false;$emit('choose',i.url)">
+            <img :src="i.url" alt="i.url" />
           </div>
         </CarouselItem>
       </Carousel>

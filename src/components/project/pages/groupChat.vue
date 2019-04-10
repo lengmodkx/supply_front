@@ -12,7 +12,7 @@
             <div v-for="(item, index) in chatData" :key="index">
               <div class="me-msg"  v-if="item.isOwn && item.chatDel==0">
                 <div class="me">
-                  <div class="content">{{item.content}}</div>
+                  <div class="content" v-html="item.content"></div>
                 </div>
                 <div class="time me-time">
                   <Time :time="item.createTime" />
@@ -44,12 +44,14 @@
         <!--发消息-->
         <div class="talk">
           <div class="talkinner">
-            <div class="talkUp" @keyup.enter="sendChat"
-                 contenteditable="true">
-              <Input id="input"
-                     v-model.trim="talkvalue"
+            <div class="talkUp" >
+              <div id="input"
+                   style="width: 100%;height: 40px;padding: 5px 10px"
                      ref="textarea"
-                     placeholder="按Enter快速发布" />
+                     placeholder="按Enter快速发布"
+                      contenteditable="true"
+                   @keyup.enter="sendChat">
+              </div>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="上传附件" class="fl">
@@ -103,9 +105,10 @@ export default {
     },
     // 发送消息
     sendChat(){
-      if (this.talkvalue){
-        sendChat(this.$route.params.id,this.talkvalue).then(res => {
-          this.talkvalue=''
+      let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")
+      if (con){
+        sendChat(this.$route.params.id,con).then(res => {
+          this.$refs.textarea.innerHTML=''
           this.$nextTick(() => {
             this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight
           })
@@ -113,7 +116,8 @@ export default {
       }
     },
     chooseEmoji (name) {
-      insertText(this.$refs.textarea.$el.children[1], name)
+      this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
+      // insertText(this.$refs.textarea.$el.children[1], name)
     },
     // 撤回消息
     chehui (chatId) {
@@ -134,6 +138,17 @@ export default {
       .chehui-btn{
         display: block;
       }
+    }
+  }
+  #input{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    img{
+      width: 26px;
+      height: 26px;
     }
   }
 .group-chat {
@@ -166,10 +181,9 @@ export default {
     padding: 0 15px;
     margin-top: 25px;
     img {
-      width: 36px;
-      height: 36px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      margin-right: 12px;
     }
     .content {
       display: inline-block;
@@ -318,6 +332,13 @@ export default {
     span{
       font-size: 12px;
       line-height: 20px;
+    }
+  }
+  .content{
+    display: flex !important;
+    align-items: center;
+    img{
+      width: 26px;
     }
   }
 </style>
