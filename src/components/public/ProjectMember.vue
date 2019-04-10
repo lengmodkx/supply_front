@@ -7,7 +7,7 @@
       </span>
     </div>
     <!-- 列表 -->
-    <Input class="search" v-model="keyword" placeholder="搜索成员，或输入邮箱直接邀请"/>
+    <Input class="search" v-model="keyword" placeholder="搜索成员" @on-search="filterUser"/>
     <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请新成员
     </div>
@@ -20,29 +20,72 @@
           <p class="uname">{{user.userName}}</p>
           <p class="email">{{user.email}}</p>
         </div>
+        <Icon type="ios-arrow-down" size="18" @click="showModal1(user.userId,$event)"/>
       </li>
     </ul>
     <Modal v-model="modal" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请新成员</span>
       </p>
-      <div style="text-align:center;height:450px">
+      <div style="text-align:center;height:400px">
         <div>
-          <Input search enter-button placeholder="请输入手机号/邮箱查找"/>
+          <Input
+            search
+            enter-button
+            placeholder="请输入手机号/邮箱查找"
+            @on-search="searchUser"
+            v-model="keyword2"
+          />
         </div>
-        <p>Will you delete it?</p>
+        <loading v-if="loading"></loading>
+        <div style="height:360px;padding-top:10px">
+          <ul>
+            <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
+              <div class="invit-user-name">
+                <img
+                  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`"
+                >
+                <p>{{user.userName}}</p>
+              </div>
+              <Button type="primary" @click="adduser(user.userId)">添加</Button>
+            </li>
+          </ul>
+        </div>
       </div>
     </Modal>
+    <div v-show="modal1" :style="{left:offsetLeft,top:offsetTop}" class="member-menu">
+      <p slot="header" style="color:#000;text-align:center">
+        <span>成员菜单</span>
+      </p>
+      <div>
+        <div class="user-set">
+          <p>成员</p>
+          <Icon type="md-checkmark" size="16"/>
+        </div>
+        <div style="color:red;height:30px;line-height:30px;cursor:pointer">移除成员</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
+import { getUsers, addUser } from "../../axios/api2.js";
+import loading from "./common/Loading.vue";
 export default {
   name: "",
+  components: {
+    loading
+  },
   data() {
     return {
       keyword: "",
-      modal: false
+      keyword2: "",
+      modal: false,
+      modal1: false,
+      invitUsers: [],
+      loading: false,
+      offsetLeft: 0,
+      offsetTop: 0
     };
   },
   computed: {
@@ -52,11 +95,61 @@ export default {
     this.initUser(this.$route.params.id);
   },
   methods: {
-    ...mapActions("member", ["initUser"])
+    ...mapActions("member", ["initUser"]),
+    searchUser() {
+      if (!this.keyword2) {
+        this.$Notice.warning({
+          title: "请输入关键字"
+        });
+        return false;
+      }
+      this.loading = true;
+      getUsers(this.keyword2).then(res => {
+        this.loading = false;
+        if (res.result === 1) {
+          this.invitUsers = res.data;
+        }
+      });
+    },
+    //筛选用户
+    filterUser() {},
+    adduser(userId) {
+      let params = {
+        projectId: this.$route.params.id,
+        memberId: userId
+      };
+      addUser(params).then(res => {
+        if (res.result === 1) {
+          this.initUser(this.$route.params.id);
+        } else {
+          this.$Notice.warning({
+            title: res.msg
+          });
+        }
+      });
+    },
+    showModal1(userId, e) {
+      this.offsetLeft = e.clientX - 180 + "px";
+      this.offsetTop = e.clientY + 20 + "px";
+      this.modal1 = !this.modal1;
+      console.log(e);
+    },
+    clsoeModal1() {
+      this.modal1 = false;
+    }
   }
 };
 </script>
 <style scoped lang="less">
+.member-menu {
+  width: 200px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px 5px;
+  position: fixed;
+  z-index: 999;
+  box-shadow: 0 0 6px #ececec;
+}
 .projectMember {
   position: fixed;
   top: 98px;
@@ -67,9 +160,11 @@ export default {
   background-color: #f7f7f7;
   transition: 0;
   box-shadow: -3px 0 3px rgba(0, 0, 0, 0.1);
+
   &.animate {
     transition: 0.1s;
   }
+
   .head {
     line-height: 50px;
     text-align: center;
@@ -79,6 +174,7 @@ export default {
     width: 320px;
     margin: 0 15px;
     border-bottom: 1px solid #e5e5e5;
+
     .close {
       cursor: pointer;
       color: lightgray;
@@ -88,35 +184,43 @@ export default {
       position: absolute;
       top: 0;
       right: 0;
+
       &:hover {
         color: #3da8f5;
       }
     }
   }
 }
+
 .search {
   width: 320px;
   margin: 10px auto;
   display: block;
+
   /deep/.ivu-input {
     height: 40px !important;
     font-size: 14px;
+
     &:focus {
       border-color: #a6a6a6;
       box-shadow: 0 0 0 0;
     }
+
     &:hover {
       border-color: #a6a6a6;
     }
   }
 }
+
 .invite {
   color: #3da8f5;
   padding: 4px 15px;
   cursor: pointer;
+
   &:hover {
     background-color: #efefef;
   }
+
   i {
     font-size: 40px;
     vertical-align: middle;
@@ -129,11 +233,15 @@ export default {
     display: flex;
     cursor: pointer;
     padding: 4px 18px;
+    justify-content: center;
+    align-items: center;
     &:hover {
       background-color: #efefef;
     }
+
     .avatar {
       width: 46px;
+
       img {
         display: block;
         width: 34px;
@@ -141,8 +249,13 @@ export default {
         border-radius: 50%;
       }
     }
+
     .memberInfo {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
       .uname {
         max-width: 200px;
         overflow: hidden;
@@ -151,6 +264,7 @@ export default {
         font-size: 14px;
         color: #555;
       }
+
       .email {
         color: #a6a6a6;
         max-width: 260px;
@@ -161,7 +275,35 @@ export default {
     }
   }
 }
+
 .active {
   right: 0px;
+}
+
+.invit-user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  .invit-user-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 32px;
+      height: 32px;
+    }
+    p {
+      font-size: 14px;
+      margin-left: 10px;
+    }
+  }
+}
+.user-set {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  cursor: pointer;
 }
 </style>

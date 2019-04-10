@@ -7,21 +7,21 @@
     <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideMenuBox="hideBox"></ProjectMenu>
 
     <div class="router-view-box" :class="{zhanWei:show==1||show==2}">
-      <router-view />
+      <router-view/>
     </div>
   </div>
 </template>
 
 <script>
-import MyHeader from '@/components/public/HeaderProject.vue'
-import ProjectMember from '@/components/public/ProjectMember.vue'
-import ProjectMenu from '@/components/public/ProjectMenu.vue'
-import SockJS from 'sockjs-client'
-import Stomp from 'stompjs'
+import MyHeader from "@/components/public/HeaderProject.vue";
+import ProjectMember from "../../components/public/ProjectMember.vue";
+import ProjectMenu from "@/components/public/ProjectMenu.vue";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 export default {
-  name: '',
+  name: "",
   components: {
-    'header-project': MyHeader,
+    "header-project": MyHeader,
     ProjectMember,
     ProjectMenu
   },
@@ -30,21 +30,21 @@ export default {
       show: -1,
       animate: true,
       activeHeaderTag: -1
-    }
+    };
   },
   mounted() {
-    this.initSocket(this.$route.params.id)
+    this.initSocket(this.$route.params.id);
   },
   methods: {
     showBox(i) {
-      let old = this.show
-      this.show = old == i ? -1 : i
-      this.animate = old == -1
-      this.activeHeaderTag = -1
+      let old = this.show;
+      this.show = old == i ? -1 : i;
+      this.animate = old == -1;
+      this.activeHeaderTag = -1;
     },
     hideBox() {
-      this.animate = true
-      this.show = -1
+      this.animate = true;
+      this.show = -1;
     },
     // showMemberBox () {
     //   this.show=!this.show
@@ -59,28 +59,30 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var socket = new SockJS('http://192.168.31.184:8090/webSocketServer') //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      var socket = new SockJS("http://192.168.31.184:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
-      this.stompClient = Stomp.over(socket)
+      this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
         {},
         frame => {
           this.stompClient.subscribe(`/topic/${id}`, msg => {
-            var result = JSON.parse(msg.body)
+            var result = JSON.parse(msg.body);
             switch (result.type) {
-              case 'C1':
-              case 'C2':
-              case 'C3':
-                this.$store.dispatch('file/initFile', { fileId: result.object.parentId })
-                break
+              case "C1":
+              case "C2":
+              case "C3":
+                this.$store.dispatch("file/initFile", {
+                  fileId: result.object.parentId
+                });
+                break;
             }
-          })
+          });
         },
         err => {}
-      )
+      );
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

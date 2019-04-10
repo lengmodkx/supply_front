@@ -44,10 +44,15 @@ export function checkFolder(fileId) {
 }
 
 
+//通过关键字查询用户
+export function getUsers(keyword) {
+    return $get(`/members/${keyword}`, null)
+}
 
-
-
-
+//给项目添加用户
+export function addUser(params) {
+    return $post('/members', params)
+}
 
 export function $post(url, params) {
     return fetch({

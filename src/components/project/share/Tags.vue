@@ -2,30 +2,52 @@
   <div>
     <!-- <div class="tagtitle" v-if="taglist.length==0">
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow($event)" />
-    </div> -->
+    </div>-->
     <div class="list" ref="addIcon">
-      <Tag v-if="taglist.length>0" v-for="(item,index) in taglist" :key="index" :name="item.tagId" :style="`background-color:${item.bgColor};`" closable @on-close="handleClose">{{ item.tagName}}</Tag>
-      <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow"></Icon>
+      <Tag
+        v-for="(item,index) in taglist"
+        :key="index"
+        :name="item.tagId"
+        :style="`background-color:${item.bgColor};`"
+        closable
+        @on-close="handleClose"
+      >{{ item.tagName}}</Tag>
+      <Icon
+        type="md-add-circle"
+        size="24"
+        style="color:#2d8cf0;vertical-align:middle;"
+        @click.native="popShow"
+      ></Icon>
     </div>
     <div class="content" v-if="Popvisible" :style="{left:offsetLeft}">
       <div class="div1" v-if="showdiv1">
         <!--无任何标签的情况 -->
         <div class="tag_input clearfix">
-          <Input class="search fl" v-model="searchTag" placeholder="搜索标签" autofocus />
+          <Input class="search fl" v-model="searchTag" placeholder="搜索标签" autofocus/>
           <div class="add-icon fl">
             <Tooltip content="新建标签" placement="top">
-              <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="addTag"></Icon>
+              <Icon
+                type="md-add-circle"
+                size="24"
+                style="color:#2d8cf0;vertical-align:middle;"
+                @click="addTag"
+              ></Icon>
             </Tooltip>
           </div>
         </div>
         <div class="conBox">
           <div class="noTag" v-if="totalTag.length==0" style="text-align:center;padding-top:8px">
-            <img :src="require('@/assets/images/tag.png')" width="50px" />
+            <img :src="require('@/assets/images/tag.png')" width="50px">
             <p style="color:#a6a6a6;">暂无标签</p>
           </div>
           <!-- 有默认标签的时候 -->
           <div class="hasTag" v-if="totalTag.length>0">
-            <div v-for="(tag,index) in totalTag" :key="index" class="clearfix tag-list" @click="chooseTag(tag)">
+            <div
+              v-for="(tag,index) in totalTag"
+              :key="index"
+              class="clearfix tag-list"
+              @click="chooseTag(tag)"
+            >
               <i class="color" :style="`background-color:${tag.bgColor}`"></i>
               <span>{{tag.tagName}}</span>
               <div class="fr">
@@ -45,10 +67,8 @@
               </li>
             </ul>
             <Button type="primary" long @click="createNew">创建</Button>
-          </div> -->
-
+          </div>-->
         </div>
-
       </div>
       <!-- 新建 -->
       <div class="div2 clearfix" v-if="showdiv2">
@@ -57,24 +77,34 @@
             <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
           </span>
           {{isEdit?'编辑标签':'新建标签'}}
-          <span class="close fr" @click="Popvisible=false;showdiv1=true;showdiv2=false">
+          <span
+            class="close fr"
+            @click="Popvisible=false;showdiv1=true;showdiv2=false"
+          >
             <Icon type="md-close" size="24"></Icon>
           </span>
         </div>
-        <Input style="padding:8px 8px;" v-model="tagName" placeholder="标签名称" ref="input" />
+        <Input style="padding:8px 8px;" v-model="tagName" placeholder="标签名称" ref="input"/>
         <div class="createTag">
           <ul class="tagcolor clearfix">
             <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
               <div class="circle" :style="`background-color:${color}`">
                 <span class="markbox" v-if="color==checkedColor">
-                  <Icon type="md-checkmark" class="mark" v-if="color==checkedColor" />
+                  <Icon type="md-checkmark" class="mark" v-if="color==checkedColor"/>
                 </span>
               </div>
             </li>
           </ul>
           <div class="btnBox">
             <Button long v-if="isEdit" @click="showdiv2=false;showdiv3=true">删除</Button>
-            <Button class="crtBtn" type="primary" long :disabled="!tagName" @click="finish" :loading="loading">{{isEdit?'完成':'创建'}}</Button>
+            <Button
+              class="crtBtn"
+              type="primary"
+              long
+              :disabled="!tagName"
+              @click="finish"
+              :loading="loading"
+            >{{isEdit?'完成':'创建'}}</Button>
           </div>
         </div>
       </div>
@@ -94,10 +124,8 @@
         <div class="btnBox">
           <Button class="crtBtn" type="error" long @click="deleteTag">删除</Button>
         </div>
-
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -143,9 +171,9 @@ export default {
     searchTag() {
       this.search();
     },
-    offsetLeft(newl, oldl){
-  console.log(oldl,newl)
-}
+    offsetLeft(newl, oldl) {
+      console.log(oldl, newl);
+    }
   },
   methods: {
     search() {
@@ -168,21 +196,20 @@ export default {
       }
     },
     handleClose(event, id) {
-      removeInfoTag(id,this.publicId,this.publicType).then(res => {
-        if(res.result === 1){
-          // let that = this;
-          // this.taglist = this.taglist.filter(v => {
-          //   if (v.tagId !== id) {
-          //     this.$nextTick(() => {
-          //       this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-          //     });
-          //     return v;
-          //   }
-          //
-          // });
-          this.$Message.success(res.msg)
+      removeInfoTag(id, this.publicId, this.publicType).then(res => {
+        if (res.result === 1) {
+          let that = this;
+          this.taglist = this.taglist.filter(v => {
+            if (v.tagId !== id) {
+              this.$nextTick(() => {
+                this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+              });
+              return v;
+            }
+          });
+          this.$Message.success(res.msg);
         }
-      })
+      });
     },
     editTag(data) {
       this.isEdit = true;
@@ -217,7 +244,7 @@ export default {
             this.$nextTick(() => {
               console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
               this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-              console.log(this.offsetLeft)
+              console.log(this.offsetLeft);
             });
           }
         }
@@ -241,7 +268,7 @@ export default {
         });
       }
       this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-      console.log(this.offsetLeft)
+      console.log(this.offsetLeft);
     },
     popHide() {
       setTimeout(_ => {
@@ -249,23 +276,23 @@ export default {
       }, 300);
     },
     chooseTag(tag) {
-      bindingTag(tag.tagId,this.publicId,this.publicType).then(res => {
-        if(res.result === 1){
-          // let i = this.taglist.indexOf(tag);
-          // if (i >= 0) {
-          //   this.taglist.splice(i, 1);
-          //   this.$nextTick(() => {
-          //     this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-          //   });
-          // } else {
-          //   this.taglist.push(tag);
-          //   this.$nextTick(() => {
-          //     this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-          //   });
-          // }
-          this.$Message.success(res.msg)
+      bindingTag(tag.tagId, this.publicId, this.publicType).then(res => {
+        if (res.result === 1) {
+          let i = this.taglist.indexOf(tag);
+          if (i >= 0) {
+            this.taglist.splice(i, 1);
+            this.$nextTick(() => {
+              this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
+            });
+          } else {
+            this.taglist.push(tag);
+            this.$nextTick(() => {
+              this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+            });
+          }
+          this.$Message.success(res.msg);
         }
-      })
+      });
     },
     finish() {
       if (this.isEdit) {
@@ -354,7 +381,7 @@ export default {
     }
   }
 }
-.list{
+.list {
   display: flex;
   align-items: center;
 }

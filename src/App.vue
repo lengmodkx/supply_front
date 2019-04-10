@@ -2,13 +2,13 @@
   <div id="app">
     <header-main v-if="hasHeader"></header-main>
     <div class="content-main">
-      <router-view v-if="isRouterAlive" />
+      <router-view v-if="isRouterAlive"/>
     </div>
   </div>
 </template>
 
 <script>
-import Header from "@/components/public/Header.vue";
+import Header from "./components/public/Header.vue";
 
 export default {
   name: "App",
@@ -37,7 +37,7 @@ export default {
   methods: {
     renderHeader() {
       this.hasHeader =
-        this.$route.path !== "/login" &&
+        this.$route.path !== "/" &&
         this.$route.path.indexOf("/management") < 0 &&
         this.$route.path !== "/register" &&
         this.$route.path !== "/forget";
@@ -101,7 +101,7 @@ export default {
     }
   }
 }
-.demo-spin-container{
+.demo-spin-container {
   display: inline-block;
   position: absolute;
   top: 0;
