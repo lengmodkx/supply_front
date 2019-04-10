@@ -6,16 +6,18 @@
           <Icon type="more" class="fr"></Icon>
         </div>
         <div class="chat-text" ref="scrollbox">
-          <div ref="heightbox">
+
+          <!--有消息-->
+          <div v-if="chatData.length" ref="heightbox">
             <div v-for="(item, index) in chatData" :key="index">
-              <div  v-if="item.isOwn && item.chatDel==0">
+              <div class="me-msg"  v-if="item.isOwn && item.chatDel==0">
                 <div class="me">
                   <div class="content">{{item.content}}</div>
                 </div>
                 <div class="time me-time">
                   <Time :time="item.createTime" />
                   <span v-if="item.fileList.length">下载附件</span>
-                  <span @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+                  <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
                 </div>
               </div>
               <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
@@ -31,6 +33,12 @@
               </div>
 
             </div>
+          </div>
+          <!--无消息-->
+          <div class="no-msg" v-else>
+            <img src="@/icons/img/no-msg.png" alt="">
+            <p>还没有项目群聊消息</p>
+            <span>项目中的成员都可以在这里参与群聊</span>
           </div>
         </div>
         <!--发消息-->
@@ -118,6 +126,16 @@ export default {
 </script>
 
 <style lang="less">
+  .me-msg{
+    .chehui-btn{
+      display: none;
+    }
+    &:hover{
+      .chehui-btn{
+        display: block;
+      }
+    }
+  }
 .group-chat {
   position: absolute;
   left: 0;
@@ -280,5 +298,26 @@ export default {
     background-color: #EFEEEC;
     color: #a6a6a6;
     border-radius: 8px;
+  }
+  .no-msg{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #D2D2D2;
+    img{
+      width: 95px;
+      margin-bottom: 10px;
+    }
+    p{
+      font-size: 16px;
+      line-height: 20px;
+    }
+    span{
+      font-size: 12px;
+      line-height: 20px;
+    }
   }
 </style>
