@@ -104,7 +104,6 @@ export default {
               sessionStorage.token = res.accessToken;
               this.updateUserId(res.userInfo); //存储、更新用户信息
               localStorage.userId=res.userInfo.userId
-              alert(localStorage.userId)
               this.$Message.success("登录成功!");
               this.$router.push("/home");
             }

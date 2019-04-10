@@ -143,6 +143,9 @@ export default {
               case "G1":
                   this.$store.commit("chat/pushMsg",{chat:result.object,userId:localStorage.userId})
                   break;
+              case "G2":
+                this.$store.commit("chat/revoke",result.object)
+                break;
             }
           });
         },

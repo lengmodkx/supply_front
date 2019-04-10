@@ -15,6 +15,13 @@ const  store ={
                 data.chat.isOwn = 0
             }
             state.chatData.push(data.chat)
+        },
+        revoke(state,data){
+            state.chatData.forEach(item => {
+                if(item.chatId === data){
+                    item.chatDel = 1
+                }
+            })
         }
     },
     actions: {
