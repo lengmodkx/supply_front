@@ -13,29 +13,18 @@
         v-for="(menu, index) in menus"
         :key="index"
         :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''"
-        v-if="menu.open"
       >{{menu.funcName}}</a>
     </div>
 
     <div class="fr">
-      <a
-        :class="{activeHeaderTag:show==1}"
-        @click="$emit('showBox',1);"
-      >
-        <Icon type="android-people"></Icon>
-        3
+      <a :class="{activeHeaderTag:show==1}" @click="$emit('showBox',1);">
+        <Icon type="md-people" size="20"/>3
       </a>
       <a>
-        <Icon type="eye"></Icon>
-        视图
+        <Icon type="eye"></Icon>视图
       </a>
-      <a
-        :class="{activeHeaderTag:show==2}"
-        @click="$emit('showBox',2);"
-        class="last"
-      >
-        <Icon type="navicon"></Icon>
-        菜单
+      <a :class="{activeHeaderTag:show==2}" @click="$emit('showBox',2);" class="last">
+        <Icon type="navicon"></Icon>菜单
       </a>
     </div>
   </div>

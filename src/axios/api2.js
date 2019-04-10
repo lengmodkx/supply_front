@@ -49,10 +49,15 @@ export function getUsers(keyword) {
     return $get(`/members/${keyword}`, null)
 }
 
-//给项目添加用户
+//给项目添加成员
 export function addUser(params) {
     return $post('/members', params)
 }
+//移除项目成员
+export function removeUser(userId) {
+    return $delete(`/members/${userId}`, null)
+}
+
 
 export function $post(url, params) {
     return fetch({

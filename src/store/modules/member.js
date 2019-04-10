@@ -1,5 +1,5 @@
 import {
-    getmemberList
+    projectMembers
 } from "../../axios/api.js"
 const store = {
     namespaced: true,
@@ -36,7 +36,7 @@ const store = {
         initUser({
             commit
         }, data) {
-            getmemberList(data).then(res => {
+            projectMembers(data).then(res => {
                 if (res.result === 1) {
                     commit('initUser', res.data)
                 }

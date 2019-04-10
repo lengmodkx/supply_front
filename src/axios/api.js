@@ -53,11 +53,11 @@ export function updateProject(data) {
         url: `/projects/${data.projectId}`,
         method: "put", // 请求方法
         params: {
-            'projectName':data.projectName,
-            'projectDes':data.projectDes,
-            'isPublic':data.isPublic,
-            'projectDel':data.projectDel,
-            'projectStatus':data.projectStatus
+            'projectName': data.projectName,
+            'projectDes': data.projectDes,
+            'isPublic': data.isPublic,
+            'projectDel': data.projectDel,
+            'projectStatus': data.projectStatus
             // 'projectCover':data.projectCover
         }
     });
@@ -205,7 +205,10 @@ export function moveTask(taskId, projectId, groupId, menuId) {
         menuId: menuId
     });
 }
-
+//获取项目成员
+export function projectMembers(projectId) {
+    return $get(`/projects/${projectId}/members`, '');
+}
 //获取参与者列表
 export function getmemberList(projectId) {
     return $get(`/members/${projectId}/member`, '');
@@ -466,11 +469,14 @@ export function addChildTask(taskId, params) {
     })
 }
 // 群聊发送消息
-export function sendChat(projectId,content) {
+export function sendChat(projectId, content) {
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
-        params: {projectId:projectId,content:content}
+        params: {
+            projectId: projectId,
+            content: content
+        }
     });
 }
 // 获取群聊消息
@@ -478,15 +484,19 @@ export function getChat(projectId) {
     return fetch({
         url: '/groupchat',
         method: "get", // 请求方法
-        params: {projectId:projectId}
+        params: {
+            projectId: projectId
+        }
     });
 }
 // 撤回群聊消息
-export function recall(chatId,projectId) {
+export function recall(chatId, projectId) {
     return fetch({
         url: `/groupchat/${chatId}/revoke`,
         method: "put", // 请求方法
-        params: {projectId:projectId}
+        params: {
+            projectId: projectId
+        }
     });
 }
 export function $post(url, params) {

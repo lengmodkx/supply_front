@@ -4,7 +4,7 @@
     <!-- 项目成员 -->
     <ProjectMember v-transfer :class="{active:show==1,animate}" @hideBox="hideBox"></ProjectMember>
     <!-- 项目菜单 -->
-    <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideMenuBox="hideBox"></ProjectMenu>
+    <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideBox="hideBox"></ProjectMenu>
 
     <div class="router-view-box" :class="{zhanWei:show==1||show==2}">
       <router-view/>
@@ -43,6 +43,7 @@ export default {
       this.activeHeaderTag = -1;
     },
     hideBox() {
+      alert(3);
       this.animate = true;
       this.show = -1;
     },
@@ -96,9 +97,11 @@ export default {
   overflow: auto;
   background-color: #fff;
   overflow: hidden;
+
   .router-view-box {
     height: calc(100% - 50px);
   }
+
   .router-view-box.zhanWei {
     .column-main {
       right: 350px;

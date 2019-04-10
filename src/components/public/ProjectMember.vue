@@ -2,7 +2,7 @@
   <div class="projectMember">
     <div class="head">
       项目成员
-      <span class="close" @click="$emit('hideBox')">
+      <span class="close" @click="closebox">
         <Icon type="md-close"></Icon>
       </span>
     </div>
@@ -11,7 +11,7 @@
     <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请新成员
     </div>
-    <ul class="programMember">
+    <!-- <ul class="programMember">
       <li class="member-item clearfix" v-for="(user,index) in users" :key="index">
         <div class="avatar">
           <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`" alt>
@@ -22,7 +22,36 @@
         </div>
         <Icon type="ios-arrow-down" size="18" @click="showModal1(user.userId,$event)"/>
       </li>
-    </ul>
+    </ul>-->
+    <Collapse v-model="value" accordion>
+      <Panel v-for="(user,index) in users" :key="index" hide-arrow>
+        <div class="member-item clearfix">
+          <div class="avatar">
+            <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`">
+          </div>
+          <div class="memberInfo">
+            <p class="uname">{{user.userName}}</p>
+            <p class="email">{{user.email}}</p>
+          </div>
+          <Icon type="ios-arrow-down" size="18"/>
+        </div>
+        <div slot="content">
+          <div class="user-set">
+            <p>{{user.memberLabel==1?'管理员':'成员'}}</p>
+            <Icon type="md-checkmark" size="16"/>
+          </div>
+          <div
+            style="color:red;height:30px;line-height:30px;cursor:pointer"
+            v-if="user.memberLabel!=1"
+          >
+            <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.userId)">
+              <p>移除成员</p>
+            </Poptip>
+          </div>
+        </div>
+      </Panel>
+    </Collapse>
+
     <Modal v-model="modal" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请新成员</span>
@@ -53,23 +82,11 @@
         </div>
       </div>
     </Modal>
-    <div v-show="modal1" :style="{left:offsetLeft,top:offsetTop}" class="member-menu">
-      <p slot="header" style="color:#000;text-align:center">
-        <span>成员菜单</span>
-      </p>
-      <div>
-        <div class="user-set">
-          <p>成员</p>
-          <Icon type="md-checkmark" size="16"/>
-        </div>
-        <div style="color:red;height:30px;line-height:30px;cursor:pointer">移除成员</div>
-      </div>
-    </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, addUser } from "../../axios/api2.js";
+import { getUsers, addUser, removeUser } from "../../axios/api2.js";
 import loading from "./common/Loading.vue";
 export default {
   name: "",
@@ -81,11 +98,9 @@ export default {
       keyword: "",
       keyword2: "",
       modal: false,
-      modal1: false,
       invitUsers: [],
       loading: false,
-      offsetLeft: 0,
-      offsetTop: 0
+      value: "-1"
     };
   },
   computed: {
@@ -118,6 +133,7 @@ export default {
         projectId: this.$route.params.id,
         memberId: userId
       };
+      console.log(userId);
       addUser(params).then(res => {
         if (res.result === 1) {
           this.initUser(this.$route.params.id);
@@ -128,28 +144,27 @@ export default {
         }
       });
     },
-    showModal1(userId, e) {
-      this.offsetLeft = e.clientX - 180 + "px";
-      this.offsetTop = e.clientY + 20 + "px";
-      this.modal1 = !this.modal1;
-      console.log(e);
+    //移除项目成员
+    remove(userId) {
+      this.value = -1;
+      removeUser(userId).then(res => {
+        if (res.result === 1) {
+          this.initUser(this.$route.params.id);
+        } else {
+          this.$Notice.warning({
+            title: "移除失败"
+          });
+        }
+      });
     },
-    clsoeModal1() {
+    closebox() {
       this.modal1 = false;
+      this.$emit("hideBox");
     }
   }
 };
 </script>
 <style scoped lang="less">
-.member-menu {
-  width: 200px;
-  background-color: white;
-  border-radius: 8px;
-  padding: 10px 5px;
-  position: fixed;
-  z-index: 999;
-  box-shadow: 0 0 6px #ececec;
-}
 .projectMember {
   position: fixed;
   top: 98px;
@@ -228,50 +243,42 @@ export default {
   }
 }
 
-.programMember {
-  .member-item {
+.member-item {
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  .avatar {
+    width: 46px;
+    img {
+      display: block;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+    }
+  }
+
+  .memberInfo {
+    flex: 1;
     display: flex;
-    cursor: pointer;
-    padding: 4px 18px;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    &:hover {
-      background-color: #efefef;
+
+    .uname {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      color: #555;
     }
 
-    .avatar {
-      width: 46px;
-
-      img {
-        display: block;
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-      }
-    }
-
-    .memberInfo {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      .uname {
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 14px;
-        color: #555;
-      }
-
-      .email {
-        color: #a6a6a6;
-        max-width: 260px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+    .email {
+      color: #a6a6a6;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
@@ -305,5 +312,6 @@ export default {
   align-items: center;
   height: 30px;
   cursor: pointer;
+  border-bottom: 1px solid #eeeeee;
 }
 </style>
