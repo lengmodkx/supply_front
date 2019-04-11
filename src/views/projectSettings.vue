@@ -8,7 +8,7 @@
             <Icon type="ios-eye-outline"></Icon>概览
           </li>
           <!--<li :class="{tabactive:active==2}" @click="choose(2)">-->
-            <!--<Icon type="android-checkbox-outline"></Icon>任务权限-->
+          <!--<Icon type="android-checkbox-outline"></Icon>任务权限-->
           <!--</li>-->
           <li :class="{tabactive:active==3}" @click="choose(3)">
             <Icon type="ios-more"></Icon>更多
@@ -42,24 +42,30 @@
           </div>
           <div class="div1-box">
             <div class="div1-title">项目公开性</div>
-            <Select v-model="priority" size="large" style="width:100%;" @on-change="priorityChange" :placeholder="project.isPublic?'私有':'公开'">
+            <Select
+              v-model="priority"
+              size="large"
+              style="width:100%;"
+              @on-change="priorityChange"
+              :placeholder="project.isPublic?'私有':'公开'"
+            >
               <Option v-for="item in List" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
           <!--<div class="div1-box">-->
-            <!--<div class="div1-title">项目拥有者</div>-->
-            <!--<div class="clearfix">-->
-              <!--<div class="owner fl">-->
-                <!--<img-->
-                  <!--src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"-->
-                  <!--alt-->
-                <!--&gt;-->
-                <!--<span>拥有人</span>-->
-              <!--</div>-->
-              <!--<div class="fr">-->
-                <!--<Button class="giveBtn">移交</Button>-->
-              <!--</div>-->
-            <!--</div>-->
+          <!--<div class="div1-title">项目拥有者</div>-->
+          <!--<div class="clearfix">-->
+          <!--<div class="owner fl">-->
+          <!--<img-->
+          <!--src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"-->
+          <!--alt-->
+          <!--&gt;-->
+          <!--<span>拥有人</span>-->
+          <!--</div>-->
+          <!--<div class="fr">-->
+          <!--<Button class="giveBtn">移交</Button>-->
+          <!--</div>-->
+          <!--</div>-->
           <!--</div>-->
           <div class="save clearfix">
             <Button type="primary" @click="saveSet">保存</Button>
@@ -103,7 +109,7 @@
 </template>
 <script>
 import { mapState, mapMutations } from "vuex";
-import {updateProject} from '@/axios/api'
+import { updateProject } from "@/axios/api";
 export default {
   data() {
     return {
@@ -128,55 +134,55 @@ export default {
     ...mapState("project", ["project"])
   },
   methods: {
-    ...mapMutations('project',['updatePro']),
+    ...mapMutations("project", ["updatePro"]),
     choose(flag) {
       this.active = flag;
     },
-    publishAxios(){
+    publishAxios() {
       return new Promise((resolve, reject) => {
         this.$Message.loading({
-          content: 'Loading...',
+          content: "Loading...",
           duration: 0
         });
-        let data={
-          'projectId':this.project.projectId,
-          'projectName':this.project.projectName,
-          'projectDes':this.project.projectDes,
-          'isPublic':this.project.isPublic,
+        let data = {
+          projectId: this.project.projectId,
+          projectName: this.project.projectName,
+          projectDes: this.project.projectDes,
+          isPublic: this.project.isPublic,
           // 'projectCover':this.project.projectCover,
-          'projectDel':this.project.projectDel,
-          'projectStatus':this.project.projectStatus
-        }
+          projectDel: this.project.projectDel,
+          projectStatus: this.project.projectStatus
+        };
         updateProject(data).then(res => {
-          console.log(res)
-          this.$Message.destroy()
-          this.updatePro(this.project)
-          resolve('成功')
-        })
-      })
+          console.log(res);
+          this.$Message.destroy();
+          this.updatePro(this.project);
+          resolve("成功");
+        });
+      });
     },
     // 选择公开性
-    priorityChange(data){
-      this.project.isPublic=data
+    priorityChange(data) {
+      this.project.isPublic = data;
     },
     // 点击保存按钮
     saveSet() {
-      this.publishAxios().then(res =>{
-        console.log(res)
-      })
+      this.publishAxios().then(res => {
+        console.log(res);
+      });
     },
     changeSwitch() {},
     okGuidang() {
-      this.project.projectStatus=1
-      this.publishAxios().then(res =>{
+      this.project.projectStatus = 1;
+      this.publishAxios().then(res => {
         this.modal1 = false;
-      })
+      });
     },
     okHuishou() {
-      this.project.projectDel=1
-      this.publishAxios().then(res =>{
+      this.project.projectDel = 1;
+      this.publishAxios().then(res => {
         this.modal2 = false;
-      })
+      });
     }
   }
 };

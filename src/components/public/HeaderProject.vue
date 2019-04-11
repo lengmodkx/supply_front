@@ -18,11 +18,10 @@
 
     <div class="fr">
       <a :class="{activeHeaderTag:show==1}" @click="$emit('showBox',1);">
-        <Icon type="md-people" size="20"/>3
+        <Icon type="md-people" size="20"/>
+        {{users.length}}
       </a>
-      <a>
-        <Icon type="eye"></Icon>视图
-      </a>
+      <!-- <a><Icon type="eye"></Icon>视图</a> -->
       <a :class="{activeHeaderTag:show==2}" @click="$emit('showBox',2);" class="last">
         <Icon type="navicon"></Icon>菜单
       </a>
@@ -32,6 +31,7 @@
 
 <script>
 import { menus } from "../../axios/api.js";
+import { mapState } from "vuex";
 export default {
   props: ["show"],
   data() {
@@ -41,6 +41,9 @@ export default {
       id: this.$route.params.id,
       menus: []
     };
+  },
+  computed: {
+    ...mapState("member", ["users"])
   },
   mounted() {
     menus(this.id).then(res => {

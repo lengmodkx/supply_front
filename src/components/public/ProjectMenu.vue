@@ -2,22 +2,46 @@
   <div class="projectMenu">
     <div class="head">
       项目菜单
-      <span class="close"
-            @click="$emit('hideMenuBox')">
-        <Icon type="close-round"></Icon>
+      <span class="close" @click="$emit('hideMenuBox')">
+        <Icon type="md-close" size="20"></Icon>
       </span>
     </div>
-
+    <ul>
+      <li>
+        <div class="munu-set" @click="projectSet=true">
+          <Icon type="ios-settings-outline" size="20"/>
+          <p>项目设置</p>
+        </div>
+      </li>
+      <li>
+        <div class="munu-set" @click="tagSet=true">
+          <Icon type="ios-pricetag-outline" size="20"/>
+          <p>标签设置</p>
+        </div>
+      </li>
+    </ul>
+    <!-- 项目设置 -->
+    <Modal v-model="projectSet" class="setPro-modal">
+      <projectsetting></projectsetting>
+    </Modal>
+    <Modal v-model="tagSet" width="800">
+      <p slot="header" style="text-align:center;font-size:16px">
+        <span>标签</span>
+      </p>
+      <tagsettings></tagsettings>
+    </Modal>
   </div>
-
 </template>
 <script>
+import ProjectSettings from "../../views/projectSettings.vue";
+import TagSettings from "./tagsettings.vue";
 export default {
-  name: "",
-  data () {
+  components: { projectsetting: ProjectSettings, tagsettings: TagSettings },
+  data() {
     return {
-
-    }
+      projectSet: false,
+      tagSet: false
+    };
   }
 };
 </script>
@@ -61,5 +85,21 @@ export default {
 }
 .activeMenu {
   right: 0px;
+}
+
+.munu-set {
+  display: flex;
+  align-items: center;
+  color: #111111;
+  font-weight: 600;
+  padding: 10px;
+  &:hover {
+    background-color: #e5e5e5;
+  }
+  margin-top: 8px;
+  cursor: pointer;
+  p {
+    margin-left: 10px;
+  }
 }
 </style>

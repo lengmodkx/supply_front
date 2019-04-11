@@ -58,6 +58,11 @@ export function removeUser(userId) {
     return $delete(`/members/${userId}`, null)
 }
 
+export function projectTag(projectId) {
+    return $get(`tags/${projectId}/checkProjectTag`, '')
+}
+
+
 
 export function $post(url, params) {
     return fetch({

@@ -29,7 +29,6 @@
           class="project-list"
           v-for="(item,index) in projects"
           :key="index"
-          v-if="item.projectDel==0"
           @click="path(item.projectId,item.groupId)"
         >
           <div
@@ -87,9 +86,9 @@
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
         <Row>
-          <iCol span="6" v-for="(item,index) in projects" :key="index" v-if="item.projectDel==0">
+          <iCol span="6" v-for="(item,index) in projects" :key="index">
             <div
-              @click="path(item.projectId,item.groupId, item.projectName)"
+              @click="path(item)"
               class="col"
               :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
             >
@@ -261,16 +260,19 @@ export default {
   },
   methods: {
     ...mapActions("project", ["init", "updateProject"]),
-    ...mapMutations("project", ["openSet",'setName']),
+    ...mapMutations("project", ["openSet", "setName"]),
     // 选择项目类型
     selectProjectType(value) {
       this.projectType = value;
       this.$store.state.project.loading = true;
       this.init(value);
     },
-    path(projectId, groupId,name) {
-      this.setName(name)
-      this.$router.push(`/project/${projectId}/tasks/group/${groupId}`);
+    path(item) {
+      this.openSet(item);
+      this.setName(item.name);
+      this.$router.push(
+        `/project/${item.projectId}/tasks/group/${item.groupId}`
+      );
     },
     showMore() {
       this.tabBox = !this.tabBox;
@@ -319,9 +321,9 @@ export default {
     },
     setProject(item) {
       this.projectSet = true;
-      this.openSet(item)
+      this.openSet(item);
       // this.project = this.item;
-      console.log(item)
+      console.log(item);
     },
     confirmguiDang(data) {
       this.projectSet = false;

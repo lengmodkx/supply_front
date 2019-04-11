@@ -27,11 +27,11 @@
       <Panel v-for="(user,index) in users" :key="index" hide-arrow>
         <div class="member-item clearfix">
           <div class="avatar">
-            <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`">
+            <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
           </div>
           <div class="memberInfo">
-            <p class="uname">{{user.userName}}</p>
-            <p class="email">{{user.email}}</p>
+            <p class="uname">{{user.memberName}}</p>
+            <!-- <p class="email">{{user.email}}</p> -->
           </div>
           <Icon type="ios-arrow-down" size="18"/>
         </div>
@@ -41,7 +41,7 @@
             <Icon type="md-checkmark" size="16"/>
           </div>
           <div
-            style="color:red;height:30px;line-height:30px;cursor:pointer"
+            style="color:red;height:30px;line-height:30px;cursor:pointer;border-bottom: 1px solid #eeeeee;"
             v-if="user.memberLabel!=1"
           >
             <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.userId)">
@@ -312,6 +312,5 @@ export default {
   align-items: center;
   height: 30px;
   cursor: pointer;
-  border-bottom: 1px solid #eeeeee;
 }
 </style>

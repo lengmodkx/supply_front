@@ -1,23 +1,26 @@
-import {} from "../../axios/api.js";
+import {
+    projectTag
+} from "../../axios/api2.js";
 
 const store = {
     namespaced: true,
     state: {
-
-    },
-    getters: {
-
+        tags: []
     },
     mutations: {
-        //绑定标签
-        bindingTag(state,data){
-
+        init(state, data) {
+            state.tags = data
         }
     },
     actions: {
-        //绑定标签
-        bindingTag({commit},data){
-            commit('bindingTag',data)
+        getTags({
+            commit
+        }, data) {
+            projectTag(data).then(res => {
+                if (res.result === 1) {
+                    commit('init', res.data)
+                }
+            })
         }
     }
 }

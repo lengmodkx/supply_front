@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import MyHeader from "@/components/public/HeaderProject.vue";
+import MyHeader from "../../components/public/HeaderProject.vue";
 import ProjectMember from "../../components/public/ProjectMember.vue";
-import ProjectMenu from "@/components/public/ProjectMenu.vue";
+import ProjectMenu from "../../components/public/ProjectMenu.vue";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
