@@ -4,6 +4,8 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Forget from "../views/Forget.vue";
 import Home from "../views/Home.vue";
+import mine from '../components/public/Mine'
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -53,6 +55,37 @@ export default new Router({
       meta: {
         title: "阿拉丁BIM5D云平台"
       }
+    },
+    {
+      path: "/mine",
+      name: "Mine",
+      component: mine,
+      meta: {
+        title: "阿拉丁BIM5D云平台"
+      },
+      children: [
+        {
+          path: "nearThing",
+          component: _import("public/mine/nearThing")
+        },
+        {
+          path: "file",
+          component: _import("public/mine/mineFile")
+        },
+        {
+          path: "task",
+          component: _import("public/mine/mineTask")
+        },
+        {
+            path: "schedule",
+            component: _import("public/mine/mineSchedule")
+        },
+        {
+            path: "collect",
+            component: _import("public/mine/mineCollect")
+        }
+
+      ]
     },
     // {
     //   path: "/member",

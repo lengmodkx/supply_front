@@ -186,9 +186,8 @@ export default {
     },
     clickHeaderTag(id) {
       this.activeHeaderTag =
-        id == this.activeHeaderTag
-          ? (this.activeHeaderTag = -1)
-          : (this.activeHeaderTag = id);
+        id == this.activeHeaderTag ? (this.activeHeaderTag = -1) : (this.activeHeaderTag = id);
+      this.$router.push('/mine/nearThing')
     }
   }
 };
