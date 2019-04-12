@@ -11,8 +11,8 @@ const store = {
   state: {
     userInfo:userData,
     users:{},
-    mineRouter:'',
-    projectRouter:''
+    mineRouter:'/mine/nearThing',
+    projectRouter:'/home'
   },
   mutations: {
     updateUserInfo(state, data) {

@@ -189,8 +189,9 @@ export default {
     clickHeaderTag(id) {
       this.activeHeaderTag =
         id == this.activeHeaderTag ? (this.activeHeaderTag = -1) : (this.activeHeaderTag = id);
-      if (this.mineRouter()){
-        this.$router.push(this.mineRouter())
+      localStorage.projectRouter=this.$route.fullPath
+      if (localStorage.mineRouter){
+        this.$router.push(localStorage.mineRouter)
       } else {
         this.$router.push('/mine/nearThing')
       }

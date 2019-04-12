@@ -25,17 +25,20 @@ import {mapMutations,mapState} from 'vuex'
         ...mapMutations('user',["changeMineRouter","changeProjectRouter"]),
         ...mapState('user',['projectRouter']),
         closeMine(){
-            this.$router.push(this.projectRouter())
+            this.$router.push(localStorage.projectRouter)
         }
     },
-    beforeRouteEnter(to, from, next){
-        next(vm => {
-            vm.changeProjectRouter(from.fullPath)
-        })
-    },
+    // beforeRouteEnter(to, from, next){
+    //     localStorage.projectRouter=from.fullPath
+    //     next(vm => {
+    //         // vm.changeProjectRouter(from.fullPath)
+    //
+    //     })
+    // },
     beforeRouteLeave(to, from, next){
+        localStorage.mineRouter=from.fullPath
         next(vm => {
-            vm.changeMineRouter(from.fullPath)
+            // vm.changeMineRouter(from.fullPath)
         })
     }
   }
