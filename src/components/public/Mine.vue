@@ -8,12 +8,12 @@
           <router-link tag="li" to="collect">收藏</router-link>
       </ul>
       <router-view></router-view>
-    <div class="close" @click="$emit('close')">&times;</div>
+    <div class="close" @click="closeMine">&times;</div>
 
   </div>
 </template>
 <script>
-
+import {mapMutations,mapState} from 'vuex'
   export default{
     data () {
       return {
@@ -22,6 +22,21 @@
     mounted () {
     },
     methods:{
+        ...mapMutations('user',["changeMineRouter","changeProjectRouter"]),
+        ...mapState('user',['projectRouter']),
+        closeMine(){
+            this.$router.push(this.projectRouter())
+        }
+    },
+    beforeRouteEnter(to, from, next){
+        next(vm => {
+            vm.changeProjectRouter(from.fullPath)
+        })
+    },
+    beforeRouteLeave(to, from, next){
+        next(vm => {
+            vm.changeMineRouter(from.fullPath)
+        })
     }
   }
 </script>

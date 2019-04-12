@@ -114,6 +114,7 @@
 <script>
 // import Mine from './Mine'
 import CreateOrg from "./common/CreateOrg";
+import {mapState} from 'vuex'
 export default {
   name: "header-main",
   components: {
@@ -164,6 +165,7 @@ export default {
     };
   },
   methods: {
+    ...mapState('user',['mineRouter']),
     pathClick(path) {
       this.$router.push(path);
     },
@@ -187,7 +189,12 @@ export default {
     clickHeaderTag(id) {
       this.activeHeaderTag =
         id == this.activeHeaderTag ? (this.activeHeaderTag = -1) : (this.activeHeaderTag = id);
-      this.$router.push('/mine/nearThing')
+      if (this.mineRouter()){
+        this.$router.push(this.mineRouter())
+      } else {
+        this.$router.push('/mine/nearThing')
+      }
+
     }
   }
 };
