@@ -1,5 +1,6 @@
 import {
     getProjectList,
+    getProject
 } from "../../axios/api.js";
 const store = {
     namespaced: true,
@@ -7,7 +8,7 @@ const store = {
         projects: [],
         loading: true,
         project: null,
-        projectName:null
+        projectName: null
     },
     mutations: {
         _init(state, data) {
@@ -17,18 +18,18 @@ const store = {
         updateProject(state, data) {
             state.projects = data
         },
-        setName (state, data){
-            state.projectName=data
+        setName(state, data) {
+            state.projectName = data
         },
         // 打开项目设置
-        openSet(state, data){
-            state.project=data
+        openSet(state, data) {
+            state.project = data
         },
         // 局部更新项目
-        updatePro(state, data){
-            state.projects.forEach((i,n) => {
-                if (i.projectId==data.projectId){
-                    state.projects[n]=data
+        updatePro(state, data) {
+            state.projects.forEach((i, n) => {
+                if (i.projectId == data.projectId) {
+                    state.projects[n] = data
                 }
                 console.log(state.projects)
             })
@@ -83,6 +84,15 @@ const store = {
             commit
         }, data) {
             commit('updateProject', data)
+        },
+        openSet({
+            commit
+        }, data) {
+            getProject(data).then(res => {
+                if (res.result === 1) {
+                    commit('openSet', res.data)
+                }
+            })
         }
     }
 }

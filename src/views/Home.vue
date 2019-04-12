@@ -129,55 +129,13 @@
       </div>
     </div>
 
-    <!-- 创建企业 -->
+    <!-- 创建项目 -->
     <Modal v-model="showproject" class="newPro-modal">
       <CreateProject @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
     </Modal>
     <!-- 项目设置 -->
     <Modal v-model="projectSet" class="setPro-modal">
-      <ProjectSettings
-        :data="projectdata"
-        @confirmguiDang="confirmguiDang"
-        @confirmHuishou="confirmHuishou"
-      ></ProjectSettings>
-    </Modal>
-    <!-- 从已归档移到回收站 -->
-    <Modal class="confirmModal" v-model="modal3" title="移到回收站">
-      <p
-        style="padding:10px;font-size:15px;"
-      >一旦将项目「{{delName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
-      <div class="doBtn">
-        <Button type="error" @click="okHuishou(delId)">移到回收站</Button>
-      </div>
-    </Modal>
-    <!-- 取消归档 -->
-    <Modal
-      :mask-closable="false"
-      v-model="guidangModal"
-      title="取消归档项目"
-      ok-text="取消归档"
-      @on-ok="ok(cancelID,cancelStatus)"
-      @on-cancel="cancel"
-    >
-      <p style="font-size:16px;margin:10px 0;padding-left:15px;">取消归档项目后，你就可以正常使用该项目了。</p>
-    </Modal>
-
-    <!-- 从回收站恢复项目 -->
-    <Modal
-      :mask-closable="false"
-      v-model="cancelModal"
-      title="恢复项目"
-      @on-ok="recover(recoverId)"
-      @on-cancel="cancelModal=false"
-    >
-      <p style="font-size:16px;margin:10px 0;padding-left:15px;">恢复项目后，你就可以正常使用该项目了。</p>
-    </Modal>
-    <!-- 从回收站彻底删除项目 -->
-    <Modal class="confirmModal" v-model="modal4" title="移到回收站">
-      <p style="padding:10px;font-size:15px;">要将项目「{{guiName}}」彻底删除吗？</p>
-      <div class="doBtn">
-        <Button type="error" @click="okDel(guiId)">彻底删除</Button>
-      </div>
+      <ProjectSettings></ProjectSettings>
     </Modal>
   </div>
 </template>
@@ -259,8 +217,8 @@ export default {
     this.init("我创建的项目");
   },
   methods: {
-    ...mapActions("project", ["init", "updateProject"]),
-    ...mapMutations("project", ["openSet", "setName"]),
+    ...mapActions("project", ["init", "updateProject", "openSet"]),
+    ...mapMutations("project", ["setName"]),
     // 选择项目类型
     selectProjectType(value) {
       this.projectType = value;
@@ -268,7 +226,6 @@ export default {
       this.init(value);
     },
     path(item) {
-      this.openSet(item);
       this.setName(item.name);
       this.$router.push(
         `/project/${item.projectId}/tasks/group/${item.groupId}`
@@ -277,35 +234,6 @@ export default {
     showMore() {
       this.tabBox = !this.tabBox;
     },
-    ok(projectId, status) {
-      guidangProject(projectId, status).then(res => {
-        this.$Message.success("取消归档成功!");
-        this.init(this.projectType);
-      });
-      this.guidangModal = false;
-    },
-    okHuishou(id) {
-      recycleProject(id).then(res => {
-        if (res.result == 1) {
-          this.$Message.success("项目已移入回收站!");
-          this.modal3 = false;
-          this.init(this.projectType);
-        }
-      });
-    },
-    okDel(id) {
-      delProject(id).then(res => {
-        if (res.result == 1) {
-          this.modal4 = false;
-          this.$Message.success("彻底删除项目成功!");
-          this.init(this.projectType);
-        }
-      });
-    },
-    cancel() {
-      this.guidangModal = false;
-    },
-
     setStar(id) {
       setStarProject(id).then(res => {
         if (res.result == 1 && res.msg == "收藏成功") {
@@ -321,28 +249,9 @@ export default {
     },
     setProject(item) {
       this.projectSet = true;
-      this.openSet(item);
-      // this.project = this.item;
-      console.log(item);
+      this.openSet(item.projectId);
     },
-    confirmguiDang(data) {
-      this.projectSet = false;
-      guidangProject(data.projectId, data.projectStatus).then(res => {
-        if (res.result == 1) {
-          this.$Message.success("项目归档成功!");
-          this.init(this.projectType);
-        }
-      });
-    },
-    confirmHuishou(data) {
-      recycleProject(data.projectId).then(res => {
-        if (res.result == 1) {
-          this.$Message.success("项目已移入回收站!");
-          this.projectSet = false;
-          this.init(this.projectType);
-        }
-      });
-    },
+
     recover(id) {
       recoverProject(id).then(res => {
         if (res.result == 1) {

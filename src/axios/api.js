@@ -47,6 +47,10 @@ export function createProject(data) {
         data: data
     });
 }
+//获取单个项目
+export function getProject(projectId) {
+    return $get(`/projects/${projectId}`);
+}
 // 局部更新项目
 export function updateProject(data) {
     return fetch({

@@ -8,7 +8,7 @@
     </div>
     <ul>
       <li>
-        <div class="munu-set" @click="projectSet=true">
+        <div class="munu-set" @click="projectSetting">
           <Icon type="ios-settings-outline" size="20"/>
           <p>项目设置</p>
         </div>
@@ -35,6 +35,7 @@
 <script>
 import ProjectSettings from "../../views/projectSettings.vue";
 import TagSettings from "./tagsettings.vue";
+import { mapActions } from "vuex";
 export default {
   components: { projectsetting: ProjectSettings, tagsettings: TagSettings },
   data() {
@@ -42,6 +43,13 @@ export default {
       projectSet: false,
       tagSet: false
     };
+  },
+  methods: {
+    ...mapActions("project", ["openSet"]),
+    projectSetting() {
+      this.projectSet = true;
+      this.openSet(this.$route.params.id);
+    }
   }
 };
 </script>

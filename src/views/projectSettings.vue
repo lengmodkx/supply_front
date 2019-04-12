@@ -171,7 +171,6 @@ export default {
         console.log(res);
       });
     },
-    changeSwitch() {},
     okGuidang() {
       this.project.projectStatus = 1;
       this.publishAxios().then(res => {
