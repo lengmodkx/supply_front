@@ -23,7 +23,7 @@
         @click="clickHeaderTag(2)"
       >
         <span class="text">
-          <Badge dot :offset=[5,0]><span>日志</span></Badge>
+          <Badge dot :offset=[5,0]><span>日历</span></Badge>
         </span>
       </a>
       <a
@@ -189,12 +189,21 @@ export default {
     clickHeaderTag(id) {
       this.activeHeaderTag =
         id == this.activeHeaderTag ? (this.activeHeaderTag = -1) : (this.activeHeaderTag = id);
-      localStorage.projectRouter=this.$route.fullPath
-      if (localStorage.mineRouter){
-        this.$router.push(localStorage.mineRouter)
-      } else {
-        this.$router.push('/mine/nearThing')
+      if (this.$route.fullPath.includes('home') || this.$route.fullPath.includes('project')) {
+        localStorage.projectRouter=this.$route.fullPath
       }
+      if (id===1){
+        if (localStorage.mineRouter){
+          this.$router.push(localStorage.mineRouter)
+        } else {
+          this.$router.push('/mine/nearThing')
+        }
+      } else if (id===2){
+
+      } else if (id===3) {
+        this.$router.push('/message')
+      }
+
 
     }
   }

@@ -5,6 +5,7 @@ import Register from "../views/Register.vue";
 import Forget from "../views/Forget.vue";
 import Home from "../views/Home.vue";
 import mine from '../components/public/Mine'
+import message from '../components/public/message'
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -87,39 +88,13 @@ export default new Router({
 
       ]
     },
-    // {
-    //   path: "/member",
-    //   name: "member",
-    //   component: _import("member/member"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    // {
-    //   path: "/report",
-    //   name: "report",
-    //   component: _import("report/report"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    // {
-    //   path: "/calc",
-    //   name: "calc",
-    //   component: _import("calc/calc"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    // {
-    //   path: "/target",
-    //   name: "target",
-    //   component: _import("target/target"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    //...management,
+    {
+        path: "/message",
+        meta: {
+            title: "消息"
+        },
+        component: message
+    },
     {
       path: "/",
       name: "login",
