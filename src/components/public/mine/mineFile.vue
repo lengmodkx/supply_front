@@ -53,7 +53,7 @@
                         <div class="file-size">500kb</div>
                         <div class="file-time">2018-12-12</div>
                         <Icon type="ios-cloud-download-outline" />
-                        <Icon type="ios-arrow-dropdown" />
+                        <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0')"></Icon>
                     </li>
                 </ul>
                 <!--图片模式-->
@@ -64,7 +64,7 @@
                                 <Checkbox v-model="single" size="default"></Checkbox>
                             </div>
                             <div class="xiazai"><Icon type="ios-cloud-download-outline" /></div>
-                            <div class="gengduo"><Icon type="ios-arrow-dropdown" /></div>
+                            <div class="gengduo"><Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'110')"></Icon></div>
                         </div>
                         <div class="file-name-box">
                             <Tooltip content="Here is the prompt text">
@@ -75,20 +75,45 @@
                 </ul>
             </div>
         </div>
+        <mineFileMenu @closeFileMenu="closeFileMenu" v-show="visible" class="mine-file-menu" :data="fileData" :style="{left:left,bottom:top}"></mineFileMenu>
     </div>
 </template>
 
 <script>
+import mineFileMenu from './mineFileMenu'
 export default {
     data () {
       return {
           moShi: 'liebiao',
-          single:''
+          single:'',
+          left:0,
+          top:0,
+          fileData:{
+              privacyPattern:'',
+              collect:''
+          },
+          visible:false
       }
+    },
+    components:{ mineFileMenu },
+    methods: {
+        showFileMenu(e,n){
+            this.left=e.clientX-120+'px'
+            this.top=e.clientY-n+'px'
+            this.visible=true
+        },
+        closeFileMenu(){
+            this.visible=false
+        }
     }
 }
 </script>
 
 <style scoped lang="less">
 @import "../Mine";
+    .mine-file-menu{
+        position: fixed;
+        z-index: 999;
+        background-color: white;
+    }
 </style>
