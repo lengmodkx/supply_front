@@ -5,7 +5,7 @@
             <!-- 头部 -->
             <div class="header1">
                 <div class="h1_title">
-                    <Poptip placement="bottom-start" v-model="collectVisible">
+                    <Poptip placement="bottom-start" v-model="collectVisible" @on-popper-hide="getCollect">
                         <span class="showchoose">{{collectType}}<Icon type="ios-arrow-down" style="margin-left:6px;"></Icon></span>
                         <div slot="content">
                             <ul class="selectlist">
@@ -19,19 +19,20 @@
                     </Poptip>
                 </div>
             </div>
+            <Loading v-if="loading"></Loading>
             <!-- 内容 -->
             <div class="favoriteList">
                 <ul class="favoriteItem">
-                    <li>
+                    <li v-for="(c,i) in collectList" :key="i">
                         <div class="item-header">
-                            <div class="create-time">9月26日</div>
+                            <div class="create-time"><Time :time="c.createTime" /></div>
                             <div class="unfavorite">取消收藏</div>
                         </div>
                         <div class="item-title clearfix">
                             <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>
-                            <span class="img"><img src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200" /></span>
-                            <span class="title">哈哈哈哈哈</span>
-                            <span class="update fr">已更新</span>
+                            <span class="img"><img v-if="c.collectType !== '日程'" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${c.item.userImage}`" /></span>
+                            <span class="title">{{c.item.taskName}}{{c.item.fileName}}{{c.item.title}}{{c.item.scheduleName}}</span>
+                            <!--<span class="update fr">已更新</span>-->
                         </div>
                     </li>
                 </ul>
@@ -42,12 +43,15 @@
 </template>
 
 <script>
+import {collectList} from "@/axios/api"
 export default {
   data () {
       return {
           collectType:'所有收藏',
           activeCollect:1,
-          collectVisible: false
+          collectVisible: false,
+          collectList:[],
+          loading:false
       }
   },
   methods: {
@@ -55,7 +59,23 @@ export default {
           this.activeCollect=i
           this.collectType=name
           this.collectVisible=false
+      },
+      getCollect(){
+          this.loading = true
+          let type=null
+          if(this.collectType !== '所有收藏'){
+              type=this.collectType
+          }
+          collectList(type).then(res => {
+              if(res.result === 1){
+                  this.loading = false
+                  this.collectList = res.data
+              }
+          })
       }
+  },
+  mounted(){
+      this.getCollect()
   }
 }
 </script>
