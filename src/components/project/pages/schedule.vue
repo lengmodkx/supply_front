@@ -79,8 +79,9 @@
     </div>
     <AddSchedule
       v-model="addSchedule"
-      :id="parameter.projectId"
-    ></AddSchedule>
+      :id="parameter.projectId" :projectTypes="richengData">
+       <span slot="projectName">{{projectName?projectName:'添加日程'}}</span>
+    </AddSchedule>
     <Modal
             v-model="editrc"
             :footer-hide='true'
@@ -116,7 +117,8 @@ export default {
     };
   },
   computed:{
-    ...mapState("schedule", ['loading','schedules',])
+    ...mapState("schedule", ['loading','schedules',]),
+    ...mapState("project", ['projectName'])
   },
   methods: {
     ...mapActions("schedule", ['init']),

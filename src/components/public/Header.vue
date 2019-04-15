@@ -23,7 +23,7 @@
         @click="clickHeaderTag(2)"
       >
         <span class="text">
-          <Badge dot :offset=[5,0]><span>日历</span></Badge>
+          <span>日历</span>
         </span>
       </a>
       <a
@@ -34,7 +34,7 @@
           class="text"
           style="border-right:none;"
         >
-          <Badge dot :offset=[5,0]><span>消息</span></Badge>
+         <span>消息</span>
         </span>
       </a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
@@ -167,7 +167,7 @@ export default {
     };
   },
   mounted() {
-    console.log(">>",this.users)
+    console.log(">>",this.users())
     this.initSocket(this.users.userId);
   },
   methods: {
@@ -229,7 +229,7 @@ export default {
           this.$router.push('/mine/nearThing')
         }
       } else if (id===2){
-
+        this.$router.push('/calendar')
       } else if (id===3) {
         this.$router.push('/message')
       }

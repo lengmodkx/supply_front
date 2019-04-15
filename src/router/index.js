@@ -6,6 +6,7 @@ import Forget from "../views/Forget.vue";
 import Home from "../views/Home.vue";
 import mine from '../components/public/Mine'
 import message from '../components/public/message'
+import calendar from '../components/public/calendar'
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -94,6 +95,13 @@ export default new Router({
             title: "消息"
         },
         component: message
+    },
+    {
+      path: "/calendar",
+      meta: {
+        title: "日历"
+      },
+      component: calendar
     },
     {
       path: "/",
