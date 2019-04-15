@@ -503,6 +503,74 @@ export function recall(chatId, projectId) {
         }
     });
 }
+
+// 获取近期的事儿
+export function nearThing() {
+    return fetch({
+        url: '/me/recentThing',
+        method: "get", // 请求方法
+    });
+}
+
+// 获取我的任务信息并且排序
+export function getMeTask(isDone,order,type) {
+    return fetch({
+        url: '/me/task',
+        method: "get", // 请求方法
+        params:{isDone:isDone,order:order,type:type}
+    });
+}
+
+// 获取我的日程信息
+export function getMeAfterSchedule() {
+    return fetch({
+        url: 'me/schedule/after',
+        method: "get", // 请求方法
+    });
+}
+
+// 获取和我有关的日程月份信息
+export function getMonth() {
+    return fetch({
+        url: 'me/schedule/before',
+        method: "get" // 请求方法
+    });
+}
+
+/**
+ * 根据月份获取过去的日程
+ */
+export function getScheduleByMonth(month) {
+    return fetch({
+        url: `me/schedule/${month}`,
+        method: "get" // 请求方法
+    });
+}
+
+/**
+ * 获取我创建的文件
+ */
+export function getMeFile(order) {
+    return fetch({
+        url: `me/file`,
+        method: "get", // 请求方法
+        params:{order:order}
+    });
+}
+
+/**
+ * 获取我的收藏数据
+ * @param order
+ */
+export function collectList(type) {
+    console.log(type)
+    return fetch({
+        url: `collections`,
+        method: "get", // 请求方法
+        params:{collectType:type}
+    });
+}
+
 export function $post(url, params) {
     return fetch({
         url: url,

@@ -7,15 +7,18 @@
             </div>
             <div class="file-title">
                 <!--没选文件时-->
-                <div v-if="1" class="select-no">
-                    <div class="file-title-left">
-                        <div class="check-box"></div>
-                        <div class="file-con">
-                            <div class="file-name">名称</div>
+                <div v-if="checkedFile.length=='0'" class="select-no">
+                    <div>
+                        <div v-show="moShi=='liebiao'" class="file-title-left">
+                            <div class="check-box"></div>
+                            <div class="file-con">
+                                <div class="file-name">名称</div>
+                            </div>
+                            <div class="file-size">大小</div>
+                            <div class="file-time">更新时间</div>
                         </div>
-                        <div class="file-size">大小</div>
-                        <div class="file-time">更新时间</div>
                     </div>
+
                     <div class="file-title-right">
                         <Tooltip content="列表模式">
                             <Icon :class="{now:moShi=='liebiao'}" @click="moShi='liebiao'" type="ios-list-box-outline" />
@@ -29,7 +32,7 @@
                 <!--选了文件-->
                 <div v-else class="select-has">
                     <div class="select-has-left">
-                        <p>已选择3项</p>
+                        <p>已选择{{checkedFile.length}}项</p>
                         <div><Icon type="ios-log-out" />移动</div>
                         <div><Icon type="md-copy" />复制</div>
                         <div> <Icon type="ios-archive-outline" />收藏</div>
@@ -39,40 +42,48 @@
             </div>
             <div class="file-content">
                 <!--列表模式-->
-                <ul v-if="moShi==='liebiao'" class="liebiao">
-                    <li>
-                        <div class="check-box">
-                            <Checkbox v-model="single" size="default"></Checkbox>
-                        </div>
-                        <div class="file-con">
-                            <img src="" alt="">
-                            <Tooltip class="file-name" content="Here is the prompt text">
-                                名称名称名称
-                            </Tooltip>
-                        </div>
-                        <div class="file-size">500kb</div>
-                        <div class="file-time">2018-12-12</div>
-                        <Icon type="ios-cloud-download-outline" />
-                        <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0')"></Icon>
-                    </li>
-                </ul>
-                <!--图片模式-->
-                <ul v-if="moShi==='tupian'" class="tupian">
-                    <li>
-                        <div class="file-img-box">
+                <CheckboxGroup v-model="checkedFile">
+                    <ul v-if="moShi==='liebiao'" class="liebiao">
+                        <li v-for="f in files">
                             <div class="check-box">
-                                <Checkbox v-model="single" size="default"></Checkbox>
+                                <Checkbox :label="f.fileId" size="default"><span> </span></Checkbox>
                             </div>
-                            <div class="xiazai"><Icon type="ios-cloud-download-outline" /></div>
-                            <div class="gengduo"><Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'110')"></Icon></div>
-                        </div>
-                        <div class="file-name-box">
-                            <Tooltip content="Here is the prompt text">
-                                <input type="text" value="22222222">
-                            </Tooltip>
-                        </div>
-                    </li>
-                </ul>
+                            <div class="file-con">
+                                <img v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
+
+                                <Tooltip class="file-name" content="Here is the prompt text">
+                                    {{f.fileName}}
+                                </Tooltip>
+                            </div>
+                            <div class="file-size">{{f.size}}</div>
+                            <div class="file-time"><Time :time="f.updateTime" /></div>
+                            <Icon type="ios-cloud-download-outline" />
+                            <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0')"></Icon>
+                        </li>
+                    </ul>
+                </CheckboxGroup>
+
+                <!--图片模式-->
+                <CheckboxGroup v-model="checkedFile">
+                    <ul v-if="moShi==='tupian'" class="tupian">
+                        <li v-for="f in files" :class="{checked:checkedFile.includes(f.fileId)}">
+                            <div class="file-img-box">
+                                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
+                                <div class="check-box">
+                                    <Checkbox  :label="f.fileId" size="default"><span> </span></Checkbox>
+                                </div>
+                                <div class="xiazai"><Icon type="ios-cloud-download-outline" /></div>
+                                <div class="gengduo"><Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'110')"></Icon></div>
+                            </div>
+                            <div class="file-name-box">
+                                <Tooltip content="Here is the prompt text">
+                                    <input type="text" v-model="f.fileName">
+                                </Tooltip>
+                            </div>
+                        </li>
+                    </ul>
+                </CheckboxGroup>
+
             </div>
         </div>
         <mineFileMenu @closeFileMenu="closeFileMenu" v-show="visible" class="mine-file-menu" :data="fileData" :style="{left:left,bottom:top}"></mineFileMenu>
@@ -81,6 +92,7 @@
 
 <script>
 import mineFileMenu from './mineFileMenu'
+import {getMeFile} from '@/axios/api'
 export default {
     data () {
       return {
@@ -88,6 +100,8 @@ export default {
           single:'',
           left:0,
           top:0,
+          files:[],
+          checkedFile:[],
           fileData:{
               privacyPattern:'',
               collect:''
@@ -104,7 +118,17 @@ export default {
         },
         closeFileMenu(){
             this.visible=false
+        },
+        getMeFile(){
+            getMeFile().then(res => {
+                if(res.result === 1){
+                    this.files = res.data
+                }
+            })
         }
+    },
+    created(){
+        this.getMeFile()
     }
 }
 </script>
