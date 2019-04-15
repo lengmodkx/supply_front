@@ -115,6 +115,8 @@
 // import Mine from './Mine'
 import CreateOrg from "./common/CreateOrg";
 import {mapState} from 'vuex'
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 export default {
   name: "header-main",
   components: {
@@ -164,8 +166,36 @@ export default {
       time: 0
     };
   },
+  mounted() {
+    console.log(">>",this.users)
+    this.initSocket(this.users.userId);
+  },
   methods: {
-    ...mapState('user',['mineRouter']),
+    ...mapState('user',['mineRouter','users']),
+    initSocket(id) {
+      // 建立连接对象
+      var socket = new SockJS("http://192.168.31.238:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket);
+      this.stompClient.connect(
+              {},
+              frame => {
+                this.stompClient.subscribe(`/user/${id}`, msg => {
+                  var result = JSON.parse(msg.body);
+                  switch (result.type) {
+                    case "C1":
+                    case "C2":
+                    case "C3":
+                      this.$store.dispatch("file/initFile", {
+                        fileId: result.object.parentId
+                      });
+                      break;
+                  }
+                });
+              },
+              err => {}
+      );
+    },
     pathClick(path) {
       this.$router.push(path);
     },

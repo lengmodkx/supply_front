@@ -21,7 +21,6 @@ const store = {
       state.userInfo = data
     },
     updateUserId(state, data) {
-      console.log('我是ueserinfo啊',data)
       state.users = data
     },
     // 更改我的路由路径
