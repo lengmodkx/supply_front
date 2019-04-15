@@ -2,11 +2,14 @@
   <div class="talk">
     <div class="talkinner">
       <div class="talkUp" @keyup.enter="sendMsg"
-           contenteditable="true">
-        <Input id="input"
-               v-model.trim="talkvalue"
-               ref="textarea"
-               placeholder="按Enter快速发布" />
+          >
+        <div id="input"
+             style="width: 100%;height: 40px;padding: 5px 10px"
+             ref="textarea"
+             placeholder="按Enter快速发布"
+             contenteditable="true"
+             @keyup.enter="sendMsg">
+        </div>
       </div>
       <div class="talkDown clearfix">
         <!-- 表情包组件 -->
@@ -37,21 +40,23 @@ export default {
   methods: {
     // 发送消息
     sendMsg(){
-      if (this.talkvalue){
+      let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")
+      if (con){
         let datas={
           'publicId':this.publicId,
           'projectId':this.projectId,
           'publicType':this.publicType,
-          'content':this.talkvalue
+          'content':con
         }
         console.log(datas)
         sendMsg(datas).then(res => {
-          this.talkvalue=''
+          this.$refs.textarea.innerHTML=''
         })
       }
     },
     chooseEmoji (name) {
-      insertText(this.$refs.textarea.$el.children[1], name)
+      // insertText(this.$refs.textarea.$el.children[1], name)
+      this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
     },
   }
 }
@@ -89,6 +94,15 @@ export default {
           margin-right: 10px;
         }
       }
+    }
+  }
+  .talkUp{
+    div{
+      display: flex;
+      align-items: center;
+    }
+    img{
+      width: 18px;
     }
   }
 </style>
