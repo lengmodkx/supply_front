@@ -292,7 +292,7 @@
       <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="type"></publick>
     </footer>
     <div class="demo-spin-container"  style="width: 100%;height: 100%" v-show="loading">
-      <Spin fix size="large"></Spin>
+      <Loading></Loading>
     </div>
   </div>
 </template>
@@ -513,7 +513,7 @@ export default {
   display: flex;
   align-items: center;
   position: absolute;
-  top: 13px;
+  top: -3px;
   right: 10px;
   margin-right: 30px;
   .zan {

@@ -176,7 +176,7 @@
     </Modal>
     <!--加载中-->
     <div class="demo-spin-container" v-if="!simpleTasks.length">
-      <Spin fix size="large"></Spin>
+      <Loading></Loading>
     </div>
   </div>
 </template>
