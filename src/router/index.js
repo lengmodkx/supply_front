@@ -90,6 +90,13 @@ export default new Router({
       ]
     },
     {
+      path: "/statisticsDetail",
+      meta: {
+        title: "统计详情"
+      },
+      component: _import("project/pages/statisticsDetail")
+    },
+    {
         path: "/message",
         meta: {
             title: "消息"
