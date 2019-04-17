@@ -164,7 +164,16 @@ export function updateTaskName(taskId, taskName) {
         }
     });
 }
-
+// 修改任务执行者
+export function taskExecutor(taskId, executor) {
+    return fetch({
+        url: `${api.tasks}/${taskId}/executor`,
+        method: "put", // 请求方法
+        params: {
+            executor: executor
+        }
+    });
+}
 // 修改任务名称
 export function updateRepeat(taskId, repeat) {
     return fetch({

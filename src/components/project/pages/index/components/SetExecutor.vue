@@ -1,54 +1,41 @@
 <template>
 
-  <Poptip v-model="visible" class="involvelistBox" @on-popper-hide="popHide" transfer>
-    <slot :executor="current" :close="close">
-      <svg-icon name="people"></svg-icon>
+  <Poptip v-model="visible" class="involvelistBox" @on-popper-show="popShow" @on-popper-hide="popHide" transfer>
+    <slot :close="close">
+      <Icon type="ios-contact"  size="24" /><span style="margin-right: 10px">待认领</span>
 
     </slot>
 
-    <div slot="content" style="height:320px;">
-      <Input v-model="searchvalue" placeholder="搜索" style="width:220px;margin-top:10px;height:36px;" />
+    <div slot="content" style="height:320px;position: relative">
+      <div class="loading" v-if="loading"><Icon type="ios-loading" /></div>
       <div class="selectable">
-        <ul v-if="!searchvalue">
+        <ul>
           <li class="select-option-group">
-            <div class="option-group-label" v-if="!searchvalue">执行者</div>
-            <ul v-if="searchvalue?(current && current.userName.indexOf(searchvalue)>=0):true">
-              <li class="member-menu-item clearfix" @click="itemClick(current?current.userId:-1)">
+            <div class="option-group-label" >执行者</div>
+            <ul >
+              <li class="member-menu-item clearfix" @click="visible=false">
                 <div class="img fl">
-                  <img v-if="current&&current.image" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${current.image}`" alt="">
-                  <svg-icon v-else name="people"></svg-icon>
+                  <Icon style="margin-top: 5px" type="ios-contact"  size="24" />
                 </div>
-                <div class="membername fl">{{current?current.userName:'待认领' }}</div>
+                <div class="membername fl">待认领</div>
                 <div class="tick fr">
-                  <svg-icon class="right" name="right"></svg-icon>
+                  <Icon style="margin-top: 5px" class="right" type="md-checkmark" size="20" />
                 </div>
               </li>
             </ul>
           </li>
 
           <li class="select-option-group">
-            <div class="option-group-label" v-if="!searchvalue">推荐</div>
+            <div class="option-group-label">推荐</div>
             <ul>
-              <li class="member-menu-item clearfix" v-if="current && !searchvalue" @click="itemClick(-1)">
-                <div class="img fl">
-                  <svg-icon name="people"></svg-icon>
-                </div>
-                <div class="membername fl">待认领</div>
-              </li>
-              <li class="member-menu-item clearfix" @click="itemClick(i.userId)" v-for="(i,index) in computedMemberList" :key="index" v-if="!current || (current && current.userId!=i.userId)">
-                <div class="img fl"><img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${i.image}`" alt=""></div>
-                <div class="membername fl">{{i.userName}}</div>
+              <li class="member-menu-item clearfix" @click="itemClick(i.memberId)" v-for="(i,index) in memberList" :key="index" >
+                <div class="img fl"><img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${i.memberImg}`" alt=""></div>
+                <div class="membername fl">{{i.memberName}}</div>
               </li>
             </ul>
           </li>
         </ul>
-        <!-- 搜索出来的人员列表 -->
-        <ul v-if="searchvalue">
-          <li class="member-menu-item searchItem clearfix" @click="itemClick(i.userId)" v-for="(i,index) in computedMemberList" :key="index" v-if="!current || (current && current.userId!=i.userId)">
-            <div class="img fl"><img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${i.image}`" alt=""></div>
-            <div class="membername fl">{{i.userName}}</div>
-          </li>
-        </ul>
+
       </div>
 
     </div>
@@ -57,49 +44,35 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
+import {projectMembers} from '@/axios/api'
 
 export default {
+  props: ['id','taskId'],
   data() {
     return {
       visible: false,
       searchvalue: "",
       // current: null,
-      memberList: [
-        // {
-        //   id: 1,
-        //   name: "张三",
-        //   imgUrl: "https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"
-        // },
-        // {
-        //   id: 2,
-        //   name: "李四",
-        //   imgUrl: "https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"
-        // }
-      ]
+      memberList: [],
+      loading:true
     };
   },
-  props: ["executor"],
   model: {
     event: "choose",
     prop: "executor"
   },
   computed: {
-    ...mapState("task", ["members"]),
-    computedMemberList() {
-      return this.memberList.filter(v =>
-        this.$containStr(this.searchvalue, v.userName)
-      );
-      // return this.memberList.filter(v => v.name.indexOf(this.searchvalue) >= 0)
-    },
-    current() {
-      return this.memberList.find(v => v.userId == this.executor);
-    }
+    ...mapState("task", ["task"]),
   },
   methods: {
     ...mapActions("task", ["initMemberList"]),
     itemClick(id) {
       //this.current = this.memberList.find(v => v.userId == id)
-      this.$emit("choose", id);
+      let data={
+        'taskid':this.taskId,
+        'zxzid':id
+      }
+      this.$emit("choose", id,this.taskId);
       this.$nextTick(_ => {
         this.visible = false;
       });
@@ -107,19 +80,42 @@ export default {
     popHide() {
       this.searchvalue = "";
     },
+    popShow(){
+      projectMembers(this.id).then(res => {
+        console.log(res)
+        this.memberList=res.data
+        this.loading=false
+      })
+    },
     close() {
       this.itemClick(-1);
     }
   },
   mounted() {
-    this.initMemberList(() => {
-      this.memberList = JSON.parse(JSON.stringify(this.members));
-      //  console.log( this.memberList)
-    });
+
   }
 };
 </script>
 <style scoped lang="less">
+  .loading{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i{
+      font-size: 22px;
+      animation: zhuan 1s infinite;
+    }
+    @keyframes zhuan{
+      from {transform:rotate(0deg);}
+      to {transform:rotate(360deg);}
+    }
+  }
 .involvelistBox {
   .executor {
     cursor: pointer;
@@ -135,7 +131,8 @@ export default {
   }
 }
 .selectable {
-  height: calc(100% - 46px);
+  width: 200px;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   &::-webkit-scrollbar {
