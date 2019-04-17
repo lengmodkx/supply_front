@@ -256,7 +256,7 @@
       </div>
     </div>
     <footer>
-      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="type"></publick>
+      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="publicType"></publick>
     </footer>
   </div>
 </template>

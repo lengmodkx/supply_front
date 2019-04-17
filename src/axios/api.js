@@ -10,6 +10,23 @@ export function sendMsg(data) {
         data: data
     });
 }
+
+// 删除所有的已读消息
+export function deleteAllRead() {
+    return fetch({
+        url: `/news/read`,
+        method: "delete"
+    });
+}
+
+//标记所有消息为已读
+export function allIsRead() {
+    return fetch({
+        url: `/news/read`,
+        method: "put"
+    });
+}
+
 // 剩余消息
 export function restMsg(publicId, surpluscount) {
     return fetch({
@@ -164,16 +181,7 @@ export function updateTaskName(taskId, taskName) {
         }
     });
 }
-// 修改任务执行者
-export function taskExecutor(taskId, executor) {
-    return fetch({
-        url: `${api.tasks}/${taskId}/executor`,
-        method: "put", // 请求方法
-        params: {
-            executor: executor
-        }
-    });
-}
+
 // 修改任务名称
 export function updateRepeat(taskId, repeat) {
     return fetch({
@@ -481,6 +489,21 @@ export function addChildTask(taskId, params) {
         taskName: params
     })
 }
+
+//获取当前用户消息
+export function getNews(data) {
+    if(!data){
+        return $get(`news`,{isRead:data})
+    } else{
+        return $get(`news`,{})
+    }
+}
+
+//获取当前用户消息
+export function deleteNews(id) {
+    return $delete(`news/${id}`)
+}
+
 // 群聊发送消息
 export function sendChat(projectId, content) {
     return fetch({
@@ -492,6 +515,12 @@ export function sendChat(projectId, content) {
         }
     });
 }
+
+//用户消息设为已读
+export function readNews(id,isRead) {
+    return $put(`news/${id}/read`,{"isRead":isRead})
+}
+
 // 获取群聊消息
 export function getChat(projectId) {
     return fetch({
@@ -593,6 +622,17 @@ function $get(url, params) {
         url: url,
         method: "get", // 请求方法
         params: params
+    });
+}
+
+// 修改任务执行者
+export function taskExecutor(taskId, executor) {
+    return fetch({
+        url: `${api.tasks}/${taskId}/executor`,
+        method: "put", // 请求方法
+        params: {
+            executor: executor
+        }
     });
 }
 
