@@ -5,7 +5,6 @@
   <!--</Modal>-->
     <!--固定顶部-->
     <div class="toolRight">
-
       <Tooltip content="点个赞" placement="bottom-start">
         <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
           <Icon type="md-thumbs-up" size="20" />
