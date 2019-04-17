@@ -1,10 +1,14 @@
-import {getNews,deleteNews} from '@/axios/api'
+import {getNews,deleteNews,getNewsCount} from '@/axios/api'
 const store = {
     namespaced: true,
     state: {
-        news:[]
+        news:[],
+        newsCount:0
     },
     mutations: {
+        getNewsCount(state,data){
+            state.newsCount = data
+        },
         getNewsList(state, data) {
             state.news = data
         },
@@ -28,10 +32,12 @@ const store = {
                         state.news[index].newsFromUser.defaultImage = data.newsFromUser.defaultImage
                         state.news[index].newsCount++
                         state.news[index].newsHandle = 0
+                        state.newsCount++
                         i = 1;
                     }
                 })
                 if(i === 0){
+                    state.newsCount++
                     state.news.unshift(data)
                 }
             }
@@ -49,6 +55,13 @@ const store = {
             deleteNews(id).then(res => {
                 if(res.result === 1){
                     commit('deteleNews',id)
+                }
+            })
+        },
+        getNewsCount({commit}){
+            getNewsCount().then(res => {
+                if(res.result === 1){
+                    commit('getNewsCount',res.data)
                 }
             })
         }

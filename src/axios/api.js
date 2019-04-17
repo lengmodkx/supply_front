@@ -636,6 +636,14 @@ export function taskExecutor(taskId, executor) {
     });
 }
 
+//获取用户未读消息数
+export function getNewsCount() {
+    return fetch({
+        url: `/news/count`,
+        method: "get" // 请求方法
+    });
+}
+
 function $put(url, params) {
     return fetch({
         url: url,

@@ -90,12 +90,14 @@
             deleteNews(id){
                 this.$store.dispatch("news/deleteNews",id)
                 this.msgTypeShow = false
+                this.getNewsCount()
             },
             deleteReadNews(){
                 deleteAllRead().then(res => {
                     if(res.result === 1){
                         this.$store.dispatch("news/getNewsList")
                         this.msgTypeShow = false
+                        this.getNewsCount()
                     } else{
                         this.$Message.error("删除失败!")
                     }
@@ -118,9 +120,13 @@
                             this.news[i].newsHandle = 1
                             this.news[i].newsCount = 0
                         })
+                        this.getNewsCount()
                         this.msgTypeShow = false
                     }
                 })
+            },
+            getNewsCount(){
+                this.$store.dispatch("news/getNewsCount")
             },
             handle(publicId,publicType,id,isHandle){
                 this.loading=true
@@ -141,6 +147,7 @@
                                 this.isShow = true
                             })
                         }
+                        this.getNewsCount()
                     }
                 })
             }

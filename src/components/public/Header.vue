@@ -32,7 +32,7 @@
       >
 
       <span class="text" style="border-right:none;">
-         <Badge :count="33" overflow-count="99" type="info" :offset=[10,0]>
+         <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
            <Icon type="ios-notifications-outline" size="22" />
         </Badge>
         </span>
@@ -173,7 +173,7 @@
       ...mapState('user',['mineRouter','users']),
       initSocket(id) {
         // 建立连接对象
-        var socket = new SockJS("http://192.168.3.189:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+        var socket = new SockJS("http://192.168.3.1189:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
         // 获取STOMP子协议的客户端对象
         this.stompClient = Stomp.over(socket);
         this.stompClient.connect(
@@ -207,6 +207,9 @@
           }, 300);
         }, 10);
       },
+      getNewsCount(){
+        this.$store.dispatch("news/getNewsCount")
+      },
       clickHeaderTag(id) {
         this.activeHeaderTag =
                 id == this.activeHeaderTag ? (this.activeHeaderTag = -1) : (this.activeHeaderTag = id);
@@ -224,9 +227,13 @@
         } else if (id===3) {
           this.$router.push('/message')
         }
-
-
       }
+    },
+    computed:{
+      ...mapState('news', ['newsCount'])
+    },
+    created(){
+      this.getNewsCount()
     }
   };
 </script>
