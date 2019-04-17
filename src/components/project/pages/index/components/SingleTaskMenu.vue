@@ -29,23 +29,18 @@
            v-if="active==''">
         <div class="menuItem"
              @click="listItemClick('b','复制到')">
-          <svg-icon class="svgicon"
-                    name="copy"></svg-icon>复制任务</div>
+          <Icon type="ios-copy-outline" />复制任务</div>
         <div class="menuItem tasklink" @click="copylink" :data-clipboard-text="link">
-          <svg-icon class="svgicon"
-                    name="link"></svg-icon>复制任务链接</div>
+          <Icon type="ios-link-outline" />复制任务链接</div>
         <div class="menuItem"
              @click="listItemClick('a','移动到')">
-          <svg-icon class="svgicon"
-                    name="moveTo"></svg-icon>移动任务</div>
+          <Icon type="ios-log-out" />移动任务</div>
         <div class="menuItem" @click="collectTask">
-          <svg-icon class="svgicon"
-                    name="collect"></svg-icon>{{data.isCollect ? '取消收藏':'收藏任务'}}</div>
+          <Icon type="md-star" />{{data.isCollect ? '取消收藏':'收藏任务'}}</div>
 
         <div class="menuItem"
              @click="listItemClick('c','移到回收站')">
-          <svg-icon class="svgicon"
-                    name="delete"></svg-icon>移到回收站</div>
+          <Icon type="ios-trash-outline" />移到回收站</div>
 
         <div class="privacy">
           <div class="p_left fl clearfix"
@@ -380,5 +375,11 @@ export default {
 </script>
 <style lang="less">
 @import './poptipMenu';
+  .menuItem{
+    i{
+      font-size: 20px;
+      margin-right: 10px;
+    }
+  }
 </style>
 

@@ -30,11 +30,10 @@
         :class="{activeHeaderTag:activeHeaderTag==3}"
         @click="clickHeaderTag(3)"
       >
-        <span
-          class="text"
-          style="border-right:none;"
-        >
-         <span>消息</span>
+        <span class="text" style="border-right:none;">
+         <Badge :count="33" overflow-count="99" type="info" :offset=[10,0]>
+           <Icon type="ios-notifications-outline" size="22" />
+        </Badge>
         </span>
       </a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
