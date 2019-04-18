@@ -52,7 +52,6 @@ const store = {
         },
         editTask(state, data){
             state.task = data
-            console.log(555555555, state.task)
             if (data.joinInfo) {
                 state.joinInfoIds = data.joinInfo.map((v) => {
                     return v.userId
@@ -61,6 +60,32 @@ const store = {
                 state.joinInfoIds=[]
             }
 
+        },
+        changeExecutor(state,data){
+            state.task.executor = data.executor.userId
+            if(!data.executor.userId){
+                state.task.executorName = ''
+                state.task.executorImg = ''
+
+                state.simpleTasks.forEach((m,i) => {
+                    m.taskList.forEach((t,n) => {
+                        if(t.taskId === data.taskId){
+                            state.simpleTasks[i].taskList[n].executorImg = ''
+                        }
+                    })
+                })
+            } else{
+                state.task.executorImg = data.executor.image
+                state.task.executorName = data.executor.userName
+                alert( state.task.executorImg)
+                state.simpleTasks.forEach((m,i) => {
+                    m.taskList.forEach((t,n) => {
+                        if(t.taskId === data.taskId){
+                            state.simpleTasks[i].taskList[n].executorImg = data.executor.image
+                        }
+                    })
+                })
+            }
         },
         changeTask(state, data) {
             state.simpleTasks = data
