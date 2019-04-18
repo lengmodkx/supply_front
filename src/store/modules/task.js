@@ -52,6 +52,7 @@ const store = {
         },
         editTask(state, data){
             state.task = data
+            console.log(555555555, state.task)
             if (data.joinInfo) {
                 state.joinInfoIds = data.joinInfo.map((v) => {
                     return v.userId
@@ -240,6 +241,7 @@ const store = {
                             }
                         }
                     }
+                    console.log(11111111111,res.menus)
                     commit('initTask', res.menus)
                 }
             });

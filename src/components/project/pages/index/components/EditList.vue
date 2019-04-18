@@ -55,7 +55,7 @@
         <Checkbox v-model="task.taskStatus" @on-change="updateTaskStatus" class="checkbox"></Checkbox>
         <Tooltip content="点击即可编辑" placement="top" class="content">
           <div id="editCon" style="width:100%;">
-            <input v-model="task.taskName" @blur="updateTaskName()" type="text" style="width: 100%;height: 100%;border: 0 none;outline-style: none">
+            <input v-model="task.taskName" @blur="updateTaskName()" type="text" style="height: 24px;border: 0 none;outline-style: none">
           </div>
         </Tooltip>
 
@@ -63,20 +63,13 @@
       <div class="task_attr clearfix">
         <div class="executor fl">
           <!-- 设置认领者 -->
-          <SetExecutor ref="executor" v-model="task.executor" v-if="task.executor">
-            <template slot-scope="scope">
-              <div class="executor">
-                <svg-icon name="people" v-if="!scope.executor"></svg-icon>
-                <span class="conText">
-                  <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${scope.executor?scope.executor.image:''}`" alt="">
-                  {{scope.executor?scope.executor.userName:'待认领'}}
-                </span>
-                <Tooltip content="执行者是任务的负责人，每个任务对应唯一执行者" placement="left" transfer>
-                  <Icon type="ios-help"></Icon>
-                </Tooltip>
-                <span class="close" v-if="scope.executor" @click.stop="scope.close">&times;</span>
-              </div>
-            </template>
+          <div class="rlz fl" v-if="task.executor">
+            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+task.executorImg" alt="">
+            <span>{{task.executorName}}</span>
+            <Icon @click="deleteExecutor" type="ios-close" />
+          </div>
+          <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor" v-model="task.executor" v-else>
+
           </SetExecutor>
         </div>
 
@@ -104,13 +97,8 @@
           <SetRepeat :repeat="task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
         </div>
 
-        <div class="alarm fl" @click="modal1=true" >
-          <Tooltip content="点击设置任务提醒" placement="top">
-            <Icon type="ios-alarm-outline" size="20"></Icon>
-          </Tooltip>
-          <Modal id="warnModal" v-model="modal1" class="taskwarn">
-            <TaskWarn @save="confirmWarnList"></TaskWarn>
-          </Modal>
+        <div class="alarm fl" >
+          <TaskWarn :remind="task.remind" v-on:updateRepeat="updateRepeat"></TaskWarn>
 
         </div>
         <!-- <p>{{$moment('2018-09-04 12:19:20').format("YYYY-MM-DD HH:mm:ss")}}</p> -->
@@ -145,13 +133,13 @@
           <Icon type="ios-options-outline" />子任务</p>
         <!-- 已添加的子任务列表 -->
         <ul v-if="task.taskList">
-          <li class="sontask_list" v-for="(i,index) in task.taskList" :key="index" @click.stop="showaa(i.taskId)">
+          <li class="sontask_list" v-for="(i,index) in task.taskList" :key="index">
             <!-- 点击之前 -->
             <div class="clearfix" v-show="isEdit" style="display:flex;">
               <div class="addicon fl">
                 <Checkbox v-model="sonComplete"></Checkbox>
               </div>
-              <div class="sonInput fl">
+              <div class="sonInput fl" @click.stop="showaa(i.taskId)">
                 <Tooltip content="点击即可编辑" placement="top">
                   <div class="sonCon" ref="sonCon" style="" >{{i.taskName}}</div>
                 </Tooltip>
@@ -164,69 +152,13 @@
                   </span>
                 </div>
               </DateTimePicker>
+              <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="i.taskId" ref="executor" v-model="i.executor">
 
-              <SetExecutor ref="executor" v-model="task.sontaskExecutor" class="sonManager fl">
-                <template slot-scope="scope">
-                  <div>
-                    <Tooltip v-if="!scope.executor" content="待认领" placement="top">
-                      <svg-icon name="people" v-if="!scope.executor"></svg-icon>
-                    </Tooltip>
-
-                    <Tooltip v-else :content="scope.executor.name" placement="top">
-                      <div class="ava">
-                        <img :src="scope.executor.imgUrl" alt="">
-                      </div>
-                    </Tooltip>
-
-                  </div>
-                </template>
               </SetExecutor>
-
               <div class="enterDetail fl">
                 <Icon type="ios-arrow-right"></Icon>
               </div>
             </div>
-            <!-- 点击之后显示的 带input，可编辑 -->
-            <!--<div v-show="!isEdit">-->
-              <!--<div class="clearfix">-->
-                <!--<div class="addicon fl">-->
-                  <!--<Checkbox v-model="sonComplete"></Checkbox>-->
-                <!--</div>-->
-                <!--<div class="sonInput fl">-->
-                  <!--<Input v-model.trim="i.title" style="width:410px;" autofocus />-->
-                <!--</div>-->
-
-                <!--<DateTimePicker class="sonDate fl" type="start" :max="task.endDate" @confirm="confirmSonDate" @clear="clearSonDate">-->
-                  <!--<div>-->
-                    <!--<Icon class="icon" type="calendar" v-if="!task.sontaskDate" size="20"></Icon>-->
-                    <!--<span v-else class="timeBox">-->
-                      <!--{{$moment(task.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}-->
-                    <!--</span>-->
-                  <!--</div>-->
-                <!--</DateTimePicker>-->
-
-                <!--<SetExecutor ref="executor" v-model="task.sontaskExecutor" class="sonManager fl">-->
-                  <!--<template slot-scope="scope">-->
-                    <!--<div>-->
-                      <!--<Tooltip v-if="!scope.executor" content="待认领" placement="top">-->
-                        <!--<svg-icon name="people" v-if="!scope.executor"></svg-icon>-->
-                      <!--</Tooltip>-->
-
-                      <!--<Tooltip v-else :content="scope.executor.name" placement="top">-->
-                        <!--<div class="ava">-->
-                          <!--<img :src="scope.executor.imgUrl" alt="">-->
-                        <!--</div>-->
-                      <!--</Tooltip>-->
-
-                    <!--</div>-->
-                  <!--</template>-->
-                <!--</SetExecutor>-->
-              <!--</div>-->
-              <!--<div class="btns">-->
-                <!--<Button type="text" @click="showSontask=true;isEdit=true;">取消</Button>-->
-                <!--<Button type="primary" style="padding:6px 20px;" @click="saveSon" :disabled="!i.title">保存</Button>-->
-              <!--</div>-->
-            <!--</div>-->
 
           </li>
         </ul>
@@ -253,7 +185,37 @@
         <Modal v-model="relationModal" class="relationModal" id="relationModal">
           <AddRelation :publicId="task.taskId"></AddRelation>
         </Modal>
-
+      </div>
+      <div class="has-relevance">
+        <ul>
+          <div class="what-title">关联的任务</div>
+          <li class="gl-task-list">
+            <div class="gl-task-list-con">
+              <Icon type="md-checkbox-outline" size="22" />
+              <Icon type="ios-list-box-outline" size="22" />
+              <Icon type="ios-calendar-outline" size="22" />
+              <Icon type="ios-document-outline" size="22" />
+              <img src="" alt="">
+              <div class="gl-con">
+                <div class="gl-con-top">
+                  <span>关联人物名称</span><span>关联项目名称</span>
+                </div>
+                <div class="gl-con-bottom">2018-12-12 12:00</div>
+              </div>
+            </div>
+            <Poptip v-model="glPop">
+              <Icon class="glpop" type="ios-arrow-down" size="20" />
+              <div slot="content">
+                <div class="glpop-list">
+                  <Icon type="ios-link" size="20" /><span>复制链接</span>
+                </div>
+                <div class="glpop-list">
+                  <Icon type="md-link" size="20" /><span>取消关联</span>
+                </div>
+              </div>
+            </Poptip>
+          </li>
+        </ul>
       </div>
       <!-- 上传附件 -->
       <div class="accessory">
@@ -289,11 +251,8 @@
       </div>
     </div>
     <footer>
-      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="type"></publick>
+      <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="publicType"></publick>
     </footer>
-    <div class="demo-spin-container"  style="width: 100%;height: 100%" v-show="loading">
-      <Spin fix size="large"></Spin>
-    </div>
   </div>
 </template>
 <script>
@@ -318,7 +277,8 @@ import {
   updateRepeat,
   updateTaskJoin,
   fabulous,
-  cancelFabulous
+  cancelFabulous,
+  taskExecutor
 } from "@/axios/api";
 export default {
   name: "myModel",
@@ -339,6 +299,7 @@ export default {
     return {
       prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       loading: true,
+      glPop: false,
       zan: false,
       aa: false,
       childTaskData:null,
@@ -367,6 +328,9 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState('task', ['task'])
+  },
   methods: {
     ...mapActions('task',['initEditTask','updateStartTime','updateEndTime','addChildrenTask']),
     updateTaskName() {
@@ -375,6 +339,16 @@ export default {
           //console.log(data)
         }
       );
+    },
+    // 删除执行者
+    deleteExecutor(){
+      taskExecutor(this.task.taskId,'').then(res => {})
+    },
+    // 选择执行者
+    chooseZxz(data,taskid){
+      taskExecutor(taskid,data).then(res => {
+        console.log(res)
+      })
     },
     showaa (taskId){
         const msg = this.$Message.loading('正在加载中...', 0);
@@ -394,7 +368,9 @@ export default {
     },
     //更改任务的重复性
     updateRepeat(repeat){
-      updateRepeat(this.task.taskId,repeat).then(item => {})
+      updateRepeat(this.task.taskId,repeat).then(res => {
+          console.log(res)
+      })
     },
     //更改任务的状态
     updateTaskStatus() {
@@ -406,8 +382,8 @@ export default {
     },
     // 添加子任务
     submitSontask () {
-      console.log('submitSontask')
       this.addChildrenTask({"taskId":this.task.taskId, "taskName":this.son})
+      this.showSontask=false
     },
     confirmSonDate(date) {
       this.task.sontaskDate = date;
@@ -449,7 +425,6 @@ export default {
         })
       }
     },
-    deleteExecutor() {},
     deleteInvolve(id) {
       // if (id == 3) return; //需获取当前登录用户id判断
       let index = this.joinInfoIds.indexOf(id);
@@ -493,9 +468,6 @@ export default {
     this.aa=false
     // document.getElementById("editCon").parentNode.style.width = "100%"
   },
-  updated(){
-    this.loading=false
-  },
   computed:{
     ...mapState("task",["task",'joinInfoIds']),
     vuexTask(){
@@ -513,7 +485,7 @@ export default {
   display: flex;
   align-items: center;
   position: absolute;
-  top: 13px;
+  top: -3px;
   right: 10px;
   margin-right: 30px;
   .zan {
@@ -537,5 +509,30 @@ export default {
     color: #aba6a1;
   }
 }
+  .rlz{
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    margin-right: 8px;
+    &:hover{
+      i{
+        display: block;
+      }
+    }
+    img{
+      width: 24px;
+      height: 24px;
+      margin-right: 3px;
+    }
+    i{
+      position: absolute;
+      top: -5px;
+      right: -8px;
+      font-size: 22px;
+      color: gray;
+      display: none;
+    }
+  }
 </style>
 

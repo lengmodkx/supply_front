@@ -40,6 +40,7 @@ export default {
         this.$route.path !== "/" &&
         this.$route.path.indexOf("/management") < 0 &&
         this.$route.path !== "/register" &&
+        this.$route.path.indexOf("/statisticsDetail") < 0 &&
         this.$route.path !== "/forget";
       // this.hasHeader = this.$route.path !== '/management'
     },

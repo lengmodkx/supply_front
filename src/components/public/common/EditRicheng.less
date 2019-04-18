@@ -23,6 +23,11 @@
   border: 0 none;
   outline-style: none;
   background-color: transparent;
+  &:hover{
+    input{
+      background-color: #eee;
+    }
+  }
   &:focus{
     background: rgba(9,152,219);
   }
@@ -89,9 +94,12 @@
     word-break: break-word;
     color:#fff;
     text-indent: 5px;
-    div:focus {
+    div:hover {
       outline: none;
       background-color: rgba(0,0,0,.1);
+      input{
+        background-color: rgba(0,0,0,.1);
+      }
     }
     
   }

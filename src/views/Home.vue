@@ -226,7 +226,7 @@ export default {
       this.init(value);
     },
     path(item) {
-      this.setName(item.name);
+      this.setName(item.projectName);
       this.$router.push(
         `/project/${item.projectId}/tasks/group/${item.groupId}`
       );

@@ -120,6 +120,7 @@
   }
   .column-main {
     // position: relative;
+    display: flex;
     white-space: nowrap;
     position: absolute;
     top: 0;
@@ -132,6 +133,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     .column {
+      flex: none;
       overflow: hidden;
       position: relative;
       display: -webkit-inline-flex;
@@ -183,6 +185,7 @@
       padding: 10px;
     }
     .scrum-stage-tasks {
+      max-height: calc(100vh - 175px) ;
       overflow-x: hidden;
       overflow-y: auto;
       &::-webkit-scrollbar {

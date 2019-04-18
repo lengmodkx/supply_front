@@ -10,6 +10,23 @@ export function sendMsg(data) {
         data: data
     });
 }
+
+// 删除所有的已读消息
+export function deleteAllRead() {
+    return fetch({
+        url: `/news/read`,
+        method: "delete"
+    });
+}
+
+//标记所有消息为已读
+export function allIsRead() {
+    return fetch({
+        url: `/news/read`,
+        method: "put"
+    });
+}
+
 // 剩余消息
 export function restMsg(publicId, surpluscount) {
     return fetch({
@@ -472,6 +489,21 @@ export function addChildTask(taskId, params) {
         taskName: params
     })
 }
+
+//获取当前用户消息
+export function getNews(data) {
+    if(!data){
+        return $get(`news`,{isRead:data})
+    } else{
+        return $get(`news`,{})
+    }
+}
+
+//获取当前用户消息
+export function deleteNews(id) {
+    return $delete(`news/${id}`)
+}
+
 // 群聊发送消息
 export function sendChat(projectId, content) {
     return fetch({
@@ -483,6 +515,12 @@ export function sendChat(projectId, content) {
         }
     });
 }
+
+//用户消息设为已读
+export function readNews(id,isRead) {
+    return $put(`news/${id}/read`,{"isRead":isRead})
+}
+
 // 获取群聊消息
 export function getChat(projectId) {
     return fetch({
@@ -503,6 +541,74 @@ export function recall(chatId, projectId) {
         }
     });
 }
+
+// 获取近期的事儿
+export function nearThing() {
+    return fetch({
+        url: '/me/recentThing',
+        method: "get", // 请求方法
+    });
+}
+
+// 获取我的任务信息并且排序
+export function getMeTask(isDone,order,type) {
+    return fetch({
+        url: '/me/task',
+        method: "get", // 请求方法
+        params:{isDone:isDone,order:order,type:type}
+    });
+}
+
+// 获取我的日程信息
+export function getMeAfterSchedule() {
+    return fetch({
+        url: 'me/schedule/after',
+        method: "get", // 请求方法
+    });
+}
+
+// 获取和我有关的日程月份信息
+export function getMonth() {
+    return fetch({
+        url: 'me/schedule/before',
+        method: "get" // 请求方法
+    });
+}
+
+/**
+ * 根据月份获取过去的日程
+ */
+export function getScheduleByMonth(month) {
+    return fetch({
+        url: `me/schedule/${month}`,
+        method: "get" // 请求方法
+    });
+}
+
+/**
+ * 获取我创建的文件
+ */
+export function getMeFile(order) {
+    return fetch({
+        url: `me/file`,
+        method: "get", // 请求方法
+        params:{order:order}
+    });
+}
+
+/**
+ * 获取我的收藏数据
+ * @param order
+ */
+export function collectList(type) {
+    console.log(type)
+    return fetch({
+        url: `collections`,
+        method: "get", // 请求方法
+        params:{collectType:type}
+    });
+}
+
 export function $post(url, params) {
     return fetch({
         url: url,
@@ -516,6 +622,25 @@ function $get(url, params) {
         url: url,
         method: "get", // 请求方法
         params: params
+    });
+}
+
+// 修改任务执行者
+export function taskExecutor(taskId, executor) {
+    return fetch({
+        url: `${api.tasks}/${taskId}/executor`,
+        method: "put", // 请求方法
+        params: {
+            executor: executor
+        }
+    });
+}
+
+//获取用户未读消息数
+export function getNewsCount() {
+    return fetch({
+        url: `/news/count`,
+        method: "get" // 请求方法
     });
 }
 

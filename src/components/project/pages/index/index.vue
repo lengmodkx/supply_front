@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- 右边可拖拽盒子 -->
-    <draggable class="column-main dragscroll" v-model="simpleTasks" :options="{
+    <draggable class="column-main dragscroll" v-model="allTask" :options="{
                   handle:'.handle',
                   chosenClass: 'boxChosenClass',
                   dragClass: 'boxDragClass',
@@ -48,8 +48,8 @@
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
-      <div class="column" :key="k" v-for="(i, k) in simpleTasks">
-        <div style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto" :data-index="k">
+      <div class="column" :key="k" v-for="(i, k) in allTask">
+        <div style="min-height:150px;max-height: 100%;position:relative;" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
             <!-- 点击三角形出来的任务列表菜单组件 -->
@@ -163,7 +163,7 @@
           <Input v-model="newProTitle" placeholder="新建任务列表..." style="width:268px" />
           <div style="margin-top:12px;text-align:right;">
             <Button @click="showAdd=true;newProTitle='';">取消</Button>
-            <Button type="primary" @click="saveNewPro" :disabled="newProTitle==''">保存</Button>
+            <Button style="margin-left: 10px" type="primary" @click="saveNewPro" :disabled="newProTitle==''">保存</Button>
           </div>
         </div>
 
@@ -176,7 +176,7 @@
     </Modal>
     <!--加载中-->
     <div class="demo-spin-container" v-if="!simpleTasks.length">
-      <Spin fix size="large"></Spin>
+      <Loading></Loading>
     </div>
   </div>
 </template>
@@ -191,7 +191,6 @@ import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
 import { scrollTo, dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-import Loading from "@/components/public/common/Loading";
 import {
   enterTask,
   sortTaskMenu,
@@ -219,6 +218,7 @@ export default {
   },
   data() {
     return {
+      allTask: null,
       show: false,
       showmodal:false,
       showAdd: true,
@@ -244,6 +244,8 @@ export default {
     };
   },
   mounted() {
+    this.allTask=this.simpleTasks;
+    console.log(22222222,this.allTask)
     this.taskGroupId = this.$route.params.groupId
     // this.initStore()
     window.onscroll = () => {
@@ -253,13 +255,13 @@ export default {
     this.init(this.projectId)
   },
   watch: {
-    sort(n, o) {
-      //任务的优先级变化后在这里发请求
-      // console.log(n,o)
-    }
+    simpleTasks(n, o) {
+      this.allTask=n
+    },
   },
   methods: {
     ...mapActions("task", ["init"]),
+    ...mapMutations('task', ['changeTask']),
     hideAddTask() {
       this.currentEditId = "";
     },
@@ -268,7 +270,9 @@ export default {
       tasklist.push(data);
     },
     initTask(taskId) {
+      this.loading=true
       this.$store.dispatch('task/editTask', taskId).then(() => {
+        this.loading=false
           this.showModal = true
       })
     },
@@ -348,19 +352,16 @@ export default {
     },
     dragBox(evt) {
       //拖拽大盒子
+      this.changeTask(this.allTask)
       //获取拖动的大盒子的id排序数组
-      let newArr = this.data.data.map(v => v.relationId).join(",");
+      let newArr = this.allTask.map(v => v.relationId).join(",");
       sortTaskMenu(newArr).then(res => {});
     },
     dragList(evt) {
       //拖拽小的任务列表项 排序
       let targetIndex = evt.to.parentNode.parentNode.getAttribute("data-index");
-      let obj = this.data.data[targetIndex];
-      let listId = obj.taskList
-        .map(v => {
-          return v.taskId;
-        })
-        .join(",");
+      let obj = this.allTask[targetIndex];
+      let listId = obj.taskList.map(v => {return v.taskId}).join(",");
       let taskId = evt.clone.getAttribute("data-id");
       let finalObj = {
         //发给后台的数据
@@ -370,7 +371,7 @@ export default {
         projectId: this.projectId //项目id
       };
       dragTask(finalObj).then(res => {
-        // console.log(res)
+        console.log(res)
       });
     },
     changeStatus(flag, i, j, taskId) {
@@ -420,15 +421,18 @@ export default {
       } */
     },
     saveNewPro() {
+      this.loading=true
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
       addnewTask(this.projectId, this.menuGroupId, this.newProTitle).then(
         res => {
           if (res.result == 1) {
-            this.data.data.push({
+            this.allTask.push({
               relationName: this.newProTitle,
               taskList: []
             });
+            this.changeTask(this.allTask)
+            this.loading=false
 
             this.newProTitle = "";
             this.showAdd = true;

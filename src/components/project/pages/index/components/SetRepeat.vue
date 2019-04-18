@@ -15,9 +15,7 @@
                       :key="item.name"
                       :name="item.name">
           {{item.name}}
-          <svg-icon v-if="item.id===curRepeat.id"
-                    class="right"
-                    name="right"></svg-icon>
+          <Icon type="md-checkmark" size="20" v-if="item.name === repeat" class="right" />
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

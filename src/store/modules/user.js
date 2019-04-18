@@ -10,7 +10,9 @@ const store = {
   namespaced: true,
   state: {
     userInfo:userData,
-    users:{}
+    users:{},
+    mineRouter:'/mine/nearThing',
+    projectRouter:'/home'
   },
   mutations: {
     updateUserInfo(state, data) {
@@ -19,9 +21,16 @@ const store = {
       state.userInfo = data
     },
     updateUserId(state, data) {
-      console.log('我是ueserinfo啊',data)
       state.users = data
     },
+    // 更改我的路由路径
+    changeMineRouter(state, data){
+      state.mineRouter=data
+    },
+    // 更改项目路由路径
+    changeProjectRouter(state, data){
+      state.projectRouter=data
+    }
   },
   actions: {
     updateUserInfo({

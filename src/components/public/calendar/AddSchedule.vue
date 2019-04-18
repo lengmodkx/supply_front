@@ -1,7 +1,12 @@
 <template>
   <Modal class="addSchedule" v-model="modal" width="600" @on-ok="clone" @on-cancel="clone">
     <div class="add-schedule-head">
-      <slot name="projectName" >没有项目名称</slot>
+      <slot name="projectName" >
+        <span>选择项目：</span>
+        <Select v-model="projectType" style="width:200px">
+          <Option v-for="item in projectTypes" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+        </Select>
+      </slot>
     </div>
     <div class="direct">
       <textarea class="textarea" v-model="title" placeholder="日程标题"></textarea>
@@ -68,7 +73,7 @@
           </div>
           <InvolveMember ref="involveMember"
                          :checkedList="[]"
-                         :projectId="id"
+                         :projectId="projectType"
                          @save="saveInvolveMember">
           </InvolveMember>
         </div>
@@ -99,11 +104,13 @@ import userList from "@/components/resource/userList.vue";
 import {mapActions} from 'vuex'
 export default {
   name: "",
+  props:['projectTypes', 'value'],
   components: { userList },
   data() {
     return {
       showUserList: false,
       title: "",
+      projectType: '',
       repetition: [
         "不重复",
         "每天重复",
@@ -133,13 +140,6 @@ export default {
       datetime: ["", ""],
       membeiList:[]
     };
-  },
-  props: {
-    id: String,
-    value: {
-      type: Boolean,
-      default: false
-    }
   },
   mounted() {
     this.inits();
@@ -183,7 +183,7 @@ export default {
     addSchedules() {
       this.loading = true;
       let data = {
-        projectId: this.id,
+        projectId: this.projectType,
         scheduleName: this.title,
         startTime: this.datetime[0]
           ? this.datetime[0].getTime().toString()
@@ -201,10 +201,10 @@ export default {
         .then(res => {
           console.log(res);
           this.loading = false;
-          this.$Message.info("成功");
+          this.$Message.info("创建成功");
           this.clone();
           let id={
-            projectId: this.id
+            projectId: this.projectType
           }
           this.init(id)
           // setTimeout(() => {
@@ -213,7 +213,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          this.$Message.info("失败");
+          this.$Message.info("创建失败");
         });
     }
   }
@@ -227,7 +227,6 @@ export default {
     align-items: center;
     padding: 0 18px;
     font-size: 14px;
-    padding-top: 13px;
   }
   .cyz{
     display: flex;

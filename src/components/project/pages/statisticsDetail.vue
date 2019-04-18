@@ -1,36 +1,38 @@
 <template>
-    <div class="statistics-wrap">
-        <div class="statistics">
-            <div class="statistics-title">项目统计</div>
-            <div class="statistics-con">
-                <div class="charts-lsit">
-                    <div @click="goDetail" class="charts-title">按任务执行者分布</div>
-                    <div id="chart1" class="charts-con"></div>
+    <div class="box">
+        <header class="top-header">
+            <span>{{title}}</span>
+            <Icon @click="close" type="md-close" size="22"/>
+        </header>
+        <div class="contents">
+            <div class="w900">
+                <div class="tu">
+                    <div id="chart1"></div>
                 </div>
-                <div class="charts-lsit">
-                    <div class="charts-title">期间完成的任务</div>
-                    <div id="chart2" class="charts-con"></div>
+                <div class="biao">
+                    <h2>详情表</h2>
+                    <Table border :columns="columns1" :data="data1"></Table>
                 </div>
-                <div class="charts-lsit">
-                    <div class="charts-title">概览报表</div>
-                    <div id="chart3" class="charts-con">
-                        <div class="chart3-wrap">
-                            <div class="chart3-list">
-                                <p>任务总数</p>
-                                <div class="num">5</div>
-                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="charts-lsit">
-                    <div class="charts-title">任务燃尽图</div>
-                    <div id="chart4" class="charts-con"></div>
-                </div>
-                <div class="charts-lsit">
-                    <div class="charts-title">项目进展走势图</div>
-                    <div id="chart5" class="charts-con"></div>
-                </div>
+            </div>
+        </div>
+        <!--按条件查询-->
+        <div class="filter-box">
+            <p>按任务完成情况</p>
+            <RadioGroup v-model="finished" vertical>
+                <Radio label="全部"></Radio>
+                <Radio label="已完成"></Radio>
+                <Radio label="未完成"></Radio>
+            </RadioGroup>
+            <p>执行者</p>
+            <Select v-model="people" style="width:200px" placeholder="全部">
+                <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <p>任务分组</p>
+            <Select v-model="people" style="width:200px" placeholder="所有任务分组">
+                <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <div style="margin-top: 20px">
+                <Button type="info" long>确定</Button>
             </div>
         </div>
     </div>
@@ -50,14 +52,58 @@
     export default {
         data: function () {
             return {
-                color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669']
+                title: '',
+                color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
+                finished: '全部',
+                people: '',
+                peopleList: [
+                    {
+                        value: '全部',
+                        label: '全部'
+                    },
+                    {
+                        value: '亚索',
+                        label: '亚索'
+                    },
+                    {
+                        value: '泰隆',
+                        label: '泰隆'
+                    },
+                ],
+                columns1: [
+                    {
+                        title: '执行者',
+                        key: 'zxz'
+                    },
+                    {
+                        title: '任务数',
+                        key: 'rws'
+                    }
+                ],
+                data1: [
+                    {
+                        zxz: 'John Brown',
+                        rws: 18,
+                    },
+                    {
+                        zxz: 'Jim Green',
+                        rws: 24,
+                    },
+                    {
+                        zxz: 'Joe Black',
+                        rws: 30,
+                    },
+                    {
+                        zxz: 'Jon Snow',
+                        rws: 26,
+                    }
+                ]
             }
         },
         mounted() {
+            this.title=this.$route.query.title
+            console.log(this.$route.query)
            this.initChart1()
-            this.initChart2()
-            this.initChart4()
-            this.initChart5()
         },
         methods: {
             initChart1(){
@@ -82,8 +128,9 @@
                         pie: {
                             allowPointSelect: true,
                             cursor: 'pointer',
+                            showInLegend: true,
                             dataLabels: {
-                                enabled: true,
+                                enabled: false,
                                 format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                                 style: {
                                     color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
@@ -255,95 +302,81 @@
                     }
                 });
             },
-            goDetail(){
-                localStorage.statisticsRouter=this.$route.fullPath
-                this.$router.push({
-                    path: '/statisticsDetail',
-                    query: {
-                        type: 1,
-                        title: '按任务执行者分布'
-                    }
-                })
-
+            close(){
+                this.$router.push(localStorage.statisticsRouter)
             }
         }
     }
 </script>
 <style socped lang="less">
-    .project-main{
-        overflow: auto !important;
-    }
-    .statistics-wrap{
-        padding-top: 78px;
-        width: 100%;
-        padding-bottom: 30px;
-        background-color: #F5F5F4;
-        .statistics{
-            width: 1200px;
-            margin: 0 auto;
-            .statistics-title{
-                width: 100%;
-                height: 48px;
-                line-height: 40px;
-                font-size: 16px;
-            }
-            .statistics-con{
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                flex-wrap: wrap;
-            }
+.box{
+    width: 100%;
+    padding: 76px 0 0 20px;
+    background-color: #F5F5F4;
+}
+.top-header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+    height: 56px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    background-color: white;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    i{
+        cursor: pointer;
+        &:hover{
+            color: #3da8f5;
         }
     }
-    .charts-lsit{
-        width: 590px;
-        height: 340px;
-        border-radius: 4px;
-        background-color: #fff;
+}
+.contents{
+    width: 1250px;
+    margin: 0 auto;
+}
+.w900{
+    width: 900px;
+    padding-bottom: 20px;
+    .tu{
+        width: 100%;
+        height: 400px;
+        background-color: white;
         border: 1px solid #e5e5e5;
-        margin-bottom: 20px;
-        .charts-title{
-            width: 100%;
-            height: 50px;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 16px;
-            color: #a6a6a6;
-            cursor: pointer;
-            &:hover{
-                color: #3da8f5;
-            }
-        }
-        .charts-con{
-            width: 100%;
-            height: 290px;
-        }
     }
-    .chart3-wrap{
+    .biao{
         width: 100%;
-        height: 100%;
-        padding: 32px 50px;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        .chart3-list{
-            width: 104px;
-            height: 88px;
-            margin-bottom: 24px;
-            padding: 12px;
-            p{
-                font-size: 12px;
-                color: #a6a6a6;
-            }
-            .num{
-                height: 32px;
-                line-height: 32px;
-                font-size: 28px;
-                font-weight: 600;
-            }
+        margin-top: 20px;
+        background-color: white;
+        border:1px solid #e5e5e5;
+        h2{
+            width: 100%;
+            height: 48px;
+            font-size: 14px;
+            text-align: center;
+            line-height: 48px;
         }
     }
+}
+.filter-box{
+    width: 320px;
+    height: calc(100vh - 100px) ;
+    background-color: white;
+    border-radius: 5px;
+    border:1px solid #e5e5e5;
+    position: fixed;
+    top: 76px;
+    right: calc((100vw - 1250px)/2) ;
+    padding: 16px;
+    p{
+        line-height: 24px;
+        padding: 10px 0;
+        font-size: 14px;
+        color: gray;
+    }
+}
 </style>

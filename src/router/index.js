@@ -4,6 +4,10 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Forget from "../views/Forget.vue";
 import Home from "../views/Home.vue";
+import mine from '../components/public/Mine'
+import message from '../components/public/message'
+import calendar from '../components/public/calendar'
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -54,39 +58,58 @@ export default new Router({
         title: "阿拉丁BIM5D云平台"
       }
     },
-    // {
-    //   path: "/member",
-    //   name: "member",
-    //   component: _import("member/member"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    // {
-    //   path: "/report",
-    //   name: "report",
-    //   component: _import("report/report"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    // {
-    //   path: "/calc",
-    //   name: "calc",
-    //   component: _import("calc/calc"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    // {
-    //   path: "/target",
-    //   name: "target",
-    //   component: _import("target/target"),
-    //   meta: {
-    //     title: "阿拉丁BIM5D云平台"
-    //   }
-    // },
-    //...management,
+    {
+      path: "/mine",
+      name: "Mine",
+      component: mine,
+      meta: {
+        title: "阿拉丁BIM5D云平台"
+      },
+      children: [
+        {
+          path: "nearThing",
+          component: _import("public/mine/nearThing")
+        },
+        {
+          path: "file",
+          component: _import("public/mine/mineFile")
+        },
+        {
+          path: "task",
+          component: _import("public/mine/mineTask")
+        },
+        {
+            path: "schedule",
+            component: _import("public/mine/mineSchedule")
+        },
+        {
+            path: "collect",
+            component: _import("public/mine/mineCollect")
+        }
+
+      ]
+    },
+    {
+      path: "/statisticsDetail",
+      meta: {
+        title: "统计详情"
+      },
+      component: _import("project/pages/statisticsDetail")
+    },
+    {
+        path: "/message",
+        meta: {
+            title: "消息"
+        },
+        component: message
+    },
+    {
+      path: "/calendar",
+      meta: {
+        title: "日历"
+      },
+      component: calendar
+    },
     {
       path: "/",
       name: "login",

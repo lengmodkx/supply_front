@@ -4,11 +4,12 @@ import router from "./router";
 import store from "./store";
 import iView from "iview";
 import "iview/dist/styles/iview.css";
+import fullCalendar from 'vue-fullcalendar'
 import "./icons";
 import "./components/public/common"; //挂载common下组件到全局
 import moment from "moment";
 import gobal from "./global";
-
+Vue.component('full-calendar', fullCalendar)
 moment.locale("zh-cn");
 import {
     get,

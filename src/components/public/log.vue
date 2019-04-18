@@ -6,13 +6,13 @@
       </div>
       <div class="log-list" v-for="(item, index) in logs" :key="index">
           <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
-          <p class="things">{{item.content}}</p>
+          <div class="things" v-html="item.content"></div>
           <p class="time"><Time :time="item.createTime-1000*60" :interval="60" /></p>
       </div>
       <div v-show="restData.length">
           <div class="log-list" v-for="(item, index) in restData" :key="index">
               <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
-              <p class="things">{{item.content}}</p>
+              <div class="things" v-html="item.content"></div>
               <p class="time"><Time :time="item.createTime-1000*60" :interval="60" /></p>
           </div>
       </div>
@@ -65,6 +65,11 @@
             line-height: 20px;
             font-size: 12px;
             color: #a6a6a6;
+            display: flex;
+            align-items: center;
+            /deep/ img{
+                width: 20px;
+            }
         }
         .time{
             line-height: 20px;
