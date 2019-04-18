@@ -8,16 +8,16 @@
     <div class="Con clearfix">
         <div class="div1 fl">
           <ul class="type">
-            <li :class="{on:active=='a'}" @click="active='a'">
+            <li :class="{on:active=='a'}" @click="firstClick('a')">
                 <Icon type="ios-open-outline" />任务
             </li>
-            <li :class="{on:active=='b'}" @click="active='b'">
+            <li :class="{on:active=='b'}" @click="firstClick('b')">
                 <Icon type="ios-paper-outline" />分享
             </li>
-            <li :class="{on:active=='c'}" @click="active='c'">
+            <li :class="{on:active=='c'}" @click="firstClick('c')">
               <Icon type="ios-calendar-outline"></Icon>日程
             </li>
-            <li :class="{on:active=='d'}" @click="active='d'">
+            <li :class="{on:active=='d'}" @click="firstClick('d')">
               <Icon type="ios-folder-outline"></Icon>文件
             </li>
           </ul>
@@ -197,7 +197,7 @@
     import {getProjectList} from '@/axios/api'
     import {getFenzu, getTask,getZirenwu,getShare,getSchedule,getFile,addRelation} from '@/axios/relevanceApi'
   export default{
-    props:['publicId'],
+    props:['publicId','fromType'],
     name:"",
     data () {
       return{
@@ -211,14 +211,14 @@
         tabBox: false,
         showOldRc:false,
         projectData:[],
-        projectI:null,
-        shareI:null,
-        scheduleI:null,
-        fileI:null,
+        projectI:-1,
+        shareI:-1,
+        scheduleI:-1,
+        fileI:-1,
         projectId:'',
         taskDataFenzu: [],
-        checkTAsk:null,
-        checkedOneTask:{n:'',nn:''},
+        checkTAsk:-1,
+        checkedOneTask:{n:'-1',nn:'-1'},
         checkedShare:[],
         checkedAfterSchedule:[{'ok':false}],
         checkedBeforeSchedule:[],
@@ -230,7 +230,7 @@
         shceduleAfterData:[],
         fileData:[],
         zirenwuData:[],
-        checkZirenwu:null,
+        checkZirenwu:-1,
         showShare:false,
         showSchedule:false,
         showFile:false,
@@ -270,7 +270,8 @@
         scheduleIdArr:[],
         fileIdArr:[],
         guanlianData:{
-            'publicId':'',
+            'publicId':this.publicId,
+            'fromType':this.fromType,
             'bindId':'',
             'publicType':''
         }
@@ -282,6 +283,24 @@
     methods:{
       showMore() {
       this.tabBox = !this.tabBox;
+    },
+        // 点击最左侧 任务 分享 日程文件
+    firstClick(type) {
+          this.active=type
+        this.showRenwu=false
+        this.showShare=false
+        this.showSchedule=false
+        this.showFile=false
+        this.projectI=-1
+        this.shareI=-1
+        this.scheduleI=-1
+        this.fileI=-1
+        this.checkTAsk=-1
+        this.checkedOneTask={n:'-1',nn:'-1'}
+        this.checkedShare=[]
+        this.checkedAfterSchedule=[{'ok':false}]
+        this.checkedBeforeSchedule=[]
+        this.checkedFile=-1
     },
   // 点击具体任务 显示子任务
       showChild(n,nn,taskId){
@@ -315,6 +334,8 @@
               case '任务':
                   this.projectI=index
                   this.loading=true
+                  this.showRenwu=false
+                  this.showZirenwu=false
                   getFenzu(this.projectId).then(res => {
                       this.showRenwu=true
                       this.loading=false

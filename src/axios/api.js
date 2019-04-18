@@ -644,6 +644,14 @@ export function getNewsCount() {
     });
 }
 
+export function cancle(id,projectId,fromType,publicId){
+    return fetch({
+        url: `/bindings/`,
+        method: "delete", // 请求方法
+        params:{"bindId":id,"projectId":projectId,"fromType":fromType,"publicId":publicId}
+    });
+}
+
 function $put(url, params) {
     return fetch({
         url: url,

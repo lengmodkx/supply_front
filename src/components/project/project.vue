@@ -120,6 +120,14 @@ export default {
               case "A17":
                 this.$store.dispatch("task/recycle",result.object.task)
                 break;
+              case "A28":
+                if(result.object.fromType === '任务'){
+                  this.$store.commit("task/bind",result.object)
+                }
+                break;
+              case "A29":
+                if(result.object.fromType === '任务')
+                this.$store.commit("task/cancleRelation",result.object)
               case "C1":
               case "C2":
               case "C3":

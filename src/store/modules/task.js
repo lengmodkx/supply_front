@@ -166,6 +166,85 @@ const store = {
                 }
             })
         },
+        bind(state,data){
+            data.bind.forEach((d,index) => {
+                if(data.publicType === '任务'){
+                    if(state.task.bindTasks.length === 0){
+                        state.task.bindTasks.unshift(d)
+                    } else{
+                        state.task.bindTasks.forEach((t,i) => {
+                            if(t.taskId !== d.taskId){
+                                state.task.bindTasks.unshift(d)
+                            }
+                        })
+                    }
+                }
+                if(data.publicType === '文件'){
+                    if(state.task.bindFiles.length === 0){
+                        state.task.bindFiles.unshift(d)
+                    } else{
+                        state.task.bindFiles.forEach((t,i) => {
+                            if(t.fileId !== d.fileId){
+                                state.task.bindFiles.unshift(d)
+                            }
+                        })
+                    }
+                }
+
+                if(data.publicType === '日程'){
+                    if(state.task.bindSchedules.length === 0){
+                        state.task.bindSchedules.unshift(d)
+                    } else{
+                        state.task.bindSchedules.forEach((t,i) => {
+                            if(t.scheduleId !== d.scheduleId){
+                                state.task.bindSchedules.unshift(d)
+                            }
+                        })
+                    }
+                }
+                if(data.publicType === '分享'){
+                    if(state.task.bindShares.length === 0){
+                        state.task.bindShares.unshift(d)
+                    } else{
+                        state.task.bindShares.forEach((t,i) => {
+                            if(t.id !== d.id){
+                                state.task.bindShares.unshift(d)
+                            }
+                        })
+                    }
+                }
+            })
+        },
+        cancleRelation(state,data){
+            if(data.publicType === '任务'){
+                state.task.bindTasks.forEach((t,i) => {
+                    if(t.taskId === data.bindId){
+                        state.task.bindTasks.splice(i,1)
+                    }
+                })
+            }
+            if(data.publicType === '文件'){
+                state.task.bindFiles.forEach((f,i) => {
+                    if(f.fileId === data.bindId){
+                        state.task.bindFiles.splice(i,1)
+                    }
+                })
+            }
+            if(data.publicType === '分享'){
+                state.task.bindShares.forEach((s,i) => {
+                    if(s.shareId === data.bindId){
+                        state.task.bindShares.splice(i,1)
+                    }
+                })
+            }
+            if(data.publicType === '日程'){
+                state.task.bindSchedules.forEach((t,i) => {
+                    if(t.scheduleId === data.bindId){
+                        state.task.bindSchedules.splice(i,1)
+                    }
+                })
+            }
+        },
         updateSort(state, data) {
             state.sort = data
         },
