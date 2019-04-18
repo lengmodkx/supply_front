@@ -49,7 +49,7 @@
                    }" @end="dragBox">
 
       <div class="column" :key="k" v-for="(i, k) in allTask">
-        <div style="min-height:150px;max-height: 100%;position:relative;overflow-y: auto" :data-index="k">
+        <div style="min-height:150px;max-height: 100%;position:relative;" :data-index="k">
           <p class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
             <!-- 点击三角形出来的任务列表菜单组件 -->

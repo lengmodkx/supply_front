@@ -55,7 +55,7 @@
         <Checkbox v-model="task.taskStatus" @on-change="updateTaskStatus" class="checkbox"></Checkbox>
         <Tooltip content="点击即可编辑" placement="top" class="content">
           <div id="editCon" style="width:100%;">
-            <input v-model="task.taskName" @blur="updateTaskName()" type="text" style="width: 100%;height: 24px;border: 0 none;outline-style: none">
+            <input v-model="task.taskName" @blur="updateTaskName()" type="text" style="height: 24px;border: 0 none;outline-style: none">
           </div>
         </Tooltip>
 
@@ -97,13 +97,8 @@
           <SetRepeat :repeat="task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
         </div>
 
-        <div class="alarm fl" @click="modal1=true" >
-          <Tooltip content="点击设置任务提醒" placement="top">
-            <Icon type="ios-alarm-outline" size="20"></Icon>
-          </Tooltip>
-          <Modal id="warnModal" v-model="modal1" class="taskwarn">
-            <TaskWarn @save="confirmWarnList"></TaskWarn>
-          </Modal>
+        <div class="alarm fl" >
+          <TaskWarn :remind="task.remind" v-on:updateRepeat="updateRepeat"></TaskWarn>
 
         </div>
         <!-- <p>{{$moment('2018-09-04 12:19:20').format("YYYY-MM-DD HH:mm:ss")}}</p> -->
@@ -373,7 +368,9 @@ export default {
     },
     //更改任务的重复性
     updateRepeat(repeat){
-      updateRepeat(this.task.taskId,repeat).then(item => {})
+      updateRepeat(this.task.taskId,repeat).then(res => {
+          console.log(res)
+      })
     },
     //更改任务的状态
     updateTaskStatus() {
