@@ -41,233 +41,242 @@
     import HighchartsDrilldown from 'highcharts/modules/drilldown';
     import Highcharts3D from 'highcharts/highcharts-3d';
     import Highmaps from 'highcharts/modules/map';
+    import  { getPieDate }  from "../../../axios/statisticApi.js";
     // import exportCSV from '@/libs/export-csv.js'
     HighchartsMore(Highcharts)
     HighchartsDrilldown(Highcharts);
     Highcharts3D(Highcharts);
     Highmaps(Highcharts);
     // exportCSV(Highcharts);
-    export default {
-        data: function () {
-            return {
-                color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669']
-            }
-        },
-        mounted() {
-           this.initChart1()
-            this.initChart2()
-            this.initChart4()
-            this.initChart5()
-        },
-        methods: {
-            initChart1(){
-                Highcharts.chart('chart1', {
-                    chart: {
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
-                    credits: {
-                        enabled: false     //不显示LOGO
-                    },
-                    title: {
-                        text: null
-                    },
-                    tooltip: {
-                        // 鼠标移入 显示的提示
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                style: {
-                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                }
-                            }
-                        }
-                    },
-                    series: [{
-                        name: '任务数',
-                        colorByPoint: true,
-                        data: [{
-                            name: '待认领',
-                            y: 40,
-                        }, {
-                            name: '李健',
-                            y: 30
-                        }, {
-                            name: '何少华',
-                            y: 30
-                        }]
-                    }]
-                });
-            },
-            initChart2(){
-                Highcharts.chart('chart2',{
-                    chart: {
-                        type: 'column'
-                    },
-                    title: {
-                        text: null
-                    },
-                    credits: {
-                        enabled: false     //不显示LOGO
-                    },
-                    xAxis: {
-                        categories: [
-                            '李健','何少华','待认领'
-                        ],
-                        crosshair: false
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: '任务数'
-                        }
-                    },
-                    tooltip: {
-                        // shared: false,
-                        // useHTML: false
-                    },
-                    plotOptions: {
-                        column: {
-                            borderWidth: 0
-                        }
-                    },
-                    series: [{
-                        name: '任务数',
-                        data: [12, 14, 10]
-                    }]
-                });
-            },
-            initChart4(){
-                Highcharts.chart('chart4', {
-                    title: {
-                        text: null
-                    },
-                    credits: {
-                        enabled: false     //不显示LOGO
-                    },
-                    xAxis: {
-                        categories: [
-                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
-                        ],
-                        crosshair: false
-                    },
-                    yAxis: {
-                        title: {
-                            text: '任务数'
-                        }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle'
-                    },
-                    // plotOptions: {
-                    //     series: {
-                    //         label: {
-                    //             connectorAllowed: false
-                    //         },
-                    //         pointStart: 2010
-                    //     }
-                    // },
-                    series: [{
-                        name: '理想剩余任务数',
-                        data: [50, 40, 30, 20, 15, 10, 5, 0]
-                    }, {
-                        name: '实际剩余任务数',
-                        data: [50, 50, 45, 40, 35, 30, 25, 10]
-                    }],
-                    responsive: {
-                        rules: [{
-                            condition: {
-                                maxWidth: 500
-                            },
-                            chartOptions: {
-                                legend: {
-                                    layout: 'horizontal',
-                                    align: 'center',
-                                    verticalAlign: 'bottom'
-                                }
-                            }
-                        }]
-                    }
-                });
-            },
-            initChart5(){
-                Highcharts.chart('chart5', {
-                    title: {
-                        text: null
-                    },
-                    credits: {
-                        enabled: false     //不显示LOGO
-                    },
-                    xAxis: {
-                        categories: [
-                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
-                        ],
-                        crosshair: false
-                    },
-                    yAxis: {
-                        title: {
-                            text: '任务数'
-                        }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle'
-                    },
-                    // plotOptions: {
-                    //     series: {
-                    //         label: {
-                    //             connectorAllowed: false
-                    //         },
-                    //         pointStart: 2010
-                    //     }
-                    // },
-                    series: [{
-                        name: '累计任务总数',
-                        data: [2, 4, 4, 4, 6, 6, 8, 10]
-                    }, {
-                        name: '累计完成任务总数',
-                        data: [0, 0, 1, 3, 3, 5, 6, 7]
-                    }],
-                    responsive: {
-                        rules: [{
-                            condition: {
-                                maxWidth: 500
-                            },
-                            chartOptions: {
-                                legend: {
-                                    layout: 'horizontal',
-                                    align: 'center',
-                                    verticalAlign: 'bottom'
-                                }
-                            }
-                        }]
-                    }
-                });
-            },
-            goDetail(){
-                localStorage.statisticsRouter=this.$route.fullPath
-                this.$router.push({
-                    path: '/statisticsDetail',
-                    query: {
-                        type: 1,
-                        title: '按任务执行者分布'
-                    }
-                })
 
+
+        export default {
+            data: function () {
+                return {
+                    color: ['#0DA9F5', '#8BDC76', '#FF7969', '#A0A3D6', '#FFC669'],
+                    chartData1: [],
+                }
+            },
+            mounted() {
+                getPieDate(this.$route.params.id).then(res => {
+                    this.chartData1 = JSON.parse(res.pieData);
+                    this.chartData2 = res.staticHistogram.nameArray
+                    this.chartData3 = res.staticHistogram.dataArray
+                    this.chartEveryDate1 = res.statisticsBurnout.everyDate
+                    this.chartTrueTask = res.statisticsBurnout.trueTask
+                    this.chartIdealTask = res.statisticsBurnout.idealTask
+                    this.cumulativeTask = res.statisticsBurnout.cumulativeTask
+                    this.completionTask = res.statisticsBurnout.completionTask
+                    this.initChart1(this.chartData1);
+                    this.initChart2(this.chartData2,this.chartData3);
+                    this.initChart4(this.chartEveryDate1,this.chartTrueTask,this.chartIdealTask);
+                    this.initChart5(this.chartEveryDate1,this.cumulativeTask,this.completionTask);
+                })
+            },
+            methods: {
+                initChart1(data) {
+                        console.log(this.chartData1)
+                        Highcharts.chart('chart1', {
+                            chart: {
+                                plotBackgroundColor: null,
+                                plotBorderWidth: null,
+                                plotShadow: false,
+                                type: 'pie'
+                            },
+                            credits: {
+                                enabled: false     //不显示LOGO
+                            },
+                            title: {
+                                text: null
+                            },
+                            tooltip: {
+                                // 鼠标移入 显示的提示
+                                pointFormat: '任务比重: <b>{point.percentage:.1f}%</b>'
+
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        style: {
+                                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                        }
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: '任务数',
+                                colorByPoint: true,
+                                data: data
+                            }]
+                        });
+                },
+                initChart2(data2,data3) {
+                        Highcharts.chart('chart2', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: null
+                            },
+                            credits: {
+                                enabled: false     //不显示LOGO
+                            },
+                            xAxis: {
+                                categories: data2,
+                                crosshair: false
+                            },
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: '任务数'
+                                }
+                            },
+                            tooltip: {
+                                // shared: false,
+                                // useHTML: false
+                            },
+                            plotOptions: {
+                                column: {
+                                    borderWidth: 0
+                                }
+                            },
+                            series: [{
+                                name: '任务数',
+                                data: data3
+                            }]
+                        });
+                },
+                initChart4(everyDate1,trueTask,idealTask) {
+                        Highcharts.chart('chart4', {
+                            title: {
+                                text: null
+                            },
+                            credits: {
+                                enabled: false     //不显示LOGO
+                            },
+                            xAxis: {
+                                categories: everyDate1,
+                                /*[
+                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
+                            ],*/
+                                crosshair: false
+                            },
+                            yAxis: {
+                                title: {
+                                    text: '任务数'
+                                }
+                            },
+                            legend: {
+                                layout: 'vertical',
+                                align: 'right',
+                                verticalAlign: 'middle'
+                            },
+                            // plotOptions: {
+                            //     series: {
+                            //         label: {
+                            //             connectorAllowed: false
+                            //         },
+                            //         pointStart: 2010
+                            //     }
+                            // },
+                            series: [{
+                                name: '理想剩余任务数',
+                                data: idealTask
+                            }, {
+                                name: '实际剩余任务数',
+                                data: trueTask
+                            }],
+                            responsive: {
+                                rules: [{
+                                    condition: {
+                                        maxWidth: 500
+                                    },
+                                    chartOptions: {
+                                        legend: {
+                                            layout: 'horizontal',
+                                            align: 'center',
+                                            verticalAlign: 'bottom'
+                                        }
+                                    }
+                                }]
+                            }
+                        });
+                },
+                initChart5(everyDate2,cumulativeTask,completionTask) {
+                        Highcharts.chart('chart5', {
+                            title: {
+                                text: null
+                            },
+                            credits: {
+                                enabled: false     //不显示LOGO
+                            },
+                            xAxis: {
+                                categories: everyDate2,
+                                /* [
+                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
+                        ],*/
+                                crosshair: false
+                            },
+                            yAxis: {
+                                title: {
+                                    text: '任务数'
+                                }
+                            },
+                            legend: {
+                                layout: 'vertical',
+                                align: 'right',
+                                verticalAlign: 'middle'
+                            },
+                            // plotOptions: {
+                            //     series: {
+                            //         label: {
+                            //             connectorAllowed: false
+                            //         },
+                            //         pointStart: 2010
+                            //     }
+                            // },
+                            series: [{
+                                name: '累计任务总数',
+                                data: cumulativeTask
+                            }, {
+                                name: '累计完成任务总数',
+                                data: completionTask
+                            }],
+                            responsive: {
+                                rules: [{
+                                    condition: {
+                                        maxWidth: 500
+                                    },
+                                    chartOptions: {
+                                        legend: {
+                                            layout: 'horizontal',
+                                            align: 'center',
+                                            verticalAlign: 'bottom'
+                                        }
+                                    }
+                                }]
+                            }
+                        });
+                },
+                goDetail() {
+                    localStorage.statisticsRouter = this.$route.fullPath
+                    this.$router.push({
+                        path: '/statisticsDetail',
+                        query: {
+                            type: 1,
+                            title: '按任务执行者分布'
+                        }
+                    })
+                }
             }
-        }
+
     }
+
+
 </script>
 <style socped lang="less">
     .project-main{
