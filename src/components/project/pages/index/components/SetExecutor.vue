@@ -2,7 +2,14 @@
 
   <Poptip v-model="visible" class="involvelistBox" @on-popper-show="popShow" @on-popper-hide="popHide" transfer>
     <slot :close="close">
-      <Icon type="ios-contact"  size="24" /><span style="margin-right: 10px">待认领</span>
+        <div class="rlz fl" v-if="task.executor">
+            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+task.executorImg" alt="">
+            <span>{{task.executorName}}</span>
+            <Icon @click.stop="deleteExecutor" type="ios-close" />
+        </div>
+      <div v-else>
+          <Icon type="ios-contact"  size="24" /><span style="margin-right: 10px">待认领</span>
+      </div>
 
     </slot>
 
@@ -13,11 +20,20 @@
           <li class="select-option-group">
             <div class="option-group-label" >执行者</div>
             <ul >
-              <li class="member-menu-item clearfix" @click="visible=false">
+              <li class="member-menu-item clearfix" @click="visible=false" v-if="!task.executor">
                 <div class="img fl">
                   <Icon style="margin-top: 5px" type="ios-contact"  size="24" />
                 </div>
-                <div class="membername fl">待认领</div>
+                <div class="membername fl" >待认领</div>
+                <div class="tick fr">
+                  <Icon style="margin-top: 5px" class="right" type="md-checkmark" size="20" />
+                </div>
+              </li>
+              <li class="member-menu-item clearfix" @click="visible=false" v-else>
+                <div class="img fl">
+                  <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ task.executorImg" alt="执行者">
+                </div>
+                <div class="membername fl" >{{task.executorName}}</div>
                 <div class="tick fr">
                   <Icon style="margin-top: 5px" class="right" type="md-checkmark" size="20" />
                 </div>
@@ -28,7 +44,7 @@
           <li class="select-option-group">
             <div class="option-group-label">推荐</div>
             <ul>
-              <li class="member-menu-item clearfix" @click="itemClick(i.memberId)" v-for="(i,index) in memberList" :key="index" >
+              <li class="member-menu-item clearfix" @click="itemClick(i.memberId)" v-for="(i,index) in memberList" :key="index" v-if="i.memberId !== task.executor">
                 <div class="img fl"><img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${i.memberImg}`" alt=""></div>
                 <div class="membername fl">{{i.memberName}}</div>
               </li>
@@ -47,7 +63,7 @@ import { mapState, mapActions } from "vuex";
 import {projectMembers} from '@/axios/api'
 
 export default {
-  props: ['id','taskId'],
+  props: ['id','taskId','task'],
   data() {
     return {
       visible: false,
@@ -57,13 +73,13 @@ export default {
       loading:true
     };
   },
-  model: {
-    event: "choose",
-    prop: "executor"
-  },
-  computed: {
-    ...mapState("task", ["task"]),
-  },
+  // model: {
+  //   event: "choose",
+  //   prop: "executor"
+  // },
+  // computed: {
+  //   ...mapState("task", ["task"]),
+  // },
   methods: {
     ...mapActions("task", ["initMemberList"]),
     itemClick(id) {
@@ -76,6 +92,9 @@ export default {
       this.$nextTick(_ => {
         this.visible = false;
       });
+    },
+    deleteExecutor(){
+      this.$parent.deleteExecutor()
     },
     popHide() {
       this.searchvalue = "";
@@ -97,6 +116,34 @@ export default {
 };
 </script>
 <style scoped lang="less">
+    .rlz{
+        display: flex;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        margin-right: 8px;
+        line-height: 24px;
+        align-items: center;
+        margin-top: 7px;
+        &:hover{
+            i{
+                display: block;
+            }
+        }
+        img{
+            width: 24px;
+            height: 24px;
+            margin-right: 3px;
+        }
+        i{
+            position: absolute;
+            top: -8px;
+            right: -13px;
+            font-size: 22px;
+            color: gray;
+            display: none;
+        }
+    }
   .loading{
     width: 100%;
     height: 100%;

@@ -146,7 +146,7 @@
 
             <span class="add" @click.stop="addCurTask(i.parentId,i.relationId,i.taskList, k)" v-if="currentEditId!=i.relationId">
               <Icon type="android-add-circle"></Icon>
-              添加任务
+              <Button type="info" long>添加任务</Button>
             </span>
           </div>
 

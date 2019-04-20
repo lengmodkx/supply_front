@@ -63,12 +63,7 @@
       <div class="task_attr clearfix">
         <div class="executor fl">
           <!-- 设置认领者 -->
-          <div class="rlz fl" v-if="task.executor">
-            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+task.executorImg" alt="">
-            <span>{{task.executorName}}</span>
-            <Icon @click="deleteExecutor" type="ios-close" />
-          </div>
-          <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor" v-model="task.executor" v-else>
+          <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId"  ref="executor" :task="task" v-model="task.executor" >
 
           </SetExecutor>
         </div>
@@ -152,7 +147,7 @@
                   </span>
                 </div>
               </DateTimePicker>
-              <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="i.taskId" ref="executor" v-model="i.executor">
+              <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="i.taskId" :task="task" ref="executor" v-model="i.executor">
 
               </SetExecutor>
               <div class="enterDetail fl">
@@ -187,7 +182,7 @@
         </Modal>
       </div>
       <div class="has-relevance">
-        <ul v-if="task.bindTasks.length > 0">
+        <ul v-if="task.bindTasks.length">
           <div class="what-title">关联的任务</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">
             <div class="gl-task-list-con">
@@ -217,7 +212,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindFiles.length > 0">
+        <ul v-if="task.bindFiles.length">
           <div class="what-title">关联的文件</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindFiles" :key="i">
             <div class="gl-task-list-con">
@@ -243,7 +238,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindSchedules.length > 0">
+        <ul v-if="task.bindSchedules.length">
           <div class="what-title">关联的日程</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">
             <div class="gl-task-list-con">
@@ -269,7 +264,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindShares.length > 0">
+        <ul v-if="task.bindShares.length">
           <div class="what-title">关联的分享</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindShares" :key="i">
             <div class="gl-task-list-con">

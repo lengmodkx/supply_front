@@ -77,7 +77,6 @@ const store = {
             } else{
                 state.task.executorImg = data.executor.image
                 state.task.executorName = data.executor.userName
-                alert( state.task.executorImg)
                 state.simpleTasks.forEach((m,i) => {
                     m.taskList.forEach((t,n) => {
                         if(t.taskId === data.taskId){

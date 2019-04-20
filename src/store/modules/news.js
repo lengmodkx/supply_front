@@ -22,6 +22,7 @@ const store = {
         addNews(state,data){
             var i = 0
             if(state.news.length === 0){
+                state.newsCount++
                 state.news.push(data)
             } else{
                 state.news.forEach((n,index) => {
