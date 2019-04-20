@@ -44,19 +44,12 @@
               class="userPop"
               v-model="popVisible"
       >
-        <img
-                class="avatar"
-                src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"
-                alt=""
-        >
-        <div
-                class="userInfo"
-                slot="content"
-        >
+        <img class="avatar" src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200">
+        <div class="userInfo" slot="content">
           <ul class="org">
             <li
-                    class="addOrgPro"
-                    @click="addOrgModal=true;popVisible=false;"
+                class="addOrgPro"
+                @click="addOrgModal=true;popVisible=false;"
             >创建企业</li>
             <li>个人项目</li>
             <li>企业项目</li>
@@ -102,10 +95,7 @@
     <!-- 我的 -->
     <!-- <Mine :class="{showmine:activeHeaderTag==1}" @close="activeHeaderTag=-1"></Mine> -->
     <!-- 创建企业项目 -->
-    <Modal
-            v-model="addOrgModal"
-            class="newOrg"
-    >
+    <Modal v-model="addOrgModal" class="newOrg">
       <CreateOrg v-if="addOrgModal"></CreateOrg>
     </Modal>
   </header>
