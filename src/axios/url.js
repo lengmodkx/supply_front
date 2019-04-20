@@ -11,5 +11,6 @@ export default {
   tags: "/tags", //所有标签
   relations: "/relations", //关联关系
   schedules: "/schedules", //所有日程
-  members: "/members" // 所有成员
+  members: "/members", // 所有成员
+  statistics: "/statistics" // 所有成员
 };
