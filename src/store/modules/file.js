@@ -3,21 +3,34 @@ const store = {
   namespaced: true,
   state: {
     files: [],
-    loading: true
+    file: {},
+    joinInfoIds: []
   },
   mutations: {
     initFile(state, data) {
       state.files = data;
+        console.log('filesaaaaaa',state.files)
+    },
+      // 文件详情 赋值
+    putOneFile(state, data){
+        state.file=data
+        state.joinInfoIds=data.data.joinInfo.map(v => {
+            return v.userId
+        });
+        console.log(state.joinInfoIds)
     }
   },
   actions: {
     initFile({ commit, state }, data) {
-      files(data).then(res => {
-        if (res.result == 1) {
-          state.loading = false;
-          commit("initFile", res.data);
-        }
-      });
+        return new Promise((resolve, reject) => {
+            files(data).then(res => {
+                if (res.result == 1) {
+                    commit("initFile", res.data);
+                    resolve()
+                }
+            });
+        })
+
     }
   }
 };

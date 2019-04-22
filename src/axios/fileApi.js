@@ -30,6 +30,7 @@ export function jionPeople(fileId, newJoin) {
         params: {newJoin: newJoin}
     });
 }
+
 // 移动文件
 export function removeFile(folderId, fileIds) {
     return fetch({

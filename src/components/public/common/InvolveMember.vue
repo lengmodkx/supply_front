@@ -99,7 +99,8 @@ export default {
     // ...mapState('task', ['members']),
     curUserId () {
       //从vuex取当前登录用户id
-      return this.user.userId
+      // return this.user.userId
+      return localStorage.userId
     },
     computedMemberList () {
       return 1
