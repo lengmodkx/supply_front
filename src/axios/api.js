@@ -500,10 +500,12 @@ export function addChildTask(taskId, params) {
 
 //获取当前用户消息
 export function getNews(data) {
-    if(!data){
-        return $get(`news`,{isRead:data})
-    } else{
-        return $get(`news`,{})
+    if (!data) {
+        return $get(`news`, {
+            isRead: data
+        })
+    } else {
+        return $get(`news`, {})
     }
 }
 
@@ -525,8 +527,10 @@ export function sendChat(projectId, content) {
 }
 
 //用户消息设为已读
-export function readNews(id,isRead) {
-    return $put(`news/${id}/read`,{"isRead":isRead})
+export function readNews(id, isRead) {
+    return $put(`news/${id}/read`, {
+        "isRead": isRead
+    })
 }
 
 // 获取群聊消息
@@ -559,11 +563,15 @@ export function nearThing() {
 }
 
 // 获取我的任务信息并且排序
-export function getMeTask(isDone,order,type) {
+export function getMeTask(isDone, order, type) {
     return fetch({
         url: '/me/task',
         method: "get", // 请求方法
-        params:{isDone:isDone,order:order,type:type}
+        params: {
+            isDone: isDone,
+            order: order,
+            type: type
+        }
     });
 }
 
@@ -600,7 +608,9 @@ export function getMeFile(order) {
     return fetch({
         url: `me/file`,
         method: "get", // 请求方法
-        params:{order:order}
+        params: {
+            order: order
+        }
     });
 }
 
@@ -613,7 +623,9 @@ export function collectList(type) {
     return fetch({
         url: `collections`,
         method: "get", // 请求方法
-        params:{collectType:type}
+        params: {
+            collectType: type
+        }
     });
 }
 
@@ -652,11 +664,16 @@ export function getNewsCount() {
     });
 }
 
-export function cancle(id,projectId,fromType,publicId){
+export function cancle(id, projectId, fromType, publicId) {
     return fetch({
         url: `/bindings/`,
         method: "delete", // 请求方法
-        params:{"bindId":id,"projectId":projectId,"fromType":fromType,"publicId":publicId}
+        params: {
+            "bindId": id,
+            "projectId": projectId,
+            "fromType": fromType,
+            "publicId": publicId
+        }
     });
 }
 
