@@ -360,6 +360,14 @@ export function initEditTask(taskId) {
     });
 }
 
+export function getTaskFiles(params) {
+    return fetch({
+        url: `/tasks/${params}/files`,
+        method: 'get', // 请求方法
+        params: params
+    })
+}
+
 /**获取项目下的所有分组 */
 export function getGroupList(projectId) {
     return $get(`/relations/${projectId}`, {

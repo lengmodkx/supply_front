@@ -5,6 +5,7 @@ import {
     gettagList,
     addTask,
     initEditTask,
+    getTaskFiles,
     upStartTime,
     upEndTime,
     addChildTask
@@ -21,7 +22,8 @@ const store = {
         tags: [],
         members: [],
         task:{},
-        joinInfoIds:[]
+        joinInfoIds:[],
+        images_suffix:[".gif",".GIF",".jpg",".JPG",".jpeg",".JPEG",".png",".PNG",".bmp",".BMP"]
     },
     getters: {
         curTaskGroup: (state, getters) => {
@@ -164,6 +166,11 @@ const store = {
                     state.simpleTasks[mIndex].taskList.unshift(data)
                 }
             })
+        },
+        loadFile(state,data){
+            if(state.task){
+                state.task.fileList = data
+            }
         },
         bind(state,data){
             data.bind.forEach((d,index) => {
@@ -348,6 +355,13 @@ const store = {
                     commit('initTask', res.menus)
                 }
             });
+        },
+        loadFile({commit},data){
+            getTaskFiles(data).then(res => {
+                if(res.result === 1){
+                    commit('loadFile',res.data)
+                }
+            })
         },
         editTask({commit},data){
             return new Promise((resolve, reject) => {

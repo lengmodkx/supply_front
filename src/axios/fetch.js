@@ -16,11 +16,11 @@ service.interceptors.request.use(config => {
   store.commit('app/updateLoading', true) //加loding
   //如果要加token的话，先要在登录后将token存入session：
   if (sessionStorage.token) config.headers['Authorization'] = `${sessionStorage.token}`
-  if (config.method == 'post' && !config.isJson) {
-    config.data = qs.stringify({
-      ...config.data
-    })
-  }
+  // if (config.method == 'post' && !config.isJson) {
+  //   config.data = qs.stringify({
+  //     ...config.data
+  //   })
+  // }
   // console.log("请求参数========", config.data)
   return config
 }, error => {
