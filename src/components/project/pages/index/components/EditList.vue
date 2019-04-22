@@ -441,7 +441,6 @@ export default {
     },
     //文件下载
     downLoad(fileId){
-      //console.log(">>>", this.$route);
       window.location.href= "http://192.168.3.189:8090/files/"+fileId+"/download"
       //downloadFile(fileId)
     },
@@ -454,7 +453,7 @@ export default {
 
     },
     closeDetail () {
-      this.showModelDetail=false
+      this.showFileDetail=false
     },
     // 删除执行者
     deleteExecutor(){
