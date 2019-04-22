@@ -294,7 +294,24 @@
       <div class="accessory">
         <!--<p class="name" style="float: none;width: 90px"><Icon type="ios-cloud-upload-outline" size="14" />上传附件</p>-->
         <div class="addfile">
-          <Icon type="ios-add-circle-outline" />添加附件</div>
+          <div class="file-lsit" v-if="task.fileList" v-for="(f,i) in task.fileList" :key="i">
+            <div class="file-img">
+              <img v-if="images_suffix.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'" alt="">
+              <img v-else src="@/icons/img/moren.png" alt="文件">
+              <div class="zhezhao">
+                <Icon type="md-cloud-download" @click="downLoad(f.fileId)"/>
+                <Icon type="md-search" @click="getFileDetail(f.fileId)"/>
+              </div>
+            </div>
+            <Tooltip :content="f.fileName">
+              <p class="file-name">{{f.fileName}}</p>
+            </Tooltip>
+
+          </div>
+          <div style="width: 117px;height:117px;line-height: 117px;border: 1px solid #e5e5e5;display: flex;align-items: center;justify-content: center" @click="showCommon=true">
+            <Icon type="md-add" size="40" style="margin-right: 0px"></Icon>
+          </div>
+        </div>
       </div>
       <!-- 设置参与者 -->
       <div class="participator">
@@ -326,6 +343,12 @@
     <footer>
       <publick :publicId="task.taskId" :projectId="task.projectId" :publicType="publicType"></publick>
     </footer>
+    <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
+      <common-file @close="showCommon=false" :projectId="task.projectId" :publicId="task.taskId"></common-file>
+    </Modal>
+    <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
+      <fileDetail @close="closeDetail"></fileDetail>
+    </Modal>
   </div>
 </template>
 <script>
@@ -340,8 +363,10 @@ import SetExecutor from "./SetExecutor";
 import myModel from "./EditList"
 import log from '@/components/public/log'
 import publick from '@/components/public/Publish'
+import fileDetail from "@/components/project/file/fileDetail"
+import OSS from "ali-oss";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-
+import commonFile from './commonfile.vue'
 import {
   updateTaskName,
   updatePriority,
@@ -354,9 +379,11 @@ import {
   taskExecutor,
   cancle
 } from "@/axios/api";
+import  {downloadFile,getFileDetails} from "@/axios/fileApi"
 export default {
   name: "myModel",
   components: {
+    fileDetail,
     SetRepeat,
     TaskWarn,
     Tags,
@@ -366,7 +393,8 @@ export default {
     AddRelation,
     myModel,
     publick,
-    log
+    log,
+    commonFile
   },
   props:["data"],
   data() {
@@ -380,7 +408,11 @@ export default {
       complete: false,
       hoverExecutor: false,
       editorValue: "123",
+      showFileDetail:false,
+      fileId:'',
       showEditor: false,
+      maxFileSize:1024*1024*100,
+      isShowFileList:true,
       type:'task',
       modal1: false,
       relationModal: false,
@@ -393,26 +425,36 @@ export default {
       ept: "",
       publicType:"任务",
       involveDataList: [
-        {
-          id: 3,
-          name: "罗茜",
-          avatar:
-            "https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200"
-        }
-      ]
+      ],
+      showCommon:false
     };
-  },
-  computed: {
-    ...mapState('task', ['task'])
   },
   methods: {
     ...mapActions('task',['initEditTask','updateStartTime','updateEndTime','addChildrenTask']),
+    ...mapMutations('file',["putOneFile"]),
     updateTaskName() {
       updateTaskName(this.task.taskId, this.task.taskName).then(
         data => {
           //console.log(data)
         }
       );
+    },
+    //文件下载
+    downLoad(fileId){
+      //console.log(">>>", this.$route);
+      window.location.href= "http://192.168.3.189:8090/files/"+fileId+"/download"
+      //downloadFile(fileId)
+    },
+    getFileDetail(fileId){
+      getFileDetails(fileId).then(res => {
+        console.log(res)
+        this.putOneFile(res)
+        this.showFileDetail = true
+      })
+
+    },
+    closeDetail () {
+      this.showModelDetail=false
     },
     // 删除执行者
     deleteExecutor(){
@@ -544,13 +586,31 @@ export default {
         }
       })
     },
+    random_string(len) {
+      len = len || 32;
+      var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+      var maxPos = chars.length;
+      var pwd = "";
+      for (var i = 0; i < len; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+      }
+      return pwd;
+    },
+    get_suffix(filename) {
+      var pos = filename.lastIndexOf(".");
+      var suffix = "";
+      if (pos !== -1) {
+        suffix = filename.substring(pos);
+      }
+      return suffix;
+    }
   },
   mounted() {
     this.aa=false
     // document.getElementById("editCon").parentNode.style.width = "100%"
   },
   computed:{
-    ...mapState("task",["task",'joinInfoIds']),
+    ...mapState("task",["task",'joinInfoIds','images_suffix']),
     vuexTask(){
       return this.$store.state.task.joinInfo
     }
@@ -559,6 +619,7 @@ export default {
 </script>
 <style scoped lang="less">
 @import "./EditList.less";
+
 .not-allow *{
   cursor: not-allowed !important;
 }

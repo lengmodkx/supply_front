@@ -671,3 +671,61 @@ footer {
     }
   }
 }
+.file-lsit:nth-of-type(4n){
+  margin-right: 0 !important;
+}
+.addfile{
+  display: flex;
+  flex-wrap: wrap;
+  .file-lsit{
+    margin-right: 15px;
+    &:hover{
+      .zhezhao{
+        display: flex;
+      }
+    }
+    .file-img{
+      width: 117px;
+      height: 117px;
+      border: 1px solid #dcdee2;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img{
+        max-width: 95%;
+      }
+    }
+    .zhezhao{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: rgba(0,0,0,.3);
+      display: none;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 20px;
+      i{
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+      }
+    }
+    .file-name{
+      width: 117px;
+      height: 30px;
+      margin-top: 8px;
+      overflow: hidden;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+  }
+}
+.task-detail{
+  display: flex;
+  flex-direction: column;
+}

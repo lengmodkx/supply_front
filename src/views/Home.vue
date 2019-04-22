@@ -2,21 +2,17 @@
   <div class="container index">
     <div class="container-title">
       <div class="search-box">
-        <Input search enter-button placeholder="搜索"/>
+        <Input search enter-button placeholder="请输入项目名称关键字进行搜索" @on-search="searchProject" />
       </div>
       <div class="filtrate-box">
-        <Select
-          v-model="projectType"
-          @on-change="selectProjectType"
-          style="width:200px"
-          placeholder="我创建的项目"
-        >
+        <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
           <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <RadioGroup class="select-view" v-model="selectView" type="button">
           <Radio label="卡片视图"></Radio>
           <Radio label="列表视图"></Radio>
         </RadioGroup>
+        <Button type="primary" style="margin-left:10px" @click="showproject=true">创建新项目</Button>
       </div>
     </div>
 
@@ -24,29 +20,16 @@
     <loading v-if="loading"></loading>
     <div v-show="selectView=='列表视图'">
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
-      <ul>
-        <li
-          class="project-list"
-          v-for="(item,index) in projects"
-          :key="index"
-          @click="path(item.projectId,item.groupId)"
-        >
-          <div
-            class="bj-img"
-            :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
-          ></div>
+      <ul v-if="!loading">
+        <li class="project-list" v-for="(item,index) in projects" :key="index" @click="path(item.projectId,item.groupId)">
+          <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
           <div class="project-body">
             <div class="project-con">
               <p>{{item.projectName}}</p>
               <span>{{item.projectDes}}</span>
             </div>
             <div class="operate-box">
-              <Tooltip
-                class="iconpic2"
-                :class="{showStar:item.collect}"
-                content="星标"
-                placement="top"
-              >
+              <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
                 <span @click.stop="setStar(item.projectId)">
                   <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
                 </span>
@@ -58,24 +41,20 @@
               </Tooltip>
               <Tooltip class="iconpic2" content="删除项目" placement="top">
                 <span @click.stop="confirmHuishou(item)">
-                  <Icon type="ios-trash-outline" size="22"/>
+                  <Icon type="ios-trash-outline" size="22" />
                 </span>
               </Tooltip>
             </div>
           </div>
         </li>
-        <li
-          v-show="projectType=='我创建的项目'"
-          class="project-list add-project"
-          @click="showproject=true"
-        >
+        <li v-show="projectType=='我创建的项目'" class="project-list add-project" @click="showproject=true">
           <div class="bj-img add-img">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
           </div>
           <div class="add-project-body">创建新项目</div>
         </li>
       </ul>
-      <div class="noList" v-if="projects.length==0 && projectType!='我创建的项目'">
+      <div class="noList" v-if="projects.length==0 && !loading && projectType!='我创建的项目'">
         <img src="../assets/images/noproject.png">
         <p>暂无项目</p>
       </div>
@@ -85,13 +64,9 @@
     <div v-show="selectView=='卡片视图'">
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
-        <Row>
+        <Row v-if="!loading">
           <iCol span="6" v-for="(item,index) in projects" :key="index">
-            <div
-              @click="path(item)"
-              class="col"
-              :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"
-            >
+            <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
               <h2>{{item.projectName}}</h2>
               <p>{{item.projectDes}}</p>
               <div class="iconPic">
@@ -100,12 +75,7 @@
                     <Icon type="md-settings" size="18"></Icon>
                   </span>
                 </Tooltip>
-                <Tooltip
-                  class="iconpic2"
-                  :class="{showStar:item.collect}"
-                  content="星标"
-                  placement="top"
-                >
+                <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
                   <span @click.stop="setStar(item.projectId)">
                     <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
                   </span>
@@ -116,13 +86,13 @@
           <iCol span="6" v-show="projectType=='我创建的项目'">
             <div class="col add-project" @click="showproject=true">
               <h1 class="center">
-                <Icon type="md-add-circle"/>
+                <Icon type="md-add-circle" />
               </h1>
               <h2 class="center">创建新项目</h2>
             </div>
           </iCol>
         </Row>
-        <div class="noList" v-if="projects.length==0 && projectType!='我创建的项目'">
+        <div class="noList" v-if="projects.length==0 && !loading && projectType!='我创建的项目'">
           <img src="../assets/images/noproject.png">
           <p>暂无项目</p>
         </div>
@@ -259,6 +229,9 @@ export default {
           this.init(this.projectType);
         }
       });
+    },
+    searchProject() {
+
     }
   }
 };
@@ -267,8 +240,10 @@ export default {
 .starOn {
   color: #ffaa31 !important;
 }
+
 .doBtn {
   padding: 15px 0;
+
   button {
     display: block;
     width: 90%;
@@ -276,28 +251,30 @@ export default {
     font-size: 14px;
   }
 }
+
 .container-title {
   width: 100%;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   .search-box {
     width: 400px;
     height: 32px;
     margin-left: 12px;
   }
+
   .filtrate-box {
     height: 32px;
     display: flex;
+
     .select-view {
       margin-left: 10px;
-      label {
-        margin-left: 10px;
-      }
     }
   }
 }
+
 .project-list {
   width: 1080px;
   height: 72px;
@@ -306,12 +283,15 @@ export default {
   margin-top: 15px;
   margin-left: 100px;
   cursor: pointer;
+
   &:hover .operate-box {
     display: flex !important;
   }
+
   &:hover p {
     color: #3da8f5;
   }
+
   .add-project-body {
     width: 900px;
     display: flex;
@@ -319,6 +299,7 @@ export default {
     font-size: 16px;
     transition: color 0.218s ease;
   }
+
   .bj-img {
     margin: 16px 20px;
     width: 40px;
@@ -327,16 +308,19 @@ export default {
     background-position: center;
     background-size: cover;
   }
+
   .add-img {
     background-color: #f6f5f4;
     display: flex;
     justify-content: center;
     align-items: center;
+
     i {
       color: #aea4a1;
       font-size: 24px;
     }
   }
+
   .project-body {
     width: 900px;
     padding: 16px 0;
@@ -344,8 +328,10 @@ export default {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #e7e6e3;
+
     .project-con {
       max-width: 750px;
+
       p {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -354,6 +340,7 @@ export default {
         font-size: 16px;
         line-height: 24px;
       }
+
       span {
         font-size: 12px;
         line-height: 20px;
@@ -364,6 +351,7 @@ export default {
         max-width: 100%;
       }
     }
+
     .operate-box {
       width: 150px;
       height: 100%;
@@ -371,9 +359,11 @@ export default {
       flex-direction: row-reverse;
       align-items: center;
       transition: all 0.3s;
+
       i {
         margin-left: 10px;
         color: gray;
+
         &:hover {
           color: #3da8f5;
         }
@@ -381,12 +371,15 @@ export default {
     }
   }
 }
+
 .add-project:hover .add-img {
   background-color: #e8f6fe;
 }
+
 .add-project:hover .add-img i {
   color: #4baaf6;
 }
+
 .add-project:hover .add-project-body {
   color: #3da8f5;
 }

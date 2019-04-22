@@ -72,62 +72,66 @@ export default {
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A2":
-                this.$store.dispatch("task/deleteTask",result.object)
+                this.$store.dispatch("task/deleteTask", result.object)
                 break;
               case "A3":
                 result.object.task.taskStatus = true
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskStatus"})
-                    break;
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "taskStatus" })
+                break;
               case "A4":
                 result.object.task.taskStatus = false
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskStatus"})
-                    break;
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "taskStatus" })
+                break;
               case "A5":
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"taskName"})
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "taskName" })
                 break;
               case "A6":
-                this.$store.commit("task/changeExecutor",result.object)
+                this.$store.commit("task/changeExecutor", result.object)
                 break;
               case "A7":
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"startTime"})
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "startTime" })
                 break;
               case "A8":
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"endTime"})
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "endTime" })
                 break;
               case "A9":
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"repeat"})
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "repeat" })
                 break;
               case "A12":
-                this.$store.dispatch("task/changeProperty",{task:result.object.task,property:"priority"})
+                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "priority" })
                 break;
               case "A13":
-                  this.$store.dispatch("task/updateChildTask",result.object.task)
+                this.$store.dispatch("task/updateChildTask", result.object.task)
                 break;
               case "A14":
-                this.$store.dispatch("task/updateJoinInfo",result.object.members)
+                this.$store.dispatch("task/updateJoinInfo", result.object.members)
                 break;
-                case "A15":
-                  this.$store.dispatch("task/copyTask",result.object.task)
+              case "A15":
+                this.$store.dispatch("task/copyTask", result.object.task)
                 break;
               case "A16":
-                if(result.object.task.taskStatus === '完成'){
+                if (result.object.task.taskStatus === '完成') {
                   result.object.task.taskStatus = true
-                } else{
+                } else {
                   result.object.task.taskStatus = false
                 }
-                this.$store.dispatch("task/moveTask",result.object.task)
+                this.$store.dispatch("task/moveTask", result.object.task)
                 break;
               case "A17":
-                this.$store.dispatch("task/recycle",result.object.task)
+                this.$store.dispatch("task/recycle", result.object.task)
                 break;
               case "A28":
-                if(result.object.fromType === '任务'){
-                  this.$store.commit("task/bind",result.object)
+                if (result.object.fromType === '任务') {
+                  this.$store.commit("task/bind", result.object)
                 }
                 break;
               case "A29":
-                if(result.object.fromType === '任务')
-                this.$store.commit("task/cancleRelation",result.object)
+                if (result.object.fromType === '任务')
+                  this.$store.commit("task/cancleRelation", result.object)
+                  break;
+              case "A30":
+                this.$store.dispatch("task/loadFile",result.object)
+                break;
               case "C1":
               case "C2":
               case "C3":
@@ -136,31 +140,31 @@ export default {
                 });
                 break;
               case "E1":
-                if(result.object.publicType === '任务'){
-                  this.$store.dispatch("task/bindingTag",{tag:result.object.tag,taskId:result.object.publicId})
+                if (result.object.publicType === '任务') {
+                  this.$store.dispatch("task/bindingTag", { tag: result.object.tag, taskId: result.object.publicId })
                 }
                 break;
               case "E2":
-                if(result.object.publicType === '任务'){
-                  this.$store.dispatch("task/removeTag",{tagId:result.object.tagId,taskId:result.object.publicId})
+                if (result.object.publicType === '任务') {
+                  this.$store.dispatch("task/removeTag", { tagId: result.object.tagId, taskId: result.object.publicId })
                 }
               case "F1":
-                  if(result.object.type === '任务'){
-                        this.$store.dispatch("task/publish",result.object.log)
-                  }else if (result.object.type === 'schedule') {
-                        this.$store.commit("schedule/msg",result.object.log)
-                  }
-                  break;
+                if (result.object.type === '任务') {
+                  this.$store.dispatch("task/publish", result.object.log)
+                } else if (result.object.type === 'schedule') {
+                  this.$store.commit("schedule/msg", result.object.log)
+                }
+                break;
               case "G1":
-                  this.$store.commit("chat/pushMsg",{chat:result.object,userId:localStorage.userId})
-                  break;
+                this.$store.commit("chat/pushMsg", { chat: result.object, userId: localStorage.userId })
+                break;
               case "G2":
-                this.$store.commit("chat/revoke",result.object)
+                this.$store.commit("chat/revoke", result.object)
                 break;
             }
           });
         },
-        err => {}
+        err => { }
       );
     }
   }
