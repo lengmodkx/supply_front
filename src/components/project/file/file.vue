@@ -1,7 +1,9 @@
 <template>
   <div class="file-view-wrap fade in">
     <header class="file-header">
-      <div class="file-header-title">文件库</div>
+      <div class="file-header-title" >
+       文件库
+      </div>
       <div class="file-header-add">
         <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
           <Icon type="plus-circled" class="icon-file" size="20"></Icon>创建文件夹
@@ -18,38 +20,99 @@
       </div>
     </header>
 
-    <div style="border-bottom: 1px solid #e9e9e9;padding:10px 20px 10px 20px;">
+    <div style="padding:10px 20px 10px 20px;">
       <Input search enter-button placeholder="请输入文件名搜索" style="width:500px" @on-search="searchFile" />
     </div>
-    <loading v-if="loading"></loading>
-    <ul class="file-content-wrap">
-      <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId)">
+    <Loading v-if="loading"></Loading>
+    <ul class="file-content-wrap" v-if="files.length">
+      <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
-          <Icon type="folder" size="60" color="#2d8cf0" v-if="file.catalog==1"></Icon>
-          <img src='../../../assets/images/folder.png' style="height:64px;width:80px">
-          <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" v-if="file.catalog==0" />
-          <div class="file-content-opt">
+          <img v-if="file.catalog==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+          <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
+            <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`"  />
+            <img v-else-if="file.ext.includes('txt')" src="@/icons/img/txt.png" alt="">
+            <img v-else-if="file.ext.includes('doc')||file.ext.includes('docx')" src="@/icons/img/word.png" alt="">
+            <img v-else-if="file.ext.includes('xls')||file.ext.includes('xlsx')" src="@/icons/img/excel.png" alt="">
+            <img v-else-if="file.ext.includes('pdf')" src="@/icons/img/pdf.png" alt="">
+            <img v-else-if="file.ext.includes('pp')" src="@/icons/img/ppt.png" alt="">
+            <img v-else-if="file.ext.includes('zip')||file.ext.includes('rar')" src="@/icons/img/zip.png" alt="">
+            <img v-else src="@/icons/img/moren.png" alt="">
+          </div>
+          <div  @click.stop class="file-content-opt">
             <p></p>
-            <Icon type="md-arrow-dropdown" size=22 ref="arrow" @click.stop="menuShow(file.catalog, file.fileId,$event)" />
+            <Poptip class="menu-file" width="250"  :transfer="true" @on-popper-hide="popHid">
+              <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
+              <div slot="content">
+                <div  v-show="rublish" class="rublish">
+                  <div class="rublish-header">
+                    <Icon @click="rublish=false" type="ios-arrow-back" />
+                    移到回收站
+                    <!--<Icon @click="menuShow=false" type="ios-close" />-->
+                      <span></span>
+                  </div>
+                  <p>您确定要把该文件移到回收站吗？</p>
+                  <Button long type="error" @click="putRecyclebin">移到回收站</Button>
+                </div>
+                <div v-show="!rublish">
+                  <div class="menu-file-title" style="text-align:center;font-size:16px">
+                    <span>文件菜单</span>
+                  </div>
+                  <section v-if="file.catalog" class="file-folder-opt">
+                    <ul>
+                      <li @click="removeClone('移动')">移动文件夹</li>
+                      <li @click="removeClone('复制')">复制文件夹</li>
+                      <li @click="rublish=true">移到回收站</li>
+                      <li @click="rublish=true">可见性设置</li>
+                    </ul>
+                  </section>
+                  <section v-else class="file-folder-opt">
+                    <ul>
+                      <li @click="removeClone('移动')">移动文件</li>
+                      <li @click="removeClone('复制')">复制文件</li>
+                      <li >复制文件链接</li>
+                      <li >收藏文件</li>
+                      <li @click="rublish=true">移到回收站</li>
+                    </ul>
+                  </section>
+                  <div class="footer" >
+                    <div class="footer-left">
+                      <i class="ivu-icon ivu-icon-unlocked"></i>
+                      <div class="footer-privacy-text">
+                        <span>隐私模式</span>
+                        <span>{{privacyTxt}}</span>
+                      </div>
+                    </div>
+                    <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
+                  </div>
+                </div>
+
+              </div>
+            </Poptip>
           </div>
         </div>
         <div class="file-content-filename" v-if="file.catalog==1">{{file.fileName}}</div>
         <div class="file-content-filename" v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</div>
       </li>
     </ul>
+    <div v-else class="no-files">
+      <Icon type="md-folder" />
+      <p>文件夹中还没有内容</p>
+    </div>
     <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
       <model ref="model" @close="showModel=false" :fileId="fileId"></model>
     </Modal>
     <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
       <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
     </Modal>
+    <!--创建文件夹 模态框-->
     <Modal v-model="showAddFolder" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
       <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" />
-      <div slot="footer">
-        <Button type="primary" size="large" long @click="handleSave">确定</Button>
+      <div>
+        <Button type="info" long @click="handleSave">确定</Button>
       </div>
     </Modal>
-    <Modal v-model="showMove" width="800" @on-visible-change="changeVisible" class="show-move">
+    <!--复制、移动 模态框-->
+    <Modal v-model="showMove" :z-index=11111 class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
       <div slot="header">
         <span style="font-size:18px">移动文件{{fileName}}至</span>
       </div>
@@ -63,6 +126,7 @@
           </ul>
         </div>
         <div class="picker-column thin-scroll flex-fill flex-vert">
+          <Loading v-show="loading"></Loading>
           <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row @item-click="itemClick" ref="jstree" children-field-name="child"></v-jstree>
         </div>
 
@@ -70,58 +134,14 @@
       <div slot="footer" class="move-footer">
         <span>{{footerTxt}}</span>
         <div class="move-footer-btn">
-          <Button type="default" size="large" @click="showMove=false">取消</Button>
-          <Button type="primary" size="large" @click="showMove=false">确定</Button>
+          <Button type="default" size="large" @click="cancelRemoveClone">取消</Button>
+          <Button type="primary" size="large" @click="removeCloneFile">确定</Button>
         </div>
       </div>
     </Modal>
-    <Modal v-model="menu1Show" width="240" :styles="{top: top,left:left,margin:0}" :mask=false>
-      <div slot="header" style="text-align:center;font-size:16px">
-        <span>文件菜单</span>
-      </div>
-      <section class="file-folder-opt">
-        <ul>
-          <li @click="download">下载文件</li>
-          <li @click="moveFile">移动文件</li>
-          <li>复制文件</li>
-          <li>收藏文件</li>
-          <li>移到回收站</li>
-        </ul>
-      </section>
-      <div class="footer" slot="footer">
-        <div class="footer-left">
-          <i class="ivu-icon ivu-icon-unlocked"></i>
-          <div class="footer-privacy-text">
-            <span>隐私模式</span>
-            <span>{{privacyTxt}}</span>
-          </div>
-        </div>
-        <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
-      </div>
-    </Modal>
-
-    <Modal v-model="menu2Show" width="240" :styles="{top: top, left:left,margin:0}" :mask=false>
-      <div slot="header" style="text-align:center;font-size:16px">
-        <span>文件菜单</span>
-      </div>
-      <section class="file-folder-opt">
-        <ul>
-          <li>移动文件夹</li>
-          <li>复制文件夹</li>
-          <li>移到回收站</li>
-          <li>可见性设置</li>
-        </ul>
-      </section>
-      <div class="footer" slot="footer">
-        <div class="footer-left">
-          <i class="ivu-icon ivu-icon-unlocked"></i>
-          <div class="footer-privacy-text">
-            <span>隐私模式</span>
-            <span>{{privacyTxt}}</span>
-          </div>
-        </div>
-        <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
-      </div>
+   <!--文件详情-->
+    <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
+      <fileDetail @close="closeDetail"></fileDetail>
     </Modal>
   </div>
 
@@ -130,7 +150,10 @@
 import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import Loading from "../../public/common/Loading.vue";
-import { mapState, mapActions } from "vuex";
+import fileDetail from './fileDetail'
+import { mapState, mapActions, mapMutations } from "vuex";
+import {getFileDetails} from '@/axios/fileApi'
+import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin} from '@/axios/fileApi'
 import {
   files,
   createFolder,
@@ -144,11 +167,13 @@ export default {
     model,
     commonFile,
     Loading,
-    VJstree
+    VJstree,
+    fileDetail
   },
   data() {
     return {
       showModel: false,
+      showModelDetai: false,
       showCommon: false,
       showAddFolder: false,
       visible: false,
@@ -173,36 +198,53 @@ export default {
       top: 0,
       left: 0,
       fileIdParam: "",
-      asyncData: []
+      asyncData: [],
+      fileData: null,
+      loading: true,
+      caozuo: '',
+      folderId: '',
+      menuShow:false,
+      rublish: false,
+      thisFileId: ''
     };
   },
   computed: {
-    ...mapState("file", ["files", "loading"])
+    ...mapState("file", ["files", "filePath"])
   },
   mounted: function() {
     let params = { fileId: this.fileId };
-    this.initFile(params);
+    this.initFile(params).then(res => {
+      this.loading=false
+    })
   },
 
   methods: {
     ...mapActions("file", ["initFile"]),
-    itemClick(node) {
-      console.log(node.model.id + " clicked !");
-      console.log(this.projectId);
+    ...mapMutations("file", ["putOneFile"]),
+    // 获取当前文件id
+    getFileid(id){
+       this.thisFileId=id
     },
-
+    closeDetail () {
+      this.showModelDetai=false
+    },
     searchFile() {},
-    menuShow(catalog, fileId, e) {
-      if (catalog == 0) {
-        this.menu1Show = true;
-        this.menu2Show = false;
-      } else {
-        this.menu2Show = true;
-        this.menu1Show = false;
-      }
-      this.top = e.clientY + "px";
-      this.left = e.clientX + "px";
-      this.fileIdParam = fileId;
+    // menuShow(catalog, fileId, e) {
+    //   if (catalog == 0) {
+    //     this.menu1Show = true;
+    //     this.menu2Show = false;
+    //   } else {
+    //     this.menu2Show = true;
+    //     this.menu1Show = false;
+    //   }
+    //   this.top = e.clientY + "px";
+    //   this.left = e.clientX + "px";
+    //   this.fileIdParam = fileId;
+    // },
+    popHid () {
+      setTimeout(() => {
+        this.rublish=false
+      },300)
     },
     handleSave() {
       //创建文件夹
@@ -241,12 +283,20 @@ export default {
         this.fileIdParam
       }/download`;
     },
-
-    fileDetail(catalog, id) {
+// 点击文件、文件夹进入详情
+    fileDetail(catalog, id, file) {
       if (catalog == 1) {
         this.$router.push({
           path: `/project/${this.$route.params.id}/files/${id}`
         });
+      }else {
+        this.loading=true
+        getFileDetails(id).then(res => {
+          console.log(res)
+          this.loading=false
+          this.putOneFile(res)
+          this.showModelDetai=true
+        })
       }
     },
     changePrivacy() {
@@ -269,27 +319,65 @@ export default {
         this.menu2Show = !this.menu2Show;
       }
     },
+    // 移到回收站
+    putRecyclebin () {
+      recycleBin(this.thisFileId, this.projectId).then(res => {
+        if (res.result){
+          this.$Message.success('成功移到回收站');
+          this.popHid()
+        }
+      })
+    },
     copyFile() {
       this.showMove = true;
       this.footerTxt = "跨项目复制时，部分信息不会被保留。";
     },
-
-    moveFile() {
-      if (this.catalog == 0) {
-        this.menu1Show = !this.menu1Show;
-      } else {
-        this.menu2Show = !this.menu2Show;
-      }
+    // 选中要移动到哪
+    itemClick(node) {
+      this.folderId=node.data.id
+      console.log(node.data.id);
+    },
+    // 取消 移动复制
+    cancelRemoveClone () {
+      this.folderId=''
+      this.showMove=false
+    },
+//点击 移动、复制文件
+    removeClone(caozuo) {
+      // if (this.catalog == 0) {
+      //   this.menu1Show = !this.menu1Show;
+      // } else {
+      //   this.menu2Show = !this.menu2Show;
+      // }
+      this.caozuo=caozuo
       this.showMove = true;
       this.footerTxt = "跨项目移动时，部分信息不会被保留。";
       this.asyncData = [this.$refs.jstree.initializeLoading()];
       folderChild(this.projectId).then(res => {
-        console.info(res.data);
         this.asyncData = res.data;
+        this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
       });
-      this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
-    },
 
+    },
+    // 移动、复制文件的确定按钮
+    removeCloneFile () {
+      if (this.folderId) {
+        if (this.caozuo==='移动') {
+          removeFile(this.folderId,this.thisFileId).then(res => {
+            if (res.result){
+              this.$Message.success('移动成功');
+              this.showMove=false
+            }
+          })
+        }else if (this.caozuo==='复制') {
+          cloneFile(this.folderId,this.thisFileId).then(res => {
+            console.log(res)
+          })
+        }
+      }
+
+    },
+    // 获取项目列表
     projectList() {
       getProjectList().then(res => {
         if (res.result == 1) {
@@ -297,6 +385,7 @@ export default {
         }
       });
     },
+    // 移动、赋值文件框打开关闭
     changeVisible(bool) {
       if (bool) {
         this.projectList();
@@ -305,11 +394,17 @@ export default {
         this.items = [];
       }
     },
+    // 改变选择的项目
     changeProject(projectId) {
+      this.loading=true
       this.items = [];
       this.projectId = projectId;
-      this.projectList();
-    }
+      folderChild(this.projectId).then(res => {
+        this.asyncData = res.data;
+        this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
+        this.loading=false
+      });
+    },
   },
   watch: {
     $route(to, from) {
@@ -319,6 +414,22 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+  .no-files{
+    width: 100%;
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+    i{
+      font-size: 40px;
+    }
+    p{
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  }
 .project-main {
   background: #f7f7f7;
 }
@@ -407,8 +518,7 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     img {
-      width: 100px;
-      height: 100px;
+      max-width: 100%;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -428,8 +538,10 @@ export default {
     .file-content-opt {
       position: absolute;
       display: flex;
-      width: 160px;
+      width: 25px;
       height: 25px;
+      top: 0;
+      right: 0;
       justify-content: space-between;
       i {
         display: none;
@@ -551,6 +663,7 @@ export default {
     line-height: 35px;
     padding-left: 10px;
     font-size: 14px;
+    cursor: pointer;
     &:hover {
       background: #e5e5e5;
     }
@@ -565,6 +678,64 @@ export default {
 .flex-fill {
   flex: 1 1 auto;
 }
+  .menu-file-title{
+      height: 40px;
+      line-height: 40px;
+  }
+  .menu-file{
+    margin-right: 15px;
+    i{
+      cursor: pointer;
+      font-size: 20px;
+      &:hover{
+        color: #3da8f5;
+      }
+    }
+    /deep/ .ivu-poptip-body{
+      padding: 0;
+    }
+    .footer {
+      padding-top: 10px;
+      border-top: 1px solid #e5e5e5;
+      .footer-left {
+        display: flex;
+      }
+
+      display: flex;
+      justify-content: space-between;
+      .footer-privacy-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .ivu-icon {
+        margin-right: 10px;
+      }
+    }
+  }
+  .rublish{
+      padding-bottom: 15px;
+      .rublish-header{
+          width: 100%;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-weight: 600;
+          font-size: 14px;
+          border-bottom: 1px solid #e5e5e5;
+          i{
+              color: grey;
+              font-size: 20px;
+              font-weight: 400;
+              cursor: pointer;
+          }
+      }
+      p{
+          margin: 15px 0;
+          font-size: 14px;
+      }
+  }
 </style>
 
 
