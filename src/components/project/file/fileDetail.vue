@@ -7,9 +7,15 @@
             </Tooltip>
 
             <div class="f-header-right">
-                <p><Icon type="ios-cloud-upload-outline" />更新版本</p>
-                <p @click="downLoad"><Icon type="ios-cloud-download-outline" />下载</p>
-                <p><Icon type="ios-link-outline" />复制文件链接</p>
+                <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
+                    <p class="padd8"><Icon type="ios-cloud-upload-outline" />更新版本</p>
+                    <DropdownMenu slot="list">
+                        <DropdownItem name="model">上传模型文件</DropdownItem>
+                        <DropdownItem name="commonfile">上传普通文件</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+                <p @click="downLoad" class="padd8"><Icon type="ios-cloud-download-outline" />下载</p>
+                <!--<p><Icon type="ios-link-outline" />复制文件链接</p>-->
                 <Poptip class="menu-file"  v-model="menuShow" @on-popper-hide="popHid">
                     <Icon type="ios-more" class="mr0" />
                     <div slot="content">
@@ -53,12 +59,24 @@
         </header>
         <div class="f-content">
             <div class="f-content-left">
-                <img v-if="file.data.ext.includes('jpg') ||
+                <div class="img-look-box" v-if="file.data.ext.includes('jpg') ||
                             file.data.ext.includes('jpeg') ||
                             file.data.ext.includes('gif') ||
                             file.data.ext.includes('bmp') ||
-                           file.data.ext.includes('png')"
-                     :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" alt="">
+                           file.data.ext.includes('png')">
+                    <div class="big-small-box">
+                        <Tooltip content="放大">
+                            <Icon @click="changeImgSize(1)" type="ios-add-circle-outline" />
+                        </Tooltip>
+                        <span>{{Math.floor(imgSize*100)}}%</span>
+                        <Tooltip content="缩小">
+                            <Icon  @click="changeImgSize(0)" type="ios-remove-circle-outline" />
+                        </Tooltip>
+
+                    </div>
+                    <img :style="{transform:'scale('+imgSize+')'}" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" alt="">
+                </div>
+
                 <iframe v-else-if="file.data.ext.includes('doc') ||
                               file.data.ext.includes('docx') ||
                               file.data.ext.includes('docm') ||
@@ -90,7 +108,7 @@
                         <div class="sp-bw">
                             <p>
                                 <Icon type="ios-information-circle-outline" size="18" />
-                                <span>{{file.version[file.version.length-1].info}}</span>
+                                <span>{{file.version.length?file.version[file.version.length-1].info:''}}</span>
                             </p>
                             <p>{{file.data.size}}</p>
                         </div>
@@ -225,6 +243,14 @@
                 </div>
             </div>
         </Modal>
+        <!--上传模型文件-->
+        <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
+            <model ref="model" @close="showModel=false" :fileId="file.data.fileId"></model>
+        </Modal>
+        <!--上传普通文件-->
+        <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
+            <common-file @close="showCommon=false" :fileId="file.data.fileId" :projectId="projectId"></common-file>
+        </Modal>
     </div>
 </template>
 
@@ -233,11 +259,14 @@ import Tags from "@/components/project/pages/index/components/task/Tags";
 import AddRelation from "@/components/public/common/AddRelation";
 import log from '@/components/public/log'
 import Emoji from '@/components/public/common/emoji/Emoji'
+import model from "./model.vue";
+import commonFile from "./commonfile.vue";
 import {mapState} from 'vuex'
 import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin} from '@/axios/fileApi'
 import {folderChild, getProjectList} from '@/axios/api'
 import VJstree from "vue-jstree";
 export default {
+    props: ['fid'],
     name: "fileDetail",
     data () {
         return {
@@ -260,10 +289,12 @@ export default {
             fileId: this.$route.params.fileId,
             projectId: this.$route.params.id,
             loading: false,
-            folderId: ''
+            folderId: '',
+            imgSize: 1,
+            showModel: false,
         }
     },
-    components: {Tags, AddRelation, log, Emoji, VJstree},
+    components: {Tags, AddRelation, log, Emoji, VJstree, model, commonFile},
     computed: {
         ...mapState('file', ['file','joinInfoIds'])
     },
@@ -280,6 +311,25 @@ export default {
             changeName(this.file.data.fileId,this.file.data.fileName).then(res => {
                 this.$Message.success('修改成功');
             })
+        },
+        // 更新文件
+        showFileChoose(data) {
+            console.log(data);
+            if (data === "model") {
+                this.showModel = !this.showModel;
+            } else {
+                this.showCommon = !this.showCommon;
+            }
+        },
+        // 放大缩小图片
+        changeImgSize(n){
+            if (n){
+                this.imgSize=this.imgSize+0.1
+                console.log( this.imgSize)
+            } else {
+                this.imgSize=this.imgSize-0.1
+                console.log( this.imgSize)
+            }
         },
         // 下载文件
         downLoad () {

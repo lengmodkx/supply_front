@@ -70,7 +70,7 @@
     }
   }
 }
-.f-header-right>p{
+.f-header-right .padd8{
   display: flex;
   align-items: center;
   margin-right: 12px;
@@ -105,6 +105,35 @@
     justify-content: center;
     align-items: center;
     background-color: #eee;
+    .img-look-box{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .big-small-box{
+        position: absolute;
+        height: 36px;
+        width: 100px;
+        background-color: rgba(0,0,0,.6);
+        bottom: 15px;
+        left: 50%;
+        margin-left: -50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        color: white;
+        i{
+          cursor: pointer;
+          color: white;
+          font-size: 24px;
+          &:hover{
+            color: #3da8f5;
+          }
+        }
+      }
+    }
   }
   .f-content-right{
     position: relative;
