@@ -125,40 +125,110 @@
                         <div class="addLink" @click="relationModal=true;">
                             <Icon type="ios-add-circle-outline" />添加关联</div>
                         <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-                            <AddRelation :publicId="file.data.fileId"></AddRelation>
+                            <AddRelation :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
                         </Modal>
                     </div>
-                    <div class="has-relevance">
-                        <ul>
-                            <div class="what-title">被以下任务关联</div>
-                            <li class="gl-task-list">
-                                <div class="gl-task-list-con">
-                                    <Icon type="md-checkbox-outline" size="22" />
-                                    <Icon type="ios-list-box-outline" size="22" />
-                                    <Icon type="ios-calendar-outline" size="22" />
-                                    <Icon type="ios-document-outline" size="22" />
-                                    <img src="" alt="">
-                                    <div class="gl-con">
-                                        <div class="gl-con-top">
-                                            <span>关联人物名称</span><span>关联项目名称</span>
-                                        </div>
-                                        <div class="gl-con-bottom">2018-12-12 12:00</div>
-                                    </div>
-                                </div>
-                                <Poptip v-model="glPop">
-                                    <Icon class="glpop" type="ios-arrow-down" size="20" />
-                                    <div slot="content">
-                                        <div class="glpop-list">
-                                            <Icon type="ios-link" size="20" /><span>复制链接</span>
-                                        </div>
-                                        <div class="glpop-list">
-                                            <Icon type="md-link" size="20" /><span>取消关联</span>
-                                        </div>
-                                    </div>
-                                </Poptip>
-                            </li>
-                        </ul>
-                    </div>
+                   <!--有关联内容-->
+                    <!--<div class="has-relevance">-->
+                        <!--<ul v-if="file.data.bindTasks.length">-->
+                            <!--<div class="what-title">关联的任务</div>-->
+                            <!--<li class="gl-task-list" v-for="(b,i) in file.data.bindTasks" :key="i">-->
+                                <!--<div class="gl-task-list-con">-->
+                                    <!--<Icon type="md-checkbox-outline" size="22" />-->
+                                    <!--<img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">-->
+                                    <!--<img v-else src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==">-->
+                                    <!--<div class="gl-con">-->
+                                        <!--<div class="gl-con-top">-->
+                                            <!--<span>{{b.taskName}}</span><span>{{b.projectName}}</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<Poptip>-->
+                                    <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                                    <!--<div slot="content">-->
+                                        <!--<div class="glpop-list">-->
+                                            <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                                        <!--</div>-->
+                                        <!--<div class="glpop-list" @click="cancle(b.taskId)">-->
+                                            <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</Poptip>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                        <!--<ul v-if="file.data.bindFiles.length">-->
+                            <!--<div class="what-title">关联的文件</div>-->
+                            <!--<li class="gl-task-list" v-for="(b,i) in file.data.bindFiles" :key="i">-->
+                                <!--<div class="gl-task-list-con">-->
+                                    <!--<Icon type="ios-document-outline" size="22" />-->
+                                    <!--<div class="gl-con">-->
+                                        <!--<div class="gl-con-top">-->
+                                            <!--<span>{{b.fileName}}</span><span>{{b.projectName}}</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<Poptip>-->
+                                    <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                                    <!--<div slot="content">-->
+                                        <!--<div class="glpop-list">-->
+                                            <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                                        <!--</div>-->
+                                        <!--<div class="glpop-list" @click="cancle(b.fileId)">-->
+                                            <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</Poptip>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                        <!--<ul v-if="file.data.bindSchedules.length">-->
+                            <!--<div class="what-title">关联的日程</div>-->
+                            <!--<li class="gl-task-list" v-for="(b,i) in file.data.bindSchedules" :key="i">-->
+                                <!--<div class="gl-task-list-con">-->
+                                    <!--<Icon type="ios-calendar-outline" size="22" />-->
+                                    <!--<div class="gl-con">-->
+                                        <!--<div class="gl-con-top">-->
+                                            <!--<span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<Poptip >-->
+                                    <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                                    <!--<div slot="content">-->
+                                        <!--<div class="glpop-list">-->
+                                            <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                                        <!--</div>-->
+                                        <!--<div class="glpop-list" @click="cancle(b.scheduleId)">-->
+                                            <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</Poptip>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                        <!--<ul v-if="file.data.bindShares.length">-->
+                            <!--<div class="what-title">关联的分享</div>-->
+                            <!--<li class="gl-task-list" v-for="(b,i) in file.data.bindShares" :key="i">-->
+                                <!--<div class="gl-task-list-con">-->
+                                    <!--<Icon type="ios-open-outline" size="22" />-->
+                                    <!--<div class="gl-con">-->
+                                        <!--<div class="gl-con-top">-->
+                                            <!--<span>{{b.shareName}}</span><span>{{b.projectName}}</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<Poptip>-->
+                                    <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                                    <!--<div slot="content">-->
+                                        <!--<div class="glpop-list">-->
+                                            <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                                        <!--</div>-->
+                                        <!--<div class="glpop-list" @click="cancle(b.shareId)">-->
+                                            <!--<Icon type="md-link" size="20"/><span>取消关联</span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</Poptip>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
                     <div class="line"></div>
                     <!-- 设置参与者 -->
                     <div class="participator">
@@ -186,7 +256,7 @@
                     </div>
                     <div class="line"></div>
                     <!--所有动态-->
-                    <log :logs="task.logs" :publicId="task.taskId" :unReadMsg="task.unReadMsg"></log>
+                    <log :logs="file.logs" :publicId="file.data.fileId" :unReadMsg="file.data.unReadMsg"></log>
                 </div>
                 <!--发消息-->
                 <div class="talk">
@@ -263,7 +333,7 @@ import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import {mapState} from 'vuex'
 import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin} from '@/axios/fileApi'
-import {folderChild, getProjectList, collect} from '@/axios/api'
+import {folderChild, getProjectList, collect, cancle, sendMsg} from '@/axios/api'
 import VJstree from "vue-jstree";
 export default {
     props: ['fid'],
@@ -299,8 +369,26 @@ export default {
         ...mapState('file', ['file','joinInfoIds'])
     },
     methods: {
-        sendChat () {},
-        chooseEmoji () {},
+        // 发送消息
+        sendChat () {
+            let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")
+            if (con){
+                let datas={
+                    'publicId':this.file.data.fileId,
+                    'projectId':this.projectId,
+                    'publicType':this.publicType,
+                    'content':con
+                }
+                console.log(datas)
+                sendMsg(datas).then(res => {
+                    this.$refs.textarea.innerHTML=''
+                })
+            }
+        },
+        chooseEmoji () {
+            alert(1)
+            this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
+        },
         popHid () {
             setTimeout(() => {
                 this.rublish=false
@@ -320,6 +408,14 @@ export default {
             } else {
                 this.showCommon = !this.showCommon;
             }
+        },
+        // 取消关联
+        cancle(id){
+            cancle(id,this.projectId,this.publicType,this.file.data.fileId).then(res => {
+                if(res.result === 1){
+                    this.$Message.success("已取消")
+                }
+            })
         },
         // 放大缩小图片
         changeImgSize(n){
