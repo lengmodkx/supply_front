@@ -7,11 +7,15 @@
         <div class="contents">
             <div class="w900">
                 <div class="tu">
-                    <div id="chart1"></div>
+                    <div v-if="type==1" id="chart6"></div>
+                    <div v-if="type==2" id="chart7"></div>
+                    <div v-if="type==3" id="chart8"></div>
+                    <div v-if="type==4" id="chart9"></div>
+                    <div v-if="type==5" id="chart10"></div>
                 </div>
                 <div class="biao">
                     <h2>详情表</h2>
-                    <Table border :columns="columns1" :data="data1"></Table>
+                    <Table   border :columns="columns1" :data="data1"></Table>
                 </div>
             </div>
         </div>
@@ -24,8 +28,8 @@
                 <Radio label="未完成"></Radio>
             </RadioGroup>
             <p>执行者</p>
-            <Select v-model="people" style="width:200px" placeholder="全部">
-                <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Select v-model="executor" style="width:200px" placeholder="全部">
+                <Option v-for="item in peopleL" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <p>任务分组</p>
             <Select v-model="people" style="width:200px" placeholder="所有任务分组">
@@ -43,6 +47,7 @@
     import HighchartsDrilldown from 'highcharts/modules/drilldown';
     import Highcharts3D from 'highcharts/highcharts-3d';
     import Highmaps from 'highcharts/modules/map';
+    import  { getPieSource,getHistogramSource,getBurnoutSource,getAddSource }  from "../../../axios/statisticApi.js";
     // import exportCSV from '@/libs/export-csv.js'
     HighchartsMore(Highcharts)
     HighchartsDrilldown(Highcharts);
@@ -53,9 +58,17 @@
         data: function () {
             return {
                 title: '',
+                type: '',
+                id: '',
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
                 finished: '全部',
                 people: '',
+                executor: '',
+                peopleL: [
+                    {
+                        value: '全部执行者',
+                        label: '全部执行者'
+                    }],
                 peopleList: [
                     {
                         value: '全部',
@@ -70,44 +83,58 @@
                         label: '泰隆'
                     },
                 ],
-                columns1: [
-                    {
-                        title: '执行者',
-                        key: 'zxz'
-                    },
-                    {
-                        title: '任务数',
-                        key: 'rws'
-                    }
-                ],
-                data1: [
-                    {
-                        zxz: 'John Brown',
-                        rws: 18,
-                    },
-                    {
-                        zxz: 'Jim Green',
-                        rws: 24,
-                    },
-                    {
-                        zxz: 'Joe Black',
-                        rws: 30,
-                    },
-                    {
-                        zxz: 'Jon Snow',
-                        rws: 26,
-                    }
-                ]
+                columns1:[],
+                data1: []
+
             }
         },
         mounted() {
-            this.title=this.$route.query.title
-            console.log(this.$route.query)
-           this.initChart1()
+            this.title=this.$route.query.title;
+            this.type = this.$route.query.type;
+            this.id  =  this.$route.query.id
+            console.log("********************",this.type)
+            switch(this.type){
+                case 1 :
+                    getPieSource(this.id).then(res => {
+                        this.chartData1 = res.pieData;
+                        this.columns1 = res.titleList
+                        this.data1 = res.pieData;
+                        this.initChart1(this.chartData1)
+                    })
+                    break;
+                case 2:
+                    getHistogramSource(this.id).then(res=>{
+                        this.chartData1 = res.staticHistogram.nameArray
+                        this.chartData1 = res.staticHistogram.dataArray
+                        this.columns1   =  res.titleList
+                        this.initChart2(this.chartData1,this.chartData1)
+                    })
+                    break;
+                case 4 :
+                    getBurnoutSource(this.id).then(res => {
+                        let chartEveryDate1 = res.statisticsBurnout.everyDate
+                        let chartTrueTask = res.statisticsBurnout.trueTask
+                        let chartIdealTask = res.statisticsBurnout.idealTask
+                        this.columns1 = res.titleList
+                        this.data1 = res.statisticsBurnout.sticResultVOS
+                        this.initChart4(chartEveryDate1, chartTrueTask, chartIdealTask)
+                    })
+                    break;
+                case 5:
+                    getAddSource(this.id).then(res => {
+                        let chartEveryDate1 = res.statisticsBurnout.everyDate
+                        let cumulativeTask = res.statisticsBurnout.cumulativeTask
+                        let completionTask = res.statisticsBurnout.completionTask
+                        this.columns1 = res.titleList
+                        this.data1 = res.statisticsBurnout.sticResultVOS
+                        this.initChart5(chartEveryDate1, cumulativeTask, completionTask)
+                    })
+                    break;
+            }
         },
         methods: {
-            initChart1(){
-                Highcharts.chart('chart1', {
+            initChart1(data){
+                Highcharts.chart('chart6', {
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
@@ -122,7 +149,7 @@
                     },
                     tooltip: {
                         // 鼠标移入 显示的提示
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        pointFormat: '任务比重: <b>{point.percentage:.1f}%</b>'
                     },
                     plotOptions: {
                         pie: {
@@ -141,21 +168,12 @@
                     series: [{
                         name: '任务数',
                         colorByPoint: true,
-                        data: [{
-                            name: '待认领',
-                            y: 40,
-                        }, {
-                            name: '李健',
-                            y: 30
-                        }, {
-                            name: '何少华',
-                            y: 30
-                        }]
+                        data: data
                     }]
                 });
             },
-            initChart2(){
-                Highcharts.chart('chart2',{
+            initChart2(nameArray,dataArray){
+                Highcharts.chart('chart7',{
                     chart: {
                         type: 'column'
                     },
@@ -166,9 +184,7 @@
                         enabled: false     //不显示LOGO
                     },
                     xAxis: {
-                        categories: [
-                            '李健','何少华','待认领'
-                        ],
+                        categories:nameArray,
                         crosshair: false
                     },
                     yAxis: {
@@ -188,12 +204,12 @@
                     },
                     series: [{
                         name: '任务数',
-                        data: [12, 14, 10]
+                        data: dataArray
                     }]
                 });
             },
-            initChart4(){
-                Highcharts.chart('chart4', {
+            initChart4(date1,trueTask,idealTask){
+                Highcharts.chart('chart9', {
                     title: {
                         text: null
                     },
@@ -201,9 +217,7 @@
                         enabled: false     //不显示LOGO
                     },
                     xAxis: {
-                        categories: [
-                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
-                        ],
+                        categories:date1,
                         crosshair: false
                     },
                     yAxis: {
@@ -226,10 +240,10 @@
                     // },
                     series: [{
                         name: '理想剩余任务数',
-                        data: [50, 40, 30, 20, 15, 10, 5, 0]
+                        data: idealTask
                     }, {
                         name: '实际剩余任务数',
-                        data: [50, 50, 45, 40, 35, 30, 25, 10]
+                        data: trueTask
                     }],
                     responsive: {
                         rules: [{
@@ -247,8 +261,8 @@
                     }
                 });
             },
-            initChart5(){
-                Highcharts.chart('chart5', {
+            initChart5(date,cumulativeTask,completionTask){
+                Highcharts.chart('chart10', {
                     title: {
                         text: null
                     },
@@ -256,9 +270,7 @@
                         enabled: false     //不显示LOGO
                     },
                     xAxis: {
-                        categories: [
-                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
-                        ],
+                        categories: date,
                         crosshair: false
                     },
                     yAxis: {
@@ -281,10 +293,10 @@
                     // },
                     series: [{
                         name: '累计任务总数',
-                        data: [2, 4, 4, 4, 6, 6, 8, 10]
+                        data: cumulativeTask
                     }, {
                         name: '累计完成任务总数',
-                        data: [0, 0, 1, 3, 3, 5, 6, 7]
+                        data: completionTask
                     }],
                     responsive: {
                         rules: [{

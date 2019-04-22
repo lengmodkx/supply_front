@@ -4,15 +4,15 @@
             <div class="statistics-title">项目统计</div>
             <div class="statistics-con">
                 <div class="charts-lsit">
-                    <div @click="goDetail" class="charts-title">按任务执行者分布</div>
+                    <div @click="goDetail(1,'按任务执行者分布')" class="charts-title">按任务执行者分布</div>
                     <div id="chart1" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
-                    <div class="charts-title">期间完成的任务</div>
+                    <div  @click="goDetail(2,'期间完成的任务')" class="charts-title">期间完成的任务</div>
                     <div id="chart2" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
-                    <div class="charts-title">概览报表</div>
+                    <div  @click="goDetail(3,'概览报表')" class="charts-title">概览报表</div>
                     <div id="chart3" class="charts-con">
                         <div class="chart3-wrap">
                             <div class="chart3-list">
@@ -24,11 +24,11 @@
                     </div>
                 </div>
                 <div class="charts-lsit">
-                    <div class="charts-title">任务燃尽图</div>
+                    <div  @click="goDetail(4,'任务燃尽图')" class="charts-title">任务燃尽图</div>
                     <div id="chart4" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
-                    <div class="charts-title">项目进展走势图</div>
+                    <div  @click="goDetail(5,'项目进展走势图')" class="charts-title">项目进展走势图</div>
                     <div id="chart5" class="charts-con"></div>
                 </div>
             </div>
@@ -59,9 +59,11 @@
             },
             mounted() {
                 getPieDate(this.$route.params.id).then(res => {
-                    this.chartData1 = JSON.parse(res.pieData);
+                    this.chartData1 = res.pieData;
                     this.chartData2 = res.staticHistogram.nameArray
                     this.chartData3 = res.staticHistogram.dataArray
+                    this.chartData4 = res.count;
+                    console.log("总任务数="+this.chartData4)
                     this.chartEveryDate1 = res.statisticsBurnout.everyDate
                     this.chartTrueTask = res.statisticsBurnout.trueTask
                     this.chartIdealTask = res.statisticsBurnout.idealTask
@@ -262,13 +264,14 @@
                             }
                         });
                 },
-                goDetail() {
+                goDetail(type, title) {
                     localStorage.statisticsRouter = this.$route.fullPath
                     this.$router.push({
                         path: '/statisticsDetail',
                         query: {
-                            type: 1,
-                            title: '按任务执行者分布'
+                            type: type,
+                            title: title,
+                            id:this.$route.params.id
                         }
                     })
                 }
