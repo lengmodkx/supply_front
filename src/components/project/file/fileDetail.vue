@@ -36,7 +36,7 @@
                                <ul>
                                    <li @click="showModels('移动')">移动文件</li>
                                    <li @click="showModels('复制')">复制文件</li>
-                                   <li>收藏文件</li>
+                                   <li @click="collectFile">收藏文件</li>
                                    <li @click="rublish=true">移到回收站</li>
                                </ul>
                            </section>
@@ -263,7 +263,7 @@ import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import {mapState} from 'vuex'
 import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin} from '@/axios/fileApi'
-import {folderChild, getProjectList} from '@/axios/api'
+import {folderChild, getProjectList, collect} from '@/axios/api'
 import VJstree from "vue-jstree";
 export default {
     props: ['fid'],
@@ -343,6 +343,19 @@ export default {
                 console.log(res)
             })
         },
+        // 收藏文件
+        collectFile () {
+            let data={
+                'projectId': this.projectId,
+                'publicId': this.file.data.fileId,
+                'collectType': '文件'
+            }
+            collect(data).then(res => {
+                if (res.result){
+                    this.$Message.success('收藏成功');
+                }
+            })
+        },
         // 移到回收站
         putRecyclebin () {
             recycleBin(this.file.data.fileId, this.projectId).then(res => {
@@ -389,7 +402,7 @@ export default {
                         fileIds: this.file.data.fileId
                     }
                     cloneFile(this.folderId,this.file.data.fileId).then(res => {
-                        console.log(res)
+                        console.log('复制',res)
                     })
                 }
             }

@@ -2,6 +2,14 @@ import fetch from "./fetch"; // 引用fetch.js
 import api from "./url"; // 引用url.js
 
 // 所有发请求的方法：
+// 收藏
+export function collect(data) {
+    return fetch({
+        url: '/collections',
+        method: "post",
+        data: data
+    });
+}
 // 发送消息
 export function sendMsg(data) {
     return fetch({
