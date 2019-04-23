@@ -32,7 +32,6 @@ export function uploadCommonFile(parentId, params) {
 }
 
 export function bind_files(params) {
-    console.log(">>>>>>>>>>", params);
     return fetch({
         url: '/files/bind_files',
         method: 'post', // 请求方法
