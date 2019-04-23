@@ -1,4 +1,5 @@
 import { files } from "../../axios/api.js";
+import {getTSFile, filePrivacy} from '../../axios/fileApi'
 const store = {
   namespaced: true,
   state: {
@@ -16,9 +17,71 @@ const store = {
         state.file=data
         state.joinInfoIds=data.data.joinInfo.map(v => {
             return v.userId
-        });
-        console.log(state.file)
-    }
+        }).join(",");
+        console.log(state.joinInfoIds)
+    },
+   // 推送，更改文件名称
+   changeFileName(state, data) {
+      state.file.fileName=data
+       state.files.forEach((i,n) => {
+           if (i.fileId==state.file.data.fileId){
+               state.files[n].fileName=data
+           }
+       })
+   },
+   // 推送， 移动文件
+   removeFile(state, data) {
+       state.files.forEach((v, n) => {
+           if (v.fileId == data[0].fileId){
+               state.files.splice(n,1)
+           }
+       });
+       if (localStorage.fileParentId == data[0].parentId){
+           state.files.unshift(data[0])
+       }
+   },
+   // 推送 复制文件
+   copyFile(state,data){
+
+       if(data[0].parentId === localStorage.fileParentId){
+           state.files.unshift(data[0])
+       }
+   },
+   upFiles (state, data) {
+       state.files=data.data
+   },
+      // 推送 移入回收站
+   putRecycle (state, data) {
+        state.files.forEach((i,n) => {
+            if (data.includes(i.fileId)){
+                state.files.splice(n,1)
+            }
+        })
+   },
+      // 推送 添加标签
+      bindingTag(state,data){
+        state.file.data.tagList.unshift(data.tag)
+      },
+      // 推送 删除标签
+      removeTag(state,data){
+          state.file.data.tagList.forEach((i,n) => {
+              if (i.tagId == data.tagId) {
+                  state.file.data.tagList.splice(n,1)
+              }
+          })
+      },
+      // 推送 参与者
+      player(state, data){
+          console.log(data)
+      },
+      // 推送 关联
+      relevance (state, data) {
+          console.log(data)
+      },
+      // 推送 消息
+      getMsg (state, data) {
+         state.file.logs.push(data)
+      },
   },
   actions: {
     initFile({ commit, state }, data) {
@@ -31,7 +94,19 @@ const store = {
             });
         })
 
-    }
+    },
+      // 推送 上传文件
+      upFiles ({commit}, data) {
+          getTSFile(data).then(res => {
+              commit("upFiles", res)
+          })
+      },
+      // 推送 隐私模式
+      putMimi ({commit}, data) {
+          getTSFile(data).then(res => {
+              commit("upFiles", res)
+          })
+      }
   }
 };
 

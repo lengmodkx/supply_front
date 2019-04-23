@@ -154,7 +154,7 @@ import commonFile from "./commonfile.vue";
 import Loading from "../../public/common/Loading.vue";
 import fileDetail from './fileDetail'
 import { mapState, mapActions, mapMutations } from "vuex";
-import {getFileDetails} from '@/axios/fileApi'
+import {getFileDetails, getChildFiles} from '@/axios/fileApi'
 import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy} from '@/axios/fileApi'
 import {
   files,
@@ -302,9 +302,18 @@ export default {
 // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
       if (catalog == 1) {
-        this.$router.push({
-          path: `/project/${this.$route.params.id}/files/${id}`
-        });
+          this.loading=true
+          console.log(id)
+          getChildFiles(id).then(res => {
+              console.log(res)
+              this.$store.commit("file/initFile", res.data)
+              this.loading=false
+              localStorage.fileParentId=res.parentId
+          })
+          // this.$router.push({
+          //     path: `/project/${this.$route.params.id}/files/${id}`
+          // });
+
       }else {
         this.loading=true
         getFileDetails(id).then(res => {
@@ -380,14 +389,14 @@ export default {
     removeCloneFile () {
       if (this.folderId) {
         if (this.caozuo==='移动') {
-          removeFile(this.folderId,this.thisFileId).then(res => {
+          removeFile(this.folderId,this.thisFileId, this.projectId).then(res => {
             if (res.result){
               this.$Message.success('移动成功');
               this.showMove=false
             }
           })
         }else if (this.caozuo==='复制') {
-          cloneFile(this.folderId,this.thisFileId).then(res => {
+          cloneFile(this.folderId,this.thisFileId,).then(res => {
               this.$Message.success('复制成功');
               this.showMove=false
           })
@@ -406,6 +415,7 @@ export default {
     // 移动、赋值文件框打开关闭
     changeVisible(bool) {
       if (bool) {
+        this.projectId=this.$route.params.id
         this.projectList();
       } else {
         this.projects = [];
@@ -516,7 +526,21 @@ export default {
 .file-content-wrap {
   display: flex;
   flex-wrap: wrap;
+  height: calc(100vh - 250px) ;
   justify-content: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 8px;
+        background-color: #e5e5e5;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #cecece;
+    }
+    li{
+        height: 200px;
+    }
   .file-content-filename {
     height: 30px;
     margin-left: 20px;
@@ -537,6 +561,7 @@ export default {
     cursor: pointer;
     img {
       max-width: 100%;
+      max-height: 100%;
       position: absolute;
       top: 50%;
       left: 50%;

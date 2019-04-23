@@ -129,7 +129,7 @@
                         <div class="addLink" @click="relationModal=true;">
                             <Icon type="ios-add-circle-outline" />添加关联</div>
                         <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-                            <AddRelation :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
+                            <AddRelation v-if="relationModal" @binkCallback="binkCallback" :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
                         </Modal>
                     </div>
                    <!--有关联内容-->
@@ -350,6 +350,10 @@ export default {
                 this.rublish=false
             },300)
         },
+        // 关联 回调
+        binkCallback() {
+            this.relationModal=false
+        },
         // 更改文件名称
         changeFileName(){
             changeName(this.file.data.fileId,this.file.data.fileName).then(res => {
@@ -389,7 +393,26 @@ export default {
         // 添加参与者
         saveInvolveMember (detailList) {
             jionPeople(this.file.data.fileId, detailList).then(res => {
-                console.log(res)
+                if (res.result){
+                    this.$Message.success("添加成功")
+                }
+            })
+        },
+        // 移出参与者
+        deleteInvolve(userid) {
+            let a = this.file.data.joinInfo.map(v => {
+                return v.userId
+            })
+            a.forEach((i,n) => {
+                if (i===userid) {
+                    a.splice(n,1)
+                }
+            })
+            let newJoin= a.join(",")
+            jionPeople(this.file.data.fileId, newJoin).then(res => {
+                if (res.result){
+                    this.$Message.success("移除成功")
+                }
             })
         },
         // 收藏文件
@@ -430,6 +453,7 @@ export default {
         changeVisible(bool) {
             if (bool) {
                 this.projectList();
+                this.projectId=this.$route.params.id
             } else {
                 this.projects = [];
                 this.items = [];
@@ -439,7 +463,7 @@ export default {
         removeCloneFile () {
             if (this.folderId) {
                 if (this.caozuo==='移动') {
-                    removeFile(this.folderId,this.file.data.fileId).then(res => {
+                    removeFile(this.folderId,this.file.data.fileId, this.projectId).then(res => {
                         if (res.result){
                             this.$Message.success('移动成功');
                             this.showMove=false

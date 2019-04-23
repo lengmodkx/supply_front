@@ -124,10 +124,13 @@ export default {
               case "A17":
                 this.$store.dispatch("task/recycle", result.object.task)
                 break;
+                // 关联
               case "A28":
                 if (result.object.fromType === '任务') {
                   this.$store.commit("task/bind", result.object)
-                }
+                }else if (result.object.fromType === '文件') {
+                  this.$store.commit("file/relevance", result.object)
+                  }
                 break;
               case "A29":
                 if (result.object.fromType === '任务')
@@ -136,27 +139,53 @@ export default {
               case "A30":
                 this.$store.dispatch("task/loadFile", result.object)
                 break;
+                // 上传文件
+              case "C2":
+                this.$store.dispatch("file/upFiles",result.object);
               // 修改文件名称
               case "C11":
                 this.$store.commit("file/changeFileName", result.object)
+                break;
+                // 复制文件
+              case "C10":
+                this.$store.commit("file/copyFile",result.object)
                 break;
               // 移动文件
               case "C12":
                 this.$store.commit("file/removeFile", result.object)
                 break;
+                // 文件移到回收站
+              case "C13":
+                this.$store.commit("file/putRecycle", result.object)
+                break;
+                // 更改 文件隐私模式
+              case "C8":
+                this.$store.dispatch("file/putMimi", result.object)
+                break;
+                // 改变文件参与者
+              case "C9":
+                this.$store.commit("file/player", result.object)
+                break;
               case "C3":
                 this.$store.dispatch("file/initFile", {
                   fileId: result.object.parentId
                 });
+
                 break;
+                // 添加标签
               case "E1":
                 if (result.object.publicType === '任务') {
                   this.$store.dispatch("task/bindingTag", { tag: result.object.tag, taskId: result.object.publicId })
+                } else if (result.object.publicType === '文件') {
+                  this.$store.commit("file/bindingTag", { tag: result.object.tag, fileId: result.object.publicId })
                 }
                 break;
+                // 移除标签
               case "E2":
                 if (result.object.publicType === '任务') {
                   this.$store.dispatch("task/removeTag", { tagId: result.object.tagId, taskId: result.object.publicId })
+                }else if (result.object.publicType === '文件') {
+                  this.$store.commit("file/removeTag", { tagId: result.object.tagId, fileId: result.object.publicId })
                 }
               case "F1":
                 if (result.object.type === '任务') {
@@ -164,7 +193,7 @@ export default {
                 } else if (result.object.type === 'schedule') {
                   this.$store.commit("schedule/msg", result.object.log)
                 } else if (result.object.type === '文件') {
-
+                  this.$store.commit("file/getMsg", result.object.log)
                 }
                 break;
               case "G1":
