@@ -17,7 +17,7 @@ const store = {
         state.joinInfoIds=data.data.joinInfo.map(v => {
             return v.userId
         });
-        console.log(state.joinInfoIds)
+        console.log(state.file)
     }
   },
   actions: {

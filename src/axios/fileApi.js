@@ -80,19 +80,11 @@ export function updateFileVersion() {
 
 }
 
-//收藏文件
-export function collectFile(fileId) {
-    return fetch({
-        url: `/files/${fileId}/collect`,
-        method: "post",
-        data: ''
-    });
-}
 //文件隐私模式
-export function filePrivacy(data) {
+export function filePrivacy(id, privacy) {
     return fetch({
-        url: `/files/${fileId}/privacy`,
-        method: "post",
-        data: data
+        url: `/files/${id}/privacy/${privacy}`,
+        method: "put",
+        data: ''
     });
 }
