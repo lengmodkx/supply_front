@@ -132,8 +132,14 @@ export default {
               case "A30":
                 this.$store.dispatch("task/loadFile",result.object)
                 break;
-              case "C1":
-              case "C2":
+                // 修改文件名称
+              case "C11":
+                this.$store.commit("file/changeFileName", result.object)
+                break;
+                // 移动文件
+              case "C12":
+                this.$store.commit("file/removeFile", result.object)
+                break;
               case "C3":
                 this.$store.dispatch("file/initFile", {
                   fileId: result.object.parentId
