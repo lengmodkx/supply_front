@@ -7,7 +7,7 @@
       </span>
     </div>
     <!-- 列表 -->
-    <Input class="search" v-model="keyword" placeholder="搜索成员" @on-search="filterUser"/>
+    <Input class="search" v-model="keyword" placeholder="搜索成员" @on-search="filterUser" />
     <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请新成员
     </div>
@@ -33,17 +33,14 @@
             <p class="uname">{{user.memberName}}</p>
             <!-- <p class="email">{{user.email}}</p> -->
           </div>
-          <Icon type="ios-arrow-down" size="18"/>
+          <Icon type="ios-arrow-down" size="18" />
         </div>
         <div slot="content">
           <div class="user-set">
             <p>{{user.memberLabel==1?'管理员':'成员'}}</p>
-            <Icon type="md-checkmark" size="16"/>
+            <Icon type="md-checkmark" size="16" />
           </div>
-          <div
-            style="color:red;height:30px;line-height:30px;cursor:pointer;border-bottom: 1px solid #eeeeee;"
-            v-if="user.memberLabel!=1"
-          >
+          <div style="color:red;height:30px;line-height:30px;cursor:pointer;border-bottom: 1px solid #eeeeee;" v-if="user.memberLabel!=1">
             <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.userId)">
               <p>移除成员</p>
             </Poptip>
@@ -58,22 +55,14 @@
       </p>
       <div style="text-align:center;height:400px">
         <div>
-          <Input
-            search
-            enter-button
-            placeholder="请输入手机号/邮箱查找"
-            @on-search="searchUser"
-            v-model="keyword2"
-          />
+          <Input search enter-button placeholder="请输入手机号/邮箱查找" @on-search="searchUser" v-model="keyword2" />
         </div>
         <loading v-if="loading"></loading>
         <div style="height:360px;padding-top:10px">
           <ul>
             <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
               <div class="invit-user-name">
-                <img
-                  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`"
-                >
+                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`">
                 <p>{{user.userName}}</p>
               </div>
               <Button type="primary" @click="adduser(user.userId)">添加</Button>
@@ -127,7 +116,7 @@ export default {
       });
     },
     //筛选用户
-    filterUser() {},
+    filterUser() { },
     adduser(userId) {
       let params = {
         projectId: this.$route.params.id,
@@ -248,6 +237,7 @@ export default {
   cursor: pointer;
   justify-content: center;
   align-items: center;
+
   .avatar {
     width: 46px;
     img {

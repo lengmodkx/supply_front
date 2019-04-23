@@ -6,7 +6,9 @@
     <!-- 项目菜单 -->
     <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideMenuBox="hideBox"></ProjectMenu>
 
-    <div class="router-view-box" :class="{zhanWei:show==1||show==2}">
+    <ProjectView v-transfer :class="{activeMenu:show==3,animate}" @hideMenuBox="hideBox"></ProjectView>
+
+    <div class="router-view-box" :class="{zhanWei:show==1||show==2||show==3}">
       <router-view />
     </div>
   </div>
@@ -16,6 +18,7 @@
 import MyHeader from "@/components/public/HeaderProject.vue";
 import ProjectMember from "@/components/public/ProjectMember.vue";
 import ProjectMenu from "@/components/public/ProjectMenu.vue";
+import ProjectView from '../../components/public/ProjectView.vue'
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -23,7 +26,8 @@ export default {
   components: {
     "header-project": MyHeader,
     ProjectMember,
-    ProjectMenu
+    ProjectMenu,
+    ProjectView
   },
   data() {
     return {
@@ -128,15 +132,15 @@ export default {
               case "A29":
                 if (result.object.fromType === '任务')
                   this.$store.commit("task/cancleRelation", result.object)
-                  break;
-              case "A30":
-                this.$store.dispatch("task/loadFile",result.object)
                 break;
-                // 修改文件名称
+              case "A30":
+                this.$store.dispatch("task/loadFile", result.object)
+                break;
+              // 修改文件名称
               case "C11":
                 this.$store.commit("file/changeFileName", result.object)
                 break;
-                // 移动文件
+              // 移动文件
               case "C12":
                 this.$store.commit("file/removeFile", result.object)
                 break;
@@ -159,7 +163,7 @@ export default {
                   this.$store.dispatch("task/publish", result.object.log)
                 } else if (result.object.type === 'schedule') {
                   this.$store.commit("schedule/msg", result.object.log)
-                } else if(result.object.type === '文件'){
+                } else if (result.object.type === '文件') {
 
                 }
                 break;

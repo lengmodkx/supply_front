@@ -8,20 +8,18 @@
     </div>
 
     <div class="menu">
-      <a
-        @click="push(menu.prefix)"
-        v-for="(menu, index) in menus"
-        :key="index"
-        :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''"
-      >{{menu.funcName}}</a>
+      <a @click="push(menu.prefix)" v-for="(menu, index) in menus" :key="index" :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''">{{menu.funcName}}</a>
     </div>
 
     <div class="fr">
       <a :class="{activeHeaderTag:show==1}" @click="$emit('showBox',1);">
-        <Icon type="md-people" size="20"/>
+        <Icon type="md-people" size="20" />
         {{users.length}}
       </a>
-      <!-- <a><Icon type="eye"></Icon>视图</a> -->
+
+      <a :class="{activeHeaderTag:show==3}" @click="$emit('showBox',3);">
+        <Icon type="eye"></Icon>视图
+      </a>
       <a :class="{activeHeaderTag:show==2}" @click="$emit('showBox',2);" class="last">
         <Icon type="navicon"></Icon>菜单
       </a>
