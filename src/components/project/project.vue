@@ -153,6 +153,8 @@ export default {
                   this.$store.dispatch("task/publish", result.object.log)
                 } else if (result.object.type === 'schedule') {
                   this.$store.commit("schedule/msg", result.object.log)
+                } else if(result.object.type === '文件'){
+
                 }
                 break;
               case "G1":
