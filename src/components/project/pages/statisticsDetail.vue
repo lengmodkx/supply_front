@@ -21,22 +21,32 @@
         </div>
         <!--按条件查询-->
         <div class="filter-box">
-            <p>按任务完成情况</p>
-            <RadioGroup v-model="finished" vertical>
-                <Radio label="全部"></Radio>
-                <Radio label="已完成"></Radio>
-                <Radio label="未完成"></Radio>
-            </RadioGroup>
+            <div v-show="show_finish">
+                <p>按任务完成情况</p>
+                <RadioGroup v-model="finished" vertical @on-change="Task_Finish">
+                   <Radio label="全部"></Radio>
+                   <Radio label="已完成"></Radio>
+                   <Radio label="未完成"></Radio>
+               </RadioGroup>
+            </div>
+            <div v-show="time_scope">
+                <p>时间范围</p>
+                <Select v-model="scope" style="width:200px" placeholder="过去7天" @on-change="Task_day">
+                    <Option v-for="" :value="7" :key="">过去7天</Option>
+                    <Option v-for="" :value="30" :key="">过去一个月</Option>
+                    <Option v-for="" :value="90" :key="">过去三个月</Option>
+                </Select>
+            </div>
             <p>执行者</p>
-            <Select v-model="executor" style="width:200px" placeholder="全部">
-                <Option v-for="item in peopleL" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Select v-model="executor" style="width:200px" placeholder="全部" @on-change="Task_zxz">
+                <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <p>任务分组</p>
-            <Select v-model="people" style="width:200px" placeholder="所有任务分组">
+            <Select v-model="people" style="width:200px" placeholder="所有任务分组" @on-change="Task_rw">
                 <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <div style="margin-top: 20px">
-                <Button type="info" long>确定</Button>
+                <Button type="info" long @click="filterData">确定</Button>
             </div>
         </div>
     </div>
@@ -48,91 +58,104 @@
     import Highcharts3D from 'highcharts/highcharts-3d';
     import Highmaps from 'highcharts/modules/map';
     import  { getPieSource,getHistogramSource,getBurnoutSource,getAddSource }  from "../../../axios/statisticApi.js";
-    // import exportCSV from '@/libs/export-csv.js'
     HighchartsMore(Highcharts)
     HighchartsDrilldown(Highcharts);
     Highcharts3D(Highcharts);
     Highmaps(Highcharts);
-    // exportCSV(Highcharts);
     export default {
         data: function () {
             return {
+                show_finish:'',
+                time_scope:'',
                 title: '',
                 type: '',
                 id: '',
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
                 finished: '全部',
-                people: '',
-                executor: '',
-                peopleL: [
-                    {
-                        value: '全部执行者',
-                        label: '全部执行者'
-                    }],
-                peopleList: [
-                    {
-                        value: '全部',
-                        label: '全部'
-                    },
-                    {
-                        value: '亚索',
-                        label: '亚索'
-                    },
-                    {
-                        value: '泰隆',
-                        label: '泰隆'
-                    },
-                ],
+                people: 0,
+                executor: 0,
+                scope:7,
+                executorData: [],
+                peopleList:[],
                 columns1:[],
-                data1: []
-
+                data1: [],
+                StatisticsDTO:{
+                    taskMember:'',
+                    taskGroup:'',
+                    taskCase:'',
+                    taskDay:''
+                }
             }
         },
         mounted() {
             this.title=this.$route.query.title;
             this.type = this.$route.query.type;
             this.id  =  this.$route.query.id
-            console.log("********************",this.type)
-            switch(this.type){
-                case 1 :
-                    getPieSource(this.id).then(res => {
-                        this.chartData1 = res.pieData;
-                        this.columns1 = res.titleList
-                        this.data1 = res.pieData;
-                        this.initChart1(this.chartData1)
-                    })
-                    break;
-                case 2:
-                    getHistogramSource(this.id).then(res=>{
-                        this.chartData1 = res.staticHistogram.nameArray
-                        this.chartData1 = res.staticHistogram.dataArray
-                        this.columns1   =  res.titleList
-                        this.initChart2(this.chartData1,this.chartData1)
-                    })
-                    break;
-                case 4 :
-                    getBurnoutSource(this.id).then(res => {
-                        let chartEveryDate1 = res.statisticsBurnout.everyDate
-                        let chartTrueTask = res.statisticsBurnout.trueTask
-                        let chartIdealTask = res.statisticsBurnout.idealTask
-                        this.columns1 = res.titleList
-                        this.data1 = res.statisticsBurnout.sticResultVOS
-                        this.initChart4(chartEveryDate1, chartTrueTask, chartIdealTask)
-                    })
-                    break;
-                case 5:
-                    getAddSource(this.id).then(res => {
-                        let chartEveryDate1 = res.statisticsBurnout.everyDate
-                        let cumulativeTask = res.statisticsBurnout.cumulativeTask
-                        let completionTask = res.statisticsBurnout.completionTask
-                        this.columns1 = res.titleList
-                        this.data1 = res.statisticsBurnout.sticResultVOS
-                        this.initChart5(chartEveryDate1, cumulativeTask, completionTask)
-                    })
-                    break;
-            }
+            this.allMethods(this.type)
         },
         methods: {
+            Task_day(data){
+               this.StatisticsDTO.taskDay=data;
+            },
+            Task_Finish(data) {
+                this.StatisticsDTO.taskCase = data;
+            },
+            Task_zxz(data){
+                this.StatisticsDTO.taskMember = data
+            },
+            Task_rw(data){
+                this.StatisticsDTO.taskGroup = data
+            },
+            filterData(){
+                this.allMethods(this.type)
+            },
+            allMethods(n){
+                switch(n){
+                    case 1 :
+                        this.show_finish = true,
+                        this.time_scope = false,
+                        getPieSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
+                            this.columns1 = res.titleList
+                            this.data1 = res.pieData;
+                            this.executorData = res.executor
+                            this.peopleList = res.taskGroup;
+                            this.initChart1(res.pieData)
+                        })
+                        break;
+                    case 2:
+                        this.show_finish = true,
+                            this.time_scope = false,
+                        getHistogramSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
+                            this.columns1   =  res.titleList
+                            this.executorData = res.executor
+                            this.peopleList = res.taskGroup;
+                            this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
+                        })
+                        break;
+                    case 4 :
+                        this.show_finish = false,
+                            this.time_scope = true,
+                        getBurnoutSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
+                            this.columns1 = res.titleList
+                            this.executorData = res.executor
+                            this.peopleList = res.taskGroup;
+                            this.data1 = res.statisticsBurnout.sticResultVOS
+                            this.initChart4(res.statisticsBurnout.everyDate, res.statisticsBurnout.trueTask, res.statisticsBurnout.idealTask)
+                        })
+                        break;
+                    case 5:
+                        this.show_finish = false,
+                            this.time_scope = true,
+                        getAddSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
+                            this.columns1 = res.titleList
+                            this.executorData = res.executor
+                            this.peopleList = res.taskGroup;
+                            this.data1 = res.statisticsBurnout.sticResultVOS
+                            this.initChart5( res.statisticsBurnout.everyDate, res.statisticsBurnout.cumulativeTask, res.statisticsBurnout.completionTask)
+                        })
+                        break;
+                }
+            },
             initChart1(data){
                 Highcharts.chart('chart6', {
                     chart: {
@@ -194,8 +217,6 @@
                         }
                     },
                     tooltip: {
-                        // shared: false,
-                        // useHTML: false
                     },
                     plotOptions: {
                         column: {
@@ -230,14 +251,6 @@
                         align: 'right',
                         verticalAlign: 'middle'
                     },
-                    // plotOptions: {
-                    //     series: {
-                    //         label: {
-                    //             connectorAllowed: false
-                    //         },
-                    //         pointStart: 2010
-                    //     }
-                    // },
                     series: [{
                         name: '理想剩余任务数',
                         data: idealTask

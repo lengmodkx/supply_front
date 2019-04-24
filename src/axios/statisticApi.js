@@ -15,10 +15,11 @@ export function getPieDate(projectId){
  * 饼图详细数据集
  * @param projectId
  */
-export function getPieSource(projectId) {
+    export function getPieSource(projectId,data) {
+
     return fetch({
-        url: `${api.statistics}/getPieSource/${projectId}`,
-        method: "get"
+        url: `${api.statistics}/getPieSource/${projectId}/${data}`,
+        method: "get",
     });
 }
 
@@ -26,9 +27,9 @@ export function getPieSource(projectId) {
  * 柱状图详细数据集
  * @param projectId
  */
-export function getHistogramSource(projectId) {
+export function getHistogramSource(projectId,data) {
     return fetch({
-        url: `${api.statistics}/getHistogramSource/${projectId}`,
+        url: `${api.statistics}/getHistogramSource/${projectId}/${data}`,
         method: "get"
     });
 }
@@ -38,9 +39,9 @@ export function getHistogramSource(projectId) {
  * 任务燃尽图详细数据集
  * @param projectId
  */
-export function getBurnoutSource(projectId) {
+export function getBurnoutSource(projectId,data) {
     return fetch({
-        url: `${api.statistics}/getBurnoutSource/${projectId}`,
+        url: `${api.statistics}/getBurnoutSource/${projectId}/${data}`,
         method: "get"
     });
 }
@@ -52,9 +53,9 @@ export function getBurnoutSource(projectId) {
  * 累计图详细数据集
  * @param projectId
  */
-export function getAddSource(projectId) {
+export function getAddSource(projectId,data) {
     return fetch({
-        url: `${api.statistics}/getAddSource/${projectId}`,
+        url: `${api.statistics}/getAddSource/${projectId}/${data}`,
         method: "get"
     });
 }
