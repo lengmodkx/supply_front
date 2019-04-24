@@ -296,7 +296,7 @@
         <div class="addfile">
           <div class="file-lsit" v-if="task.fileList" v-for="(f,i) in task.fileList" :key="i">
             <div class="file-img">
-              <img v-if="images_suffix.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'" alt="">
+              <img v-if="images_suffix.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
               <img v-else src="@/icons/img/moren.png" alt="文件">
               <div class="zhezhao">
                 <Icon type="md-cloud-download" @click="downLoad(f.fileId)"/>
@@ -441,7 +441,6 @@ export default {
     },
     //文件下载
     downLoad(fileId){
-      //console.log(">>>", this.$route);
       window.location.href= "http://192.168.3.189:8090/files/"+fileId+"/download"
       //downloadFile(fileId)
     },
@@ -454,7 +453,7 @@ export default {
 
     },
     closeDetail () {
-      this.showModelDetail=false
+      this.showFileDetail=false
     },
     // 删除执行者
     deleteExecutor(){

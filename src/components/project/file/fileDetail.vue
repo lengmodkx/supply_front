@@ -14,7 +14,8 @@
                         <DropdownItem name="commonfile">上传普通文件</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-                <p @click="downLoad" class="padd8"><Icon type="ios-cloud-download-outline" />下载</p>
+                <p class="padd8"><Icon type="ios-cloud-download-outline" />
+                    <a style="color: gray" :download="file.data.fileName" :href="'http://192.168.3.189:8090/files/'+file.data.fileId +'/download'" ref="xiazai">下载</a></p>
                 <!--<p><Icon type="ios-link-outline" />复制文件链接</p>-->
                 <Poptip class="menu-file"  v-model="menuShow" @on-popper-hide="popHid">
                     <Icon type="ios-more" class="mr0" />
@@ -36,19 +37,22 @@
                                <ul>
                                    <li @click="showModels('移动')">移动文件</li>
                                    <li @click="showModels('复制')">复制文件</li>
-                                   <li>收藏文件</li>
+                                   <li @click="collectFile">收藏文件</li>
                                    <li @click="rublish=true">移到回收站</li>
                                </ul>
                            </section>
                            <div class="footer" >
                                <div class="footer-left">
                                    <i class="ivu-icon ivu-icon-unlocked"></i>
-                                   <div class="footer-privacy-text">
+                                   <div class="footer-privacy-text" @click="changePrivacy">
                                        <span>隐私模式</span>
-                                       <span>{{privacyTxt}}</span>
+                                       <span v-if="file.data.filePrivacy=='1'">仅参与者可见</span>
+                                       <span v-else>所有成员可见</span>
                                    </div>
                                </div>
-                               <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
+                               <span v-if="file.data.filePrivacy=='1'" style="color:#3da8f5" @click="changePrivacy">已开启</span>
+                               <span v-else style="color:#3da8f5" @click="changePrivacy">已关闭</span>
+
                            </div>
                        </div>
 
@@ -125,33 +129,55 @@
                         <div class="addLink" @click="relationModal=true;">
                             <Icon type="ios-add-circle-outline" />添加关联</div>
                         <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-                            <AddRelation :publicId="file.data.fileId"></AddRelation>
+                            <AddRelation v-if="relationModal" @binkCallback="binkCallback" :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
                         </Modal>
                     </div>
-                    <div class="has-relevance">
-                        <ul>
-                            <div class="what-title">被以下任务关联</div>
-                            <li class="gl-task-list">
+                   <!--有关联内容-->
+                    <div class="has-relevance" v-for="(b,i) in file.bindings" :key="i">
+                        <ul >
+                            <div class="what-title" v-if="b.publicType=='任务'">关联的任务</div>
+                            <div class="what-title" v-if="b.publicType=='日程'">关联的日程</div>
+                            <div class="what-title" v-if="b.publicType=='分享'">关联的分享</div>
+                            <div class="what-title" v-if="b.publicType=='文件'">关联的文件</div>
+                            <li class="gl-task-list" >
                                 <div class="gl-task-list-con">
-                                    <Icon type="md-checkbox-outline" size="22" />
-                                    <Icon type="ios-list-box-outline" size="22" />
-                                    <Icon type="ios-calendar-outline" size="22" />
-                                    <Icon type="ios-document-outline" size="22" />
-                                    <img src="" alt="">
+                                    <Icon v-if="b.publicType=='任务'" type="md-checkbox-outline" size="22" />
+                                    <Icon v-if="b.publicType=='分享'" class="glpop" type="ios-arrow-down" size="20" />
+                                    <Icon v-if="b.publicType=='文件'" type="ios-document-outline" size="22" />
+                                    <Icon v-if="b.publicType=='日程'" type="ios-calendar-outline" size="22" />
+                                    <img v-if="JSON.parse(b.bindContent).userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ JSON.parse(b.bindContent).userImage" alt="执行者">
+                                    <img v-else src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==">
                                     <div class="gl-con">
-                                        <div class="gl-con-top">
-                                            <span>关联人物名称</span><span>关联项目名称</span>
+                                        <div class="gl-con-top" v-if="b.publicType=='任务'">
+                                            <span>{{JSON.parse(b.bindContent).taskName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
                                         </div>
-                                        <div class="gl-con-bottom">2018-12-12 12:00</div>
+                                        <div class="gl-con-top" v-if="b.publicType=='文件'">
+                                            <span>{{JSON.parse(b.bindContent).fileName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
+                                        </div>
+                                        <div class="gl-con-top" v-if="b.publicType=='日程'">
+                                            <span>{{JSON.parse(b.bindContent).scheduleName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
+                                        </div>
+                                        <div class="gl-con-top" v-if="b.publicType=='分享'">
+                                            <span>{{JSON.parse(b.bindContent).shareName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <Poptip v-model="glPop">
+                                <Poptip>
                                     <Icon class="glpop" type="ios-arrow-down" size="20" />
                                     <div slot="content">
                                         <div class="glpop-list">
                                             <Icon type="ios-link" size="20" /><span>复制链接</span>
                                         </div>
-                                        <div class="glpop-list">
+                                        <div class="glpop-list"  v-if="b.publicType=='任务'" @click="cancle(JSON.parse(b.bindContent).taskId)">
+                                            <Icon type="md-link" size="20" /><span>取消关联</span>
+                                        </div>
+                                        <div class="glpop-list"  v-if="b.publicType=='分享'" @click="cancle(JSON.parse(b.bindContent).shareId)">
+                                            <Icon type="md-link" size="20" /><span>取消关联</span>
+                                        </div>
+                                        <div class="glpop-list"  v-if="b.publicType=='日程'" @click="cancle(JSON.parse(b.bindContent).scheduleId)">
+                                            <Icon type="md-link" size="20" /><span>取消关联</span>
+                                        </div>
+                                        <div class="glpop-list"  v-if="b.publicType=='文件'" @click="cancle(JSON.parse(b.bindContent).fileId)">
                                             <Icon type="md-link" size="20" /><span>取消关联</span>
                                         </div>
                                     </div>
@@ -186,7 +212,7 @@
                     </div>
                     <div class="line"></div>
                     <!--所有动态-->
-                    <log :logs="task.logs" :publicId="task.taskId" :unReadMsg="task.unReadMsg"></log>
+                    <log :logs="file.logs" :publicId="file.data.fileId" :unReadMsg="file.data.unReadMsg"></log>
                 </div>
                 <!--发消息-->
                 <div class="talk">
@@ -262,8 +288,8 @@ import Emoji from '@/components/public/common/emoji/Emoji'
 import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import {mapState} from 'vuex'
-import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin} from '@/axios/fileApi'
-import {folderChild, getProjectList} from '@/axios/api'
+import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy} from '@/axios/fileApi'
+import {folderChild, getProjectList, collect, cancle, sendMsg} from '@/axios/api'
 import VJstree from "vue-jstree";
 export default {
     props: ['fid'],
@@ -299,12 +325,34 @@ export default {
         ...mapState('file', ['file','joinInfoIds'])
     },
     methods: {
-        sendChat () {},
-        chooseEmoji () {},
+        // 发送消息
+        sendChat () {
+            let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")
+            if (con){
+                let datas={
+                    'publicId':this.file.data.fileId,
+                    'projectId':this.projectId,
+                    'publicType':this.publicType,
+                    'content':con
+                }
+                console.log(datas)
+                sendMsg(datas).then(res => {
+                    this.$refs.textarea.innerHTML=''
+                })
+            }
+        },
+        chooseEmoji (name) {
+            alert(1)
+            this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
+        },
         popHid () {
             setTimeout(() => {
                 this.rublish=false
             },300)
+        },
+        // 关联 回调
+        binkCallback() {
+            this.relationModal=false
         },
         // 更改文件名称
         changeFileName(){
@@ -321,6 +369,14 @@ export default {
                 this.showCommon = !this.showCommon;
             }
         },
+        // 取消关联
+        cancle(id){
+            cancle(id,this.projectId,this.publicType,this.file.data.fileId).then(res => {
+                if(res.result === 1){
+                    this.$Message.success("已取消")
+                }
+            })
+        },
         // 放大缩小图片
         changeImgSize(n){
             if (n){
@@ -333,14 +389,43 @@ export default {
         },
         // 下载文件
         downLoad () {
-            downloadFile(this.file.data.fileId).then(res => {
-                console.log(res)
-            })
         },
         // 添加参与者
         saveInvolveMember (detailList) {
             jionPeople(this.file.data.fileId, detailList).then(res => {
-                console.log(res)
+                if (res.result){
+                    this.$Message.success("添加成功")
+                }
+            })
+        },
+        // 移出参与者
+        deleteInvolve(userid) {
+            let a = this.file.data.joinInfo.map(v => {
+                return v.userId
+            })
+            a.forEach((i,n) => {
+                if (i===userid) {
+                    a.splice(n,1)
+                }
+            })
+            let newJoin= a.join(",")
+            jionPeople(this.file.data.fileId, newJoin).then(res => {
+                if (res.result){
+                    this.$Message.success("移除成功")
+                }
+            })
+        },
+        // 收藏文件
+        collectFile () {
+            let data={
+                'projectId': this.projectId,
+                'publicId': this.file.data.fileId,
+                'collectType': '文件'
+            }
+            collect(data).then(res => {
+                if (res.result){
+                    this.$Message.success('收藏成功');
+                }
             })
         },
         // 移到回收站
@@ -354,20 +439,21 @@ export default {
         },
         // 更改隐私模式
         changePrivacy() {
-            if (this.isPrivacy == 1) {
-                this.privacyTxt = "所有成员可见";
-                this.isPrivacy = 2;
-                this.privacyStatus = "未开启";
-            } else {
-                this.privacyTxt = "仅参与者可见";
-                this.isPrivacy = 1;
-                this.privacyStatus = "已开启";
+            let num=0
+            if (this.file.data.filePrivacy == 1) {
+                num =0
+            }else {
+                num =1
             }
+            filePrivacy(this.file.data.fileId,num).then(res => {
+                console.log(res)
+            })
         },
         // 移动、赋值文件框打开关闭
         changeVisible(bool) {
             if (bool) {
                 this.projectList();
+                this.projectId=this.$route.params.id
             } else {
                 this.projects = [];
                 this.items = [];
@@ -377,19 +463,16 @@ export default {
         removeCloneFile () {
             if (this.folderId) {
                 if (this.caozuo==='移动') {
-                    removeFile(this.folderId,this.file.data.fileId).then(res => {
+                    removeFile(this.folderId,this.file.data.fileId, this.projectId).then(res => {
                         if (res.result){
                             this.$Message.success('移动成功');
                             this.showMove=false
                         }
                     })
                 }else if (this.caozuo==='复制') {
-                    let data={
-                        folderId: this.folderId,
-                        fileIds: this.file.data.fileId
-                    }
                     cloneFile(this.folderId,this.file.data.fileId).then(res => {
-                        console.log(res)
+                        this.$Message.success('复制成功');
+                        this.showMove=false
                     })
                 }
             }

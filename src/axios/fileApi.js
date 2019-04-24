@@ -36,12 +36,13 @@ export function jionPeople(fileId, newJoin) {
 }
 
 // 移动文件
-export function removeFile(folderId, fileIds) {
+export function removeFile(folderId, fileIds, toProjectId) {
     return fetch({
         url: `/files/${folderId}/m_move`,
         method: "put",
         params: {
-            fileIds: fileIds
+            fileIds: fileIds,
+            toProjectId: toProjectId
         }
     });
 }
@@ -74,25 +75,33 @@ export function addRelation(data) {
         data: data
     });
 }
+// 获取文件夹下的子文件
+export function getChildFiles(fileId) {
+        return fetch({
+        url: '/files',
+        method: "get",
+        params: {fileId: fileId}
+    });
+}
+// 加载项目下的文件信息
+export function getTSFile(fileId) {
+    return fetch({
+        url: '/files',
+        method: "get",
+        params: {fileId: fileId}
+    });
+}
 
 //更新文件版本
 export function updateFileVersion() {
 
 }
 
-//收藏文件
-export function collectFile(fileId) {
-    return fetch({
-        url: `/files/${fileId}/collect`,
-        method: "post",
-        data: ''
-    });
-}
 //文件隐私模式
-export function filePrivacy(data) {
+export function filePrivacy(id, privacy) {
     return fetch({
-        url: `/files/${fileId}/privacy`,
-        method: "post",
-        data: data
+        url: `/files/${id}/privacy/${privacy}`,
+        method: "put",
+        data: ''
     });
 }

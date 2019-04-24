@@ -173,50 +173,67 @@ const store = {
             }
         },
         bind(state,data){
+            var sign = 0
             data.bind.forEach((d,index) => {
                 if(data.publicType === '任务'){
                     if(state.task.bindTasks.length === 0){
                         state.task.bindTasks.unshift(d)
+                        return
                     } else{
                         state.task.bindTasks.forEach((t,i) => {
-                            if(t.taskId !== d.taskId){
-                                state.task.bindTasks.unshift(d)
+                            if(t.taskId === d.taskId){
+                                sign = 1
                             }
                         })
+                        if(sign === 0){
+                            state.task.bindTasks.unshift(d)
+                        }
                     }
                 }
                 if(data.publicType === '文件'){
                     if(state.task.bindFiles.length === 0){
                         state.task.bindFiles.unshift(d)
+                        return
                     } else{
                         state.task.bindFiles.forEach((t,i) => {
-                            if(t.fileId !== d.fileId){
-                                state.task.bindFiles.unshift(d)
+                            if(t.taskId === d.taskId){
+                                sign = 1
                             }
                         })
+                        if(sign === 0){
+                            state.task.bindTasks.unshift(d)
+                        }
                     }
                 }
 
                 if(data.publicType === '日程'){
                     if(state.task.bindSchedules.length === 0){
                         state.task.bindSchedules.unshift(d)
+                        return
                     } else{
                         state.task.bindSchedules.forEach((t,i) => {
-                            if(t.scheduleId !== d.scheduleId){
-                                state.task.bindSchedules.unshift(d)
+                            if(t.taskId === d.taskId){
+                                sign = 1
                             }
                         })
+                        if(sign === 0){
+                            state.task.bindTasks.unshift(d)
+                        }
                     }
                 }
                 if(data.publicType === '分享'){
                     if(state.task.bindShares.length === 0){
                         state.task.bindShares.unshift(d)
+                        return
                     } else{
                         state.task.bindShares.forEach((t,i) => {
-                            if(t.id !== d.id){
-                                state.task.bindShares.unshift(d)
+                            if(t.taskId === d.taskId){
+                                sign = 1
                             }
                         })
+                        if(sign === 0){
+                            state.task.bindTasks.unshift(d)
+                        }
                     }
                 }
             })

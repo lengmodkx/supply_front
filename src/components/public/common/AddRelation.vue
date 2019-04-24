@@ -467,10 +467,10 @@
       },
         // 点击关联 确定按钮
       relation(){
-          console.log(">>>>>>>>>", this.guanlianData);
           this.relationing=true
           addRelation(this.guanlianData).then(res => {
               if (res.result){
+                  this.$emit('binkCallback')
                   this.$Message.success('关联成功');
               }
               else {
@@ -481,8 +481,8 @@
       }
     },
     mounted () {
-      document.getElementById('relationModal').children[1].style.zIndex = '1010';
-      document.getElementById('relationModal').children[0].style.zIndex = '1010';
+      // document.getElementById('relationModal').children[1].style.zIndex = '1010';
+      // document.getElementById('relationModal').children[0].style.zIndex = '1010';
         getProjectList().then(res => {
            this.projectData=res.data
             console.log(res.data)

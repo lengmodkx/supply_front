@@ -35,8 +35,7 @@ export function bind_files(params) {
     return fetch({
         url: '/files/bind_files',
         method: 'post', // 请求方法
-        data: params,
-        headers: {'Content-Type':'application/json;charset=UTF-8'}
+        data: params
     })
 }
 

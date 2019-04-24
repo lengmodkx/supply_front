@@ -112,8 +112,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      img{
+        max-height: 100%;
+      }
       .big-small-box{
         position: absolute;
+        z-index: 9;
         height: 36px;
         width: 100px;
         background-color: rgba(0,0,0,.6);
@@ -269,6 +273,15 @@
             align-items: center;
             width: 100%;
             justify-content: space-between;
+            span:nth-of-type(1){
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            span:nth-of-type(2){
+              flex: none;
+            }
           }
           .gl-con-bottom{
             line-height: 20px;

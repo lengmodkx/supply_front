@@ -70,19 +70,21 @@
                       <li @click="removeClone('移动')">移动文件</li>
                       <li @click="removeClone('复制')">复制文件</li>
                       <li >复制文件链接</li>
-                      <li >收藏文件</li>
+                      <li @click="collectFile">收藏文件</li>
                       <li @click="rublish=true">移到回收站</li>
                     </ul>
                   </section>
                   <div class="footer" >
                     <div class="footer-left">
                       <i class="ivu-icon ivu-icon-unlocked"></i>
-                      <div class="footer-privacy-text">
+                      <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
                         <span>隐私模式</span>
-                        <span>{{privacyTxt}}</span>
+                        <span v-if="file.filePrivacy=='1'">仅参与者可见</span>
+                        <span v-else>所有成员可见</span>
                       </div>
                     </div>
-                    <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
+                    <span v-if="file.filePrivacy=='1'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
+                    <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
                   </div>
                 </div>
 
@@ -152,13 +154,14 @@ import commonFile from "./commonfile.vue";
 import Loading from "../../public/common/Loading.vue";
 import fileDetail from './fileDetail'
 import { mapState, mapActions, mapMutations } from "vuex";
-import {getFileDetails} from '@/axios/fileApi'
-import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin} from '@/axios/fileApi'
+import {getFileDetails, getChildFiles} from '@/axios/fileApi'
+import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy} from '@/axios/fileApi'
 import {
   files,
   createFolder,
   getProjectList,
-  folderChild
+  folderChild,
+  collect
 } from "../../../axios/api.js";
 import VJstree from "vue-jstree";
 export default {
@@ -283,12 +286,34 @@ export default {
         this.fileIdParam
       }/download`;
     },
+      // 收藏文件
+      collectFile () {
+          let data={
+              'projectId': this.projectId,
+              'publicId': this.file.data.fileId,
+              'collectType': '文件'
+          }
+          collect(data).then(res => {
+              if (res.result){
+                  this.$Message.success('收藏成功');
+              }
+          })
+      },
 // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
       if (catalog == 1) {
-        this.$router.push({
-          path: `/project/${this.$route.params.id}/files/${id}`
-        });
+          this.loading=true
+          console.log(id)
+          getChildFiles(id).then(res => {
+              console.log(res)
+              this.$store.commit("file/initFile", res.data)
+              this.loading=false
+              localStorage.fileParentId=res.parentId
+          })
+          // this.$router.push({
+          //     path: `/project/${this.$route.params.id}/files/${id}`
+          // });
+
       }else {
         this.loading=true
         getFileDetails(id).then(res => {
@@ -299,16 +324,17 @@ export default {
         })
       }
     },
-    changePrivacy() {
-      if (this.isPrivacy == 1) {
-        this.privacyTxt = "所有成员可见";
-        this.isPrivacy = 2;
-        this.privacyStatus = "未开启";
-      } else {
-        this.privacyTxt = "仅参与者可见";
-        this.isPrivacy = 1;
-        this.privacyStatus = "已开启";
-      }
+      // 隐私模式
+    changePrivacy(id, privacy) {
+        let num = 0
+        if (privacy == '0'){
+            num = 1
+        } else {
+            num = 0
+        }
+        filePrivacy(id,num).then(res => {
+            console.log(res)
+        })
     },
     showMore(fileName, fileId, catalog) {
       this.fileName = fileName;
@@ -363,15 +389,16 @@ export default {
     removeCloneFile () {
       if (this.folderId) {
         if (this.caozuo==='移动') {
-          removeFile(this.folderId,this.thisFileId).then(res => {
+          removeFile(this.folderId,this.thisFileId, this.projectId).then(res => {
             if (res.result){
               this.$Message.success('移动成功');
               this.showMove=false
             }
           })
         }else if (this.caozuo==='复制') {
-          cloneFile(this.folderId,this.thisFileId).then(res => {
-            console.log(res)
+          cloneFile(this.folderId,this.thisFileId,).then(res => {
+              this.$Message.success('复制成功');
+              this.showMove=false
           })
         }
       }
@@ -388,6 +415,7 @@ export default {
     // 移动、赋值文件框打开关闭
     changeVisible(bool) {
       if (bool) {
+        this.projectId=this.$route.params.id
         this.projectList();
       } else {
         this.projects = [];
@@ -498,7 +526,21 @@ export default {
 .file-content-wrap {
   display: flex;
   flex-wrap: wrap;
+  height: calc(100vh - 250px) ;
   justify-content: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 8px;
+        background-color: #e5e5e5;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #cecece;
+    }
+    li{
+        height: 200px;
+    }
   .file-content-filename {
     height: 30px;
     margin-left: 20px;
@@ -519,6 +561,7 @@ export default {
     cursor: pointer;
     img {
       max-width: 100%;
+      max-height: 100%;
       position: absolute;
       top: 50%;
       left: 50%;

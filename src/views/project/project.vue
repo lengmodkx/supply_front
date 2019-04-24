@@ -7,7 +7,7 @@
     <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideBox="hideBox"></ProjectMenu>
 
     <div class="router-view-box" :class="{zhanWei:show==1||show==2}">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@
 import MyHeader from "../../components/public/HeaderProject.vue";
 import ProjectMember from "../../components/public/ProjectMember.vue";
 import ProjectMenu from "../../components/public/ProjectMenu.vue";
+import ProjectView from '../../components/public/ProjectView.vue'
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -23,7 +24,8 @@ export default {
   components: {
     "header-project": MyHeader,
     ProjectMember,
-    ProjectMenu
+    ProjectMenu,
+    ProjectView
   },
   data() {
     return {
@@ -43,7 +45,6 @@ export default {
       this.activeHeaderTag = -1;
     },
     hideBox() {
-      alert(3);
       this.animate = true;
       this.show = -1;
     },
@@ -79,7 +80,7 @@ export default {
             }
           });
         },
-        err => {}
+        err => { }
       );
     }
   }

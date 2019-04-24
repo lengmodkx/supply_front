@@ -119,7 +119,12 @@ export default {
       });
     },
     uploadServer() {
-      bind_files(JSON.stringify(this.files)).then(res => {
+      let params = {
+        files: JSON.stringify(this.files),
+        publicId:this.publicId,
+        projectId:this.projectId
+      };
+      bind_files(params).then(res => {
         if (res.result === 1) {
           this.files = [];
           this.$Notice.success({

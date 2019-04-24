@@ -21,7 +21,7 @@
       </a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible">
-        <img class="avatar" src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200" alt="">
+        <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt="">
         <div class="userInfo" slot="content">
           <ul class="org">
             <li class="addOrgPro" @click="addOrgModal=true;popVisible=false;">创建企业</li>
@@ -81,6 +81,7 @@ export default {
       logoMenu: "",
       activeHeaderTag: -1,
       active: false,
+      src: localStorage.userImg,
       data: [
         {
           value: "阿拉丁",
