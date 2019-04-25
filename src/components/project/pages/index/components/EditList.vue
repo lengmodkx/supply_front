@@ -341,7 +341,6 @@ import SetRepeat from "./SetRepeat";
 import TaskWarn from "./TaskWarn";
 import AddRelation from "@/components/public/common/AddRelation";
 import Tags from "@/components/project/pages/index/components/task/Tags";
-import TaskSimditor from "@/components/project/pages/index/components/TaskSimditor";
 import insertText from "@/utils/insertText";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import SingleTaskMenu from "./SingleTaskMenu";
@@ -376,7 +375,6 @@ export default {
     TaskWarn,
     Tags,
     Emoji,
-    TaskSimditor,
     Simditor,
     SingleTaskMenu,
     SetExecutor,
