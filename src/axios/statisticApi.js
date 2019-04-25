@@ -59,3 +59,27 @@ export function getAddSource(projectId,data) {
         method: "get"
     });
 }
+
+/**
+ * 获取统计数据概览
+ * @param projectId
+ */
+export function getCountData(projectId,data) {
+    return fetch({
+        url: `${api.statistics}/getCountData/${projectId}/${data}`,
+        method: "get"
+    })
+
+
+}/**
+ * 获取统计数据概览
+ * @param projectId
+ * @param divName
+ * @param data
+ */
+export function getCountTable(projectId,divName,data) {
+    return fetch({
+        url: `${api.statistics}/getCountTable/${projectId}/${divName}/${data}`,
+        method: "get"
+    })
+}

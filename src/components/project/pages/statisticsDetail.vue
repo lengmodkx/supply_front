@@ -6,10 +6,18 @@
         </header>
         <div class="contents">
             <div class="w900">
-                <div class="tu">
+                <div class="tu" >
                     <div v-if="type==1" id="chart6"></div>
                     <div v-if="type==2" id="chart7"></div>
-                    <div v-if="type==3" id="chart8"></div>
+                    <div v-if="type==3" id="chart8">
+                        <div class="type3-chart">
+                            <div class="chart3-list" v-for="(item,index) in countData" :class="{checked:nowChecked==index}" :key="index" @click="checkOne(item, index)">
+                                <p>{{item.value}}</p>
+                                <div class="num">{{item.label}}</div>
+                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
+                            </div>
+                        </div>
+                    </div>
                     <div v-if="type==4" id="chart9"></div>
                     <div v-if="type==5" id="chart10"></div>
                 </div>
@@ -57,7 +65,7 @@
     import HighchartsDrilldown from 'highcharts/modules/drilldown';
     import Highcharts3D from 'highcharts/highcharts-3d';
     import Highmaps from 'highcharts/modules/map';
-    import  { getPieSource,getHistogramSource,getBurnoutSource,getAddSource }  from "../../../axios/statisticApi.js";
+    import  { getPieSource,getHistogramSource,getBurnoutSource,getAddSource,getCountData,getCountTable }  from "../../../axios/statisticApi.js";
     HighchartsMore(Highcharts)
     HighchartsDrilldown(Highcharts);
     Highcharts3D(Highcharts);
@@ -70,11 +78,13 @@
                 title: '',
                 type: '',
                 id: '',
+                nowChecked: 1,
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
                 finished: '全部',
                 people: 0,
                 executor: 0,
                 scope:7,
+                countData:[],
                 executorData: [],
                 peopleList:[],
                 columns1:[],
@@ -94,6 +104,20 @@
             this.allMethods(this.type)
         },
         methods: {
+            // 点击表格3中的某一个
+            checkOne(item, index) {
+                if (index!==0) {
+                    this.nowChecked=item.value;
+                    getCountTable(this.id, this.nowChecked,JSON.stringify(this.StatisticsDTO)).then(resp=>{
+                        this.columns1 = resp.titleList
+                        this.data1 = resp.sticsResultList;
+                        this.executorData = resp.executor
+                        this.peopleList = resp.taskGroup;
+                    }).catch(resp => {
+                        console.log('请求失败');
+                    });
+                }
+            },
             Task_day(data){
                this.StatisticsDTO.taskDay=data;
             },
@@ -114,6 +138,8 @@
                     case 1 :
                         this.show_finish = true,
                         this.time_scope = false,
+                        this.hide_div=true;
+                        this.show_div=false;
                         getPieSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.data1 = res.pieData;
@@ -123,8 +149,9 @@
                         })
                         break;
                     case 2:
-                        this.show_finish = true,
+                            this.show_finish = true,
                             this.time_scope = false,
+                            this.hide_div=true;
                         getHistogramSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
                             this.columns1   =  res.titleList
                             this.executorData = res.executor
@@ -132,9 +159,19 @@
                             this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
                         })
                         break;
+                    case 3:
+                        getCountData(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
+                            this.countData=res.countData;
+                            this.columns1 = res.titleList
+                            this.data1 = res.sticsResultList;
+                            this.executorData = res.executor
+                            this.peopleList = res.taskGroup;
+                        })
+                        break;
                     case 4 :
-                        this.show_finish = false,
+                            this.show_finish = false,
                             this.time_scope = true,
+                            this.hide_div=true;
                         getBurnoutSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.executorData = res.executor
@@ -144,8 +181,9 @@
                         })
                         break;
                     case 5:
-                        this.show_finish = false,
+                            this.show_finish = false,
                             this.time_scope = true,
+                            this.hide_div=true;
                         getAddSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.executorData = res.executor
@@ -334,6 +372,40 @@
     }
 </script>
 <style socped lang="less">
+    #chart8{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .checked{
+        border: 1px solid #e5e5e5;
+    }
+    .type3-chart{
+        width: 532px;
+        height: 224px;
+        display: flex;
+        flex-wrap: wrap;
+        .chart3-list{
+            width: 104px;
+            height: 88px;
+            cursor: pointer;
+            padding: 12px;
+            margin-right: 24px;
+            margin-bottom: 24px;
+            p{
+                font-size: 12px;
+                color: #a6a6a6;
+            }
+            .num{
+                height: 40px;
+                padding: 4px 0;
+                font-size: 28px;
+            }
+
+        }
+    }
 .box{
     width: 100%;
     padding: 76px 0 0 20px;
