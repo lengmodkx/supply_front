@@ -169,7 +169,7 @@
               <div class="gl-task-list-con">
                 <Icon type="md-checkbox-outline" size="22" />
                 <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
-                <Icon type="md-contact" v-else />
+                <Icon type="md-contact" v-else  size="26"/>
                 <div class="gl-con">
                   <div class="gl-con-top">
                     <span>{{b.taskName}}</span><span>{{b.projectName}}</span>

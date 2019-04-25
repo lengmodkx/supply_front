@@ -112,14 +112,16 @@ export default {
                 this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A15":
-                this.$store.dispatch("task/copyTask", result.object.task)
+                this.$store.dispatch("task/loadIndex", result.object)
                 break;
               case "A16":
-                this.$store.dispatch("task/moveTask", result.object.task)
+                this.$store.dispatch("task/loadIndex", result.object)
                 break;
               case "A17":
                 this.$store.dispatch("task/changeTask",result.object)
                 break;
+              case "A20":
+                this.$store.dispatch("task/changeTask",result.object)
               // 关联
               case "A28":
                 if (result.object.fromType === '任务') {

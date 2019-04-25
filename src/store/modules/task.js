@@ -361,6 +361,13 @@ const store = {
                 }
             });
         },
+        loadIndex({commit},data){
+            enterTask(data).then(res => {
+                if (res.result === 1) {
+                    commit('initTask',res.menus)
+                }
+            });
+        },
         loadFile({
             commit
         }, data) {
