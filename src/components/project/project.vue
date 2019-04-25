@@ -79,12 +79,10 @@ export default {
                 this.$store.dispatch("task/deleteTask", result.object)
                 break;
               case "A3":
-                result.object.task.taskStatus = true
                 this.$store.dispatch("task/changeTask", result.object)
                 break;
               case "A4":
-                result.object.task.taskStatus = false
-                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "taskStatus" })
+                this.$store.dispatch("task/changeProperty", result.object.task)
                 break;
               case "A5":
                 this.$store.dispatch("task/changeTask",result.object)
