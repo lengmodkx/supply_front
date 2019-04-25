@@ -43,6 +43,13 @@ new Vue({
     store,
     render: h => h(App)
 }).$mount("#app");
+Vue.filter('timeFilter', function (value) {
+    var time = new Date(value);
+    var month=0;
+    var day=0
+    var birthday= time.getFullYear()+"年"+(time.getMonth()*1+1)+"月"+(time.getDate()*1+1)+"日";
+    return birthday
+    })
 Date.prototype.Format = function (fmt) {
     //author: meizz
     var o = {

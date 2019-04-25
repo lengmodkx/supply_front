@@ -53,7 +53,7 @@
             <DateTimePicker type="start" :max="task.endTime" @confirm="confirm1">
               <div class="init" v-if="!task.startTime">开始时间</div>
               <div class="setTime" v-if="task.startTime">
-                {{$moment(task.startTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}
+                {{task.startTime | timeFilter}}
                 <span @click.stop="deleteStart">&times;</span>
               </div>
             </DateTimePicker>
@@ -61,7 +61,7 @@
             <DateTimePicker type="end" :min="task.startTime" @confirm="confirm2">
               <div class="init" v-if="!task.endTime">截止时间</div>
               <div class="setTime" v-if="task.endTime">
-                {{$moment(task.endTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}
+                {{task.endTime | timeFilter}}
                 <!-- {{data.endDate}} -->
                 <span @click.stop="deleteEnd">&times;</span>
               </div>
@@ -624,7 +624,7 @@ export default {
   display: flex;
   align-items: center;
   position: absolute;
-  top: 10px;
+  top: -3px;
   right: 10px;
   margin-right: 30px;
   .zan {
