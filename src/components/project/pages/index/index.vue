@@ -64,8 +64,10 @@
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check" >
-                    <div @click.stop class="checkbox-wrap"><Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox></div>
+                  <div class="check">
+                    <div @click.stop class="checkbox-wrap">
+                      <Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                    </div>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg" alt="">
                   </div>
@@ -89,9 +91,9 @@
                       <span class="label">
                         <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
-                        <div class="tag-box" v-if="a.tagList.length > 0">
-                            <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
-                        </div>
+                      <div class="tag-box" v-if="a.tagList.length > 0">
+                        <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -110,8 +112,10 @@
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="check" >
-                    <div class="checkbox-wrap" @click.stop><Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox></div>
+                  <div class="check">
+                    <div class="checkbox-wrap" @click.stop>
+                      <Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
+                    </div>
                     <div class="cont">{{a.taskName}}</div>
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
@@ -172,7 +176,7 @@
     </draggable>
     <!-- 点击列表出来的弹框。编辑列表 -->
     <Modal v-model="showModal" class="myModal">
-      <my-modal></my-modal>
+      <my-modal v-if="showModal"></my-modal>
     </Modal>
     <!--加载中-->
     <div class="demo-spin-container" v-if="!simpleTasks.length">
@@ -198,7 +202,6 @@ import {
   completeTask,
   cancelcompleteTask,
   dragTask,
-  initEditTask,
   addTask
 } from "@/axios/api";
 export default {
@@ -213,14 +216,14 @@ export default {
     CurrentAdd
   },
   computed: {
-    ...mapGetters("task", ["curTaskGroup","abc"]),
-    ...mapState("task", ["simpleTasks","sort"])
+    ...mapGetters("task", ["curTaskGroup", "abc"]),
+    ...mapState("task", ["simpleTasks", "sort"])
   },
   data() {
     return {
       allTask: null,
       show: false,
-      showmodal:false,
+      showmodal: false,
       showAdd: true,
       beforeClick: true,
       currentEditId: "",
@@ -232,7 +235,7 @@ export default {
       active: "a",
       priority: "1",
       showModal: false,
-      loadingShow:true,
+      loadingShow: true,
       taskMenuvisible: false,
       wHeight: window.outerHeight - 261,
       textarea: "",
@@ -244,24 +247,22 @@ export default {
     };
   },
   mounted() {
-    this.allTask=this.simpleTasks;
-    console.log(22222222,this.allTask)
-    this.taskGroupId = this.$route.params.groupId
-    // this.initStore()
+    this.allTask = this.simpleTasks;
+    this.taskGroupId = this.$route.params.groupId;
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
     };
     dragscroll(["column-main", "scrum-stage-tasks"]);
-    this.init(this.projectId)
+    this.init(this.projectId);
   },
   watch: {
     simpleTasks(n, o) {
-      this.allTask=n
-    },
+      this.allTask = n;
+    }
   },
   methods: {
-    ...mapActions("task", ["init"]),
-    ...mapMutations('task', ['changeTask']),
+    ...mapActions("task", ["init", "initEditTask"]),
+    ...mapMutations("task", ["changeTask", "setTaskId"]),
     hideAddTask() {
       this.currentEditId = "";
     },
@@ -269,68 +270,15 @@ export default {
       this.currentEditId = "";
       tasklist.push(data);
     },
+    //打开任务详情
     initTask(taskId) {
-      this.loading=true
-      this.$store.dispatch('task/editTask', taskId).then(() => {
-        this.loading=false
-          this.showModal = true
-      })
+      this.showModal = true;
+      this.setTaskId(taskId);
     },
-      // initEditTask(taskId).then(res => {
-      //   if (res.data.task.taskStatus == "未完成") {
-      //     res.data.task.taskStatus = false;
-      //   } else {
-      //     res.data.task.taskStatus = true;
-      //   }
-      //
-      //   this.activeModalData = res.data.task;
-      //   // console.log(res.task)
-      //   this.showModal = true;
-      // });
-    //},
-    // initStore () {
-    //   //发请求获取task store中的标签列表，任务列表，人员列表
-    //   this.updateTags([
-    //     {
-    //       id: 1,
-    //       name: "ios",
-    //       color: "#3da8f5"
-    //     },
-    //     {
-    //       id: 2,
-    //       name: "web",
-    //       color: "#75c940"
-    //     },
-    //     {
-    //       id: 3,
-    //       name: "andriod",
-    //       color: "#797ec9"
-    //     },
-    //     {
-    //       id: 4,
-    //       name: "标签",
-    //       color: "#ff4f3e"
-    //     }
-    //   ])
-    // },
+
     addCurTask(groupId, id, taskList, index) {
       this.currentEditId = id;
-      // this.$nextTick(_ => {
-      //   this.$nextTick(_ => {
-      //     let ele = this.$refs.currentadd[index]
-      //     scrollTo(
-      //       this.$refs[`scrollbox${id}`][0],
-      //       ele.offsetTop - ele.offsetHeight + 190,
-      //       200
-      //     );
-      //   });
-      // });
-      //this.taskGroupId = groupId;
       this.taskMenuId = id;
-      // console.log(groupId)
-      // taskList.push({
-
-      // });
     },
     // 创建任务
     createTask() {
@@ -340,19 +288,19 @@ export default {
         taskMenuId: this.taskMenuId,
         taskGroupId: this.taskGroupId
       };
-      addTask(data).then(res=>{
-        if(res.result===1){
+      addTask(data).then(res => {
+        if (res.result === 1) {
           this.$Notice.success({
             title: "创建成功"
           });
         }
         this.init(this.projectId);
-        this.currentEditId=''
-      })
+        this.currentEditId = "";
+      });
     },
     dragBox(evt) {
       //拖拽大盒子
-      this.changeTask(this.allTask)
+      this.changeTask(this.allTask);
       //获取拖动的大盒子的id排序数组
       let newArr = this.allTask.map(v => v.relationId).join(",");
       sortTaskMenu(newArr).then(res => {});
@@ -361,7 +309,11 @@ export default {
       //拖拽小的任务列表项 排序
       let targetIndex = evt.to.parentNode.parentNode.getAttribute("data-index");
       let obj = this.allTask[targetIndex];
-      let listId = obj.taskList.map(v => {return v.taskId}).join(",");
+      let listId = obj.taskList
+        .map(v => {
+          return v.taskId;
+        })
+        .join(",");
       let taskId = evt.clone.getAttribute("data-id");
       let finalObj = {
         //发给后台的数据
@@ -371,11 +323,10 @@ export default {
         projectId: this.projectId //项目id
       };
       dragTask(finalObj).then(res => {
-        console.log(res)
+        console.log(res);
       });
     },
     changeStatus(flag, i, j, taskId) {
-
       //i是外层循环的索引，j是嵌套循环的索引
       if (flag) {
         //第一种方法 先处理好了再发请求
@@ -421,7 +372,7 @@ export default {
       } */
     },
     saveNewPro() {
-      this.loading=true
+      this.loading = true;
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
       addnewTask(this.projectId, this.menuGroupId, this.newProTitle).then(
@@ -431,8 +382,8 @@ export default {
               relationName: this.newProTitle,
               taskList: []
             });
-            this.changeTask(this.allTask)
-            this.loading=false
+            this.changeTask(this.allTask);
+            this.loading = false;
 
             this.newProTitle = "";
             this.showAdd = true;
