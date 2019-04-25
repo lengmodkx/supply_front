@@ -114,7 +114,7 @@
              v-html="schedule.remarks?schedule.remarks:'待添加'">
         </div>
           <div v-if="showEditor" class="editor-wrap">
-              <editor ref="editor" :content="schedule.remarks" class="editBox"></editor>
+              <editor ref="editor" :contents="schedule.remarks" class="editBox"></editor>
               <button type="button" class="fr ivu-btn ivu-btn-info ivu-btn-large" @click="addBeizhu" :loading="loading">
                   <span v-if="!loading">立即发布</span>
                   <span v-else>Loading...</span>

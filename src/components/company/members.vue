@@ -59,15 +59,16 @@
                             <div class="branch"><Icon type="md-add-circle" />添加成员</div>
                             <div slot="content">
                                 <p @click="showAddModel">添加企业成员</p>
-                                <!--<p>添加企业外部成员</p>-->
+                                <p @click="showAddModel(true)">添加企业外部成员</p>
                             </div>
                         </Poptip>
                     </header>
+                    <Loading v-if="loading"></Loading>
                     <ul>
-                        <li class="one-member">
-                            <img src="" alt="">
-                            <p>亚索</p>
-                            <span>拥有者</span>
+                        <li class="one-member" v-for="(item, index) in peopleList" :key="index">
+                            <img :src="item.image" alt="">
+                            <p>{{item.userName}}</p>
+                            <span>{{organizationLable?'拥有者':'参与者'}}</span>
                         </li>
                     </ul>
                 </div>
@@ -78,14 +79,14 @@
             <p slot="header" style="color:#000;text-align:center">
                 <span>添加成员至企业</span>
             </p>
-            <addPeople v-if="showAddPeople" :invitUsers="peopleList"></addPeople>
+            <addPeople @add="addPeople" v-if="showAddPeople" :invitUsers="peopleList"></addPeople>
         </Modal>
     </div>
 </template>
 
 <script>
 import addPeople from '@/components/public/addPeople'
-import {getMembers} from '@/axios/companyApi'
+import {initOrgMember} from '@/axios/companyApi'
     export default {
         name: "members",
         data () {
@@ -96,21 +97,40 @@ import {getMembers} from '@/axios/companyApi'
                 groupName: '',
                 showAddPeople: false,
                 peopleList: [],
-                memModal: false
+                memModal: false,
+                loading:true
             }
+        },
+        mounted () {
+            this.initMember()
         },
         components: {addPeople},
         methods: {
-            showAddModel() {
-                this.memModal=false
-                getMembers(localStorage.companyPhone,localStorage.companyId).then(res => {
+            // 页面初始化
+            initMember(){
+                initOrgMember(localStorage.companyId).then(res => {
                     console.log(res)
-                    this.peopleList=res.data
-                    this.showAddPeople=true
-
+                    this.loading=false
                 })
+            },
+            // 显示添加人员匡
+            showAddModel(waibu) {
+                if (waibu){
 
-            }
+                }
+                this.memModal=false
+                this.showAddPeople=true
+            },
+            // 添加成员 回调
+            addPeople (data) {
+                let people={
+                    'userName': data.userEntity.userName,
+                    'image': data.userEntity.image,
+                    'organizationLable': data.organizationLable
+                }
+                this.peopleList.push(people)
+            },
+
         }
     }
 </script>
