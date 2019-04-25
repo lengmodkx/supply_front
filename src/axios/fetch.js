@@ -3,12 +3,12 @@ import qs from 'qs'
 import store from '@/store'
 
 const service = axios.create({
-  baseURL: "/api",
+  //baseURL: "/api",
   // headers: {
   // 'token_in_header': "123",//  token从全局变量那里传过来
   // },
   //判断是生产环境还是开发环境
-  // baseURL: process.env.NODE_ENV == 'development' ? "/api/" : "", 
+  baseURL: process.env.NODE_ENV == 'development' ? "/api" : process.env.VUE_APP_URL,
   timeout: 1000 * 30
 })
 

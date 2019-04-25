@@ -28,8 +28,7 @@ export default new Router({
       path: "/project/:id",
       name: "project",
       component: _import("project/project"),
-      children: [
-        {
+      children: [{
           path: "tasks/group/:groupId",
           component: _import("project/pages/index/index")
         },
@@ -70,8 +69,7 @@ export default new Router({
       meta: {
         title: "阿拉丁BIM5D云平台"
       },
-      children: [
-        {
+      children: [{
           path: "nearThing",
           component: _import("public/mine/nearThing")
         },
@@ -84,12 +82,12 @@ export default new Router({
           component: _import("public/mine/mineTask")
         },
         {
-            path: "schedule",
-            component: _import("public/mine/mineSchedule")
+          path: "schedule",
+          component: _import("public/mine/mineSchedule")
         },
         {
-            path: "collect",
-            component: _import("public/mine/mineCollect")
+          path: "collect",
+          component: _import("public/mine/mineCollect")
         }
 
       ]
@@ -102,11 +100,11 @@ export default new Router({
       component: _import("project/pages/statisticsDetail")
     },
     {
-        path: "/message",
-        meta: {
-            title: "消息"
-        },
-        component: message
+      path: "/message",
+      meta: {
+        title: "消息"
+      },
+      component: message
     },
     {
       path: "/calendar",
