@@ -1,8 +1,6 @@
 <template>
   <div class="task-detail" style="height:100%;position: relative" v-if="task">
-    <!--<Modal class="myModal" v-model="aa" v-if="data">-->
-    <!--<my-model :data="childTaskData"></my-model>-->
-  <!--</Modal>-->
+
     <!--固定顶部-->
     <div class="toolRight">
       <Tooltip content="点个赞" placement="bottom-start">
@@ -18,12 +16,12 @@
     <div class="headerTool">
       <div class="toolLeft" v-if="task.parentId === '0'">
         <span></span>
-        <span>{{task.project.projectName}}·</span>
+        <span>{{task.project.projectName}} > </span>
         <span class="proName">{{task.groupName}}</span>
-        <span>·</span>
+        <span> > </span>
         <Dropdown trigger="click">
-        <span class="proName">{{task.taskName}}</span>
-      </Dropdown>
+          <span class="proName">{{task.menuName}}</span>
+        </Dropdown>
       </div>
       <div class="toolLeft" v-if="task.parentTask">
         <span></span>
@@ -44,7 +42,7 @@
       <div class="task_attr clearfix">
         <div class="executor fl">
           <!-- 设置认领者 -->
-          <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId"  ref="executor" :task="task" v-model="task.executor" >
+          <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor" :task="task" v-model="task.executor">
 
           </SetExecutor>
         </div>
@@ -52,7 +50,7 @@
         <div class="timer fl">
           <Icon type="ios-calendar-outline" size="18" style="margin-right:5px;"></Icon>
           <DateTimePicker type="start" :max="task.endTime" @confirm="confirm1">
-            <div class="init" v-if="!task.startTime">设置开始时间</div>
+            <div class="init" v-if="!task.startTime">开始时间</div>
             <div class="setTime" v-if="task.startTime">
               {{$moment(task.startTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}
               <span @click.stop="deleteStart">&times;</span>
@@ -60,7 +58,7 @@
           </DateTimePicker>
           <span>-</span>
           <DateTimePicker type="end" :min="task.startTime" @confirm="confirm2">
-            <div class="init" v-if="!task.endTime">设置截止时间</div>
+            <div class="init" v-if="!task.endTime">截止时间</div>
             <div class="setTime" v-if="task.endTime">
               {{$moment(task.endTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}
               <!-- {{data.endDate}} -->
@@ -73,24 +71,19 @@
           <SetRepeat :repeat="task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
         </div>
 
-        <div class="alarm fl" >
+        <div class="alarm fl">
           <TaskWarn :remind="task.remind" v-on:updateRepeat="updateRepeat"></TaskWarn>
-
         </div>
-        <!-- <p>{{$moment('2018-09-04 12:19:20').format("YYYY-MM-DD HH:mm:ss")}}</p> -->
-        <!-- <p>{{$moment('2018-09-04 12:19:20').calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: '[下]dddLT', lastDay: '[昨天]', lastWeek: '[上]dddLT', sameElse: 'L'})}}</p> -->
-        <!-- <p>{{$moment('2018-11-04 12:19:20').calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: '[下]ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}</p> -->
       </div>
-
       <div class="remark">
         <span class="name">
           <Icon type="ios-document-outline" />备注</span>
         <div class="editor" @click="showEditor=true" v-if="!showEditor" v-html="task.remarks?task.remarks:'待添加'"></div>
-        <div class="editor-wrap"  v-if="showEditor" >
+        <div class="editor-wrap" v-if="showEditor">
           <Simditor :contents="task.remarks" ref="editor" class="fl editBox"></Simditor>
           <div style="margin-top: 5px">
             <Button @click="showEditor=false" style="margin-right: 15px;cursor: pointer">取消</Button>
-            <Button style="cursor: pointer" type="info" :loading="editorLoading" @click="addBeizhu">立即发布</Button>
+            <Button style="cursor: pointer" type="info" :loading="editorLoading" @click="addBeizhu">保存</Button>
           </div>
 
         </div>
@@ -123,7 +116,7 @@
               </div>
               <div class="sonInput fl" @click.stop="showaa(i.taskId)">
                 <Tooltip content="点击即可编辑" placement="top">
-                  <div class="sonCon" ref="sonCon" style="" >{{i.taskName}}</div>
+                  <div class="sonCon" ref="sonCon" style="">{{i.taskName}}</div>
                 </Tooltip>
               </div>
               <DateTimePicker class="sonDate fl" type="start" :max="i.endTime" @confirm="confirmSonDate" @clear="clearSonDate">
@@ -149,7 +142,7 @@
         <!-- 添加子任务 -->
         <div class="sonBox clearfix" v-if="!showSontask">
           <div class="newSon clearfix">
-            <div class="sonInput fl"><Input v-model="son" placeholder="输入子任务内容..." autofocus @keyup.enter.native = "submitSontask"/></div>
+            <div class="sonInput fl"><Input v-model="son" placeholder="输入子任务内容..." autofocus @keyup.enter.native="submitSontask" /></div>
           </div>
           <div class="btns">
             <Button type="text" @click="showSontask=true;">取消</Button>
@@ -169,16 +162,13 @@
         </Modal>
       </div>
       <div class="has-relevance">
-        <ul v-if="task.bindTasks">
+        <ul v-if="task.bindTasks.length!=0">
           <div class="what-title">关联的任务</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">
             <div class="gl-task-list-con">
               <Icon type="md-checkbox-outline" size="22" />
-              <!--<Icon type="ios-list-box-outline" size="22" />-->
-              <!--<Icon type="ios-calendar-outline" size="22" />-->
-              <!--<Icon type="ios-document-outline" size="22" />-->
               <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
-              <Icon type="md-contact" v-else/>
+              <Icon type="md-contact" v-else />
               <div class="gl-con">
                 <div class="gl-con-top">
                   <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
@@ -199,7 +189,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindFiles">
+        <ul v-if="task.bindFiles.length!=0">
           <div class="what-title">关联的文件</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindFiles" :key="i">
             <div class="gl-task-list-con">
@@ -225,7 +215,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindSchedules">
+        <ul v-if="task.bindSchedules.length!=0">
           <div class="what-title">关联的日程</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">
             <div class="gl-task-list-con">
@@ -238,7 +228,7 @@
                 <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
               </div>
             </div>
-            <Poptip >
+            <Poptip>
               <Icon class="glpop" type="ios-arrow-down" size="20" />
               <div slot="content">
                 <div class="glpop-list">
@@ -251,7 +241,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindShares">
+        <ul v-if="task.bindShares.length!=0">
           <div class="what-title">关联的分享</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindShares" :key="i">
             <div class="gl-task-list-con">
@@ -270,7 +260,7 @@
                   <Icon type="ios-link" size="20" /><span>复制链接</span>
                 </div>
                 <div class="glpop-list" @click="cancle(b.shareId)">
-                  <Icon type="md-link" size="20"/><span>取消关联</span>
+                  <Icon type="md-link" size="20" /><span>取消关联</span>
                 </div>
               </div>
             </Poptip>
@@ -279,14 +269,17 @@
       </div>
       <!-- 上传附件 -->
       <div class="accessory">
+        <p class="name" style="float: none;width:100px">
+          <Icon type="ios-folder-outline" />添加附件</p>
+
         <div class="addfile" v-if="task.fileList">
           <div class="file-lsit" v-for="(f,i) in task.fileList" :key="i">
             <div class="file-img">
               <img v-if="images_suffix.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
               <img v-else src="@/icons/img/moren.png" alt="文件">
               <div class="zhezhao">
-                <Icon type="md-cloud-download" @click="downLoad(f.fileId)"/>
-                <Icon type="md-search" @click="getFileDetail(f.fileId)"/>
+                <Icon type="md-cloud-download" @click="downLoad(f.fileId)" />
+                <Icon type="md-search" @click="getFileDetail(f.fileId)" />
               </div>
             </div>
             <Tooltip :content="f.fileName">
@@ -366,7 +359,7 @@ import {
   taskExecutor,
   cancle
 } from "@/axios/api";
-import  {downloadFile,getFileDetails} from "@/axios/fileApi"
+import { downloadFile, getFileDetails } from "@/axios/fileApi"
 export default {
   name: "myModel",
   components: {
@@ -384,7 +377,7 @@ export default {
     log,
     commonFile
   },
-  props:["data"],
+  props: ["data"],
   data() {
     return {
       prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
@@ -393,16 +386,16 @@ export default {
       zan: false,
       editorLoading: false,
       aa: false,
-      childTaskData:null,
+      childTaskData: null,
       complete: false,
       hoverExecutor: false,
       editorValue: "123",
-      showFileDetail:false,
-      fileId:'',
+      showFileDetail: false,
+      fileId: '',
       showEditor: false,
-      maxFileSize:1024*1024*100,
-      isShowFileList:true,
-      type:'task',
+      maxFileSize: 1024 * 1024 * 100,
+      isShowFileList: true,
+      type: 'task',
       modal1: false,
       relationModal: false,
       talkvalue: "",
@@ -412,16 +405,16 @@ export default {
       isEdit: true,
       newCon: "",
       ept: "",
-      publicType:"任务",
+      publicType: "任务",
       involveDataList: [
       ],
-      showCommon:false,
+      showCommon: false,
       beizhuContent: '',
     };
   },
   methods: {
-    ...mapActions('task',['initEditTask','updateStartTime','updateEndTime','addChildrenTask']),
-    ...mapMutations('file',["putOneFile"]),
+    ...mapActions('task', ['initEditTask', 'updateStartTime', 'updateEndTime', 'addChildrenTask']),
+    ...mapMutations('file', ["putOneFile"]),
     updateTaskName() {
       updateTaskName(this.task.taskId, this.task.taskName).then(
         data => {
@@ -430,11 +423,11 @@ export default {
       );
     },
     //文件下载
-    downLoad(fileId){
-      window.location.href= "http://192.168.3.189:8090/files/"+fileId+"/download"
+    downLoad(fileId) {
+      window.location.href = "http://192.168.3.189:8090/files/" + fileId + "/download"
       //downloadFile(fileId)
     },
-    getFileDetail(fileId){
+    getFileDetail(fileId) {
       getFileDetails(fileId).then(res => {
         console.log(res)
         this.putOneFile(res)
@@ -442,40 +435,40 @@ export default {
       })
 
     },
-    closeDetail () {
-      this.showFileDetail=false
+    closeDetail() {
+      this.showFileDetail = false
     },
     // 添加备注
-    addBeizhu(){
+    addBeizhu() {
       this.beizhuContent = this.$refs.editor.content;
-      this.editorLoading=true
-      updateTaskRemarks(this.task.taskId,this.beizhuContent).then(res => {
-        if (res.result === 1){
+      this.editorLoading = true
+      updateTaskRemarks(this.task.taskId, this.beizhuContent).then(res => {
+        if (res.result === 1) {
           this.editorLoading = false
-          this.showEditor=false
+          this.showEditor = false
         }
       })
     },
     // 删除执行者
-    deleteExecutor(){
-      taskExecutor(this.task.taskId,'').then(res => {})
+    deleteExecutor() {
+      taskExecutor(this.task.taskId, '').then(res => { })
     },
     // 选择执行者
-    chooseZxz(data,taskid){
-      taskExecutor(taskid,data).then(res => {
+    chooseZxz(data, taskid) {
+      taskExecutor(taskid, data).then(res => {
         console.log(res)
       })
     },
-    cancle(id){
-      cancle(id,this.task.projectId,this.publicType,this.task.taskId).then(res => {
-        if(res.result === 1){
+    cancle(id) {
+      cancle(id, this.task.projectId, this.publicType, this.task.taskId).then(res => {
+        if (res.result === 1) {
           this.$Message.success("已取消")
         }
       })
     },
-    showaa (taskId){
-        const msg = this.$Message.loading('正在加载中...', 0);
-        setTimeout(msg,10000);
+    showaa(taskId) {
+      const msg = this.$Message.loading('正在加载中...', 0);
+      setTimeout(msg, 10000);
       this.$store.dispatch('task/editTask', taskId).then(() => {
         clearTimeout(msg)
       })
@@ -487,12 +480,12 @@ export default {
 
     },
     changePriority(priority) {
-      updatePriority(this.task.taskId, priority).then(item => {});
+      updatePriority(this.task.taskId, priority).then(item => { });
     },
     //更改任务的重复性
-    updateRepeat(repeat){
-      updateRepeat(this.task.taskId,repeat).then(res => {
-          console.log(res)
+    updateRepeat(repeat) {
+      updateRepeat(this.task.taskId, repeat).then(res => {
+        console.log(res)
       })
     },
     //更改任务的状态
@@ -504,9 +497,9 @@ export default {
       }
     },
     // 添加子任务
-    submitSontask () {
-      this.addChildrenTask({"taskId":this.task.taskId, "taskName":this.son})
-      this.showSontask=false
+    submitSontask() {
+      this.addChildrenTask({ "taskId": this.task.taskId, "taskName": this.son })
+      this.showSontask = false
     },
     confirmSonDate(date) {
       this.task.sontaskDate = date;
@@ -514,13 +507,13 @@ export default {
     clearSonDate() {
       this.task.sontaskDate = "";
     },
-    confirm1 (date) {
-      this.updateStartTime({'taskId':`${this.task.taskId}`, 'date':date})
+    confirm1(date) {
+      this.updateStartTime({ 'taskId': `${this.task.taskId}`, 'date': date })
       // this.task.startTime = date
       // this.$forceUpdate()
     },
-    confirm2 (date) {
-      this.updateEndTime({'taskId':`${this.task.taskId}`, 'date':date})
+    confirm2(date) {
+      this.updateEndTime({ 'taskId': `${this.task.taskId}`, 'date': date })
     },
     deleteStart() {
       this.task.startDate = "";
@@ -532,7 +525,7 @@ export default {
       if (!this.task.isFabulous) {
         //发请求点赞
         fabulous(this.task.taskId).then(res => {
-          if(res.result === 1){
+          if (res.result === 1) {
             this.task.isFabulous = true
             this.task.fabulousCount++
           }
@@ -541,7 +534,7 @@ export default {
       } else {
         //发请求取消点赞
         cancelFabulous(this.task.taskId).then(res => {
-          if(res.result === 1){
+          if (res.result === 1) {
             this.task.isFabulous = false
             this.task.fabulousCount--
           }
@@ -552,7 +545,7 @@ export default {
       // if (id == 3) return; //需获取当前登录用户id判断
       let index = this.joinInfoIds.indexOf(id);
       this.joinInfoIds.splice(index, 1);
-      updateTaskJoin(this.task.taskId,this.joinInfoIds.join(',')).then(res => {
+      updateTaskJoin(this.task.taskId, this.joinInfoIds.join(',')).then(res => {
 
       })
     },
@@ -579,9 +572,9 @@ export default {
       });
     },
     // 添加参与者
-    saveInvolveMember (detailList) {
-      updateTaskJoin(this.task.taskId,detailList).then(res => {
-        if(res.result === 1){
+    saveInvolveMember(detailList) {
+      updateTaskJoin(this.task.taskId, detailList).then(res => {
+        if (res.result === 1) {
           // this.task.joinInfo.unshift(res.data)
         }
       })
@@ -606,12 +599,12 @@ export default {
     }
   },
   mounted() {
-    this.aa=false
+    this.aa = false
     // document.getElementById("editCon").parentNode.style.width = "100%"
   },
-  computed:{
-    ...mapState("task",["task",'joinInfoIds','images_suffix']),
-    vuexTask(){
+  computed: {
+    ...mapState("task", ["task", 'joinInfoIds', 'images_suffix']),
+    vuexTask() {
       return this.$store.state.task.joinInfo
     }
   },
@@ -620,7 +613,7 @@ export default {
 <style scoped lang="less">
 @import "./EditList.less";
 
-.not-allow *{
+.not-allow * {
   cursor: not-allowed !important;
 }
 .toolRight {
@@ -651,30 +644,30 @@ export default {
     color: #aba6a1;
   }
 }
-  .rlz{
-    display: flex;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    margin-right: 8px;
-    &:hover{
-      i{
-        display: block;
-      }
-    }
-    img{
-      width: 24px;
-      height: 24px;
-      margin-right: 3px;
-    }
-    i{
-      position: absolute;
-      top: -5px;
-      right: -8px;
-      font-size: 22px;
-      color: gray;
-      display: none;
+.rlz {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  margin-right: 8px;
+  &:hover {
+    i {
+      display: block;
     }
   }
+  img {
+    width: 24px;
+    height: 24px;
+    margin-right: 3px;
+  }
+  i {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    font-size: 22px;
+    color: gray;
+    display: none;
+  }
+}
 </style>
 
