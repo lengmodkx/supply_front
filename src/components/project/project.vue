@@ -82,53 +82,48 @@ export default {
                 this.$store.dispatch("task/changeTask", result.object)
                 break;
               case "A4":
-                this.$store.dispatch("task/changeProperty", result.object.task)
+                this.$store.dispatch("task/changeTask", result.object)
                 break;
               case "A5":
                 this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A6":
-                this.$store.commit("task/changeExecutor", result.object)
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A7":
-                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "startTime" })
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A8":
-                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "endTime" })
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A9":
-                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "repeat" })
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A11":
-                this.$store.commit("task/changeRemarks", result.object)
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A12":
-                this.$store.dispatch("task/changeProperty", { task: result.object.task, property: "priority" })
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A13":
-                this.$store.dispatch("task/updateChildTask", result.object.task)
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A14":
-                this.$store.dispatch("task/updateJoinInfo", result.object.members)
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               case "A15":
                 this.$store.dispatch("task/copyTask", result.object.task)
                 break;
               case "A16":
-                if (result.object.task.taskStatus === '完成') {
-                  result.object.task.taskStatus = true
-                } else {
-                  result.object.task.taskStatus = false
-                }
                 this.$store.dispatch("task/moveTask", result.object.task)
                 break;
               case "A17":
-                this.$store.dispatch("task/recycle", result.object.task)
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               // 关联
               case "A28":
                 if (result.object.fromType === '任务') {
-                  this.$store.commit("task/bind", result.object)
+                  this.$store.dispatch("task/changeTask",result.object.publicId)
                 } else if (result.object.fromType === '文件') {
                   this.$store.commit("file/relevance", result.object)
                 }
@@ -136,13 +131,13 @@ export default {
               // 取消关联
               case "A29":
                 if (result.object.fromType === '任务') {
-                  this.$store.commit("task/cancleRelation", result.object)
+                  this.$store.dispatch("task/changeTask",result.object.publicId)
                 } else if (result.object.fromType === '文件') {
                   this.$store.commit("file/cancelRelevance", result.object)
                 }
                 break;
               case "A30":
-                this.$store.dispatch("task/loadFile", result.object)
+                this.$store.dispatch("task/changeTask",result.object)
                 break;
               // 创建文件夹
               case "C1":
