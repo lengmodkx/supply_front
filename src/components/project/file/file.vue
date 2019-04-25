@@ -2,7 +2,7 @@
   <div class="file-view-wrap fade in">
     <header class="file-header">
       <div class="file-header-title" >
-       文件库
+       <span @click="whereGo(i,n)" v-for="(i,n) in pathData" :key="n">{{i.name}}＞</span>
       </div>
       <div class="file-header-add">
         <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
@@ -21,10 +21,85 @@
     </header>
 
     <div style="padding:10px 20px 10px 20px;">
-      <Input search enter-button placeholder="请输入文件名搜索" style="width:500px" @on-search="searchFile" />
+      <Input search enter-button placeholder="请输入文件名搜索" style="width:500px"
+             @on-search="searchFile" @on-keyup="keypress" v-model="searched" />
     </div>
     <Loading v-if="loading"></Loading>
-    <ul class="file-content-wrap" v-if="files.length">
+    <!--搜索出来的文件-->
+    <ul class="file-content-wrap" v-if="searched && searchData.length">
+      <li v-for="(file,index) in searchData" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
+        <div class="file-content-view">
+          <img v-if="file.catalog==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+          <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
+            <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`"  />
+            <img v-else-if="file.ext.includes('txt')" src="@/icons/img/txt.png" alt="">
+            <img v-else-if="file.ext.includes('doc')||file.ext.includes('docx')" src="@/icons/img/word.png" alt="">
+            <img v-else-if="file.ext.includes('xls')||file.ext.includes('xlsx')" src="@/icons/img/excel.png" alt="">
+            <img v-else-if="file.ext.includes('pdf')" src="@/icons/img/pdf.png" alt="">
+            <img v-else-if="file.ext.includes('pp')" src="@/icons/img/ppt.png" alt="">
+            <img v-else-if="file.ext.includes('zip')||file.ext.includes('rar')" src="@/icons/img/zip.png" alt="">
+            <img v-else src="@/icons/img/moren.png" alt="">
+          </div>
+          <div  @click.stop class="file-content-opt">
+            <p></p>
+            <Poptip class="menu-file" width="250"  :transfer="true" @on-popper-hide="popHid">
+              <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
+              <div slot="content">
+                <div  v-show="rublish" class="rublish">
+                  <div class="rublish-header">
+                    <Icon @click="rublish=false" type="ios-arrow-back" />
+                    移到回收站
+                    <!--<Icon @click="menuShow=false" type="ios-close" />-->
+                    <span></span>
+                  </div>
+                  <p>您确定要把该文件移到回收站吗？</p>
+                  <Button long type="error" @click="putRecyclebin">移到回收站</Button>
+                </div>
+                <div v-show="!rublish">
+                  <div class="menu-file-title" style="text-align:center;font-size:16px">
+                    <span>文件菜单</span>
+                  </div>
+                  <section v-if="file.catalog" class="file-folder-opt">
+                    <ul>
+                      <li @click="removeClone('移动')">移动文件夹</li>
+                      <li @click="removeClone('复制')">复制文件夹</li>
+                      <li @click="rublish=true">移到回收站</li>
+                      <li @click="rublish=true">可见性设置</li>
+                    </ul>
+                  </section>
+                  <section v-else class="file-folder-opt">
+                    <ul>
+                      <li @click="removeClone('移动')">移动文件</li>
+                      <li @click="removeClone('复制')">复制文件</li>
+                      <li >复制文件链接</li>
+                      <li @click="collectFile">收藏文件</li>
+                      <li @click="rublish=true">移到回收站</li>
+                    </ul>
+                  </section>
+                  <div class="footer" >
+                    <div class="footer-left">
+                      <i class="ivu-icon ivu-icon-unlocked"></i>
+                      <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
+                        <span>隐私模式</span>
+                        <span v-if="file.filePrivacy=='1'">仅参与者可见</span>
+                        <span v-else>所有成员可见</span>
+                      </div>
+                    </div>
+                    <span v-if="file.filePrivacy=='1'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
+                    <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
+                  </div>
+                </div>
+
+              </div>
+            </Poptip>
+          </div>
+        </div>
+        <div class="file-content-filename" v-if="file.catalog==1">{{file.fileName}}</div>
+        <div class="file-content-filename" v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</div>
+      </li>
+    </ul>
+    <!--正常展示-->
+    <ul class="file-content-wrap" v-else-if="files.length">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
           <img v-if="file.catalog==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
@@ -48,7 +123,7 @@
                     <Icon @click="rublish=false" type="ios-arrow-back" />
                     移到回收站
                     <!--<Icon @click="menuShow=false" type="ios-close" />-->
-                      <span></span>
+                    <span></span>
                   </div>
                   <p>您确定要把该文件移到回收站吗？</p>
                   <Button long type="error" @click="putRecyclebin">移到回收站</Button>
@@ -107,7 +182,7 @@
       <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
     </Modal>
     <!--创建文件夹 模态框-->
-    <Modal v-model="showAddFolder" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
+    <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
       <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" />
       <div>
         <Button type="info" long @click="handleSave">确定</Button>
@@ -155,7 +230,7 @@ import Loading from "../../public/common/Loading.vue";
 import fileDetail from './fileDetail'
 import { mapState, mapActions, mapMutations } from "vuex";
 import {getFileDetails, getChildFiles} from '@/axios/fileApi'
-import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy} from '@/axios/fileApi'
+import {changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy, searchFile} from '@/axios/fileApi'
 import {
   files,
   createFolder,
@@ -208,7 +283,15 @@ export default {
       folderId: '',
       menuShow:false,
       rublish: false,
-      thisFileId: ''
+      thisFileId: '',
+      searchData: [],
+      searched: "",
+      pathData: [
+        {
+          name: '文件夹',
+          id: this.$route.params.id
+        }
+      ]
     };
   },
   computed: {
@@ -231,7 +314,21 @@ export default {
     closeDetail () {
       this.showModelDetai=false
     },
-    searchFile() {},
+    // 搜索文件
+    searchFile(value) {
+      if (value !=='') {
+        this.loading=true
+        searchFile(value, this.projectId).then(res => {
+          this.loading=false
+          this.searchData=res.data
+        })
+      }
+    },
+    keypress() {
+      if (this.searched===''){
+        this.searchData=[]
+      }
+    },
     // menuShow(catalog, fileId, e) {
     //   if (catalog == 0) {
     //     this.menu1Show = true;
@@ -299,11 +396,22 @@ export default {
               }
           })
       },
+    // 点击 上面文件夹的路径
+    whereGo (i,n) {
+      this.loading=true
+      this.pathData.splice(n+1)
+      getChildFiles(i.id).then(res => {
+        this.$store.commit("file/initFile", res.data)
+        this.loading=false
+        localStorage.fileParentId=res.parentId
+      })
+    },
 // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
       if (catalog == 1) {
-          this.loading=true
-          console.log(id)
+        this.loading=true
+        this.fileId=id
+        this.pathData.push({"name": file.fileName, "id": file.fileId})
           getChildFiles(id).then(res => {
               console.log(res)
               this.$store.commit("file/initFile", res.data)
@@ -313,7 +421,6 @@ export default {
           // this.$router.push({
           //     path: `/project/${this.$route.params.id}/files/${id}`
           // });
-
       }else {
         this.loading=true
         getFileDetails(id).then(res => {
@@ -488,6 +595,11 @@ export default {
   font-size: 18px;
   line-height: 60px;
   float: left;
+  display: flex;
+  span{
+    margin-right: 10px;
+    cursor: pointer;
+  }
 }
 .file-header-add {
   float: right;

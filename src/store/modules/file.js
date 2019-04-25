@@ -72,16 +72,58 @@ const store = {
       },
       // 推送 参与者
       player(state, data){
-          console.log(data)
+         state.file.data.joinInfo=data
       },
       // 推送 关联
       relevance (state, data) {
           console.log(data)
+          if (data.publicType==='任务'){
+              state.file.data.bindTasks=state.file.data.bindTasks.concat(data.bind)
+          }else if (data.publicType==='分享') {
+              state.file.data.bindShares=state.file.data.bindShares.concat(data.bind)
+          }else if (data.publicType==='日程') {
+              state.file.data.bindSchedules=state.file.data.bindSchedules.concat(data.bind)
+          }else if (data.publicType==='文件') {
+              state.file.data.bindFiles=state.file.data.bindFiles.concat(data.bind)
+          }
+      },
+      // 推送 取消关联
+      cancelRelevance(state, data){
+          console.log(data.bindId)
+          if (data.publicType==='任务'){
+              state.file.data.bindTasks.forEach((i,n) => {
+                  if (i.taskId === data.bindId){
+                      state.file.data.bindTasks.splice(n,1)
+                  }
+              })
+          }else if (data.publicType==='分享') {
+              state.file.data.bindShares.forEach((i,n) => {
+                  if (i.shareId === data.bindId){
+                      state.file.data.bindShares.splice(n,1)
+                  }
+              })
+          }else if (data.publicType==='日程') {
+              state.file.data.bindSchedules.forEach((i,n) => {
+                  if (i.scheduleId === data.bindId){
+                      state.file.data.bindSchedules.splice(n,1)
+                  }
+              })
+          }else if (data.publicType==='文件') {
+              state.file.data.bindFiles.forEach((i,n) => {
+                  if (i.fileId === data.bindId){
+                      state.file.data.bindFiles.splice(n,1)
+                  }
+              })
+          }
       },
       // 推送 消息
       getMsg (state, data) {
          state.file.logs.push(data)
       },
+      // 推送 创建文件夹
+      createWjj(state, data){
+        state.files=data
+      }
   },
   actions: {
     initFile({ commit, state }, data) {

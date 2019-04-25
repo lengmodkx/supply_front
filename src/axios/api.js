@@ -91,6 +91,17 @@ export function updateProject(data) {
         }
     });
 }
+// 搜索项目
+export function searchProjects(projectName,condition) {
+    return fetch({
+        url: '/projects/seach',
+        method: "get", // 请求方法
+        params: {
+            projectName:projectName,
+            condition:condition
+        }
+    });
+}
 //获取项目列表
 export function getProjectList() {
     return fetch({

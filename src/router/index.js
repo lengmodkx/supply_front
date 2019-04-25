@@ -7,6 +7,7 @@ import Home from "../views/Home.vue";
 import mine from '../components/public/Mine'
 import message from '../components/public/message'
 import calendar from '../components/public/calendar'
+import members from "../components/company/members"
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -19,6 +20,10 @@ export default new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: "/members",   // 成员
+      component: members,
+    },
     {
       path: "/project/:id",
       name: "project",

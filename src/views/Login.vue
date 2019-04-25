@@ -105,6 +105,7 @@ export default {
               this.updateUserId(res.userInfo); //存储、更新用户信息
               localStorage.userId=res.userInfo.userId
               localStorage.userImg=res.userInfo.image
+              localStorage.userName=res.userInfo.userName
               this.$Message.success("登录成功!");
               this.$router.push("/home");
             }

@@ -5,10 +5,11 @@
     <div class="pic"></div>
     <p class="myindex">输入企业名称，解锁企业独有功能</p>
     <Input class="inputbox" v-model.trim="proName" placeholder="企业名称" />
+    <Input class="inputbox" v-model.trim="phone" placeholder="手机号" />
     <Select class="selectBox" v-model="selectmodel1" placeholder="企业规模">
         <Option v-for="item in sizeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
     </Select>
-    <Button class="submitBtn" type="primary" size="large" :disabled="proName==''||selectmodel1==''" @click="next">下一步</Button>
+    <Button :loading="btnLoading" class="submitBtn" type="primary" size="large" :disabled="proName==''||selectmodel1==''||phone==''" @click="createOrg">开始创建</Button>
   </div>
   <!-- 验证手机号模块 -->
   <div class="contentPro" v-if="showbox2">
@@ -16,7 +17,6 @@
     <div class="pic2"></div>
     <p class="myindex">确认联系方式，免费培训团队</p>
     <Input class="inputbox" v-model.trim="people" placeholder="联系人" />
-    <Input class="inputbox" v-model.trim="phone" placeholder="联系电话" />
     <div class="yanzheng">
     <Input class="inputbox" v-model.trim="authority" placeholder="请输入短信验证码" />
     <span class="getCode" @click="getCode">{{getcode}}</span>
@@ -29,6 +29,7 @@
   
 </template>
 <script>
+  import {createCompany} from '@/axios/companyApi'
   export default{
     data(){
       return{
@@ -36,6 +37,7 @@
         showbox2:false,
         selectmodel1:'',
         disabled:true,
+        btnLoading: false,
         proName:'',
         proDes:'',
         people:'',
@@ -46,20 +48,24 @@
         timer:null,
         sizeList: [
                     {
-                        value: '1-30人',
-                        label: '1-30人'
+                        value: '1-10人',
+                        label: '1-10人'
                     },
                     {
-                        value: '30-100人',
-                        label: '30-100人'
+                        value: '10-50人',
+                        label: '10-50人'
+                    },
+                    {
+                        value: '50-100人',
+                        label: '50-100人'
                     },
                     {
                         value: '100-300人',
                         label: '100-300人'
                     },
                     {
-                        value: '300-1000人',
-                        label: '300-1000人'
+                      value: '300-1000人',
+                      label: '300-1000人'
                     },
                     {
                         value: '1000人以上',
@@ -72,6 +78,30 @@
       clearInterval(this.timer)
     },
     methods:{
+      // 创建企业
+      createOrg(){
+        if(!(/^1[34578]\d{9}$/.test(this.phone))){
+          this.$Message.error("手机号码有误，请重填");
+        }else {
+          this.btnLoading=true
+          let data={
+            'orgName': this.proName,
+            'orgDes': this.selectmodel1,
+            'contact': localStorage.userName,
+            'contactPhone': this.phone
+          }
+          console.log(data)
+          createCompany(data).then(res => {
+            this.btnLoading=false
+            console.log(res)
+            if (res.result){
+              localStorage.companyPhone=this.phone
+              localStorage.companyId=res.data
+              this.$router.push('/Home')
+            }
+          })
+        }
+      },
       next(){
         this.showbox1 = false
         this.showbox2 = true
@@ -79,7 +109,7 @@
       },
       backTo (){
          this.showbox1 = true
-        this.showbox2 = false
+        this.phone = false
       },
       getCode () {
         if (typeof this.getcode == 'number') return

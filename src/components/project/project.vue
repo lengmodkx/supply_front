@@ -132,13 +132,20 @@ export default {
                   this.$store.commit("file/relevance", result.object)
                   }
                 break;
+                // 取消关联
               case "A29":
-                if (result.object.fromType === '任务')
+                if (result.object.fromType === '任务') {
                   this.$store.commit("task/cancleRelation", result.object)
+                }else if (result.object.fromType === '文件') {
+                  this.$store.commit("file/cancelRelevance", result.object)
+                }
                 break;
               case "A30":
                 this.$store.dispatch("task/loadFile", result.object)
                 break;
+                    // 创建文件夹
+              case "C1":
+                this.$store.commit("file/createWjj",result.object);
                 // 上传文件
               case "C2":
                 this.$store.dispatch("file/upFiles",result.object);
@@ -187,6 +194,7 @@ export default {
                 }else if (result.object.publicType === '文件') {
                   this.$store.commit("file/removeTag", { tagId: result.object.tagId, fileId: result.object.publicId })
                 }
+                // 发消息
               case "F1":
                 if (result.object.type === '任务') {
                   this.$store.dispatch("task/publish", result.object.log)

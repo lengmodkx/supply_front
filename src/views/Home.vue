@@ -2,7 +2,9 @@
   <div class="container index">
     <div class="container-title">
       <div class="search-box">
-        <Input search enter-button placeholder="请输入项目名称关键字进行搜索" @on-search="searchProject" />
+        <Input v-model.trim="searchWords" search enter-button
+               placeholder="请输入项目名称关键字进行搜索"
+               @on-search="searchProject" @on-keyup="searchNo" />
       </div>
       <div class="filtrate-box">
         <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
@@ -15,12 +17,42 @@
         <Button type="primary" style="margin-left:10px" @click="showproject=true">创建新项目</Button>
       </div>
     </div>
-
+<Loading v-if="searchLoading"></Loading>
     <!--列表视图-->
     <loading v-if="loading"></loading>
     <div v-show="selectView=='列表视图'">
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
-      <ul v-if="!loading">
+      <!--搜索项目-->
+      <ul v-if="searchData.length">
+        <li class="project-list" v-for="(item,index) in searchData" :key="index" @click="path(item.projectId,item.groupId)">
+          <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
+          <div class="project-body">
+            <div class="project-con">
+              <p>{{item.projectName}}</p>
+              <span>{{item.projectDes}}</span>
+            </div>
+            <div class="operate-box">
+              <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
+                <span @click.stop="setStar(item.projectId)">
+                  <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
+                </span>
+              </Tooltip>
+              <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                <span @click.stop="setProject(item)">
+                  <Icon type="ios-settings-outline" size="22"></Icon>
+                </span>
+              </Tooltip>
+              <Tooltip class="iconpic2" content="删除项目" placement="top">
+                <span @click.stop="confirmHuishou(item)">
+                  <Icon type="ios-trash-outline" size="22" />
+                </span>
+              </Tooltip>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <!--正常显示-->
+      <ul v-else-if="!loading && !isSearch">
         <li class="project-list" v-for="(item,index) in projects" :key="index" @click="path(item.projectId,item.groupId)">
           <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
           <div class="project-body">
@@ -64,7 +96,29 @@
     <div v-show="selectView=='卡片视图'">
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <div>
-        <Row v-if="!loading">
+        <!--搜索项目-->
+        <Row v-if="searchData.length">
+          <iCol span="6" v-for="(item,index) in searchData" :key="index">
+            <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
+              <h2>{{item.projectName}}</h2>
+              <p>{{item.projectDes}}</p>
+              <div class="iconPic">
+                <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                  <span @click.stop="setProject(item)">
+                    <Icon type="md-settings" size="18"></Icon>
+                  </span>
+                </Tooltip>
+                <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
+                  <span @click.stop="setStar(item.projectId)">
+                    <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
+                  </span>
+                </Tooltip>
+              </div>
+            </div>
+          </iCol>
+        </Row>
+        <!--正常显示-->
+        <Row v-else-if="!loading && !isSearch" >
           <iCol span="6" v-for="(item,index) in projects" :key="index">
             <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
               <h2>{{item.projectName}}</h2>
@@ -120,7 +174,8 @@ import {
   guidangProject,
   recycleProject,
   recoverProject,
-  delProject
+  delProject,
+  searchProjects
 } from "@/axios/api";
 export default {
   name: "index",
@@ -133,7 +188,11 @@ export default {
     return {
       //用变量承接一下要传入modal的每个id或参数
       cancelID: null,
+      searchWords: '',
+      isSearch: false,
+      searchData: [],
       cancelStatus: null,
+      searchLoading: false,
       recoverId: null,
       delId: null,
       delName: null,
@@ -230,8 +289,26 @@ export default {
         }
       });
     },
-    searchProject() {
-
+    // 搜索项目
+    searchProject(value) {
+      let arr={
+        '我创建的项目':'created',
+        '我参与的项目': 'join',
+        '星标项目': 'star'
+      }
+      this.searchLoading=true
+      this.isSearch=true
+      searchProjects(value,arr[this.projectType]).then(res => {
+        this.searchLoading=false
+        this.searchData=res.data
+      })
+    },
+    searchNo(){
+      console.log(this.searchWords)
+      if (this.searchWords==''){
+        this.searchData=[]
+        this.isSearch=false
+      }
     }
   }
 };
