@@ -408,7 +408,11 @@ const store = {
         changeTask({
             commit
         }, data) { //任务数据改变时调用
-            commit('changeTask', data)
+            initEditTask(data).then(res => {
+                if (res.result === 1) {
+                    commit('editTask', res.data)
+                }
+            })
         },
         changeProperty({
             commit
