@@ -19,29 +19,10 @@
       <div class="toolLeft" v-if="task.parentId === '0'">
         <span></span>
         <span>{{task.project.projectName}}·</span>
-        <Dropdown trigger="click">
-          <span class="proName">任务组名</span>
-          <DropdownMenu slot="list">
-            <DropdownItem>任务组1
-              <svg-icon class="right" name="right"></svg-icon>
-            </DropdownItem>
-            <DropdownItem>任务组2
-              <svg-icon class="right" name="right"></svg-icon>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-
+        <span class="proName">{{task.groupName}}</span>
         <span>·</span>
         <Dropdown trigger="click">
         <span class="proName">{{task.taskName}}</span>
-        <DropdownMenu slot="list">
-          <DropdownItem>任务1
-            <svg-icon class="right" name="right"></svg-icon>
-          </DropdownItem>
-          <DropdownItem>任务2
-            <svg-icon class="right" name="right"></svg-icon>
-          </DropdownItem>
-        </DropdownMenu>
       </Dropdown>
       </div>
       <div class="toolLeft" v-if="task.parentTask">
@@ -182,7 +163,7 @@
         </Modal>
       </div>
       <div class="has-relevance">
-        <ul v-if="task.bindTasks.length">
+        <ul v-if="task.bindTasks">
           <div class="what-title">关联的任务</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">
             <div class="gl-task-list-con">
@@ -191,7 +172,7 @@
               <!--<Icon type="ios-calendar-outline" size="22" />-->
               <!--<Icon type="ios-document-outline" size="22" />-->
               <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
-              <img v-else src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==">
+              <Icon type="md-contact" v-else/>
               <div class="gl-con">
                 <div class="gl-con-top">
                   <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
@@ -212,7 +193,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindFiles.length">
+        <ul v-if="task.bindFiles">
           <div class="what-title">关联的文件</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindFiles" :key="i">
             <div class="gl-task-list-con">
@@ -238,7 +219,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindSchedules.length">
+        <ul v-if="task.bindSchedules">
           <div class="what-title">关联的日程</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">
             <div class="gl-task-list-con">
@@ -264,7 +245,7 @@
             </Poptip>
           </li>
         </ul>
-        <ul v-if="task.bindShares.length">
+        <ul v-if="task.bindShares">
           <div class="what-title">关联的分享</div>
           <li class="gl-task-list" v-for="(b,i) in task.bindShares" :key="i">
             <div class="gl-task-list-con">
@@ -292,9 +273,8 @@
       </div>
       <!-- 上传附件 -->
       <div class="accessory">
-        <!--<p class="name" style="float: none;width: 90px"><Icon type="ios-cloud-upload-outline" size="14" />上传附件</p>-->
-        <div class="addfile">
-          <div class="file-lsit" v-if="task.fileList" v-for="(f,i) in task.fileList" :key="i">
+        <div class="addfile" v-if="task.fileList">
+          <div class="file-lsit" v-for="(f,i) in task.fileList" :key="i">
             <div class="file-img">
               <img v-if="images_suffix.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
               <img v-else src="@/icons/img/moren.png" alt="文件">
@@ -306,7 +286,6 @@
             <Tooltip :content="f.fileName">
               <p class="file-name">{{f.fileName}}</p>
             </Tooltip>
-
           </div>
           <div style="width: 117px;height:117px;line-height: 117px;border: 1px solid #e5e5e5;display: flex;align-items: center;justify-content: center" @click="showCommon=true">
             <Icon type="md-add" size="40" style="margin-right: 0px"></Icon>
@@ -316,7 +295,7 @@
       <!-- 设置参与者 -->
       <div class="participator">
         <h5>
-          参与者 · {{task.joinInfo?task.joinInfo.length:0}}
+          参与者 · {{task.joinInfo!=null?task.joinInfo.length:0}}
           <Tooltip content="参与者将会收到评论和任务更新通知" placement="right" transfer>
             <Icon type="ios-help"></Icon>
           </Tooltip>
