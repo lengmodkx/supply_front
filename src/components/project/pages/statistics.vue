@@ -15,9 +15,9 @@
                     <div  @click="goDetail(3,'概览报表')" class="charts-title">概览报表</div>
                     <div id="chart3" class="charts-con">
                         <div class="chart3-wrap">
-                            <div class="chart3-list">
-                                <p>任务总数</p>
-                                <div class="num">5</div>
+                            <div class="chart3-list" v-for="item in chartData4">
+                                <p>{{item.value }}</p>
+                                <div class="num">{{item.label }}</div>
                                 <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
                             </div>
                         </div>
@@ -55,6 +55,8 @@
                 return {
                     color: ['#0DA9F5', '#8BDC76', '#FF7969', '#A0A3D6', '#FFC669'],
                     chartData1: [],
+                    staticData:[],
+                    chartData4:[]
                 }
             },
             mounted() {
@@ -62,7 +64,8 @@
                     this.chartData1 = res.pieData;
                     this.chartData2 = res.staticHistogram.nameArray
                     this.chartData3 = res.staticHistogram.dataArray
-                    this.chartData4 = res.count;
+                    this.chartData4 = res.countData;
+
                     console.log("总任务数="+this.chartData4)
                     this.chartEveryDate1 = res.statisticsBurnout.everyDate
                     this.chartTrueTask = res.statisticsBurnout.trueTask
@@ -162,9 +165,6 @@
                             },
                             xAxis: {
                                 categories: everyDate1,
-                                /*[
-                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
-                            ],*/
                                 crosshair: false
                             },
                             yAxis: {
@@ -218,9 +218,6 @@
                             },
                             xAxis: {
                                 categories: everyDate2,
-                                /* [
-                            '4月1','4月2','4月3','4月4','4月5','4月6','4月7','4月8'
-                        ],*/
                                 crosshair: false
                             },
                             yAxis: {
