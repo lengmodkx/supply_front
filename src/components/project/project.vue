@@ -13,7 +13,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import MyHeader from "@/components/public/HeaderProject.vue";
 import ProjectMember from "@/components/public/ProjectMember.vue";
