@@ -91,6 +91,17 @@ export function updateProject(data) {
         }
     });
 }
+// 搜索项目
+export function searchProjects(projectName,condition) {
+    return fetch({
+        url: '/projects/seach',
+        method: "get", // 请求方法
+        params: {
+            projectName:projectName,
+            condition:condition
+        }
+    });
+}
 //获取项目列表
 export function getProjectList() {
     return fetch({
@@ -660,6 +671,17 @@ export function taskExecutor(taskId, executor) {
         method: "put", // 请求方法
         params: {
             executor: executor
+        }
+    });
+}
+
+// 修改任务备注
+export function updateTaskRemarks(taskId, data) {
+    return fetch({
+        url: `${api.tasks}/${taskId}/remarks`,
+        method: "put", // 请求方法
+        params: {
+            remarks: data
         }
     });
 }

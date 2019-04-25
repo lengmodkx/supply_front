@@ -7,6 +7,7 @@ import Home from "../views/Home.vue";
 import mine from '../components/public/Mine'
 import message from '../components/public/message'
 import calendar from '../components/public/calendar'
+import members from "../components/company/members"
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -20,11 +21,14 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: "/members",   // 成员
+      component: members,
+    },
+    {
       path: "/project/:id",
       name: "project",
       component: _import("project/project"),
-      children: [
-        {
+      children: [{
           path: "tasks/group/:groupId",
           component: _import("project/pages/index/index")
         },
@@ -65,8 +69,7 @@ export default new Router({
       meta: {
         title: "阿拉丁BIM5D云平台"
       },
-      children: [
-        {
+      children: [{
           path: "nearThing",
           component: _import("public/mine/nearThing")
         },
@@ -79,12 +82,12 @@ export default new Router({
           component: _import("public/mine/mineTask")
         },
         {
-            path: "schedule",
-            component: _import("public/mine/mineSchedule")
+          path: "schedule",
+          component: _import("public/mine/mineSchedule")
         },
         {
-            path: "collect",
-            component: _import("public/mine/mineCollect")
+          path: "collect",
+          component: _import("public/mine/mineCollect")
         }
 
       ]
@@ -97,11 +100,11 @@ export default new Router({
       component: _import("project/pages/statisticsDetail")
     },
     {
-        path: "/message",
-        meta: {
-            title: "消息"
-        },
-        component: message
+      path: "/message",
+      meta: {
+        title: "消息"
+      },
+      component: message
     },
     {
       path: "/calendar",

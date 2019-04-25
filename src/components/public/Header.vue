@@ -1,5 +1,20 @@
 <template>
   <header class="header" id="header">
+      <Poptip>
+          <Icon class="app-icon" type="md-apps" />
+          <div slot="content">
+              <ul class="app-con">
+                  <router-link tag="li" to="/home" class="app-li">
+                      <img src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
+                      <p>主页</p>
+                  </router-link>
+                  <router-link tag="li" to="/members" class="app-li">
+                      <img src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
+                      <p>成员</p>
+                  </router-link>
+              </ul>
+          </div>
+      </Poptip>
     <div class="logo">
       <img src="../../assets/images/logo.png" alt="">
       <Icon type="code" @click="openMenu"></Icon>
@@ -124,7 +139,8 @@ export default {
     ...mapState('user', ['mineRouter', 'users']),
     initSocket(id) {
       // 建立连接对象
-      var socket = new SockJS("http://192.168.3.189:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      var url = process.env.NODE_ENV === "development" ? 'http://192.168.3.179:8090/webSocketServer' : 'http://apitest.aldbim.com/api/webSocketServer';
+      var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(

@@ -1,7 +1,7 @@
 
 <template>
   <div ref="editor">
-    <p>请输入内容</p>
+    <p v-html="contents"></p>
   </div>
 </template>
 <script>

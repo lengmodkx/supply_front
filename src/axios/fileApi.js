@@ -105,3 +105,11 @@ export function filePrivacy(id, privacy) {
         data: ''
     });
 }
+// 模糊查询
+export function searchFile(fileName, projectId) {
+    return fetch({
+        url: `/files/${fileName}/seach`,
+        method: "get",
+        params: {projectId: projectId}
+    });
+}

@@ -63,6 +63,11 @@ const store = {
             }
 
         },
+        changeRemarks(state,data){
+          if(state.task){
+              state.task.remarks = data
+          }
+        },
         changeExecutor(state,data){
             state.task.executor = data.executor.userId
             if(!data.executor.userId){

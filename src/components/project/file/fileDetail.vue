@@ -100,8 +100,15 @@
                         :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" width='100%' height='100%' frameborder='1'>
                 </iframe>
 
-                <iframe v-else :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" width='100%' height='100%' frameborder='1'>
+                <iframe v-else-if="file.data.ext.includes('txt')"
+                    :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" width='100%' height='100%' frameborder='1'>
                 </iframe>
+                <div v-else class="cant-read-file">
+                    <span>{{file.data.fileName}}</span>
+                    <Button long size="large" type="primary">
+                        <a style="color: white" :download="file.data.fileName" :href="'http://192.168.3.189:8090/files/'+file.data.fileId +'/download'" ref="xiazai">下载文件（{{file.data.size}}）</a>
+                    </Button>
+                </div>
             </div>
             <div class="f-content-right">
                 <div class="padd16">
@@ -133,33 +140,22 @@
                         </Modal>
                     </div>
                    <!--有关联内容-->
-                    <div class="has-relevance" v-for="(b,i) in file.bindings" :key="i">
-                        <ul >
-                            <div class="what-title" v-if="b.publicType=='任务'">关联的任务</div>
-                            <div class="what-title" v-if="b.publicType=='日程'">关联的日程</div>
-                            <div class="what-title" v-if="b.publicType=='分享'">关联的分享</div>
-                            <div class="what-title" v-if="b.publicType=='文件'">关联的文件</div>
-                            <li class="gl-task-list" >
+                    <div class="has-relevance">
+                        <ul v-if="file.data.bindTasks.length">
+                            <div class="what-title">关联的任务</div>
+                            <li class="gl-task-list" v-for="(b,i) in file.data.bindTasks" :key="i">
                                 <div class="gl-task-list-con">
-                                    <Icon v-if="b.publicType=='任务'" type="md-checkbox-outline" size="22" />
-                                    <Icon v-if="b.publicType=='分享'" class="glpop" type="ios-arrow-down" size="20" />
-                                    <Icon v-if="b.publicType=='文件'" type="ios-document-outline" size="22" />
-                                    <Icon v-if="b.publicType=='日程'" type="ios-calendar-outline" size="22" />
-                                    <img v-if="JSON.parse(b.bindContent).userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ JSON.parse(b.bindContent).userImage" alt="执行者">
+                                    <Icon type="md-checkbox-outline" size="22" />
+                                    <!--<Icon type="ios-list-box-outline" size="22" />-->
+                                    <!--<Icon type="ios-calendar-outline" size="22" />-->
+                                    <!--<Icon type="ios-document-outline" size="22" />-->
+                                    <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
                                     <img v-else src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==">
                                     <div class="gl-con">
-                                        <div class="gl-con-top" v-if="b.publicType=='任务'">
-                                            <span>{{JSON.parse(b.bindContent).taskName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
+                                        <div class="gl-con-top">
+                                            <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
                                         </div>
-                                        <div class="gl-con-top" v-if="b.publicType=='文件'">
-                                            <span>{{JSON.parse(b.bindContent).fileName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
-                                        </div>
-                                        <div class="gl-con-top" v-if="b.publicType=='日程'">
-                                            <span>{{JSON.parse(b.bindContent).scheduleName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
-                                        </div>
-                                        <div class="gl-con-top" v-if="b.publicType=='分享'">
-                                            <span>{{JSON.parse(b.bindContent).shareName}}</span><span>{{JSON.parse(b.bindContent).projectName}}</span>
-                                        </div>
+                                        <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
                                     </div>
                                 </div>
                                 <Poptip>
@@ -168,17 +164,85 @@
                                         <div class="glpop-list">
                                             <Icon type="ios-link" size="20" /><span>复制链接</span>
                                         </div>
-                                        <div class="glpop-list"  v-if="b.publicType=='任务'" @click="cancle(JSON.parse(b.bindContent).taskId)">
+                                        <div class="glpop-list" @click="cancle(b.taskId)">
                                             <Icon type="md-link" size="20" /><span>取消关联</span>
                                         </div>
-                                        <div class="glpop-list"  v-if="b.publicType=='分享'" @click="cancle(JSON.parse(b.bindContent).shareId)">
+                                    </div>
+                                </Poptip>
+                            </li>
+                        </ul>
+                        <ul v-if="file.data.bindFiles.length">
+                            <div class="what-title">关联的文件</div>
+                            <li class="gl-task-list" v-for="(b,i) in file.data.bindFiles" :key="i">
+                                <div class="gl-task-list-con">
+                                    <!--<Icon type="md-checkbox-outline" size="22" />-->
+                                    <Icon type="ios-document-outline" size="22" />
+                                    <div class="gl-con">
+                                        <div class="gl-con-top">
+                                            <span>{{b.fileName}}</span><span>{{b.projectName}}</span>
+                                        </div>
+                                        <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                    </div>
+                                </div>
+                                <Poptip>
+                                    <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                    <div slot="content">
+                                        <div class="glpop-list">
+                                            <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                        </div>
+                                        <div class="glpop-list" @click="cancle(b.fileId)">
                                             <Icon type="md-link" size="20" /><span>取消关联</span>
                                         </div>
-                                        <div class="glpop-list"  v-if="b.publicType=='日程'" @click="cancle(JSON.parse(b.bindContent).scheduleId)">
+                                    </div>
+                                </Poptip>
+                            </li>
+                        </ul>
+                        <ul v-if="file.data.bindSchedules.length">
+                            <div class="what-title">关联的日程</div>
+                            <li class="gl-task-list" v-for="(b,i) in file.data.bindSchedules" :key="i">
+                                <div class="gl-task-list-con">
+                                    <!--<Icon type="md-checkbox-outline" size="22" />-->
+                                    <Icon type="ios-calendar-outline" size="22" />
+                                    <div class="gl-con">
+                                        <div class="gl-con-top">
+                                            <span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>
+                                        </div>
+                                        <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                    </div>
+                                </div>
+                                <Poptip >
+                                    <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                    <div slot="content">
+                                        <div class="glpop-list">
+                                            <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                        </div>
+                                        <div class="glpop-list" @click="cancle(b.scheduleId)">
                                             <Icon type="md-link" size="20" /><span>取消关联</span>
                                         </div>
-                                        <div class="glpop-list"  v-if="b.publicType=='文件'" @click="cancle(JSON.parse(b.bindContent).fileId)">
-                                            <Icon type="md-link" size="20" /><span>取消关联</span>
+                                    </div>
+                                </Poptip>
+                            </li>
+                        </ul>
+                        <ul v-if="file.data.bindShares.length">
+                            <div class="what-title">关联的分享</div>
+                            <li class="gl-task-list" v-for="(b,i) in file.data.bindShares" :key="i">
+                                <div class="gl-task-list-con">
+                                    <Icon type="ios-open-outline" size="22" />
+                                    <div class="gl-con">
+                                        <div class="gl-con-top">
+                                            <span>{{b.shareName}}</span><span>{{b.projectName}}</span>
+                                        </div>
+                                        <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                    </div>
+                                </div>
+                                <Poptip>
+                                    <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                    <div slot="content">
+                                        <div class="glpop-list">
+                                            <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                        </div>
+                                        <div class="glpop-list" @click="cancle(b.shareId)">
+                                            <Icon type="md-link" size="20"/><span>取消关联</span>
                                         </div>
                                     </div>
                                 </Poptip>
