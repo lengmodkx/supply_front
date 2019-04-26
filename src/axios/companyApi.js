@@ -1,5 +1,12 @@
 import fetch from "./fetch"; // 引用fetch.js
 
+// 查询企业列表
+export function getAllOrg() {
+    return fetch({
+        url: '/organizations/my_org',
+        method: "get",
+    });
+}
 // 创建企业
 export function createCompany(data) {
     return fetch({
@@ -24,11 +31,14 @@ export function addPeople(data) {
         data: data
     });
 }
-// 初始化企业信息
-export function initOrgMember(orgId) {
+// 初始化企业信息  查询信息
+export function initOrgMember(orgId, flag) {
     return fetch({
         url: `/organization/members/${orgId}`,
         method: "get",
-        params: {}
+        params: {
+            'pageSize': 9999,
+            'flag': flag?flag:0,
+        }
     });
 }

@@ -55,7 +55,7 @@ export default new Router({
       ]
     },
     {
-      path: "/home",
+      path: "/home/:num",
       name: "Home",
       component: Home,
       meta: {

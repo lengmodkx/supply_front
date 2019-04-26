@@ -30,6 +30,7 @@
 </template>
 <script>
   import {createCompany} from '@/axios/companyApi'
+  import {mapActions} from 'vuex'
   export default{
     data(){
       return{
@@ -78,6 +79,7 @@
       clearInterval(this.timer)
     },
     methods:{
+        ...mapActions("company", ["initCompany"]),
       // 创建企业
       createOrg(){
         if(!(/^1[34578]\d{9}$/.test(this.phone))){
@@ -95,9 +97,16 @@
             this.btnLoading=false
             console.log(res)
             if (res.result){
-              localStorage.companyPhone=this.phone
               localStorage.companyId=res.data
-              this.$router.push('/Home')
+              this.initCompany()
+                console.log(this.$route.name)
+                if (this.$route.name=='Home'){
+                    window.location.reload()
+                } else {
+                    this.$router.push('/Home/'+Math.random())
+                    this.$emit('closeCreateOrg')
+                }
+
             }
           })
         }

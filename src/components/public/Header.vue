@@ -4,7 +4,7 @@
           <Icon class="app-icon" type="md-apps" />
           <div slot="content">
               <ul class="app-con">
-                  <router-link tag="li" to="/home" class="app-li" >
+                  <router-link tag="li" :to="'/home/'+Math.random()" class="app-li" >
                       <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
                       <p>主页</p>
                   </router-link>
@@ -39,15 +39,16 @@
         <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt="">
         <div class="userInfo" slot="content">
           <ul class="org">
-            <li class="addOrgPro" @click="addOrgModal=true;popVisible=false;">创建企业</li>
-            <li>个人项目</li>
-            <li>企业项目</li>
+            <div class="createdOrg" @click="addOrgModal=true;popVisible=false;">创建企业</div>
+            <li class="addOrgPro" v-for="(item, index) in companyList" :key="index">
+                {{item.organizationName}}<Icon type="md-checkmark" />
+            </li>
           </ul>
           <ul class="admin">
             <li>账号设置</li>
           </ul>
           <ul class="logOut">
-            <li>退出登录</li>
+            <router-link tag="li" to="/">退出登录</router-link>
           </ul>
         </div>
       </Poptip>
@@ -71,7 +72,7 @@
     <!-- <Mine :class="{showmine:activeHeaderTag==1}" @close="activeHeaderTag=-1"></Mine> -->
     <!-- 创建企业项目 -->
     <Modal v-model="addOrgModal" class="newOrg">
-      <CreateOrg v-if="addOrgModal"></CreateOrg>
+      <CreateOrg @closeCreateOrg="addOrgModal=false" v-if="addOrgModal"></CreateOrg>
     </Modal>
   </header>
 </template>
@@ -79,7 +80,7 @@
 <script>
 // import Mine from './Mine'
 import CreateOrg from "./common/CreateOrg";
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -135,9 +136,11 @@ export default {
   },
   mounted() {
     this.initSocket(localStorage.userId);
+    this.initCompany()
   },
   methods: {
     ...mapState('user', ['mineRouter', 'users']),
+      ...mapActions("company", ["initCompany"]),
     initSocket(id) {
       // 建立连接对象
       var url = process.env.NODE_ENV === "development" ? 'http://192.168.3.189:8090/webSocketServer' : 'http://apitest.aldbim.com/api/webSocketServer';
@@ -198,7 +201,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('news', ['newsCount'])
+    ...mapState('news', ['newsCount']),
+    ...mapState('company', ['companyList'])
   },
   created() {
     this.getNewsCount()

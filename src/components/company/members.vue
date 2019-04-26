@@ -9,11 +9,9 @@
                         <TabPane label="组织架构" name="name1">
                             <div class="zzjg">
                                 <h3>成员</h3>
-                                <div class="filter-member">所有成员</div>
-                                <div class="filter-member">新加入的成员</div>
-                                <div class="filter-member">未分配部门的成员</div>
-                                <div class="filter-member">外部成员</div>
-                                <div class="filter-member">停用的成员</div>
+                                <div class="filter-member" @click="changeMemberType(item)"
+                                     :class="{checked:memberType==item}"
+                                     v-for="(item, index) in allMemberType" :key="index">{{item}}</div>
                                 <h3 style="margin-top: 15px">部门</h3>
                                 <Poptip v-model="branch" transfer>
                                     <div class="branch"><Icon type="md-add-circle" />创建部门</div>
@@ -54,7 +52,7 @@
                 <!--右侧显示成员-->
                 <div class="member-right">
                     <header class="member-right-head">
-                        <div style="font-size: 16px">所有成员 · 1</div>
+                        <div style="font-size: 16px">{{memberType}} · {{peopleList.length?peopleList.length:0}}</div>
                         <Poptip v-model="memModal">
                             <div class="branch"><Icon type="md-add-circle" />添加成员</div>
                             <div slot="content">
@@ -64,13 +62,17 @@
                         </Poptip>
                     </header>
                     <Loading v-if="loading"></Loading>
-                    <ul>
+                    <ul v-if="peopleList.length">
                         <li class="one-member" v-for="(item, index) in peopleList" :key="index">
-                            <img :src="item.image" alt="">
-                            <p>{{item.userName}}</p>
-                            <span>{{organizationLable?'拥有者':'参与者'}}</span>
+                            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.userEntity.image" alt="">
+                            <p>{{item.userEntity.userName}}</p>
+                            <span>{{item.organizationLable?'拥有者':'参与者'}}</span>
                         </li>
                     </ul>
+                    <div v-else class="no-memebers">
+                        <Icon type="ios-contacts" />
+                        <p>暂无成员</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,13 +94,15 @@ import {initOrgMember} from '@/axios/companyApi'
         data () {
             return{
                 branch: false,
+                memberType: '所有成员',
                 branchName: '',
                 group: false,
                 groupName: '',
                 showAddPeople: false,
                 peopleList: [],
                 memModal: false,
-                loading:true
+                loading:true,
+                allMemberType: ['所有成员','新加入的成员','未分配部门的成员','外部成员','停用的成员']
             }
         },
         mounted () {
@@ -109,7 +113,14 @@ import {initOrgMember} from '@/axios/companyApi'
             // 页面初始化
             initMember(){
                 initOrgMember(localStorage.companyId).then(res => {
-                    console.log(res)
+                    console.log(1111111,res)
+                    if (res.result){
+                        if (res.data==='无数据'){
+                            this.peopleList=[]
+                        }else {
+                            this.peopleList=res.data
+                        }
+                    }
                     this.loading=false
                 })
             },
@@ -129,6 +140,36 @@ import {initOrgMember} from '@/axios/companyApi'
                     'organizationLable': data.organizationLable
                 }
                 this.peopleList.push(people)
+            },
+            // 点击左侧 成员类型
+            changeMemberType (item) {
+                this.memberType=item
+                this.loading=true
+                let flag=0
+                switch (item) {
+                    case '未分配部门的成员':
+                        flag=1
+                        break;
+                    case '停用的成员':
+                        flag=2
+                        break;
+                    case '新加入的成员':
+                        flag=3
+                        break;
+                }
+                initOrgMember(localStorage.companyId,flag).then(res => {
+                    this.loading=false
+                    console.log(res.data)
+                    if (res.result){
+                        if (res.result){
+                            if (res.data==='无数据'){
+                                this.peopleList=[]
+                            }else {
+                                this.peopleList=res.data
+                            }
+                        }
+                    }
+                })
             },
 
         }
