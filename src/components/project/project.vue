@@ -17,7 +17,7 @@
 import MyHeader from "@/components/public/HeaderProject.vue";
 import ProjectMember from "@/components/public/ProjectMember.vue";
 import ProjectMenu from "@/components/public/ProjectMenu.vue";
-import ProjectView from '../../components/public/ProjectView.vue'
+import ProjectView from "../../components/public/ProjectView.vue";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -62,7 +62,10 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var url = process.env.NODE_ENV === "development" ? 'http://192.168.3.189:8090/webSocketServer' : 'http://apitest.aldbim.com/api/webSocketServer';
+      var url =
+        process.env.NODE_ENV === "development"
+          ? "http://192.168.3.179:8090/webSocketServer"
+          : "http://apitest.aldbim.com/api/webSocketServer";
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
@@ -72,74 +75,80 @@ export default {
           this.stompClient.subscribe(`/topic/${id}`, msg => {
             var result = JSON.parse(msg.body);
             switch (result.type) {
-              case "A1":
-                this.$store.dispatch("task/changeTask", result.object);
+              case "A1": //创建任务
+                this.$store.commit("task/setTask", result.object);
                 break;
               case "A2":
-                this.$store.dispatch("task/deleteTask", result.object)
+                this.$store.dispatch("task/deleteTask", result.object);
                 break;
               case "A3":
-                this.$store.dispatch("task/changeTask", result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A4":
-                this.$store.dispatch("task/changeTask", result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A5":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A6":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A7":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A8":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A9":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A11":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A12":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A13":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A14":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A15":
-                this.$store.dispatch("task/loadIndex", result.object)
+                this.$store.dispatch("task/loadIndex", result.object);
                 break;
               case "A16":
-                this.$store.dispatch("task/loadIndex", result.object.taskId)
+                this.$store.dispatch("task/loadIndex", result.object.taskId);
                 break;
               case "A17":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A20":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
               // 关联
               case "A28":
-                if (result.object.fromType === '任务') {
-                  this.$store.dispatch("task/changeTask",result.object.publicId)
-                } else if (result.object.fromType === '文件') {
-                  this.$store.commit("file/relevance", result.object)
+                if (result.object.fromType === "任务") {
+                  this.$store.dispatch(
+                    "task/changeTask",
+                    result.object.publicId
+                  );
+                } else if (result.object.fromType === "文件") {
+                  this.$store.commit("file/relevance", result.object);
                 }
                 break;
               // 取消关联
               case "A29":
-                if (result.object.fromType === '任务') {
-                  this.$store.dispatch("task/changeTask",result.object.publicId)
-                } else if (result.object.fromType === '文件') {
-                  this.$store.commit("file/cancelRelevance", result.object)
+                if (result.object.fromType === "任务") {
+                  this.$store.dispatch(
+                    "task/changeTask",
+                    result.object.publicId
+                  );
+                } else if (result.object.fromType === "文件") {
+                  this.$store.commit("file/cancelRelevance", result.object);
                 }
                 break;
               case "A30":
-                this.$store.dispatch("task/changeTask",result.object)
+                this.$store.dispatch("task/changeTask", result.object);
                 break;
               // 创建文件夹
               case "C1":
@@ -149,27 +158,27 @@ export default {
                 this.$store.dispatch("file/upFiles", result.object);
               // 修改文件名称
               case "C11":
-                this.$store.commit("file/changeFileName", result.object)
+                this.$store.commit("file/changeFileName", result.object);
                 break;
               // 复制文件
               case "C10":
-                this.$store.commit("file/copyFile", result.object)
+                this.$store.commit("file/copyFile", result.object);
                 break;
               // 移动文件
               case "C12":
-                this.$store.commit("file/removeFile", result.object)
+                this.$store.commit("file/removeFile", result.object);
                 break;
               // 文件移到回收站
               case "C13":
-                this.$store.commit("file/putRecycle", result.object)
+                this.$store.commit("file/putRecycle", result.object);
                 break;
               // 更改 文件隐私模式
               case "C8":
-                this.$store.dispatch("file/putMimi", result.object)
+                this.$store.dispatch("file/putMimi", result.object);
                 break;
               // 改变文件参与者
               case "C9":
-                this.$store.commit("file/player", result.object)
+                this.$store.commit("file/player", result.object);
                 break;
               case "C3":
                 this.$store.dispatch("file/initFile", {
@@ -179,39 +188,54 @@ export default {
                 break;
               // 添加标签
               case "E1":
-                if (result.object.publicType === '任务') {
-                  this.$store.dispatch("task/bindingTag", { tag: result.object.tag, taskId: result.object.publicId })
-                } else if (result.object.publicType === '文件') {
-                  this.$store.commit("file/bindingTag", { tag: result.object.tag, fileId: result.object.publicId })
+                if (result.object.publicType === "任务") {
+                  this.$store.dispatch("task/bindingTag", {
+                    tag: result.object.tag,
+                    taskId: result.object.publicId
+                  });
+                } else if (result.object.publicType === "文件") {
+                  this.$store.commit("file/bindingTag", {
+                    tag: result.object.tag,
+                    fileId: result.object.publicId
+                  });
                 }
                 break;
               // 移除标签
               case "E2":
-                if (result.object.publicType === '任务') {
-                  this.$store.dispatch("task/removeTag", { tagId: result.object.tagId, taskId: result.object.publicId })
-                } else if (result.object.publicType === '文件') {
-                  this.$store.commit("file/removeTag", { tagId: result.object.tagId, fileId: result.object.publicId })
+                if (result.object.publicType === "任务") {
+                  this.$store.dispatch("task/removeTag", {
+                    tagId: result.object.tagId,
+                    taskId: result.object.publicId
+                  });
+                } else if (result.object.publicType === "文件") {
+                  this.$store.commit("file/removeTag", {
+                    tagId: result.object.tagId,
+                    fileId: result.object.publicId
+                  });
                 }
               // 发消息
               case "F1":
-                if (result.object.type === '任务') {
-                  this.$store.dispatch("task/publish", result.object.log)
-                } else if (result.object.type === 'schedule') {
-                  this.$store.commit("schedule/msg", result.object.log)
-                } else if (result.object.type === '文件') {
-                  this.$store.commit("file/getMsg", result.object.log)
+                if (result.object.type === "任务") {
+                  this.$store.dispatch("task/publish", result.object.log);
+                } else if (result.object.type === "schedule") {
+                  this.$store.commit("schedule/msg", result.object.log);
+                } else if (result.object.type === "文件") {
+                  this.$store.commit("file/getMsg", result.object.log);
                 }
                 break;
               case "G1":
-                this.$store.commit("chat/pushMsg", { chat: result.object, userId: localStorage.userId })
+                this.$store.commit("chat/pushMsg", {
+                  chat: result.object,
+                  userId: localStorage.userId
+                });
                 break;
               case "G2":
-                this.$store.commit("chat/revoke", result.object)
+                this.$store.commit("chat/revoke", result.object);
                 break;
             }
           });
         },
-        err => { }
+        err => {}
       );
     }
   }

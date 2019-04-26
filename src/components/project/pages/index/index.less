@@ -18,6 +18,7 @@
   overflow-x: hidden;
   overflow-y: hidden;
   margin-top: 50px;
+
   .side {
     width: 298px;
     background-color: #fff;
@@ -26,24 +27,29 @@
     top: 0;
     bottom: 0;
     transition: 0.3s;
+
     &.active {
       .leftTaskInfo {
         height: calc(100% - 47px);
         border-top: 1px solid #eee;
         overflow: auto;
+
         &::-webkit-scrollbar {
           width: 6px;
           height: 8px;
           background-color: #e5e5e5;
         }
+
         &::-webkit-scrollbar-thumb {
           background-color: #cecece;
         }
       }
+
       .nav .drop i {
         transform: rotate(180deg);
       }
     }
+
     .nav {
       width: 298px;
       padding: 0 16px;
@@ -52,11 +58,14 @@
       font-size: 16px;
       border-bottom: 1px solid #d9d9d9;
       cursor: pointer;
+
       &:hover .drop .ivu-icon {
         color: #3da8f5 !important;
       }
+
       .drop {
         float: right;
+
         i {
           font-size: 20px;
           line-height: unset;
@@ -64,6 +73,7 @@
         }
       }
     }
+
     .leftTaskInfo {
       position: absolute;
       top: 46px;
@@ -75,40 +85,60 @@
       transition: 0.5s;
       background-color: #fff;
     }
+
     .tab_nav {
       margin: 16px 16px 20px;
       text-align: center;
+
       .tabon {
         background-color: #f5f5f5;
         color: #3da8f5;
       }
+
       .ivu-btn-ghost:focus {
         box-shadow: 0 0 0 0;
       }
+
       .ivu-btn:focus {
         box-shadow: 0 0 0 0;
       }
+
       .ivu-btn {
         padding: 6px 18px;
         font-size: 14px;
       }
+
       .ivu-icon {
         margin-right: 6px;
         font-size: 18px;
         vertical-align: middle;
       }
     }
+
     .tab_container {
       height: calc(100% - 48px - 68px);
       overflow: hidden;
+
+      .task-group {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+
+        p {
+          font-weight: 600;
+        }
+      }
+
       ::-webkit-scrollbar {
         width: 6px;
         height: 8px;
         background-color: #e5e5e5;
       }
+
       ::-webkit-scrollbar-thumb {
         background-color: #cecece;
       }
+
       .tabcon1,
       .tabcon2,
       .tabcon3 {
@@ -118,6 +148,7 @@
       }
     }
   }
+
   .column-main {
     // position: relative;
     display: flex;
@@ -132,6 +163,8 @@
     height: 100%;
     overflow-x: auto;
     overflow-y: hidden;
+    align-items: flex-start;
+
     .column {
       flex: none;
       overflow: hidden;
@@ -147,55 +180,68 @@
       align-items: stretch;
       width: 288px;
       margin-right: 12px;
-      > div {
+
+      >div {
         border-radius: 4px;
         background-color: rgb(236, 236, 236);
+
         &::-webkit-scrollbar {
           width: 6px;
           height: 8px;
           background-color: #e5e5e5;
         }
+
         &::-webkit-scrollbar-thumb {
           background-color: #cecece;
         }
       }
+
       .title {
         padding: 14px 18px;
         font-size: 15px;
         font-weight: bold;
         cursor: move;
+
         fr {
           color: #495060;
           cursor: pointer;
         }
       }
     }
+
     .addList {
       height: auto;
+
       .title {
         cursor: pointer;
         color: #a6a6a6;
         font-weight: normal;
+
         &:hover {
           color: #3da8f5;
         }
       }
     }
+
     .newTask {
       padding: 10px;
     }
+
     .scrum-stage-tasks {
-      max-height: calc(100vh - 175px) ;
+      max-height: calc(100vh - 175px);
       overflow-x: hidden;
       overflow-y: auto;
+
       &::-webkit-scrollbar {
         width: 6px;
         height: 8px;
         background-color: #e5e5e5;
       }
+
       &::-webkit-scrollbar-thumb {
         background-color: #cecece;
       }
+
       .add {
         width: 100%;
         font-size: 15px;
@@ -204,6 +250,7 @@
         color: #2d8cf0;
         cursor: pointer;
       }
+
       .task-mod {
         width: 100%;
         min-height: 47px;
@@ -212,6 +259,7 @@
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
         cursor: pointer;
         position: relative;
+
         &:after {
           position: absolute;
           left: 0;
@@ -224,36 +272,43 @@
           border-bottom-left-radius: 4px;
           transition: all 0.3s;
         }
+
         &:hover {
           &:after {
             width: 5px !important;
           }
         }
+
         &.warning {
           &:after {
             width: 3px;
             background-color: #ffaf38;
           }
         }
+
         &.urgent {
           &:after {
             width: 3px;
             background-color: #ff4f3e;
           }
         }
+
         .check {
           padding: 8px 15px;
           display: flex;
-          .checkbox-wrap{
+
+          .checkbox-wrap {
             width: 20px;
             height: 20px;
           }
+
           .ivu-checkbox-wrapper {
             margin-right: 15px;
             padding-top: 3px;
             height: 24px;
             transform: scale(1.4);
           }
+
           .cont {
             width: 100%;
             padding-right: 15px;
@@ -261,6 +316,7 @@
             font-size: 14px;
             white-space: pre-wrap;
           }
+
           .ava {
             width: 24px;
             height: 24px;
@@ -268,14 +324,17 @@
           }
         }
       }
+
       .ul {
         width: 100%;
-        min-height: 20px !important;
+        min-height: 10px !important;
         position: relative;
       }
+
       .li {
         margin: 0 8px 8px;
       }
+
       .done {
         .ivu-checkbox-wrapper {
           .ivu-checkbox-checked .ivu-checkbox-inner {
@@ -283,9 +342,11 @@
             border-color: #a6a6a6;
           }
         }
+
         .cont {
           color: #a6a6a6 !important;
         }
+
         .ava {
           opacity: 0.5;
         }
@@ -401,8 +462,9 @@
 .boxChosenClass:not(.boxDragClass),
 .chosenClass:not(.dragClass) {
   background-color: #ccc !important;
-  > div,
-  > p {
+
+  >div,
+  >p {
     opacity: 0;
   }
 }
@@ -414,7 +476,8 @@
 
 .boxFallbackClass {
   opacity: 1 !important;
-  > div {
+
+  >div {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     transform: rotate(2deg);
   }
@@ -424,6 +487,7 @@
   display: flex;
   flex-direction: column;
   padding-right: 14px;
+
   .task-infos {
     flex: 1 1 auto;
     overflow: hidden;
@@ -432,6 +496,7 @@
     font-size: 0;
     padding: 0 0 8px 40px;
     padding-left: 30px;
+
     .label {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -444,22 +509,26 @@
       vertical-align: middle;
       display: inline-block;
     }
+
     .icon {
       vertical-align: middle;
       color: #a6a6a6;
     }
+
     .sonTask {
       padding-top: 2px;
       padding-left: 2px;
       color: #a6a6a6;
       vertical-align: text-top;
     }
+
     .time-label {
       margin: 2px 6px 5px 0;
       padding-left: 6px;
       color: #fff;
       background-color: gray;
     }
+
     .repeat-label {
       background-color: #3da8f5;
       color: #fff;
@@ -468,22 +537,26 @@
     }
   }
 }
-.tag-box{
+
+.tag-box {
   display: flex;
   flex-wrap: wrap;
   line-height: 20px;
-  .tag-list{
+
+  .tag-list {
     display: flex;
     align-items: center;
     margin-right: 5px;
-    i{
+
+    i {
       width: 7px;
       height: 7px;
       border-radius: 50%;
       background-color: red;
       margin-right: 5px;
     }
-    span{
+
+    span {
       font-size: 12px;
     }
   }

@@ -10,7 +10,7 @@ import {
 const store = {
     namespaced: true,
     state: {
-        simpleTasks: [],
+        allTask: [],
         tasks: [],
         currentProjectId: null,
         sort: '1',
@@ -18,10 +18,9 @@ const store = {
         taskGroup: [],
         tags: [],
         members: [],
-        task: {},
+        task: null,
         joinInfoIds: [],
         images_suffix: [".gif", ".GIF", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
-        loading: true,
         taskId: ''
     },
     getters: {
@@ -52,10 +51,17 @@ const store = {
             state.taskId = data
         },
         initTask(state, data) {
-            state.simpleTasks = data
+            state.allTask = data
         },
+        setTask(state, data) {
+            state.allTask.forEach((m, i) => {
+                if (m.relationId == data.taskMenuId) {
+                    m.taskList.push(data)
+                }
+            })
+        },
+
         editTask(state, data) {
-            state.loading = false;
             state.task = data
             if (data.joinInfo) {
                 state.joinInfoIds = data.joinInfo.map((v) => {
@@ -64,7 +70,6 @@ const store = {
             } else {
                 state.joinInfoIds = []
             }
-
         },
         changeRemarks(state, data) {
             if (state.task) {
@@ -96,10 +101,6 @@ const store = {
                 })
             }
         },
-        changeTask(state, data) {
-            state.simpleTasks = data
-        },
-
         //这是更改打开任务详情时的数据修改
         changeProperty(state, data) {
             var pro = null
@@ -357,14 +358,18 @@ const store = {
         }, data) {
             enterTask(data).then(res => {
                 if (res.result === 1) {
+                    console.log(res.menus)
                     commit('initTask', res.menus)
                 }
             });
         },
-        loadIndex({commit},data){
+
+        loadIndex({
+            commit
+        }, data) {
             enterTask(data).then(res => {
                 if (res.result === 1) {
-                    commit('initTask',res.menus)
+                    commit('initTask', res.menus)
                 }
             });
         },
@@ -413,11 +418,13 @@ const store = {
             })
         },
         changeTask({
+            dispatch,
             commit
         }, data) { //任务数据改变时调用
             initEditTask(data).then(res => {
                 if (res.result === 1) {
                     commit('editTask', res.data)
+                    dispatch('init', res.data.projectId)
                 }
             })
         },

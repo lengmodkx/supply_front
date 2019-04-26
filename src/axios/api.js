@@ -92,13 +92,13 @@ export function updateProject(data) {
     });
 }
 // 搜索项目
-export function searchProjects(projectName,condition) {
+export function searchProjects(projectName, condition) {
     return fetch({
         url: '/projects/seach',
         method: "get", // 请求方法
         params: {
-            projectName:projectName,
-            condition:condition
+            projectName: projectName,
+            condition: condition
         }
     });
 }
@@ -647,6 +647,14 @@ export function collectList(type) {
         }
     });
 }
+
+export function group(projectId) {
+    return $get(`relations/${projectId}`, '')
+
+}
+
+
+
 
 export function $post(url, params) {
     return fetch({

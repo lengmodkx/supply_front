@@ -2,37 +2,24 @@
   <div class="task" :class="{show:show}" @click="hideAddTask">
     <!-- 任务伸缩框 -->
     <div class="side" :class="showTaskDetailInfo?'active':''">
-      <div class="nav" @click="showTaskDetailInfo=!showTaskDetailInfo">
-        {{curTaskGroup.name}}
-        <span class="drop">
-          <Icon type="ios-arrow-down" style="color:gray;"></Icon>
-        </span>
-      </div>
+      <!-- <div class="nav" @click="showTaskDetailInfo=!showTaskDetailInfo">
+      
+      </div> -->
       <!--<left-task-info class="leftTaskInfo"></left-task-info>-->
-      <div class="tab_nav">
-        <ButtonGroup>
-
-          <Button @click="active='a'" :class="{tabon:active=='a'}">
-            <Icon type="funnel"></Icon>筛选
-          </Button>
-          <Button @click="active='b'" :class="{tabon:active=='b'}">
-            <Icon type="android-funnel"></Icon>排序
-          </Button>
-        </ButtonGroup>
-      </div>
       <div class="tab_container">
-
-        <div class="tabcon2" v-if="active=='a'">
-          <FilterBox></FilterBox>
+        <div class="task-group">
+          <p>任务分组</p>
+          <Icon type="md-add" color="#2db7f5" size="20" />
         </div>
-        <div class="tabcon3" v-if="active=='b'">
-          <SortBox></SortBox>
-        </div>
-
+        <ul>
+          <li v-for="(g,index) in groups" :key="index">
+            <div>{{g.relationName}}</div>
+          </li>
+        </ul>
       </div>
 
       <div class="board-left-panel-indicator">
-        <div class="root__3UYM" @click="show=!show" :class="show?'left':'right'">
+        <div class="root__3UYM" @click="getGroup" :class="show?'left':'right'">
           <i class="left__1DdF"></i>
           <i class="indicator__1TO8"></i>
         </div>
@@ -49,12 +36,12 @@
                    }" @end="dragBox">
 
       <div class="column" :key="k" v-for="(i, k) in allTask">
-        <div style="min-height:150px;max-height: 100%;position:relative;" :data-index="k">
-          <p class="title handle">
+        <div style="max-height: 100%;position:relative;" :data-index="k">
+          <div class="title handle">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
             <!-- 点击三角形出来的任务列表菜单组件 -->
             <TaskMenu class="fr" :data=i></TaskMenu>
-          </p>
+          </div>
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''">
             <draggable :list="i.taskList" :options="{group:'uncheckedTask',
                         forceFallback: true,
@@ -91,9 +78,9 @@
                       <span class="label">
                         <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
-                      <div class="tag-box" v-if="a.tagList.length > 0">
+                      <!-- <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -140,6 +127,9 @@
                       <span class="label">
                         <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
+                      <!-- <div class="tag-box" v-if="a.tagList">
+                        <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
+                      </div> -->
                     </div>
                   </div>
 
@@ -179,7 +169,7 @@
       <my-modal v-if="showModal"></my-modal>
     </Modal>
     <!--加载中-->
-    <div class="demo-spin-container" v-if="!simpleTasks.length">
+    <div class="demo-spin-container" v-if="!allTask.length">
       <Loading></Loading>
     </div>
   </div>
@@ -202,7 +192,8 @@ import {
   completeTask,
   cancelcompleteTask,
   dragTask,
-  addTask
+  addTask,
+  group
 } from "@/axios/api";
 export default {
   name: "",
@@ -217,11 +208,10 @@ export default {
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup", "abc"]),
-    ...mapState("task", ["simpleTasks", "sort"])
+    ...mapState("task", ["allTask", "sort"])
   },
   data() {
     return {
-      allTask: null,
       show: false,
       showmodal: false,
       showAdd: true,
@@ -243,22 +233,17 @@ export default {
       showTaskDetailInfo: false, //左侧任务三角下拉详情
       activeModalData: {
         //是数据里面的arr里面的每一项
-      }
+      },
+      groups: []
     };
   },
   mounted() {
-    this.allTask = this.simpleTasks;
+    this.init(this.projectId);
     this.taskGroupId = this.$route.params.groupId;
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
     };
     dragscroll(["column-main", "scrum-stage-tasks"]);
-    this.init(this.projectId);
-  },
-  watch: {
-    simpleTasks(n, o) {
-      this.allTask = n;
-    }
   },
   methods: {
     ...mapActions("task", ["init", "initEditTask"]),
@@ -266,9 +251,13 @@ export default {
     hideAddTask() {
       this.currentEditId = "";
     },
-    pushTask(data, tasklist) {
-      this.currentEditId = "";
-      tasklist.push(data);
+    getGroup() {
+      this.show = !this.show;
+      group(this.projectId).then(res => {
+        if (res.result === 1) {
+          this.groups = res.data;
+        }
+      });
     },
     //打开任务详情
     initTask(taskId) {
@@ -288,19 +277,11 @@ export default {
         taskMenuId: this.taskMenuId,
         taskGroupId: this.taskGroupId
       };
-      addTask(data).then(res => {
-        if (res.result === 1) {
-          this.$Notice.success({
-            title: "创建成功"
-          });
-        }
-        this.init(this.projectId);
-        this.currentEditId = "";
-      });
+      addTask(data).then(res => {});
     },
     dragBox(evt) {
       //拖拽大盒子
-      this.changeTask(this.allTask);
+      //this.changeTask(this.allTask);
       //获取拖动的大盒子的id排序数组
       let newArr = this.allTask.map(v => v.relationId).join(",");
       sortTaskMenu(newArr).then(res => {});
@@ -330,16 +311,16 @@ export default {
       //i是外层循环的索引，j是嵌套循环的索引
       if (flag) {
         //第一种方法 先处理好了再发请求
-        let savedCheck = true;
-        if (this.simpleTasks[i].taskList[j + 1]) {
-          savedCheck = this.simpleTasks[i].taskList[j + 1].taskStatus;
-        }
-        let tmp = this.simpleTasks[i].taskList.splice(j, 1);
-        this.simpleTasks[i].taskList.push(tmp[0]);
-        this.$set(this.simpleTasks[i].taskList[j], "taskStatus", true);
-        this.$nextTick(_ => {
-          this.$set(this.simpleTasks[i].taskList[j], "taskStatus", savedCheck);
-        });
+        // let savedCheck = true;
+        // if (this.simpleTasks[i].taskList[j + 1]) {
+        //   savedCheck = this.simpleTasks[i].taskList[j + 1].taskStatus;
+        // }
+        // let tmp = this.simpleTasks[i].taskList.splice(j, 1);
+        // this.simpleTasks[i].taskList.push(tmp[0]);
+        // this.$set(this.simpleTasks[i].taskList[j], "taskStatus", true);
+        // this.$nextTick(_ => {
+        //   this.$set(this.simpleTasks[i].taskList[j], "taskStatus", savedCheck);
+        // });
 
         //完成任务  请求
         completeTask(taskId).then(res => {
@@ -372,19 +353,11 @@ export default {
       } */
     },
     saveNewPro() {
-      this.loading = true;
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
       addnewTask(this.projectId, this.menuGroupId, this.newProTitle).then(
         res => {
           if (res.result == 1) {
-            this.allTask.push({
-              relationName: this.newProTitle,
-              taskList: []
-            });
-            this.changeTask(this.allTask);
-            this.loading = false;
-
             this.newProTitle = "";
             this.showAdd = true;
           }

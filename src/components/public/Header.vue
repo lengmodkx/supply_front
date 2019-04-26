@@ -143,7 +143,10 @@ export default {
       ...mapActions("company", ["initCompany"]),
     initSocket(id) {
       // 建立连接对象
-      var url = process.env.NODE_ENV === "development" ? 'http://192.168.3.189:8090/webSocketServer' : 'http://apitest.aldbim.com/api/webSocketServer';
+      var url =
+        process.env.NODE_ENV === "development"
+          ? "http://192.168.3.179:8090/webSocketServer"
+          : "http://apitest.aldbim.com/api/webSocketServer";
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
@@ -152,10 +155,10 @@ export default {
         frame => {
           this.stompClient.subscribe(`/user/${id}/message`, msg => {
             var result = JSON.parse(msg.body);
-            this.$store.commit("news/addNews", result.message)
+            this.$store.commit("news/addNews", result.message);
           });
         },
-        err => { }
+        err => {}
       );
     },
     pathClick(path) {
@@ -179,24 +182,29 @@ export default {
       }, 10);
     },
     getNewsCount() {
-      this.$store.dispatch("news/getNewsCount")
+      this.$store.dispatch("news/getNewsCount");
     },
     clickHeaderTag(id) {
       this.activeHeaderTag =
-        id == this.activeHeaderTag ? (this.activeHeaderTag = -1) : (this.activeHeaderTag = id);
-      if (this.$route.fullPath.includes('home') || this.$route.fullPath.includes('project')) {
-        localStorage.projectRouter = this.$route.fullPath
+        id == this.activeHeaderTag
+          ? (this.activeHeaderTag = -1)
+          : (this.activeHeaderTag = id);
+      if (
+        this.$route.fullPath.includes("home") ||
+        this.$route.fullPath.includes("project")
+      ) {
+        localStorage.projectRouter = this.$route.fullPath;
       }
       if (id === 1) {
         if (localStorage.mineRouter) {
-          this.$router.push(localStorage.mineRouter)
+          this.$router.push(localStorage.mineRouter);
         } else {
-          this.$router.push('/mine/nearThing')
+          this.$router.push("/mine/nearThing");
         }
       } else if (id === 2) {
-        this.$router.push('/calendar')
+        this.$router.push("/calendar");
       } else if (id === 3) {
-        this.$router.push('/message')
+        this.$router.push("/message");
       }
     }
   },
@@ -205,7 +213,7 @@ export default {
     ...mapState('company', ['companyList'])
   },
   created() {
-    this.getNewsCount()
+    this.getNewsCount();
   }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%;position: relative">
-    <Loading v-if="loading"></Loading>
-    <div class="task-detail" style="height:100%;position: relative" v-if="!loading&&task!=null">
+    <Loading v-if="task==null"></Loading>
+    <div class="task-detail" style="height:100%;position: relative" v-if="task!=null">
       <!--固定顶部-->
       <div class="toolRight">
         <Tooltip content="点个赞" placement="bottom-start">
@@ -84,11 +84,9 @@
             <Simditor :contents="task.remarks" ref="editor" class="fl editBox"></Simditor>
             <div style="margin-top: 5px">
               <Button @click="showEditor=false" style="margin-right: 15px;cursor: pointer">取消</Button>
-              <Button style="cursor: pointer" type="info" :loading="editorLoading" @click="addBeizhu">保存</Button>
+              <Button style="cursor: pointer" type="info" @click="addBeizhu">保存</Button>
             </div>
-
           </div>
-
         </div>
         <div class="priority clearfix">
           <span class="name">
@@ -169,7 +167,7 @@
               <div class="gl-task-list-con">
                 <Icon type="md-checkbox-outline" size="22" />
                 <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
-                <Icon type="md-contact" v-else  size="26"/>
+                <Icon type="md-contact" v-else size="26" />
                 <div class="gl-con">
                   <div class="gl-con-top">
                     <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
@@ -384,7 +382,6 @@ export default {
       prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       glPop: false,
       zan: false,
-      editorLoading: false,
       aa: false,
       childTaskData: null,
       complete: false,
@@ -420,13 +417,7 @@ export default {
   //   }
   // },
   computed: {
-    ...mapState("task", [
-      "task",
-      "joinInfoIds",
-      "images_suffix",
-      "loading",
-      "taskId"
-    ]),
+    ...mapState("task", ["task", "joinInfoIds", "images_suffix", "taskId"]),
     vuexTask() {
       return this.$store.state.task.joinInfo;
     }
@@ -438,6 +429,7 @@ export default {
       "updateEndTime",
       "addChildrenTask"
     ]),
+    //修改任务名称
     updateTaskName() {
       updateTaskName(this.task.taskId, this.task.taskName).then(data => {});
     },
@@ -449,7 +441,6 @@ export default {
     },
     getFileDetail(fileId) {
       getFileDetails(fileId).then(res => {
-        console.log(res);
         this.putOneFile(res);
         this.showFileDetail = true;
       });
@@ -460,10 +451,8 @@ export default {
     // 添加备注
     addBeizhu() {
       this.beizhuContent = this.$refs.editor.content;
-      this.editorLoading = true;
       updateTaskRemarks(this.task.taskId, this.beizhuContent).then(res => {
         if (res.result === 1) {
-          this.editorLoading = false;
           this.showEditor = false;
         }
       });
