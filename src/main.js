@@ -45,12 +45,12 @@ new Vue({
 }).$mount("#app");
 Vue.filter('timeFilter', function (value) {
     var time = new Date(value);
-    var birthday = time.getFullYear() + "年" + (time.getMonth() * 1 + 1) + "月" + (time.getDate() * 1 + 1) + "日";
+    var birthday = time.getFullYear() + "年" + (time.getMonth() * 1 + 1) + "月" + (time.getDate()) + "日";
     return birthday
 })
 Vue.filter('timeFilter1', function (value) {
     var time = new Date(value);
-    var birthday = (time.getMonth() * 1 + 1) + "月" + (time.getDate() * 1 + 1) + "日";
+    var birthday = (time.getMonth() * 1 + 1) + "月" + (time.getDate()) + "日";
     return birthday
 })
 Date.prototype.Format = function (fmt) {

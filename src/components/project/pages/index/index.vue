@@ -45,7 +45,6 @@
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''">
             <draggable :list="i.taskList" :options="{group:'uncheckedTask',
                         forceFallback: true,
-                        chosenClass: 'chosenClass',
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
@@ -64,7 +63,7 @@
                       <span class="label time-label" v-if="a.endTime">{{a.endTime|timeFilter1}} 截止</span>
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
                       <!--<span class="label">-->
-                        <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
+                      <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
                       <!--</span>-->
                       <span class="label">
                         <Icon class="icon" type="document" size="16"></Icon>
@@ -113,7 +112,7 @@
                       <span class="label time-label" v-if="a.endTime">{{a.endTime | timeFilter}}截止</span>
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
                       <!--<span class="label">-->
-                        <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
+                      <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
                       <!--</span>-->
                       <span class="label">
                         <Icon class="icon" type="document" size="16"></Icon>
