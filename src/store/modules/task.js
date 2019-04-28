@@ -428,6 +428,12 @@ const store = {
                 }
             })
         },
+        updateStatus({dispatch,commit},data){
+            initEditTask(data.taskId).then(res => {
+                commit('editTask', res.data)
+                dispatch('init', data.projectId)
+            })
+        },
         changeProperty({
             commit
         }, data) {

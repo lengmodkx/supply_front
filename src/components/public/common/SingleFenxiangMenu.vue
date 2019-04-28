@@ -24,7 +24,7 @@
             <div class="task-menu-list"
                  v-if="active==''">
                 <div class="menuItem"
-                     @click="listItemClick('c','移到回收站')">
+                     @click="listItemClick('d','移到回收站')">
                     <Icon type="md-color-filter" />编辑分享</div>
                 <div class="menuItem"
                      @click="topShare">
