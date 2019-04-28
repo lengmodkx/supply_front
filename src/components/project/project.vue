@@ -82,10 +82,10 @@ export default {
                 this.$store.dispatch("task/deleteTask", result.object);
                 break;
               case "A3":
-                this.$store.dispatch("task/changeTask", result.object);
+                this.$store.dispatch("task/updateStatus", result.object);
                 break;
               case "A4":
-                this.$store.dispatch("task/changeTask", result.object);
+                this.$store.dispatch("task/updateStatus", result.object);
                 break;
               case "A5":
                 this.$store.dispatch("task/changeTask", result.object);

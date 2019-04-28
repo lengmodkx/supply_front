@@ -32,7 +32,7 @@
 
       <div class="Conbox">
         <div class="task_info done clearfix" :class="{done:task.taskStatus}">
-          <Checkbox v-model="task.taskStatus" @on-change="updateTaskStatus" class="checkbox"></Checkbox>
+          <Checkbox v-model="task.taskStatus" @on-change="updateTaskStatus(task.taskId,task.taskStatus)" class="checkbox"></Checkbox>
           <Tooltip content="点击即可编辑" placement="top" class="content">
             <div id="editCon" style="width:100%;">
               <input v-model="task.taskName" @blur="updateTaskName()" type="text" style="height: 24px;border: 0 none;outline-style: none">
@@ -110,8 +110,8 @@
             <li class="sontask_list" v-for="(i,index) in task.taskList" :key="index">
               <!-- 点击之前 -->
               <div class="clearfix" v-show="isEdit" style="display:flex;">
-                <div class="addicon fl">
-                  <Checkbox v-model="sonComplete"></Checkbox>
+                <div class="addicon fl" @click.stop>
+                  <Checkbox v-model="i.taskStatus" @on-change="updateTaskStatus(i.taskId,i.taskStatus)"></Checkbox>
                 </div>
                 <div class="sonInput fl" @click.stop="showaa(i.taskId)">
                   <Tooltip content="点击即可编辑" placement="top">
@@ -441,7 +441,7 @@ export default {
     },
     getFileDetail(fileId) {
       getFileDetails(fileId).then(res => {
-        this.putOneFile(res);
+        this.$store.commit("file/putOneFile",res)
         this.showFileDetail = true;
       });
     },
@@ -491,11 +491,19 @@ export default {
         updateRepeat(this.task.taskId, repeat)
     },
     //更改任务的状态
-    updateTaskStatus() {
-      if (this.task.taskStatus) {
-        completeTask(this.task.taskId);
+    updateTaskStatus(taskId,taskStatus) {
+      if (taskStatus) {
+        completeTask(taskId).then(res => {
+          if(res.result !== 1){
+            this.$Message.error(res.msg)
+          }
+        })
       } else {
-        cancelcompleteTask(this.task.taskId);
+        cancelcompleteTask(taskId).then(res => {
+          if(res.result !== 1){
+            this.$Message.error(res.msg)
+          }
+        })
       }
     },
     // 添加子任务
