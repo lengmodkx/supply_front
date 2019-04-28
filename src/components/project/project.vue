@@ -118,7 +118,7 @@ export default {
                 this.$store.dispatch("task/loadIndex", result.object);
                 break;
               case "A16":
-                this.$store.dispatch("task/loadIndex", result.object.taskId);
+                this.$store.dispatch("task/loadIndex", result.object);
                 break;
               case "A17":
                 this.$store.dispatch("task/changeTask", result.object);
@@ -189,10 +189,7 @@ export default {
               // 添加标签
               case "E1":
                 if (result.object.publicType === "任务") {
-                  this.$store.dispatch("task/bindingTag", {
-                    tag: result.object.tag,
-                    taskId: result.object.publicId
-                  });
+                    this.$store.dispatch("task/changeTask", result.object.publicId);
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/bindingTag", {
                     tag: result.object.tag,
@@ -202,12 +199,9 @@ export default {
                 break;
               // 移除标签
               case "E2":
-                if (result.object.publicType === "任务") {
-                  this.$store.dispatch("task/removeTag", {
-                    tagId: result.object.tagId,
-                    taskId: result.object.publicId
-                  });
-                } else if (result.object.publicType === "文件") {
+                  if (result.object.publicType === "任务") {
+                      this.$store.dispatch("task/changeTask", result.object.publicId);
+                  }  else if (result.object.publicType === "文件") {
                   this.$store.commit("file/removeTag", {
                     tagId: result.object.tagId,
                     fileId: result.object.publicId

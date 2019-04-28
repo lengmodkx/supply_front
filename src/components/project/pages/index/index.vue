@@ -62,15 +62,15 @@
                   <div class="task-info-wrapper">
                     <div class="task-infos">
                       <span class="label time-label" v-if="a.endTime">{{a.endTime|timeFilter1}} 截止</span>
-                      <span class="label repeat-label">每周重复</span>
-                      <span class="label">
-                        <Icon class="icon" type="ios-alarm-outline" size="16"></Icon>
-                      </span>
+                      <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
+                      <!--<span class="label">-->
+                        <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
+                      <!--</span>-->
                       <span class="label">
                         <Icon class="icon" type="document" size="16"></Icon>
                       </span>
                       <span class="label" style="margin-bottom: 5px">
-                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.childCount}}</span>
+                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
                       <span class="label">
                         <Icon class="icon" type="link" size="16"></Icon>
@@ -78,9 +78,9 @@
                       <span class="label">
                         <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
-                      <!-- <div class="tag-box" v-if="a.tagList">
+                      <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
-                      </div> -->
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -110,16 +110,16 @@
                   <div class="task-info-wrapper">
                     <div class="task-infos">
 
-                      <span class="label time-label">9月12日 截止</span>
-                      <span class="label repeat-label">每周重复</span>
-                      <span class="label">
-                        <Icon class="icon" type="ios-alarm-outline" size="16"></Icon>
-                      </span>
+                      <span class="label time-label" v-if="a.endTime">{{a.endTime | timeFilter}}截止</span>
+                      <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
+                      <!--<span class="label">-->
+                        <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
+                      <!--</span>-->
                       <span class="label">
                         <Icon class="icon" type="document" size="16"></Icon>
                       </span>
                       <span class="label">
-                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.childCount}}</span>
+                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
                       <span class="label">
                         <Icon class="icon" type="link" size="16"></Icon>
@@ -127,9 +127,9 @@
                       <span class="label">
                         <Icon class="icon" type="android-attach" size="16"></Icon>
                       </span>
-                      <!-- <div class="tag-box" v-if="a.tagList">
+                      <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
-                      </div> -->
+                      </div>
                     </div>
                   </div>
 

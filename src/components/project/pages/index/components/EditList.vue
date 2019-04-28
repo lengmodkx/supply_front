@@ -488,9 +488,7 @@ export default {
     },
     //更改任务的重复性
     updateRepeat(repeat) {
-      updateRepeat(this.task.taskId, repeat).then(res => {
-        console.log(res);
-      });
+        updateRepeat(this.task.taskId, repeat)
     },
     //更改任务的状态
     updateTaskStatus() {
