@@ -512,12 +512,18 @@ export default {
       this.task.sontaskDate = "";
     },
     confirm1(date) {
-      this.updateStartTime({ taskId: `${this.task.taskId}`, date: date });
+      this.updateStartTime({
+        taskId: `${this.task.taskId}`,
+        date: new Date(date).getTime()
+      });
       // this.task.startTime = date
       // this.$forceUpdate()
     },
     confirm2(date) {
-      this.updateEndTime({ taskId: `${this.task.taskId}`, date: date });
+      this.updateEndTime({
+        taskId: `${this.task.taskId}`,
+        date: new Date(date).getTime()
+      });
     },
     deleteStart() {
       this.task.startDate = "";

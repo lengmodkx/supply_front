@@ -61,7 +61,7 @@
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
                     <div class="task-infos">
-                      <span class="label time-label">9月12日 截止</span>
+                      <span class="label time-label" v-if="a.endTime">{{a.endTime|timeFilter1}} 截止</span>
                       <span class="label repeat-label">每周重复</span>
                       <span class="label">
                         <Icon class="icon" type="ios-alarm-outline" size="16"></Icon>
