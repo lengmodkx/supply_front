@@ -109,8 +109,114 @@
                   <p class="name" style="margin-top: 5px"><Icon type="ios-link-outline" style="font-size: 18px;margin-right: 3px"></Icon>关联内容</p>
                   <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
                   <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-                    <AddRelation :publicId="share.id"></AddRelation>
+                    <AddRelation :publicId="share.id" :fromType="publicType"></AddRelation>
                   </Modal>
+                  <!--<div class="has-relevance">-->
+                    <!--<ul v-if="share.bindings.length!=0">-->
+                      <!--<div class="what-title">关联的任务</div>-->
+                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">-->
+                        <!--<div class="gl-task-list-con">-->
+                          <!--<Icon type="md-checkbox-outline" size="22" />-->
+                          <!--<img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">-->
+                          <!--<Icon type="md-contact" v-else size="26" />-->
+                          <!--<div class="gl-con">-->
+                            <!--<div class="gl-con-top">-->
+                              <!--<span>{{b.taskName}}</span><span>{{b.projectName}}</span>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
+                          <!--</div>-->
+                        <!--</div>-->
+                        <!--<Poptip>-->
+                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                          <!--<div slot="content">-->
+                            <!--<div class="glpop-list">-->
+                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                            <!--</div>-->
+                            <!--<div class="glpop-list" @click="cancle(b.taskId)">-->
+                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                            <!--</div>-->
+                          <!--</div>-->
+                        <!--</Poptip>-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul v-if="task.bindFiles.length!=0">-->
+                      <!--<div class="what-title">关联的文件</div>-->
+                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindFiles" :key="i">-->
+                        <!--<div class="gl-task-list-con">-->
+                          <!--&lt;!&ndash;<Icon type="md-checkbox-outline" size="22" />&ndash;&gt;-->
+                          <!--<Icon type="ios-document-outline" size="22" />-->
+                          <!--<div class="gl-con">-->
+                            <!--<div class="gl-con-top">-->
+                              <!--<span>{{b.fileName}}</span><span>{{b.projectName}}</span>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
+                          <!--</div>-->
+                        <!--</div>-->
+                        <!--<Poptip>-->
+                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                          <!--<div slot="content">-->
+                            <!--<div class="glpop-list">-->
+                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                            <!--</div>-->
+                            <!--<div class="glpop-list" @click="cancle(b.fileId)">-->
+                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                            <!--</div>-->
+                          <!--</div>-->
+                        <!--</Poptip>-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul v-if="task.bindSchedules.length!=0">-->
+                      <!--<div class="what-title">关联的日程</div>-->
+                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">-->
+                        <!--<div class="gl-task-list-con">-->
+                          <!--&lt;!&ndash;<Icon type="md-checkbox-outline" size="22" />&ndash;&gt;-->
+                          <!--<Icon type="ios-calendar-outline" size="22" />-->
+                          <!--<div class="gl-con">-->
+                            <!--<div class="gl-con-top">-->
+                              <!--<span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
+                          <!--</div>-->
+                        <!--</div>-->
+                        <!--<Poptip>-->
+                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                          <!--<div slot="content">-->
+                            <!--<div class="glpop-list">-->
+                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                            <!--</div>-->
+                            <!--<div class="glpop-list" @click="cancle(b.scheduleId)">-->
+                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                            <!--</div>-->
+                          <!--</div>-->
+                        <!--</Poptip>-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul v-if="task.bindShares.length!=0">-->
+                      <!--<div class="what-title">关联的分享</div>-->
+                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindShares" :key="i">-->
+                        <!--<div class="gl-task-list-con">-->
+                          <!--<Icon type="ios-open-outline" size="22" />-->
+                          <!--<div class="gl-con">-->
+                            <!--<div class="gl-con-top">-->
+                              <!--<span>{{b.shareName}}</span><span>{{b.projectName}}</span>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
+                          <!--</div>-->
+                        <!--</div>-->
+                        <!--<Poptip>-->
+                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
+                          <!--<div slot="content">-->
+                            <!--<div class="glpop-list">-->
+                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
+                            <!--</div>-->
+                            <!--<div class="glpop-list" @click="cancle(b.shareId)">-->
+                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
+                            <!--</div>-->
+                          <!--</div>-->
+                        <!--</Poptip>-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                  <!--</div>-->
                 </div>
               </div>
               <div class="omg" v-if="members">

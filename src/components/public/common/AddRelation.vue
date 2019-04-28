@@ -86,8 +86,8 @@
                     <!--<Icon type="md-add-circle" size="20" />-->
                     <!--<span>创建新分享</span>-->
                     <!--</div>-->
-                    <ul v-show="showShare">
-                        <li :class="{checkeds:checkedShare[n].ok}"
+                    <ul v-if="showShare">
+                        <li :class="{checkeds:checkedShare[n].FXok}"
                             class="fenxiang-list"
                             v-for="(i,n) in shareData" :key="n"
                             @click="checkShare(n, i)">
@@ -108,7 +108,7 @@
                 </div>
                 <div style="width: 440px">
                     <loading v-if="loading"></loading>
-                    <div v-show="showSchedule" style="width: 440px;padding: 10px 0">
+                    <div v-if="showSchedule" style="width: 440px;padding: 10px 0">
                         <!--<div class="create-task">-->
                             <!--<Icon type="md-add-circle" size="20" />-->
                             <!--<span>创建新日程</span>-->
@@ -163,7 +163,7 @@
                 </div>
                 <div class="wenjian-wrap">
                     <loading v-if="loading" style="position: absolute;top: 0;left: 50%;margin-left: -30px"></loading>
-                    <div class="all-files scrolly" v-show="showFile">
+                    <div class="all-files scrolly" v-if="showFile">
                         <div :class="{checked:item.ok}"
                              class="folder"
                              v-for="(item,index) in fileData" :key="index"
@@ -286,7 +286,9 @@
     },
         // 点击最左侧 任务 分享 日程文件
     firstClick(type) {
-          this.active=type
+          this.guanlianData.bindId=''
+        this.guanlianData.publicType=type
+        this.active=type
         this.showRenwu=false
         this.showShare=false
         this.showSchedule=false
@@ -298,7 +300,7 @@
         this.checkTAsk=-1
         this.checkedOneTask={n:'-1',nn:'-1'}
         this.checkedShare=[]
-        this.checkedAfterSchedule=[{'ok':false}]
+        this.checkedAfterSchedule=[]
         this.checkedBeforeSchedule=[]
         this.checkedFile=-1
     },
@@ -350,7 +352,7 @@
                   getShare(projectId).then(res => {
                       this.shareData=res.data
                       for (let j=0;j<res.data.length;j++){
-                          this.checkedShare.push({'ok':false})
+                          this.checkedShare.push({'FXok':false})
                       }
                       this.loading=false
                       this.showShare=true
@@ -452,7 +454,7 @@
       },
         // 选中 具体 分享
       checkShare (n, i) {
-          this.checkedShare[n].ok=!this.checkedShare[n].ok
+          this.checkedShare[n].FXok=!this.checkedShare[n].FXok
           this.getBindId(this.shareIdArr,i.id)
       },
         // 选中 过去 日程

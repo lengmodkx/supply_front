@@ -26,7 +26,8 @@
       </div>
     </div>
     <!-- 右边可拖拽盒子 -->
-    <draggable class="column-main dragscroll" v-model="allTask" :options="{
+    <!--看板视图-->
+    <draggable v-if="view==='看板视图'" class="column-main dragscroll" v-model="allTask" :options="{
                   handle:'.handle',
                   chosenClass: 'boxChosenClass',
                   dragClass: 'boxDragClass',
@@ -164,6 +165,14 @@
       </draggable>
 
     </draggable>
+    <!--列表视图-->
+    <div v-if="view==='列表视图'" class="column-main" style="padding: 0">
+      <listView></listView>
+    </div>
+    <!--时间视图-->
+    <div v-if="view==='时间视图'" class="column-main" style="padding: 0">
+      <timeView></timeView>
+    </div>
     <!-- 点击列表出来的弹框。编辑列表 -->
     <Modal v-model="showModal" class="myModal">
       <my-modal v-if="showModal"></my-modal>
@@ -183,6 +192,8 @@ import TaskMenu from "./components/TaskMenu";
 import myModal from "./components/EditList";
 import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
+import listView from './listView'
+import timeView from './timeView'
 import { scrollTo, dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import {
@@ -199,16 +210,19 @@ export default {
   name: "",
   components: {
     draggable,
-    FilterBox,
-    SortBox,
+    timeView,
+    listView,
+    // FilterBox,
+    // SortBox,
     TaskMenu,
     myModal,
-    LeftTaskInfo,
-    CurrentAdd
+    // LeftTaskInfo,
+    // CurrentAdd
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup", "abc"]),
-    ...mapState("task", ["allTask", "sort"])
+    ...mapState("task", ["allTask", "sort"]),
+    ...mapState("app", ["view"])
   },
   data() {
     return {
