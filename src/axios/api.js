@@ -464,6 +464,10 @@ export function topShare(shareId) {
     return $post(`/shares/${shareId}/top`, "");
 }
 
+//更改任务的隐私模式
+export function updateTaskPrivacy(taskId,privacy) {
+    return $put(`/tasks/${taskId}/privacy`, {privacy:privacy});
+}
 
 //所有文件
 export function files(params) {

@@ -123,6 +123,9 @@ export default {
               case "A17":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
+              case "A18":
+                this.$store.dispatch("task/loadIndex", result.object);
+                break;
               case "A20":
                 this.$store.dispatch("task/changeTask", result.object);
               // 关联

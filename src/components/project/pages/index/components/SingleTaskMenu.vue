@@ -44,8 +44,8 @@
 
         <div class="privacy">
           <div class="p_left fl clearfix"
-               @click="unlock=!unlock;">
-            <div v-if="unlock" style="overflow:hidden;">
+               @click="updatePrivate">
+            <div v-if="!unlock" style="overflow:hidden;">
               <Icon type="unlocked"
                     class="fl"></Icon>
               <div class="p_title fl">
@@ -54,7 +54,7 @@
               </div>
             </div>
 
-            <div v-if="!unlock" style="overflow:hidden;">
+            <div v-if="unlock" style="overflow:hidden;">
               <Icon type="locked"
                     class="fl"></Icon>
               <div class="p_title fl">
@@ -64,7 +64,7 @@
             </div>
           </div>
           <div class="p_right fr">
-              <span>{{unlock==true?"已关闭":"已开启"}}</span>
+              <span>{{unlock==false?"已关闭":"已开启"}}</span>
           </div>
         </div>
       </div>
@@ -218,7 +218,7 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import {collectTask,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
+import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
 
 export default {
   props: ['data'],
@@ -256,7 +256,11 @@ export default {
     }
   },
   mounted () {
-
+    if(this.unlock){
+      this.data.privacyPattern = 0
+    } else{
+      this.data.privacyPattern = 1
+    }
   },
   methods: {
      copylink () {
@@ -272,6 +276,12 @@ export default {
           clipboard.destroy()
         })
       },
+    //更改任务的隐私模式
+     updatePrivate(){
+       this.unlock = !this.unlock
+       var privacy = this.unlock ? 0:1
+        updateTaskPrivacy(this.data.taskId,privacy)
+     },
     saveTitle () {
       this.visible = false;
       //发请求修改标题
