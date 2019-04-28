@@ -66,17 +66,18 @@
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
                       <!--</span>-->
-                      <span class="label">
-                        <Icon class="icon" type="document" size="16"></Icon>
+                      <span class="label" v-if="a.remarks">
+                        <Icon type="ios-create-outline" size="18"/>
                       </span>
                       <span class="label" style="margin-bottom: 5px">
+                        <Icon type="ios-list" size="22"/>
                         <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
-                      <span class="label">
-                        <Icon class="icon" type="link" size="16"></Icon>
+                      <span class="label" v-if="a.bindId">
+                        <Icon type="ios-link"  size="16"/>
                       </span>
-                      <span class="label">
-                        <Icon class="icon" type="android-attach" size="16"></Icon>
+                      <span class="label" v-if="a.fileId">
+                        <Icon type="md-paper" size="16"/>
                       </span>
                       <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
