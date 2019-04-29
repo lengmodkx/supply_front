@@ -30,8 +30,8 @@
         <div class="menuItem"
              @click="listItemClick('b','复制到')">
           <Icon type="ios-copy-outline" />复制任务</div>
-        <div class="menuItem tasklink" @click="copylink" :data-clipboard-text="link">
-          <Icon type="ios-link-outline" />复制任务链接</div>
+        <!--<div class="menuItem tasklink" @click="copylink" :data-clipboard-text="link">-->
+          <!--<Icon type="ios-link-outline" />复制任务链接</div>-->
         <div class="menuItem"
              @click="listItemClick('a','移动到')">
           <Icon type="ios-log-out" />移动任务</div>

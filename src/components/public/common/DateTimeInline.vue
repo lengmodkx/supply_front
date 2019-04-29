@@ -12,7 +12,7 @@
         <Button
           long
           @click="clear"
-        >清除</Button>
+        >清除1</Button>
       </iCol>
       <iCol span="2"></iCol>
       <iCol span="11">
