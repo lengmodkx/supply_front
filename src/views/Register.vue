@@ -1,26 +1,29 @@
 <template>
-  <div class="register-box">
-    <div class="register-title">欢迎注册阿拉丁BIM云平台</div>
-    <Form ref="formValidate" @keyup.native.enter="register('formValidate')" :model="formValidate" :rules="rules">
-      <FormItem prop="accountName">
-        <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
-      </FormItem>
-      <FormItem prop="password">
-        <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
-      </FormItem>
-      <FormItem prop="captcha">
-        <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
-        <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg">
-       <span class="changeCaptcha">看不清，点击图片换一张</span>
-      </FormItem>
-      <FormItem prop="userName">
-        <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
-      </FormItem>
-      <FormItem>
-        <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
-      </FormItem>
-    </Form>
+  <div class="bj-box">
+    <div class="register-box">
+      <div class="register-title">欢迎注册阿拉丁BIM云平台</div>
+      <Form ref="formValidate" @keyup.native.enter="register('formValidate')" :model="formValidate" :rules="rules">
+        <FormItem prop="accountName">
+          <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
+        </FormItem>
+        <FormItem prop="password">
+          <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
+        </FormItem>
+        <FormItem prop="captcha">
+          <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
+          <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg">
+          <span class="changeCaptcha">看不清，点击图片换一张</span>
+        </FormItem>
+        <FormItem prop="userName">
+          <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
+        </FormItem>
+        <FormItem>
+          <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
+        </FormItem>
+      </Form>
+    </div>
   </div>
+
 </template>
 <script>
 import { userRegister,getCaptcha } from '@/axios/api'
@@ -102,10 +105,20 @@ export default {
 };
 </script>
 <style scoped lang="less">
+  .bj-box{
+    width: 100vw;
+    height: 100vh;
+   position: relative;
+    background: url("../assets/images/login-bg.jpg");
+  }
 .register-box {
   width: 340px;
-  margin: 0 auto;
-  margin-top: 100px;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  right: 200px;
+  transform: translateY(-50%);
+  background-color: white;
 }
 .register-title {
   font-size: 20px;
