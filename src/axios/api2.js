@@ -1,5 +1,12 @@
 import fetch from './fetch' // 引用fetch.js
 import api from './url' // 引用url.js
+// 列表示图初始化
+export function getListView(projectId) {
+    return fetch({
+        url: `/tasks/${projectId}/panel`,
+        method: 'get',
+    })
+}
 // 所有分享
 export function shares(projectId) {
     return $get('/shares', {
