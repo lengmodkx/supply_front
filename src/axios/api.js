@@ -465,8 +465,10 @@ export function topShare(shareId) {
 }
 
 //更改任务的隐私模式
-export function updateTaskPrivacy(taskId,privacy) {
-    return $put(`/tasks/${taskId}/privacy`, {privacy:privacy});
+export function updateTaskPrivacy(taskId, privacy) {
+    return $put(`/tasks/${taskId}/privacy`, {
+        privacy: privacy
+    });
 }
 
 //所有文件
@@ -653,12 +655,21 @@ export function collectList(type) {
 }
 
 export function group(projectId) {
-    return $get(`relations/${projectId}`, '')
+    return $get(`relations/${projectId}/groups`, '')
 
 }
 
+export function addGroup(projectId, groupName) {
+    return $post(`relations/${projectId}/group`, {
+        groupName: groupName
+    })
+}
 
-
+export function changeGroup(groupId, projectId) {
+    return $put(`members/${groupId}/group`, {
+        projectId: projectId
+    })
+}
 
 export function $post(url, params) {
     return fetch({

@@ -9,11 +9,22 @@
       <div class="tab_container">
         <div class="task-group">
           <p>任务分组</p>
-          <Icon type="md-add" color="#2db7f5" size="20" />
+          <Icon type="md-add" color="#2db7f5" size="20" @click.native="showAddGroup=true" style="cursor:pointer" />
         </div>
         <ul>
-          <li v-for="(g,index) in groups" :key="index">
-            <div>{{g.relationName}}</div>
+          <li v-for="(g,index) in groups" :key="index" :class="{groupActive:taskGroupId==g.groupId}" class="group-li" @click="changeGroup(g.groupId)">
+            <div class="group-name">{{g.groupName}} · {{g.completeCount}}/{{g.taskTotal}}</div>
+            <div class="group-progress">
+              <div class="p1" :style="{width:(g.completePercentage*278/100)+'px'}">
+                <span>已完成 · {{g.completeCount}}</span>
+              </div>
+              <div class="p2" :style="{width:g.noCompletePercentage*278/100+'px'}">
+                <span>未完成 · {{g.notCompleteCount}}</span>
+              </div>
+              <div class="p3" :style="{width:g.beOverduePercentage*278/100+'px'}">
+                <span>已逾期 · {{g.beOverdue}}</span>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -67,17 +78,17 @@
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
                       <!--</span>-->
                       <span class="label" v-if="a.remarks">
-                        <Icon type="ios-create-outline" size="18"/>
+                        <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 5px">
-                        <Icon type="ios-list" size="22"/>
-                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
+                      <span class="label" style="margin-bottom: 5px" v-if="a.completeCount">
+                        <Icon type="ios-list" size="22" />
+                        <span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
                       <span class="label" v-if="a.bindId">
-                        <Icon type="ios-link"  size="16"/>
+                        <Icon type="ios-link" size="16" />
                       </span>
                       <span class="label" v-if="a.fileId">
-                        <Icon type="md-paper" size="16"/>
+                        <Icon type="md-paper" size="16" />
                       </span>
                       <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
@@ -117,17 +128,17 @@
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
                       <!--</span>-->
                       <span class="label" v-if="a.remarks">
-                        <Icon type="ios-create-outline" size="18"/>
+                        <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 5px" v-if="a.taskList">
-                        <Icon type="ios-list" size="22"/>
-                        <Icon class="icon" type="ios-list-outline" size="16"></Icon><span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
+                      <span class="label" style="margin-bottom: 5px" v-if="a.completeCount">
+                        <Icon type="ios-list" size="22" />
+                        <span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
                       <span class="label" v-if="a.bindId">
-                        <Icon type="ios-link"  size="16"/>
+                        <Icon type="ios-link" size="16" />
                       </span>
                       <span class="label" v-if="a.fileId">
-                        <Icon type="md-paper" size="16"/>
+                        <Icon type="md-paper" size="16" />
                       </span>
                       <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
@@ -181,8 +192,14 @@
     <Modal v-model="showModal" class="myModal">
       <my-modal v-if="showModal"></my-modal>
     </Modal>
+    <Modal v-model="showAddGroup" :footer-hide="true" title="创建分组" :width="350">
+      <Input v-model="groupName" placeholder="请输入分组名称" class="group-name-input" ref="input" />
+      <div>
+        <Button type="info" long @click="handleSave" :disabled="!groupName">确定</Button>
+      </div>
+    </Modal>
     <!--加载中-->
-    <div class="demo-spin-container" v-if="!allTask.length">
+    <div class="demo-spin-container" v-if="loading">
       <Loading></Loading>
     </div>
   </div>
@@ -196,8 +213,8 @@ import TaskMenu from "./components/TaskMenu";
 import myModal from "./components/EditList";
 import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
-import listView from './listView'
-import timeView from './timeView'
+import listView from "./listView";
+import timeView from "./timeView";
 import { scrollTo, dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import {
@@ -208,7 +225,9 @@ import {
   cancelcompleteTask,
   dragTask,
   addTask,
-  group
+  group,
+  addGroup,
+  changeGroup
 } from "@/axios/api";
 export default {
   name: "",
@@ -219,13 +238,13 @@ export default {
     // FilterBox,
     // SortBox,
     TaskMenu,
-    myModal,
+    myModal
     // LeftTaskInfo,
     // CurrentAdd
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup", "abc"]),
-    ...mapState("task", ["allTask", "sort"]),
+    ...mapState("task", ["allTask", "sort", "groups"]),
     ...mapState("app", ["view"])
   },
   data() {
@@ -238,7 +257,6 @@ export default {
       newProTitle: "",
       taskMenuId: null,
       taskGroupId: null,
-      menuGroupId: null,
       projectId: this.$route.params.id,
       active: "a",
       priority: "1",
@@ -252,12 +270,16 @@ export default {
       activeModalData: {
         //是数据里面的arr里面的每一项
       },
-      groups: []
+      showAddGroup: false,
+      groupName: "",
+      loading: true
     };
   },
   mounted() {
-    this.init(this.projectId);
     this.taskGroupId = this.$route.params.groupId;
+    this.init(this.projectId).then(res => {
+      this.loading = false;
+    });
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
     };
@@ -269,13 +291,37 @@ export default {
     hideAddTask() {
       this.currentEditId = "";
     },
-    getGroup() {
-      this.show = !this.show;
-      group(this.projectId).then(res => {
-        if (res.result === 1) {
-          this.groups = res.data;
+    changeGroup(groupId) {
+      this.taskGroupId = groupId;
+      this.loading = true;
+      changeGroup(groupId, this.projectId).then(res => {
+        if (res.result == 1) {
+          this.$router.replace(
+            `/project/${this.projectId}/tasks/group/${groupId}`
+          );
+          this.init(this.projectId).then(res => {
+            this.loading = false;
+          });
         }
       });
+    },
+    handleSave() {
+      this.loading = true;
+      this.showAddGroup = false;
+      addGroup(this.projectId, this.groupName).then(res => {
+        if (res.result === 1) {
+          this.taskGroupId = res.groupId;
+          this.$router.replace(
+            `/project/${this.projectId}/tasks/group/${res.groupId}`
+          );
+          this.init(this.projectId).then(res => {
+            this.loading = false;
+          });
+        }
+      });
+    },
+    getGroup() {
+      this.show = !this.show;
     },
     //打开任务详情
     initTask(taskId) {
@@ -295,7 +341,11 @@ export default {
         taskMenuId: this.taskMenuId,
         taskGroupId: this.taskGroupId
       };
-      addTask(data).then(res => {});
+      addTask(data).then(res => {
+        if (res.result === 1) {
+          this.textarea = "";
+        }
+      });
     },
     dragBox(evt) {
       //拖拽大盒子
@@ -373,11 +423,12 @@ export default {
     saveNewPro() {
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
-      addnewTask(this.projectId, this.menuGroupId, this.newProTitle).then(
+      addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then(
         res => {
           if (res.result == 1) {
             this.newProTitle = "";
             this.showAdd = true;
+            this.init(this.projectId);
           }
         }
       );
@@ -418,5 +469,82 @@ export default {
     flex-direction: row-reverse;
     margin-top: 10px;
   }
+}
+.group-progress {
+  width: 278px;
+  height: 8px;
+  border-radius: 8px;
+  display: flex;
+  margin-left: 10px;
+  background-color: #e5e5e5;
+  /deep/ .ivu-tooltip-rel {
+    display: block;
+  }
+  span {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: gray;
+    padding: 5px 10px;
+    color: white;
+    display: none;
+    width: 80px;
+    &::after {
+      content: "";
+      border-top: solid 7px gray;
+      border-left: solid 7px #00800000;
+      border-right: solid 7px #00800000;
+      border-bottom: solid 0px #00800000;
+      position: absolute;
+      left: 40%;
+      top: 100%;
+    }
+  }
+  .p1 {
+    background-color: #75c940;
+    height: 8px;
+    position: relative;
+    &:hover {
+      span {
+        display: block;
+      }
+    }
+  }
+  .p2 {
+    background-color: #3da8f5;
+    height: 8px;
+    position: relative;
+    &:hover {
+      span {
+        display: block;
+      }
+    }
+  }
+  .p3 {
+    background-color: #ff4f3e;
+    height: 8px;
+    position: relative;
+    &:hover {
+      span {
+        display: block;
+      }
+    }
+  }
+}
+.group-name {
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+.groupActive {
+  background-color: #f5f5f5;
+}
+.group-li {
+  height: 45px;
+  padding-top: 5px;
+  cursor: pointer;
+}
+.group-name-input {
+  margin-bottom: 10px;
 }
 </style>

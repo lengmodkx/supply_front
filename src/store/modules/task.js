@@ -5,8 +5,15 @@ import {
     getTaskFiles,
     upStartTime,
     upEndTime,
-    addChildTask
+    addChildTask,
+    group
 } from "../../axios/api.js";
+import {
+    resolve
+} from "url";
+import {
+    reject
+} from "q";
 const store = {
     namespaced: true,
     state: {
@@ -21,7 +28,8 @@ const store = {
         task: null,
         joinInfoIds: [],
         images_suffix: [".gif", ".GIF", ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
-        taskId: ''
+        taskId: '',
+        groups: []
     },
     getters: {
         curTaskGroup: (state, getters) => {
@@ -47,6 +55,9 @@ const store = {
         }
     },
     mutations: {
+        initGroup(state, data) {
+            state.groups = data
+        },
         setTaskId(state, data) {
             state.taskId = data
         },
@@ -354,16 +365,29 @@ const store = {
     },
     actions: {
         init({
+            dispatch,
             commit
         }, data) {
-            enterTask(data).then(res => {
+            return new Promise((resolve, reject) => {
+                enterTask(data).then(res => {
+                    if (res.result === 1) {
+                        dispatch('initGroup', data)
+                        commit('initTask', res.menus)
+                        resolve()
+                    }
+                });
+            })
+
+        },
+        initGroup({
+            commit
+        }, data) {
+            group(data).then(res => {
                 if (res.result === 1) {
-                    console.log(res.menus)
-                    commit('initTask', res.menus)
+                    commit('initGroup', res.data)
                 }
             });
         },
-
         loadIndex({
             commit
         }, data) {
@@ -428,10 +452,14 @@ const store = {
                 }
             })
         },
-        updateStatus({dispatch,commit},data){
+        updateStatus({
+            dispatch,
+            commit
+        }, data) {
             initEditTask(data.taskId).then(res => {
                 commit('editTask', res.data)
                 dispatch('init', data.projectId)
+                dispatch('initGroup', data.projectId)
             })
         },
         changeProperty({
