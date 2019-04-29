@@ -3,23 +3,14 @@
     <div class="title">创建项目</div>
     <div class="pic"></div>
     <p class="myindex">为不同的事物建立各自的项目</p>
-    <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）"/>
-    <Input
-      type="textarea"
-      :rows="2"
-      class="inputbox"
-      v-model="proDes"
-      :maxlength="50"
-      placeholder="项目简介（选填）"
-    />
-    <Button
-      class="submitBtn"
-      type="primary"
-      size="large"
-      :loading="loading"
-      :disabled="proName==''"
-      @click="create"
-    >
+    <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）" />
+    <Input type="textarea" :rows="2" class="inputbox" v-model="proDes" :maxlength="50" placeholder="项目简介（选填）" />
+    <div class="create-project-time">
+      <DatePicker placeholder="开始时间" :value="startTime" type="date" @on-change="startDate" :options="options1"></DatePicker>
+      <DatePicker placeholder="结束时间" :value="endTime" type="date" @on-change="endDate" :options="options2"></DatePicker>
+    </div>
+
+    <Button class="submitBtn" type="primary" size="large" :loading="loading" :disabled="proName==''||startTime==''||endTime==''" @click="create">
       <span v-if="!loading">完成并创建</span>
       <span v-else>正在创建...</span>
     </Button>
@@ -33,14 +24,34 @@ export default {
       disabled: true,
       proName: "",
       proDes: "",
-      loading: false
+      loading: false,
+      startTime: "",
+      endTime: "",
+      options1: {},
+      options2: {}
     };
   },
   methods: {
     create() {
+      if (!this.startTime) {
+        this.$Notice.warning({
+          title: "请选择项目开始时间"
+        });
+        return false;
+      }
+
+      if (!this.endTime) {
+        this.$Notice.warning({
+          title: "请选择项目结束时间"
+        });
+        return false;
+      }
+
       let data = {
         projectName: this.proName,
-        projectDes: this.proDes
+        projectDes: this.proDes,
+        startTime: new Date(this.startTime).getTime(),
+        endTime: new Date(this.endTime).getTime()
       };
 
       createProject(data).then(msg => {
@@ -49,10 +60,29 @@ export default {
           this.$emit("hideModal");
           this.proName = "";
           this.proDes = "";
+          this.startTime = "";
+          this.endTime = "";
+          this.loading = false;
           this.$emit("getNewList", "我创建的项目");
         }
         //创建成功后关闭modal this.$emit("hideModal")  再次请求获取项目列表
       });
+    },
+    startDate(date) {
+      this.startTime = date;
+      this.options2 = {
+        disabledDate(date1) {
+          return date1.valueOf() < new Date(date).getTime() - 86400000;
+        }
+      };
+    },
+    endDate(date) {
+      this.endTime = date;
+      this.options1 = {
+        disabledDate(date1) {
+          return date1.valueOf() > new Date(date).getTime() - 86400000;
+        }
+      };
     }
   }
 };
@@ -94,6 +124,11 @@ export default {
     width: 320px;
     margin: 20px auto;
   }
+}
+.create-project-time {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 4px;
 }
 </style>
 
