@@ -2,7 +2,7 @@
   <div class="header-project">
     <div class="fl">
       <Breadcrumb separator="<i class='breadcrumb-separator ivu-icon ivu-icon-chevron-right'></i>">
-        <BreadcrumbItem :to="'/home/'+Math.random()">首页</BreadcrumbItem>
+        <BreadcrumbItem to="/home">首页</BreadcrumbItem>
         <BreadcrumbItem>研发</BreadcrumbItem>
       </Breadcrumb>
     </div>
