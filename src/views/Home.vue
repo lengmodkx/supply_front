@@ -24,7 +24,7 @@
       <h2 class="oh" v-text="projectType">我创建的项目</h2>
       <!--搜索项目-->
       <ul v-if="searchData.length">
-        <li class="project-list" v-for="(item,index) in searchData" :key="index" @click="path(item.projectId,item.groupId)">
+        <li class="project-list" v-for="(item,index) in searchData" :key="index" @click="path(item)">
           <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
           <div class="project-body">
             <div class="project-con">
@@ -53,7 +53,7 @@
       </ul>
       <!--正常显示-->
       <ul v-else-if="!loading && !isSearch">
-        <li class="project-list" v-for="(item,index) in projects" :key="index" @click="path(item.projectId,item.groupId)">
+        <li class="project-list" v-for="(item,index) in projects" :key="index" @click="path(item)">
           <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
           <div class="project-body">
             <div class="project-con">
