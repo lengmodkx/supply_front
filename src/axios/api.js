@@ -340,21 +340,25 @@ export function cancelCollect(publicId) {
 }
 
 //完成任务
-export function completeTask(taskId) {
+export function completeTask(taskId,label) {
+    if(label){
+        var l = {label:label}
+    }
     return fetch({
         url: `${api.tasks}/${taskId}/finish`,
         method: "put", // 请求方法
-        params: {}
+        params: l
     });
 }
 //取消完成任务
 export function cancelcompleteTask(taskId, taskStatus) {
+    if(taskStatus){
+        var l = {label:taskStatus}
+    }
     return fetch({
         url: `${api.tasks}/${taskId}/unFinish`,
         method: "put", // 请求方法
-        params: {
-            taskStatus: taskStatus
-        }
+        params: l
     });
 }
 //拖拽任务排序

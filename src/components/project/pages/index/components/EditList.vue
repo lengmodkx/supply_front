@@ -113,7 +113,7 @@
               <!-- 点击之前 -->
               <div class="clearfix" v-show="isEdit" style="display:flex;">
                 <div class="addicon fl" @click.stop>
-                  <Checkbox v-model="i.taskStatus" @on-change="updateTaskStatus(i.taskId,i.taskStatus)"></Checkbox>
+                  <Checkbox v-model="i.taskStatus" @on-change="updateTaskStatus(i.taskId,i.taskStatus,true)"></Checkbox>
                 </div>
                 <div class="sonInput fl" @click.stop="showaa(i.taskId)">
                   <Tooltip content="点击即可编辑" placement="top">
@@ -499,15 +499,19 @@ export default {
       updateRepeat(this.task.taskId, repeat);
     },
     //更改任务的状态
-    updateTaskStatus(taskId,taskStatus) {
+    updateTaskStatus(taskId,taskStatus,isChild) {
+        var label = 0
+        if(isChild){
+            label = 1
+        }
       if (taskStatus) {
-        completeTask(taskId).then(res => {
+        completeTask(taskId,label).then(res => {
           if(res.result !== 1){
             this.$Message.error(res.msg)
           }
         })
       } else {
-        cancelcompleteTask(taskId).then(res => {
+        cancelcompleteTask(taskId,label).then(res => {
           if(res.result !== 1){
             this.$Message.error(res.msg)
           }
