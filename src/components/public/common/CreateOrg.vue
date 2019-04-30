@@ -103,7 +103,7 @@
                 if (this.$route.name=='Home'){
                     window.location.reload()
                 } else {
-                    this.$router.push('/Home/'+Math.random())
+                    this.$router.push('/home')
                     this.$emit('closeCreateOrg')
                 }
 

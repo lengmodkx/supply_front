@@ -4,7 +4,7 @@
           <Icon class="app-icon" type="md-apps" />
           <div slot="content">
               <ul class="app-con">
-                  <router-link tag="li" :to="'/home/'+Math.random()" class="app-li" >
+                  <router-link tag="li" to="/home" class="app-li" >
                       <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
                       <p>主页</p>
                   </router-link>
