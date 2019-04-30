@@ -24,7 +24,7 @@
       </li>
     </ul>-->
     <Collapse v-model="value" accordion>
-      <Panel v-for="(user,index) in users" :key="index" hide-arrow>
+      <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
         <div class="member-item clearfix">
           <div class="avatar">
             <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
@@ -40,8 +40,8 @@
             <p>{{user.memberLabel==1?'管理员':'成员'}}</p>
             <Icon type="md-checkmark" size="16" />
           </div>
-          <div style="color:red;height:30px;line-height:30px;cursor:pointer;border-bottom: 1px solid #eeeeee;" v-if="user.memberLabel!=1">
-            <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.userId)">
+          <div style="color:red;height:30px;line-height:30px;cursor:pointer;" v-show="user.memberLabel!=1">
+            <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.memberId)">
               <p>移除成员</p>
             </Poptip>
           </div>
@@ -116,13 +116,13 @@ export default {
       });
     },
     //筛选用户
-    filterUser() { },
+    filterUser() {},
     adduser(userId) {
       let params = {
         projectId: this.$route.params.id,
         memberId: userId
       };
-      console.log(userId);
+
       addUser(params).then(res => {
         if (res.result === 1) {
           this.initUser(this.$route.params.id);
@@ -135,8 +135,9 @@ export default {
     },
     //移除项目成员
     remove(userId) {
-      this.value = -1;
+      this.value = "-1";
       removeUser(userId).then(res => {
+        console.log(userId);
         if (res.result === 1) {
           this.initUser(this.$route.params.id);
         } else {

@@ -1,9 +1,9 @@
 <template>
   <div class="header-project">
     <div class="fl">
-      <Breadcrumb separator="<i class='breadcrumb-separator ivu-icon ivu-icon-chevron-right'></i>">
-        <BreadcrumbItem to="/home">首页</BreadcrumbItem>
-        <BreadcrumbItem>研发</BreadcrumbItem>
+      <Breadcrumb separator=">">
+        <BreadcrumbItem :to="'/home/'+Math.random()">首页</BreadcrumbItem>
+        <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
       </Breadcrumb>
     </div>
 
@@ -37,7 +37,8 @@ export default {
       on: false,
       path: this.$route.path,
       id: this.$route.params.id,
-      menus: []
+      menus: [],
+      projectName: ""
     };
   },
   computed: {
@@ -74,6 +75,7 @@ export default {
         }
         return item;
       });
+      this.projectName = res.project.projectName;
     });
   },
   methods: {
