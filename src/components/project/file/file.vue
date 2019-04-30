@@ -251,7 +251,6 @@ export default {
   components: {
     model,
     commonFile,
-    Loading,
     VJstree,
     fileDetail
   },
