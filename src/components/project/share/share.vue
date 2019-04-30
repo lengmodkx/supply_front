@@ -28,15 +28,15 @@
               <Icon type="android-add-circle"></Icon>
               添加分享
             </a>
-            <Modal v-model="showAddshare" :title="projectName" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
+            <Modal v-model="showAddshare" title="添加分享" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
               <add-share ref="addshare" @close="addShares" :projectId="projectId" :shareTitle="shareTitle" :shareContent="shareContent"></add-share>
             </Modal>
           </div>
           <div class="share-list">
-            <loading v-if="loading"></loading>
-            <ul>
+            <Loading v-if="loading"></Loading>
+            <ul v-if="shareList.length">
               <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index)">
-                <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${share.memberImg}`" :title="share.memberName">
+                <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${share.memberImg}`">
                 <div class="">
                   <p class="t">{{share.title}}</p>
                   <p class="c"> {{share.memberName}}发布于{{share.createTimeStr}}</p>
@@ -46,7 +46,7 @@
           </div>
         </iCol>
         <iCol span="18" class="right">
-          <div class="share-view" v-if="share!=null">
+          <div class="share-view" v-if="share">
             <div class="share-text">
               <div class="rng">
                 <div class="share-title">
@@ -63,7 +63,7 @@
                     </Tooltip>
 
                     <Tooltip content="点个赞" placement="bottom">
-                      <span class="zan" :class="{zan_blue:zan}" >
+                      <span class="zan" :class="{zan_blue:zan}">
                         <Icon type="md-thumbs-up"></Icon>
                         <!--<span class="zanNum" v-if="zan">1</span>-->
                       </span>
@@ -106,123 +106,20 @@
                     </div>
                   </div>
                   <!--关联-->
-                  <p class="name" style="margin-top: 5px"><Icon type="ios-link-outline" style="font-size: 18px;margin-right: 3px"></Icon>关联内容</p>
-                  <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
+                  <p class="name" style="margin-top: 5px">
+                    <Icon type="ios-link-outline" style="font-size: 18px;margin-right: 3px"></Icon>关联内容
+                  </p>
+                  <div class="addLink" @click="relationModal=true;">
+                    <Icon type="ios-add-circle-outline" />添加关联</div>
                   <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
                     <AddRelation :publicId="share.id" :fromType="publicType"></AddRelation>
                   </Modal>
-                  <!--<div class="has-relevance">-->
-                    <!--<ul v-if="share.bindings.length!=0">-->
-                      <!--<div class="what-title">关联的任务</div>-->
-                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">-->
-                        <!--<div class="gl-task-list-con">-->
-                          <!--<Icon type="md-checkbox-outline" size="22" />-->
-                          <!--<img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">-->
-                          <!--<Icon type="md-contact" v-else size="26" />-->
-                          <!--<div class="gl-con">-->
-                            <!--<div class="gl-con-top">-->
-                              <!--<span>{{b.taskName}}</span><span>{{b.projectName}}</span>-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
-                          <!--</div>-->
-                        <!--</div>-->
-                        <!--<Poptip>-->
-                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
-                          <!--<div slot="content">-->
-                            <!--<div class="glpop-list">-->
-                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
-                            <!--</div>-->
-                            <!--<div class="glpop-list" @click="cancle(b.taskId)">-->
-                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                        <!--</Poptip>-->
-                      <!--</li>-->
-                    <!--</ul>-->
-                    <!--<ul v-if="task.bindFiles.length!=0">-->
-                      <!--<div class="what-title">关联的文件</div>-->
-                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindFiles" :key="i">-->
-                        <!--<div class="gl-task-list-con">-->
-                          <!--&lt;!&ndash;<Icon type="md-checkbox-outline" size="22" />&ndash;&gt;-->
-                          <!--<Icon type="ios-document-outline" size="22" />-->
-                          <!--<div class="gl-con">-->
-                            <!--<div class="gl-con-top">-->
-                              <!--<span>{{b.fileName}}</span><span>{{b.projectName}}</span>-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
-                          <!--</div>-->
-                        <!--</div>-->
-                        <!--<Poptip>-->
-                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
-                          <!--<div slot="content">-->
-                            <!--<div class="glpop-list">-->
-                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
-                            <!--</div>-->
-                            <!--<div class="glpop-list" @click="cancle(b.fileId)">-->
-                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                        <!--</Poptip>-->
-                      <!--</li>-->
-                    <!--</ul>-->
-                    <!--<ul v-if="task.bindSchedules.length!=0">-->
-                      <!--<div class="what-title">关联的日程</div>-->
-                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">-->
-                        <!--<div class="gl-task-list-con">-->
-                          <!--&lt;!&ndash;<Icon type="md-checkbox-outline" size="22" />&ndash;&gt;-->
-                          <!--<Icon type="ios-calendar-outline" size="22" />-->
-                          <!--<div class="gl-con">-->
-                            <!--<div class="gl-con-top">-->
-                              <!--<span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
-                          <!--</div>-->
-                        <!--</div>-->
-                        <!--<Poptip>-->
-                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
-                          <!--<div slot="content">-->
-                            <!--<div class="glpop-list">-->
-                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
-                            <!--</div>-->
-                            <!--<div class="glpop-list" @click="cancle(b.scheduleId)">-->
-                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                        <!--</Poptip>-->
-                      <!--</li>-->
-                    <!--</ul>-->
-                    <!--<ul v-if="task.bindShares.length!=0">-->
-                      <!--<div class="what-title">关联的分享</div>-->
-                      <!--<li class="gl-task-list" v-for="(b,i) in task.bindShares" :key="i">-->
-                        <!--<div class="gl-task-list-con">-->
-                          <!--<Icon type="ios-open-outline" size="22" />-->
-                          <!--<div class="gl-con">-->
-                            <!--<div class="gl-con-top">-->
-                              <!--<span>{{b.shareName}}</span><span>{{b.projectName}}</span>-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash;<div class="gl-con-bottom">2018-12-12 12:00</div>&ndash;&gt;-->
-                          <!--</div>-->
-                        <!--</div>-->
-                        <!--<Poptip>-->
-                          <!--<Icon class="glpop" type="ios-arrow-down" size="20" />-->
-                          <!--<div slot="content">-->
-                            <!--<div class="glpop-list">-->
-                              <!--<Icon type="ios-link" size="20" /><span>复制链接</span>-->
-                            <!--</div>-->
-                            <!--<div class="glpop-list" @click="cancle(b.shareId)">-->
-                              <!--<Icon type="md-link" size="20" /><span>取消关联</span>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                        <!--</Poptip>-->
-                      <!--</li>-->
-                    <!--</ul>-->
-                  <!--</div>-->
                 </div>
               </div>
               <div class="omg" v-if="members">
                 <p class="ot">参与者 · {{members.length}}</p>
                 <p class="oc" v-for="user in members" :key="user.id">
-                  <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`" :title="user.userName">
+                  <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
                   <Icon type="md-add-circle" size="28" color="#2d8cf0" @click.native="showMember"></Icon>
                 </p>
 
@@ -235,33 +132,27 @@
       </Row>
     </div>
     <Modal v-model="showAddMember" width="252" footer-hide transfer :mask="false" :closable="false">
-
       <user-list :projectId="projectId"></user-list>
+    </Modal>
 
-    </Modal>
-    <!--编辑分享-->
-    <Modal v-model="editShare" :title="projectName" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
-      <add-share ref="editshare" @close="editShare=false" :projectId="projectId" :shareTitle="share.title" :shareContent="share.content"></add-share>
-    </Modal>
   </div>
 </template>
 
 <script>
 import publish from "../../public/Publish.vue";
 import addShare from "./AddShare.vue";
-import Loading from "../../public/common/Loading.vue";
 import tag from "./Tags.vue";
 // import { shares } from "../../../axios/api2.js";
 import userList from "../../resource/userList.vue";
-import log from "../../public/log"
-import singleFenxiangMenu from '../../public/common/SingleFenxiangMenu'
-import AddRelation from '@/components/public/common/AddRelation'
+import log from "../../public/log";
+import singleFenxiangMenu from "../../public/common/SingleFenxiangMenu.vue";
+import AddRelation from "@/components/public/common/AddRelation";
 import { mapState, mapMutations, mapActions } from "vuex";
+import { share } from "../../../axios/api";
 export default {
   components: {
     publish,
     addShare,
-    Loading,
     tag,
     userList,
     singleFenxiangMenu,
@@ -272,11 +163,11 @@ export default {
     return {
       loading: true,
       type: 1,
-      editShare:false,
+      editShare: false,
       showAddshare: false,
       projectId: this.$route.params.id,
       shareTitle: "",
-      relationModal:false,
+      relationModal: false,
       shareContent: "",
       // shareList: [],
       indexNow: 0,
@@ -289,19 +180,21 @@ export default {
       tagList: [],
       publicType: "分享",
       showAddMember: false,
-      zan:0
+      zan: 0
     };
   },
   computed: {
     ...mapState("member", ["members"]),
     ...mapState("project", ["projectName"]),
-    ...mapState("share", ["shareList","share"])
+    ...mapState("share", ["shareList", "share"])
   },
   mounted() {
     this.init(this.$route.params.id).then(res => {
       this.loading = false;
-      this.$store.dispatch("member/init", this.shareList[0].joinInfo);
-    })
+      if (this.share != null) {
+        this.$store.dispatch("member/init", this.share.joinInfo);
+      }
+    });
     // shares(this.$route.params.id).then(res => {
     //   if (res.result == 1) {
     //     this.shareList = res.data;
@@ -314,8 +207,8 @@ export default {
     // });
   },
   methods: {
-    ...mapActions('share',['init']),
-    ...mapMutations('share',['changeShare']),
+    ...mapActions("share", ["init"]),
+    ...mapMutations("share", ["changeShare"]),
     clickEvent(parameter) {},
     changePrivacy() {
       if (this.isPrivacy == 1) {
@@ -330,20 +223,20 @@ export default {
     },
     changeContent(index) {
       this.indexNow = index;
-      this.changeShare(index)
+      this.changeShare(index);
       // this.share = this.shareList[index];
       this.$store.dispatch("member/init", this.shareList[index].joinInfo);
     },
     showMember() {
       this.showAddMember = !this.showAddMember;
     },
-    addShares(){
-      this.showAddshare=false
-      this.loading=true
+    addShares() {
+      this.showAddshare = false;
+      this.loading = true;
       this.init(this.$route.params.id).then(res => {
         this.loading = false;
         this.$store.dispatch("member/init", this.shareList[0].joinInfo);
-      })
+      });
     }
   }
 };
@@ -433,34 +326,34 @@ export default {
         justify-content: space-between;
         align-items: center;
         height: 28px;
-        .left-title{
+        .left-title {
           display: flex;
           align-items: center;
-          div{
+          div {
             display: flex;
             width: 64px;
             height: 28px;
             padding: 4px;
             align-items: center;
             justify-content: space-between;
-            background-color: #EFF9FE;
+            background-color: #eff9fe;
             color: #77c2f8;
             font-size: 14px;
             margin-right: 15px;
           }
         }
-        .right-icons{
+        .right-icons {
           position: absolute;
           right: 20px;
           top: 20px;
           display: flex;
           align-items: center;
           height: 28px;
-          i{
+          i {
             cursor: pointer;
             font-size: 18px;
             margin-right: 10px;
-            &:hover{
+            &:hover {
               color: #3da8f5;
             }
           }

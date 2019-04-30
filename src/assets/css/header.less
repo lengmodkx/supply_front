@@ -1,4 +1,3 @@
-
 .header {
   position: fixed;
   width: 100%;
@@ -6,6 +5,7 @@
   height: 48px;
   background-color: hsla(0, 0%, 100%, .95);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
+
   .logoMenu {
     position: absolute;
     left: 50%;
@@ -16,6 +16,7 @@
     padding-top: 0;
     transition-duration: .3s;
     z-index: 999999999;
+
     .main {
       width: 324px;
       min-height: 100px;
@@ -24,29 +25,36 @@
       border-radius: 4px;
       padding: 20px;
       text-align: center;
+
       h2 {
         font-size: 17px;
         font-weight: 100;
       }
+
       .ivu-icon {
         font-size: 20px;
       }
+
       .ivu-col {
         padding: 10px 0;
         cursor: pointer;
         transition-duration: .3s;
         border-radius: 4px;
-        &:hover, &.active {
+
+        &:hover,
+        &.active {
           color: #fff;
           background-color: #2d8cf0;
         }
       }
     }
+
     &.show {
       padding-top: 55px;
       opacity: 1;
     }
   }
+
   .logo {
     height: 48px;
     position: absolute;
@@ -54,21 +62,26 @@
     top: 0;
     transform: translateX(-50%);
     padding-top: (48-20)/2px;
+
     img {
-      height: 20px;
+      height: 30px;
     }
+
     .ivu-icon {
       font-size: 23px;
       transform: rotate(90deg) scale(0.8);
       margin-left: 5px;
       cursor: pointer;
+
       &:hover {
         color: #2d8cf0;
       }
     }
   }
+
   .menu {
     padding-right: 20px;
+
     .avatar {
       width: 28px;
       height: 28px;
@@ -77,60 +90,74 @@
       border-radius: 50%;
       cursor: pointer;
     }
+
     a {
       font-size: 14px;
       color: gray;
       display: inline-block;
       line-height: 48px;
       float: left;
-      .text{
+
+      .text {
         border-right: 1px solid #e5e5e5;
         padding: 0 20px;
       }
+
       &.icon {
         font-size: 18px;
       }
+
       &.last-child {
         border-right: 0;
       }
     }
+
     a:hover {
       color: #2d8cf0;
     }
-    
+
   }
-  .userPop{
-      /deep/.ivu-poptip-body{
-        padding:8px 0 !important;
-      }
+
+  .userPop {
+    /deep/.ivu-poptip-body {
+      padding: 8px 0 !important;
+    }
   }
-  .userInfo{
-    .createdOrg{
+
+  .userInfo {
+    .createdOrg {
       cursor: pointer;
-      padding:8px 10px;
-      font-size:14px;
-      color:#2d8cf0;
-      &:hover{
+      padding: 8px 10px;
+      font-size: 14px;
+      color: #2d8cf0;
+
+      &:hover {
         background-color: #f5f5f5;
       }
     }
-    li{
+
+    li {
       cursor: pointer;
-      padding:8px 10px;
-      font-size:14px;
-      &:hover{
+      padding: 8px 10px;
+      font-size: 14px;
+
+      &:hover {
         background-color: #f5f5f5;
       }
     }
-    .org,.admin{
-      border-bottom:1px solid #efefef;
+
+    .org,
+    .admin {
+      border-bottom: 1px solid #efefef;
     }
-    .org{
-      .addOrgPro{
+
+    .org {
+      .addOrgPro {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        i{
+
+        i {
           font-size: 18px;
           color: #a6a6a6;
         }
@@ -138,23 +165,27 @@
     }
   }
 }
-.app-icon{
+
+.app-icon {
   font-size: 24px;
   color: #a6a6a6;
   line-height: 48px;
   margin-left: 20px;
   cursor: pointer;
   margin-top: 12px;
-  &:hover{
+
+  &:hover {
     color: #3da8f5;
   }
 }
-.app-con{
+
+.app-con {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
-.app-li{
+
+.app-li {
   width: 92px;
   height: 80px;
   padding: 4px 8px;
@@ -164,12 +195,14 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  img{
+
+  img {
     width: 45px;
     height: 45px;
-    &:hover{
+
+    &:hover {
       margin-top: -1px;
-      box-shadow: 0 2px 8px rgba(56,56,56,.08);
+      box-shadow: 0 2px 8px rgba(56, 56, 56, .08);
     }
   }
 }
