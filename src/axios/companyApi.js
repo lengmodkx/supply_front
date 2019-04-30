@@ -42,3 +42,42 @@ export function initOrgMember(orgId, flag) {
         }
     });
 }
+// 创建部门
+export function createBranchs(orgId, data) {
+    return fetch({
+        url: `/partments/${orgId}`,
+        method: "post",
+        data: data
+    });
+}
+// 获取部门信息
+export function getBranch(orgId) {
+    return fetch({
+        url: `/partments/${orgId}`,
+        method: "get",
+    });
+}
+// 获取部门下的成员
+export function getBranchpeople(partmentId) {
+    return fetch({
+        url: `/partment_members/${partmentId}/members`,
+        method: "get",
+    });
+}
+// 添加部门成员
+export function addBranchPeople(partmentId, data) {
+    return fetch({
+        url: `/partment_members/${partmentId}/add`,
+        method: "post",
+        data:data
+    });
+}
+
+// 创建群组
+export function addGroup(orgId, data) {
+    return fetch({
+        url: `/organization_group/${orgId}`,
+        method: "post",
+        data:data
+    });
+}

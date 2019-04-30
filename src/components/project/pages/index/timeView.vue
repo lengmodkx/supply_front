@@ -1,10 +1,14 @@
 <template>
-    <div>时间视图啊啊啊啊啊</div>
+    <div style="width: 100%">
+        <gantt></gantt>
+    </div>
 </template>
 
 <script>
+    import gantt from './gantt/GanttIndex'
     export default {
-        name: "timeView"
+        name: "timeView",
+        components: {gantt}
     }
 </script>
 
