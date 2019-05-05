@@ -57,7 +57,7 @@
             <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
           </span>
           {{isEdit?'编辑标签':'新建标签'}}
-          <span class="close fr" @click="Popvisible=false;showdiv1=true;showdiv2=false">
+          <span class="close-tag fr" @click="Popvisible=false;showdiv1=true;showdiv2=false">
             <Icon type="md-close" size="24"></Icon>
           </span>
         </div>
@@ -85,7 +85,7 @@
             <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
           </span>
           删除标签
-          <span class="close fr" @click="Popvisible=false">
+          <span class="close-tag fr" @click="Popvisible=false">
             <Icon type="android-close" size="24"></Icon>
           </span>
         </div>
@@ -105,6 +105,7 @@ import { mapState, mapMutations } from "vuex";
 import {
   allTags,
   addnewTag,
+  addTagAndBind,
   modifyTag,
   searchTags,
   delTag,
@@ -214,6 +215,7 @@ export default {
       });
     },
     reset(flag) {
+      alert(flag)
       //Object.assign(this.$data, this.$options.data());
       this.Popvisible = flag;
     },
@@ -231,12 +233,14 @@ export default {
         });
       }
       this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-      console.log(this.offsetLeft)
     },
     popHide() {
       setTimeout(_ => {
         this.reset();
       }, 300);
+    },
+    closeTag(){
+      this.Popvisible = false
     },
     chooseTag(tag) {
       bindingTag(tag.tagId,this.publicId,this.publicType).then(res => {
@@ -264,12 +268,18 @@ export default {
         this.loading = true;
         let params = {
           projectId: this.projectId,
+          publicId:this.publicId,
+          publicType:"任务",
           tagName: this.tagName,
           bgColor: this.checkedColor
         };
-        addnewTag(params).then(res => {
+        addTagAndBind(params).then(res => {
           this.loading = false;
-          console.log(res.data);
+          if(res.result === 1){
+            this.$Message.success("新标签绑定成功!")
+          } else{
+            this.$Message.error(res.msg)
+          }
         });
       }
     }
@@ -393,7 +403,7 @@ export default {
         color: #a6a6a6;
       }
     }
-    .close {
+    .close-tag {
       i {
         font-size: 28px;
         margin-top: 2px;

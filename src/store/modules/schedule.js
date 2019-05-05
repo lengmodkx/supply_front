@@ -1,5 +1,5 @@
 import { schedules } from "@/axios/api";
-import {upRichengName, beginDate,endDate} from '@/axios/scheduleApi'
+import {upRichengName, beginDate,endDate,getRicheng} from '@/axios/scheduleApi'
 const store ={
     namespaced: true,
     state: {
@@ -15,7 +15,6 @@ const store ={
         // 单个日程 赋值
         oneSchedule (state, data){
             state.schedule=data
-            console.log(2222222,state.schedule)
         },
         // 更新日程名称
         updateScheduleName(state, data){
@@ -96,6 +95,12 @@ const store ={
             })
 
         },
+        //获取单个日程的详情信息
+        getScheduleById({commit},scheduleId){
+            getRicheng(scheduleId).then(res => {
+                commit('oneSchedule',res.data)
+            })
+        }
         // 开始时间
         // startDate ({commit}, data) {
         //     console.log(data.startTime)

@@ -2,11 +2,14 @@ import {getChat} from '@/axios/api'
 const  store ={
     namespaced: true,
     state: {
-        chatData: []
+        chatData: [],
+        images:[]
     },
     mutations: {
         initChat(state, data){
-            state.chatData=data
+            console.log(">>", data)
+            state.chatData=data.data
+            state.images = data.images
         },
         pushMsg(state,data){
             if(data.userId === data.chat.memberId){
@@ -29,7 +32,7 @@ const  store ={
             return new Promise((resolve, reject) => {
                 getChat(data).then(res => {
                     if (res.result === 1){
-                        commit('initChat', res.data)
+                        commit('initChat', res)
                         resolve()
                     }
                 })

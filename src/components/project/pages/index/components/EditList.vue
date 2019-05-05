@@ -4,7 +4,7 @@
       <Loading ></Loading>
     </div>
 
-    <div class="task-detail" style="height:100%;position: relative" v-if="task!=null">
+    <div class="task-detail" style="height:100%;position: relative" v-if="task!=null" @click="closeTag">
       <!--固定顶部-->
       <div class="toolRight">
         <Tooltip content="点个赞" placement="bottom-start">
@@ -97,12 +97,12 @@
             <UrgentDropdown v-on:priority="changePriority" v-bind:checked-name="task.priority"></UrgentDropdown>
           </div>
         </div>
-        <div class="tags clearfix" style="display: flex;align-items: center">
+        <div @click.stop class="tags clearfix" style="display: flex;align-items: center">
           <span class="name">
             <Icon type="ios-pricetags-outline"></Icon>标签
           </span>
           <!-- 取到data.tag了再添加孙子辈组件 -->
-          <Tags class="fl" :taglist="task.tagList" :publicId="task.taskId" :publicType="publicType" :projectId="task.projectId" v-if="task.tagList"></Tags>
+          <Tags class="fl" :taglist="task.tagList" :publicId="task.taskId" :publicType="publicType" :projectId="task.projectId" v-if="task.tagList" ref="tags"></Tags>
         </div>
         <div class="childTask clearfix">
           <p class="name" style="float:none;">
@@ -165,8 +165,8 @@
         <div class="has-relevance">
           <ul v-if="task.bindTasks.length!=0">
             <div class="what-title">关联的任务</div>
-            <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">
-              <div class="gl-task-list-con">
+            <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i" >
+              <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
                 <Icon type="md-checkbox-outline" size="22" />
                 <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
                 <Icon type="md-contact" v-else size="26" />
@@ -177,13 +177,13 @@
                   <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
                 </div>
               </div>
-              <Poptip>
+              <Poptip @click.stop>
                 <Icon class="glpop" type="ios-arrow-down" size="20" />
                 <div slot="content">
                   <div class="glpop-list">
                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                   </div>
-                  <div class="glpop-list" @click="cancle(b.taskId)">
+                  <div class="glpop-list" @click.stop="cancle(b.taskId)">
                     <Icon type="md-link" size="20" /><span>取消关联</span>
                   </div>
                 </div>
@@ -193,7 +193,7 @@
           <ul v-if="task.bindFiles.length!=0">
             <div class="what-title">关联的文件</div>
             <li class="gl-task-list" v-for="(b,i) in task.bindFiles" :key="i">
-              <div class="gl-task-list-con">
+              <div class="gl-task-list-con" @click="getFileDetail(b.fileId)">
                 <!--<Icon type="md-checkbox-outline" size="22" />-->
                 <Icon type="ios-document-outline" size="22" />
                 <div class="gl-con">
@@ -209,7 +209,7 @@
                   <div class="glpop-list">
                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                   </div>
-                  <div class="glpop-list" @click="cancle(b.fileId)">
+                  <div class="glpop-list" @click.stop="cancle(b.fileId)">
                     <Icon type="md-link" size="20" /><span>取消关联</span>
                   </div>
                 </div>
@@ -218,8 +218,8 @@
           </ul>
           <ul v-if="task.bindSchedules.length!=0">
             <div class="what-title">关联的日程</div>
-            <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">
-              <div class="gl-task-list-con">
+            <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i" >
+              <div class="gl-task-list-con" @click="editSchedule(b.scheduleId)">
                 <!--<Icon type="md-checkbox-outline" size="22" />-->
                 <Icon type="ios-calendar-outline" size="22" />
                 <div class="gl-con">
@@ -235,7 +235,7 @@
                   <div class="glpop-list">
                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                   </div>
-                  <div class="glpop-list" @click="cancle(b.scheduleId)">
+                  <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
                     <Icon type="md-link" size="20" /><span>取消关联</span>
                   </div>
                 </div>
@@ -245,7 +245,7 @@
           <ul v-if="task.bindShares.length!=0">
             <div class="what-title">关联的分享</div>
             <li class="gl-task-list" v-for="(b,i) in task.bindShares" :key="i">
-              <div class="gl-task-list-con">
+              <div class="gl-task-list-con" @click="goShareDetail(b.shareId)">
                 <Icon type="ios-open-outline" size="22" />
                 <div class="gl-con">
                   <div class="gl-con-top">
@@ -260,7 +260,7 @@
                   <div class="glpop-list">
                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                   </div>
-                  <div class="glpop-list" @click="cancle(b.shareId)">
+                  <div class="glpop-list" @click.stop="cancle(b.shareId)">
                     <Icon type="md-link" size="20" /><span>取消关联</span>
                   </div>
                 </div>
@@ -327,6 +327,11 @@
       <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
         <fileDetail @close="closeDetail" v-if="showFileDetail"></fileDetail>
       </Modal>
+      <!-- 编辑日程模态框 -->
+      <Modal v-model="showRCModal"
+             class="myModal myRcModal">
+          <rc-modal></rc-modal>
+      </Modal>
     </div>
   </div>
 
@@ -334,6 +339,7 @@
 <script>
 import SetRepeat from "./SetRepeat";
 import TaskWarn from "./TaskWarn";
+import rcModal from "@/components/public/common/EditRicheng"
 import AddRelation from "@/components/public/common/AddRelation";
 import Tags from "@/components/project/pages/index/components/task/Tags";
 import insertText from "@/utils/insertText";
@@ -377,7 +383,8 @@ export default {
     publick,
     log,
     commonFile,
-    Loading
+    Loading,
+    rcModal
   },
   data() {
     return {
@@ -385,6 +392,7 @@ export default {
       glPop: false,
       zan: false,
       aa: false,
+      showRCModal:false,
       childTaskData: null,
       complete: false,
       hoverExecutor: false,
@@ -431,6 +439,9 @@ export default {
       "updateEndTime",
       "addChildrenTask"
     ]),
+      closeTag(){
+        this.$refs.tags.closeTag()
+      },
     //修改任务名称
     updateTaskName() {
       updateTaskName(this.task.taskId, this.task.taskName).then(data => {});
@@ -446,6 +457,11 @@ export default {
         this.$store.commit("file/putOneFile",res)
         this.showFileDetail = true;
       });
+    },
+    //弹出日程详情框
+    editSchedule(id){
+        this.$store.dispatch("schedule/getScheduleById",id)
+        this.showRCModal = true
     },
     closeDetail() {
       this.showFileDetail = false;
@@ -638,6 +654,11 @@ export default {
         suffix = filename.substring(pos);
       }
       return suffix;
+    },
+      // 去分享详情
+    goShareDetail(shareId){
+        alert(shareId)
+        this.$router.push(`/project/${this.$route.params.id}/share_detail/${shareId}`)
     }
   }
 };
