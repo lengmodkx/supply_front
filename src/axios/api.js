@@ -261,6 +261,11 @@ export function allTags(projectId, params) {
 export function addnewTag(params) {
     return $post(`/tags`, params)
 }
+
+//创建标签并且绑定信息
+export function addTagAndBind(params){
+    return $post(`/tags/add_and_bind`, params)
+}
 //删除标签
 export function delTag(tagId) {
     return $delete(`/tags/${tagId}`, null);
@@ -544,13 +549,15 @@ export function deleteNews(id) {
 }
 
 // 群聊发送消息
-export function sendChat(projectId, content) {
+export function sendChat(projectId, content, files) {
+    console.log(">>>3", files);
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
         params: {
             projectId: projectId,
-            content: content
+            content: content,
+            files: files
         }
     });
 }
