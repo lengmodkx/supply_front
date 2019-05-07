@@ -101,7 +101,8 @@
     <ul class="file-content-wrap" v-else-if="files.length">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
-          <img v-if="file.catalog==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+          <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+          <img v-else-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
           <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
             <img v-else-if="file.ext.includes('txt')" src="@/icons/img/txt.png" alt="">
@@ -217,7 +218,7 @@
     </Modal>
     <!--文件详情-->
     <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
-      <fileDetail @close="closeDetail"></fileDetail>
+      <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
     </Modal>
   </div>
 
