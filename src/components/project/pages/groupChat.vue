@@ -8,46 +8,46 @@
         <div class="chat-text" ref="scrollbox">
 
           <!--有消息-->
-          <div v-if="chatData.length" ref="heightbox">
-            <div v-for="(item, index) in chatData" :key="index">
-              <div class="me-msg"  v-if="item.isOwn && item.chatDel==0">
-                <div class="me">
-                  <div class="content" v-html="item.content"></div>
-                </div>
-                <div class="file-box">
-                  <div class="one-file" v-for="(f,i) in item.fileList" :index="i">
-                    <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
-                    <img v-else src="@/icons/img/moren.png" alt="">
-                    <p>{{f.fileName}}</p>
-                    <span>{{f.size}}</span>
+          <div  ref="heightbox" style="height: 100%">
+            <div v-if="chatData.length">
+              <div v-for="(item, index) in chatData" :key="index">
+                <div class="me-msg"  v-if="item.isOwn && item.chatDel==0">
+                  <div class="me">
+                    <div class="content" v-html="item.content"></div>
                   </div>
-
+                  <div class="file-box" v-if="item.fileList.length">
+                    <div class="one-file" v-for="(f,i) in item.fileList" :key="i" >
+                      <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="" >
+                      <img v-else src="@/icons/img/moren.png" alt="">
+                      <p>{{f.fileName}}</p>
+                      <span>{{f.size}}</span>
+                    </div>
+                  </div>
+                  <div class="time me-time">
+                    <Time :time="item.createTime" />
+                    <span v-if="item.fileList.length" @click="downLoad(item.chatId)">下载附件</span>
+                    <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+                  </div>
                 </div>
-                <div class="time me-time">
-                  <Time :time="item.createTime" />
-                  <span v-if="item.fileList.length" @click="downLoad(item.chatId)">下载附件</span>
-                  <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+                <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
+                <div v-else>
+                  <div class="other">
+                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
+                    <div class="content">{{item.content}}</div>
+                  </div>
+                  <div class="time">
+                    <Time :time="item.createTime" />
+                    <span v-if="item.fileList.length">下载附件</span>
+                  </div>
                 </div>
               </div>
-              <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
-              <div v-else>
-                <div class="other">
-                  <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
-                  <div class="content">{{item.content}}</div>
-                </div>
-                <div class="time">
-                  <Time :time="item.createTime" />
-                  <span v-if="item.fileList.length">下载附件</span>
-                </div>
-              </div>
-
             </div>
-          </div>
-          <!--无消息-->
-          <div class="no-msg" v-else>
-            <img src="@/icons/img/no-msg.png" alt="">
-            <p>还没有项目群聊消息</p>
-            <span>项目中的成员都可以在这里参与群聊</span>
+            <!--无消息-->
+            <div class="no-msg" v-else>
+              <img src="@/icons/img/no-msg.png" alt="">
+              <p>还没有项目群聊消息</p>
+              <span>项目中的成员都可以在这里参与群聊</span>
+            </div>
           </div>
         </div>
         <!--发消息-->
