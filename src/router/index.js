@@ -17,11 +17,9 @@ const _import = file => () => import("@/components/" + file + ".vue");
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: "/members",   // 成员
+  mode: 'history',
+  routes: [{
+      path: "/members", // 成员
       component: members,
     },
     {

@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%;position: relative">
     <div v-if="task==null" style="width: 100%;height: 100%;display:flex;justify-content: center;align-items: center">
-      <Loading ></Loading>
+      <Loading></Loading>
     </div>
 
     <div class="task-detail" style="height:100%;position: relative" v-if="task!=null" @click="closeTag">
@@ -75,7 +75,7 @@
             <SetRepeat :repeat="task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
           </div>
           <!--<div class="alarm fl">-->
-            <!--<TaskWarn :remind="task.remind" v-on:updateRepeat="updateRepeat"></TaskWarn>-->
+          <!--<TaskWarn :remind="task.remind" v-on:updateRepeat="updateRepeat"></TaskWarn>-->
           <!--</div>-->
         </div>
         <div class="remark">
@@ -449,12 +449,13 @@ export default {
     //文件下载
     downLoad(fileId) {
       window.location.href =
-        "http://192.168.3.189:8090/files/" + fileId + "/download";
-      //downloadFile(fileId)
+        process.env.NODE_ENV == "development"
+          ? "/api/files/" + fileId + "/download"
+          : process.env.VUE_APP_URL + fileId + "/download";
     },
     getFileDetail(fileId) {
       getFileDetails(fileId).then(res => {
-        this.$store.commit("file/putOneFile",res)
+        this.$store.commit("file/putOneFile", res);
         this.showFileDetail = true;
       });
     },
@@ -480,7 +481,7 @@ export default {
       taskExecutor(this.task.taskId, "").then(res => {});
     },
     // 子任务执行者
-    ZrwChooseZxz(data, taskid){
+    ZrwChooseZxz(data, taskid) {
       taskExecutor(taskid, data).then(res => {
         console.log(res);
       });
@@ -515,23 +516,23 @@ export default {
       updateRepeat(this.task.taskId, repeat);
     },
     //更改任务的状态
-    updateTaskStatus(taskId,taskStatus,isChild) {
-        var label = 0
-        if(isChild){
-            label = 1
-        }
+    updateTaskStatus(taskId, taskStatus, isChild) {
+      var label = 0;
+      if (isChild) {
+        label = 1;
+      }
       if (taskStatus) {
-        completeTask(taskId,label).then(res => {
-          if(res.result !== 1){
-            this.$Message.error(res.msg)
+        completeTask(taskId, label).then(res => {
+          if (res.result !== 1) {
+            this.$Message.error(res.msg);
           }
-        })
+        });
       } else {
-        cancelcompleteTask(taskId,label).then(res => {
-          if(res.result !== 1){
-            this.$Message.error(res.msg)
+        cancelcompleteTask(taskId, label).then(res => {
+          if (res.result !== 1) {
+            this.$Message.error(res.msg);
           }
-        })
+        });
       }
     },
     // 添加子任务
@@ -555,16 +556,15 @@ export default {
     },
     // 清空时间
     clearTime(type) {
-      if (type==='截止'){
+      if (type === "截止") {
         this.updateEndTime({
           taskId: `${this.task.taskId}`,
-          date: '0'
+          date: "0"
         });
-      }
-      else if (type==='开始'){
+      } else if (type === "开始") {
         this.updateStartTime({
           taskId: `${this.task.taskId}`,
-          date: '0'
+          date: "0"
         });
       }
     },
