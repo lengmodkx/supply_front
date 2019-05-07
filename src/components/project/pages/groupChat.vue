@@ -14,9 +14,18 @@
                 <div class="me">
                   <div class="content" v-html="item.content"></div>
                 </div>
+                <div class="file-box">
+                  <div class="one-file" v-for="(f,i) in item.fileList" :index="i">
+                    <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
+                    <img v-else src="@/icons/img/moren.png" alt="">
+                    <p>{{f.fileName}}</p>
+                    <span>{{f.size}}</span>
+                  </div>
+
+                </div>
                 <div class="time me-time">
                   <Time :time="item.createTime" />
-                  <span v-if="item.fileList.length">下载附件</span>
+                  <span v-if="item.fileList.length" @click="downLoad(item.chatId)">下载附件</span>
                   <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
                 </div>
               </div>
@@ -69,7 +78,7 @@
       </div>
     </div>
     <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-      <up-file @close="showCommon=false" :projectId="this.$route.params.id"></up-file>
+      <up-file @close="showCommon=false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
     </Modal>
   </div>
 </template>
@@ -77,7 +86,7 @@
 <script>
 import Emoji from '@/components/public/common/emoji/Emoji'
 import insertText from '@/utils/insertText'
-import upFile from './chatStatistics/upfile'
+import upFile from './index/chatUpFile'
 import {sendChat, getChat,recall} from '@/axios/api'
 import {mapActions, mapState} from 'vuex'
 export default {
@@ -85,15 +94,16 @@ export default {
   components: { Emoji,upFile },
   data() {
     return {
+      files:[],
       talkvalue: '',
-      showCommon: false,
+      showCommon: false
     }
   },
   mounted() {
     this.getChat()
   },
   computed: {
-    ...mapState('chat',['chatData'])
+    ...mapState('chat',['chatData','images'])
   },
   methods: {
     ...mapActions('chat',['initChat']),
@@ -107,13 +117,21 @@ export default {
     sendChat(){
       let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")
       if (con){
-        sendChat(this.$route.params.id,con).then(res => {
+        sendChat(this.$route.params.id,con,JSON.stringify(this.files)).then(res => {
           this.$refs.textarea.innerHTML=''
           this.$nextTick(() => {
             this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight
           })
         })
       }
+    },
+    getFiles(files){
+      this.files = files
+      this.showCommon = false
+    },
+    //下载附件
+    downLoad(id){
+      window.location.href = "http://192.168.3.189:8090/groupchat/" + id;
     },
     chooseEmoji (name) {
       this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
@@ -130,6 +148,38 @@ export default {
 </script>
 
 <style lang="less">
+  .file-box{
+    width: 100%;
+    height: 60px;
+    padding: 0 15px;
+    .one-file{
+      width: 400px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      background-color: #e5f6fb;
+      border-radius: 10px;
+      img{
+        width: 32px;
+        height: 40px;
+        margin-right: 8px;
+        flex: none;
+      }
+      p{
+        width: 290px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      span{
+        width: 40px;
+        margin-left: 12px;
+        flex: none;
+        text-align: right;
+      }
+    }
+  }
   .me-msg{
     .chehui-btn{
       display: none;
@@ -139,6 +189,10 @@ export default {
         display: block;
       }
     }
+    .one-file{
+      float: right;
+    }
+
   }
   #input{
     width: 100%;
@@ -173,6 +227,9 @@ export default {
       text-align: right;
       flex-direction: row-reverse;
     }
+  }
+  .other .one-file{
+    float: left;
   }
   .other,
   .me {

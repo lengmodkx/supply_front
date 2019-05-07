@@ -32,7 +32,11 @@ export default new Router({
         },
         {
           path: "shares",
-          component: _import("project/share/share")
+          component: _import("project/share/share"),
+        },
+        {
+          path:"share_detail/:shareId",
+          component: _import("project/share/bindShareDetail")
         },
         {
           path: "schedules",
