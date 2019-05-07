@@ -26,16 +26,17 @@
 
 </template>
 <script>
-import { userRegister,getCaptcha } from '@/axios/api'
-import { mapState } from 'vuex'
+import { userRegister, getCaptcha } from "@/axios/api";
+import { mapState } from "vuex";
 
 export default {
   data() {
-     const validatePhone = (rule, value, callback) => {
+    const validatePhone = (rule, value, callback) => {
       if (
         !/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(
           value
-        ) && !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)
+        ) &&
+        !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)
       ) {
         return callback(new Error("请输入正确的手机号码或邮箱"));
       } else {
@@ -49,10 +50,10 @@ export default {
         password: "",
         captcha: "",
         userName: "",
-        captchaUrl:"/api/captcha"
+        captchaUrl: "/api/captcha"
       },
       rules: {
-        accountName:[{ validator: validatePhone, trigger: "blur" }],
+        accountName: [{ validator: validatePhone, trigger: "blur" }],
         captcha: [
           {
             required: true,
@@ -77,40 +78,39 @@ export default {
       }
     };
   },
-   computed:{
-    ...mapState('app',['loading']),
+  computed: {
+    ...mapState("app", ["loading"])
   },
   methods: {
     register: function(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-
-          userRegister(this.formValidate).then(msg=>{
-            if(msg.result==0){
+          userRegister(this.formValidate).then(msg => {
+            if (msg.result == 0) {
               this.$Message.error("验证码填写错误!");
-            }else{
+            } else {
               this.$Message.success("注册成功!");
-              this.$router.push('/login')
+              this.$router.push("/");
             }
-          })
+          });
         } else {
           this.$Message.error("Fail!");
         }
       });
     },
-    changeImg(){
-       this.formValidate.captchaUrl = "/api/captcha?d="+Math.random()
+    changeImg() {
+      this.formValidate.captchaUrl = "/api/captcha?d=" + Math.random();
     }
   }
 };
 </script>
 <style scoped lang="less">
-  .bj-box{
-    width: 100vw;
-    height: 100vh;
-   position: relative;
-    background: url("../assets/images/login-bg.jpg");
-  }
+.bj-box {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: url("../assets/images/login-bg.jpg");
+}
 .register-box {
   width: 340px;
   padding: 20px;
@@ -134,16 +134,15 @@ export default {
   margin-left: 5%;
   position: absolute;
   right: 0;
-  cursor:pointer;
+  cursor: pointer;
 }
-.changeCaptcha{
+.changeCaptcha {
   // color:#2d8cf0;
-  color:#bbb;
+  color: #bbb;
   cursor: pointer;
   font-size: 12px;
-  position:absolute;
-  bottom:-30px;
-  right:0;
-
+  position: absolute;
+  bottom: -30px;
+  right: 0;
 }
 </style>

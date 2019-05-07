@@ -64,13 +64,6 @@ const store = {
         initTask(state, data) {
             state.allTask = data
         },
-        setTask(state, data) {
-            state.allTask.forEach((m, i) => {
-                if (m.relationId == data.taskMenuId) {
-                    m.taskList.push(data)
-                }
-            })
-        },
 
         editTask(state, data) {
             state.task = data
@@ -459,7 +452,6 @@ const store = {
             initEditTask(data.taskId).then(res => {
                 commit('editTask', res.data)
                 dispatch('init', data.projectId)
-                dispatch('initGroup', data.projectId)
             })
         },
         changeProperty({
