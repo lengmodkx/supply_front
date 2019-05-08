@@ -55,6 +55,14 @@ export function userlogin(data) {
     });
 }
 
+//获取用户登录时用于加密的字符串
+export function getEncrypStr() {
+    return fetch({
+        url: '/encryp_str',
+        method: "get"
+    });
+}
+
 //用户注册：
 export function userRegister(data) {
     return fetch({

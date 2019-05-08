@@ -50,8 +50,9 @@
 
 </template>
 <script>
-import { userlogin } from "@/axios/api";
+import { userlogin,getEncrypStr } from "@/axios/api";
 import { mapState, mapActions } from "vuex";
+import {Encrypt} from "@/utils/cryptoUtils";
 
 export default {
   data() {
@@ -71,7 +72,12 @@ export default {
     return {
       formValidate: {
         accountName: "",
-        password: ""
+        password: "",
+        encryption:""
+      },
+      userLoginInfo:{
+        accountName:"",
+        password:""
       },
       userInfo: null,
       ruleValidate: {
@@ -83,7 +89,9 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      key:"",
+      iv:""
     };
   },
   computed: {
@@ -92,12 +100,14 @@ export default {
   methods: {
     ...mapActions("user", ["updateUserInfo","updateUserId"]),
     login: function(name) {
+      this.userLoginInfo.accountName = this.formValidate.accountName
+      this.userLoginInfo.password = Encrypt(this.formValidate.password,this.key,this.iv)
       this.userInfo = this.formValidate;
 
       this.$refs[name].validate(valid => {
         if (valid) {
           //发请求的方法
-          userlogin(this.formValidate).then(res => {
+          userlogin(this.userLoginInfo).then(res => {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
@@ -115,6 +125,12 @@ export default {
         }
       });
     }
+  },
+  created(){
+    getEncrypStr().then(res => {
+      this.key = res.key
+      this.iv = res.iv
+    })
   }
 };
 </script>

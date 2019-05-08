@@ -145,7 +145,7 @@ export default {
       // 建立连接对象
       var url =
         process.env.NODE_ENV === "development"
-          ? "http://192.168.3.179:8090/webSocketServer"
+          ? "http://192.168.3.189:8090/webSocketServer"
           : "http://apitest.aldbim.com/api/webSocketServer";
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
