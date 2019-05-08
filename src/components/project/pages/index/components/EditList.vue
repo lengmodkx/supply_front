@@ -3,36 +3,36 @@
     <div v-if="task==null" style="width: 100%;height: 100%;display:flex;justify-content: center;align-items: center">
       <Loading></Loading>
     </div>
-
     <div class="task-detail" style="height:100%;position: relative" v-if="task!=null" @click="closeTag">
       <!--固定顶部-->
-      <div class="toolRight">
-        <Tooltip content="点个赞" placement="bottom-start">
+      <div slot="header">
+        <div class="toolRight">
+          <Tooltip content="点个赞" placement="bottom-start">
           <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
             <Icon type="md-thumbs-up" size="20" />
             <span class="zanNum" v-if="task.fabulousCount !== 0">{{task.fabulousCount}}</span>
           </span>
-        </Tooltip>
-        <span class="down">
+          </Tooltip>
+          <span class="down">
           <SingleTaskMenu :data="task"></SingleTaskMenu>
         </span>
-      </div>
-      <div class="headerTool">
-        <div class="toolLeft" v-if="task.parentId === '0'">
-          <span></span>
-          <span>{{task.project.projectName}} > </span>
-          <span class="proName">{{task.groupName}}</span>
-          <span> > </span>
-          <Dropdown trigger="click">
-            <span class="proName">{{task.menuName}}</span>
-          </Dropdown>
         </div>
-        <div class="toolLeft" v-if="task.parentTask">
-          <span></span>
-          <span>属于任务:{{task.parentTask.taskName}}</span>
+        <div class="headerTool">
+          <div class="toolLeft" v-if="task.parentId === '0'">
+            <span></span>
+            <span>{{task.project.projectName}} > </span>
+            <span class="proName">{{task.groupName}}</span>
+            <span> > </span>
+            <Dropdown trigger="click">
+              <span class="proName">{{task.menuName}}</span>
+            </Dropdown>
+          </div>
+          <div class="toolLeft" v-if="task.parentTask">
+            <span></span>
+            <span>属于任务:{{task.parentTask.taskName}}</span>
+          </div>
         </div>
       </div>
-
       <div class="Conbox">
         <div class="task_info done clearfix" :class="{done:task.taskStatus}">
           <Checkbox v-model="task.taskStatus" @on-change="updateTaskStatus(task.taskId,task.taskStatus)" class="checkbox"></Checkbox>
@@ -60,7 +60,7 @@
                 <span @click.stop="clearTime('开始')">&times;</span>
               </div>
             </DateTimePicker>
-            <span>-</span>
+            <span>&nbsp;-&nbsp;</span>
             <DateTimePicker @clear="clearTime('截止')" type="end" :min="task.startTime" @confirm="confirm2">
               <div class="init" v-if="!task.endTime">截止时间</div>
               <div class="setTime" v-if="task.endTime">

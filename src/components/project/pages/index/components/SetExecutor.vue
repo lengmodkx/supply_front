@@ -8,7 +8,7 @@
             <Icon @click.stop="deleteExecutor" type="ios-close" />
         </div>
       <div v-else>
-          <Icon type="ios-contact"  size="24" /><span style="margin-right: 10px">待认领</span>
+          <Icon type="ios-contact"  size="24" /><span style="margin-right: 15px;margin-left: 5px">待认领</span>
       </div>
 
     </slot>

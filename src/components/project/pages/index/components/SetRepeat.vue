@@ -7,7 +7,7 @@
               @on-click="itemClick">
       <slot :repeat="curRepeat">
         <Icon type="ios-color-filter-outline"
-              size="20"></Icon>
+              size="18"></Icon>
       </slot>
       <DropdownMenu slot="list"
                     class="aaaaaab">
