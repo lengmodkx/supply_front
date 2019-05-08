@@ -31,7 +31,7 @@ export function addPeople(data) {
         data: data
     });
 }
-// 初始化企业信息  查询信息
+// 初始化企业成员信息  查询信息
 export function initOrgMember(orgId, flag) {
     return fetch({
         url: `/organization/members/${orgId}`,
@@ -72,12 +72,67 @@ export function addBranchPeople(partmentId, data) {
         data:data
     });
 }
-
+// 更新部门 （更改部门名称）
+export function changeBranchNames(partmentId, data) {
+    return fetch({
+        url: `/partments/${partmentId}`,
+        method: "put",
+        data:data
+    });
+}
+// 删除部门
+export function deleteBranch(partmentId) {
+    return fetch({
+        url: `/partments/${partmentId}`,
+        method: "delete",
+    });
+}
+// 获取所有群组
+export function getGroups(orgId) {
+    return fetch({
+        url: `/organization_group/${orgId}`,
+        method: "get",
+    });
+}
 // 创建群组
 export function addGroup(orgId, data) {
     return fetch({
         url: `/organization_group/${orgId}`,
         method: "post",
         data:data
+    });
+}
+// 获取某个群组下的成员
+export function getGroupPeople(groupId) {
+    return fetch({
+        url: `/organization_group_member/${groupId}`,
+        method: "get",
+    });
+}
+// 添加群组成员
+export function addGroupPeople(groupId,memberId) {
+    return fetch({
+        url: `/organization_group_member/${groupId}`,
+        method: "post",
+        data: {
+            memberId:memberId
+        }
+    });
+}
+// 改变群组名称
+export function changeGroupsname(groupId, groupName) {
+    return fetch({
+        url: `/organization_group/${groupId}`,
+        method: "put",
+        params: {
+            groupName:groupName
+        }
+    });
+}
+// 删除群组
+export function deleteGroup(groupId) {
+    return fetch({
+        url: `/organization_group/${groupId}`,
+        method: "delete",
     });
 }

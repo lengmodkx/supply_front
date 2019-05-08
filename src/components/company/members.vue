@@ -5,8 +5,8 @@
                 <!--左侧筛选成员-->
                 <div class="member-left">
                     <Input class="search" search placeholder="搜索..." />
-                    <Tabs value="name1">
-                        <TabPane label="组织架构" name="name1">
+                    <Tabs value="组织架构" @on-click="clickTabs">
+                        <TabPane label="组织架构" name="组织架构">
                             <div class="zzjg">
                                 <h3>成员</h3>
                                 <div class="filter-member" @click="changeMemberType(item)"
@@ -15,7 +15,7 @@
                                 <h3 style="margin-top: 15px">部门</h3>
                                 <div class="branch-head">
                                     <Poptip v-model="branch" transfer>
-                                        <div class="branch"><Icon type="md-add-circle" />创建部门</div>
+                                        <div class="branch"><Icon @click="branch=false" type="md-add-circle" />创建部门</div>
                                         <div slot="content">
                                             <div class="branch-title">
                                                 <span></span>创建部门
@@ -27,33 +27,18 @@
                                     </Poptip>
                                     <div class="bsort"><Icon type="md-swap" />部门排序</div>
                                 </div>
-                                <div v-for="(item, n) in branchData" :key="item.partmentId">
-                                    <div :class="{checked:bumenChecked==item.partmentId}" class="yiji-bumen" @click="getBranchMember(item)">
-                                        {{item.partmentName}}
-                                        <Icon v-if="isdown" type="ios-arrow-dropdown" size="20" />
-                                        <Icon v-else @click="isdown=true" type="ios-arrow-dropup" size="20" />
-                                    </div>
-                                    <div class="erji-bumen"></div>
-                                </div>
+                                <branch @getBranchMember="getBranchMember" :branchData="branchData"></branch>
+
                             </div>
                         </TabPane>
-                        <TabPane label="企业群组" name="name2">
-                            <Poptip v-model="group" transfer>
-                                <div class="branch"><Icon type="md-add-circle" />创建群组</div>
-                                <div slot="content">
-                                    <div class="branch-title">
-                                        <span></span>创建群组
-                                        <Icon @click="group=false" type="md-close" size="20" />
-                                    </div>
-                                    <Input v-model="groupName" placeholder="群组名称" class="branch-name" />
-                                    <Button long type="info" :disabled="groupName==''" :loading="isCreateGroup" @click="createGroup">创建</Button>
-                                </div>
-                            </Poptip>
-                            <ul>
-                                <li class="group-list">
+                        <TabPane label="企业群组" name="企业群组">
+                            <div class="branch" @click="groupStep1=true;groupStep2=false"><Icon type="md-add-circle" />创建群组</div>
+                            <ul class="group-ul">
+                                <li :class="{'checked':nowGroup.id===item.groupId}" class="group-list"
+                                    v-for="(item, n) in groupData" :key="n" @click="changeNowGroup(item)">
                                     <Icon type="ios-contacts" />
-                                        <Tooltip style="margin-top: 5px" transfer content="Here is the prompt text">
-                                            <p class="w225"></p>
+                                        <Tooltip style="margin-top: 5px" transfer :content="item.groupName">
+                                            <p class="w225">{{item.groupName}}</p>
                                         </Tooltip>
                                 </li>
                             </ul>
@@ -61,7 +46,8 @@
                     </Tabs>
                 </div>
                 <!--右侧显示成员-->
-                <div class="member-right">
+                <!--组织架构显示-->
+                <div v-if="tabType==='组织架构'" class="member-right">
                     <header class="member-right-head">
                         <div style="font-size: 16px">{{memberType}} · {{peopleList.length?peopleList.length:'0'}}</div>
                         <div class="header-right">
@@ -75,11 +61,46 @@
                             </Poptip>
                             <!--创建子部门 按钮-->
                             <div v-if="nowType==='部门'" class="createZBM">
-                                <Icon type="md-add-circle" />创建子部门
+                                <Poptip v-model="sonBranch" transfer>
+                                    <Icon type="md-add-circle" />创建子部门
+                                    <div slot="content">
+                                        <div class="branch-title">
+                                            <span></span>创建子部门
+                                            <Icon @click="sonBranch=false" type="md-close" size="20" />
+                                        </div>
+                                        <Input v-model="sonBranchName" placeholder="子部门名称" class="branch-name" />
+                                        <p style="margin-bottom: 10px;color: gray;font-size: 14px">隶属于：{{nowBranch.name}}</p>
+                                        <Button long type="info" :loading="isCreateBranch" :disabled="sonBranchName==''" @click="createBranch('子部门')">创建</Button>
+                                    </div>
+                                </Poptip>
                             </div>
                             <!--部门 更多 按钮-->
                             <div v-if="nowType==='部门'" class="more-bumen-opearte">
-                                <Icon type="ios-more" />更多
+                                <Poptip v-model="branchMenu">
+                                    <Icon type="ios-more" />更多
+                                    <div slot="content">
+                                        <div class="branch-title">
+                                            <span><Icon @click="branchMenuTitle='部门菜单'" v-show="branchMenuTitle!=='部门菜单'" type="ios-arrow-back" size="20"/></span>
+                                            {{branchMenuTitle}}
+                                            <Icon @click="branchMenu=false" type="md-close" size="20" />
+                                        </div>
+                                        <div class="branch-menu-con">
+                                            <ul class="bmcd" v-show="branchMenuTitle==='部门菜单'">
+                                                <li @click="branchMenuTitle='编辑部门'">编辑部门</li>
+                                                <li style="color: #ff4f3e" @click="branchMenuTitle='删除部门'">删除部门</li>
+                                            </ul>
+                                            <div class="bjbm" v-show="branchMenuTitle==='编辑部门'">
+                                                <input type="text" v-model="nowBranch.name" >
+                                                <Button long type="info" :loading="isCreateBranch" @click="changeBranchName">保存</Button>
+                                            </div>
+                                            <div class="scbm" v-show="branchMenuTitle==='删除部门'">
+                                                <span>删除部门会同时删除其子部门，部门中的成员不会被移出企业。</span>
+                                                <Button long type="error" :loading="isCreateBranch" @click="deleteIt">确定</Button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </Poptip>
                             </div>
                         </div>
                     </header>
@@ -141,6 +162,56 @@
                         </div>
                     </div>
                 </div>
+                <!--企业群组显示-->
+                <div v-if="tabType==='企业群组'" class="member-right">
+                    <header class="member-right-head">
+                        <div style="font-size: 16px">{{nowGroup.name}} · {{groupPeople.length?groupPeople.length:'0'}}</div>
+                        <div  class="header-right">
+                            <!--添加成员 按钮-->
+                                <div class="branch" @click="showAddGroupPeople"><Icon type="md-add-circle" />添加成员</div>
+                            <!-- 更多 按钮-->
+                            <div class="more-bumen-opearte">
+                                <Poptip v-model="branchMenu">
+                                    <Icon type="ios-more" />更多
+                                    <div slot="content">
+                                        <div class="branch-title">
+                                            <span><Icon @click="branchMenuTitle='群组菜单'" v-show="branchMenuTitle!=='群组菜单'" type="ios-arrow-back" size="20"/></span>
+                                            {{branchMenuTitle}}
+                                            <Icon @click="branchMenu=false" type="md-close" size="20" />
+                                        </div>
+                                        <div class="branch-menu-con">
+                                            <ul class="bmcd" v-show="branchMenuTitle==='群组菜单'">
+                                                <li @click="branchMenuTitle='编辑群组'">编辑群组</li>
+                                                <li style="color: #ff4f3e" @click="branchMenuTitle='删除群组'">删除群组</li>
+                                            </ul>
+                                            <div class="bjbm" v-show="branchMenuTitle==='编辑群组'">
+                                                <input type="text" v-model="nowGroup.name" >
+                                                <Button long type="info" :loading="isCreateBranch" @click="changeGroupName">保存</Button>
+                                            </div>
+                                            <div class="scbm" v-show="branchMenuTitle==='删除群组'">
+                                                <span>您确定要删除当前群组吗？</span>
+                                                <Button long type="error" :loading="isCreateBranch" @click="deleteGroupOk">确定</Button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </Poptip>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="scroll-box">
+                        <Loading v-if="loading"></Loading>
+                        <ul>
+                            <li class="group-people" v-for="(item, index) in groupPeople" :key="index">
+                                <div class="group-people-con">
+                                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image" alt="">
+                                    <p>{{item.userName}}　{{item.isOwner?'（拥有者）':''}}</p>
+                                </div>
+                                <span>{{item.isOwner?'退出':'移除'}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <!--添加人员-->
@@ -151,12 +222,50 @@
             <addPeople @add="addPeople" v-if="showAddPeople"
                        :invitUsers="peopleList" :type="nowType" :partmentId="partmentId"></addPeople>
         </Modal>
+        <!--创建群组 框1 输入群组名称-->
+        <Modal v-model="groupStep1" width="360" class-name="vertical-center-modal">
+            <p slot="header" class="craete-group-head">
+               创建群组
+            </p>
+            <div class="craete-group-con">
+                <Input v-model="groupName" placeholder="请输入群组名称"  />
+            </div>
+            <div slot="footer">
+                <Button type="info" size="large" :disabled="!groupName" long @click="addGroupNext">下一步</Button>
+            </div>
+        </Modal>
+        <!--创建群组 框2 添加、选择人员-->
+        <Modal v-model="groupStep2" width="360" class-name="vertical-center-modal">
+            <p slot="header" class="craete-group-head">
+                <Icon v-if="!againAdd" type="ios-arrow-back" @click="groupStep2=false" />
+                选择企业成员
+            </p>
+            <div class="craete-group-con">
+                <Input search @on-search="searchOrgProple"  placeholder="搜索企业成员"  />
+                <Loading v-if="loading"></Loading>
+                <ul class="people-ul">
+                    <li v-for="(item, index) in allOrgPeople" :key="index" @click="checkedPeople(index)">
+                        <div>
+                            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.userEntity.image" alt="">
+                            <p>{{item.userEntity.userName}}</p>
+                        </div>
+                        <Icon v-show="item.isChecked" type="md-checkmark" />
+                    </li>
+                </ul>
+            </div>
+            <div slot="footer">
+                <Button type="info" :loading="isCreateBranch" size="large" long @click="createGroup">完成</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
 import addPeople from '@/components/public/addPeople'
-import {initOrgMember, createBranchs, getBranch, getBranchpeople} from '@/axios/companyApi'
+import branch from './branch'
+import {initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNames,
+        deleteBranch, addGroup, getGroups, getGroupPeople, addGroupPeople, changeGroupsname,
+        deleteGroup} from '@/axios/companyApi'
     export default {
         name: "members",
         data () {
@@ -164,7 +273,8 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople} from '@/axios/
                 branch: false,
                 memberType: '所有成员',
                 branchName: '',
-                group: false,
+                groupStep1: false,
+                groupStep2: false,
                 groupName: '',
                 showAddPeople: false,
                 peopleList: [],
@@ -176,28 +286,73 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople} from '@/axios/
                 branchData: [],
                 isdown: true,
                 nowType: '成员',
+                nowBranch:{
+                    id: '',
+                    name: ''
+                },
                 partmentId: '',
                 bumenChecked: '',
                 isCreateGroup: false,
+                sonBranchName: '',
+                sonBranch: false,
+                branchMenu: false,
+                branchMenuTitle: '部门菜单',
+                allOrgPeople: [],
+                groupData: [],
+                tabType: '组织架构',
+                nowGroup: {
+                    name: '',
+                    id: ''
+                },
+                groupPeople: [],
+                againAdd: false,
             }
         },
         mounted () {
             this.initMember()
             this.initBranch()
         },
-        components: {addPeople},
+        components: {addPeople, branch},
         methods: {
+            // tab切换
+            clickTabs (value) {
+                console.log(value)
+                if (value==='组织架构'){
+                    this.tabType='组织架构'
+                    this.branchMenuTitle='部门菜单'
+
+                } else if (value==='企业群组') {
+                    this.tabType='企业群组'
+                    this.branchMenuTitle='群组菜单'
+                }
+            },
             // 页面初始化
             initMember(){
+                // 获取成员信息
                 initOrgMember(localStorage.companyId).then(res => {
                     if (res.result){
                         if (res.data==='无数据'){
                             this.peopleList=[]
                         }else {
+                            res.data.forEach(i => {
+                                i.isChecked=false
+                            })
                             this.peopleList=res.data
+                           this.allOrgPeople=res.data
                         }
                     }
                     this.loading=false
+                })
+                // 获取群组信息
+                getGroups(localStorage.companyId).then(res => {
+                  if (res.result){
+                      this.groupData=res.data
+                      this.nowGroup.name=this.groupData[0].groupName
+                      this.nowGroup.id=this.groupData[0].groupId
+                      getGroupPeople(this.groupData[0].groupId).then(res => {
+                          this.groupPeople=res.data
+                      })
+                  }
                 })
             },
             // 显示添加人员匡
@@ -251,24 +406,36 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople} from '@/axios/
                 })
             },
             // 创建部门
-            createBranch () {
+            createBranch (v) {
                 this.isCreateBranch=true
-                let data={
-                    'partmentName': this.branchName
+                if (v==='子部门'){
+                    let data={
+                        'partmentName': this.nowBranch.name,
+                        'parentId': this.nowBranch.id
+                    }
+                    createBranchs(localStorage.companyId,data).then(res => {
+                        console.log(res)
+                        this.isCreateBranch=false
+                        this.sonBranch=false
+                        // this.branchData.push(res.data)
+                    })
+                } else {
+                    let data={
+                        'partmentName': this.branchName
+                    }
+                    createBranchs(localStorage.companyId,data).then(res => {
+                        console.log(res)
+                        this.isCreateBranch=false
+                        this.branch=false
+                        this.branchData.push(res.data)
+                    })
                 }
-                createBranchs(localStorage.companyId,data).then(res => {
-                    console.log(res)
-                    this.isCreateBranch=false
-                    this.branch=false
-                    this.branchData.push(res.data)
-                })
             },
             // 初始化部门信息
             initBranch() {
                 getBranch(localStorage.companyId).then(res => {
-                    if (res.result){
-                        this.branchData=res.data
-                    }
+                    console.log(res)
+                    this.branchData=res.data
                 })
             },
             // 获取某个部门下成员
@@ -278,11 +445,44 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople} from '@/axios/
                 this.partmentId=item.partmentId
                 this.bumenChecked=item.partmentId
                 this.memberType=item.partmentName
+                this.nowBranch.id=item.partmentId
+                this.nowBranch.name=item.partmentName
                 this.loading=true
                 getBranchpeople(item.partmentId).then(res => {
                     if (res.result){
                         this.peopleList=res.data
                         this.loading=false
+                    }
+                })
+            },
+            // 改变部门名称
+            changeBranchName () {
+                this.isCreateBranch=true
+                let data={
+                    'partmentName': this.nowBranch.name
+                }
+                changeBranchNames(this.nowBranch.id,data).then(res => {
+                    if (res.result){
+                        this.isCreateBranch=false
+                        this.$Message.success('修改成功');
+                        this.branchMenu=false
+                        this.memberType=this.nowBranch.name
+                        this.branchData.forEach((i,n) => {
+                            if (i.partmentId===this.nowBranch.id) {
+                                i.partmentName=this.nowBranch.name
+                            }
+                        })
+                    }
+                })
+            },
+            // 删除部门
+            deleteIt () {
+                this.isCreateBranch=true
+                deleteBranch(this.nowBranch.id).then(res => {
+                    if (res.result){
+                        this.$Message.success('删除成功');
+                        this.isCreateBranch=false
+                        this.$router.go(0)
                     }
                 })
             },
@@ -293,12 +493,115 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople} from '@/axios/
             removePeopleCancel(){
                 alert('取消')
             },
-            // 创建群组
             createGroup () {
-                this.isCreateGroup=true
+                this.isCreateBranch=true
+                if (this.againAdd) {
+                    // 添加群组成员
 
+                    // addGroupPeople()
+                } else {
+                    // 创建群组
+                    let ids = this.allOrgPeople.map(i => {
+                        if (i.isChecked){
+                            return i.userEntity.userId
+                        }
+                    }).join(',')
+                    let data={
+                        'groupName': this.groupName,
+                        'memberIds': ids
+                    }
+                    addGroup(localStorage.companyId, data).then(res => {
+                        if (res.result){
+                            this.isCreateBranch=false
+                            this.groupStep1=false
+                            this.groupStep2=false
+                            this.groupData.push(res.data)
+                        }
+                    })
+                }
             },
+            // 创建群组的下一步
+            addGroupNext () {
+                this.groupStep2=true
+                this.loading=true
+                initOrgMember(localStorage.companyId).then(res => {
+                    if (res.result){
+                        if (res.data==='无数据'){
+                            console.log('企业并没有成员')
+                        }else {
+                            res.data.forEach(i => {
+                                i.isChecked=false
+                            })
+                            this.allOrgPeople=res.data
+                            this.loading=false
+                            console.log(this.allOrgPeople)
+                        }
+                    }
+                })
+            },
+            // 选中成员
+            checkedPeople(n){
+                this.allOrgPeople[n].isChecked=!this.allOrgPeople[n].isChecked
+            },
+            // 搜索企业内成员  创建群组时使用
+            searchOrgProple() {},
+            // 点击某个群组
+            changeNowGroup (item) {
+                this.nowGroup.name=item.groupName
+                this.nowGroup.id=item.groupId
+                getGroupPeople(item.groupId).then(res => {
+                    this.groupPeople=res.data
+                })
+            },
+            // 点击群组的添加成员 按钮
+            showAddGroupPeople () {
+                this.groupStep2=true
+                this.againAdd=true
+                this.allOrgPeople.forEach((i,n) => {
+                    this.groupPeople.forEach(j => {
+                        if (i.groupId===j.groupId){
+                            this.allOrgPeople.splice(n,1)
+                        }
+                    })
+                })
+                console.log(this.allOrgPeople)
+            },
+            // 改变群组名称
+            changeGroupName () {
+                this.isCreateBranch=true
+                changeGroupsname(this.nowGroup.id, this.nowGroup.name).then(res => {
+                    this.groupData.forEach(i => {
+                        if (i.groupId===this.nowGroup.id) {
+                            i.groupName=this.nowGroup.name
+                        }
+                    })
+                    this.branchMenu=false
+                    this.$Message.success('修改成功');
+                    this.isCreateBranch=false
+                })
+            },
+            // 删除群组
+            deleteGroupOk () {
+                this.isCreateBranch=true
+                deleteGroup(this.nowGroup.id).then(res => {
+                    this.branchMenu=false
+                    this.$Message.success('删除成功');
+                    this.isCreateBranch=false
+                    this.groupData.forEach((i,n) => {
+                        if (i.groupId===this.nowGroup.id) {
+                            this.groupData.splice(n,1)
+                        }
+                    })
+                    if (this.groupData.length){
+                        this.changeNowGroup(this.groupData[0])
+                    }else {
+                        this.nowGroup.name=''
+                        this.nowGroup.id=''
+                        this.groupPeople= []
+                    }
 
+                })
+            },
         }
     }
 </script>

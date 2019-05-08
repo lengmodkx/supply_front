@@ -34,9 +34,8 @@
 
       //tasks
       logTaskUpdate (id, mode, task) {
-        debugger
-        let text = (task && task.text ? ` (${task.text})`: '')
-        let message = `Task ${mode}: ${id} ${text}`
+        console.log(11111111111111111,task)
+
       },
 
       //link

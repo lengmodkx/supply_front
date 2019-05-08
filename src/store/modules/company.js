@@ -7,12 +7,16 @@ const  store ={
     mutations: {
         initCompany(state, data){
             state.companyList=data
+            if (data[0]){
+                state.companyList=data
+            } else {
+                state.companyList=[]
+            }
         }
     },
     actions: {
         initCompany({commit}){
             getAllOrg().then(res => {
-                console.log(res)
                 commit('initCompany', res.data)
             })
         }

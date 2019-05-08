@@ -14,6 +14,7 @@ export function initGantt(projectId) {
         method: 'get',
     })
 }
+// 在甘特图中 更新项目的开始结束时间
 // 所有分享
 export function shares(projectId) {
     return $get('/shares', {
