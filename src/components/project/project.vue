@@ -35,7 +35,7 @@ export default {
       activeHeaderTag: -1
     };
   },
-  created() {
+  mounted() {
     this.initSocket(this.$route.params.id);
   },
   methods: {
@@ -64,8 +64,8 @@ export default {
       // 建立连接对象
       var url =
         process.env.NODE_ENV === "development"
-          ? process.env.VUE_APP_URL
-          : process.env.VUE_APP_URL;
+          ? process.env.VUE_APP_SOCKET
+          : process.env.VUE_APP_SOCKET;
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
