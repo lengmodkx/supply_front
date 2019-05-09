@@ -8,7 +8,7 @@
         </FormItem>
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
-          <img src="/api/captcha.html" class="captcha-img">
+          <img src="/api/captcha" class="captcha-img">
         </FormItem>
         <FormItem prop="code">
           <Input type="text" size="large" placeholder="请输入短信验证码" v-model="formValidate.code" clearable class="captcha-input" />
