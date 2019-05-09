@@ -76,7 +76,7 @@ export default {
             var result = JSON.parse(msg.body);
             switch (result.type) {
               case "A1": //创建任务
-                this.$store.dispatch("task/changeTask", result.object);
+                this.$store.dispatch("task/init",result.object)
                 break;
               case "A2":
                 this.$store.dispatch("task/deleteTask", result.object);
