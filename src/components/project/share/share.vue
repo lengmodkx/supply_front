@@ -58,10 +58,6 @@
                     <span>{{this.share.title}}</span>
                   </div>
                   <div class="right-icons">
-                    <Tooltip content="复制分享链接" placement="bottom">
-                      <Icon type="ios-link" />
-                    </Tooltip>
-
                     <Tooltip content="点个赞" placement="bottom">
                       <span class="zan" :class="{zan_blue:zan}">
                         <Icon type="md-thumbs-up"></Icon>

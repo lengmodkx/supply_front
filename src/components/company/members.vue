@@ -25,7 +25,7 @@
                                             <Button long type="info" :loading="isCreateBranch" :disabled="branchName==''" @click="createBranch">创建</Button>
                                         </div>
                                     </Poptip>
-                                    <div class="bsort"><Icon type="md-swap" />部门排序</div>
+                                    <!--<div class="bsort"><Icon type="md-swap" />部门排序</div>-->
                                 </div>
                                 <branch @getBranchMember="getBranchMember" :branchData="branchData"></branch>
 
@@ -410,14 +410,14 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNa
                 this.isCreateBranch=true
                 if (v==='子部门'){
                     let data={
-                        'partmentName': this.nowBranch.name,
+                        'partmentName': this.sonBranchName,
                         'parentId': this.nowBranch.id
                     }
+                    console.log()
                     createBranchs(localStorage.companyId,data).then(res => {
                         console.log(res)
                         this.isCreateBranch=false
                         this.sonBranch=false
-                        // this.branchData.push(res.data)
                     })
                 } else {
                     let data={
@@ -436,6 +436,9 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNa
                 getBranch(localStorage.companyId).then(res => {
                     console.log(res)
                     this.branchData=res.data
+                    this.branchData.forEach(i => {
+                        i.isdown=true
+                    })
                 })
             },
             // 获取某个部门下成员
@@ -449,6 +452,7 @@ import {initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNa
                 this.nowBranch.name=item.partmentName
                 this.loading=true
                 getBranchpeople(item.partmentId).then(res => {
+                    console.log(res)
                     if (res.result){
                         this.peopleList=res.data
                         this.loading=false

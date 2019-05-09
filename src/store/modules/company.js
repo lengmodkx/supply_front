@@ -2,7 +2,8 @@ import {getAllOrg} from '@/axios/companyApi'
 const  store ={
     namespaced: true,
     state: {
-        companyList: []
+        companyList: [],
+        branchId: ''
     },
     mutations: {
         initCompany(state, data){
@@ -12,6 +13,9 @@ const  store ={
             } else {
                 state.companyList=[]
             }
+        },
+        setBranchId (state, data) {
+            state.branchId=data
         }
     },
     actions: {

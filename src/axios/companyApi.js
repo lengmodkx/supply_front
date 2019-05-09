@@ -64,6 +64,13 @@ export function getBranchpeople(partmentId) {
         method: "get",
     });
 }
+// 获取子部门
+export function getSonBranchs(partmentId) {
+    return fetch({
+        url: `/partments/${partmentId}/sub`,
+        method: "get",
+    });
+}
 // 添加部门成员
 export function addBranchPeople(partmentId, data) {
     return fetch({
