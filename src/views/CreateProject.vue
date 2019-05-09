@@ -128,7 +128,8 @@ export default {
 .create-project-time {
   display: flex;
   justify-content: space-between;
-  margin: 0px 4px;
+  width: 320px;
+  margin: 15px auto;
 }
 </style>
 
