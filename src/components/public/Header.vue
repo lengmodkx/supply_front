@@ -1,20 +1,20 @@
 <template>
   <header class="header" id="header">
-      <Poptip v-model="mainMenu">
-          <Icon class="app-icon" type="md-apps" />
-          <div slot="content">
-              <ul class="app-con">
-                  <router-link tag="li" to="/home" class="app-li" >
-                      <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
-                      <p>主页</p>
-                  </router-link>
-                  <router-link tag="li" to="/members" class="app-li" >
-                      <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
-                      <p>成员</p>
-                  </router-link>
-              </ul>
-          </div>
-      </Poptip>
+    <Poptip v-model="mainMenu">
+      <Icon class="app-icon" type="md-apps" />
+      <div slot="content">
+        <ul class="app-con">
+          <router-link tag="li" to="/home" class="app-li">
+            <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
+            <p>主页</p>
+          </router-link>
+          <router-link tag="li" to="/members" class="app-li">
+            <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
+            <p>成员</p>
+          </router-link>
+        </ul>
+      </div>
+    </Poptip>
     <div class="logo">
       <img src="../../assets/images/logo.png" alt="">
       <Icon type="code" @click="openMenu"></Icon>
@@ -41,7 +41,8 @@
           <ul class="org">
             <div class="createdOrg" @click="addOrgModal=true;popVisible=false;">创建企业</div>
             <li class="addOrgPro" v-for="(item, index) in companyList" :key="index">
-                {{item.organizationName}}<Icon type="md-checkmark" />
+              {{item.organizationName}}
+              <Icon type="md-checkmark" />
             </li>
           </ul>
           <ul class="admin">
@@ -80,7 +81,7 @@
 <script>
 // import Mine from './Mine'
 import CreateOrg from "./common/CreateOrg";
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from "vuex";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -136,17 +137,17 @@ export default {
   },
   mounted() {
     this.initSocket(localStorage.userId);
-    this.initCompany()
+    this.initCompany();
   },
   methods: {
-    ...mapState('user', ['mineRouter', 'users']),
-      ...mapActions("company", ["initCompany"]),
+    ...mapState("user", ["mineRouter", "users"]),
+    ...mapActions("company", ["initCompany"]),
     initSocket(id) {
       // 建立连接对象
       var url =
         process.env.NODE_ENV === "development"
-          ? "http://192.168.3.189:8090/webSocketServer"
-          : "http://apitest.aldbim.com/api/webSocketServer";
+          ? process.env.VUE_APP_URL
+          : process.env.VUE_APP_URL;
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
@@ -209,8 +210,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('news', ['newsCount']),
-    ...mapState('company', ['companyList'])
+    ...mapState("news", ["newsCount"]),
+    ...mapState("company", ["companyList"])
   },
   created() {
     this.getNewsCount();
