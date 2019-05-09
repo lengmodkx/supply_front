@@ -8,7 +8,7 @@
                     <div id="chart1" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
-                    <div  @click="goDetail(2,'期间完成的任务')" class="charts-title">期间完成的任务</div>
+                    <div  @click="goDetail(2,'近期完成的任务')" class="charts-title">近期完成的任务</div>
                     <div id="chart2" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
