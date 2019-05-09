@@ -69,6 +69,7 @@ export default {
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
+      //this.stompClient.debug = function(str) {};
       this.stompClient.connect(
         {},
         frame => {
@@ -76,7 +77,7 @@ export default {
             var result = JSON.parse(msg.body);
             switch (result.type) {
               case "A1": //创建任务
-                this.$store.dispatch("task/init",result.object)
+                this.$store.dispatch("task/init", result.object);
                 break;
               case "A2":
                 this.$store.dispatch("task/deleteTask", result.object);
