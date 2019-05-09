@@ -138,8 +138,8 @@
                     case 1 :
                         this.show_finish = true,
                         this.time_scope = false,
-                        this.hide_div=true;
-                        this.show_div=false;
+                        //this.hide_div=true;
+                        //this.show_div=false;
                         getPieSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.data1 = res.pieData;
@@ -151,9 +151,10 @@
                     case 2:
                             this.show_finish = true,
                             this.time_scope = false,
-                            this.hide_div=true;
+                            //this.hide_div=true;
                         getHistogramSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
-                            this.columns1   =  res.titleList
+                            this.columns1   =  res.titleList;
+                            this.data1=res.hisResultlist;
                             this.executorData = res.executor
                             this.peopleList = res.taskGroup;
                             this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
@@ -171,7 +172,7 @@
                     case 4 :
                             this.show_finish = false,
                             this.time_scope = true,
-                            this.hide_div=true;
+                            //this.hide_div=true;
                         getBurnoutSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.executorData = res.executor
@@ -183,7 +184,7 @@
                     case 5:
                             this.show_finish = false,
                             this.time_scope = true,
-                            this.hide_div=true;
+                            //this.hide_div=true;
                         getAddSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.executorData = res.executor
