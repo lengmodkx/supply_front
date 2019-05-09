@@ -72,12 +72,7 @@ export default {
     return {
       formValidate: {
         accountName: "",
-        password: "",
-        encryption:""
-      },
-      userLoginInfo:{
-        accountName:"",
-        password:""
+        password: ""
       },
       userInfo: null,
       ruleValidate: {
@@ -100,14 +95,12 @@ export default {
   methods: {
     ...mapActions("user", ["updateUserInfo","updateUserId"]),
     login: function(name) {
-      this.userLoginInfo.accountName = this.formValidate.accountName
-      this.userLoginInfo.password = Encrypt(this.formValidate.password,this.key,this.iv)
       this.userInfo = this.formValidate;
 
       this.$refs[name].validate(valid => {
         if (valid) {
           //发请求的方法
-          userlogin(this.userLoginInfo).then(res => {
+          userlogin(this.formValidate).then(res => {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
@@ -125,12 +118,6 @@ export default {
         }
       });
     }
-  },
-  created(){
-    getEncrypStr().then(res => {
-      this.key = res.key
-      this.iv = res.iv
-    })
   }
 };
 </script>
