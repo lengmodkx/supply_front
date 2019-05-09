@@ -14,7 +14,7 @@
                             <div class="chart3-list" v-for="(item,index) in countData" :class="{checked:nowChecked==index}" :key="index" @click="checkOne(item, index)">
                                 <p>{{item.value}}</p>
                                 <div class="num">{{item.label}}</div>
-                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
+                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="item.percent" hide-info :stroke-width=5 />
                             </div>
                         </div>
                     </div>

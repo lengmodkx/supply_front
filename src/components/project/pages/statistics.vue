@@ -18,7 +18,7 @@
                             <div class="chart3-list" v-for="item in chartData4">
                                 <p>{{item.value }}</p>
                                 <div class="num">{{item.label }}</div>
-                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
+                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="item.percent" hide-info :stroke-width=5 />
                             </div>
                         </div>
                     </div>
