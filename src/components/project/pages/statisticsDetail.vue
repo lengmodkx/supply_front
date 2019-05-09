@@ -107,8 +107,8 @@
             // 点击表格3中的某一个
             checkOne(item, index) {
                 if (index!==0) {
-                    this.nowChecked=item.value;
-                    getCountTable(this.id, this.nowChecked,JSON.stringify(this.StatisticsDTO)).then(resp=>{
+                    this.nowChecked=index;
+                    getCountTable(this.id, item.value,JSON.stringify(this.StatisticsDTO)).then(resp=>{
                         this.columns1 = resp.titleList
                         this.data1 = resp.sticsResultList;
                         this.executorData = resp.executor

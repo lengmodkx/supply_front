@@ -66,7 +66,6 @@
                     this.chartData3 = res.staticHistogram.dataArray
                     this.chartData4 = res.countData;
 
-                    console.log("总任务数="+this.chartData4)
                     this.chartEveryDate1 = res.statisticsBurnout.everyDate
                     this.chartTrueTask = res.statisticsBurnout.trueTask
                     this.chartIdealTask = res.statisticsBurnout.idealTask
