@@ -81,7 +81,7 @@
 <script>
 // import Mine from './Mine'
 import CreateOrg from "./common/CreateOrg";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 export default {
@@ -96,7 +96,6 @@ export default {
       popVisible: false,
       addOrgModal: false,
       logoMenu: "",
-      activeHeaderTag: -1,
       active: false,
       mainMenu: false,
       src: localStorage.userImg,
@@ -142,6 +141,7 @@ export default {
   methods: {
     ...mapState("user", ["mineRouter", "users"]),
     ...mapActions("company", ["initCompany"]),
+    ...mapMutations('app',['changeHeaderTag']),
     initSocket(id) {
       // 建立连接对象
       var url =
@@ -186,10 +186,7 @@ export default {
       this.$store.dispatch("news/getNewsCount");
     },
     clickHeaderTag(id) {
-      this.activeHeaderTag =
-        id == this.activeHeaderTag
-          ? (this.activeHeaderTag = -1)
-          : (this.activeHeaderTag = id);
+      this.changeHeaderTag(id)
       if (
         this.$route.fullPath.includes("home") ||
         this.$route.fullPath.includes("project")
@@ -210,6 +207,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('app', ['activeHeaderTag']),
     ...mapState("news", ["newsCount"]),
     ...mapState("company", ["companyList"])
   },

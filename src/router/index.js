@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from '../store/index'
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Forget from "../views/Forget.vue";
@@ -16,7 +17,7 @@ import members from "../components/company/members"
 const _import = file => () => import("@/components/" + file + ".vue");
 Vue.use(Router);
 
-export default new Router({
+const router=new Router({
   mode: 'history',
   routes: [{
       path: "/members", // 成员
@@ -141,3 +142,15 @@ export default new Router({
     }
   ]
 });
+router.afterEach((to, from) => {
+  if (to.fullPath.includes('/calendar')) {
+    store.commit('app/changeHeaderTag',2)
+  }else if (to.fullPath.includes('/mine')) {
+    store.commit('app/changeHeaderTag',1)
+  }else if (to.fullPath.includes('/message')) {
+    store.commit('app/changeHeaderTag',3)
+  }else {
+    store.commit('app/changeHeaderTag',-1)
+  }
+})
+export default router
