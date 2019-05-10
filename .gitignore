@@ -2,7 +2,7 @@
 node_modules
 /dist
 /dist.zip
-
+/vue.config.js
 # local env files
 .env.local
 .env.*.local
