@@ -118,8 +118,8 @@ export default {
     },
     
     checkUser (index) {
-      if (this.memberList[index].userId == this.curUserId) return//当前用户不可点击
-      this.$set(this.memberList[index], 'checked', !this.memberList[index].checked)
+      //if (this.memberList[index].userId == this.curUserId) return//当前用户不可点击
+      this.memberList[index].checked=!this.memberList[index].checked
     },
     save () {
 
@@ -131,29 +131,26 @@ export default {
       })
       let detailList=list1.join(',')
 
-      console.log(detailList)
-      this.$emit('save', detailList)
+      // this.$emit('save', detailList)
       this.visible=false
-      // let all = this.memberList.find(v => v.userId == -1)
-      // let allChecked = all.checked
-      // this.memberList.map(v => {
-      //   if ((allChecked || v.checked) && v.userId != -1) {
-      //     list.push(v.userId)
-      //     detailList.push(v)
-      //   }
-      // })
-      // this.$nextTick(_ => {
-      //   this.visible = false
-      //   this.$emit('save', list,detailList)
-      //   this.searchvalue = ''
-      //   // Object.assign(this.$data, this.$options.data())
-      // })
+      let peopleData=this.memberList.filter(v => {
+        if (v.checked) {
+          return v
+        }
+      })
+      this.$nextTick(_ => {
+        this.visible = false
+        this.$emit('save', detailList, peopleData)
+        this.searchvalue = ''
+        // Object.assign(this.$data, this.$options.data())
+      })
     },
     popShow () {
       this.memberList.forEach(v => {
         // v.checked = this.checkedList.indexOf(v.id) >= 0
-        this.$set(v, 'checked', this.checkedList.indexOf(v.userId) >= 0)
+        this.$set(v, 'checked', this.checkedList.indexOf(v.userId) >= 0?true:false)
       })
+      console.log(this.memberList)
     }
   },
   mounted () {

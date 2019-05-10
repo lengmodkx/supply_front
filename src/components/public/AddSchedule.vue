@@ -45,7 +45,7 @@
         <Icon type="checkmark-circled"></Icon> 所有人都有时间
       </div> -->
       <div class="participant">
-        <p class="title">参与者 · {{membeiList.length}}</p>
+        <p class="title">参与者 · {{membeiList.length?membeiList.length:0}}</p>
         <div class="cyz">
           <div class="member-avatar fl"
                v-for="(item,index) in membeiList"
@@ -67,7 +67,7 @@
 
           </div>
           <InvolveMember ref="involveMember"
-                         :checkedList="[]"
+                         :checkedList="membeiList"
                          :projectId="id"
                          @save="saveInvolveMember">
           </InvolveMember>
@@ -153,8 +153,9 @@ export default {
   methods: {
     ...mapActions("schedule", ['init']),
     saveInvolveMember(dataList, list){
-      this.memberIds=dataList.split(",")
+      this.memberIds=dataList
       this.membeiList=list
+      console.log(dataList, this.membeiList)
     },
     deleteInvolve(index){
       this.membeiList.splice(index,1)
@@ -316,9 +317,9 @@ export default {
     img {
       width: 24px;
       height: 24px;
-      float: left;
       border-radius: 50%;
-      margin-right: 10px;
+      margin-right: 0;
+      float: none;
     }
   }
   .direct {

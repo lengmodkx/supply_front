@@ -14,7 +14,7 @@
                             <div class="chart3-list" v-for="(item,index) in countData" :class="{checked:nowChecked==index}" :key="index" @click="checkOne(item, index)">
                                 <p>{{item.value}}</p>
                                 <div class="num">{{item.label}}</div>
-                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
+                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="item.percent" hide-info :stroke-width=5 />
                             </div>
                         </div>
                     </div>
@@ -107,8 +107,8 @@
             // 点击表格3中的某一个
             checkOne(item, index) {
                 if (index!==0) {
-                    this.nowChecked=item.value;
-                    getCountTable(this.id, this.nowChecked,JSON.stringify(this.StatisticsDTO)).then(resp=>{
+                    this.nowChecked=index;
+                    getCountTable(this.id, item.value,JSON.stringify(this.StatisticsDTO)).then(resp=>{
                         this.columns1 = resp.titleList
                         this.data1 = resp.sticsResultList;
                         this.executorData = resp.executor
@@ -138,8 +138,8 @@
                     case 1 :
                         this.show_finish = true,
                         this.time_scope = false,
-                        this.hide_div=true;
-                        this.show_div=false;
+                        //this.hide_div=true;
+                        //this.show_div=false;
                         getPieSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.data1 = res.pieData;
@@ -151,9 +151,10 @@
                     case 2:
                             this.show_finish = true,
                             this.time_scope = false,
-                            this.hide_div=true;
+                            //this.hide_div=true;
                         getHistogramSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
-                            this.columns1   =  res.titleList
+                            this.columns1   =  res.titleList;
+                            this.data1=res.hisResultlist;
                             this.executorData = res.executor
                             this.peopleList = res.taskGroup;
                             this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
@@ -171,7 +172,7 @@
                     case 4 :
                             this.show_finish = false,
                             this.time_scope = true,
-                            this.hide_div=true;
+                            //this.hide_div=true;
                         getBurnoutSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.executorData = res.executor
@@ -183,7 +184,7 @@
                     case 5:
                             this.show_finish = false,
                             this.time_scope = true,
-                            this.hide_div=true;
+                            //this.hide_div=true;
                         getAddSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res => {
                             this.columns1 = res.titleList
                             this.executorData = res.executor

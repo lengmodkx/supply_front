@@ -8,7 +8,7 @@
                     <div id="chart1" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
-                    <div  @click="goDetail(2,'期间完成的任务')" class="charts-title">期间完成的任务</div>
+                    <div  @click="goDetail(2,'近期完成的任务')" class="charts-title">近期完成的任务</div>
                     <div id="chart2" class="charts-con"></div>
                 </div>
                 <div class="charts-lsit">
@@ -18,7 +18,7 @@
                             <div class="chart3-list" v-for="item in chartData4">
                                 <p>{{item.value }}</p>
                                 <div class="num">{{item.label }}</div>
-                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="75" hide-info :stroke-width=5 />
+                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="item.percent" hide-info :stroke-width=5 />
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,6 @@
                     this.chartData3 = res.staticHistogram.dataArray
                     this.chartData4 = res.countData;
 
-                    console.log("总任务数="+this.chartData4)
                     this.chartEveryDate1 = res.statisticsBurnout.everyDate
                     this.chartTrueTask = res.statisticsBurnout.trueTask
                     this.chartIdealTask = res.statisticsBurnout.idealTask
