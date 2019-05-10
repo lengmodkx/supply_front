@@ -23,31 +23,34 @@
         <Icon type="ios-arrow-down" size="18" @click="showModal1(user.userId,$event)"/>
       </li>
     </ul>-->
-    <Collapse v-model="value" accordion>
-      <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
-        <div class="member-item clearfix">
-          <div class="avatar">
-            <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
-          </div>
-          <div class="memberInfo">
-            <p class="uname">{{user.memberName}}</p>
-            <!-- <p class="email">{{user.email}}</p> -->
-          </div>
-          <Icon type="ios-arrow-down" size="18" />
-        </div>
-        <div slot="content">
-          <div class="user-set">
-            <p>{{user.memberLabel==1?'管理员':'成员'}}</p>
-            <Icon type="md-checkmark" size="16" />
-          </div>
-          <div style="color:red;height:30px;line-height:30px;cursor:pointer;" v-show="user.memberLabel!=1">
-            <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.memberId)">
-              <p>移除成员</p>
-            </Poptip>
-          </div>
-        </div>
-      </Panel>
-    </Collapse>
+    <div class="userBox">
+        <Collapse v-model="value" accordion>
+              <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
+                <div class="member-item clearfix">
+                  <div class="avatar">
+                    <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
+                  </div>
+                  <div class="memberInfo">
+                    <p class="uname">{{user.memberName}}</p>
+                    <!-- <p class="email">{{user.email}}</p> -->
+                  </div>
+                  <Icon type="ios-arrow-down" size="18" />
+                </div>
+                <div slot="content">
+                  <div class="user-set">
+                    <p>{{user.memberLabel==1?'管理员':'成员'}}</p>
+                    <Icon type="md-checkmark" size="16" />
+                  </div>
+                  <div style="color:red;height:30px;line-height:30px;cursor:pointer;" v-show="user.memberLabel!=1">
+                    <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.memberId)">
+                      <p>移除成员</p>
+                    </Poptip>
+                  </div>
+                </div>
+              </Panel>
+            </Collapse>
+    </div>
+   
 
     <Modal v-model="modal" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
@@ -277,6 +280,12 @@ export default {
 .active {
   right: 0px;
 }
+.userBox{
+  width: 320px;
+  padding-top: 5px;
+  margin: 0px auto;
+}
+
 
 .invit-user {
   display: flex;
