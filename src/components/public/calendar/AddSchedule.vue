@@ -104,7 +104,7 @@ import userList from "@/components/resource/userList.vue";
 import {mapActions} from 'vuex'
 export default {
   name: "",
-  props:['projectTypes', 'value'],
+  props:['projectTypes', 'value','date'],
   components: { userList },
   data() {
     return {
@@ -178,25 +178,29 @@ export default {
       console.log("<<<<<<<<<<", this.modal);
     },
     clone() {
-      this.$emit("input", false);
+      this.$emit("rcok", false);
     },
     addSchedules() {
+      if (!this.projectType){
+        this.$Message.error("请选择项目");
+        return false
+      }
       this.loading = true;
       let data = {
         projectId: this.projectType,
         scheduleName: this.title,
         startTime: this.datetime[0]
           ? this.datetime[0].getTime().toString()
-          : new Date().getTime().toString(),
+          : this.date.toString(),
         endTime: this.datetime[1]
           ? this.datetime[1].getTime().toString()
-          : new Date().getTime().toString(),
+          : this.date.toString(),
         repeat: this.repetition_data,
         remind: this.remind_data,
         memberIds: this.memberIds.join(","),
         privacy: this.locked ? "1" : "0"
       };
-      console.log(this.datetime);
+      console.log(this.data);
       addSchedule(data)
         .then(res => {
           console.log(res);
