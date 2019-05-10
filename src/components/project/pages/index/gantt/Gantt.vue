@@ -113,8 +113,8 @@
               text: item.text,
               user: item.user,
               type: item.type,
-              start_date: new Date(item.start_date),
-              end_date: new Date(item.end_date+(24*60*60*1000-1000)),
+              start_date:item.start_date ? new Date(item.start_date):new Date().getTime(),
+              end_date: item.start_date ? new Date(item.end_date+(24*60*60*1000-1000)):new Date().getTime(),
               parent:item.parent,
               open:item.open ,
               progress:0

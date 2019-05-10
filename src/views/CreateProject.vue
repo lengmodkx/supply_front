@@ -135,10 +135,5 @@ export default {
 .create-project-time  .ivu-date-picker{
   width:150px !important;
 }
-.create-project-time  .ivu-input-icon{
-    
-    height: 40px !important;
-    line-height: 40px !important;
-}
 </style>
 
