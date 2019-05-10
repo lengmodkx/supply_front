@@ -112,6 +112,7 @@ export default {
   }
   /deep/.ivu-input {
     height: 40px !important;
+    line-height: 30px;
     font-size: 14px;
   }
   .inputbox {
@@ -130,6 +131,14 @@ export default {
   justify-content: space-between;
   width: 320px;
   margin: 15px auto;
+}
+.create-project-time  .ivu-date-picker{
+  width:150px !important;
+}
+.create-project-time  .ivu-input-icon{
+    
+    height: 40px !important;
+    line-height: 40px !important;
 }
 </style>
 
