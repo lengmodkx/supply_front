@@ -5,19 +5,19 @@
         </header>
         <div class="calendar-con">
             <div class="left-filter">
-                <p>选择要查看的人员</p>
+                <p>要查看的人员</p>
                 <div class="member-list">
-                    <img src="" alt="">
-                    <span>名字</span>
+                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+img" alt="">
+                    <span>{{name}}</span>
                     <Icon type="md-checkmark" size="20" />
                 </div>
             </div>
             <full-calendar
                     :config="config"
                     :events="fcEvents"
-            @changeMonth="changeMonths"
-            @eventClick="clickEvent"
-            @dayClick="clickDay">
+                    @event-render="eventRender"
+            @day-click="clickDay"
+            @event-selected="eventClick">
             </full-calendar>
         </div>
         <ul class="create" v-show="showCreate" :style="{left:left,top:top}">
@@ -33,57 +33,62 @@
         <Modal v-model="creatTask" :footer-hide=true title="创建任务" width="360">
             <div class="what-task">
                 <span>请选择项目：</span>
-                <Select v-model="project" style="width:300px">
+                <Select v-model="project" style="width:300px" >
                     <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </div>
             <textarea class="taskInput" v-model="taskTitle" type="text" placeholder="任务标题"></textarea>
-            <Button type="info" long>创建</Button>
+            <Button type="info" :loading="btnLoading" long @click="createTask">创建</Button>
         </Modal>
         <!--创建日程-->
-        <AddSchedule :projectTypes="projectTypes" :value="createRc"></AddSchedule>
+        <AddSchedule :projectTypes="projectTypes" :value="createRc" :date="clickTime" @rcok="rcok"></AddSchedule>
+        <!-- 编辑任务框 -->
+        <Modal v-model="showditTask" class="myModal">
+            <my-modal v-if="showditTask"></my-modal>
+        </Modal>
+        <!--编辑日程框-->
+        <Modal v-model="editrc" :footer-hide='true'>
+            <editRicheng v-if="editrc"></editRicheng>
+        </Modal>
     </div>
 </template>
 
 <script>
+    import 'fullcalendar/dist/fullcalendar.css'
 import AddSchedule from './calendar/AddSchedule'
-import {getProjectList} from '@/axios/api'
+import myModal from "@/components/project/pages/index/components/EditList";
+import editRicheng from "@/components/public/common/EditRicheng"
+import {getCalendar} from '@/axios/api2'
+import {getProjectList, addTask} from '@/axios/api'
+import {mapMutations, mapActions} from 'vuex'
 export default {
     name: "calendar",
-    components: {AddSchedule},
+    components: {AddSchedule, myModal, editRicheng},
     data() {
         return {
             showCreate: false,
+            img: localStorage.userImg,
+            name: localStorage.userName,
             left:0,
             top:0,
             creatTask: false,
             createRc: false,
+            clickTime: '',
             projectId: '',
             project: '',
             taskTitle: '',
             projectTypes: [],
             loading: false,
-            projectList: [
-                {
-                    value: '项目a',
-                    label: '项目a'
-                },
-            ],
-            fcEvents:[
-                {
-                    title : '郭靖的病假',
-                    start : '2019-04-16',
-                    end : '2019-04-17'
-                },
-                {
-                    title : '郭靖的任务',
-                    start : '2019-04-01',
-                    end : '2019-04-17'
-                }
-            ],
+            projectList: [],
+            fcEvents:[],
+            btnLoading: false,
+            showditTask: false,
+            editrc: false,
             config: {
                 locale: 'zh-cn',
                 firstDay:'1',
+                defaultView: 'month',
+                height: 'auto',
                 header: {
                     left: 'prev, next, today',
                     center: 'title',
@@ -92,27 +97,96 @@ export default {
             }
         }
     },
+    mounted () {
+        getCalendar(localStorage.userId).then(res => {
+           if (res.result){
+               let schedulesData=res.data.schedules
+               let tasksData=res.data.tasks
+               schedulesData.forEach((i,n) => {
+                   this.fcEvents.push({
+                       'title': '<img class="img20" src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+localStorage.userImg+'" />'+i.scheduleName,
+                       'start': this.getTime(i.startTime),
+                       'end': this.getTime(i.endTime),
+                       'id': i.scheduleId,
+                       'type': '日程'
+                   })
+               })
+               tasksData.forEach(i => {
+                   this.fcEvents.push({
+                       'title': '<img class="img20" src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+i.executorImg+'" />'+i.taskName,
+                       'start': this.getTime(i.startTime),
+                       'end': this.getTime(i.endTime),
+                       'id': i.taskId,
+                       'type': '任务'
+                   })
+               })
+           }
+        })
+    },
     methods: {
-        changeMonths(start, end, current){
-            console.log('start:',start)
-            console.log('end:',end)
-            console.log('current:',current)
+        ...mapMutations('task', ['setTaskId']),
+        ...mapActions("schedule", ['getScheduleById']),
+        eventRender(event,element) {
+            element.html(event.title);
         },
-        clickEvent(event, jsEvent, pos){
-            console.log('event:',event)
-            console.log('jsEvent:',jsEvent)
-            console.log('pos:',pos)
+        getTime (time) {
+            if (time){
+                let year =new Date(time).getFullYear()
+                let month=new Date(time).getMonth()+1
+                let day=new Date(time).getDate()
+                if (month<10){
+                    month='0'+month
+                }
+                return year+'-'+month+'-'+day
+            } else {
+                return ''
+            }
+
         },
         clickDay(day, jsEvent){
             this.showCreate=!this.showCreate;
             this.left=jsEvent.clientX+'px'
             this.top=jsEvent.clientY+'px'
-            console.log('day:',day)
+            this.clickTime=day._i
+            console.log('day:',day._i)
             console.log('jsEvent:',jsEvent)
         },
+        // 显示创建任务框
         showCreateTask(){
             this.creatTask=true
+            getProjectList().then(res => {
+                if (res.result){
+                    res.data.forEach(i => {
+                        this.projectList.push({
+                            value: i.projectId,
+                            label: i.projectName
+                        })
+                    })
+                }
+            })
         },
+        // 点击创建任务
+        createTask () {
+            if (!this.taskTitle || !this.project) {
+                this.$Message.error('请选择项目并填写任务名称');
+            }else {
+                this.btnLoading=true
+                let data={
+                    'taskName': this.taskTitle,
+                    'projectId': this.project,
+                    'startTime': this.clickTime,
+                    'endTime': this.clickTime
+                }
+                addTask(data).then(res => {
+                    this.btnLoading=false
+                    this.$Message.success('创建成功');
+                    this.creatTask=false
+                    this.showCreate=false
+                })
+            }
+
+        },
+        // 显示创建日程框
         showCreateRc(){
             this.loading=true
             getProjectList().then(res => {
@@ -122,6 +196,21 @@ export default {
                 this.createRc=true
                 this.loading=false
             })
+        },
+        // 创建日程完毕
+        rcok () {
+            this.showCreate=false
+            this.createRc=false
+        },
+        // event的点击事件
+        eventClick (event) {
+            if (event.type==='任务'){
+                this.showditTask = true;
+                this.setTaskId(event.id);
+            }else if (event.type==='日程') {
+                this.getScheduleById(event.id)
+                this.editrc=true
+            }
         },
         close(){
             this.$router.push(localStorage.projectRouter)
@@ -178,6 +267,8 @@ export default {
             display: flex;
             align-items: center;
             cursor: pointer;
+            background-color: #f5f5f5;
+            padding: 0 15px;
             img{
                 width: 24px;
                 height: 24px;
@@ -246,5 +337,16 @@ export default {
     padding: 5px 10px;
     border: 1px solid rgba(0,0,0,.1);
     margin: 16px 0;
+}
+.calendar-con{
+    /deep/ .fc-header-toolbar{
+        width: 1220px;
+        margin-left: -250px;
+        height: 50px !important;
+        padding: 12px 0;
+        .fc-center{
+            margin-left: -130px;
+        }
+    }
 }
 </style>

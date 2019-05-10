@@ -101,7 +101,7 @@ import editRicheng from "../../public/common/EditRicheng"
 import { schedules } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 import {mapState,mapActions,mapMutations} from 'vuex'
-import {getRicheng} from '@/axios/scheduleApi'
+
 export default {
   name: "",
   components: { AddSchedule, userList, editRicheng, loading },
@@ -121,17 +121,18 @@ export default {
     ...mapState("project", ['projectName'])
   },
   methods: {
-    ...mapActions("schedule", ['init']),
+    ...mapActions("schedule", ['init','getScheduleById']),
     ...mapMutations("schedule", ['oneSchedule']),
     // 编辑日程
     showEditRC(item){
-      this.load=true
-      getRicheng(item.scheduleId).then(res => {
-        console.log(res.data)
-        this.oneSchedule(res.data);
-        this.editrc=true
-        this.load=false
-      })
+      // this.load=true
+      this.editrc=true
+      this.getScheduleById(item.scheduleId)
+      // getRicheng(item.scheduleId).then(res => {
+      //   console.log(res.data)
+      //   this.oneSchedule(res.data);
+      //   // this.load=false
+      // })
 
     }
   },

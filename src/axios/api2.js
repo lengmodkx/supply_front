@@ -1,5 +1,12 @@
 import fetch from './fetch' // 引用fetch.js
 import api from './url' // 引用url.js
+// 获取一个用户的日历信息
+export function getCalendar(userId) {
+    return fetch({
+        url: `/calendar/${userId}`,
+        method: 'get',
+    })
+}
 // 列表示图初始化
 export function getListView(projectId) {
     return fetch({
