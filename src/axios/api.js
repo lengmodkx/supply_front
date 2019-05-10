@@ -54,7 +54,29 @@ export function userlogin(data) {
         data: data
     });
 }
-
+// 获取手机验证码
+export function getPhone(accountName,captcha) {
+    return fetch({
+        url: '/code',
+        method: "get",
+        params: {
+            'accountName':accountName,
+            'captcha':captcha
+        }
+    });
+}
+// 重置密码
+export function resetPwd(data) {
+    return fetch({
+        url: '/forget',
+        method: "put",
+        params: {
+            'accountName':data.accountName,
+            'password':data.password,
+            'code': data.code
+        }
+    });
+}
 //获取用户登录时用于加密的字符串
 export function getEncrypStr() {
     return fetch({

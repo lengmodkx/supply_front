@@ -12,22 +12,27 @@
         </FormItem>
         <FormItem prop="code">
           <Input type="text" size="large" placeholder="请输入短信验证码" v-model="formValidate.code" clearable class="captcha-input" />
-          <span class="code">获取短信验证码</span>
+          <span v-if="isTimes" class="code" style="background-color: #e5e5e5">{{timeNum}}秒后重新发送</span>
+          <span v-else class="code" @click="getPhoneCode">获取短信验证码</span>
+
         </FormItem>
         <FormItem prop="password">
           <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable class="forget-input" />
         </FormItem>
         <FormItem>
-          <Button type="primary" long size="large" @click="forget('formValidate')">注册</Button>
+          <Button type="primary" long size="large" @click="forget('formValidate')">重置密码</Button>
         </FormItem>
       </Form>
     </div>
   </div>
 </template>
 <script>
+  import {getPhone, resetPwd} from '@/axios/api'
 export default {
   data() {
     return {
+      isTimes: false,
+      timeNum: 60,
       formValidate: {
         accountName: "",
         captcha: "",
@@ -68,13 +73,33 @@ export default {
   },
   methods: {
     forget: function(name) {
+      console.log(name)
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("Success!");
+          console.log(this.formValidate)
+          resetPwd(this.formValidate).then(res => {
+            console.log(res)
+          })
         } else {
-          this.$Message.error("Fail!");
+          this.$Message.error("请填写完整!");
         }
       });
+    },
+    // 获取短信验证码
+    getPhoneCode () {
+      this.isTimes=true
+      let time
+      time=setInterval(() => {
+        this.timeNum--
+        if (this.timeNum<=0){
+          this.timeNum=60
+          this.isTimes=false
+          clearInterval(time)
+        }
+      },1000)
+      getPhone(this.formValidate.accountName,this.formValidate.captcha).then(res => {
+        console.log(res)
+      })
     }
   }
 };
