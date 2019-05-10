@@ -5,7 +5,8 @@ const store = {
   state: {
     loading: false,
     token: null,
-    view: '看板视图'
+    view: '看板视图',
+    activeHeaderTag: -1
   },
   mutations: {
     updateLoading (state, data) {
@@ -14,6 +15,9 @@ const store = {
     updateView (state, data) {
       state.view=data
     },
+    changeHeaderTag (state, data) {
+      state.activeHeaderTag=data
+    }
 
   }
 }
