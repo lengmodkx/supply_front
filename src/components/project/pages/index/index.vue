@@ -127,17 +127,17 @@
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
                       <!--</span>-->
-                      <span class="label" v-if="a.remarks">
+                      <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 5px" v-if="a.taskList">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
+                        <span class="sonTask" style="line-height:16px;padding-left:5px;">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
-                      <span class="label" v-if="a.bindId">
+                      <span class="label" v-if="a.bindId" style="margin-bottom: -5px">
                         <Icon type="ios-link" size="16" />
                       </span>
-                      <span class="label" v-if="a.fileId">
+                      <span class="label" v-if="a.fileId"  style="margin-bottom:2px">
                         <Icon type="md-paper" size="16" />
                       </span>
                       <div class="tag-box" v-if="a.tagList">
