@@ -142,6 +142,7 @@
                   </section>
                   <section v-else class="file-folder-opt">
                     <ul>
+                      <li><a style="color: #333"  :download="file.fileName" :href="'http://192.168.31.119:8090/files/'+file.fileId +'/download'">下载文件</a></li>
                       <li @click="removeClone('移动')">移动文件</li>
                       <li @click="removeClone('复制')">复制文件</li>
                       <li>复制文件链接</li>
