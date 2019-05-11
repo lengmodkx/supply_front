@@ -53,11 +53,15 @@ const store = {
             })
         },
         deleteNews({commit},id){
-            deleteNews(id).then(res => {
-                if(res.result === 1){
-                    commit('deteleNews',id)
-                }
+            return new Promise(resolve => {
+                deleteNews(id).then(res => {
+                    if(res.result === 1){
+                        commit('deteleNews',id)
+                        resolve()
+                    }
+                })
             })
+
         },
         getNewsCount({commit}){
             getNewsCount().then(res => {

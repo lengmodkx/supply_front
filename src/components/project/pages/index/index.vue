@@ -80,7 +80,7 @@
                       <span class="label" v-if="a.remarks">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 5px" v-if="a.completeCount">
+                      <span class="label" style="margin-bottom: 5px" v-if="a.taskList">
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
@@ -130,7 +130,7 @@
                       <span class="label" v-if="a.remarks">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 5px" v-if="a.completeCount">
+                      <span class="label" style="margin-bottom: 5px" v-if="a.taskList">
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>

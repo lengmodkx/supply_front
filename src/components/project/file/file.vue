@@ -183,8 +183,8 @@
       <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
     </Modal>
     <!--创建文件夹 模态框-->
-    <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
-      <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" />
+    <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350" >
+      <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" @keyup.enter.native="handleSave"/>
       <div>
         <Button type="info" long @click="handleSave">确定</Button>
       </div>
@@ -297,7 +297,7 @@ export default {
       pathData: [
         {
           name: "文件夹",
-          id: this.$route.params.id
+          id: this.$route.params.fileId
         }
       ]
     };

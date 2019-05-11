@@ -62,10 +62,10 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var url =
-        process.env.NODE_ENV === "development"
-          ? process.env.VUE_APP_SOCKET
-          : process.env.VUE_APP_SOCKET;
+      var url = 'http://192.168.31.238:8090/webSocketServer'
+        // process.env.NODE_ENV === "development"
+        //   ? process.env.VUE_APP_SOCKET
+        //   : process.env.VUE_APP_SOCKET;
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
@@ -129,6 +129,9 @@ export default {
                 break;
               case "A20":
                 this.$store.dispatch("task/changeTask", result.object);
+              case "A27":
+                this.$store.dispatch("task/init", result.object);
+                break;
               // 关联
               case "A28":
                 if (result.object.fromType === "任务") {

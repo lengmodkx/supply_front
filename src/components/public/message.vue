@@ -88,9 +88,10 @@
                 this.$router.push(localStorage.projectRouter)
             },
             deleteNews(id){
-                this.$store.dispatch("news/deleteNews",id)
-                this.msgTypeShow = false
-                this.getNewsCount()
+                this.$store.dispatch("news/deleteNews",id).then(() => {
+                    this.msgTypeShow = false
+                    this.getNewsCount()
+                })
             },
             deleteReadNews(){
                 deleteAllRead().then(res => {
