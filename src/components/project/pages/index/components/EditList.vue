@@ -35,7 +35,7 @@
       </div>
       <div class="Conbox">
         <div class="task_info done clearfix" :class="{done:task.taskStatus}">
-          <Checkbox v-model="task.taskStatus" @on-change="updateTaskStatus(task.taskId,task.taskStatus)" class="checkbox"></Checkbox>
+          <Checkbox v-model="task.taskStatus" :disabled="!task.subIsAllComplete" @on-change="updateTaskStatus(task.taskId,task.taskStatus)" class="checkbox"></Checkbox>
           <Tooltip content="点击即可编辑" placement="top" class="content">
             <div id="editCon" style="width:100%;">
               <input v-model="task.taskName" @blur="updateTaskName()" type="text" style="height: 24px;border: 0 none;outline-style: none">
@@ -47,7 +47,6 @@
           <div class="executor fl">
             <!-- 设置认领者 -->
             <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor" :task="task" v-model="task.executor">
-
             </SetExecutor>
           </div>
 
@@ -421,11 +420,11 @@ export default {
   mounted() {
     this.editTask(this.taskId);
   },
-  // watch: {
-  //   taskId(oldValue, newValue) {
-  //     console.log(oldValue, newValue);
-  //   }
-  // },
+  watch: {
+    // task(newValue, oldValue) {
+    //   console.log(newValue.subIsAllComplete);
+    // }
+  },
   computed: {
     ...mapState("task", ["task", "joinInfoIds", "images_suffix", "taskId"]),
     vuexTask() {
