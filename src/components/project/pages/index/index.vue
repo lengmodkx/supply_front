@@ -84,13 +84,13 @@
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:16px;padding-left:5px;">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
-                      <span class="label" v-if="a.bindId" style="margin-bottom: -5px">
-                        <Icon type="ios-link" size="16" />
+                      <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
+                        <Icon type="ios-link" size="14" />
                       </span>
                       <span class="label" v-if="a.fileId" style="margin-bottom:2px">
                         <Icon type="md-paper" size="16" />
                       </span>
-                      <div class="tag-box" v-if="a.tagList">
+                      <div class="tag-box" v-if="a.tagList" style="margin-bottom:5px">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId"><i :style="{backgroundColor:tag.bgColor}"></i><span>{{tag.tagName}}</span></div>
                       </div>
                     </div>
@@ -134,8 +134,8 @@
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:16px;padding-left:5px;">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
-                      <span class="label" v-if="a.bindId" style="margin-bottom: -5px">
-                        <Icon type="ios-link" size="16" />
+                      <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
+                        <Icon type="ios-link" size="14" />
                       </span>
                       <span class="label" v-if="a.fileId"  style="margin-bottom:2px">
                         <Icon type="md-paper" size="16" />
