@@ -221,6 +221,10 @@
     <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
       <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
     </Modal>
+    <!--模型文件详情-->
+    <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail" >
+      <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail>
+    </Modal>
   </div>
 
 </template>
@@ -228,6 +232,7 @@
 import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import fileDetail from "./fileDetail";
+import modelFileDetail from './modelFileDetail'
 import { mapState, mapActions, mapMutations } from "vuex";
 import { getFileDetails, getChildFiles } from "@/axios/fileApi";
 import {
@@ -254,7 +259,8 @@ export default {
     model,
     commonFile,
     VJstree,
-    fileDetail
+    fileDetail,
+    modelFileDetail
   },
   data() {
     return {
@@ -299,7 +305,9 @@ export default {
           name: "文件夹",
           id: this.$route.params.fileId
         }
-      ]
+      ],
+      showModelFileDetail: false,
+      svfUrl: ''
     };
   },
   computed: {
@@ -423,28 +431,42 @@ export default {
     },
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
-      if (catalog == 1) {
-        this.loading = true;
-        this.fileId = id;
-        this.pathData.push({ name: file.fileName, id: file.fileId });
-        getChildFiles(id).then(res => {
-          console.log(res);
-          this.$store.commit("file/initFile", res.data);
-          this.loading = false;
-          localStorage.fileParentId = res.parentId;
-        });
-        // this.$router.push({
-        //     path: `/project/${this.$route.params.id}/files/${id}`
-        // });
-      } else {
-        this.loading = true;
+      if (file.ext.includes('svf')){
+        // 模型文件
         getFileDetails(id).then(res => {
-          console.log(res);
-          this.loading = false;
-          this.putOneFile(res);
-          this.showModelDetai = true;
+          console.log(res.data.fileUrl)
+          this.svfUrl=res.data.fileUrl
+          this.showModelFileDetail=true
         });
+
+
+        console.log(file)
+      } else {
+        // 普通文件或者文件夹
+        if (catalog == 1) {
+          this.loading = true;
+          this.fileId = id;
+          this.pathData.push({ name: file.fileName, id: file.fileId });
+          getChildFiles(id).then(res => {
+            console.log(res);
+            this.$store.commit("file/initFile", res.data);
+            this.loading = false;
+            localStorage.fileParentId = res.parentId;
+          });
+          // this.$router.push({
+          //     path: `/project/${this.$route.params.id}/files/${id}`
+          // });
+        } else {
+          this.loading = true;
+          getFileDetails(id).then(res => {
+            console.log(res);
+            this.loading = false;
+            this.putOneFile(res);
+            this.showModelDetai = true;
+          });
+        }
       }
+
     },
     // 隐私模式
     changePrivacy(id, privacy) {
@@ -904,6 +926,14 @@ export default {
   p {
     margin: 15px 0;
     font-size: 14px;
+  }
+}
+.nopadding{
+  /deep/ .ivu-modal-body{
+    padding: 0;
+  }
+  /deep/ .ivu-modal-close{
+    z-index: 999999;
   }
 }
 </style>
