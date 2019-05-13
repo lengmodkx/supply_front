@@ -17,6 +17,13 @@ export function changeName(fileId, fileName) {
         }
     });
 }
+//获取文件的url
+export function getFileUrl(fileId){
+    return fetch({
+        url: `/files/${fileId}/url`,
+        method: "get"
+    });
+}
 // 下载文件
 export function downloadFile(fileId) {
     return fetch({
