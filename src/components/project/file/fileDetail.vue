@@ -15,7 +15,7 @@
                     </DropdownMenu>
                 </Dropdown>
                 <p class="padd8"><Icon type="ios-cloud-download-outline" />
-                    <a style="color: gray" :download="file.data.fileName" :href="'http://192.168.3.189:8090/files/'+file.data.fileId +'/download'" ref="xiazai">下载</a></p>
+                    <a style="color: gray" :download="file.data.fileName" @click="downLoad" ref="xiazai">下载</a></p>
                 <!--<p><Icon type="ios-link-outline" />复制文件链接</p>-->
                 <Poptip class="menu-file"  v-model="menuShow" @on-popper-hide="popHid">
                     <Icon type="ios-more" class="mr0" />
@@ -408,6 +408,13 @@ export default {
         chooseEmoji (name) {
             alert(1)
             this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
+        },
+        //文件下载
+        downLoad(fileId) {
+            window.location.href =
+                process.env.NODE_ENV == "development"
+                    ? "/api/files/" + fileId + "/download"
+                    : process.env.VUE_APP_URL + fileId + "/download";
         },
         popHid () {
             setTimeout(() => {
