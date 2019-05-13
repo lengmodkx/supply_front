@@ -5,7 +5,7 @@
     </div>
     <div class="task-detail" style="height:100%;position: relative" v-if="task!=null" @click="closeTag">
       <!--固定顶部-->
-      <div slot="header">
+      <div slot="header" style="height:24px;">
         <div class="toolRight">
           <Tooltip content="点个赞" placement="bottom-start">
           <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">

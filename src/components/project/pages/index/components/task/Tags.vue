@@ -61,7 +61,7 @@
             <Icon type="md-close" size="24"></Icon>
           </span>
         </div>
-        <Input style="padding:8px 8px;" v-model="tagName" placeholder="标签名称" ref="input" />
+        <Input style="padding:8px 8px;" maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
         <div class="createTag">
           <ul class="tagcolor clearfix">
             <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
