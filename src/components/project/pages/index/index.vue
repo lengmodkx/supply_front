@@ -57,6 +57,7 @@
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''">
             <draggable :list="i.taskList" :options="{group:'uncheckedTask',
                         forceFallback: true,
+                        delay: 500,
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
@@ -102,12 +103,12 @@
             <div @click.stop class="add-task-box" v-show="currentEditId==i.relationId" ref="currentadd">
               <textarea placeholder="任务内容" v-model="textarea"></textarea>
               <div class="add-task-btn">
-                <Button @click="createTask()" type="primary">创建</Button>
+                <Button @click="createTask()" :loading="isCreateTask" type="primary">创建</Button>
               </div>
             </div>
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
-            <draggable :list="i.taskList" :options="{group:'checkedTask'}" class="ul" @end="dragList">
+            <draggable :list="i.taskList" :options="{group:'checkedTask',delay: 500,}"  class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
@@ -173,7 +174,7 @@
           <Input v-model="newProTitle" placeholder="新建任务列表..." style="width:268px" />
           <div style="margin-top:12px;text-align:right;">
             <Button @click="showAdd=true;newProTitle='';">取消</Button>
-            <Button style="margin-left: 10px" type="primary" @click="saveNewPro" :disabled="newProTitle==''">保存</Button>
+            <Button style="margin-left: 10px" :loading="isCreateTask" type="primary" @click="saveNewPro" :disabled="newProTitle==''">保存</Button>
           </div>
         </div>
 
@@ -252,6 +253,7 @@ export default {
       show: false,
       showmodal: false,
       showAdd: true,
+      isCreateTask:false,
       beforeClick: true,
       currentEditId: "",
       newProTitle: "",
@@ -343,6 +345,7 @@ export default {
     },
     // 创建任务
     createTask() {
+      this.isCreateTask=true
       let data = {
         taskName: this.textarea,
         projectId: this.projectId,
@@ -352,6 +355,7 @@ export default {
       addTask(data).then(res => {
         if (res.result === 1) {
           this.textarea = "";
+          this.isCreateTask=false
         }
       });
     },
@@ -430,6 +434,7 @@ export default {
       } */
     },
     saveNewPro() {
+      this.isCreateTask=true
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
       addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then(
@@ -438,6 +443,7 @@ export default {
             this.newProTitle = "";
             this.showAdd = true;
             this.init(this.projectId);
+            this.isCreateTask=false
           }
         }
       );
