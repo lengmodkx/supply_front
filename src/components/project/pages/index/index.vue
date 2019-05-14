@@ -57,7 +57,7 @@
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''">
             <draggable :list="i.taskList" :options="{group:'uncheckedTask',
                         forceFallback: true,
-                        delay: 500,
+                        delay: 0.5,
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
@@ -108,7 +108,7 @@
             </div>
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
-            <draggable :list="i.taskList" :options="{group:'checkedTask',delay: 500,}"  class="ul" @end="dragList">
+            <draggable :list="i.taskList" :options="{group:'checkedTask',delay: 0.5,}"  class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
