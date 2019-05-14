@@ -6,9 +6,9 @@
         <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
       </Breadcrumb>
     </div>
-
+    <!-- :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''" -->
     <div class="menu">
-      <a @click="push(menu.prefix)" v-for="(menu, index) in menus" :key="index" :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''">{{menu.funcName}}</a>
+      <router-link v-for="(menu, index) in menus" :key="index" :to="`/project/${id}${menu.prefix}`">{{menu.funcName}}</router-link>
     </div>
 
     <div class="fr">
@@ -47,6 +47,7 @@ export default {
   mounted() {
     menus(this.id).then(res => {
       this.menus = res.data.map((item, index) => {
+        console.log(">>>>>>>", this.path);
         switch (item.funcName) {
           case "任务":
             item.prefix = "/tasks/group/" + item.suffix; //this.$route.params.groupId;
@@ -119,7 +120,7 @@ export default {
       color: #495060;
       margin: 0 15px;
       transition: all 0.3s;
-      &.active,
+      &.router-link-active,
       &:hover {
         border-bottom: 3px solid #2d8cf0;
       }

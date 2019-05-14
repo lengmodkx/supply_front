@@ -31,12 +31,12 @@
           <img v-if="file.catalog==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
           <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-            <img v-else-if="file.ext.includes('txt')" src="@/icons/img/txt.png" alt="">
-            <img v-else-if="file.ext.includes('doc')||file.ext.includes('docx')" src="@/icons/img/word.png" alt="">
-            <img v-else-if="file.ext.includes('xls')||file.ext.includes('xlsx')" src="@/icons/img/excel.png" alt="">
-            <img v-else-if="file.ext.includes('pdf')" src="@/icons/img/pdf.png" alt="">
-            <img v-else-if="file.ext.includes('pp')" src="@/icons/img/ppt.png" alt="">
-            <img v-else-if="file.ext.includes('zip')||file.ext.includes('rar')" src="@/icons/img/zip.png" alt="">
+            <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
+            <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
+            <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
+            <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
+            <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
+            <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
             <img v-else src="@/icons/img/moren.png" alt="">
           </div>
           <div @click.stop class="file-content-opt">
@@ -98,19 +98,19 @@
       </li>
     </ul>
     <!--正常展示-->
-    <ul class="file-content-wrap" v-else-if="files.length">
+    <ul class="file-content-wrap" v-else-if="files.length" :key="fileId">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
           <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder.png' style="height:64px;width:80px">
           <img v-else-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
           <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-            <img v-else-if="file.ext.includes('txt')" src="@/icons/img/txt.png" alt="">
-            <img v-else-if="file.ext.includes('doc')||file.ext.includes('docx')" src="@/icons/img/word.png" alt="">
-            <img v-else-if="file.ext.includes('xls')||file.ext.includes('xlsx')" src="@/icons/img/excel.png" alt="">
-            <img v-else-if="file.ext.includes('pdf')" src="@/icons/img/pdf.png" alt="">
-            <img v-else-if="file.ext.includes('pp')" src="@/icons/img/ppt.png" alt="">
-            <img v-else-if="file.ext.includes('zip')||file.ext.includes('rar')" src="@/icons/img/zip.png" alt="">
+            <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
+            <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
+            <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
+            <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
+            <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
+            <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
             <img v-else src="@/icons/img/moren.png" alt="">
           </div>
           <div @click.stop class="file-content-opt">
@@ -142,7 +142,7 @@
                   </section>
                   <section v-else class="file-folder-opt">
                     <ul>
-                      <li><a style="color: #333"  :download="file.fileName" @click="downLoad">下载文件</a></li>
+                      <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
                       <li @click="removeClone('移动')">移动文件</li>
                       <li @click="removeClone('复制')">复制文件</li>
                       <li>复制文件链接</li>
@@ -183,8 +183,8 @@
       <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
     </Modal>
     <!--创建文件夹 模态框-->
-    <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350" >
-      <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" @keyup.enter.native="handleSave"/>
+    <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
+      <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" @keyup.enter.native="handleSave" />
       <div>
         <Button type="info" long @click="handleSave">确定</Button>
       </div>
@@ -222,7 +222,7 @@
       <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
     </Modal>
     <!--模型文件详情-->
-    <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail" >
+    <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
       <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail>
     </Modal>
   </div>
@@ -232,7 +232,7 @@
 import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import fileDetail from "./fileDetail";
-import modelFileDetail from './modelFileDetail'
+import modelFileDetail from "./modelFileDetail";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { getFileDetails, getChildFiles } from "@/axios/fileApi";
 import {
@@ -307,7 +307,7 @@ export default {
         }
       ],
       showModelFileDetail: false,
-      svfUrl: ''
+      svfUrl: ""
     };
   },
   computed: {
@@ -340,13 +340,13 @@ export default {
         });
       }
     },
-      //文件下载
-      downLoad(fileId) {
-          window.location.href =
-              process.env.NODE_ENV == "development"
-                  ? "/api/files/" + fileId + "/download"
-                  : process.env.VUE_APP_URL + fileId + "/download";
-      },
+    //文件下载
+    downLoad(fileId) {
+      window.location.href =
+        process.env.NODE_ENV == "development"
+          ? "/api/files/" + fileId + "/download"
+          : process.env.VUE_APP_URL + fileId + "/download";
+    },
     keypress() {
       if (this.searched === "") {
         this.searchData = [];
@@ -431,16 +431,15 @@ export default {
     },
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
-      if (file.ext.includes('svf')){
+      if ("svf".includes(file.ext)) {
         // 模型文件
         getFileDetails(id).then(res => {
-          console.log(res.data.fileUrl)
-          this.svfUrl=res.data.fileUrl
-          this.showModelFileDetail=true
+          console.log(res.data.fileUrl);
+          this.svfUrl = res.data.fileUrl;
+          this.showModelFileDetail = true;
         });
 
-
-        console.log(file)
+        console.log(file);
       } else {
         // 普通文件或者文件夹
         if (catalog == 1) {
@@ -466,7 +465,6 @@ export default {
           });
         }
       }
-
     },
     // 隐私模式
     changePrivacy(id, privacy) {
@@ -928,11 +926,11 @@ export default {
     font-size: 14px;
   }
 }
-.nopadding{
-  /deep/ .ivu-modal-body{
+.nopadding {
+  /deep/ .ivu-modal-body {
     padding: 0;
   }
-  /deep/ .ivu-modal-close{
+  /deep/ .ivu-modal-close {
     z-index: 999999;
   }
 }
