@@ -445,16 +445,16 @@ export default {
         if (catalog == 1) {
           this.loading = true;
           this.fileId = id;
-          this.pathData.push({ name: file.fileName, id: file.fileId });
-          getChildFiles(id).then(res => {
-            console.log(res);
-            this.$store.commit("file/initFile", res.data);
-            this.loading = false;
-            localStorage.fileParentId = res.parentId;
-          });
-          // this.$router.push({
-          //     path: `/project/${this.$route.params.id}/files/${id}`
+          // this.pathData.push({ name: file.fileName, id: file.fileId });
+          // getChildFiles(id).then(res => {
+          //   console.log(res);
+          //   this.$store.commit("file/initFile", res.data);
+          //   this.loading = false;
+          //   localStorage.fileParentId = res.parentId;
           // });
+          this.$router.push({
+            path: `/project/${this.$route.params.id}/files/${id}`
+          });
         } else {
           this.loading = true;
           getFileDetails(id).then(res => {
