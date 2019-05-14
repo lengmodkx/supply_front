@@ -4,7 +4,12 @@
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow($event)" />
     </div> -->
     <div class="list" ref="addIcon">
-      <Tag v-if="taglist.length>0" v-for="(item,index) in taglist" :key="index" :name="item.tagId" :style="`background-color:${item.bgColor};`" closable @on-close="handleClose">{{ item.tagName}}</Tag>
+      <Tag v-if="taglist.length>0"
+         v-for="(item,index) in taglist" 
+         :key="index" :name="item.tagId" 
+         :style="`background-color:${item.bgColor};`" closable  @on-close="handleClose">
+         {{ item.tagName}}
+      </Tag>
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow"></Icon>
     </div>
     <div class="content" v-if="Popvisible" :style="{left:offsetLeft}">
@@ -61,7 +66,7 @@
             <Icon type="md-close" size="24"></Icon>
           </span>
         </div>
-        <Input style="padding:8px 8px;" maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
+        <Input style="padding:8px 8px;" :maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
         <div class="createTag">
           <ul class="tagcolor clearfix">
             <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
@@ -145,8 +150,8 @@ export default {
       this.search();
     },
     offsetLeft(newl, oldl){
-  console.log(oldl,newl)
-}
+      console.log(oldl,newl)
+      }
   },
   methods: {
     search() {
@@ -232,7 +237,13 @@ export default {
           }
         });
       }
-      this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+      if(this.$refs.addIcon.offsetWidth + 45>300){
+            this.offsetLeft=270+"px"
+      }else{
+         this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+      }
+    
+      console.log(this.offsetLeft)
     },
     popHide() {
       setTimeout(_ => {
