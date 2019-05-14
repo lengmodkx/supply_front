@@ -80,11 +80,11 @@
                       <i class="ivu-icon ivu-icon-unlocked"></i>
                       <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
                         <span>隐私模式</span>
-                        <span v-if="file.filePrivacy=='1'">仅参与者可见</span>
+                        <span v-if="file.filePrivacy=='0'">仅参与者可见</span>
                         <span v-else>所有成员可见</span>
                       </div>
                     </div>
-                    <span v-if="file.filePrivacy=='1'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
+                    <span v-if="file.filePrivacy=='0'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
                     <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
                   </div>
                 </div>
@@ -101,8 +101,8 @@
     <ul class="file-content-wrap" v-else-if="files.length">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
-          <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder.png' style="height:64px;width:80px">
-          <img v-else-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
+          <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+          <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
           <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
             <img v-else-if="file.ext.includes('txt')" src="@/icons/img/txt.png" alt="">
@@ -155,11 +155,11 @@
                       <i class="ivu-icon ivu-icon-unlocked"></i>
                       <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
                         <span>隐私模式</span>
-                        <span v-if="file.filePrivacy=='1'">仅参与者可见</span>
+                        <span v-if="file.filePrivacy=='0'">仅参与者可见</span>
                         <span v-else>所有成员可见</span>
                       </div>
                     </div>
-                    <span v-if="file.filePrivacy=='1'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
+                    <span v-if="file.filePrivacy=='0'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
                     <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
                   </div>
                 </div>
