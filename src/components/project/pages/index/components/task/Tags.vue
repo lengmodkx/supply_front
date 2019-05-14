@@ -356,6 +356,7 @@ export default {
 .list{
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 .createTag {
   text-align: center;

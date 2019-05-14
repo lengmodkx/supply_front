@@ -17,7 +17,7 @@ import {
 const store = {
     namespaced: true,
     state: {
-        allTask: [],
+        allTasks: [],
         tasks: [],
         currentProjectId: null,
         sort: '1',
@@ -62,7 +62,7 @@ const store = {
             state.taskId = data
         },
         initTask(state, data) {
-            state.allTask = data
+            state.allTasks = data
         },
 
         editTask(state, data) {

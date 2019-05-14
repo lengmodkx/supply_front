@@ -244,7 +244,7 @@ export default {
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup", "abc"]),
-    ...mapState("task", ["allTask", "sort", "groups"]),
+    ...mapState("task", ["allTasks", "sort", "groups"]),
     ...mapState("app", ["view"])
   },
   data() {
@@ -272,13 +272,15 @@ export default {
       },
       showAddGroup: false,
       groupName: "",
-      loading: true
+      loading: true,
+      allTask:[],
     };
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
     this.init(this.projectId).then(res => {
       this.loading = false;
+      this.allTask=this.allTasks
     });
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
@@ -348,6 +350,7 @@ export default {
       });
     },
     dragBox(evt) {
+      console.log(this.allTask)
       //拖拽大盒子
       //this.changeTask(this.allTask);
       //获取拖动的大盒子的id排序数组
