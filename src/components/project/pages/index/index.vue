@@ -287,6 +287,12 @@ export default {
     };
     dragscroll(["column-main", "scrum-stage-tasks"]);
   },
+  watch: {
+    allTasks (newName, oldName) {
+      this.allTask=newName
+    },
+    deep: true,
+  },
   methods: {
     ...mapActions("task", ["init", "initEditTask"]),
     ...mapMutations("task", ["changeTask", "setTaskId"]),
