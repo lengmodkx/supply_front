@@ -52,6 +52,7 @@ const store = {
             }
         },
         upFiles(state, data) {
+            console.log(">>>", data);
             state.files = data.data
         },
         // 推送 移入回收站
