@@ -345,7 +345,11 @@ export default {
     },
     // 创建任务
     createTask() {
-      this.isCreateTask=true
+      if(this.textarea==''){
+        this.$Message.error("请输入任务内容");
+        return
+      }
+      this.isCreateTask=true //打开loading
       let data = {
         taskName: this.textarea,
         projectId: this.projectId,
