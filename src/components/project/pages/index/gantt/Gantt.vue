@@ -172,4 +172,9 @@
 
 <style>
   @import "~dhtmlx-gantt/codebase/dhtmlxgantt.css";
+
+  .gantt_task_line {
+      border-radius: 30px !important;
+  }
+  
 </style>
