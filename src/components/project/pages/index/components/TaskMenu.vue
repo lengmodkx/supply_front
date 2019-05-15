@@ -113,7 +113,7 @@
                         :confirm="true"
                         @on-clear="clearAll">
             </DatePicker> -->
-            <DateTimeInline></DateTimeInline>
+            <DateTimeInline @confirm="setAllTaskEndTime"></DateTimeInline>
         </div>
         <div class="con5"
              v-if="active=='e'">
@@ -333,6 +333,7 @@
 
 </template>
 <script>
+import {editMenuName,addMenu,setAllTaskEndTime} from '@/axios/relation'
 export default {
   props: ['data'],
   data () {
@@ -382,9 +383,25 @@ export default {
     chooseExecutor (id) {
         this.curId = id
     },
+    //修改此列表的名称
     saveTitle (){
       this.visible = false;
       //发请求修改标题
+      editMenuName(this.data.relationId,this.title).then(res => {
+        if(res.result === 0){
+          this.$Message.error("修改失败!")
+        }
+      })
+    },
+    //设置此列表下所有任务的截止时间
+    setAllTaskEndTime(endTime){
+      setAllTaskEndTime(this.data.relationId,endTime).then(res => {
+        if(res.result === 0){
+          this.$Message.error(res.msg)
+        } else{
+          this.popHide()
+        }
+      })
     },
     listItemClick (index, title) {
       this.active = index
@@ -395,6 +412,11 @@ export default {
     },
     createNew () {
       this.active = '';
+      addMenu(this.data.projectId,this.newTask,this.data.parentId,this.data.order).then(res => {
+        if(res.result === 0){
+          this.$Message.error("添加失败!")
+        }
+      })
     },
     reset (flag) {
       Object.assign(this.$data, this.$options.data())

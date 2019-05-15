@@ -12,6 +12,7 @@ import share from './modules/share'
 import chat from './modules/chat'
 import news from './modules/news'
 import company from './modules/company'
+import relation from './modules/relation'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -27,7 +28,8 @@ const store = new Vuex.Store({
         share,
         chat,
         news,
-        company
+        company,
+        relation
     }
 })
 
