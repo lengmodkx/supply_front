@@ -300,6 +300,10 @@ export function addTagAndBind(params){
 export function delTag(tagId) {
     return $delete(`/tags/${tagId}`, null);
 }
+// 标签移动到回收站
+export function receclyTag(tagId) {
+    return $put(`/tags/${tagId}/dropTag`, null);
+}
 //修改标签
 export function modifyTag(tagId, params) {
     return $put(`/tags/${tagId}`, params);

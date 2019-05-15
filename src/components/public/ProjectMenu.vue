@@ -19,29 +19,43 @@
           <p>标签设置</p>
         </div>
       </li>
+      <li>
+        <div class="munu-set" @click="lookRecycle=true">
+          <Icon type="ios-trash-outline" size="20" />
+          <p>查看回收站</p>
+        </div>
+      </li>
     </ul>
     <!-- 项目设置 -->
     <Modal v-model="projectSet" class="setPro-modal">
       <projectsetting></projectsetting>
     </Modal>
-    <Modal v-model="tagSet" width="800">
+    <!--标签-->
+    <Modal class="nopadding" :footer-hide="true" class-name="vertical-center-modal" v-model="tagSet" width="800">
       <p slot="header" style="text-align:center;font-size:16px">
         <span>标签</span>
       </p>
       <tagsettings></tagsettings>
+    </Modal>
+    <!--回收站-->
+    <Modal class="nopadding" class-name="vertical-center-modal" v-model="lookRecycle" width="800" :footer-hide="true">
+      <p slot="header" style="text-align:center;font-size: 16px;font-weight: 600">查看回收站</p>
+      <recycleBin v-if="lookRecycle"></recycleBin>
     </Modal>
   </div>
 </template>
 <script>
 import ProjectSettings from "../../views/projectSettings.vue";
 import TagSettings from "./tagsettings.vue";
+import recycleBin from './recycleBin'
 import { mapActions } from "vuex";
 export default {
-  components: { projectsetting: ProjectSettings, tagsettings: TagSettings },
+  components: { projectsetting: ProjectSettings, tagsettings: TagSettings, recycleBin },
   data() {
     return {
       projectSet: false,
-      tagSet: false
+      tagSet: false,
+      lookRecycle: false
     };
   },
   methods: {
@@ -110,4 +124,9 @@ export default {
     margin-left: 10px;
   }
 }
+  .nopadding{
+    /deep/ .ivu-modal-body{
+      padding: 0;
+    }
+  }
 </style>
