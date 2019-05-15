@@ -191,8 +191,11 @@ export default {
       this.publishAxios().then(res => {
         this.modal2 = false;
       });
-        this.modal2 = false;
-        this.$emit('close-settings', false);
+      if(this.$route.params.groupId){
+        this.$router.push("/home");
+      }else{
+          this.$emit('close-settings', false);
+      }
     }
   }
 };
