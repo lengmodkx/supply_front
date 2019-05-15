@@ -115,181 +115,125 @@
             </DatePicker> -->
             <DateTimeInline @confirm="setAllTaskEndTime"></DateTimeInline>
         </div>
+
         <div class="con5"
              v-if="active=='e'">
           <div class="con5item1">
             <span>项目</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前项目
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content">
-                <Input class="findInput"
-                       v-model="findPro"
-                       :autofocus="true"
-                       placeholder="查找项目" />
-                <div class="star">
-                  <h5>星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
-                <div class="nostar">
-                  <h5>非星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
-
-              </div>
-            </Poptip>
+            <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
+              <OptionGroup label="星标项目">
+                <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+              </OptionGroup>
+              <OptionGroup label="非星标项目">
+                <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+              </OptionGroup>
+            </Select>
 
           </div>
           <div class="con5item2">
             <span>分组</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前任务
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">任务1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">任务2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model9" style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+              </Select>
+            </template>
           </div>
           <div class="con5item3">
             <span>列表</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前列表
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">大列表1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">大列表2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model3" style="width:150px" placeholder="当前列表" @on-change="getMenuId">
+                <Option v-for="item in menuList" :value="item.relationId" :key="item.relationName">{{ item.relationName }}</Option>
+              </Select>
+            </template>
           </div>
-          <div class="con5tip">你可以在任务板中添加和修改任务分组及任务列表。</div>
+          <div class="con5tip">跨项目移动时，部分参与者信息不会保留</div>
           <Button type="primary"
-                  long>确定</Button>
+                  long
+                  style="margin-top:8px;" @click="">确定</Button>
         </div>
+
         <div class="con6"
              v-if="active=='f'">
           <div class="con5item1">
             <span>项目</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前项目
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content">
-                <Input class="findInput"
-                       v-model="findPro"
-                       :autofocus="true"
-                       placeholder="查找项目" />
-                <div class="star">
-                  <h5>星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
-                <div class="nostar">
-                  <h5>非星标项目</h5>
-                  <div class="item">项目1
-                    <svg-icon class="right"
-                              name="right"></svg-icon>
-                  </div>
-                </div>
+            <Select v-model="model7" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
+              <OptionGroup label="星标项目">
+                <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+              </OptionGroup>
+              <OptionGroup label="非星标项目">
+                <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+              </OptionGroup>
+            </Select>
+            <!--<Poptip placement="bottom-end"-->
+            <!--class="innerRight">-->
+            <!--<div class="inTitle">-->
+            <!--<span>当前项目-->
+            <!--<Icon type="ios-arrow-down"-->
+            <!--size="18"-->
+            <!--style="margin-left:4px;"></Icon>-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--<div slot="content"-->
+            <!--class="content">-->
+            <!--<Input class="findInput"-->
+            <!--v-model="findPro"-->
+            <!--:autofocus="true"-->
+            <!--placeholder="查找项目" />-->
+            <!--<div class="star">-->
+            <!--<h5>星标项目</h5>-->
+            <!--<div class="item">项目1-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="nostar">-->
+            <!--<h5>非星标项目</h5>-->
+            <!--<div class="item">项目1-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--</div>-->
 
-              </div>
-            </Poptip>
+            <!--</div>-->
+            <!--</Poptip>-->
 
           </div>
           <div class="con5item2">
             <span>分组</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前任务
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">任务1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">任务2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model9" style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+              </Select>
+            </template>
+            <!--<Poptip placement="bottom-end"-->
+            <!--class="innerRight">-->
+            <!--<div class="inTitle">-->
+            <!--<span>当前任务-->
+            <!--<Icon type="ios-arrow-down"-->
+            <!--size="18"-->
+            <!--style="margin-left:4px;"></Icon>-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--<div slot="content"-->
+            <!--class="content2">-->
+            <!--<div class="item">任务1-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--<div class="item">任务2-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</Poptip>-->
           </div>
           <div class="con5item3">
             <span>列表</span>
-            <Poptip placement="bottom-end"
-                    class="innerRight">
-              <div class="inTitle">
-                <span>当前列表
-                  <Icon type="ios-arrow-down"
-                        size="18"
-                        style="margin-left:4px;"></Icon>
-                </span>
-              </div>
-              <div slot="content"
-                   class="content2">
-                <div class="item">大列表1
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-                <div class="item">大列表2
-                  <svg-icon class="right"
-                            name="right"></svg-icon>
-                </div>
-              </div>
-            </Poptip>
+            <template>
+              <Select v-model="model10" style="width:150px" placeholder="当前列表" @on-change="getMenuId">
+                <Option v-for="item in menuList" :value="item.relationId" :key="item.relationName">{{ item.relationName }}</Option>
+              </Select>
+            </template>
           </div>
           <CheckboxGroup v-model="notice"
                          style="margin-top:5px;">
@@ -298,11 +242,12 @@
             <Checkbox class="checkbox"
                       label="新任务接收原任务的更新提醒"></Checkbox>
           </CheckboxGroup>
-          <div class="con5tip">你可以在任务板中添加和修改任务分组及任务列表。</div>
+          <div class="con5tip">标题、子任务、备注将被复制</div>
           <Button type="primary"
-                  long>确定</Button>
+                  long @click="">确定</Button>
 
         </div>
+
         <div class="con7"
              v-if="active=='g'">
           <div class="ask">您确定要把列表下的所有任务移到回收站吗？</div>
@@ -334,6 +279,7 @@
 </template>
 <script>
 import {editMenuName,addMenu,setAllTaskEndTime} from '@/axios/relation'
+import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
 export default {
   props: ['data'],
   data () {
@@ -342,6 +288,19 @@ export default {
       visible: false,
       active: '',
       newTask: '',
+      model7: '',
+      model9:'',
+      model10:'',
+      model1: '',
+      model2:'',
+      groupList:[],
+      menuList:[],
+      currProjectId:'',
+      currMenuId:'',
+      currGroupId:'',
+      model3:'',
+      starProject: [],
+      notStarProject:[],
       curTopTitle: '列表菜单',
       title: this.data.title,
       findMember: '',
@@ -402,6 +361,37 @@ export default {
           this.popHide()
         }
       })
+    },
+    //获取项目数据
+    getProjectList(){
+      getStarProjectList().then(res => {
+        if(res.result === 1){
+          this.notStarProject = res.notStarProject
+          this.starProject = res.starProject
+        }
+      })
+    },
+    //获取分组数据
+    getGroupList(projectId){
+      this.currProjectId = projectId
+      getGroupList(projectId).then(res => {
+        if(res.result === 1){
+          this.groupList = res.data
+        }
+      })
+    },
+    //获取菜单数据
+    getMenuLists(groupId){
+      this.currGroupId = groupId
+      getMenuList(groupId).then(res => {
+        if(res.result === 1){
+          this.menuList = res.data
+        }
+      })
+    },
+    //获取选中菜单id
+    getMenuId(menuId){
+      this.currMenuId = menuId
     },
     listItemClick (index, title) {
       this.active = index
