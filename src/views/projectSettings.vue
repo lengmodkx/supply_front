@@ -191,6 +191,8 @@ export default {
       this.publishAxios().then(res => {
         this.modal2 = false;
       });
+        this.modal2 = false;
+        this.$emit('close-settings', false);
     }
   }
 };

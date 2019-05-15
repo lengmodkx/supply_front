@@ -159,7 +159,7 @@
     </Modal>
     <!-- 项目设置 -->
     <Modal v-model="projectSet" class="setPro-modal">
-      <ProjectSettings></ProjectSettings>
+      <ProjectSettings  @close-settings="closeSettings" ></ProjectSettings>
     </Modal>
   </div>
 </template>
@@ -276,11 +276,11 @@ export default {
     getNewList(value) {
       this.init(value);
     },
+    //打开项目设置
     setProject(item) {
       this.projectSet = true;
       this.openSet(item.projectId);
     },
-
     recover(id) {
       recoverProject(id).then(res => {
         if (res.result == 1) {
@@ -309,8 +309,13 @@ export default {
         this.searchData=[]
         this.isSearch=false
       }
-    }
+    },
+  
+     closeSettings:function(data){
+        this.projectSet=data
+    },
   }
+
 };
 </script>
 <style scoped lang="less">
