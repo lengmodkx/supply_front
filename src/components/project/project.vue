@@ -38,6 +38,12 @@ export default {
   mounted() {
     this.initSocket(this.$route.params.id);
   },
+  beforeRouteLeave (to, from, next) {
+    this.stompClient.disconnect(function() {
+      console.log("断开socket连接");
+    })
+    next()
+  },
   methods: {
     showBox(i) {
       let old = this.show;
@@ -247,6 +253,18 @@ export default {
                 this.$store.dispatch("task/init",result.object)
                 break;
               case "H3":
+                this.$store.dispatch("task/init",result.object)
+                break;
+              case "H4":
+                this.$store.dispatch("task/init",result.object)
+                break;
+              case "H5":
+                this.$store.dispatch("task/init",result.object)
+                break;
+              case "H6":
+                this.$store.dispatch("task/init",result.object)
+                break;
+              case "H7":
                 this.$store.dispatch("task/init",result.object)
                 break;
             }

@@ -149,7 +149,7 @@
           <div class="con5tip">跨项目移动时，部分参与者信息不会保留</div>
           <Button type="primary"
                   long
-                  style="margin-top:8px;" @click="">确定</Button>
+                  style="margin-top:8px;" @click="moveAllTask">确定</Button>
         </div>
 
         <div class="con6"
@@ -244,7 +244,7 @@
           </CheckboxGroup>
           <div class="con5tip">标题、子任务、备注将被复制</div>
           <Button type="primary"
-                  long @click="">确定</Button>
+                  long @click="copyAllTask">确定</Button>
 
         </div>
 
@@ -278,7 +278,7 @@
 
 </template>
 <script>
-import {editMenuName,addMenu,setAllTaskEndTime} from '@/axios/relation'
+import {editMenuName,addMenu,setAllTaskEndTime,moveAllTask,copyAllTask} from '@/axios/relation'
 import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
 export default {
   props: ['data'],
@@ -392,6 +392,22 @@ export default {
     //获取选中菜单id
     getMenuId(menuId){
       this.currMenuId = menuId
+    },
+    //移动所有任务
+    moveAllTask(){
+      moveAllTask(this.data.relationId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+        if(res.result === 0){
+          this.$Message.error("移动失败!")
+        }
+      })
+    },
+    //复制列表的所有任务
+    copyAllTask(){
+      copyAllTask(this.data.relationId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+        if(res.result === 0){
+          this.$Message.error("复制失败!")
+        }
+      })
     },
     listItemClick (index, title) {
       this.active = index

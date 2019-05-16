@@ -27,3 +27,21 @@ export function setAllTaskEndTime(menuId,endTime) {
         params:{"endTime":endTime}
     });
 }
+
+//移动列表下所有任务
+export function moveAllTask(menuId,projectId,groupId,toMenuId) {
+    return fetch({
+        url: `/relations/${menuId}/move_all_task`,
+        method: "put",
+        params:{"projectId":projectId,"groupId":groupId,"toMenuId":toMenuId}
+    });
+}
+
+//复制列表下所有任务
+export function copyAllTask(menuId,projectId,groupId,toMenuId) {
+    return fetch({
+        url: `/relations/${menuId}/copy_all_task`,
+        method: "post",
+        params:{"projectId":projectId,"groupId":groupId,"toMenuId":toMenuId}
+    });
+}
