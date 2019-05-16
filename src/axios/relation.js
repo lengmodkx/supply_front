@@ -45,3 +45,17 @@ export function copyAllTask(menuId,projectId,groupId,toMenuId) {
         params:{"projectId":projectId,"groupId":groupId,"toMenuId":toMenuId}
     });
 }
+// 列表下所有任务一到回收站
+export function deleteAllTask(menuId) {
+    return fetch({
+        url: `/relations/${menuId}/move_recycle_bin`,
+        method: "put",
+    });
+}
+// 删除列表
+export function deleteList(menuId) {
+    return fetch({
+        url: `/relations/${menuId}/menu`,
+        method: "delete",
+    });
+}

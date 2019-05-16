@@ -445,7 +445,7 @@ export default {
         if (catalog == 1) {
           this.loading = true;
           this.fileId = id;
-          // this.pathData.push({ name: file.fileName, id: file.fileId });
+          this.pathData.push({ name: file.fileName, id: file.fileId });
           // getChildFiles(id).then(res => {
           //   console.log(res);
           //   this.$store.commit("file/initFile", res.data);

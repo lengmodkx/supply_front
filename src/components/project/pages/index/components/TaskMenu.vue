@@ -251,8 +251,7 @@
         <div class="con7"
              v-if="active=='g'">
           <div class="ask">您确定要把列表下的所有任务移到回收站吗？</div>
-          <Button type="error"
-                  long>移到回收站</Button>
+          <Button type="error" long @click="allTaskDelete">移到回收站</Button>
 
         </div>
         <div class="con8"
@@ -266,8 +265,7 @@
           <div class="candelete"
                v-else>
             <h5>您确定要永远删除这个列表吗？</h5>
-            <Button type="error"
-                    long>删除</Button>
+            <Button type="error" long @click="deleteIt">删除</Button>
           </div>
         </div>
       </div>
@@ -278,7 +276,7 @@
 
 </template>
 <script>
-import {editMenuName,addMenu,setAllTaskEndTime,moveAllTask,copyAllTask} from '@/axios/relation'
+import {editMenuName,addMenu,setAllTaskEndTime,moveAllTask,copyAllTask, deleteAllTask, deleteList} from '@/axios/relation'
 import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
 export default {
   props: ['data'],
@@ -407,6 +405,18 @@ export default {
         if(res.result === 0){
           this.$Message.error("复制失败!")
         }
+      })
+    },
+    // 所有任务移到回收站
+    allTaskDelete () {
+      deleteAllTask(this.data.relationId).then(res => {
+        this.$Message.success("操作成功!")
+      })
+    },
+    // 删除列表
+    deleteIt () {
+      deleteList(this.data.relationId).then(res => {
+        this.$Message.success("删除成功!")
       })
     },
     listItemClick (index, title) {
