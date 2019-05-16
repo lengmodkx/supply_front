@@ -8,3 +8,17 @@ export function getRecycle(projectId, type, fileType) {
         params: {fileType:fileType}
     });
 }
+// 初始化标签页面
+export function getAllTag(projectId) {
+    return fetch({
+        url: `/tags/${projectId}/bind`,
+        method: "get",
+    });
+}
+// 获取标签所有绑定信息
+export function getTagBind(tagId) {
+    return fetch({
+        url: `/tags/${tagId}/tag_bind_info`,
+        method: "get",
+    });
+}

@@ -51,7 +51,8 @@
             <li class="task-li" v-for="(i,n) in nowTag.taskList" :key="n">
               <div class="tiao"></div>
               <Checkbox  v-model="i.complete"></Checkbox>
-              <img src="" alt="">
+              <img v-if="i.img" src="" alt="">
+              <Icon v-else type="ios-contact" size="24" style="margin-right: 10px" />
               <p class="task-name">{{i.taskName}}</p>
               <p class="gray-color">我是任务分组</p>
             </li>
@@ -63,7 +64,7 @@
           <ul class="right-view-ul">
             <li class="schedule-li" v-for="(i,n) in nowTag.scheduleList" :key="n">
               <p>{{i.scheduleName}}</p>
-              <p class="gray-color">5月18日-5月19日</p>
+              <p class="gray-color">{{i.createTime | timeFilter}}</p>
             </li>
           </ul>
         </div>
@@ -73,7 +74,7 @@
           <ul class="right-view-ul">
             <li class="share-li" v-for="(i,n) in nowTag.shareList" :key="n">
               <p>{{i.title}}</p>
-              <p class="gray-color">5月18日-5月19日</p>
+              <p class="gray-color">{{i.createTime | timeFilter}}</p>
             </li>
           </ul>
         </div>
@@ -86,7 +87,7 @@
                 <img src="@/icons/img/moren.png" alt="">
                 <span>{{i.fileName}}</span>
               </div>
-              <p class="gray-color">5月18日-5月19日</p>
+              <p class="gray-color">{{i.createTime | timeFilter}}</p>
             </li>
           </ul>
         </div>
@@ -98,6 +99,7 @@
 import createTag from './createTag'
 import { mapState, mapActions, mapMutations} from "vuex";
 import {receclyTag} from '@/axios/api'
+import {getTagBind} from '@/axios/setAndTag'
 export default {
   data() {
     return {
@@ -129,7 +131,10 @@ export default {
     showTagDetail (tag, i) {
       console.log(tag)
       this.nowIndex=i
-      this.nowTag=tag
+      getTagBind(tag.tagId).then(res => {
+        console.log(res)
+        this.nowTag=res.data
+      })
     },
     // 标签移到回收站
     removeTag (tag,index) {

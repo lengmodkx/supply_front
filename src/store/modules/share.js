@@ -12,6 +12,7 @@ const store = {
             state.shareList = data
             if (data.length > 0) {
                 state.share = data[0]
+                console.log(state.share)
             }
         },
         changeShare(state, data) {
