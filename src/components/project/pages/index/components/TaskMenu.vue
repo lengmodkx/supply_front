@@ -86,7 +86,7 @@
         </div>
         <div class="con3"
              v-if="active=='c'">
-          <Input class="findInput"
+          <!-- <Input class="findInput"
                  v-model="findMember"
                  :autofocus="true"
                  placeholder="查找成员" />
@@ -102,7 +102,17 @@
           </ul>
           <Button type="primary"
                   long
-                  :disabled="curId==-1">确定</Button>
+                  :disabled="curId==-1">确定</Button> -->
+
+         <Input class="findInput"  v-model="findMember" :autofocus="true"  placeholder="查找成员" />
+         <ul class="memberList">
+            <li  v-for ='item  in memberList' :key="item.userId"  @click="chooseExecutor(item.id)">
+              <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image">
+             {{item.userName}}
+            </li>
+          </ul>
+          <Button type="primary" long  :disabled="curId==-1">确定</Button> 
+ 
         </div>
 
         <div class="con4"
@@ -279,7 +289,16 @@
 </template>
 <script>
 import {editMenuName,addMenu,setAllTaskEndTime,moveAllTask,copyAllTask} from '@/axios/relation'
-import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
+import {collectTask,
+        updateTaskPrivacy,
+        cancelCollect,
+        taskToRecycle,
+        getStarProjectList,
+        getGroupList,
+        getMenuList,
+        copyTask, 
+        getmemberList,
+        moveTask} from "@/axios/api";
 export default {
   props: ['data'],
   data () {
@@ -309,21 +328,19 @@ export default {
       curId:-1,
       memberList:[
         {
-          id:0,
-          name:"待认领"
+            "userId": "423a9345e2474809a1579e6e7e332d61",
+            "userName": "m",
+            "accountName": "15046109313",
+            "deleteStatus": 0,
+            "locked": 0,
+            "creatorName": "15046109313",
+            "createTime": "2019-05-14T06:33:18.000+0000",
+            "updateTime": "2019-05-14T06:33:18.000+0000",
+            "image": "upload/avatar/1557815597830.jpg",
+            "defaultImage": "upload/avatar/1557815597830.jpg",
+            "sex": 0
         },
-        {
-          id:1,
-          name:"张三"
-        },
-         {
-          id:2,
-          name:"王二"
-        },
-        {
-          id:3,
-          name:"赵五"
-        }
+        
       ]
     }
   },
@@ -331,14 +348,26 @@ export default {
     topTitle () {
       return this.active ? this.curTopTitle : '列表菜单'
     },
-     computedMemberList () {
-      return this.memberList.filter(v => this.$containStr(this.findMember, v.id>0?v.name:''))
-    }
+    
+    //  computedMemberList () {
+    //   return this.memberList.filter(v => this.$containStr(this.findMember, v.id > 0?v.name:''))
+    // }
+  },
+  watch:{
+      findMember(newValue,oldValue){
+        if(newValue!=''){
+           this.memberList=this.memberList.filter((item,index,self) =>{ return item.userName==newValue  })
+        }else{
+            this.createMemberList();
+        }    
+      }
+       
   },
   mounted () {
 
   },
   methods: {
+    //获取执行者ID
     chooseExecutor (id) {
         this.curId = id
     },
@@ -412,7 +441,19 @@ export default {
     listItemClick (index, title) {
       this.active = index
       this.curTopTitle = title
+      if(index=="c"){
+        this.createMemberList();
+      }
     },
+    createMemberList(){
+          this.currProjectId=this.$route.params.id
+          getmemberList(this.currProjectId).then(res=>{
+              if(res.result===1){
+                this.memberList=res.data
+              }
+          })
+    },
+
     clearAll () {
 
     },
@@ -444,6 +485,22 @@ export default {
       color: grey;
       margin-right: 8px;
     }
+  }
+  .task-menu-detail{
+    .memberList{
+      li{
+        cursor: pointer;
+         display: flex;
+         vertical-align: text-bottom;
+         line-height: 50px !important;
+      }
+      img{
+        width: 42px;
+        height: 42px;
+        padding:10px 10px 0 0;
+      }
+  }
+
   }
 </style>
 
