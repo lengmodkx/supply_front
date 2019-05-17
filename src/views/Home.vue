@@ -161,6 +161,13 @@
     <Modal v-model="projectSet" class="setPro-modal">
       <ProjectSettings  @close-settings="closeSettings" ></ProjectSettings>
     </Modal>
+
+    <Modal class="confirmModal" v-model="showBin" title="移到回收站">
+              <p style="padding:10px;font-size:15px;">一旦将项目「{{this.binName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
+              <div class="doBtn">
+                <Button type="error" @click="okHuishou" >移到回收站</Button>
+              </div>
+    </Modal>
   </div>
 </template>
 
@@ -169,6 +176,7 @@ import CreateProject from "./CreateProject.vue";
 import ProjectSettings from "./projectSettings.vue";
 import Loading from "../components/public/common/Loading.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
+
 import {
   setStarProject,
   guidangProject,
@@ -187,6 +195,9 @@ export default {
   data() {
     return {
       //用变量承接一下要传入modal的每个id或参数
+      showBin:false,//显示回收站
+      binName:'',//回收站项目名称
+      binProjectId:'',
       cancelID: null,
       searchWords: '',
       isSearch: false,
@@ -319,6 +330,22 @@ export default {
      closeSettings:function(data){
         this.projectSet=data
     },
+    //删除项目
+    confirmHuishou:function(data){
+      console.log(data)
+      this.showBin=true;
+      this.binName=data.projectName
+      this.binProjectId=data.projectId
+    },
+    okHuishou(){
+       recycleProject(this.binProjectId).then(res=>{
+          if(res.result=='1'){
+              this.showBin=false
+          }
+         
+      })
+
+    }
   }
 
 };
