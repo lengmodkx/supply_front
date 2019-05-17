@@ -24,8 +24,8 @@
                 <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`" alt>
               </div>
               <div class="upload fl">
-                <input type="file">
-                <Button class="upLoadButton">上传新封面</Button>
+                <input type="file" ref="inputer"  @change="changeImg" >
+                <Button class="upLoadButton" >上传新封面</Button>
               </div>
             </div>
           </div>
@@ -101,9 +101,11 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import { updateProject } from "@/axios/api";
+import { updataProjectPic } from "@/axios/api2";
 export default {
   data() {
     return {
+      fil:null,
       active: 1,
       priority: "",
       switch1: false,
@@ -196,6 +198,14 @@ export default {
       }else{
           this.$emit('close-settings', false);
       }
+    },
+    changeImg:function(){
+      let inputDOM = this.$refs.inputer;
+      this.fil = inputDOM.files;
+      console.log(this.project.projectId,this.fil[0])
+      updataProjectPic(this.project.projectId,this.fil[0]).then(res=>{
+        
+      })
     }
   }
 };

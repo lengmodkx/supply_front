@@ -132,7 +132,8 @@ export function updataProjectPic(projectId,file) {
         url: '/projects/${projectId}/picture',
         method: 'post', // 请求方法
         params: {
-            "file": file
+            projectId: projectId,
+            file: file,
         }
     })
 }
