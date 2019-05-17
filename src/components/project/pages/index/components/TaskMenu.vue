@@ -340,6 +340,19 @@ export default {
             "defaultImage": "upload/avatar/1557815597830.jpg",
             "sex": 0
         },
+        {
+            "userId": "423a9345e2474809a1579e6e7e332d63",
+            "userName": "可以",
+            "accountName": "15046109313",
+            "deleteStatus": 0,
+            "locked": 0,
+            "creatorName": "15046109313",
+            "createTime": "2019-05-14T06:33:18.000+0000",
+            "updateTime": "2019-05-14T06:33:18.000+0000",
+            "image": "upload/avatar/1557815597830.jpg",
+            "defaultImage": "upload/avatar/1557815597830.jpg",
+            "sex": 0
+        },
         
       ]
     }
@@ -356,7 +369,7 @@ export default {
   watch:{
       findMember(newValue,oldValue){
         if(newValue!=''){
-           this.memberList=this.memberList.filter((item,index,self) =>{ return item.userName==newValue  })
+           this.memberList=this.memberList.filter((item,index,self) =>{ return item.userName.includes(newValue)  })
         }else{
             this.createMemberList();
         }    
@@ -452,6 +465,7 @@ export default {
                 this.memberList=res.data
               }
           })
+          
     },
 
     clearAll () {
