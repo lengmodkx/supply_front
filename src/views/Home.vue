@@ -291,6 +291,11 @@ export default {
     },
     // 搜索项目
     searchProject(value) {
+      if(value==''){
+        this.init(this.projectType);
+        return
+      }
+      
       let arr={
         '我创建的项目':'created',
         '我参与的项目': 'join',
