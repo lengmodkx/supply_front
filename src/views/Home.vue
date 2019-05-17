@@ -60,7 +60,7 @@
               <p>{{item.projectName}}</p>
               <span>{{item.projectDes}}</span>
             </div>
-            <div class="operate-box">
+            <div class="operate-box" v-if="projectType!='回收站的项目'">
               <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
                 <span @click.stop="setStar(item.projectId)">
                   <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
@@ -123,7 +123,7 @@
             <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
               <h2>{{item.projectName}}</h2>
               <p>{{item.projectDes}}</p>
-              <div class="iconPic">
+              <div class="iconPic"  v-if="projectType!='回收站的项目'">
                 <Tooltip class="iconpic1" content="打开项目设置" placement="top">
                   <span @click.stop="setProject(item)">
                     <Icon type="md-settings" size="18"></Icon>
@@ -341,8 +341,7 @@ export default {
        recycleProject(this.binProjectId).then(res=>{
           if(res.result=='1'){
               this.showBin=false
-          }
-         
+          }       
       })
 
     }
