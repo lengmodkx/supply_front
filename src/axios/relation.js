@@ -19,6 +19,15 @@ export function addMenu(projectId,menuName,groupId,order) {
     });
 }
 
+//设置列表下所有任务的执行者
+export function setAllTaskExecutor(menuId,executor) {
+    return fetch({
+        url: `/relations/${menuId}/all_task_executor`,
+        method: "put",
+        params:{"executor":executor}
+    });
+}
+
 //设置列表下所有任务的截止时间
 export function setAllTaskEndTime(menuId,endTime) {
     return fetch({
@@ -27,6 +36,8 @@ export function setAllTaskEndTime(menuId,endTime) {
         params:{"endTime":endTime}
     });
 }
+
+
 
 //移动列表下所有任务
 export function moveAllTask(menuId,projectId,groupId,toMenuId) {
