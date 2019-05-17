@@ -131,6 +131,8 @@ export function updataProjectPic(projectId,file) {
     return fetch({
         url: '/projects/${projectId}/picture',
         method: 'post', // 请求方法
-        data: file
+        params: {
+            "file": file
+        }
     })
 }
