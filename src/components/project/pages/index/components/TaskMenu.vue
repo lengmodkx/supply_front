@@ -91,7 +91,7 @@
                  :autofocus="true"
                  placeholder="查找成员" />
           <ul class="memberList">
-            <li v-for="item in computedMemberList" :key="item.id" @click="chooseExecutor(item.id)">
+            <li v-for="item in computedMemberList" :key="item.id" @click="chooseExecutor(item.userId)">
               <svg-icon name="people" style="vertical-align:middle;margin-right:6px;"></svg-icon>
               {{item.name}}
               <svg-icon name="right"
@@ -105,13 +105,13 @@
                   :disabled="curId==-1">确定</Button> -->
 
          <Input class="findInput"  v-model="findMember" :autofocus="true"  placeholder="查找成员" />
-         <ul class="memberList">
-            <li  v-for ='item  in memberList' :key="item.userId"  @click="chooseExecutor(item.id)">
-              <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image">
-             {{item.userName}}
-            </li>
-          </ul>
-          <Button type="primary" long  :disabled="curId==-1">确定</Button> 
+            <ul class="memberList">
+              <li  v-for ='item  in memberList' :key="item.userId"  @click="chooseExecutor(item.userId)">
+                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image">
+                {{item.userName}}
+              </li>
+            </ul>
+        <Button type="primary" long  :disabled="curId==-1" @click='setAllMember' >确定</Button> 
  
         </div>
 
@@ -299,6 +299,8 @@ import {collectTask,
         copyTask, 
         getmemberList,
         moveTask} from "@/axios/api";
+
+import {setAllTaskExecutor} from "@/axios/relation"
 export default {
   props: ['data'],
   data () {
@@ -326,35 +328,7 @@ export default {
       findPro: '',
       notice: [],
       curId:-1,
-      memberList:[
-        {
-            "userId": "423a9345e2474809a1579e6e7e332d61",
-            "userName": "m",
-            "accountName": "15046109313",
-            "deleteStatus": 0,
-            "locked": 0,
-            "creatorName": "15046109313",
-            "createTime": "2019-05-14T06:33:18.000+0000",
-            "updateTime": "2019-05-14T06:33:18.000+0000",
-            "image": "upload/avatar/1557815597830.jpg",
-            "defaultImage": "upload/avatar/1557815597830.jpg",
-            "sex": 0
-        },
-        {
-            "userId": "423a9345e2474809a1579e6e7e332d63",
-            "userName": "可以",
-            "accountName": "15046109313",
-            "deleteStatus": 0,
-            "locked": 0,
-            "creatorName": "15046109313",
-            "createTime": "2019-05-14T06:33:18.000+0000",
-            "updateTime": "2019-05-14T06:33:18.000+0000",
-            "image": "upload/avatar/1557815597830.jpg",
-            "defaultImage": "upload/avatar/1557815597830.jpg",
-            "sex": 0
-        },
-        
-      ]
+      memberList:[],
     }
   },
   computed: {
@@ -458,6 +432,7 @@ export default {
         this.createMemberList();
       }
     },
+    //获取执行者
     createMemberList(){
           this.currProjectId=this.$route.params.id
           getmemberList(this.currProjectId).then(res=>{
@@ -466,6 +441,14 @@ export default {
               }
           })
           
+    },
+    //设置执行者
+    setAllMember(){
+      console.log(this.data.relationId,this.curId)
+        setAllTaskExecutor(this.data.relationId,this.curId).then(res=>{
+
+        })
+
     },
 
     clearAll () {
