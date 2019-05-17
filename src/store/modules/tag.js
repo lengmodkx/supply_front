@@ -1,6 +1,4 @@
-import {
-    projectTag
-} from "../../axios/api2.js";
+import {getAllTag} from "@/axios/setAndTag";
 
 const store = {
     namespaced: true,
@@ -13,6 +11,7 @@ const store = {
                 i.showOpearte=false
             })
             state.tags = data
+            console.log(2222222, state.tags)
         },
         // 关闭 标签菜单框
         closeMenu (state, data) {
@@ -43,9 +42,9 @@ const store = {
     },
     actions: {
         getTags({commit}, data) {
-            projectTag(data).then(res => {
+            getAllTag(data).then(res => {
                 if (res.result === 1) {
-                    commit('init', res.tagList)
+                    commit('init', res.data.tags)
                 }
             })
         }
