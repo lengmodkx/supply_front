@@ -126,35 +126,6 @@
         })
       },
 
-      //获取本地数据
-      getDataLocality:function() {
-        let res={
-          result:1,
-          data:[
-            {id:1, text:"任务1", type:gantt.config.types.milestone,   start_date:1556519957000, end_date:1559111957000,open:true},
-            {id:2, text:"任务2", type:gantt.config.types.milestone,   start_date:1556519957000, end_date:1559111957000, parent:1},
-          ]
-        }
-        let listData=[]
-        listData=res.data.map(item=>{
-          let cur={
-            id: item.id,
-            publicId:item.publicId,
-            text: item.text,
-            user: item.user,
-            type: item.type,
-            start_date: new Date(item.start_date),
-            end_date: new Date(item.end_date),
-            parent:item.parent,
-            open:item.open ,
-            progress:1
-          }
-          return cur;
-        })
-        this.tasks.data = listData
-        gantt.parse(this.tasks)
-      }
-
     },
 
     mounted () {
