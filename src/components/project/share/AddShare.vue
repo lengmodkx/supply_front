@@ -1,11 +1,11 @@
 <template>
-  <div class="add-share" :class="active">
+  <div class="add-share" :class="active" >
     <div class="context">
       <div class="input">
-        <Input v-model="title" placeholder="输入文档标题" value="0011" />
+        <Input v-model="title" placeholder="输入文档标题" />
       </div>
       <div class="html">
-        <editor ref="editor"></editor>
+        <editor ref="editor" :contents="content"></editor>
       </div>
     </div>
     <div class="footer">
@@ -29,9 +29,9 @@
 
 <script>
 import editor from "../../resource/Simditor.vue";
-import { shareAdd } from "../../../axios/api.js";
+import { shareAdd, editShare } from "../../../axios/api.js";
 export default {
-  props: ["projectId", "shareTitle", "shareContent"],
+  props: ["projectId", "shareTitle", "shareContent", 'shareId'],
   data() {
     return {
       value: "",
@@ -47,7 +47,8 @@ export default {
   },
 
   mounted() {
-    this.$refs.editor.content = this.content;
+    this.$refs.editor.contents = this.content;
+    console.log(this.$refs.editor)
     // editor.on('valuechanged', () => {
     //   this.content = editor.getValue()
     // })
@@ -76,17 +77,24 @@ export default {
         content: this.content,
         isPrivacy: this.isPrivacy
       };
-
-      shareAdd(params).then(res => {
-        console.log(res);
-        if (res.result === 1) {
-          this.title = "";
-          this.content = "";
-          this.loading = false;
+      // 编辑分享
+      if (this.shareId) {
+        editShare(this.shareId,params).then(res => {
           this.$emit("close");
-        }
-      });
-    }
+        })
+      }else {
+        // 新建分享
+        shareAdd(params).then(res => {
+          console.log(res);
+          if (res.result === 1) {
+            this.title = "";
+            this.content = "";
+            this.loading = false;
+            this.$emit("close");
+          }
+        });
+      }
+    },
   }
 };
 </script>

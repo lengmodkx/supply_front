@@ -52,9 +52,9 @@ export default {
     editor.customConfig.onchange = html => {
       this.content = html;
     };
-    editor.customConfig.onfocus = function() {
-      editor.txt.clear();
-    };
+    // editor.customConfig.onfocus = function() {
+    //   editor.txt.clear();
+    // };
     editor.customConfig.menus = [
       "head", // 标题
       "bold", // 粗体

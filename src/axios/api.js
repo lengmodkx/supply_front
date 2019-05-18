@@ -464,20 +464,28 @@ export function shares(projectId) {
     });
 }
 // 分享详情
-export function share(shareId) {
+export function getShareDetail(shareId) {
     return $get(`/shares/${shareId}`, "");
+}
+// 改变分享参与者
+export function changeJoin(shareId,memberIds) {
+    return $put(`/shares/${shareId}/members`, {memberIds:memberIds});
 }
 //添加分享
 export function shareAdd(params) {
     return $post("/shares", params);
+}
+// 编辑分享
+export function editShare(shareId, params) {
+    return $post(`/shares/${shareId}`, params);
 }
 //删除分享
 export function deleteShare(shareId) {
     return $delete(`/shares/${shareId}`, "");
 }
 //将分享移入回收站
-export function recycleShare(shareId) {
-    return $put(`/shares/${shareId}/recyclebin`, "");
+export function recycleShare(shareId,projectId) {
+    return $put(`/shares/${shareId}/recyclebin`, {projectId:projectId});
 }
 //恢复分享
 export function recovery(shareId) {
@@ -491,20 +499,21 @@ export function copyShare(shareId, projectId) {
 }
 
 //移动分享
-export function moveShare(shareId, projectId) {
+export function moveShare(shareId, projectId,curProjectId) {
     return $post(`/shares/${shareId}/move`, {
-        projectId: projectId
+        projectId: projectId,
+        curProjectId:curProjectId
     });
 }
 
 //更换分享隐私模式
-export function privacyShare(shareId) {
-    return $post(`/shares/${shareId}/privacy`, "");
+export function privacyShare(shareId,projectId) {
+    return $put(`/shares/${shareId}/privacy`, {projectId:projectId});
 }
 
 //置顶分享
-export function topShare(shareId) {
-    return $post(`/shares/${shareId}/top`, "");
+export function topShare(shareId,projectId) {
+    return $post(`/shares/${shareId}/top`, {projectId:projectId});
 }
 
 //更改任务的隐私模式

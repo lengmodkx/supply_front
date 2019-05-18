@@ -35,7 +35,7 @@
           <div class="share-list">
             <Loading v-if="loading"></Loading>
             <ul v-if="shareList.length">
-              <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index)">
+              <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index,share.id)">
                 <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${share.memberImg}`">
                 <div class="">
                   <p class="t">{{share.title}}</p>
@@ -58,14 +58,15 @@
                     <span>{{this.share.title}}</span>
                   </div>
                   <div class="right-icons">
-                    <Tooltip content="点个赞" placement="bottom">
-                      <span class="zan" :class="{zan_blue:zan}">
-                        <Icon type="md-thumbs-up"></Icon>
-                        <!--<span class="zanNum" v-if="zan">1</span>-->
-                      </span>
-                    </Tooltip>
+                    <!--<Tooltip content="点个赞" placement="bottom">-->
+                      <!--<span class="zan" :class="{zan_blue:zan}">-->
+                        <!--<Icon type="md-thumbs-up"></Icon>-->
+                        <!--&lt;!&ndash;<span class="zanNum" v-if="zan">1</span>&ndash;&gt;-->
+                      <!--</span>-->
+                    <!--</Tooltip>-->
                     <span class="down">
-                      <singleFenxiangMenu :data="share" :name="publicType"></singleFenxiangMenu>
+                      <singleFenxiangMenu @changeNowIndex="indexNow=0" @shareEdit="editShare=true" @removeSahre="indexNow=0"
+                              :data="share" :name="publicType" :projectId="projectId"></singleFenxiangMenu>
                     </span>
                   </div>
 
@@ -105,6 +106,112 @@
                   <p class="name" style="margin-top: 5px">
                     <Icon type="ios-link-outline" style="font-size: 18px;margin-right: 3px"></Icon>关联内容
                   </p>
+                  <div class="has-relevance">
+                    <ul v-if="share.bindTasks.length!=0">
+                      <div class="what-title">关联的任务</div>
+                      <li class="gl-task-list" v-for="(b,i) in share.bindTasks" :key="i" >
+                        <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
+                          <Icon type="md-checkbox-outline" size="22" />
+                          <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
+                          <Icon type="md-contact" v-else size="26" />
+                          <div class="gl-con">
+                            <div class="gl-con-top">
+                              <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
+                            </div>
+                            <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                          </div>
+                        </div>
+                        <Poptip @click.stop>
+                          <Icon class="glpop" type="ios-arrow-down" size="20" />
+                          <div slot="content">
+                            <div class="glpop-list">
+                              <Icon type="ios-link" size="20" /><span>复制链接</span>
+                            </div>
+                            <div class="glpop-list" @click.stop="cancle(b.taskId)">
+                              <Icon type="md-link" size="20" /><span>取消关联</span>
+                            </div>
+                          </div>
+                        </Poptip>
+                      </li>
+                    </ul>
+                    <ul v-if="share.bindFiles.length!=0">
+                      <div class="what-title">关联的文件</div>
+                      <li class="gl-task-list" v-for="(b,i) in share.bindFiles" :key="i">
+                        <div class="gl-task-list-con" @click="getFileDetail(b.fileId)">
+                          <!--<Icon type="md-checkbox-outline" size="22" />-->
+                          <Icon type="ios-document-outline" size="22" />
+                          <div class="gl-con">
+                            <div class="gl-con-top">
+                              <span>{{b.fileName}}</span><span>{{b.projectName}}</span>
+                            </div>
+                            <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                          </div>
+                        </div>
+                        <Poptip>
+                          <Icon class="glpop" type="ios-arrow-down" size="20" />
+                          <div slot="content">
+                            <div class="glpop-list">
+                              <Icon type="ios-link" size="20" /><span>复制链接</span>
+                            </div>
+                            <div class="glpop-list" @click.stop="cancle(b.fileId)">
+                              <Icon type="md-link" size="20" /><span>取消关联</span>
+                            </div>
+                          </div>
+                        </Poptip>
+                      </li>
+                    </ul>
+                    <ul v-if="share.bindSchedules.length!=0">
+                      <div class="what-title">关联的日程</div>
+                      <li class="gl-task-list" v-for="(b,i) in share.bindSchedules" :key="i" >
+                        <div class="gl-task-list-con" @click="editSchedule(b.scheduleId)">
+                          <!--<Icon type="md-checkbox-outline" size="22" />-->
+                          <Icon type="ios-calendar-outline" size="22" />
+                          <div class="gl-con">
+                            <div class="gl-con-top">
+                              <span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>
+                            </div>
+                            <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                          </div>
+                        </div>
+                        <Poptip>
+                          <Icon class="glpop" type="ios-arrow-down" size="20" />
+                          <div slot="content">
+                            <div class="glpop-list">
+                              <Icon type="ios-link" size="20" /><span>复制链接</span>
+                            </div>
+                            <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
+                              <Icon type="md-link" size="20" /><span>取消关联</span>
+                            </div>
+                          </div>
+                        </Poptip>
+                      </li>
+                    </ul>
+                    <ul v-if="share.bindShares.length!=0">
+                      <div class="what-title">关联的分享</div>
+                      <li class="gl-task-list" v-for="(b,i) in share.bindShares" :key="i">
+                        <div class="gl-task-list-con" @click="goShareDetail(b.shareId)">
+                          <Icon type="ios-open-outline" size="22" />
+                          <div class="gl-con">
+                            <div class="gl-con-top">
+                              <span>{{b.shareName}}</span><span>{{b.projectName}}</span>
+                            </div>
+                            <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                          </div>
+                        </div>
+                        <Poptip>
+                          <Icon class="glpop" type="ios-arrow-down" size="20" />
+                          <div slot="content">
+                            <div class="glpop-list">
+                              <Icon type="ios-link" size="20" /><span>复制链接</span>
+                            </div>
+                            <div class="glpop-list" @click.stop="cancle(b.shareId)">
+                              <Icon type="md-link" size="20" /><span>取消关联</span>
+                            </div>
+                          </div>
+                        </Poptip>
+                      </li>
+                    </ul>
+                  </div>
                   <div class="addLink" @click="relationModal=true;">
                     <Icon type="ios-add-circle-outline" />添加关联</div>
                   <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
@@ -112,15 +219,40 @@
                   </Modal>
                 </div>
               </div>
-              <div class="omg" v-if="members">
-                <p class="ot">参与者 · {{members.length}}</p>
-                <p class="oc" v-for="user in members" :key="user.id">
-                  <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
-                  <Icon type="md-add-circle" size="28" color="#2d8cf0" @click.native="showMember"></Icon>
-                </p>
-
+              <!-- 设置参与者 -->
+              <div class="participator">
+                <h5>
+                  参与者 · {{share.joinInfo!=null?share.joinInfo.length:0}}
+                  <Tooltip content="参与者将会收到评论和任务更新通知" placement="right" transfer>
+                    <Icon type="ios-help"></Icon>
+                  </Tooltip>
+                </h5>
+                <div class="involve-list clearfix">
+                  <div class="member-avatar fl" v-for="(item,index) in share.joinInfo" :key="index">
+                    <Tooltip :content="item.userName" placement="top" transfer>
+                      <div class="ava">
+                        <!-- 删除需要加在关闭按钮上 -->
+                        <img v-if="item.image" :src="prefix + item.image" alt="">
+                        <svg-icon v-else style="width:24px;height:24px;display:block;" name="allMember"></svg-icon>
+                        <span class="close" @click="deleteInvolve(item.userId)">×</span>
+                      </div>
+                    </Tooltip>
+                  </div>
+                  <div class="addButton fl">
+                    <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="share.projectId" @save="saveInvolveMember"></InvolveMember>
+                  </div>
+                </div>
                 <log :logs="share.logs" :unReadMsg="share.unReadMsg" :publicId="share.id"></log>
               </div>
+              <!--<div class="omg">-->
+                <!--<p class="ot">参与者 · {{share.joinInfo.length}}</p>-->
+                <!--<p class="oc" v-for="user in share.joinInfo" :key="user.userId">-->
+                  <!--<img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">-->
+                  <!--<Icon type="md-add-circle" size="28" color="#2d8cf0" style="cursor: pointer" @click.native="showMember"></Icon>-->
+                <!--</p>-->
+
+                <!--<log :logs="share.logs" :unReadMsg="share.unReadMsg" :publicId="share.id"></log>-->
+              <!--</div>-->
             </div>
             <publish :publicId="share.id" :projectId="share.projectId" :publicType="publicType"></publish>
           </div>
@@ -130,7 +262,10 @@
     <Modal v-model="showAddMember" width="252" footer-hide transfer :mask="false" :closable="false">
       <user-list :projectId="projectId"></user-list>
     </Modal>
-
+      <!--编辑分享-->
+      <Modal v-model="editShare" :z-index=999999999  transfer fullscreen footer-hide class-name="ivu-modal-wrap" >
+          <add-share v-if="editShare" ref="editshare" @close="editShare=false" :projectId="projectId" :shareTitle="share.title" :shareContent="share.content" :shareId="share.id"></add-share>
+      </Modal>
   </div>
 </template>
 
@@ -144,7 +279,7 @@ import log from "../../public/log";
 import singleFenxiangMenu from "../../public/common/SingleFenxiangMenu.vue";
 import AddRelation from "@/components/public/common/AddRelation";
 import { mapState, mapMutations, mapActions } from "vuex";
-import { share } from "../../../axios/api";
+import { share, changeJoin, cancle } from "../../../axios/api";
 export default {
   components: {
     publish,
@@ -159,6 +294,7 @@ export default {
     return {
       loading: true,
       type: 1,
+      prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       editShare: false,
       showAddshare: false,
       projectId: this.$route.params.id,
@@ -176,20 +312,26 @@ export default {
       tagList: [],
       publicType: "分享",
       showAddMember: false,
-      zan: 0
+      zan: 0,
     };
   },
   computed: {
     ...mapState("member", ["members"]),
     ...mapState("project", ["projectName"]),
-    ...mapState("share", ["shareList", "share"])
+    ...mapState("share", ["shareList", "share"]),
+    joinInfoIds () {
+      return this.share.joinInfo.map(i => {
+        return i.userId
+      })
+    }
   },
   mounted() {
     this.init(this.$route.params.id).then(res => {
-      this.loading = false;
-      if (this.share != null) {
-        this.$store.dispatch("member/init", this.share.joinInfo);
-      }
+        if (this.shareList.length){
+            this.changeShares(this.shareList[0].id).then(res => {
+                this.loading = false;
+            })
+        }
     });
     // shares(this.$route.params.id).then(res => {
     //   if (res.result == 1) {
@@ -203,7 +345,7 @@ export default {
     // });
   },
   methods: {
-    ...mapActions("share", ["init"]),
+    ...mapActions("share", ["init",'changeShares']),
     ...mapMutations("share", ["changeShare"]),
     clickEvent(parameter) {},
     changePrivacy() {
@@ -217,22 +359,52 @@ export default {
         this.privacyStatus = "已开启";
       }
     },
-    changeContent(index) {
+      // 点击左侧分享
+    changeContent(index,id) {
       this.indexNow = index;
-      this.changeShare(index);
-      // this.share = this.shareList[index];
-      this.$store.dispatch("member/init", this.shareList[index].joinInfo);
+      this.changeShares(id);
+    },
+    // 添加参与者
+    saveInvolveMember(detailList) {
+      changeJoin(this.share.id,detailList).then(res => {
+        console.log(res)
+      })
+    },
+    // 移除参与者
+    deleteInvolve (id) {
+      console.log(this.share)
+      let arr= this.share.joinInfo
+      arr.forEach((i,n) => {
+        if (i.userId===id){
+          arr.splice(n, 1)
+        }
+      })
+      let strings=arr.map(v => {return v.userId}).join(',')
+      changeJoin(this.share.id,strings).then(res => {
+        console.log(res)
+      })
+    },
+    // 取消关联
+    cancle (id) {
+      cancle(id, this.projectId, this.publicType, this.share.id).then(
+              res => {
+                if (res.result === 1) {
+                  this.$Message.success("已取消");
+                }
+              }
+      );
     },
     showMember() {
       this.showAddMember = !this.showAddMember;
     },
     addShares() {
       this.showAddshare = false;
-      this.loading = true;
-      this.init(this.$route.params.id).then(res => {
-        this.loading = false;
-        this.$store.dispatch("member/init", this.shareList[0].joinInfo);
-      });
+        this.indexNow++
+      // this.loading = true;
+      // this.init(this.$route.params.id).then(res => {
+      //   this.loading = false;
+      //   this.$store.dispatch("member/init", this.shareList[0].joinInfo);
+      // });
     }
   }
 };
@@ -367,6 +539,14 @@ export default {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
+      &::-webkit-scrollbar {
+          width: 6px;
+          height: 8px;
+          background-color: #e5e5e5;
+      }
+      &::-webkit-scrollbar-thumb {
+          background-color: #cecece;
+      }
   }
   .share-main {
     position: relative;
@@ -395,6 +575,16 @@ export default {
     }
     .share-list {
       width: 100%;
+        height: calc(100% - 65px) ;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 6px;
+            height: 8px;
+            background-color: #e5e5e5;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #cecece;
+        }
       li {
         padding: 20px 15px;
         display: flex;
@@ -472,5 +662,160 @@ export default {
   .ivu-icon {
     margin-right: 10px;
   }
+}
+.has-relevance{
+  width: 100%;
+  padding: 0 16px;
+  ul{
+    width: 100%;
+    padding: 0 16px;
+    border: 1px solid #e5e5e5;
+    margin-top: 10px;
+    border-radius: 4px;
+    .what-title{
+      height: 44px;
+      width: 100%;
+      line-height: 44px;
+      font-size: 14px;
+      color: gray;
+    }
+    .gl-task-list{
+      width: 100%;
+      display: flex;
+      padding-bottom: 16px;
+      .gl-task-list-con{
+        width: 100%;
+        height: 60px;
+        padding: 8px 0;
+        display: flex;
+        color: #a6a6a6;
+        cursor: pointer;
+        padding-right: 5px;
+        &:hover{
+          background-color: #f5f5f5;
+        }
+        i{
+          margin-right: 10px;
+          color: gray;
+          line-height: 24px;
+          flex: none;
+        }
+        img{
+          width: 24px;
+          height: 24px;
+          margin-right: 12px;
+          flex: none;
+        }
+        .gl-con{
+          width: 100%;
+          .gl-con-top{
+            height: 24px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+          }
+          .gl-con-bottom{
+            line-height: 20px;
+          }
+        }
+      }
+      .glpop{
+        color: gray;
+        cursor: pointer;
+        margin-left: 10px;
+        margin-right: 4px;
+        flex: none;
+        line-height: 22px;
+        padding-top: 8px;
+      }
+      /deep/ .ivu-poptip-body{
+        padding: 10px 0;
+      }
+      .glpop-list{
+        width: 200px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        cursor: pointer;
+        color: gray;
+        &:hover{
+          background-color: #f5f5f5;
+        }
+        span{
+          font-size: 14px;
+          margin-left: 15px;
+        }
+      }
+    }
+  }
+}
+.participator{
+  padding:10px 16px;
+  background-color: #f6f6f6;
+  border-bottom:1px solid #eee;
+  h5 {
+    font-size: 14px;
+    color:gray;
+  }
+  .involve-list {
+    margin-top: 12px;
+    .member-avatar{
+      .ava{
+        margin-right: 5px;
+        cursor: pointer;
+        border:2px solid transparent;
+        img {
+          display: block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+        }
+        .close{
+          display: none;
+        }
+      }
+    }
+    .member-avatar:not(:nth-child(1)) {
+      .ava {
+        margin-right: 5px;
+        cursor: pointer;
+        border:2px solid transparent;
+        border-radius: 50%;
+        &:hover{
+          border:2px solid #a6a6a6;
+          .close{
+            display: block;
+          }
+        }
+        img {
+          display: block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+        }
+        .close{
+          position: absolute;
+          font-size: 14px;
+          top: -3px;
+          right: 1px;
+          width: 12px;
+          height: 12px;
+          line-height: 12px;
+          border-radius: 50%;
+          color: #fff;
+          text-align: center;
+          background-color: #a6a6a6;
+          display: none;
+          &:hover{
+            background-color: #3da8f5;
+
+          }
+        }
+      }
+    }
+  }
+
 }
 </style>

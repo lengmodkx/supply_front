@@ -16,8 +16,8 @@
             <svg-icon class="closePop" name="close"></svg-icon>
           </span>
         </div>
-        <div class="task-menu-list" v-if="active==''">
-          <div class="menuItem" @click="editShare=true">
+        <div class="task-menu-list" v-if="active===''">
+          <div class="menuItem" @click="$emit('shareEdit')">
             <Icon type="md-color-filter" />编辑分享</div>
           <div class="menuItem" @click="topShare">
             <Icon type="ios-share-outline" />置顶分享</div>
@@ -25,14 +25,14 @@
             <Icon type="ios-paper-outline" />复制{{name}}</div>
           <div class="menuItem" @click="listItemClick('a','移动到')">
             <Icon type="ios-log-out" />移动{{name}}</div>
-          <div class="menuItem" @click="collectTask">
-            <Icon type="md-clipboard" />{{data.collect ? '取消收藏':'收藏'+name}}</div>
+          <div class="menuItem" @click="collectShare">
+            <Icon type="md-clipboard" />{{collect ? '取消收藏':'收藏'+name}}</div>
 
           <div class="menuItem" @click="listItemClick('c','移到回收站')">
             <Icon type="ios-trash-outline" />移到回收站</div>
           <div class="privacy">
             <div class="p_left fl clearfix" @click="privacyChange">
-              <div v-if="data.privacyPattern" style="overflow:hidden;">
+              <div v-if="data.isPrivacy" style="overflow:hidden;">
                 <Icon type="unlocked" class="fl"></Icon>
                 <div class="p_title fl">
                   <h5>隐私模式</h5>
@@ -40,7 +40,7 @@
                 </div>
               </div>
 
-              <div v-if="!data.privacyPattern" style="overflow:hidden;">
+              <div v-if="!data.isPrivacy" style="overflow:hidden;">
                 <Icon type="locked" class="fl"></Icon>
                 <div class="p_title fl">
                   <h5>隐私模式</h5>
@@ -49,7 +49,7 @@
               </div>
             </div>
             <div class="p_right fr">
-              <span>{{data.privacyPattern==1?"已关闭":"已开启"}}</span>
+              <span>{{data.isPrivacy==1?"已关闭":"已开启"}}</span>
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@
         <div class="task-menu-detail">
           <div class="con5" v-if="active=='a'" style="height: auto">
             <div class="con5item1">
-              <span>项目11</span>
+              <span>项目</span>
               <Select v-model="model7" style="width:100px" @on-open-change="getProjectList" @on-change="getGroupList">
                 <OptionGroup label="星标项目">
                   <Option v-for="(item, index) in starProject" :value="item.projectId" :key="index">{{ item.projectName}}</Option>
@@ -74,7 +74,7 @@
           </div>
           <div class="con6" v-if="active=='b'">
             <div class="con5item1">
-              <span>项目2222</span>
+              <span>项目</span>
               <Select v-model="model7" style="width:150px" placeholder="选择项目" @on-open-change="getProjectList" @on-change="getGroupList">
                 <OptionGroup label="星标项目">
                   <Option v-for="(item,index) in starProject" :value="item.projectId" :key="index">{{ item.projectName }}</Option>
@@ -95,15 +95,16 @@
         </div>
       </div>
     </Poptip>
-    <!--编辑分享-->
-    <Modal v-model="editShare" title="编辑分享" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
-      <add-share v-if="editShare" ref="editshare" @close="editShare=false" :projectId="projectId" :shareTitle="share.title" :shareContent="share.content"></add-share>
-    </Modal>
+    <!--&lt;!&ndash;编辑分享&ndash;&gt;-->
+    <!--<Modal v-model="editShare" :z-index=999999999  transfer fullscreen footer-hide class-name="ivu-modal-wrap" >-->
+      <!--<add-share v-if="editShare" ref="editshare" @close="editShare=false" :projectId="projectId" :shareTitle="data.title" :shareContent="data.content" :shareId="data.id"></add-share>-->
+    <!--</Modal>-->
   </div>
 
 </template>
 <script>
 import Clipboard from "clipboard";
+import addShare from '../../project/share/AddShare'
 import {
   collectTask,
   cancelCollect,
@@ -119,7 +120,7 @@ import {
 } from "@/axios/api";
 
 export default {
-  props: ["data", "name"],
+  props: ["data", "name", 'projectId'],
   data() {
     return {
       link: "https://www.baidu.com",
@@ -144,9 +145,10 @@ export default {
       model9: "",
       model10: "",
       editShare: false,
-      projectId: this.$route.params.id
+      collect: this.data.collect
     };
   },
+  components: {addShare},
   computed: {
     topTitle() {
       return this.active ? this.curTopTitle : "任务菜单";
@@ -169,7 +171,8 @@ export default {
     },
     // 置顶分享
     topShare() {
-      topShare(this.data.id).then(res => {
+      topShare(this.data.id, this.projectId).then(res => {
+        this.$emit('changeNowIndex')
         this.$Message.success("置顶成功");
       });
     },
@@ -220,24 +223,25 @@ export default {
     createNew() {
       this.active = "";
     },
-    // 收藏日程
-    collectTask() {
-      if (this.data.collect) {
-        cancelCollect(this.data.task.taskId).then(res => {
+    // 收藏分享
+    collectShare() {
+      if (this.collect) {
+        cancelCollect(this.projectId,this.data.id,'分享').then(res => {
           if (res.result === 1) {
             this.$Message.success(res.msg);
-            this.data.collect = false;
+            this.collect = false;
           }
         });
       } else {
         collectTask(
-          this.data.task.projectId,
-          this.data.task.taskId,
-          "任务"
+          this.projectId,
+          this.data.id,
+          "分享"
         ).then(res => {
           if (res.result === 1) {
             this.$Message.success(res.msg);
-            this.data.collect = true;
+            this.collect = true;
+            console.log(this.data)
           }
         });
       }
@@ -245,6 +249,7 @@ export default {
     //复制分享
     copyTask() {
       copyShare(this.data.id, this.currProjectId).then(res => {
+        console.log(res)
         if (res.result === 1) {
           this.$Message.success("复制成功");
         }
@@ -252,32 +257,25 @@ export default {
     },
     // 移动分享
     removeRc() {
-      moveShare(this.data.id, this.currProjectId).then(res => {
+      moveShare(this.data.id, this.currProjectId,this.projectId).then(res => {
         if (res.result) {
           this.$Message.success("移动成功");
-          window.location.reload();
+          this.$emit('removeSahre')
         }
       });
     },
-    //任务移入回收站
+    //分享移入回收站
     recycle() {
-      recycleShare(this.data.id).then(res => {
+      recycleShare(this.data.id,this.projectId).then(res => {
         if (res.result) {
           this.$Message.success("已移到回收站");
-          window.location.reload();
+          this.$emit('removeSahre')
         }
       });
     },
     // 更新隐私模式
     privacyChange() {
-      if (this.data.privacyPattern) {
-        this.data.privacyPattern = 0;
-        this.unlock = 0;
-      } else {
-        this.data.privacyPattern = 1;
-        this.unlock = 1;
-      }
-      privacyShare(this.data.id).then(res => {
+      privacyShare(this.data.id,this.projectId).then(res => {
         console.log(res);
       });
     },

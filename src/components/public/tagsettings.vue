@@ -64,7 +64,7 @@
           <ul class="right-view-ul">
             <li class="schedule-li" v-for="(i,n) in nowTag.scheduleList" :key="n">
               <p>{{i.scheduleName}}</p>
-              <p class="gray-color">{{i.createTime | timeFilter}}</p>
+              <p class="gray-color">{{i.startTime | timeFilter}}-{{i.endTime | timeFilter}}</p>
             </li>
           </ul>
         </div>
@@ -74,7 +74,7 @@
           <ul class="right-view-ul">
             <li class="share-li" v-for="(i,n) in nowTag.shareList" :key="n">
               <p>{{i.title}}</p>
-              <p class="gray-color">{{i.createTime | timeFilter}}</p>
+              <p class="gray-color">发布于{{i.createTime | timeFilter}}</p>
             </li>
           </ul>
         </div>

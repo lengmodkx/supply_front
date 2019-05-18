@@ -95,11 +95,9 @@
 
 <script>
 import { addSchedule } from "@/axios/api";
-import userList from "@/components/resource/userList.vue";
 import {mapActions} from 'vuex'
 export default {
   name: "",
-  components: { userList },
   data() {
     return {
       showUserList: false,

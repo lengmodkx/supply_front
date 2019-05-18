@@ -148,6 +148,8 @@ export default {
                   );
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/relevance", result.object);
+                }else if (result.object.fromType === "分享") {
+                    this.$store.dispatch("share/changeShares", result.object.publicId);
                 }
                 break;
               // 取消关联
@@ -159,10 +161,43 @@ export default {
                   );
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/cancelRelevance", result.object);
+                }else if (result.object.fromType === "分享") {
+                    this.$store.commit("file/cancelRelevance", result.object.publicId);
                 }
                 break;
               case "A30":
                 this.$store.dispatch("task/changeTask", result.object);
+                break;
+            // 添加分享
+              case "B1":
+                this.$store.dispatch("share/init", result.object);
+                break;
+                // 编辑分享
+              case "B2":
+                this.$store.commit("share/editShare", result.object);
+                this.$store.dispatch("share/init", result.object.projectId);
+                break;
+                // 移动分享
+              case "B5":
+                this.$store.dispatch("share/removeShare", result.object);
+                // this.$store.commit("share/removeShare",'' );
+                break;
+                // 隐私模式
+              case "B8":
+                this.$store.dispatch("share/changeShares", result.object);
+                break;
+                // 分享移到回收站
+              case "B6":
+                this.$store.dispatch("share/changeShares", result.object);
+                break;
+                // 添加参与者
+                case "B10":
+                    this.$store.dispatch("share/changeShares", result.object);
+                    break;
+              case "B3":
+              case "B4":
+              case "B7":
+                this.$store.dispatch("share/init", result.object);
                 break;
               // 创建文件夹
               case "C1":
@@ -235,6 +270,8 @@ export default {
                   this.$store.commit("schedule/msg", result.object.log);
                 } else if (result.object.type === "文件") {
                   this.$store.commit("file/getMsg", result.object.log);
+                }else if (result.object.type === "分享") {
+                  this.$store.commit("share/sendMsg", result.object.log);
                 }
                 break;
               case "G1":
