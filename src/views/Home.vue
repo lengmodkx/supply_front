@@ -60,7 +60,7 @@
               <p>{{item.projectName}}</p>
               <span>{{item.projectDes}}</span>
             </div>
-            <div class="operate-box">
+            <div class="operate-box" v-if="projectType!='回收站的项目'">
               <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
                 <span @click.stop="setStar(item.projectId)">
                   <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
@@ -123,7 +123,7 @@
             <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
               <h2>{{item.projectName}}</h2>
               <p>{{item.projectDes}}</p>
-              <div class="iconPic">
+              <div class="iconPic"  v-if="projectType!='回收站的项目'">
                 <Tooltip class="iconpic1" content="打开项目设置" placement="top">
                   <span @click.stop="setProject(item)">
                     <Icon type="md-settings" size="18"></Icon>
@@ -161,6 +161,13 @@
     <Modal v-model="projectSet" class="setPro-modal">
       <ProjectSettings  @close-settings="closeSettings" ></ProjectSettings>
     </Modal>
+
+    <Modal class="confirmModal" v-model="showBin" title="移到回收站">
+              <p style="padding:10px;font-size:15px;">一旦将项目「{{this.binName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
+              <div class="doBtn">
+                <Button type="error" @click="okHuishou" >移到回收站</Button>
+              </div>
+    </Modal>
   </div>
 </template>
 
@@ -169,6 +176,7 @@ import CreateProject from "./CreateProject.vue";
 import ProjectSettings from "./projectSettings.vue";
 import Loading from "../components/public/common/Loading.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
+
 import {
   setStarProject,
   guidangProject,
@@ -187,6 +195,9 @@ export default {
   data() {
     return {
       //用变量承接一下要传入modal的每个id或参数
+      showBin:false,//显示回收站
+      binName:'',//回收站项目名称
+      binProjectId:'',
       cancelID: null,
       searchWords: '',
       isSearch: false,
@@ -291,6 +302,11 @@ export default {
     },
     // 搜索项目
     searchProject(value) {
+      if(value==''){
+        this.init(this.projectType);
+        return
+      }
+      
       let arr={
         '我创建的项目':'created',
         '我参与的项目': 'join',
@@ -314,6 +330,21 @@ export default {
      closeSettings:function(data){
         this.projectSet=data
     },
+    //删除项目
+    confirmHuishou:function(data){
+      console.log(data)
+      this.showBin=true;
+      this.binName=data.projectName
+      this.binProjectId=data.projectId
+    },
+    okHuishou(){
+       recycleProject(this.binProjectId).then(res=>{
+          if(res.result=='1'){
+              this.showBin=false
+          }       
+      })
+
+    }
   }
 
 };

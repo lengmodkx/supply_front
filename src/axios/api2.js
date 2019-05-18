@@ -125,3 +125,15 @@ function $delete(url, params) {
         params: params
     })
 }
+
+//更改项目封面
+export function updataProjectPic(projectId,file) {
+    return fetch({
+        url: '/projects/${projectId}/picture',
+        method: 'post', // 请求方法
+        params: {
+            projectId: projectId,
+            file: file,
+        }
+    })
+}

@@ -265,19 +265,15 @@
                   long>移到回收站</Button>
 
         </div>
-        <div class="con8"
-             v-if="active=='h'">
+        <div class="con8"  v-if="active=='h'">
           <!-- 如果列表内容不为空，则提示要先清空所有的列表 -->
-          <div class="nodelete"
-               v-if="data.arr && data.arr.length>0">
+          <div class="nodelete"  v-if="data.taskList.length>0">
             <div>请先清空此列表上的任务，然后再删除这个列表.</div>
           </div>
           <!-- 如果列表为空，则可以删除该任务 -->
-          <div class="candelete"
-               v-else>
+          <div class="candelete" v-else>
             <h5>您确定要永远删除这个列表吗？</h5>
-            <Button type="error"
-                    long>删除</Button>
+            <Button type="error"  long  @click="deleteTask">删除</Button>
           </div>
         </div>
       </div>
@@ -300,7 +296,8 @@ import {collectTask,
         getmemberList,
         moveTask} from "@/axios/api";
 
-import {setAllTaskExecutor} from "@/axios/relation"
+import {setAllTaskExecutor,deleteList} from "@/axios/relation"
+import { debuglog } from 'util';
 export default {
   props: ['data'],
   data () {
@@ -341,6 +338,14 @@ export default {
     // }
   },
   watch:{
+      data: {
+         handler: function(newValue, oldValue) {
+              
+                         
+            },
+          deep: true,
+        },
+   
       findMember(newValue,oldValue){
         if(newValue!=''){
            this.memberList=this.memberList.filter((item,index,self) =>{ return item.userName.includes(newValue)  })
@@ -351,6 +356,7 @@ export default {
        
   },
   mounted () {
+
 
   },
   methods: {
@@ -450,6 +456,14 @@ export default {
         })
 
     },
+    //删除任务
+    deleteTask(){
+
+      deleteList(this.data.relationId).then(res=>{
+
+      })
+
+    },
 
     clearAll () {
 
@@ -472,6 +486,10 @@ export default {
         this.reset()
       }, 300)
     }
+  },
+  created(){
+    
+   
   }
 }
 </script>
