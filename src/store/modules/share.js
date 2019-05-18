@@ -51,6 +51,13 @@ const store = {
                 })
             })
         },
+        // 删除分享 推送
+        deleteSahre ({commit}, daata) {
+            getShareDetail(data).then(res => {
+                commit('changeShare',res.data)
+                commit('removeShare', '')
+            })
+        },
         // 移动分享 推送
         removeShare ({commit}, data) {
             alert('a',data)

@@ -188,7 +188,7 @@ export default {
                 break;
                 // 分享移到回收站
               case "B6":
-                this.$store.dispatch("share/changeShares", result.object);
+                this.$store.dispatch("share/deleteSahre", result.object);
                 break;
                 // 添加参与者
                 case "B10":

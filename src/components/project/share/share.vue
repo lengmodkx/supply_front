@@ -35,11 +35,11 @@
           <div class="share-list">
             <Loading v-if="loading"></Loading>
             <ul v-if="shareList.length">
-              <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index,share.id)">
-                <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${share.memberImg}`">
+              <li v-for="(item,index) in shareList" :key="item.id" :class="{ active: index==indexNow }" @click="changeContent(index,item.id)">
+                <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.memberImg}`">
                 <div class="">
-                  <p class="t">{{share.title}}</p>
-                  <p class="c"> {{share.memberName}}发布于{{share.createTimeStr}}</p>
+                  <p class="t">{{item.title}}</p>
+                  <p class="c"> {{item.memberName}}发布于{{item.createTimeStr}}</p>
                 </div>
               </li>
             </ul>
@@ -256,6 +256,8 @@
             </div>
             <publish :publicId="share.id" :projectId="share.projectId" :publicType="publicType"></publish>
           </div>
+          <div v-else class="no-share">
+              <img src="@/icons/img/sys-msg.png" alt="">暂无分享</div>
         </iCol>
       </Row>
     </div>
@@ -301,9 +303,7 @@ export default {
       shareTitle: "",
       relationModal: false,
       shareContent: "",
-      // shareList: [],
       indexNow: 0,
-      // share: null,
       showmenu: false,
       isPrivacy: 1,
       privacyTxt: "所有成员可见",
@@ -331,6 +331,8 @@ export default {
             this.changeShares(this.shareList[0].id).then(res => {
                 this.loading = false;
             })
+        }else {
+            this.loading = false;
         }
     });
     // shares(this.$route.params.id).then(res => {
@@ -398,8 +400,23 @@ export default {
       this.showAddMember = !this.showAddMember;
     },
     addShares() {
-      this.showAddshare = false;
-        this.indexNow++
+        if(this.shareList.length){
+            this.showAddshare = false;
+            this.indexNow++
+        }else {
+            this.showAddshare = false;
+            this.init(this.$route.params.id).then(res => {
+                if (this.shareList.length){
+                    this.changeShares(this.shareList[0].id).then(res => {
+                        this.loading = false;
+                    })
+                }else {
+                    this.loading = false;
+                }
+            });
+        }
+
+
       // this.loading = true;
       // this.init(this.$route.params.id).then(res => {
       //   this.loading = false;
@@ -818,4 +835,16 @@ export default {
   }
 
 }
+ .no-share{
+     width: 100%;
+     height: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     font-size: 16px;
+     img{
+         margin-bottom: 15px;
+     }
+ }
 </style>
