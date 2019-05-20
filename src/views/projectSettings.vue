@@ -21,11 +21,11 @@
             <div class="div1-title">项目封面</div>
             <div class="coverBox clearfix">
               <div class="cover fl">
-                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`" alt>
+                <img :src="imageUrl" alt>
               </div>
               <div class="upload fl">
-                <input type="file" ref="inputer"  @change="changeImg" >
-                <Button class="upLoadButton" >上传新封面</Button>
+                <input type="file" ref="inputer" @change="getFile">
+                <Button class="upLoadButton"  @click="changeImg">上传新封面</Button>
               </div>
             </div>
           </div>
@@ -109,6 +109,7 @@ export default {
       active: 1,
       priority: "",
       switch1: false,
+      imageUrl: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}",
       modal1: false,
       modal2: false,
       List: [
@@ -137,6 +138,20 @@ export default {
         }
       };
     },
+      getFile (event) {
+          const files = event.target.files
+          let filename = files[0].name          //只有一个文件
+          if ( filename.lastIndexOf('.') <= 0 ) {
+              return alert("Please add a valid image!")        //判断图片是否有效
+          }
+          const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
+          fileReader.addEventListener('load',() => {
+              this.imageUrl = fileReader.result
+          })
+          fileReader.readAsDataURL(files[0])
+          this.image = files[0]
+          //到这里后, 选择图片就可以显示出来了
+      },
     endDate(date) {
       this.options1 = {
         disabledDate(date1) {
@@ -148,6 +163,8 @@ export default {
       this.active = flag;
     },
     publishAxios() {
+
+
       return new Promise((resolve, reject) => {
         this.$Message.loading({
           content: "Loading...",
@@ -179,6 +196,7 @@ export default {
     // 点击保存按钮
     saveSet() {
       this.publishAxios().then(res => {
+          alert(res)
         console.log(res);
       });
     },
@@ -200,14 +218,16 @@ export default {
       }
     },
     changeImg:function(){
-      let inputDOM = this.$refs.inputer;
+     /* let inputDOM = this.$refs.inputer;
       this.fil = inputDOM.files;
       console.log(this.project.projectId,this.fil[0])
       updataProjectPic(this.project.projectId,this.fil[0]).then(res=>{
-        
-      })
+      })*/
+
     }
+
   }
+
 };
 </script>
 <style scoped lang="less">
