@@ -431,7 +431,7 @@ export default {
     },
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
-      if ("svf".includes(file.ext)) {
+      if (".svf".includes(file.ext)) {
         // 模型文件
         getFileDetails(id).then(res => {
           console.log(res.data.fileUrl);
