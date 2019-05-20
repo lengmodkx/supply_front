@@ -4,7 +4,11 @@
 
 <script>
   import 'dhtmlx-gantt'
-  import {initGantt} from '@/axios/api2'
+  import {
+        initGantt,
+        updateProjectInfo
+  } from '@/axios/api2'
+
   export default {
     name: 'gantt',
     data () {
@@ -28,6 +32,7 @@
         })
 
         gantt.attachEvent('onAfterTaskAdd', (id, task) => {
+          debugger
           this.$emit('task-updated', id, 'inserted', task)
           task.progress = task.progress || 0
           if(gantt.getSelectedId() == id) {
@@ -35,29 +40,40 @@
           }
         })
 
+        //更新甘特图
         gantt.attachEvent('onAfterTaskUpdate', (id, task) => {
+          debugger
+          let itemId=task.publicId;
+          let text=task.text;
+          let start=(task.start_date).getTime();
+          let end=(task.end_date).getTime();
+          updateProjectInfo(itemId,text,start,end).then(res=>{
+          })      
+          debugger
           this.$emit('task-updated', id, 'updated', task)
         })
 
+       //删除甘特图
         gantt.attachEvent('onAfterTaskDelete', (id, item) => {
+          debugger
           this.$emit('task-updated', id, 'deleted', item)
           if(!gantt.getSelectedId()) {
             this.$emit('task-selected', null)
           }
         })
 
+        //增加link
         gantt.attachEvent('onAfterLinkAdd', (id, link) => {
           this.$emit('link-updated', id, 'inserted', link)
         })
-
+        //更新link
         gantt.attachEvent('onAfterLinkUpdate', (id, link) => {
           this.$emit('link-updated', id, 'updated', link)
         })
-
+        //册除link
         gantt.attachEvent('onAfterLinkDelete', (id, link) => {
           this.$emit('link-updated', id, 'deleted')
         })
-
         gantt.$_eventsInitialized = true;
       },
 
@@ -89,8 +105,8 @@
             icon_details:"详情",
             icon_edit:"Edit",
             icon_delete:"册除",
-            section_description:"任务名称",
-            section_time:"任务时间",
+            section_description:"任务名称：",
+            section_time:"任务时间：",
             minutes: "分",
             hours: "小时",
             days: "日",
@@ -134,8 +150,8 @@
       gantt.parse(this.tasks);
     },
     created:function(){
-      this.columnsInit();
-      this.localeInit();
+      this.columnsInit(); //初始化
+      this.localeInit(); //汉化
       this.getData();
     }
   }
@@ -143,9 +159,24 @@
 
 <style>
   @import "~dhtmlx-gantt/codebase/dhtmlxgantt.css";
-
   .gantt_task_line {
       border-radius: 30px !important;
   }
-  
+  .gantt_section_time .gantt_time_selects{
+    display: flex !important;
+    border-radius: 4px !important;
+    overflow: hidden
+  }
+  .gantt_section_time .gantt_time_selects select:first-child{
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius:4px !important;
+   }
+  .gantt_section_time .gantt_time_selects select:last-child{
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius:4px !important;
+   }
+   .gantt_duration .gantt_duration_dec, .gantt_duration .gantt_duration_inc{
+     padding:0px !important;
+   }
+   
 </style>

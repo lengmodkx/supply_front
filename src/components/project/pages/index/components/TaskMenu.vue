@@ -109,6 +109,9 @@
               <li  v-for ='item  in memberList' :key="item.userId"  @click="chooseExecutor(item.userId)">
                 <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image">
                 {{item.userName}}
+                <div class="memberListIcon" v-if="curId==item.userId">
+                  <Icon style="margin-top: 5px" class="right" type="md-checkmark" size="20" />
+                </div>
               </li>
             </ul>
         <Button type="primary" long  :disabled="curId==-1" @click='setAllMember' >确定</Button> 
@@ -458,11 +461,8 @@ export default {
     },
     //删除任务
     deleteTask(){
-
       deleteList(this.data.relationId).then(res=>{
-
       })
-
     },
 
     clearAll () {
@@ -504,6 +504,7 @@ export default {
   .task-menu-detail{
     .memberList{
       li{
+        position: relative;
         cursor: pointer;
          display: flex;
          vertical-align: text-bottom;
@@ -513,6 +514,12 @@ export default {
         width: 42px;
         height: 42px;
         padding:10px 10px 0 0;
+      }
+      .memberListIcon{
+        position: absolute;
+        top:10px;
+        right: 5px;
+
       }
   }
 
