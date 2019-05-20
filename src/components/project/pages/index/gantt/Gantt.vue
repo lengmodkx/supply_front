@@ -4,7 +4,8 @@
 
 <script>
   import 'dhtmlx-gantt'
-  import {initGantt,
+  import {
+        initGantt,
         updateProjectInfo
   } from '@/axios/api2'
 
@@ -42,18 +43,11 @@
         //更新甘特图
         gantt.attachEvent('onAfterTaskUpdate', (id, task) => {
           debugger
-          let projectId=this.$route.params.id;
-
+          let itemId=task.publicId;
           let text=task.text;
-
           let start=(task.start_date).getTime();
-
-
-          updateProjectInfo(projectId,text,start).then(res=>{
-
-          })
-          
-
+          updateProjectInfo(itemId,text,start).then(res=>{
+          })      
           debugger
           this.$emit('task-updated', id, 'updated', task)
         })
