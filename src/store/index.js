@@ -31,7 +31,7 @@ const store = new Vuex.Store({
         news,
         company,
         relation,
-//        gantt
+       // gantt
     }
 })
 

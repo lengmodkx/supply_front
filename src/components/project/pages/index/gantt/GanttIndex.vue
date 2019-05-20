@@ -33,7 +33,7 @@
       },
       //tasks
       logTaskUpdate (id, mode, task) {
-      
+        
       },
       //link
       logLinkUpdate (id, mode, link) {

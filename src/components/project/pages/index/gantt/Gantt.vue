@@ -32,7 +32,6 @@
         })
 
         gantt.attachEvent('onAfterTaskAdd', (id, task) => {
-          debugger
           this.$emit('task-updated', id, 'inserted', task)
           task.progress = task.progress || 0
           if(gantt.getSelectedId() == id) {
@@ -42,25 +41,22 @@
 
         //更新甘特图
         gantt.attachEvent('onAfterTaskUpdate', (id, task) => {
-          debugger
           let itemId=task.publicId;
           let text=task.text;
           let start=(task.start_date).getTime();
-          let end=(task.end_date).getTime();
+          let end=(task.end_date).getTime()-(24*60*60*1000-1000);
           updateProjectInfo(itemId,text,start,end).then(res=>{
             if(res.result==1){
-                this.getData();
+                this.getData();//从新获取的数据
             }else{
              this.$Message.error("修改失败!")
             }
           })      
-         
-          this.$emit('task-updated', id, 'updated', task)
+         this.$emit('task-updated', id, 'updated', task)
         })
 
        //删除甘特图
         gantt.attachEvent('onAfterTaskDelete', (id, item) => {
-          debugger
           this.$emit('task-updated', id, 'deleted', item)
           if(!gantt.getSelectedId()) {
             this.$emit('task-selected', null)
@@ -143,7 +139,11 @@
             return cur;
           })
           this.tasks.data = listData
-          gantt.parse(this.tasks);
+            gantt.parse(this.tasks);
+                gantt.eachTask(function(task){
+                task.$open = true;
+            });
+            gantt.render();
         })
       },
 
@@ -158,7 +158,6 @@
     created:function(){
       this.columnsInit(); //初始化
       this.localeInit(); //汉化
-   
     }
   }
 </script>
