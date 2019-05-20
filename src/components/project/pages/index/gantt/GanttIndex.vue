@@ -31,19 +31,13 @@
       selectTask (task) {
         this.selectedTask = task
       },
-
       //tasks
       logTaskUpdate (id, mode, task) {
-        console.log(11111111111111111,task)
-
+      
       },
-
       //link
       logLinkUpdate (id, mode, link) {
-        let message = `Link ${mode}: ${id}`
-        if(link){
-          message += ` ( source: ${link.source}, target: ${link.target} )`
-        }
+      
       },
     },
   }

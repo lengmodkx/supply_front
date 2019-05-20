@@ -14,13 +14,7 @@ export function getListView(projectId) {
         method: 'get',
     })
 }
-// 甘特图初始化
-export function initGantt(projectId) {
-    return fetch({
-        url: `projects/gantt_chart/${projectId}`,
-        method: 'get',
-    })
-}
+
 // 在甘特图中 更新项目的开始结束时间
 // 所有分享
 export function shares(projectId) {
@@ -137,6 +131,14 @@ export function updataProjectPic(projectId,file) {
         }
     })
 }
+// 甘特图初始化
+export function initGantt(projectId) {
+    return fetch({
+        url: `projects/gantt_chart/${projectId}`,
+        method: 'get',
+    })
+}
+
 
 //项目视图修改信息
 export function updateProjectInfo(projectId,projectName,startTime) {
