@@ -48,8 +48,13 @@
           let start=(task.start_date).getTime();
           let end=(task.end_date).getTime();
           updateProjectInfo(itemId,text,start,end).then(res=>{
+            if(res.result==1){
+                this.getData();
+            }else{
+             this.$Message.error("修改失败!")
+            }
           })      
-          debugger
+         
           this.$emit('task-updated', id, 'updated', task)
         })
 
@@ -145,6 +150,7 @@
     },
 
     mounted () {
+      this.getData();
       this.$_initGanttEvents();
       gantt.init(this.$refs.gantt);
       gantt.parse(this.tasks);
@@ -152,7 +158,7 @@
     created:function(){
       this.columnsInit(); //初始化
       this.localeInit(); //汉化
-      this.getData();
+   
     }
   }
 </script>
