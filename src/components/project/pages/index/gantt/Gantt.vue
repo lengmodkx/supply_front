@@ -46,7 +46,8 @@
           let itemId=task.publicId;
           let text=task.text;
           let start=(task.start_date).getTime();
-          updateProjectInfo(itemId,text,start).then(res=>{
+          let end=(task.end_date).getTime();
+          updateProjectInfo(itemId,text,start,end).then(res=>{
           })      
           debugger
           this.$emit('task-updated', id, 'updated', task)

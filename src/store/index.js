@@ -13,7 +13,7 @@ import chat from './modules/chat'
 import news from './modules/news'
 import company from './modules/company'
 import relation from './modules/relation'
-import gantt from './modules/gantt'
+//import gantt from './modules/gantt'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -31,7 +31,7 @@ const store = new Vuex.Store({
         news,
         company,
         relation,
-        gantt
+//        gantt
     }
 })
 

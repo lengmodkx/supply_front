@@ -141,13 +141,14 @@ export function initGantt(projectId) {
 
 
 //项目视图修改信息
-export function updateProjectInfo(projectId,projectName,startTime) {
+export function updateProjectInfo(projectId,projectName,startTime,endTime) {
     return fetch({
         url: `/projects/${projectId}/updateProInfo`,
         method: 'post', // 请求方法
         params: {
             'projectName': projectName,
             'startTime': startTime,
+            'endTime':endTime
         }
     })
 }
