@@ -137,3 +137,15 @@ export function updataProjectPic(projectId,file) {
         }
     })
 }
+
+//项目视图修改信息
+export function updateProjectInfo(projectId,projectName,startTime) {
+    return fetch({
+        url: '/projects/${projectId}/updateProInfo',
+        method: 'post', // 请求方法
+        params: {
+            'projectName': projectName,
+            'startTime': startTime,
+        }
+    })
+}

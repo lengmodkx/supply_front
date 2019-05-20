@@ -109,7 +109,7 @@ export default {
       active: 1,
       priority: "",
       switch1: false,
-      imageUrl: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}",
+      imageUrl: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/$\{project.projectCover\}",
       modal1: false,
       modal2: false,
       List: [
