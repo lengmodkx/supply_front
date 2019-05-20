@@ -100,7 +100,7 @@
 </template>
 <script>
 import { mapState, mapMutations } from "vuex";
-import { updateProject } from "@/axios/api";
+import { updateProject,recycleProject } from "@/axios/api";
 import { updataProjectPic } from "@/axios/api2";
 export default {
   data() {
@@ -207,15 +207,23 @@ export default {
       });
     },
     okHuishou() {
-      this.project.projectDel = 1;
-      this.publishAxios().then(res => {
-        this.modal2 = false;
-      });
-      if(this.$route.params.groupId){
-        this.$router.push("/home");
-      }else{
-          this.$emit('close-settings', false);
-      }
+      recycleProject(this.project.projectId).then(res => {
+        if(res.result === 1){
+          this.$Message.success("成功!")
+        } else {
+          this.$Message.error("失败!")
+        }
+      })
+      // this.project.projectDel = 1;
+      // this.publishAxios().then(res => {
+      //   this.modal2 = false;
+      // });
+      // if(this.$route.params.groupId){
+      //   this.$router.push("/home");
+      // } else{
+      //     this.$emit('close-settings', false);
+      // }
+
     },
     changeImg:function(){
      /* let inputDOM = this.$refs.inputer;
@@ -227,7 +235,6 @@ export default {
     }
 
   }
-
 };
 </script>
 <style scoped lang="less">

@@ -156,7 +156,15 @@ export default {
         frame => {
           this.stompClient.subscribe(`/user/${id}/message`, msg => {
             var result = JSON.parse(msg.body);
-            this.$store.commit("news/addNews", result.message);
+            switch (result.type) {
+              case "I1":
+                this.$store.dispatch("project/init","我创建的项目")
+                break;
+              default:
+                this.$store.commit("news/addNews", result.message);
+                break;
+
+            }
           });
         },
         err => {}
@@ -209,7 +217,8 @@ export default {
   computed: {
     ...mapState('app', ['activeHeaderTag']),
     ...mapState("news", ["newsCount"]),
-    ...mapState("company", ["companyList"])
+    ...mapState("company", ["companyList"]),
+    ...mapActions("project", ["init", "updateProject", "openSet"])
   },
   created() {
     this.getNewsCount();

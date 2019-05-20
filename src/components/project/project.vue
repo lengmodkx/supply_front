@@ -51,6 +51,10 @@ export default {
       this.animate = old == -1;
       this.activeHeaderTag = -1;
     },
+    clickHandler() {
+      this.$router.push({ path:'/home'})
+      this.$Notice.close('project_del')
+    },
     hideBox() {
       this.animate = true;
       this.show = -1;
@@ -81,6 +85,7 @@ export default {
         frame => {
           this.stompClient.subscribe(`/topic/${id}`, msg => {
             var result = JSON.parse(msg.body);
+            console.log(result.type)
             switch (result.type) {
               case "A1": //创建任务
                 this.$store.dispatch("task/init", result.object);
@@ -202,9 +207,11 @@ export default {
               // 创建文件夹
               case "C1":
                 this.$store.commit("file/createWjj", result.object);
+                break;
               // 上传文件
               case "C2":
                 this.$store.dispatch("file/upFiles", result.object);
+                break;
               // 修改文件名称
               case "C11":
                 this.$store.commit("file/changeFileName", result.object);
@@ -233,7 +240,6 @@ export default {
                 this.$store.dispatch("file/initFile", {
                   fileId: result.object.parentId
                 });
-
                 break;
               // 添加标签
               case "E1":
@@ -262,6 +268,7 @@ export default {
                     fileId: result.object.publicId
                   });
                 }
+                break;
               // 发消息
               case "F1":
                 if (result.object.type === "任务") {
@@ -303,6 +310,29 @@ export default {
                 break;
               case "H7":
                 this.$store.dispatch("task/init",result.object)
+                break;
+              case "H8":
+                this.$store.dispatch("task/init",result.object)
+                break;
+              case "I1":
+                this.$Notice.warning({
+                  title: '这个项目已被移入回收站!',
+                  duration: 0,
+                  name:'project_del',
+                  render: h => {
+                    return h('div', [
+                      h('Button', {
+                        style: {
+                          color: 'red',
+                          fontSize: '14px'
+                        },
+                        on: {
+                          click: this.clickHandler
+                        },
+                      },'我知道啦!')
+                    ])
+                  }
+                });
                 break;
             }
           });
