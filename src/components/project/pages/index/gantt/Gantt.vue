@@ -43,7 +43,6 @@
         gantt.attachEvent('onAfterTaskUpdate', (id, task) => {
           debugger
           let projectId=this.$route.params.id;
-
           let text=task.text;
 
           let start=(task.start_date).getTime();

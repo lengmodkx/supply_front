@@ -21,7 +21,7 @@
             <div class="div1-title">项目封面</div>
             <div class="coverBox clearfix">
               <div class="cover fl">
-                <img :src="imageUrl" alt>
+                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}'" alt>
               </div>
               <div class="upload fl">
                 <input type="file" ref="inputer" @change="getFile">
@@ -109,7 +109,7 @@ export default {
       active: 1,
       priority: "",
       switch1: false,
-      imageUrl: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/$\{project.projectCover\}",
+      imageUrl: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}",
       modal1: false,
       modal2: false,
       List: [
