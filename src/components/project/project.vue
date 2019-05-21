@@ -241,6 +241,34 @@ export default {
                   fileId: result.object.parentId
                 });
                 break;
+                //修改日程名称
+                case "D1":
+                  this.$store.dispatch("schedule/getScheduleById",result.object)
+                  break;
+                //修改日程的开始时间
+                case "D2":
+                    this.$store.dispatch("schedule/getScheduleById",result.object)
+                    break;
+                //修改日程的结束时间
+                case "D3":
+                    this.$store.dispatch("schedule/getScheduleById",result.object)
+                    break;
+                //更新了日程地点
+                case "D4":
+                    this.$store.dispatch("schedule/getScheduleById",result.object)
+                  break;
+                //更新了日程备注
+                case "D5":
+                    this.$store.dispatch("schedule/getScheduleById",result.object)
+                    break;
+                //更新了日程参与者
+                case "D6":
+                    this.$store.dispatch("schedule/getScheduleById",result.object)
+                    break;
+                //更新了日程重复性
+                case "D7":
+                    this.$store.dispatch("schedule/getScheduleById",result.object)
+                    break;
               // 添加标签
               case "E1":
                 if (result.object.publicType === "任务") {
