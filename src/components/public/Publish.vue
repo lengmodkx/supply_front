@@ -1,7 +1,7 @@
 <template>
   <div class="talk">
     <div class="talkinner">
-      <div class="talkUp" @keyup.enter="sendMsg"
+      <div class="talkUp"
           >
         <div id="input"
              style="width: 100%;height: 40px;padding: 5px 10px"

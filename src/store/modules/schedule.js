@@ -101,6 +101,7 @@ const store ={
                 if(res.result === 1){
                     dispatch('init', {projectId:res.data.projectId})
                     commit('oneSchedule',res.data)
+                    console.log(res.data)
                 }
             })
         }

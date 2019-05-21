@@ -26,13 +26,11 @@
                 <div class="menuItem"
                      @click="listItemClick('b','复制到')">
                     <Icon type="ios-paper-outline" />复制{{name}}</div>
-                <div class="menuItem tasklink" @click="copylink" :data-clipboard-text="link">
-                    <Icon type="ios-link-outline" />复制{{name}}链接</div>
                 <div class="menuItem"
                      @click="listItemClick('a','移动到')">
                     <Icon type="ios-log-out" />移动{{name}}</div>
                 <div class="menuItem" @click="collectTask">
-                    <Icon type="md-clipboard" />{{data.collect ? '取消收藏':'收藏'+name}}</div>
+                    <Icon type="md-clipboard" />{{data.isCollect ? '取消收藏':'收藏'+name}}</div>
 
                 <div class="menuItem"
                      @click="listItemClick('c','移到回收站')">
@@ -68,7 +66,7 @@
             <div class="task-menu-detail">
                 <div class="con5" v-if="active=='a'" style="height: auto">
                     <div class="con5item1">
-                        <span>项目11</span>
+                        <span>项目</span>
                         <Select v-model="model7" style="width:100px" @on-open-change="getProjectList" @on-change="getGroupList">
                             <OptionGroup label="星标项目">
                                 <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName}}</Option>
@@ -85,7 +83,7 @@
                 <div class="con6"
                      v-if="active=='b'">
                     <div class="con5item1">
-                        <span>项目2222</span>
+                        <span>项目</span>
                         <Select v-model="model7" style="width:150px" placeholder="选择项目" @on-open-change="getProjectList" @on-change="getGroupList">
                             <OptionGroup label="星标项目">
                                 <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
@@ -176,7 +174,6 @@
             //获取项目数据
             getProjectList(){
                 getStarProjectList().then(res => {
-                    console.log(3333333,res)
                     if(res.result === 1){
                         this.notStarProject = res.notStarProject
                         this.starProject = res.starProject
@@ -221,18 +218,19 @@
             },
             // 收藏日程
             collectTask() {
-                if(this.data.collect){
-                    cancelCollect(this.data.task.taskId).then(res => {
+                console.log(this.data)
+                if(this.data.isCollect){
+                    cancelCollect(this.data.scheduleId).then(res => {
                         if(res.result === 1){
                             this.$Message.success(res.msg)
-                            this.data.collect = false
+                            this.data.isCollect=!this.data.isCollect
                         }
                     })
                 } else{
-                    collectTask(this.data.task.projectId,this.data.task.taskId,'任务').then(res => {
+                    collectTask(this.data.projectId,this.data.scheduleId,'日程').then(res => {
                         if(res.result === 1){
                             this.$Message.success(res.msg)
-                            this.data.collect = true
+                            this.data.isCollect=!this.data.isCollect
                         }
                     })
                 }
@@ -247,11 +245,9 @@
             },
             // 移动日程
             removeRc(){
-                console.log(this.data.scheduleId,this.currProjectId)
                 removeRc(this.data.scheduleId,this.currProjectId).then(res => {
                     if (res.result){
                         this.$Message.success('移动成功')
-                        window.location.reload()
                     }
                 })
             },
@@ -260,7 +256,8 @@
                 recycleRc(this.data.scheduleId).then(res => {
                     if (res.result){
                         this.$Message.success('已移到回收站')
-                        window.location.reload()
+                        this.visible=false
+                        this.$emit('closeMenu')
                     }
                 })
             },

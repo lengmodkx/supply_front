@@ -144,7 +144,6 @@ export default {
   },
   watch: {
     value(newValue, oldValue) {
-      console.log(">>>>>>", newValue);
       this.modal = newValue;
     }
   },
@@ -174,7 +173,6 @@ export default {
     },
     inits() {
       this.modal = this.value;
-      console.log("<<<<<<<<<<", this.modal);
     },
     clone() {
       this.$emit("input", false);
@@ -192,23 +190,15 @@ export default {
           : new Date().getTime().toString(),
         repeat: this.repetition_data,
         remind: this.remind_data,
-        memberIds: this.memberIds.join(","),
+        memberIds: this.memberIds,
         privacy: this.locked ? "1" : "0"
       };
-      console.log(this.datetime);
       addSchedule(data)
         .then(res => {
           console.log(res);
           this.loading = false;
           this.$Message.info("成功");
-          this.clone();
-          let id={
-            projectId: this.id
-          }
-          this.init(id)
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 10);
+          this.clone()
         })
         .catch(err => {
           this.loading = false;

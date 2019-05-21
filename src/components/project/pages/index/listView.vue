@@ -57,6 +57,7 @@
             init() {
                 this.loading=true
                 getListView(this.projectId).then(res => {
+                    console.log(res)
                     if (res.result){
                         this.listData=res.data
                         this.loading=false
