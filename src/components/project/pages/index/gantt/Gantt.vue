@@ -114,8 +114,16 @@
             weeks: "周",
             months: "月",
             years: "年"
-          }
+          },
+            
         };
+        gantt.config.lightbox.sections=[ 
+            {name:"description", height:40, map_to:"text", type:"textarea",focus:true},
+            {name:"period",      height:40, map_to:"auto", type:"time"}, 
+        ];
+        gantt.locale.labels.section_period = "任务时间：";
+        gantt.config.buttons_right = [];
+
 
       },
 
@@ -167,8 +175,14 @@
   .gantt_task_line {
       border-radius: 30px !important;
   }
-  .gantt_section_time .gantt_time_selects{
-    display: flex !important;
+
+  .gantt_section_time{
+     display: flex !important;
+  }
+  .gantt_cal_light select{
+    height: 25px !important;
+  }
+  /* .gantt_section_time .gantt_time_selects{
     border-radius: 4px !important;
     overflow: hidden
   }
@@ -182,6 +196,6 @@
    }
    .gantt_duration .gantt_duration_dec, .gantt_duration .gantt_duration_inc{
      padding:0px !important;
-   }
+   } */
    
 </style>
