@@ -21,7 +21,8 @@
             <div class="div1-title">项目封面</div>
             <div class="coverBox clearfix">
               <div class="cover fl">
-                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}'" alt>
+                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`" alt  v-if="pic_show">
+                <img :src="imageUrl" alt v-if="pic_hide">
               </div>
               <div class="upload fl">
                 <input type="file" ref="inputer" @change="getFile">
@@ -109,7 +110,9 @@ export default {
       active: 1,
       priority: "",
       switch1: false,
-      imageUrl: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}",
+      imageUrl: "",
+      pic_show:true,
+      pic_hide:false,
       modal1: false,
       modal2: false,
       List: [
@@ -146,6 +149,8 @@ export default {
           }
           const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
           fileReader.addEventListener('load',() => {
+              this.pic_show=false,
+              this.pic_hide=true,
               this.imageUrl = fileReader.result
           })
           fileReader.readAsDataURL(files[0])
@@ -163,8 +168,6 @@ export default {
       this.active = flag;
     },
     publishAxios() {
-
-
       return new Promise((resolve, reject) => {
         this.$Message.loading({
           content: "Loading...",
@@ -194,9 +197,9 @@ export default {
       this.project.isPublic = data;
     },
     // 点击保存按钮
-    saveSet() {
-      this.publishAxios().then(res => {
-          alert(res)
+    saveSet(event) {
+        alert(res)
+      this.publishAxios(event).then(res => {
         console.log(res);
       });
     },
