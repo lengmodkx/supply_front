@@ -155,6 +155,8 @@ export default {
                   this.$store.commit("file/relevance", result.object);
                 }else if (result.object.fromType === "分享") {
                     this.$store.dispatch("share/changeShares", result.object.publicId);
+                }else if (result.object.fromType === "日程") {
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
               // 取消关联
@@ -168,6 +170,8 @@ export default {
                   this.$store.commit("file/cancelRelevance", result.object);
                 }else if (result.object.fromType === "分享") {
                     this.$store.commit("file/cancelRelevance", result.object.publicId);
+                }else if (result.object.fromType === "日程") {
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
               case "A30":
@@ -241,6 +245,10 @@ export default {
                   fileId: result.object.parentId
                 });
                 break;
+             //新建日程
+              case "D9":
+                this.$store.dispatch("schedule/init",{projectId:result.object})
+                break;
                 //修改日程名称
                 case "D1":
                   this.$store.dispatch("schedule/getScheduleById",result.object)
@@ -269,6 +277,13 @@ export default {
                 case "D7":
                     this.$store.dispatch("schedule/getScheduleById",result.object)
                     break;
+                 //复制日程
+              case "D10":
+              case "D11":
+              case "D12":
+              case "D13":
+                this.$store.dispatch("schedule/init",{projectId:result.object})
+                break;
               // 添加标签
               case "E1":
                 if (result.object.publicType === "任务") {
@@ -307,6 +322,8 @@ export default {
                   this.$store.commit("file/getMsg", result.object.log);
                 }else if (result.object.type === "分享") {
                   this.$store.commit("share/sendMsg", result.object.log);
+                }else if (result.object.type === "日程") {
+                  this.$store.commit("schedule/msg", result.object.log);
                 }
                 break;
               case "G1":

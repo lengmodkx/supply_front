@@ -77,17 +77,17 @@
         添加新日程，安排会议或其他活动，添加参与者即可通知其他成员参加。
       </div>
     </div>
-    <AddSchedule
+    <AddSchedule @input="addSchedule=false"
       v-model="addSchedule"
       :id="parameter.projectId" :projectTypes="richengData">
        <span slot="projectName">{{projectName?projectName:'添加日程'}}</span>
     </AddSchedule>
-    <Modal
+    <Modal class-name="vertical-center-modal"
             v-model="editrc"
             :footer-hide='true'
             transfer
             >
-      <editRicheng></editRicheng>
+      <editRicheng @close="closeModal"></editRicheng>
     </Modal>
 
 
@@ -134,6 +134,9 @@ export default {
       //   // this.load=false
       // })
 
+    },
+    closeModal () {
+      this.editrc=false
     }
   },
   mounted() {

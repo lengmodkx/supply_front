@@ -7,14 +7,13 @@ const  store ={
     },
     mutations: {
         initChat(state, data){
-            console.log(">>", data)
             state.chatData=data.data
             state.images = data.images
         },
         pushMsg(state,data){
             if(data.userId === data.chat.memberId){
                 data.chat.isOwn = 1
-            } else{
+            } else {
                 data.chat.isOwn = 0
             }
             state.chatData.push(data.chat)

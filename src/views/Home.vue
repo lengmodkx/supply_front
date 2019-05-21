@@ -267,6 +267,7 @@ export default {
     },
     path(item) {
       this.setName(item.projectName);
+      localStorage.projectName=item.projectName
       this.$router.push(
         `/project/${item.projectId}/tasks/group/${item.groupId}`
       );
