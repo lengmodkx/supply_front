@@ -23,7 +23,7 @@
                 </div>
             </div>
             <ul class="task-con">
-                <li class="task-list" v-for="task in taskList">
+                <li class="task-list" v-for="task in taskList" :key="task.taskId">
                     <div class="line"></div>
                     <div class="check-box"></div>
                     <img v-if="task.executorImg" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${task.executorImg}`" alt="">
@@ -93,7 +93,7 @@ export default {
       //获取任务数据
       getMeTask(){
           this.loading=true
-          getMeTask(this.isDone == 1,this.order,this.type).then(res => {
+          getMeTask(this.isDone === 1,this.order,this.type).then(res => {
               if(res.result === 1){
                   this.loading=false
                   this.taskList = res.data

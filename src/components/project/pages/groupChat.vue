@@ -8,8 +8,8 @@
         <div class="chat-text" ref="scrollbox">
 
           <!--有消息-->
-          <div  ref="heightbox" style="height: 100%">
-            <div v-if="chatData.length">
+          <div   style="height: 100%">
+            <div v-if="chatData.length" ref="heightbox">
               <div v-for="(item, index) in chatData" :key="index">
                 <div class="me-msg"  v-if="item.isOwn && item.chatDel==0">
                   <div class="me">
@@ -102,6 +102,13 @@ export default {
   mounted() {
     this.getChat()
   },
+  watch:{
+    chatData () {
+      this.$nextTick(() => {
+        this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
+      })
+    }
+  },
   computed: {
     ...mapState('chat',['chatData','images'])
   },
@@ -110,7 +117,7 @@ export default {
     // 获取消息
     getChat(){
       this.initChat(this.$route.params.id).then(res => {
-        this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight
+        this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
       })
     },
     // 发送消息
@@ -120,7 +127,8 @@ export default {
         sendChat(this.$route.params.id,con,JSON.stringify(this.files)).then(res => {
           this.$refs.textarea.innerHTML=''
           this.$nextTick(() => {
-            this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight
+            this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
+            console.log(this.$refs.scrollbox.scrollTop)
           })
         })
       }
@@ -241,6 +249,8 @@ export default {
       width: 26px;
       height: 26px;
       border-radius: 50%;
+      margin-right: 10px;
+      margin-top: 5px;
     }
     .content {
       display: inline-block;
