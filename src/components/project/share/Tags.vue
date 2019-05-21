@@ -76,7 +76,7 @@
           <span class="back fl" @click="showdiv2=false;showdiv1=true;">
             <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
           </span>
-          {{isEdit?'编辑标签':'新建标签'}}
+          <span class="headerTitel">{{isEdit?'编辑标签':'新建标签'}}</span>
           <span
             class="close fr"
             @click="Popvisible=false;showdiv1=true;showdiv2=false"
@@ -318,7 +318,12 @@ export default {
         };
         addnewTag(params).then(res => {
           this.loading = false;
-          console.log(res.data);
+          console.log(res);
+           if(res.result === 1){
+            this.$Message.success("新标签绑定成功!")
+          } else{
+            this.$Message.error("绑定标签失败")
+          }          
         });
       }
     }
@@ -429,10 +434,15 @@ export default {
   .d2Header {
     border-bottom: 1px solid #eee;
     height: 34px;
-    text-align: center;
+
     line-height: 34px;
     font-size: 14px;
     font-weight: bold;
+
+     .headerTitel{
+      padding-left: 70px;
+    }
+      
     .back {
       i {
         font-size: 28px;
@@ -443,6 +453,7 @@ export default {
       }
     }
     .close {
+      top:0px !important;
       i {
         font-size: 28px;
         margin-top: 2px;

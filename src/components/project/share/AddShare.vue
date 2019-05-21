@@ -133,6 +133,7 @@ export default {
     }
   }
   .footer {
+     z-index: 9999999;
     position: fixed;
     bottom: 0;
     left: 0;

@@ -7,7 +7,15 @@
       </span>
     </div>
     <!-- 列表 -->
-    <Input class="search" v-model="keyword" placeholder="搜索成员" @on-search="filterUser" />
+      <div class="searchBox">
+
+      
+     <Input v-model.trim="keyword" search enter-button
+               placeholder="搜索成员"
+               @on-search="filterUser"/>
+
+      </div>
+
     <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请新成员
     </div>
@@ -26,13 +34,12 @@
     <div class="userBox">
         <Collapse v-model="value" accordion>
               <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
-                <div class="member-item clearfix">
+                <div class="member-item clearfix" style="padding-left:0px;">
                   <div class="avatar">
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
                   </div>
                   <div class="memberInfo">
                     <p class="uname">{{user.memberName}}</p>
-                    <!-- <p class="email">{{user.email}}</p> -->
                   </div>
                   <Icon type="ios-arrow-down" size="18" />
                 </div>
@@ -158,6 +165,11 @@ export default {
 };
 </script>
 <style scoped lang="less">
+
+.searchBox{
+  width: 320px;
+  margin:10px auto;
+}
 .projectMember {
   position: fixed;
   top: 98px;
@@ -249,7 +261,9 @@ export default {
       width: 34px;
       height: 34px;
       border-radius: 50%;
+      
     }
+    margin-left:-15px;
   }
 
   .memberInfo {
@@ -265,6 +279,7 @@ export default {
       white-space: nowrap;
       font-size: 14px;
       color: #555;
+      
     }
 
     .email {
@@ -284,7 +299,10 @@ export default {
   width: 320px;
   padding-top: 5px;
   margin: 0px auto;
+ 
+  
 }
+
 
 
 .invit-user {
