@@ -96,9 +96,12 @@ const store ={
 
         },
         //获取单个日程的详情信息
-        getScheduleById({commit},scheduleId){
+        getScheduleById({dispatch,commit},scheduleId){
             getRicheng(scheduleId).then(res => {
-                commit('oneSchedule',res.data)
+                if(res.result === 1){
+                    dispatch('init', {projectId:res.data.projectId})
+                    commit('oneSchedule',res.data)
+                }
             })
         }
         // 开始时间
