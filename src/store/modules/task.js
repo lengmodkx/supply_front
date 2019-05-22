@@ -362,7 +362,7 @@ const store = {
             commit
         }, data) {
             return new Promise((resolve, reject) => {
-                enterTask(data).then(res => {
+                enterTask(data.projectId,data.name).then(res => {
                     if (res.result === 1) {
                         dispatch('initGroup', data)
                         commit('initTask', res.menus)

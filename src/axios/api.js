@@ -204,11 +204,11 @@ export function delProject(projectId) {
     });
 }
 //点击项目进入任务主页
-export function enterTask(projectId) {
+export function enterTask(projectId,name) {
     return fetch({
         url: `${api.projects}/${projectId}/tasks`,
         method: "get", // 请求方法
-        params: {}
+        params: {name:name}
     });
 }
 // 添加任务
