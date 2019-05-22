@@ -280,7 +280,8 @@ export default {
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
-    this.init(this.projectId).then(res => {
+    var data = {projectId:this.projectId}
+    this.init(data).then(res => {
       this.loading = false;
       this.allTask=this.allTasks
     });

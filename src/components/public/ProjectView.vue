@@ -10,7 +10,7 @@
         <Input v-model.trim="keyword" search enter-button  placeholder="搜索任务" @on-search="filterTask"/>
     </div>
     <!-- <Input class="search" v-model="keyword" placeholder="搜索任务" @on-search="filterTask" /> -->
-    <div style="font-size:16px;margin-left:15px">展示方式</div>
+    <div style="font-size:16px;margin-left:15px"> </div>
     <Select v-model="model" style="width:320px;margin-left:15px" transfer size="large" @on-change="viewChange">
       <Option value="看板视图">看板视图</Option>
       <Option value="列表视图">列表视图</Option>
@@ -19,19 +19,24 @@
   </div>
 </template>
 <script>
-  import {mapMutations} from 'vuex'
+  import {mapMutations,mapActions} from 'vuex'
 export default {
   data() {
     return {
       model: '看板视图',
-      keyword: ''
+      keyword: '',
+      projectId:this.$route.params.id
     }
   },
   methods: {
+    ...mapActions("task", ["init"]),
     ...mapMutations('app', ["updateView"]),
     //搜索任务
     filterTask() {
-
+      var data = {projectId:this.projectId,name:this.keyword}
+      this.init(data).then(res => {
+        this.$store.commit("task/initTask",res.menus)
+      });
     },
     // 视图方式改变、
     viewChange(value) {
