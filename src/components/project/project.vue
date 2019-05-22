@@ -287,15 +287,14 @@ export default {
               // 添加标签
               case "E1":
                 if (result.object.publicType === "任务") {
-                  this.$store.dispatch(
-                    "task/changeTask",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("task/changeTask",result.object.publicId);
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/bindingTag", {
                     tag: result.object.tag,
                     fileId: result.object.publicId
                   });
+                } else if (result.object.publicType === "分享") {
+                    this.$store.dispatch("share/changeShares",result.object.publicId);
                 }
                 break;
               // 移除标签
@@ -310,6 +309,8 @@ export default {
                     tagId: result.object.tagId,
                     fileId: result.object.publicId
                   });
+                }else if (result.object.publicType === "分享") {
+                   this.$store.dispatch("share/changeShares",result.object.publicId);
                 }
                 break;
               // 发消息
