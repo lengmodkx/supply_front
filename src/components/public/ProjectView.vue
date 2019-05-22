@@ -6,7 +6,10 @@
         <Icon type="md-close"></Icon>
       </span>
     </div>
-    <Input class="search" v-model="keyword" placeholder="搜索任务" @on-search="filterTask" />
+    <div class="searchBox">
+        <Input v-model.trim="keyword" search enter-button  placeholder="搜索任务" @on-search="filterTask"/>
+    </div>
+    <!-- <Input class="search" v-model="keyword" placeholder="搜索任务" @on-search="filterTask" /> -->
     <div style="font-size:16px;margin-left:15px">展示方式</div>
     <Select v-model="model" style="width:320px;margin-left:15px" transfer size="large" @on-change="viewChange">
       <Option value="看板视图">看板视图</Option>
@@ -48,7 +51,10 @@ export default {
   background-color: #f7f7f7;
   transition: 0;
   box-shadow: -3px 0 3px rgba(0, 0, 0, 0.1);
-
+    .searchBox{
+      width: 320px;
+      margin:10px auto;
+    }
   &.animate {
     transition: 0.1s;
   }

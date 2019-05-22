@@ -166,10 +166,7 @@ export default {
 </script>
 <style scoped lang="less">
 
-.searchBox{
-  width: 320px;
-  margin:10px auto;
-}
+
 .projectMember {
   position: fixed;
   top: 98px;
@@ -180,6 +177,11 @@ export default {
   background-color: #f7f7f7;
   transition: 0;
   box-shadow: -3px 0 3px rgba(0, 0, 0, 0.1);
+
+  .searchBox{
+  width: 320px;
+  margin:10px auto;
+}
 
   &.animate {
     transition: 0.1s;
