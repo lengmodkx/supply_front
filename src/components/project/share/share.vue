@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <div class="share-main">
+    <div class="share-main"  @click="closeTag">
       <Row>
         <iCol span="6" class="left">
           <div class="share-header">
@@ -45,7 +45,7 @@
             </ul>
           </div>
         </iCol>
-        <iCol span="18" class="right">
+        <iCol span="18" class="right" >
           <div class="share-view" v-if="share">
             <div class="share-text">
               <div class="rng">
@@ -93,13 +93,13 @@
                 <div class="html">
                   <div class="share-content" v-html="share.content"></div>
                   <div class="label">
-                    <div class="ol" style="width: 55px">
+                    <div class="ol" style="width: 70px">
                       <Icon type="ios-pricetags-outline" size="18" />
                       标签
                     </div>
-                    <div>
+                    <div @click.stop >
                       <!-- <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag> -->
-                      <tag :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"></tag>
+                      <tag ref="tags" :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"></tag>
                     </div>
                   </div>
                   <!--关联-->
@@ -326,6 +326,7 @@ export default {
     }
   },
   mounted() {
+    
     this.init(this.$route.params.id).then(res => {
         if (this.shareList.length){
             this.changeShares(this.shareList[0].id).then(res => {
@@ -349,6 +350,9 @@ export default {
   methods: {
     ...mapActions("share", ["init",'changeShares']),
     ...mapMutations("share", ["changeShare"]),
+    closeTag(){
+      this.$refs.tags.closeTag()
+    },
     clickEvent(parameter) {},
     changePrivacy() {
       if (this.isPrivacy == 1) {

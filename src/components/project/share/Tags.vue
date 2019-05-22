@@ -3,7 +3,8 @@
     <!-- <div class="tagtitle" v-if="taglist.length==0">
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow($event)" />
     </div>-->
-    <div class="list" ref="addIcon">
+    <div class="listBox">
+       <div class="list" ref="addIcon">
       <Tag
         v-for="(item,index) in taglist"
         :key="index"
@@ -12,13 +13,20 @@
         closable
         @on-close="handleClose"
       >{{ item.tagName}}</Tag>
-      <Icon
+    </div>
+
+     <Icon
         type="md-add-circle"
         size="24"
         style="color:#2d8cf0;vertical-align:middle;"
         @click.native="popShow"
+
+        ref="addIconButton"
       ></Icon>
+
     </div>
+   
+
     <div class="content" v-if="Popvisible" :style="{left:offsetLeft}">
       <div class="div1" v-if="showdiv1">
         <!--无任何标签的情况 -->
@@ -84,7 +92,7 @@
             <Icon type="md-close" size="24"></Icon>
           </span>
         </div>
-        <Input style="padding:8px 8px;" v-model="tagName" placeholder="标签名称" ref="input"/>
+        <Input style="padding:8px 8px;"  :maxlength='10' v-model="tagName" placeholder="标签名称" ref="input"/>
         <div class="createTag">
           <ul class="tagcolor clearfix">
             <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
@@ -176,6 +184,9 @@ export default {
     }
   },
   methods: {
+    closeTag(){
+      this.Popvisible = false
+    },
     search() {
       if (this.searchTag) {
         searchTags({ key: this.searchTag }).then(res => {
@@ -197,17 +208,9 @@ export default {
     },
     handleClose(event, id) {
       removeInfoTag(id, this.publicId, this.publicType).then(res => {
-        if (res.result === 1) {
-          let that = this;
-          this.taglist = this.taglist.filter(v => {
-            if (v.tagId !== id) {
-              this.$nextTick(() => {
-                this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-              });
-              return v;
-            }
-          });
-          this.$Message.success(res.msg);
+        debugger
+        if (res.result === 1) {      
+           this.$Message.success(res.msg); 
         }
       });
     },
@@ -267,8 +270,14 @@ export default {
           }
         });
       }
-      this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-      console.log(this.offsetLeft);
+      
+        console.log(this.$refs.addIcon.offsetWidth)
+       if(this.$refs.addIcon.offsetWidth + 45>670){
+            this.offsetLeft=520+"px"
+        }else{
+          this.offsetLeft = this.$refs.addIcon.offsetWidth + 70 + "px";
+        }
+
     },
     popHide() {
       setTimeout(_ => {
@@ -277,20 +286,8 @@ export default {
     },
     chooseTag(tag) {
       bindingTag(tag.tagId, this.publicId, this.publicType).then(res => {
-        if (res.result === 1) {
-          let i = this.taglist.indexOf(tag);
-          if (i >= 0) {
-            this.taglist.splice(i, 1);
-            this.$nextTick(() => {
-              this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-            });
-          } else {
-            this.taglist.push(tag);
-            this.$nextTick(() => {
-              this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-            });
-          }
-          this.$Message.success(res.msg);
+        if(res.result === 1){
+          this.$Message.success(res.msg)
         }
       });
     },
@@ -331,6 +328,11 @@ export default {
 };
 </script>
 <style scoped lang="less">
+.listBox{
+  display: flex;
+  flex-wrap: nowrap
+
+}
 .div1 {
   .tag_input {
     display: flex;
@@ -387,7 +389,9 @@ export default {
   }
 }
 .list {
+  max-width: 630px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 .createTag {

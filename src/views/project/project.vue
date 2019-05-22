@@ -61,7 +61,7 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var socket = new SockJS("http://192.168.31.184:8090/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      var socket = new SockJS("http://192.168.31.234:8080/webSocketServer"); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
