@@ -5,7 +5,9 @@ const store = {
     namespaced: true,
     state: {
         members: [], //项目成员（不包括参与者）
-        users: [] //项目全部成员
+        users: [
+            {memberName:'可以'},{memberName:'m可以'},{memberName:'不可以'}
+        ] //项目全部成员
     },
     mutations: {
         init(state, data) {
@@ -16,7 +18,11 @@ const store = {
         },
         //初始化项目成员列表
         initUser(state, data) {
-            state.users = data
+           state.users = data
+        },
+        //搜索用户
+        filterUser(state,data){            
+            state.users=state.users.filter((item,index,self) =>{ return item.memberName.includes(data)})
         }
     },
     actions: {
@@ -33,14 +39,16 @@ const store = {
         }, data) {
             commit('init', data)
         },
-        initUser({
-            commit
-        }, data) {
+        initUser({commit}, data) {
             projectMembers(data).then(res => {
                 if (res.result === 1) {
                     commit('initUser', res.data)
                 }
             })
+        },
+        //搜索用户
+        filterUser({commit},data){
+            commit('filterUser',data)
         }
 
 
