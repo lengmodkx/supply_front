@@ -13,12 +13,10 @@
             <div class="task-menu-list"
                  v-show="active==''">
                 <div class="menuItem"
-                     @click="listItemClick('b','复制到')">
+                     @click="listItemClick('','复制')">
                     <Icon type="ios-paper-outline" />复制{{name}}</div>
-                <div class="menuItem tasklink" @click="copylink" :data-clipboard-text="link">
-                    <Icon type="ios-link-outline" />复制{{name}}链接</div>
                 <div class="menuItem"
-                     @click="listItemClick('a','移动到')">
+                     @click="listItemClick('','移动')">
                     <Icon type="ios-log-out" />移动{{name}}</div>
                 <div class="menuItem" @click="collectTask">
                     <Icon type="md-clipboard" />{{data.collect ? '取消收藏':'收藏'+name}}
@@ -213,6 +211,9 @@
                 this.currMenuId = menuId
             },
             listItemClick (index, title) {
+                if (index===''){
+                    this.$emit('openMenu',title)
+                }
                 this.active = index
                 this.curTopTitle = title
             },

@@ -21,6 +21,7 @@
           <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
         </FormItem>
       </Form>
+      <router-link class="go-login" to="/">已有账号，去登陆</router-link>
     </div>
   </div>
 
@@ -109,7 +110,7 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg");
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg") no-repeat center/cover;
 }
 .register-box {
   width: 340px;
@@ -146,4 +147,10 @@ export default {
   bottom: -30px;
   right: 0;
 }
+  .go-login{
+    margin: -10px 0 0 auto;
+    cursor: pointer;
+    color: #3da8f5;
+    float: right;
+  }
 </style>

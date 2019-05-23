@@ -120,6 +120,9 @@ export default {
       switch1: false,
       imageUrl: "",
       filename:"",
+      fileName:"",
+      files:[],
+      dirName: "upload/project/",
       pic_show:true,
       pic_hide:false,
       modal1: false,
@@ -143,6 +146,30 @@ export default {
   },
   methods: {
       ...mapMutations("project", ["updatePro"]),
+      random_string(len) {
+          len = len || 32;
+          var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+          var maxPos = chars.length;
+          var pwd = "";
+          for (var i = 0; i < len; i++) {
+              pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+          }
+          return pwd;
+      },
+      get_suffix(filename) {
+          var pos = filename.lastIndexOf(".");
+          var suffix = "";
+          if (pos !== -1) {
+              suffix = filename.substring(pos);
+          }
+          return suffix;
+      },
+      resetFile() {
+          this.showupload = true;
+          this.showProgress = false;
+          this.uploadList = [];
+          this.percentage = [];
+      },
       startDate(date) {
           this.options2 = {
               disabledDate(date1) {
@@ -187,7 +214,7 @@ export default {
                   projectName: this.project.projectName,
                   projectDes: this.project.projectDes,
                   isPublic: this.project.isPublic,
-                  // 'projectCover':this.project.projectCover,
+                  projectCover:this.fileName,
                   startTime: this.project.startTime,
                   endTime: this.project.endTime,
                   projectDel: this.project.projectDel,
@@ -208,27 +235,23 @@ export default {
       },
       // 点击保存按钮
       saveSet() {
-         /* alert("!")
-          let fd = new FormData()              //内置方法new FormData()  新建一个表格
-          fd.append('file',this.image)
-          alert(this.project.projectId)
-          alert(fd)*/
-          /*axios.post("/projects/"+this.project.projectId+"/picture",fd).then( res => {                 //第一个参:this.postUrl就是上面保存好的要上传的地址
-                  console.log(res)                                               //(      第三次有效打印    )
-          })*/
-         /* updataProjectPic(this.project.projectId,this.image).then(res => {
-              alert(res.result)
-          })*/
-        //上传图片到OSS
-        /*  client.multipartUpload(this.filename, this.image, {
+          var that = this;
+          this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
+         /* let fd = new FormData()              //内置方法new FormData()  新建一个表格
+            fd.append('file',this.image)*/
+          client.multipartUpload(this.fileName, this.image, {
                   progress: function(p) {
-                      alert(p)
-                      //that.percent1 = Math.floor(p * 100);
+                      //that.percentage.splice(index, 1, Math.floor(p * 100));
                   }
               })
-              .then(function(){
-                alert("result:::::::::::"+JSON.stringify(result))
-              })*/
+              .then(function(result){
+                  /*var myfile = {};
+                  myfile.fileName = fileName;
+                  myfile.fileUrl = result.name;
+                  //myfile.size = that.renderSize(file.size);
+                  that.files.push(myfile);*/
+
+              }),
           this.publishAxios().then(res => {
               console.log(res);
           });
