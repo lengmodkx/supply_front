@@ -122,9 +122,9 @@ function $delete(url, params) {
 
 //更改项目封面
 export function updataProjectPic(projectId,file) {
+    alert("js:"+file)
     return fetch({
-        headers: { 'Content-Type': 'charset=UTF-8; multipart/form-data;' },
-        url: '/projects/${projectId}/picture',
+        url:`/projects/${projectId}/picture`,
         method: 'post', // 请求方法
         params: {
             file: file,

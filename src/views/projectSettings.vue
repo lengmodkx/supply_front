@@ -21,12 +21,12 @@
             <div class="div1-title">项目封面</div>
             <div class="coverBox clearfix">
               <div class="cover fl">
-                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`" alt  v-if="pic_show">
-                <img :src="imageUrl" alt v-if="pic_hide">
+                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`" alt  v-if="pic_show" accept="image/*">
+                <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
               </div>
               <div class="upload fl">
                 <input type="file" ref="inputer" @change="getFile">
-                <Button class="upLoadButton"  @click="changeImg">上传新封面</Button>
+                <Button class="upLoadButton"  >上传新封面</Button>
               </div>
             </div>
           </div>
@@ -100,9 +100,17 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import OSS from "ali-oss";
 import { mapState, mapMutations } from "vuex";
 import { updateProject,recycleProject } from "@/axios/api";
 import { updataProjectPic } from "@/axios/api2";
+let client = new OSS({
+    region: "oss-cn-beijing",
+    accessKeyId: "LTAIP4MyTAbONGJx",
+    accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
+    bucket: "art1001-bim-5d"
+});
 export default {
   data() {
     return {
@@ -111,6 +119,7 @@ export default {
       priority: "",
       switch1: false,
       imageUrl: "",
+      filename:"",
       pic_show:true,
       pic_hide:false,
       modal1: false,
@@ -133,110 +142,122 @@ export default {
     ...mapState("project", ["project"])
   },
   methods: {
-    ...mapMutations("project", ["updatePro"]),
-    startDate(date) {
-      this.options2 = {
-        disabledDate(date1) {
-          return date1.valueOf() < new Date(date).getTime() - 86400000;
-        }
-      };
-    },
-      getFile (event) {
+      ...mapMutations("project", ["updatePro"]),
+      startDate(date) {
+          this.options2 = {
+              disabledDate(date1) {
+                  return date1.valueOf() < new Date(date).getTime() - 86400000;
+              }
+          };
+      },
+      getFile(event) {
           const files = event.target.files
-          let filename = files[0].name          //只有一个文件
-          if ( filename.lastIndexOf('.') <= 0 ) {
+          this.filename = files[0].name          //只有一个文件
+          if (this.filename.lastIndexOf('.') <= 0) {
               return alert("Please add a valid image!")        //判断图片是否有效
           }
           const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
-          fileReader.addEventListener('load',() => {
-              this.pic_show=false,
-              this.pic_hide=true,
-              this.imageUrl = fileReader.result
+          fileReader.addEventListener('load', () => {
+              this.pic_show = false,
+                  this.pic_hide = true,
+                  this.imageUrl = fileReader.result
           })
           fileReader.readAsDataURL(files[0])
           this.image = files[0]
           //到这里后, 选择图片就可以显示出来了
       },
-    endDate(date) {
-      this.options1 = {
-        disabledDate(date1) {
-          return date1.valueOf() > new Date(date).getTime() - 86400000;
-        }
-      };
-    },
-    choose(flag) {
-      this.active = flag;
-    },
-    publishAxios() {
-      return new Promise((resolve, reject) => {
-        this.$Message.loading({
-          content: "Loading...",
-          duration: 0
-        });
-        let data = {
-          projectId: this.project.projectId,
-          projectName: this.project.projectName,
-          projectDes: this.project.projectDes,
-          isPublic: this.project.isPublic,
-          // 'projectCover':this.project.projectCover,
-          startTime: this.project.startTime,
-          endTime: this.project.endTime,
-          projectDel: this.project.projectDel,
-          projectStatus: this.project.projectStatus
-        };
-        updateProject(data).then(res => {
-          console.log(res);
-          this.$Message.destroy();
-          this.updatePro(this.project);
-          resolve("成功");
-        });
-      });
-    },
-    // 选择公开性
-    priorityChange(data) {
-      this.project.isPublic = data;
-    },
-    // 点击保存按钮
-    saveSet(event) {
-        alert(res)
-      this.publishAxios(event).then(res => {
-        console.log(res);
-      });
-    },
-    okGuidang() {
-      this.project.projectStatus = 1;
-      this.publishAxios().then(res => {
-        this.modal1 = false;
-      });
-    },
-    okHuishou() {
-      recycleProject(this.project.projectId).then(res => {
-        if(res.result === 1){
-          this.$Message.success("成功!")
-        } else {
-          this.$Message.error("失败!")
-        }
-      })
-      // this.project.projectDel = 1;
-      // this.publishAxios().then(res => {
-      //   this.modal2 = false;
-      // });
-      // if(this.$route.params.groupId){
-      //   this.$router.push("/home");
-      // } else{
-      //     this.$emit('close-settings', false);
-      // }
+      endDate(date) {
+          this.options1 = {
+              disabledDate(date1) {
+                  return date1.valueOf() > new Date(date).getTime() - 86400000;
+              }
+          };
+      },
+      choose(flag) {
+          this.active = flag;
+      },
+      publishAxios() {
+          return new Promise((resolve, reject) => {
+              this.$Message.loading({
+                  content: "Loading...",
+                  duration: 0
+              });
+              let data = {
+                  projectId: this.project.projectId,
+                  projectName: this.project.projectName,
+                  projectDes: this.project.projectDes,
+                  isPublic: this.project.isPublic,
+                  // 'projectCover':this.project.projectCover,
+                  startTime: this.project.startTime,
+                  endTime: this.project.endTime,
+                  projectDel: this.project.projectDel,
+                  projectStatus: this.project.projectStatus
+              };
+              updateProject(data).then(res => {
+                  console.log(res);
+                  this.$Message.destroy();
+                  this.updatePro(this.project);
+                  resolve("成功");
+              });
+          });
+      },
 
-    },
-    changeImg:function(){
-     /* let inputDOM = this.$refs.inputer;
-      this.fil = inputDOM.files;
-      console.log(this.project.projectId,this.fil[0])
-      updataProjectPic(this.project.projectId,this.fil[0]).then(res=>{
-      })*/
+      // 选择公开性
+      priorityChange(data) {
+          this.project.isPublic = data;
+      },
+      // 点击保存按钮
+      saveSet() {
+         /* alert("!")
+          let fd = new FormData()              //内置方法new FormData()  新建一个表格
+          fd.append('file',this.image)
+          alert(this.project.projectId)
+          alert(fd)*/
+          /*axios.post("/projects/"+this.project.projectId+"/picture",fd).then( res => {                 //第一个参:this.postUrl就是上面保存好的要上传的地址
+                  console.log(res)                                               //(      第三次有效打印    )
+          })*/
+         /* updataProjectPic(this.project.projectId,this.image).then(res => {
+              alert(res.result)
+          })*/
+        //上传图片到OSS
+        /*  client.multipartUpload(this.filename, this.image, {
+                  progress: function(p) {
+                      alert(p)
+                      //that.percent1 = Math.floor(p * 100);
+                  }
+              })
+              .then(function(){
+                alert("result:::::::::::"+JSON.stringify(result))
+              })*/
+          this.publishAxios().then(res => {
+              console.log(res);
+          });
+      },
+      okGuidang() {
+          this.project.projectStatus = 1;
+          this.publishAxios().then(res => {
+              this.modal1 = false;
+          });
+      },
+      okHuishou() {
+          recycleProject(this.project.projectId).then(res => {
+              if (res.result === 1) {
+                  this.$Message.success("成功!")
+              } else {
+                  this.$Message.error("失败!")
+              }
+          })
+          // this.project.projectDel = 1;
+          // this.publishAxios().then(res => {
+          //   this.modal2 = false;
+          // });
+          // if(this.$route.params.groupId){
+          //   this.$router.push("/home");
+          // } else{
+          //     this.$emit('close-settings', false);
+          // }
 
-    }
-
+      }
   }
 };
 </script>
