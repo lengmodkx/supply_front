@@ -209,7 +209,6 @@ export default {
                   content: "Loading...",
                   duration: 0
               });
-              alert("name==============="+this.fileName)
               let data = {
                   projectId: this.project.projectId,
                   projectName: this.project.projectName,
@@ -251,7 +250,6 @@ export default {
                   myfile.fileUrl = result.name;
                   //myfile.size = that.renderSize(file.size);
                   that.files.push(myfile);*/
-                  alert(result.msg)
 
               }),
           this.publishAxios().then(res => {
