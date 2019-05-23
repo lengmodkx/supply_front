@@ -17,7 +17,7 @@ import members from "../components/company/members"
 const _import = file => () => import("@/components/" + file + ".vue");
 Vue.use(Router);
 
-const router=new Router({
+const router = new Router({
   mode: 'history',
   routes: [{
       path: "/members", // 成员
@@ -36,7 +36,7 @@ const router=new Router({
           component: _import("project/share/share"),
         },
         {
-          path:"share_detail/:shareId",
+          path: "share_detail/:shareId",
           component: _import("project/share/bindShareDetail")
         },
         {
@@ -122,7 +122,7 @@ const router=new Router({
       meta: {
         title: "登录"
       },
-      component: Login
+      component: () => import('@/views/Login.vue')
     },
     {
       path: "/register",
@@ -144,13 +144,13 @@ const router=new Router({
 });
 router.afterEach((to, from) => {
   if (to.fullPath.includes('/calendar')) {
-    store.commit('app/changeHeaderTag',2)
-  }else if (to.fullPath.includes('/mine')) {
-    store.commit('app/changeHeaderTag',1)
-  }else if (to.fullPath.includes('/message')) {
-    store.commit('app/changeHeaderTag',3)
-  }else {
-    store.commit('app/changeHeaderTag',-1)
+    store.commit('app/changeHeaderTag', 2)
+  } else if (to.fullPath.includes('/mine')) {
+    store.commit('app/changeHeaderTag', 1)
+  } else if (to.fullPath.includes('/message')) {
+    store.commit('app/changeHeaderTag', 3)
+  } else {
+    store.commit('app/changeHeaderTag', -1)
   }
 })
 export default router

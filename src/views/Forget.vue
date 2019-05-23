@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-  import {getPhone, resetPwd} from '@/axios/api'
+import { getPhone, resetPwd } from "@/axios/api";
 export default {
   data() {
     return {
@@ -73,44 +73,46 @@ export default {
   },
   methods: {
     forget: function(name) {
-      console.log(name)
+      console.log(name);
       this.$refs[name].validate(valid => {
         if (valid) {
-          console.log(this.formValidate)
+          console.log(this.formValidate);
           resetPwd(this.formValidate).then(res => {
-            console.log(res)
-          })
+            console.log(res);
+          });
         } else {
           this.$Message.error("请填写完整!");
         }
       });
     },
     // 获取短信验证码
-    getPhoneCode () {
-      this.isTimes=true
-      let time
-      time=setInterval(() => {
-        this.timeNum--
-        if (this.timeNum<=0){
-          this.timeNum=60
-          this.isTimes=false
-          clearInterval(time)
+    getPhoneCode() {
+      this.isTimes = true;
+      let time;
+      time = setInterval(() => {
+        this.timeNum--;
+        if (this.timeNum <= 0) {
+          this.timeNum = 60;
+          this.isTimes = false;
+          clearInterval(time);
         }
-      },1000)
-      getPhone(this.formValidate.accountName,this.formValidate.captcha).then(res => {
-        console.log(res)
-      })
+      }, 1000);
+      getPhone(this.formValidate.accountName, this.formValidate.captcha).then(
+        res => {
+          console.log(res);
+        }
+      );
     }
   }
 };
 </script>
 <style scoped>
-  .bj-box{
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    background: url("../assets/images/login-bg.jpg");
-  }
+.bj-box {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg");
+}
 .forget-box {
   width: 340px;
   padding: 20px;
@@ -119,6 +121,7 @@ export default {
   right: 200px;
   transform: translateY(-50%);
   background-color: white;
+  opacity: 0.8;
 }
 .forget-title {
   font-size: 20px;

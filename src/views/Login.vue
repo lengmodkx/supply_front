@@ -1,58 +1,30 @@
 <template>
   <div class="login-form-box">
-    <Form
-      ref="formValidate"
-      @keyup.native.enter="login('formValidate')"
-      :model="formValidate"
-      :rules="ruleValidate"
-      class="login-box"
-    >
+    <Form ref="formValidate" @keyup.native.enter="login('formValidate')" :model="formValidate" :rules="ruleValidate" class="login-box">
       <div class="login-title">阿拉丁BIM云平台</div>
       <FormItem prop="accountName">
-        <Input
-          type="text"
-          size="large"
-          placeholder="请输入手机号或者邮箱"
-          v-model="formValidate.accountName"
-          clearable
-        />
+        <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
       </FormItem>
       <FormItem prop="password">
-        <Input
-          type="password"
-          size="large"
-          placeholder="请输入密码"
-          v-model="formValidate.password"
-          clearable
-        />
+        <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
       </FormItem>
       <FormItem>
         <span class="no-register">还没有注册？
           <router-link to="/register">立即注册</router-link>
         </span>
-        <router-link
-          to="/forget"
-          class="forget-pwd"
-        >忘记密码</router-link>
+        <router-link to="/forget" class="forget-pwd">忘记密码</router-link>
       </FormItem>
       <FormItem>
-        <Button
-          type="primary"
-          long
-          size="large"
-          class="login"
-          @click="login('formValidate')"
-          :loading="loading"
-        >登录</Button>
+        <Button type="primary" long size="large" class="login" @click="login('formValidate')" :loading="loading">登录</Button>
       </FormItem>
     </Form>
   </div>
 
 </template>
 <script>
-import { userlogin,getEncrypStr } from "@/axios/api";
+import { userlogin, getEncrypStr } from "@/axios/api";
 import { mapState, mapActions } from "vuex";
-import {Encrypt} from "@/utils/cryptoUtils";
+import { Encrypt } from "@/utils/cryptoUtils";
 
 export default {
   data() {
@@ -85,15 +57,15 @@ export default {
           }
         ]
       },
-      key:"",
-      iv:""
+      key: "",
+      iv: ""
     };
   },
   computed: {
     ...mapState("app", ["loading"])
   },
   methods: {
-    ...mapActions("user", ["updateUserInfo","updateUserId"]),
+    ...mapActions("user", ["updateUserInfo", "updateUserId"]),
     login: function(name) {
       this.userInfo = this.formValidate;
 
@@ -106,9 +78,9 @@ export default {
             } else {
               sessionStorage.token = res.accessToken;
               this.updateUserId(res.userInfo); //存储、更新用户信息
-              localStorage.userId=res.userInfo.userId
-              localStorage.userImg=res.userInfo.image
-              localStorage.userName=res.userInfo.userName
+              localStorage.userId = res.userInfo.userId;
+              localStorage.userImg = res.userInfo.image;
+              localStorage.userName = res.userInfo.userName;
               this.$Message.success("登录成功!");
               this.$router.push("/home");
             }
@@ -126,7 +98,7 @@ export default {
 .login-form-box {
   width: 100vw;
   height: 100vh;
-  background: url("../assets/images/login-bg.jpg");
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg");
   position: relative;
 }
 .login-box {
@@ -138,6 +110,7 @@ export default {
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
+  opacity: 0.8;
 }
 .login-title {
   font-size: 20px;

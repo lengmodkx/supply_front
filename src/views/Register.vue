@@ -109,7 +109,7 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: url("../assets/images/login-bg.jpg");
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg");
 }
 .register-box {
   width: 340px;
@@ -119,6 +119,7 @@ export default {
   right: 200px;
   transform: translateY(-50%);
   background-color: white;
+  opacity: 0.8;
 }
 .register-title {
   font-size: 20px;
