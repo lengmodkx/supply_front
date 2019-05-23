@@ -98,7 +98,7 @@ export default {
 .login-form-box {
   width: 100vw;
   height: 100vh;
-  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg");
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg") no-repeat center/cover;
   position: relative;
 }
 .login-box {
