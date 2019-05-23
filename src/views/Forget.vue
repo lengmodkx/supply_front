@@ -111,7 +111,7 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg");
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg") no-repeat center/cover;
 }
 .forget-box {
   width: 340px;

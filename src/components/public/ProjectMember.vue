@@ -10,9 +10,7 @@
       <div class="searchBox">
 
       
-     <Input v-model.trim="keyword" search enter-button
-               placeholder="搜索成员"
-               @on-search="filterUser"/>
+     <Input v-model.trim="keyword" search enter-button  placeholder="搜索成员" @on-search="FUser(keyword)"/>
 
       </div>
 
@@ -109,7 +107,7 @@ export default {
     this.initUser(this.$route.params.id);
   },
   methods: {
-    ...mapActions("member", ["initUser"]),
+    ...mapActions("member", ["initUser",'filterUser']),
     searchUser() {
       if (!this.keyword2) {
         this.$Notice.warning({
@@ -126,7 +124,15 @@ export default {
       });
     },
     //筛选用户
-    filterUser() {},
+    FUser(keyword) {
+      debugger
+      if(keyword!=''){
+          this.filterUser(keyword)
+      }else{
+        this.initUser(this.$route.params.id);
+      }
+       
+    },
     adduser(userId) {
       let params = {
         projectId: this.$route.params.id,

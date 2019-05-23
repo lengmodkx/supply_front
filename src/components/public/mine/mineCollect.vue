@@ -22,7 +22,7 @@
             <Loading v-if="loading"></Loading>
             <!-- 内容 -->
             <div class="favoriteList">
-                <ul class="favoriteItem">
+                <ul class="favoriteItem" v-if="collectList.length">
                     <li v-for="(c,i) in collectList" :key="i">
                         <div class="item-header">
                             <div class="create-time"><Time :time="c.createTime" /></div>
@@ -36,14 +36,37 @@
                         </div>
                     </li>
                 </ul>
+                <div v-else class="wu">
+                    <img src="../../../icons/img/sys-msg.png" alt="">
+                    <p>还没有收藏内容</p>
+                </div>
             </div>
-
         </div>
+        <!-- 编辑任务模态框 -->
+        <Modal v-model="showTaskModal" class="myModal">
+            <my-modal v-if="showTaskModal" ref="myModal" ></my-modal>
+        </Modal>
+        <!--编辑日程模态框-->
+        <Modal class="nopadding" class-name="vertical-center-modal" v-model="editrc" :footer-hide='true'>
+            <editRicheng @close="closeModal"></editRicheng>
+        </Modal>
+        <!--文件详情-->
+        <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
+            <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
+        </Modal>
+        <!--模型文件详情-->
+        <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
+            <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail>
+        </Modal>
     </div>
 </template>
 
 <script>
 import {collectList} from "@/axios/api"
+import myModal from "@/components/project/pages/index/components/EditList"
+import editRicheng from "@/components/public/common/EditRicheng"
+import fileDetail from "@/components/project/file/fileDetail";
+import modelFileDetail from "@/components/project/file/modelFileDetail";
 export default {
   data () {
       return {
@@ -51,9 +74,20 @@ export default {
           activeCollect:1,
           collectVisible: false,
           collectList:[],
-          loading:false
+          loading:false,
+          showTaskModal: false,
+          editrc: false,
+          showModelDetai: false,
+          showModelFileDetail: false,
+          svfUrl:'',
       }
   },
+    components:{
+        myModal,
+        editRicheng,
+        fileDetail,
+        modelFileDetail
+    },
   methods: {
       chooseCollectType (i,name) {
           this.activeCollect=i
@@ -72,7 +106,13 @@ export default {
                   this.collectList = res.data
               }
           })
-      }
+      },
+      closeModal () {
+          this.editrc=false
+      },
+      closeDetail() {
+          this.showModelDetai = false;
+      },
   },
   mounted(){
       this.getCollect()
