@@ -355,7 +355,7 @@ export default {
                 this.$store.dispatch("task/init",result.object)
                 break;
               case "H7":
-                this.$store.dispatch("task/init",result.object)
+                this.$store.dispatch("task/init",result.object,)
                 break;
               case "H8":
                 this.$store.dispatch("task/init",result.object)

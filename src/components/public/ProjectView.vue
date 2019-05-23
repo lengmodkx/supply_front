@@ -29,12 +29,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("task", ["init"]),
+    ...mapActions("task", ["init","init2"]),
     ...mapMutations('app', ["updateView"]),
     //搜索任务
     filterTask() {
       var data = {projectId:this.projectId,name:this.keyword}
-      this.init(data).then(res => {
+      this.init2(data).then(res => {
         this.$store.commit("task/initTask",res.menus)
       });
     },
