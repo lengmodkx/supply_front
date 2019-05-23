@@ -5,9 +5,7 @@ const store = {
     namespaced: true,
     state: {
         members: [], //项目成员（不包括参与者）
-        users: [
-            {memberName:'可以'},{memberName:'m可以'},{memberName:'不可以'}
-        ] //项目全部成员
+        users: [] //项目全部成员
     },
     mutations: {
         init(state, data) {
