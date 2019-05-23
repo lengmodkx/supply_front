@@ -120,17 +120,6 @@ function $delete(url, params) {
     })
 }
 
-//更改项目封面
-export function updataProjectPic(projectId,file) {
-    alert("js:"+file)
-    return fetch({
-        url:`/projects/${projectId}/picture`,
-        method: 'post', // 请求方法
-        params: {
-            file: file,
-        }
-    })
-}
 // 甘特图初始化
 export function initGantt(projectId) {
     return fetch({
