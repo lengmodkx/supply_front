@@ -12,6 +12,10 @@
             <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
             <p>成员</p>
           </router-link>
+          <li class="app-li" @click="goBackstage">
+            <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_administration.png" alt="">
+            <p>管理后台</p>
+          </li>
         </ul>
       </div>
     </Poptip>
@@ -212,6 +216,10 @@ export default {
       } else if (id === 3) {
         this.$router.push("/message");
       }
+    },
+    // 去管理后台页面
+    goBackstage () {
+      window.open('company.html', '_blank')
     }
   },
   computed: {
