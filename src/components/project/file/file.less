@@ -1,18 +1,18 @@
 .file-list{
   width: 100%;
- // flex-wrap: wrap;
-  //height: calc(100vh - 250px);
+  height: calc(100vh - 250px);
   .titel ,.contant li{
     height: 56px;
     line-height: 56px;
-
   }
   .titel {
     display: flex;
     flex-flow:row nowrap;
     color: gray;
     font-size: 16px;
-    border-bottom: 1px solid #e5e5e5 !important;  
+    border-bottom: 1px solid #e5e5e5 ;  
+    overflow: hidden;
+   
     span{
       width: 135px;
       text-align: center;
@@ -23,32 +23,56 @@
       padding: 0px 50px;
       width: 530px;
     }
+
   }
   .contant{
     font-size: 14px;
     color:gray;
     li{
-     display: flex;
-     flex-flow:row nowrap;
-     border-bottom: 1px solid #e5e5e5 !important;  
-     cursor: pointer;
+      display: flex;
+      flex-flow:row nowrap;
+      border-bottom: 1px solid #e5e5e5 !important;  
+      cursor: pointer;
+      position: relative;
+     }
+     li:hover{
+       background: #f5f5f5
+     }
+    
+    .contant-left{
+      display: flex;
+       .contant-titel{   
+        display: flex;
+         width: 530px;
+         padding:0px 50px;
+         img{
+           width:32px;
+           height: 37px;
+           padding:15px 10px 0 0;
+         }
+       }
+       .contant-erery{
+         width: 135px;
+         text-align: center;
+       }
+      
     }
-    li:hover{
-      background: #f5f5f5
+  
+    .file-edit{
+      width: 200px;
+      position: absolute;
+      top:0;
+      left: 82px;
+      
     }
-    .titel{
-      width: 530px;
-      padding:0px 50px;
-    }
-    span{
-      width: 135px;
-      text-align: center;
-      padding:0px 50px;
-    }
-    .icon-box{
+
+    .contant-right{
+      font-size: 22px;
+      line-height: 56px;
+      width:170px;
       font-size: 18px;
       i{
-        padding: 0px 10px;
+        padding: 0px 11px;
       }
     }
   }
