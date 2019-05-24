@@ -44,6 +44,7 @@
                   dragClass: 'boxDragClass',
                   fallbackClass: 'boxFallbackClass',
                   forceFallback: true,
+                  delay: 0.5,
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
@@ -108,7 +109,7 @@
             </div>
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
-            <draggable :list="i.taskList" :options="{group:'checkedTask',delay: 0.5,}"  class="ul" @end="dragList">
+            <draggable :list="i.taskList" :options="{group:'checkedTask',delay: 0.5,}" class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
 
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
@@ -138,7 +139,7 @@
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
-                      <span class="label" v-if="a.fileId"  style="margin-bottom:2px">
+                      <span class="label" v-if="a.fileId" style="margin-bottom:2px">
                         <Icon type="md-paper" size="16" />
                       </span>
                       <div class="tag-box" v-if="a.tagList">
@@ -253,7 +254,7 @@ export default {
       show: false,
       showmodal: false,
       showAdd: true,
-      isCreateTask:false,
+      isCreateTask: false,
       beforeClick: true,
       currentEditId: "",
       newProTitle: "",
@@ -275,14 +276,14 @@ export default {
       showAddGroup: false,
       groupName: "",
       loading: true,
-      allTask:[],
+      allTask: []
     };
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
     this.init(this.projectId).then(res => {
       this.loading = false;
-      this.allTask=this.allTasks
+      this.allTask = this.allTasks;
     });
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
@@ -290,10 +291,10 @@ export default {
     dragscroll(["column-main", "scrum-stage-tasks"]);
   },
   watch: {
-    allTasks (newName, oldName) {
-      this.allTask=newName
+    allTasks(newName, oldName) {
+      this.allTask = newName;
     },
-    deep: true,
+    deep: true
   },
   methods: {
     ...mapActions("task", ["init", "initEditTask"]),
@@ -345,11 +346,11 @@ export default {
     },
     // 创建任务
     createTask() {
-      if(this.textarea==''){
+      if (this.textarea == "") {
         this.$Message.error("请输入任务内容");
-        return
+        return;
       }
-      this.isCreateTask=true //打开loading
+      this.isCreateTask = true; //打开loading
       let data = {
         taskName: this.textarea,
         projectId: this.projectId,
@@ -359,12 +360,12 @@ export default {
       addTask(data).then(res => {
         if (res.result === 1) {
           this.textarea = "";
-          this.isCreateTask=false
+          this.isCreateTask = false;
         }
       });
     },
     dragBox(evt) {
-      console.log(this.allTask)
+      console.log(this.allTask);
       //拖拽大盒子
       //this.changeTask(this.allTask);
       //获取拖动的大盒子的id排序数组
@@ -438,7 +439,7 @@ export default {
       } */
     },
     saveNewPro() {
-      this.isCreateTask=true
+      this.isCreateTask = true;
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
       addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then(
@@ -447,7 +448,7 @@ export default {
             this.newProTitle = "";
             this.showAdd = true;
             this.init(this.projectId);
-            this.isCreateTask=false
+            this.isCreateTask = false;
           }
         }
       );
