@@ -20,17 +20,16 @@
       </div>
     </header>
 
-    <div  class="input-box" style="padding:10px 20px 10px 20px;">
+    <div class="input-box" style="padding:10px 20px 10px 20px;">
       <Input search enter-button placeholder="请输入文件名搜索" style="width:500px" @on-search="searchFile" @on-keyup="keypress" v-model="searched" />
       <div class="icon-box">
         <Icon type="ios-list" @click="view='view'" />
-        <Icon type="ios-apps"  @click="view='list'" /> 
+        <Icon type="ios-apps" @click="view='list'" />
       </div>
     </div>
     <Loading v-if="loading"></Loading>
     <!--搜索出来的文件-->
 
-  
     <ul class="file-content-wrap" v-if="searched && searchData.length">
       <li v-for="(file,index) in searchData" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
@@ -122,7 +121,7 @@
           </div>
           <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
             <p></p>
-            <Poptip  class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
+            <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
               <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
               <div slot="content">
                 <div v-show="rublish" class="rublish">
@@ -181,35 +180,33 @@
       </li>
     </ul>
 
-
-  <div class="file-list"  v-else-if="files.length&& view=='list'"  :key="fileId"  >
+    <div class="file-list" v-else-if="files.length&& view=='list'" :key="fileId">
       <div class="titel">
-        <span >名称</span>
+        <span>名称</span>
         <span>大小</span>
-        <span >创建者</span>
-        <span >更新时间</span>
+        <span>创建者</span>
+        <span>更新时间</span>
       </div>
       <ul class="contant">
         <li>
           <div class="titel">
             <img src="" alt=""> 图片
           </div>
-           <span>
-             3.8kb
-           </span>
-           <span>人名</span>
-           <span>时间</span>
-           <div class="icon-box">
-              <Icon type="md-arrow-down" />
-              <Icon type="ios-exit" />
-              <Icon type="md-create" />
-              <Icon type="ios-arrow-dropdown" />
-           </div>
-           
+          <span>
+            3.8kb
+          </span>
+          <span>人名</span>
+          <span>时间</span>
+          <div class="icon-box">
+            <Icon type="md-arrow-down" />
+            <Icon type="ios-exit" />
+            <Icon type="md-create" />
+            <Icon type="ios-arrow-dropdown" />
+          </div>
+
         </li>
       </ul>
     </div>
-    
 
     <div v-else class="no-files">
       <Icon type="md-folder" />
@@ -261,8 +258,9 @@
       <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
     </Modal>
     <!--模型文件详情-->
-    <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
-      <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail>
+    <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail" title="模型展示">
+      <!-- <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail> -->
+      <iframe :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/viewer-offline.html?path=${svfUrl}`" style="width:100vw;height:100vh" v-if="showModelFileDetail"></iframe>
     </Modal>
     <!--文件夹 可见性设置 模态框-->
     <Modal v-model="showVisibilityModal" :z-index=2000 :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
@@ -276,7 +274,7 @@ import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import fileDetail from "./fileDetail";
 import modelFileDetail from "./modelFileDetail";
-import fileCanSee from './fileCanSee'
+import fileCanSee from "./fileCanSee";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { getFileDetails, getChildFiles } from "@/axios/fileApi";
 import {
@@ -309,7 +307,7 @@ export default {
   },
   data() {
     return {
-      view:'view',
+      view: "view",
       showModel: false,
       showModelDetai: false,
       showCommon: false,
@@ -370,8 +368,8 @@ export default {
   methods: {
     ...mapActions("file", ["initFile"]),
     ...mapMutations("file", ["putOneFile"]),
-    setCanSee () {
-      this.showVisibilityModal=true
+    setCanSee() {
+      this.showVisibilityModal = true;
       this.rublish = false;
     },
     // 获取当前文件id
@@ -635,33 +633,32 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
- @import "./file";
- .input-box{
-   width: 100%;
-   display: flex;
-   justify-content: space-between;
-   .icon-box{
-     color:#2d8cf0;
-     line-height:22px;
-     font-size:22px;
-     i{
-       cursor:pointer;
-       padding-left: 10px;
-      }
-      i:first-child{
-        font-size: 34px;
-        font-weight: bold
-      }
-   }
- }
-
-  .can-see-modal{
-    /deep/ .ivu-modal-body{
-      padding: 0 !important;
-      height: 480px;
+@import "./file";
+.input-box {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  .icon-box {
+    color: #2d8cf0;
+    line-height: 22px;
+    font-size: 22px;
+    i {
+      cursor: pointer;
+      padding-left: 10px;
+    }
+    i:first-child {
+      font-size: 34px;
+      font-weight: bold;
     }
   }
+}
+
+.can-see-modal {
+  /deep/ .ivu-modal-body {
+    padding: 0 !important;
+    height: 480px;
+  }
+}
 
 .no-files {
   width: 100%;
