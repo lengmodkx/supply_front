@@ -384,7 +384,7 @@ export default {
       showIcon:null,
       showFileEdit:null,
       editFileName:'',
-      view:'list',
+      view:'view',
       showModel: false,
       showModelDetai: false,
       showCommon: false,
