@@ -20,11 +20,17 @@
       </div>
     </header>
 
-    <div style="padding:10px 20px 10px 20px;">
+    <div  class="input-box" style="padding:10px 20px 10px 20px;">
       <Input search enter-button placeholder="请输入文件名搜索" style="width:500px" @on-search="searchFile" @on-keyup="keypress" v-model="searched" />
+      <div class="icon-box">
+        <Icon type="ios-list" @click="view='view'" />
+        <Icon type="ios-apps"  @click="view='list'" /> 
+      </div>
     </div>
     <Loading v-if="loading"></Loading>
     <!--搜索出来的文件-->
+
+  
     <ul class="file-content-wrap" v-if="searched && searchData.length">
       <li v-for="(file,index) in searchData" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
@@ -98,7 +104,7 @@
       </li>
     </ul>
     <!--正常展示-->
-    <ul class="file-content-wrap" v-else-if="files.length" :key="fileId">
+    <ul class="file-content-wrap" v-else-if="files.length&& view=='view'" :key="fileId">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
           <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
@@ -172,6 +178,37 @@
         <div class="file-content-filename" v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</div>
       </li>
     </ul>
+
+
+  <div class="file-list"  v-else-if="files.length&& view=='list'"  :key="fileId"  >
+      <div class="titel">
+        <span >名称</span>
+        <span>大小</span>
+        <span >创建者</span>
+        <span >更新时间</span>
+      </div>
+      <ul class="contant">
+        <li>
+          <div class="titel">
+            <img src="" alt=""> 图片
+          </div>
+           <span>
+             3.8kb
+           </span>
+           <span>人名</span>
+           <span>时间</span>
+           <div class="icon-box">
+              <Icon type="md-arrow-down" />
+              <Icon type="ios-exit" />
+              <Icon type="md-create" />
+              <Icon type="ios-arrow-dropdown" />
+           </div>
+           
+        </li>
+      </ul>
+    </div>
+    
+
     <div v-else class="no-files">
       <Icon type="md-folder" />
       <p>文件夹中还没有内容</p>
@@ -264,6 +301,7 @@ export default {
   },
   data() {
     return {
+      view:'list',
       showModel: false,
       showModelDetai: false,
       showCommon: false,
@@ -584,6 +622,25 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+ @import "./file";
+ .input-box{
+   width: 100%;
+   display: flex;
+   justify-content: space-between;
+   .icon-box{
+     color:#2d8cf0;
+     line-height:22px;
+     font-size:22px;
+     i{
+       cursor:pointer;
+       padding-left: 10px;
+      }
+      i:first-child{
+        font-size: 34px;
+        font-weight: bold
+      }
+   }
+ }
 .no-files {
   width: 100%;
   margin-top: 200px;

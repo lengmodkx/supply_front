@@ -29,7 +29,7 @@
               添加分享
             </a>
             <Modal v-model="showAddshare" title="添加分享" transfer fullscreen footer-hide class-name="ivu-modal-wrap">
-              <add-share ref="addshare" @close="addShares" :projectId="projectId" :shareTitle="shareTitle" :shareContent="shareContent"></add-share>
+              <add-share ref="addshare"  @close="addShares" :projectId="projectId" :shareTitle="shareTitle" :shareContent="shareContent"></add-share>
             </Modal>
           </div>
           <div class="share-list">
