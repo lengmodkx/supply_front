@@ -1,0 +1,57 @@
+.file-list{
+  width: 100%;
+ // flex-wrap: wrap;
+  //height: calc(100vh - 250px);
+  .titel ,.contant li{
+    height: 56px;
+    line-height: 56px;
+
+  }
+  .titel {
+    display: flex;
+    flex-flow:row nowrap;
+    color: gray;
+    font-size: 16px;
+    border-bottom: 1px solid #e5e5e5 !important;  
+    span{
+      width: 135px;
+      text-align: center;
+      display: block;
+    }
+    span:first-child{
+      text-align: left;
+      padding: 0px 50px;
+      width: 530px;
+    }
+  }
+  .contant{
+    font-size: 14px;
+    color:gray;
+    li{
+     display: flex;
+     flex-flow:row nowrap;
+     border-bottom: 1px solid #e5e5e5 !important;  
+     cursor: pointer;
+    }
+    li:hover{
+      background: #f5f5f5
+    }
+    .titel{
+      width: 530px;
+      padding:0px 50px;
+    }
+    span{
+      width: 135px;
+      text-align: center;
+      padding:0px 50px;
+    }
+    .icon-box{
+      font-size: 18px;
+      i{
+        padding: 0px 10px;
+      }
+    }
+  }
+  
+}
+
