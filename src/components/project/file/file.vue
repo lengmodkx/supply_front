@@ -120,10 +120,8 @@
             <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
             <img v-else src="@/icons/img/moren.png" alt="">
           </div>
-          <div @click.stop class="file-content-opt">
           <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
             <p></p>
-            <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
             <Poptip  class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
               <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
               <div slot="content">
@@ -306,13 +304,12 @@ export default {
     commonFile,
     VJstree,
     fileDetail,
-    modelFileDetail
     modelFileDetail,
     fileCanSee
   },
   data() {
     return {
-      view:'list',
+      view:'view',
       showModel: false,
       showModelDetai: false,
       showCommon: false,
