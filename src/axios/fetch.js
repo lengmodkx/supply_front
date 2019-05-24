@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import store from '@/store'
-
+import iView,{Notice} from 'iview'
 const service = axios.create({
   //baseURL: "/api",
   // headers: {
@@ -28,9 +28,11 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(
   response => {
-    if (response.status === 203) {
-      console.log(window.location.origin);
-      window.location.href = '/';
+    if(response.status === 203){
+        iView.Notice.error({
+            title: response.data.msg
+        })
+        return
     }
     // //获取返回的TOKEN
     const token = response.headers['x-auth-token'];
@@ -43,7 +45,11 @@ service.interceptors.response.use(
     const res = response.data
     return res //后台如果规范可直接判断code后返回res.result
   }, error => {
-    return Promise.reject(error)
+        if(error.response.status === 401){
+            console.log(window.location.origin);
+            window.location.href = '/';
+        }
+        return Promise.reject(error)
   }
 )
 
