@@ -192,6 +192,8 @@ export default {
           fileReader.readAsDataURL(files[0])
           this.image = files[0]
           //到这里后, 选择图片就可以显示出来了
+
+          this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
       },
       endDate(date) {
           this.options1 = {
@@ -236,7 +238,6 @@ export default {
       // 点击保存按钮
       saveSet() {
           var that = this;
-          this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
          /* let fd = new FormData()              //内置方法new FormData()  新建一个表格
             fd.append('file',this.image)*/
           client.multipartUpload(this.fileName, this.image, {
