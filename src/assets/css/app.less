@@ -1,7 +1,14 @@
 body {
   background-color: rgb(244, 244, 244); // font-family: 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
 }
-
+body{
+  .pop{
+    z-index: 999999 !important;
+    /deep/ .ivu-poptip-body{
+      padding: 0;
+    }
+  }
+}
 .content-main {
 
   // padding-top: 48px;

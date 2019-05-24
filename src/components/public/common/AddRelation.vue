@@ -2,7 +2,13 @@
   <div class="relationBox">
     <div class="title clearfix">
       <span class="titleText fl">关联内容</span>
-      <Input class="search fl" v-model="searchVal" placeholder="搜索个人项目" icon="ios-search-strong"/>
+      <!-- <Input class="search fl"  search v-model="searchVal" placeholder="搜索个人项目" icon="ios-search-strong"/> -->
+    <div  class="search fl" >
+          <Input v-model.trim="searchVal" search enter-button  placeholder="搜索个人项目" @on-search="searchProject(searchVal)"/> 
+
+    </div>
+  
+
     </div>
 
     <div class="Con clearfix">
@@ -96,7 +102,7 @@
                         </li>
                     </ul>
                 </div>
-
+                
             </div>
             <!--点击日程 显示的-->
             <div class="richeng-div scrolly" v-show="active=='c'">
@@ -480,8 +486,20 @@
               }
               this.relationing=false
           })
+      },
+      searchProject(value){   
+        if(value!=''){
+            this.projectData=this.projectData.filter(item=>{ 
+                        return  item.projectName.includes(value)
+                })
+        }else{
+            getProjectList().then(res => {
+                this.projectData=res.data
+              })
+        }
       }
     },
+
     mounted () {
       // document.getElementById('relationModal').children[1].style.zIndex = '1010';
       // document.getElementById('relationModal').children[0].style.zIndex = '1010';
@@ -496,11 +514,13 @@
  @import "./AddRelation";
 .relationBox{
   height:100%;
+
+  
   .title{
     line-height:50px;
     color:gray;
     font-size:15px;
-    text-indent: 15px;
+   // text-indent: 15px;
     border-bottom:1px solid rgba(0,0,0,.12);
     .titleText{
       font-weight:bold;
@@ -601,6 +621,7 @@
     text-align: right;
     border-top: 1px solid rgba(0,0,0,.12);
   }
+  
 }
 </style>
 

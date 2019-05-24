@@ -1,3 +1,20 @@
+.wu{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  img{
+    margin-top: 100px;
+    width: 120px;
+    margin-bottom: 15px;
+  }
+}
+.nopadding{
+  /deep/ .ivu-modal-body{
+    padding: 0 !important;
+  }
+}
 .mine{
   padding-top:48px;
   // position:fixed;
@@ -11,14 +28,22 @@
   transition:.2s;
   .inner{
     width:960px;
-    height: calc(100vh - 48px - 46px - 16px) ;
-    overflow-y: hidden;
+    height: calc(100vh - 48px - 78px) ;
+    overflow-y: auto;
     margin:0 auto;
     background:#fff;
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 8px;
+      background-color: #e5e5e5;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #cecece;
+    }
   }
   .close{
     position:absolute;
-    top:10px;
+    top:58px;
     right:20px;
     cursor: pointer;
     font-size:30px;
