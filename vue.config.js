@@ -5,6 +5,7 @@ function resolve(dir) {
 }
 module.exports = {
     publicPath: "/",
+    assetsSubDirectory: 'public',
     outputDir: process.env.NODE_ENV === "development" ? 'devdist' : 'dist', // 不同的环境打不同包名
     pages:{
         index: {
@@ -38,14 +39,18 @@ module.exports = {
     lintOnSave: false,
     productionSourceMap: false,
     devServer: {
-        port: 8080, // 端口号..
+        port: 8090, // 端口号..
         // host: "localhost",
         https: false, // https:{type:Boolean}
         open: true, //配置自动启动浏览器
         // proxy: 'http://localhost:4000' // 配置跨域处理,只有一个代理
         proxy: {
             "/api": {
+<<<<<<< Updated upstream
                 target: "http://192.168.1.105:8090",
+=======
+                target: "http://192.168.1.101:8080",
+>>>>>>> Stashed changes
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
