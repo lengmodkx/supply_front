@@ -3,6 +3,7 @@ body {
 }
 
 .content-main {
+
   // padding-top: 48px;
   .container {
     width: 1180px;
@@ -46,7 +47,7 @@ li {
   text-overflow: ellipsis;
 }
 
-.ivu-input-icon{
+.ivu-input-icon {
   height: 40px !important;
   line-height: 40px !important;
 }
@@ -58,16 +59,19 @@ li {
     font-size: 18px;
     padding-left: 10px;
   }
+
   p {
     margin: 10px 0;
     color: #000;
     font-size: 14px;
     padding-left: 10px;
   }
+
   .taskDescri {
     margin-bottom: 40px;
     padding: 0 16px;
   }
+
   .foot {
     padding-top: 15px;
     border-top: 1px solid #eee;
@@ -88,18 +92,22 @@ li {
     width: 600px !important;
     top: 8vh;
   }
+
   .ivu-modal-body {
     height: 84vh !important;
     padding: 16px !important;
   }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 8px;
     background-color: #e5e5e5;
   }
+
   ::-webkit-scrollbar-thumb {
     background-color: #cecece;
   }
+
   .ivu-modal-footer {
     display: none;
   }
@@ -117,6 +125,7 @@ li {
     width: 360px !important;
     height: 500px;
   }
+
   .ivu-modal-footer {
     display: none;
   }
@@ -127,6 +136,7 @@ li {
     width: 700px !important;
     top: calc((100vh - 545px)/2);
   }
+
   .ivu-modal-footer {
     display: none;
   }
@@ -137,15 +147,18 @@ li {
     width: 800px !important;
     top: 8vh;
   }
+
   .ivu-modal-body {
     height: 84vh !important;
     background-color: #f8f8f8;
   }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 8px;
     background-color: #e5e5e5;
   }
+
   ::-webkit-scrollbar-thumb {
     background-color: #cecece;
   }
@@ -156,9 +169,11 @@ li {
     height: 40px;
     border: none;
   }
+
   input:hover {
     border-color: #dddee1;
   }
+
   input:focus {
     border-color: #dddee1;
     outline: 0;
@@ -166,9 +181,9 @@ li {
   }
 }
 
-.ivu-modal-body {
-  padding: 0;
-}
+// .ivu-modal-body {
+//   padding: 0;
+// }
 
 .ivu-tooltip-inner {
   white-space: normal;
@@ -182,25 +197,30 @@ li {
   display: flex;
   align-items: center;
   justify-content: center;
+
   &.header-center {
     .ivu-modal-header {
       text-align: center;
       font-size: 16px;
     }
   }
+
   .ivu-modal-body {
     height: 75vh;
     overflow: auto;
     position: relative;
   }
+
   .ivu-modal {
     top: 0;
   }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 8px;
     background-color: #e5e5e5;
   }
+
   ::-webkit-scrollbar-thumb {
     background-color: #cecece;
   }
@@ -218,13 +238,17 @@ li {
     font-size: 14px;
     color: #a6a6a6;
   }
+
   .task-mod {
     padding: 10px 20px;
+
     &:hover {
       background-color: #eee;
     }
+
     .check {
       display: flex;
+
       &::after {
         position: absolute;
         display: inline-block;
@@ -235,32 +259,38 @@ li {
         content: "";
         background-color: #eee;
       }
+
       .ivu-checkbox-wrapper {
         margin-right: 15px;
         padding-top: 3px;
         height: 24px;
         transform: scale(1.4);
       }
+
       .cont {
         flex: 1;
         line-height: 22px;
         font-size: 14px;
+
         .taskgroup {
           margin-left: 5px;
           color: #a6a6a6;
           transition: color 218ms;
           cursor: pointer;
+
           &:hover {
             color: #3da8f5;
           }
         }
       }
+
       .ava {
         width: 24px;
         height: 24px;
         margin-right: 10px;
         border-radius: 50%;
       }
+
       .time {
         width: 74px;
         font-size: 12px;
@@ -270,6 +300,7 @@ li {
         text-align: right;
       }
     }
+
     .done {
       .ivu-checkbox-wrapper {
         .ivu-checkbox-checked .ivu-checkbox-inner {
@@ -277,9 +308,11 @@ li {
           border-color: #a6a6a6;
         }
       }
+
       .cont {
         color: #a6a6a6 !important;
       }
+
       .ava {
         opacity: 0.5;
       }
@@ -291,6 +324,7 @@ li {
   .ivu-modal-footer {
     display: none;
   }
+
   .ivu-modal-header-inner {
     font-size: 16px;
   }
@@ -302,6 +336,7 @@ li {
 
 .left-color {
   position: relative;
+
   &::after {
     position: absolute;
     left: 0;
@@ -312,17 +347,20 @@ li {
     background-color: #2d8cf0;
     transition: all 0.3s;
   }
+
   &:hover {
     &:after {
       width: 8px !important;
     }
   }
+
   &.warning {
     &:after {
       width: 4px;
       background-color: #ffaf38;
     }
   }
+
   &.urgent {
     &:after {
       width: 4px;
@@ -334,7 +372,8 @@ li {
 .ivu-select-dropdown.ivu-dropdown-transfer {
   z-index: 1009;
 }
-.img20{
+
+.img20 {
   width: 15px;
   margin-right: 5px;
   vertical-align: middle;

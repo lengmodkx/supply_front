@@ -101,7 +101,7 @@
     <ul class="file-content-wrap" v-else-if="files.length" :key="fileId">
       <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
         <div class="file-content-view">
-          <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+          <img v-if="file.catalog==1&&(file.filePrivacy==1||file.filePrivacy==2)" src='../../../assets/images/folder.png' style="height:64px;width:80px">
           <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
           <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
@@ -113,7 +113,7 @@
             <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
             <img v-else src="@/icons/img/moren.png" alt="">
           </div>
-          <div @click.stop class="file-content-opt">
+          <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
             <p></p>
             <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
               <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
