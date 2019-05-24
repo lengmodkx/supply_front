@@ -115,7 +115,7 @@
           </div>
           <div @click.stop class="file-content-opt">
             <p></p>
-            <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
+            <Poptip  class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
               <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
               <div slot="content">
                 <div v-show="rublish" class="rublish">
@@ -137,7 +137,7 @@
                       <li @click="removeClone('移动')">移动文件夹</li>
                       <li @click="removeClone('复制')">复制文件夹</li>
                       <li @click="rublish=true">移到回收站</li>
-                      <li @click="rublish=true">可见性设置</li>
+                      <li @click="setCanSee">可见性设置</li>
                     </ul>
                   </section>
                   <section v-else class="file-folder-opt">
@@ -225,6 +225,10 @@
     <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
       <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail>
     </Modal>
+    <!--文件夹 可见性设置 模态框-->
+    <Modal v-model="showVisibilityModal" :z-index=2000 :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
+      <fileCanSee v-if="showVisibilityModal"></fileCanSee>
+    </Modal>
   </div>
 
 </template>
@@ -233,6 +237,7 @@ import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import fileDetail from "./fileDetail";
 import modelFileDetail from "./modelFileDetail";
+import fileCanSee from './fileCanSee'
 import { mapState, mapActions, mapMutations } from "vuex";
 import { getFileDetails, getChildFiles } from "@/axios/fileApi";
 import {
@@ -260,7 +265,8 @@ export default {
     commonFile,
     VJstree,
     fileDetail,
-    modelFileDetail
+    modelFileDetail,
+    fileCanSee
   },
   data() {
     return {
@@ -272,6 +278,7 @@ export default {
       showMove: false,
       menu1Show: false,
       menu2Show: false,
+      showVisibilityModal: false,
       folderName: "",
       fileId: this.$route.params.fileId,
       projectId: this.$route.params.id,
@@ -323,6 +330,10 @@ export default {
   methods: {
     ...mapActions("file", ["initFile"]),
     ...mapMutations("file", ["putOneFile"]),
+    setCanSee () {
+      this.showVisibilityModal=true
+      this.rublish = false;
+    },
     // 获取当前文件id
     getFileid(id) {
       this.thisFileId = id;
@@ -584,6 +595,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+  .can-see-modal{
+    /deep/ .ivu-modal-body{
+      padding: 0 !important;
+      height: 480px;
+    }
+  }
 .no-files {
   width: 100%;
   margin-top: 200px;
