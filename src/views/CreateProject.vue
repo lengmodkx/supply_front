@@ -19,6 +19,7 @@
 <script>
 import { createProject } from "@/axios/api";
 export default {
+  props: ["showProject"],
   data() {
     return {
       disabled: true,
@@ -31,6 +32,20 @@ export default {
       options2: {}
     };
   },
+  watch:{
+          showProject: function(val, oldVal) {      
+            if(!val){
+              this.loading = true;
+              this.proName = "";
+              this.proDes = "";
+              this.startTime = "";
+              this.endTime = "";
+              this.loading = false;
+            }
+          },
+          deep: true
+    },
+  
   methods: {
     create() {
       if (!this.startTime) {
@@ -84,6 +99,15 @@ export default {
         }
       };
     }
+  },
+  destoryed:function(){
+    this.loading = true;
+    this.proName = "";
+    this.proDes = "";
+    this.startTime = "";
+    this.endTime = "";
+    this.loading = false;
+
   }
 };
 </script>

@@ -155,7 +155,7 @@
 
     <!-- 创建项目 -->
     <Modal v-model="showproject" class="newPro-modal">
-      <CreateProject @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
+      <CreateProject :showProject='showproject' @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
     </Modal>
     <!-- 项目设置 -->
     <Modal v-model="projectSet" class="setPro-modal">

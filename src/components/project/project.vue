@@ -169,7 +169,8 @@ export default {
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/cancelRelevance", result.object);
                 }else if (result.object.fromType === "分享") {
-                    this.$store.commit("file/cancelRelevance", result.object.publicId);
+                    this.$store.dispatch("share/changeShares", result.object.publicId);
+                    
                 }else if (result.object.fromType === "日程") {
                   this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
