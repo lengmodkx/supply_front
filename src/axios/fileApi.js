@@ -120,3 +120,12 @@ export function searchFile(fileName, projectId) {
         params: {projectId: projectId}
     });
 }
+
+//获取文件目录
+
+export function getFolders(fileId) {
+    return fetch({
+        url: `/files/${fileId}/parent/folders`,
+        method: "get",
+    });
+}

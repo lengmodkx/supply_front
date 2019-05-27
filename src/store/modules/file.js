@@ -3,14 +3,84 @@ import {
 } from "../../axios/api.js";
 import {
     getTSFile,
-    filePrivacy
+    filePrivacy,
+    getFolders
 } from '../../axios/fileApi'
 const store = {
     namespaced: true,
     state: {
         files: [],
         file: {},
-        joinInfoIds: []
+        joinInfoIds: [],
+        asyncData:[ {   "id":"a1",
+        "text": "Same but with checkboxes",
+        "children": [
+          {
+            "text": "initially selected",
+            "selected": true
+          },
+          {
+            "text": "custom icon",
+            "icon": "fa fa-warning icon-state-danger"
+          },
+          {
+            "text": "initially open",
+            "icon": "fa fa-folder icon-state-default",
+            "opened": true,
+            "children": [
+              {
+                "text": "Another node"
+              }
+            ]
+          },
+          {
+            "text": "custom icon",
+            "icon": "fa fa-warning icon-state-warning"
+          },
+          {
+            "text": "disabled node",
+            "icon": "fa fa-check icon-state-success",
+            "disabled": true
+          }
+        ]
+      },
+      {
+        "text": "Same but with checkboxes",
+        "opened": true,
+        "children": [
+          {
+            "text": "initially selected",
+            "selected": true
+          },
+          {
+            "text": "custom icon",
+            "icon": "fa fa-warning icon-state-danger"
+          },
+          {
+            "text": "initially open",
+            "icon": "fa fa-folder icon-state-default",
+            "opened": true,
+            "children": [
+              {
+                "text": "Another node"
+              }
+            ]
+          },
+          {
+            "text": "custom icon",
+            "icon": "fa fa-warning icon-state-warning"
+          },
+          {
+            "text": "disabled node",
+            "icon": "fa fa-check icon-state-success",
+            "disabled": true
+          }
+        ]
+      },
+      {
+        "text": "And wholerow selection",
+         "icon": "fa fa-warning icon-state-warning"
+      }]
     },
     mutations: {
         initFile(state, data) {
@@ -128,13 +198,13 @@ const store = {
         // 推送 创建文件夹
         createWjj(state, data) {
             state.files = data
+        },
+        initFolders(state,data){
+            state.asyncData=data
         }
     },
     actions: {
-        initFile({
-            commit,
-            state
-        }, data) {
+        initFile({  commit,state}, data) {
             return new Promise((resolve, reject) => {
                 files(data).then(res => {
                     if (res.result == 1) {
@@ -154,11 +224,14 @@ const store = {
             })
         },
         // 推送 隐私模式
-        putMimi({
-            commit
-        }, data) {
+        putMimi({commit }, data) {
             getTSFile(data).then(res => {
                 commit("upFiles", res)
+            })
+        },
+        initFolders({commit},data){
+            getFolders(data).then(res=>{
+                commit("initFolders",res.data)
             })
         }
     }

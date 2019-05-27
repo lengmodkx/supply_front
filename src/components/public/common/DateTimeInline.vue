@@ -112,7 +112,6 @@ export default {
       this.$emit("clear");
     },
     confirm() {
-      console.log(this.realDateTime)
       this.$emit("confirm", this.realDateTime);
     }
   },
