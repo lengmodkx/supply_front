@@ -38,11 +38,11 @@ export default {
   mounted() {
     this.initSocket(this.$route.params.id);
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     this.stompClient.disconnect(function() {
       console.log("断开socket连接");
-    })
-    next()
+    });
+    next();
   },
   methods: {
     showBox(i) {
@@ -52,8 +52,8 @@ export default {
       this.activeHeaderTag = -1;
     },
     clickHandler() {
-      this.$router.push({ path:'/home'})
-      this.$Notice.close('project_del')
+      this.$router.push({ path: "/home" });
+      this.$Notice.close("project_del");
     },
     hideBox() {
       this.animate = true;
@@ -85,7 +85,7 @@ export default {
         frame => {
           this.stompClient.subscribe(`/topic/${id}`, msg => {
             var result = JSON.parse(msg.body);
-            console.log(result.type)
+            console.log(result.type);
             switch (result.type) {
               case "A1": //创建任务
                 this.$store.dispatch("task/init", result.object);
@@ -121,8 +121,8 @@ export default {
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A13":
-                this.$store.dispatch("task/editTask",result.object.taskId);
-                this.$store.dispatch("task/init",result.object.projectId)
+                this.$store.dispatch("task/editTask", result.object.taskId);
+                this.$store.dispatch("task/init", result.object.projectId);
                 break;
               case "A14":
                 this.$store.dispatch("task/changeTask", result.object);
@@ -153,10 +153,16 @@ export default {
                   );
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/relevance", result.object);
-                }else if (result.object.fromType === "分享") {
-                    this.$store.dispatch("share/changeShares", result.object.publicId);
-                }else if (result.object.fromType === "日程") {
-                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
+                } else if (result.object.fromType === "分享") {
+                  this.$store.dispatch(
+                    "share/changeShares",
+                    result.object.publicId
+                  );
+                } else if (result.object.fromType === "日程") {
+                  this.$store.dispatch(
+                    "schedule/getScheduleById",
+                    result.object.publicId
+                  );
                 }
                 break;
               // 取消关联
@@ -168,42 +174,47 @@ export default {
                   );
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/cancelRelevance", result.object);
-                }else if (result.object.fromType === "分享") {
-                    this.$store.dispatch("share/changeShares", result.object.publicId);
-                    
-                }else if (result.object.fromType === "日程") {
-                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
+                } else if (result.object.fromType === "分享") {
+                  this.$store.dispatch(
+                    "share/changeShares",
+                    result.object.publicId
+                  );
+                } else if (result.object.fromType === "日程") {
+                  this.$store.dispatch(
+                    "schedule/getScheduleById",
+                    result.object.publicId
+                  );
                 }
                 break;
               case "A30":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
-            // 添加分享
+              // 添加分享
               case "B1":
                 this.$store.dispatch("share/init", result.object);
                 break;
-                // 编辑分享
+              // 编辑分享
               case "B2":
                 this.$store.commit("share/editShare", result.object);
                 this.$store.dispatch("share/init", result.object.projectId);
                 break;
-                // 移动分享
+              // 移动分享
               case "B5":
                 this.$store.dispatch("share/removeShare", result.object);
                 // this.$store.commit("share/removeShare",'' );
                 break;
-                // 隐私模式
+              // 隐私模式
               case "B8":
                 this.$store.dispatch("share/changeShares", result.object);
                 break;
-                // 分享移到回收站
+              // 分享移到回收站
               case "B6":
                 this.$store.dispatch("share/deleteSahre", result.object);
                 break;
-                // 添加参与者
-                case "B10":
-                    this.$store.dispatch("share/changeShares", result.object);
-                    break;
+              // 添加参与者
+              case "B10":
+                this.$store.dispatch("share/changeShares", result.object);
+                break;
               case "B3":
               case "B4":
               case "B7":
@@ -246,56 +257,66 @@ export default {
                   fileId: result.object.parentId
                 });
                 break;
-             //新建日程
+              //新建日程
               case "D9":
-                this.$store.dispatch("schedule/init",{projectId:result.object})
+                this.$store.dispatch("schedule/init", {
+                  projectId: result.object
+                });
                 break;
-                //修改日程名称
-                case "D1":
-                  this.$store.dispatch("schedule/getScheduleById",result.object)
-                  break;
-                //修改日程的开始时间
-                case "D2":
-                    this.$store.dispatch("schedule/getScheduleById",result.object)
-                    break;
-                //修改日程的结束时间
-                case "D3":
-                    this.$store.dispatch("schedule/getScheduleById",result.object)
-                    break;
-                //更新了日程地点
-                case "D4":
-                    this.$store.dispatch("schedule/getScheduleById",result.object)
-                  break;
-                //更新了日程备注
-                case "D5":
-                    this.$store.dispatch("schedule/getScheduleById",result.object)
-                    break;
-                //更新了日程参与者
-                case "D6":
-                    this.$store.dispatch("schedule/getScheduleById",result.object)
-                    break;
-                //更新了日程重复性
-                case "D7":
-                    this.$store.dispatch("schedule/getScheduleById",result.object)
-                    break;
-                 //复制日程
+              //修改日程名称
+              case "D1":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //修改日程的开始时间
+              case "D2":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //修改日程的结束时间
+              case "D3":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //更新了日程地点
+              case "D4":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //更新了日程备注
+              case "D5":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //更新了日程参与者
+              case "D6":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //更新了日程重复性
+              case "D7":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
+              //复制日程
               case "D10":
               case "D11":
               case "D12":
               case "D13":
-                this.$store.dispatch("schedule/init",{projectId:result.object})
+                this.$store.dispatch("schedule/init", {
+                  projectId: result.object
+                });
                 break;
               // 添加标签
               case "E1":
                 if (result.object.publicType === "任务") {
-                  this.$store.dispatch("task/changeTask",result.object.publicId);
+                  this.$store.dispatch(
+                    "task/changeTask",
+                    result.object.publicId
+                  );
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/bindingTag", {
                     tag: result.object.tag,
                     fileId: result.object.publicId
                   });
                 } else if (result.object.publicType === "分享") {
-                    this.$store.dispatch("share/changeShares",result.object.publicId);
+                  this.$store.dispatch(
+                    "share/changeShares",
+                    result.object.publicId
+                  );
                 }
                 break;
               // 移除标签
@@ -310,8 +331,11 @@ export default {
                     tagId: result.object.tagId,
                     fileId: result.object.publicId
                   });
-                }else if (result.object.publicType === "分享") {
-                   this.$store.dispatch("share/changeShares",result.object.publicId);
+                } else if (result.object.publicType === "分享") {
+                  this.$store.dispatch(
+                    "share/changeShares",
+                    result.object.publicId
+                  );
                 }
                 break;
               // 发消息
@@ -322,9 +346,9 @@ export default {
                   this.$store.commit("schedule/msg", result.object.log);
                 } else if (result.object.type === "文件") {
                   this.$store.commit("file/getMsg", result.object.log);
-                }else if (result.object.type === "分享") {
+                } else if (result.object.type === "分享") {
                   this.$store.commit("share/sendMsg", result.object.log);
-                }else if (result.object.type === "日程") {
+                } else if (result.object.type === "日程") {
                   this.$store.commit("schedule/msg", result.object.log);
                 }
                 break;
@@ -338,46 +362,36 @@ export default {
                 this.$store.commit("chat/revoke", result.object);
                 break;
               case "H1":
-                this.$store.dispatch("task/init",result.object)
-                break;
               case "H2":
-                this.$store.dispatch("task/init",result.object)
-                break;
               case "H3":
-                this.$store.dispatch("task/init",result.object)
-                break;
               case "H4":
-                this.$store.dispatch("task/init",result.object)
-                break;
               case "H5":
-                this.$store.dispatch("task/init",result.object)
-                break;
               case "H6":
-                this.$store.dispatch("task/init",result.object)
-                break;
               case "H7":
-                this.$store.dispatch("task/init",result.object,)
-                break;
               case "H8":
-                this.$store.dispatch("task/init",result.object)
+                this.$store.dispatch("task/init", result.object);
                 break;
               case "I1":
                 this.$Notice.warning({
-                  title: '这个项目已被移入回收站!',
+                  title: "这个项目已被移入回收站!",
                   duration: 0,
-                  name:'project_del',
+                  name: "project_del",
                   render: h => {
-                    return h('div', [
-                      h('Button', {
-                        style: {
-                          color: 'red',
-                          fontSize: '14px'
+                    return h("div", [
+                      h(
+                        "Button",
+                        {
+                          style: {
+                            color: "red",
+                            fontSize: "14px"
+                          },
+                          on: {
+                            click: this.clickHandler
+                          }
                         },
-                        on: {
-                          click: this.clickHandler
-                        },
-                      },'我知道啦!')
-                    ])
+                        "我知道啦!"
+                      )
+                    ]);
                   }
                 });
                 break;
