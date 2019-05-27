@@ -8,14 +8,14 @@
       <div slot="header" style="height:24px;">
         <div class="toolRight">
           <Tooltip content="点个赞" placement="bottom-start">
-          <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
-            <Icon type="md-thumbs-up" size="20" />
-            <span class="zanNum" v-if="task.fabulousCount !== 0">{{task.fabulousCount}}</span>
-          </span>
+            <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
+              <Icon type="md-thumbs-up" size="20" />
+              <span class="zanNum" v-if="task.fabulousCount !== 0">{{task.fabulousCount}}</span>
+            </span>
           </Tooltip>
           <span class="down">
-          <SingleTaskMenu :data="task"></SingleTaskMenu>
-        </span>
+            <SingleTaskMenu :data="task"></SingleTaskMenu>
+          </span>
         </div>
         <div class="headerTool">
           <div class="toolLeft" v-if="task.parentId === '0'">
@@ -164,7 +164,7 @@
         <div class="has-relevance">
           <ul v-if="task.bindTasks.length!=0">
             <div class="what-title">关联的任务</div>
-            <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i" >
+            <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">
               <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
                 <Icon type="md-checkbox-outline" size="22" />
                 <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
@@ -217,7 +217,7 @@
           </ul>
           <ul v-if="task.bindSchedules.length!=0">
             <div class="what-title">关联的日程</div>
-            <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i" >
+            <li class="gl-task-list" v-for="(b,i) in task.bindSchedules" :key="i">
               <div class="gl-task-list-con" @click="editSchedule(b.scheduleId)">
                 <!--<Icon type="md-checkbox-outline" size="22" />-->
                 <Icon type="ios-calendar-outline" size="22" />
@@ -327,9 +327,8 @@
         <fileDetail @close="closeDetail" v-if="showFileDetail"></fileDetail>
       </Modal>
       <!-- 编辑日程模态框 -->
-      <Modal v-model="showRCModal"
-             class="myModal myRcModal">
-          <rc-modal></rc-modal>
+      <Modal v-model="showRCModal" class="myModal myRcModal">
+        <rc-modal></rc-modal>
       </Modal>
     </div>
   </div>
@@ -338,7 +337,7 @@
 <script>
 import SetRepeat from "./SetRepeat";
 import TaskWarn from "./TaskWarn";
-import rcModal from "@/components/public/common/EditRicheng"
+import rcModal from "@/components/public/common/EditRicheng";
 import AddRelation from "@/components/public/common/AddRelation";
 import Tags from "@/components/project/pages/index/components/task/Tags";
 import insertText from "@/utils/insertText";
@@ -391,7 +390,7 @@ export default {
       glPop: false,
       zan: false,
       aa: false,
-      showRCModal:false,
+      showRCModal: false,
       childTaskData: null,
       complete: false,
       hoverExecutor: false,
@@ -438,9 +437,9 @@ export default {
       "updateEndTime",
       "addChildrenTask"
     ]),
-      closeTag(){
-        this.$refs.tags.closeTag()
-      },
+    closeTag() {
+      this.$refs.tags.closeTag();
+    },
     //修改任务名称
     updateTaskName() {
       updateTaskName(this.task.taskId, this.task.taskName).then(data => {});
@@ -459,9 +458,9 @@ export default {
       });
     },
     //弹出日程详情框
-    editSchedule(id){
-        this.$store.dispatch("schedule/getScheduleById",id)
-        this.showRCModal = true
+    editSchedule(id) {
+      this.$store.dispatch("schedule/getScheduleById", id);
+      this.showRCModal = true;
     },
     closeDetail() {
       this.showFileDetail = false;
@@ -654,10 +653,12 @@ export default {
       }
       return suffix;
     },
-      // 去分享详情
-    goShareDetail(shareId){
-        alert(shareId)
-        this.$router.push(`/project/${this.$route.params.id}/share_detail/${shareId}`)
+    // 去分享详情
+    goShareDetail(shareId) {
+      alert(shareId);
+      this.$router.push(
+        `/project/${this.$route.params.id}/share_detail/${shareId}`
+      );
     }
   }
 };
