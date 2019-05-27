@@ -1,30 +1,45 @@
 <template>
-  <DatePicker
-    :open="visible"
-    :value="date"
-    confirm
-    class="datatimeinline"
-    @on-change="dateChange"
-    style="width:216px"
-  >
-    <Row class="footer">
-      <iCol span="11">
-        <Button
-          long
-          @click="clear"
-        >清除</Button>
-      </iCol>
-      <iCol span="2"></iCol>
-      <iCol span="11">
-        <Button
-          type="primary"
-          long
-          @click="confirm"
-          :disabled="disabled"
-        >确定</Button>
-      </iCol>
-    </Row>
-  </DatePicker>
+  <div>
+    <DatePicker
+            :open="visible"
+            :value="date"
+            confirm
+            class="datatimeinline"
+            @on-change="dateChange"
+            style="width:216px"
+    >
+      <Row class="picker-input">
+        <iCol span="14">
+          <input v-model="date" />
+        </iCol>
+        <iCol span="10">
+          <TimePicker format="HH:mm"
+                      :value="time"
+                      @on-change="timeChange"
+                      ref='timePicker'>
+          </TimePicker>
+        </iCol>
+      </Row>
+      <Row class="footer">
+        <iCol span="11">
+          <Button
+                  long
+                  @click="clear"
+          >清除</Button>
+        </iCol>
+        <iCol span="2"></iCol>
+        <iCol span="11">
+          <Button
+                  type="primary"
+                  long
+                  @click="confirm"
+                  :disabled="disabled"
+          >确定</Button>
+        </iCol>
+      </Row>
+    </DatePicker>
+  </div>
+
 </template>
 
 <script>
@@ -49,7 +64,8 @@ export default {
     return {
       date: null,
       time: null,
-      realDateTime: ""
+      realDateTime: "",
+      timeDate: null
     };
   },
   computed: {
@@ -69,6 +85,11 @@ export default {
   methods: {
     selectTimeOk(data){
       console.log(data)
+    },
+    timeChange (time) {
+      this.time = time
+      this.realDateTime = this.date + ' ' + this.time
+      this.$refs.timePicker.visible = false
     },
     dateChange(date) {
       this.date = date;
@@ -91,6 +112,7 @@ export default {
       this.$emit("clear");
     },
     confirm() {
+      console.log(this.realDateTime)
       this.$emit("confirm", this.realDateTime);
     }
   },
@@ -101,10 +123,44 @@ export default {
 </script>
 
 <style lang="less">
+  .picker-input {
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    height: 30px;
+    padding: 5px 0;
+    margin-top: 6px;
+    > div.ivu-col {
+      height: 18px;
+      &:first-child {
+        border-right: 1px solid #e5e5e5;
+      }
+    }
+    input {
+      padding: 0 12px;
+      border: none;
+      outline: none !important;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
 .datatimeinline {
   display: block;
   height: 324px;
   font-size: 14px;
+  .picker-input{
+    position: relative;
+    /deep/ .ivu-select-dropdown{
+      position: absolute !important;
+      top: 10px!important;
+    }
+  }
+  /deep/ .ivu-select-dropdown{
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    background-color: white;
+  }
   .footer {
     position: absolute;
     width: 100%;
