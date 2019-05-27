@@ -55,13 +55,13 @@ export function userlogin(data) {
     });
 }
 // 获取手机验证码
-export function getPhone(accountName,captcha) {
+export function getPhone(accountName, captcha) {
     return fetch({
         url: '/code',
         method: "get",
         params: {
-            'accountName':accountName,
-            'captcha':captcha
+            'accountName': accountName,
+            'captcha': captcha
         }
     });
 }
@@ -71,8 +71,8 @@ export function resetPwd(data) {
         url: '/forget',
         method: "put",
         params: {
-            'accountName':data.accountName,
-            'password':data.password,
+            'accountName': data.accountName,
+            'password': data.password,
             'code': data.code
         }
     });
@@ -117,7 +117,7 @@ export function updateProject(data) {
             'isPublic': data.isPublic,
             'projectDel': data.projectDel,
             'projectStatus': data.projectStatus,
-            'projectCover':data.projectCover
+            'projectCover': data.projectCover
         }
     });
 }
@@ -204,11 +204,13 @@ export function delProject(projectId) {
     });
 }
 //点击项目进入任务主页
-export function enterTask(projectId,name) {
+export function enterTask(projectId, name) {
     return fetch({
         url: `${api.projects}/${projectId}/tasks`,
         method: "get", // 请求方法
-        params: {name:name}
+        params: {
+            name: name
+        }
     });
 }
 // 添加任务
@@ -258,6 +260,10 @@ export function taskToRecycle(taskId) {
     return $put(`/tasks/${taskId}/recyclebin`);
 }
 
+//移动所有任务到回收站
+export function taskAllToRecycle(menuId) {
+    return $put(`/relations/${menuId}/move_recycle_bin`)
+}
 // 复制任务
 export function copyTask(taskId, projectId, groupId, menuId) {
     return $post(`/tasks/${taskId}/copy`, {
@@ -293,7 +299,7 @@ export function addnewTag(params) {
 }
 
 //创建标签并且绑定信息
-export function addTagAndBind(params){
+export function addTagAndBind(params) {
     return $post(`/tags/add_and_bind`, params)
 }
 //删除标签
@@ -379,9 +385,11 @@ export function cancelCollect(publicId) {
 }
 
 //完成任务
-export function completeTask(taskId,label) {
-    if(label){
-        var l = {label:label}
+export function completeTask(taskId, label) {
+    if (label) {
+        var l = {
+            label: label
+        }
     }
     return fetch({
         url: `${api.tasks}/${taskId}/finish`,
@@ -391,8 +399,10 @@ export function completeTask(taskId,label) {
 }
 //取消完成任务
 export function cancelcompleteTask(taskId, taskStatus) {
-    if(taskStatus){
-        var l = {label:taskStatus}
+    if (taskStatus) {
+        var l = {
+            label: taskStatus
+        }
     }
     return fetch({
         url: `${api.tasks}/${taskId}/unFinish`,
@@ -468,8 +478,10 @@ export function getShareDetail(shareId) {
     return $get(`/shares/${shareId}`, "");
 }
 // 改变分享参与者
-export function changeJoin(shareId,memberIds) {
-    return $put(`/shares/${shareId}/members`, {memberIds:memberIds});
+export function changeJoin(shareId, memberIds) {
+    return $put(`/shares/${shareId}/members`, {
+        memberIds: memberIds
+    });
 }
 //添加分享
 export function shareAdd(params) {
@@ -484,8 +496,10 @@ export function deleteShare(shareId) {
     return $delete(`/shares/${shareId}`, "");
 }
 //将分享移入回收站
-export function recycleShare(shareId,projectId) {
-    return $put(`/shares/${shareId}/recyclebin`, {projectId:projectId});
+export function recycleShare(shareId, projectId) {
+    return $put(`/shares/${shareId}/recyclebin`, {
+        projectId: projectId
+    });
 }
 //恢复分享
 export function recovery(shareId) {
@@ -499,21 +513,25 @@ export function copyShare(shareId, projectId) {
 }
 
 //移动分享
-export function moveShare(shareId, projectId,curProjectId) {
+export function moveShare(shareId, projectId, curProjectId) {
     return $post(`/shares/${shareId}/move`, {
         projectId: projectId,
-        curProjectId:curProjectId
+        curProjectId: curProjectId
     });
 }
 
 //更换分享隐私模式
-export function privacyShare(shareId,projectId) {
-    return $put(`/shares/${shareId}/privacy`, {projectId:projectId});
+export function privacyShare(shareId, projectId) {
+    return $put(`/shares/${shareId}/privacy`, {
+        projectId: projectId
+    });
 }
 
 //置顶分享
-export function topShare(shareId,projectId) {
-    return $post(`/shares/${shareId}/top`, {projectId:projectId});
+export function topShare(shareId, projectId) {
+    return $post(`/shares/${shareId}/top`, {
+        projectId: projectId
+    });
 }
 
 //更改任务的隐私模式

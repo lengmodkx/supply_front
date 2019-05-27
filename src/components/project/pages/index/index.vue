@@ -40,17 +40,17 @@
     <!--看板视图-->
     <draggable v-if="view==='看板视图'" class="column-main dragscroll" v-model="allTask" :options="{
                   handle:'.handle',
-                  chosenClass: 'boxChosenClass',
+                  
                   dragClass: 'boxDragClass',
                   fallbackClass: 'boxFallbackClass',
                   forceFallback: true,
-                  delay: 0.5,
+                  delay: 1,
                   preventDragY: true// 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
                    }" @end="dragBox">
 
       <div class="column" :key="k" v-for="(i, k) in allTask">
-        <div style="max-height: 100%;position:relative;" :data-index="k">
-          <div class="title handle">
+        <div style="max-height: 100%;position:relative;" :data-index="k" class="handle">
+          <div class="title">
             {{i.relationName}} · {{i.taskList ? i.taskList.length : '0'}}
             <!-- 点击三角形出来的任务列表菜单组件 -->
             <TaskMenu class="fr" :data=i></TaskMenu>
@@ -158,7 +158,7 @@
 
             <span class="add" @click.stop="addCurTask(i.parentId,i.relationId,i.taskList, k)" v-if="currentEditId!=i.relationId">
               <Icon type="android-add-circle"></Icon>
-              <Button type="info" long>添加任务</Button>
+              <Button type="info" long icon="md-add"></Button>
             </span>
           </div>
 
