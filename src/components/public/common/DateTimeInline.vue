@@ -81,9 +81,9 @@ export default {
     }
   },
   methods: {
-    selectTimeOk(data){
-      console.log(data)
-    },
+    // selectTimeOk(data){
+    //   console.log(data)
+    // },
     timeChange (time) {
       this.time = time
       this.realDateTime = this.date + ' ' + this.time
