@@ -25,15 +25,11 @@
     </div>
     <div class="fr menu">
       <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="clickHeaderTag(1)"><span class="text">我的</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)">
-        <span class="text">
-          <Badge dot :offset=[5,0]><span>日历</span></Badge>
-        </span>
-      </a>
+      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)"><span class="text">日历</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==3}" @click="clickHeaderTag(3)">
 
         <span class="text" style="border-right:none;">
-          <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
+          <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[15,0]>
             <Icon type="ios-notifications-outline" size="22" />
           </Badge>
         </span>
@@ -219,7 +215,9 @@ export default {
     },
     // 去管理后台页面
     goBackstage () {
-      window.open('company.html', '_blank')
+      let myurl="/company.html"
+      let routeData = this.$router.resolve({ path: myurl });
+      window.open(routeData.href, '_blank');
     }
   },
   computed: {
