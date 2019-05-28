@@ -1,8 +1,17 @@
 <template>
   <div class="file">
-      <div class="file-side">
+      <div    :class="show?'file-side-show':'file-side'">
        <v-jstree :data="asyncData"  @item-click="itemClick" ref="jstree" ></v-jstree>
       </div> 
+      <div class="file-button" @click='show=!show'>
+       
+        <div class="root__3UYM"  :class="show?'left':'right'">
+          <i class="left__1DdF"></i>
+          <i class="indicator__1TO8"></i>
+         </div>
+
+      </div>
+
       <div class="file-view-wrap fade in">
         <header class="file-header">
           <div class="file-header-title">
@@ -32,8 +41,9 @@
                 </Select>
           </div>
           <div class="icon-box">
-            <Icon type="ios-list" @click="view='view'" />
-            <Icon type="ios-apps" @click="view='list'" />
+          
+            <Icon type="ios-apps"  @click="view='view'"/>
+            <Icon type="ios-list"  @click="view='list'"/>
           </div>
         </div>
         <Loading v-if="loading"></Loading>
@@ -407,6 +417,7 @@ export default {
   },
   data() {
     return {
+      show:false,
       cityListmodel:'',
       cityList:[],
       showIcon: null,
@@ -451,7 +462,7 @@ export default {
       searched: "",
       pathData: [
         {
-          name: "文件夹",
+          name: "项目文件夹",
           id: this.$route.params.fileId
         }
       ],
@@ -508,6 +519,9 @@ export default {
   methods: {
     ...mapActions("file", ["initFile",'initFolders']),
     ...mapMutations("file", ["putOneFile"]),
+    leftShow(){
+
+    },
     setCanSee() {
       this.showVisibilityModal = true;
       this.rublish = false;
@@ -803,7 +817,7 @@ export default {
       cursor: pointer;
       padding-left: 10px;
     }
-    i:first-child {
+    i:last-child {
       font-size: 34px;
       font-weight: bold;
     }

@@ -1,16 +1,160 @@
+
 .file{
   display: flex;
   flex-flow: row nowrap;
 }
 
+.file-side-show{
+  width:298px;
+  background: #ffffff;;
+  padding-top:50px;
+  height: calc(100vh - 48px);
+  transition: 0.3s;
+}
+
+
 .file-side{
-   width:298px;
+   width:0px;
    background: #ffffff;;
    padding-top:50px;
    height: calc(100vh - 48px);
-   border-right: 1px #e5e5e5  solid;
+   transition: 0.3s;
 
 }
+
+.file-button{
+  width:15px;
+  border-left: 2px #e5e5e5  solid;
+  padding-top:50px;
+  height: calc(100vh - 48px);
+}
+.file-button:hover{
+  width:15px;
+  border-left: 2px #3da8f5  solid;
+  padding-top:50px;
+  height: calc(100vh - 48px);
+}
+
+
+
+
+
+// 伸缩按钮样式
+.board-left-panel-indicator {
+  position: absolute;
+  top: 0;
+  left: 298px;
+  bottom: 0;
+  width: 14px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.root__3UYM {
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.indicator__1TO8,
+.left__1DdF {
+  background-color: #ccc;
+  transition-duration: 200ms;
+}
+
+.left__1DdF {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  transition-property: background-color, width;
+  transition-timing-function: ease-in-out;
+}
+
+.indicator__1TO8 {
+  width: 100%;
+  height: 30px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-radius: 0 4px 4px 0;
+  transition-property: background-color;
+  transition-timing-function: ease-in-out;
+}
+
+.indicator__1TO8:before {
+  bottom: -1px;
+}
+
+.indicator__1TO8:after,
+.indicator__1TO8:before {
+  content: '';
+  display: block;
+  position: relative;
+  width: 2px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 1px;
+  transition: all 300ms ease-in-out;
+}
+
+.indicator__1TO8:after {
+  top: -1px;
+}
+
+.root__3UYM:hover .left__1DdF {
+  width: 2px;
+  background-color: #3da8f5;
+}
+
+.root__3UYM:hover .indicator__1TO8 {
+  background-color: #3da8f5;
+}
+
+.root__3UYM.left:hover .indicator__1TO8:before,
+.root__3UYM.right:hover .indicator__1TO8:after {
+  -webkit-transform: rotate(30deg);
+  transform: rotate(30deg);
+}
+
+.root__3UYM.left:hover .indicator__1TO8:after,
+.root__3UYM.right:hover .indicator__1TO8:before {
+  -webkit-transform: rotate(-30deg);
+  transform: rotate(-30deg);
+}
+
+.boxChosenClass:not(.boxDragClass),
+.chosenClass:not(.dragClass) {
+  background-color: #ccc !important;
+
+  >div,
+  >p {
+    opacity: 0;
+  }
+}
+
+
+
 
 .file-list{
   width: 100%;
