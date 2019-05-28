@@ -1,93 +1,36 @@
 import {
-    files
+    files,
+    allTags
 } from "../../axios/api.js";
 import {
     getTSFile,
     filePrivacy,
-    getFolders
+    getFolders,
+    searchFile
 } from '../../axios/fileApi'
+
+
+
 const store = {
     namespaced: true,
     state: {
         files: [],
         file: {},
         joinInfoIds: [],
-        asyncData:[ 
-                        //         {   "id":"a1",
-                        //     "text": "Same but with checkboxes",
-                        //     "children": [
-                        //       {
-                        //         "text": "initially selected",
-                        //         "selected": true
-                        //       },
-                        //       {
-                        //         "text": "custom icon",
-                        //         "icon": "fa fa-warning icon-state-danger"
-                        //       },
-                        //       {
-                        //         "text": "initially open",
-                        //         "icon": "fa fa-folder icon-state-default",
-                        //         "opened": true,
-                        //         "children": [
-                        //           {
-                        //             "text": "Another node"
-                        //           }
-                        //         ]
-                        //       },
-                        //       {
-                        //         "text": "custom icon",
-                        //         "icon": "fa fa-warning icon-state-warning"
-                        //       },
-                        //       {
-                        //         "text": "disabled node",
-                        //         "icon": "fa fa-check icon-state-success",
-                        //         "disabled": true
-                        //       }
-                        //     ]
-                        //   },
-                        //   {
-                        //     "text": "Same but with checkboxes",
-                        //     "opened": true,
-                        //     "children": [
-                        //       {
-                        //         "text": "initially selected",
-                        //         "selected": true
-                        //       },
-                        //       {
-                        //         "text": "custom icon",
-                        //         "icon": "fa fa-warning icon-state-danger"
-                        //       },
-                        //       {
-                        //         "text": "initially open",
-                        //         "icon": "fa fa-folder icon-state-default",
-                        //         "opened": true,
-                        //         "children": [
-                        //           {
-                        //             "text": "Another node"
-                        //           }
-                        //         ]
-                        //       },
-                        //       {
-                        //         "text": "custom icon",
-                        //         "icon": "fa fa-warning icon-state-warning"
-                        //       },
-                        //       {
-                        //         "text": "disabled node",
-                        //         "icon": "fa fa-check icon-state-success",
-                        //         "disabled": true
-                        //       }
-                        //     ]
-                        //   },
-                        //   {
-                        //     "text": "And wholerow selection",
-                        //      "icon": "fa fa-warning icon-state-warning"
-                        //   }
-                    ]
+        asyncData:[],
+        tags:[],
     },
     mutations: {
         initFile(state, data) {
             state.files = data;
         },
+        searchFile(state,data){
+            state.files = data;
+        },
+        initTag(state,data){
+            state.tags=data;
+        },
+        
         // 文件详情 赋值
         putOneFile(state, data) {
             state.file = data
@@ -234,6 +177,17 @@ const store = {
         initFolders({commit},data){
             getFolders(data).then(res=>{
                 commit("initFolders",res.data)
+            })
+        },
+        //搜索文件
+        searchFile({commit},data){
+            searchFile(data.fileName,data.projectId).then(res=>{
+                commit("searchFile",res.data)
+            })
+        },
+        initTag({commit},data){
+            allTags(data).then(res=>{
+                commit("initTag",res.data)
             })
         }
     }
