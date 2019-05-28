@@ -58,7 +58,7 @@
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="(i.taskList.length*60+42)>wHeight?'overflow-y: scroll':''">
             <draggable :list="i.taskList" :options="{group:'uncheckedTask',
                         forceFallback: true,
-                        delay: 0.5,
+                        delay: 1.5,
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
@@ -74,7 +74,7 @@
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
                     <div class="task-infos">
-                      <span class="label time-label" v-if="a.endTime">{{a.endTime|timeFilter1}} 截止</span>
+                      <span class="label time-label" v-if="a.endTime">{{$moment(a.endTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}} 截止</span>
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
