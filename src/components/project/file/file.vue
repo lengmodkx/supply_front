@@ -34,9 +34,12 @@
         <div class="input-box" style="padding:10px 20px 10px 20px;">
           <div class="input-box-left">
                 <Input search enter-button placeholder="请输入文件名搜索" style="width:500px;margin-right:20px;" @on-search="search" v-model="searched" />
-                <Select v-model="curtag" style="width:200px">
-                    <Option v-for="item in tags" :value="item.tagName" :key="item.tagId">{{ item.tagName }}</Option>
-                </Select>
+                <!-- <Select v-model="curtag" style="width:200px">
+                    <Option v-for="item in tags" :value="item.tagName" :key="item.tagId">
+                      <div class="circle" :style="`background-color:${item.bgColor}`"></div>
+                      {{ item.tagName }}
+                      </Option>
+                </Select> -->
           </div>
           <div class="icon-box">
           
@@ -79,7 +82,19 @@
                       <p>您确定要把该文件移到回收站吗？</p>
                       <Button long type="error" @click="putRecyclebin">移到回收站</Button>
                     </div>
-                    <div v-show="!rublish">
+                    <div v-show="showFileEdit" class="rublish">
+                      <div class="rublish-header">
+                        <Icon @click="rublish=false" type="ios-arrow-back" />
+                        修改文件名称
+                        <span></span>
+                      </div>
+                      <div class="rublish-input">
+                          <Input v-model.trim="editFileName"   />
+                      </div>
+                      <Button long type="primary"  @click='fileEdit(file.fileId)' >确定</Button>
+                    </div>
+
+                    <div v-show="!rublish&&!showFileEdit">
                       <div class="menu-file-title" style="text-align:center;font-size:16px">
                         <span>文件菜单</span>
                       </div>
@@ -97,6 +112,7 @@
                           <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
                           <li @click="removeClone('移动')">移动文件</li>
                           <li @click="removeClone('复制')">复制文件</li>
+                          <li @click="showFileEdit=true" >修改名称</li>
                           <li>复制文件链接</li>
                           <li @click="collectFile">收藏文件</li>
                           <li @click="rublish=true">移到回收站</li>
@@ -745,6 +761,13 @@ export default {
   justify-content: space-between;
   .input-box-left{
     display:flex;
+    .circle{
+      width:5px;
+      height: 5px;
+      border-radius: 50%;
+      float:left;
+      margin:5px 5px 0 0;
+    }
   }
   .icon-box {
     color: #2d8cf0;

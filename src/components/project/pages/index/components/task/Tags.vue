@@ -118,7 +118,7 @@ import {
   bindingTag
 } from "@/axios/api";
 export default {
-  props: ["taglist", "publicId", "publicType", "projectId"],
+  props: ["taglist", "publicId", "publicType", "projectId",'fileTask'],
   data() {
     return {
       searchTag: "",
@@ -225,6 +225,8 @@ export default {
       this.Popvisible = flag;
     },
     popShow() {
+     
+
       this.Popvisible = !this.Popvisible;
       if (this.Popvisible) {
         let params = {
@@ -237,12 +239,17 @@ export default {
           }
         });
       }
-      if(this.$refs.addIcon.offsetWidth + 45>300){
-            this.offsetLeft=270+"px"
+      if(this.fileTask=='fileTask'){
+         this.offsetLeft=80+"px"
       }else{
-         this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-      }
+           if(this.$refs.addIcon.offsetWidth + 45>300){
+            this.offsetLeft=270+"px"
+            }else{
+              this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+            }
     
+      }
+     
       console.log(this.offsetLeft)
     },
     popHide() {
