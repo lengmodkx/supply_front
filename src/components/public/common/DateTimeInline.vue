@@ -75,7 +75,7 @@ export default {
     },
     dateChange(date) {
       this.date = date;
-      this.realDateTime = new Date(date).getTime();
+      this.realDateTime = this.date + " " + this.time;
     },
     init() {
       if (this.datetime) {
