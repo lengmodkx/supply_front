@@ -6,7 +6,7 @@
           <input v-model="date" />
         </iCol>
         <iCol span="10">
-          <TimePicker format="HH:mm" :value="time" @on-change="timeChange" ref='timePicker'>
+          <TimePicker confirm format="HH:mm" :value="time" @on-change="timeChange" ref='timePicker'>
           </TimePicker>
         </iCol>
       </Row>
@@ -71,7 +71,7 @@ export default {
     timeChange(time) {
       this.time = time;
       this.realDateTime = this.date + " " + this.time;
-      this.$refs.timePicker.visible = false;
+      // this.$refs.timePicker.visible = false;
     },
     dateChange(date) {
       this.date = date;
