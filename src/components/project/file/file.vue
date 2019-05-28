@@ -851,7 +851,7 @@ export default {
   background: #f7f7f7;
 }
 .file-view-wrap {
-  width: 1100px;
+  width: 1000px;
   min-height: 500px;
   border-radius: 4px;
   background-color: #ffffff;
