@@ -41,10 +41,10 @@ const store = {
         },
         // 推送，更改文件名称
         changeFileName(state, data) {
-            state.file.fileName = data
+            state.file.fileName = data.fileName
             state.files.forEach((i, n) => {
-                if (i.fileId == state.file.data.fileId) {
-                    state.files[n].fileName = data
+                if (i.fileId == data.fileId) {
+                    state.files[n].fileName = data.fileName
                 }
             })
         },
