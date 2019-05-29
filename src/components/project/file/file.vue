@@ -1,7 +1,7 @@
 <template>
   <div class="file">
       <div    :class="show?'file-side-show':'file-side'">
-       <v-jstree :data="asyncData"  @item-click="itemClick" ref="jstree" ></v-jstree>
+       <v-jstree :data="treeData"  @item-click="itemClick" ref="jstree" ></v-jstree>
       </div> 
       <div class="file-button" @click='show=!show'>
         <div class="root__3UYM"  :class="show?'left':'right'">
@@ -360,6 +360,7 @@ export default {
   data() {
     return {
       show:false,
+      asyncData:[],
       curtag:'',
       showIcon: null,
       showFileEdit: false,
@@ -440,7 +441,7 @@ export default {
 
   },
   computed: {
-    ...mapState("file", ["files", "filePath",'asyncData','tags'])
+    ...mapState("file", ["files", "filePath",'treeData','tags'])
   },
   mounted: function() {
     console.log(localStorage)

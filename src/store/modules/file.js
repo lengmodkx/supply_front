@@ -18,7 +18,7 @@ const store = {
         files: [],
         file: {},
         joinInfoIds: [],
-        asyncData:[],
+        treeData:[],
         tags:[],
     },
     mutations: {
@@ -146,7 +146,7 @@ const store = {
             state.files = data
         },
         initFolders(state,data){
-            state.asyncData=data
+            state.treeData=data
         }
     },
     actions: {
