@@ -96,7 +96,7 @@ const store = {
         },
         // 推送 关联
         relevance(state, data) {
-            console.log(data)
+            console.log("----------"+JSON.stringify(data));
             if (data.publicType === '任务') {
                 state.file.data.bindTasks = state.file.data.bindTasks.concat(data.bind)
             } else if (data.publicType === '分享') {
