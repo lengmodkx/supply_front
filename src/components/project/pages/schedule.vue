@@ -1,47 +1,16 @@
 <template>
   <div class="schedule">
     <div class="main">
-      <div
-        class="handler"
-        @click="addSchedule=true"
-      >
+      <div class="handler" @click="addSchedule=true">
         <a class="link-add">
           <Icon type="plus-circled"></Icon> 添加日程
         </a>
       </div>
-      <!-- <div class="handler">
-        <div class="title">今天 · 9月13日</div>
-        <div class="item">
-          <div class="leftTime">
-            <p>（全天）</p>
-          </div>
-          <div class="offside">
-            <p class="headline">标题</p>
-            <div class="participant">
-              <p class="cyu">参与者 · 1</p>
-              <p class="user">
-                <img src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200" alt="">
-                <Icon type="plus-circled"></Icon>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> -->
-      <div
-        class="loading"
-        v-if='loading'
-      >
-        <Spin
-          size="large"
-          fix
-        ></Spin>
+      <div class="loading" v-if='loading'>
+        <Spin size="large" fix></Spin>
       </div>
       <loading v-if="load"></loading>
-      <div
-        class="handler"
-        v-for="(i, k) in schedules"
-        :key="k"
-      >
+      <div class="handler" v-for="(i, k) in schedules" :key="k">
         <div class="title">{{new Date(i.startTime).Format('MM月dd日')}}</div>
         <div class="item" @click="showEditRC(i)">
           <div class="leftTime">
@@ -51,22 +20,17 @@
           </div>
           <div class="offside">
             <p class="headline">{{i.scheduleName}}</p>
-            <div
-              class="participant"
-              v-if="i.joinInfo"
-            >
+            <div class="participant" v-if="i.joinInfo">
               <p class="cyu">参与者 · {{i.joinInfo.length}}</p>
               <p class="user">
-                <img
-                  :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+m.defaultImage"
-                  v-for="(m,n) in i.joinInfo"
-                  :key="n"
-                  alt=""
-                >
-                 <Icon type="plus-circled"></Icon>
+                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+m.defaultImage" v-for="(m,n) in i.joinInfo" :key="n" alt="">
+                <Icon type="plus-circled"></Icon>
                 <!--<userList :id='parameter.projectId'></userList>-->
               </p>
             </div>
+          </div>
+          <div @click.stop="openZoom" class="zoom">
+            <Icon type="md-videocam" size="32" color="#3da8f5" />
           </div>
         </div>
       </div>
@@ -77,30 +41,23 @@
         添加新日程，安排会议或其他活动，添加参与者即可通知其他成员参加。
       </div>
     </div>
-    <AddSchedule @input="addSchedule=false"
-      v-model="addSchedule"
-      :id="parameter.projectId" :projectTypes="richengData">
-       <span slot="projectName">{{projectName?projectName:'添加日程'}}</span>
+    <AddSchedule @input="addSchedule=false" v-model="addSchedule" :id="parameter.projectId" :projectTypes="richengData">
+      <span slot="projectName">{{projectName?projectName:'添加日程'}}</span>
     </AddSchedule>
-    <Modal class-name="vertical-center-modal"
-            v-model="editrc"
-            :footer-hide='true'
-            transfer
-            >
+    <Modal class-name="vertical-center-modal" v-model="editrc" :footer-hide='true' transfer>
       <editRicheng @close="closeModal"></editRicheng>
     </Modal>
-
 
   </div>
 </template>
 
 <script>
 import AddSchedule from "../../public/AddSchedule.vue";
-import loading from '../../public/common/Loading'
-import editRicheng from "../../public/common/EditRicheng"
+import loading from "../../public/common/Loading";
+import editRicheng from "../../public/common/EditRicheng";
 import { schedules } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
-import {mapState,mapActions,mapMutations} from 'vuex'
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "",
@@ -109,48 +66,50 @@ export default {
     return {
       addSchedule: false,
       editrc: false,
-      load:false,
-      richengData:null,
+      load: false,
+      richengData: null,
       parameter: {
         projectId: this.$route.params.id
       }
     };
   },
-  computed:{
-    ...mapState("schedule", ['loading','schedules',]),
-    ...mapState("project", ['projectName'])
+  computed: {
+    ...mapState("schedule", ["loading", "schedules"]),
+    ...mapState("project", ["projectName"])
   },
   methods: {
-    ...mapActions("schedule", ['init','getScheduleById']),
-    ...mapMutations("schedule", ['oneSchedule']),
+    ...mapActions("schedule", ["init", "getScheduleById"]),
+    ...mapMutations("schedule", ["oneSchedule"]),
     // 编辑日程
-    showEditRC(item){
+    showEditRC(item) {
       // this.load=true
-      this.editrc=true
-      this.getScheduleById(item.scheduleId)
+      this.editrc = true;
+      this.getScheduleById(item.scheduleId);
       // getRicheng(item.scheduleId).then(res => {
       //   console.log(res.data)
       //   this.oneSchedule(res.data);
       //   // this.load=false
       // })
-
     },
-    closeModal () {
-      this.editrc=false
+    closeModal() {
+      this.editrc = false;
+    },
+    openZoom() {
+      window.open("https://zoom.us/signin");
     }
   },
   mounted() {
     console.log(this.$route);
-    this.init(this.parameter)
+    this.init(this.parameter);
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-  .ivu-modal-body{
-    padding: 0 !important;
-  }
+.ivu-modal-body {
+  padding: 0 !important;
+}
 .schedule {
   position: absolute;
   overflow-x: hidden;
@@ -239,5 +198,8 @@ export default {
       }
     }
   }
+}
+.zoom {
+  line-height: 109px;
 }
 </style>
