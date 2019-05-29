@@ -44,7 +44,7 @@
           let itemId=task.publicId;
           let text=task.text;
           let start=(task.start_date).getTime();
-          let end=(task.end_date).getTime()-(24*60*60*1000-1000);
+          let end=(task.end_date).getTime();
           updateProjectInfo(itemId,text,start,end).then(res=>{
             if(res.result==1){
                 this.getData();//从新获取的数据
@@ -139,7 +139,7 @@
               user: item.user,
               type: item.type,
               start_date:item.start_date ? new Date(item.start_date):new Date(),
-              end_date: item.start_date ? new Date(item.end_date+(24*60*60*1000-1000)):new Date(),
+              end_date: item.start_date ? new Date(item.end_date):new Date(),
               parent:item.parent,
               open:item.open ,
               progress:0

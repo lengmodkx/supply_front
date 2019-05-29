@@ -4,7 +4,7 @@
       <Icon class="app-icon" type="md-apps" />
       <div slot="content">
         <ul class="app-con">
-          <router-link tag="li" to="/home" class="app-li">
+          <router-link tag="li" :to="'/org/'+   companyId" class="app-li">
             <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
             <p>主页</p>
           </router-link>
@@ -29,7 +29,7 @@
       <a :class="{activeHeaderTag:activeHeaderTag==3}" @click="clickHeaderTag(3)">
 
         <span class="text" style="border-right:none;">
-          <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[15,0]>
+          <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
             <Icon type="ios-notifications-outline" size="22" />
           </Badge>
         </span>
@@ -40,9 +40,9 @@
         <div class="userInfo" slot="content">
           <ul class="org">
             <div class="createdOrg" @click="addOrgModal=true;popVisible=false;">创建企业</div>
-            <li class="addOrgPro" v-for="(item, index) in companyList" :key="index">
+            <li class="addOrgPro" v-for="(item, index) in companyList" :key="index" @click="changeOrg(item)">
               {{item.organizationName}}
-              <Icon type="md-checkmark" />
+              <Icon v-if="item.isSelection" type="md-checkmark" />
             </li>
           </ul>
           <ul class="admin">
@@ -99,6 +99,7 @@ export default {
       active: false,
       mainMenu: false,
       src: localStorage.userImg,
+      companyId: localStorage.companyId,
       data: [
         {
           value: "阿拉丁",
@@ -172,6 +173,12 @@ export default {
     },
     pathClick(path) {
       this.$router.push(path);
+      this.popVisible=false
+    },
+    // 点击企业 改变当前企业
+    changeOrg (org) {
+      localStorage.companyId=org.organizationId
+      this.$router.push('/org/'+org.organizationId)
     },
     mouseOut() {
       if (this.time) return;
@@ -215,9 +222,7 @@ export default {
     },
     // 去管理后台页面
     goBackstage () {
-      let myurl="/company.html"
-      let routeData = this.$router.resolve({ path: myurl });
-      window.open(routeData.href, '_blank');
+      window.open('company.html', '_blank')
     }
   },
   computed: {

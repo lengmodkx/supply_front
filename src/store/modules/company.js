@@ -21,6 +21,7 @@ const  store ={
     actions: {
         initCompany({commit}){
             getAllOrg().then(res => {
+                console.log(res)
                 commit('initCompany', res.data)
             })
         }

@@ -1,61 +1,93 @@
 <template>
     <div>
         <div class="modal-per-content" v-for="(permission,index) in permissions" :key="index">
-            <div style="border-right: 1px solid #e9e9e9;">
-                <Checkbox :indeterminate="indeterminate" :value="checkAll" @click.prevent.native="handleCheckAll">{{permission.group}}</Checkbox>
+            <div class="checke-title">
+                <Checkbox :indeterminate="permission.indeterminate" :value="permission.checkAll" @click.prevent.native="handleCheckAll(permission)">{{permission.group}}</Checkbox>
             </div>
-            <CheckboxGroup v-model="permission.resources" @on-change="checkAllGroupChange">
-                <Checkbox v-for="(resource,index) in permission.resources" :label="resource" :key="index"></Checkbox>
+            <CheckboxGroup v-model="permission.checkAllGroup" @on-change="checkAllGroupChange(permission)">
+                <Checkbox class="mb15" v-for="(resource,index) in permission.resources" :label="resource" :key="index"></Checkbox>
             </CheckboxGroup>
+        </div>
+        <div class="footer-btn">
+            <Button type="primary" size="large" @click="savePower">保存</Button>
         </div>
     </div>
 </template>
 <script>
+    import {changePower} from '../axios/backendManagementApi'
     export default {
+        props: ['permissions', 'role'],
         data() {
             return {
-                indeterminate: true,
-                checkAll: false,
-                checkAllGroup: ['香蕉', '西瓜'],
-                permissions: [{ group: '任务', resources: ['创建任务', '移动任务', '移到回收站'] }]
             }
         },
         methods: {
-            handleCheckAll() {
-                if (this.indeterminate) {
-                    this.checkAll = false
+            handleCheckAll(permission) {
+                if (permission.indeterminate) {
+                    permission.checkAll = false
                 } else {
-                    this.checkAll = !this.checkAll
+                    permission.checkAll = !permission.checkAll
                 }
-                this.indeterminate = false
+                permission.indeterminate = false
 
-                if (this.checkAll) {
-                    this.checkAllGroup = ['香蕉', '苹果', '西瓜']
+                if (permission.checkAll) {
+                    permission.checkAllGroup = permission.resources
                 } else {
-                    this.checkAllGroup = []
+                    permission.checkAllGroup = []
                 }
             },
-            checkAllGroupChange(data) {
-                if (data.length === 3) {
-                    this.indeterminate = false
-                    this.checkAll = true
-                } else if (data.length > 0) {
-                    this.indeterminate = true
-                    this.checkAll = false
+            checkAllGroupChange(permission) {
+                if (permission.checkAllGroup.length === permission.resources.length) {
+                    permission.indeterminate = false
+                    permission.checkAll = true
+                } else if (permission.checkAllGroup.length > 0) {
+                    permission.indeterminate = true
+                    permission.checkAll = false
                 } else {
-                    this.indeterminate = false
-                    this.checkAll = false
+                    permission.indeterminate = false
+                    permission.checkAll = false
                 }
+            },
+            // 保存 按钮
+            savePower () {
+                let arr=this.permissions.map(v => {
+                    return v.checkAllGroup.join(',')
+                })
+                let resources=arr.filter(v => {
+                    return v!== ''
+                }).join(',')
+                console.log(resources)
+                changePower(this.role,resources).then(res => {
+                    console.log(res)
+                })
             }
         }
     }
 </script>
 <style>
+    .footer-btn{
+        margin: 10px 0;
+        display: flex;
+        padding: 0 20px 20px;
+        flex-direction: row-reverse;
+    }
     .modal-per-content {
         display: flex;
         border-bottom: 1px solid #e9e9e9;
+        margin-top: 15px;
+        padding: 0 16px;
+    }
+    .modal-per-content:nth-last-child(1){
+        border-bottom: 0 none;
     }
     .per-checkbox {
         width: 160px;
+    }
+    .checke-title{
+        flex: none;
+        margin-right: 10px;
+    }
+    .mb15{
+        margin-bottom: 15px;
     }
 </style>

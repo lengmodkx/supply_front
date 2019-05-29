@@ -129,3 +129,12 @@ export function getFolders(fileId) {
         method: "get",
     });
 }
+
+//获取文件目录
+
+export function getFileByTag(tagId) {
+    return fetch({
+        url: `/files/${tagId}`,
+        method: "get",
+    });
+}

@@ -4,8 +4,11 @@
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow($event)" />
     </div> -->
     <div class="list" ref="addIcon">
-      <Tag v-if="taglist.length>0" v-for="(item,index) in taglist" :key="index" :name="item.tagId" :style="`background-color:${item.bgColor};`" closable @on-close="handleClose">
-        {{ item.tagName}}
+      <Tag v-if="taglist.length>0"
+         v-for="(item,index) in taglist" 
+         :key="index" :name="item.tagId" 
+         :style="`background-color:${item.bgColor};`" closable  @on-close="handleClose">
+         {{ item.tagName}}
       </Tag>
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow"></Icon>
     </div>
@@ -31,8 +34,8 @@
               <i class="color" :style="`background-color:${tag.bgColor}`"></i>
               <span>{{tag.tagName}}</span>
               <div class="fr">
-                <svg-icon name="right" v-if="tag.flag" class="right"></svg-icon>
                 <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
+                <svg-icon name="right" v-if="totalTag.flag" class="right"></svg-icon>
               </div>
             </div>
           </div>
@@ -63,7 +66,7 @@
             <Icon type="md-close" size="24"></Icon>
           </span>
         </div>
-        <Input style="padding:8px 8px;" :maxlength='10' v-model="tagName" placeholder="标签名称" ref="input" />
+        <Input style="padding:8px 8px;" :maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
         <div class="createTag">
           <ul class="tagcolor clearfix">
             <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
@@ -115,7 +118,7 @@ import {
   bindingTag
 } from "@/axios/api";
 export default {
-  props: ["taglist", "publicId", "publicType", "projectId"],
+  props: ["taglist", "publicId", "publicType", "projectId",'fileTask'],
   data() {
     return {
       searchTag: "",
@@ -146,9 +149,9 @@ export default {
     searchTag() {
       this.search();
     },
-    offsetLeft(newl, oldl) {
-      console.log(oldl, newl);
-    }
+    offsetLeft(newl, oldl){
+      console.log(oldl,newl)
+      }
   },
   methods: {
     search() {
@@ -171,12 +174,11 @@ export default {
       }
     },
     handleClose(event, id) {
-      this.popHide();
-      removeInfoTag(id, this.publicId, this.publicType).then(res => {
-        if (res.result === 1) {
-          this.$Message.success(res.msg);
+      removeInfoTag(id,this.publicId,this.publicType).then(res => {
+        if(res.result === 1){
+          this.$Message.success(res.msg)
         }
-      });
+      })
     },
     editTag(data) {
       this.isEdit = true;
@@ -211,17 +213,20 @@ export default {
             this.$nextTick(() => {
               console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
               this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-              console.log(this.offsetLeft);
+              console.log(this.offsetLeft)
             });
           }
         }
       });
     },
     reset(flag) {
+      alert(flag)
       //Object.assign(this.$data, this.$options.data());
       this.Popvisible = flag;
     },
     popShow() {
+     
+
       this.Popvisible = !this.Popvisible;
       if (this.Popvisible) {
         let params = {
@@ -234,29 +239,33 @@ export default {
           }
         });
       }
-      if (this.$refs.addIcon.offsetWidth + 45 > 300) {
-        this.offsetLeft = 270 + "px";
-      } else {
-        this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+      if(this.fileTask=='fileTask'){
+         this.offsetLeft=80+"px"
+      }else{
+           if(this.$refs.addIcon.offsetWidth + 45>300){
+            this.offsetLeft=270+"px"
+            }else{
+              this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+            }
+    
       }
-
-      console.log(this.offsetLeft);
+     
+      console.log(this.offsetLeft)
     },
     popHide() {
       setTimeout(_ => {
         this.reset();
       }, 300);
     },
-    closeTag() {
-      this.Popvisible = false;
+    closeTag(){
+      this.Popvisible = false
     },
     chooseTag(tag) {
-      tag.flag = true;
-      bindingTag(tag.tagId, this.publicId, this.publicType).then(res => {
-        if (res.result === 1) {
-          this.$Message.success(res.msg);
+      bindingTag(tag.tagId,this.publicId,this.publicType).then(res => {
+        if(res.result === 1){
+          this.$Message.success(res.msg)
         }
-      });
+      })
     },
     finish() {
       if (this.isEdit) {
@@ -277,17 +286,17 @@ export default {
         this.loading = true;
         let params = {
           projectId: this.projectId,
-          publicId: this.publicId,
-          publicType: "任务",
+          publicId:this.publicId,
+          publicType:"任务",
           tagName: this.tagName,
           bgColor: this.checkedColor
         };
         addTagAndBind(params).then(res => {
           this.loading = false;
-          if (res.result === 1) {
-            this.$Message.success("新标签绑定成功!");
-          } else {
-            this.$Message.error(res.msg);
+          if(res.result === 1){
+            this.$Message.success("新标签绑定成功!")
+          } else{
+            this.$Message.error(res.msg)
           }
         });
       }
@@ -309,8 +318,6 @@ export default {
   }
   .tag-list {
     display: flex;
-    flex-flow: row nowrap;
-    position: relative;
     width: 100%;
     height: 45px;
     align-items: center;
@@ -320,9 +327,6 @@ export default {
         display: block;
       }
     }
-    span {
-      width: 190px;
-    }
     .color {
       width: 5px;
       height: 5px;
@@ -330,15 +334,14 @@ export default {
       border-radius: 50%;
       flex: none;
     }
-
+    span {
+      width: 205px;
+    }
     .fr {
-      width: 60px;
       svg {
-        float: right;
         width: 15px;
         cursor: pointer;
         color: gray;
-        margin: 0 5px;
       }
       .edit {
         display: none;
@@ -357,7 +360,7 @@ export default {
     }
   }
 }
-.list {
+.list{
   display: flex;
   align-items: center;
   flex-wrap: wrap;

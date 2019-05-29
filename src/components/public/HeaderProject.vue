@@ -2,7 +2,7 @@
   <div class="header-project">
     <div class="fl">
       <Breadcrumb separator=">">
-        <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+        <BreadcrumbItem :to="'/org/'+companyId">首页</BreadcrumbItem>
         <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
       </Breadcrumb>
     </div>
@@ -38,7 +38,8 @@ export default {
       path: this.$route.path,
       id: this.$route.params.id,
       menus: [],
-      projectName: ""
+      projectName: "",
+      companyId: localStorage.companyId
     };
   },
   computed: {

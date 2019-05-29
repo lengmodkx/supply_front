@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;height: 100%">
+    <div style="width: 100%;height: 100%" >
         <header class="f-header">
             <Icon class="close" @click="$emit('close')" type="md-close" />
             <Tooltip content="点击编辑">
@@ -110,7 +110,7 @@
                     </Button>
                 </div>
             </div>
-            <div class="f-content-right">
+            <div class="f-content-right" >
                 <div class="padd16">
                     <div class="bbxx">
                         <div>
@@ -128,7 +128,7 @@
                     <div class="tags">
                         <span class="name"><Icon type="ios-pricetags-outline"></Icon>标签</span>
                         <!-- 取到data.tag了再添加孙子辈组件 -->
-                        <Tags :taglist="file.data.tagList" :publicId="file.data.fileId" :publicType="publicType" :projectId="file.data.projectId" ></Tags>
+                        <Tags   ref="tags" :fileTask='"fileTask"' :taglist="file.data.tagList" :publicId="file.data.fileId" :publicType="publicType" :projectId="file.data.projectId" ></Tags>
                     </div>
                     <!--关联-->
                     <div class="relevance">
@@ -389,6 +389,9 @@ export default {
         ...mapState('file', ['file','joinInfoIds'])
     },
     methods: {
+        closeTag(){
+        this.$refs.tags.closeTag()
+        },
         // 发送消息
         sendChat () {
             let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")

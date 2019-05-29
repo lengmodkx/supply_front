@@ -5,19 +5,14 @@
             <span class="ppc-header-title"> 项目权限</span>
         </header>
         <div class="pcc-operate">
-            <Button type="primary" icon="ios-plus-outline" @click="addRole">新增</Button>
-            <Button type="warning" icon="edit" @click="editRole">编辑</Button>
-            <Button type="error" icon="trash-a" @click="romoveRole">删除</Button>
-            <Button type="success" icon="filing" @click="permissionAssign=true">分配权限</Button>
-            <Button type="success" icon="ios-plus-outline" @click="resourceAdd">添加资源</Button>
+            <Button type="primary" icon="md-add" @click="addRole">新增</Button>
+            <Button type="warning" icon="ios-create-outline" @click="editRole">编辑</Button>
+            <Button type="error" icon="ios-trash-outline" @click="romoveRole">删除</Button>
+            <Button type="success" icon="ios-filing-outline" @click="permissionAssign=true">分配权限</Button>
+            <!--<Button type="success" icon="ios-plus-outline" @click="resourceAdd">添加资源</Button>-->
         </div>
         <div class="pcc-role-table">
-            <Table :data="roles" :columns="columns" stripe border ref="selection" type="selection" @on-selection-change="selectChange"></Table>
-            <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                    <Page :total="total" :current="1" show-elevator show-sizer placement="top" @on-change="changePage"></Page>
-                </div>
-            </div>
+            11133
         </div>
         <Modal v-model="roleAdd" :title="modelTitle" transfer footer-hide>
             <div class="add-role">
@@ -36,38 +31,9 @@
                 </div>
             </div>
         </Modal>
-        <Modal v-model="permissionAssign" title="权限分配" width="600px">
+        <Modal v-model="permissionAssign" title="项目权限分配" width="850px" class="padd0">
             <project-permission ref="permission" @close="permissionAssign=false"></project-permission>
         </Modal>
-        <Modal v-model="permissionAdd" title="添加资源" transfer footer-hide>
-            <div class="add-resource">
-                <Select v-model="resourceType" class="add-role-input">
-                    <Option v-for="(item,index) in types" :value="item.value" :key="index">{{ item.label }}</Option>
-                </Select>
-                <div class="add-role-input">
-                    <Select v-model="resourceId">
-                        <Option v-for="(item,index) in resources" :value="item.id" :key="index">{{ item.name }}</Option>
-                    </Select>
-                </div>
-                <Input v-model="resourceName" class="add-role-input">
-                    <span slot="prepend">资源名称</span>
-                </Input>
-                <Input v-model="resourceKey" class="add-role-input">
-                    <span slot="prepend">资源标识</span>
-                </Input>
-                <Input v-model="resourceDes" class="add-role-input">
-                    <span slot="prepend">资源描述</span>
-                </Input>
-                <Input v-model="resourceUrl" class="add-role-input">
-                    <span slot="prepend">资源URL</span>
-                </Input>
-                <div class="model-op">
-                    <Button type="primary" @click="commitResource" class="op-btn">确定</Button>
-                    <Button type="default" @click="permissionAdd = false" class="op-btn">取消</Button>
-                </div>
-            </div>
-        </Modal>
-
     </div>
 </template>
 <script>
@@ -78,13 +44,13 @@
         },
 
         methods: {
-            resourceAdd() {
-                this.permissionAdd = true
-                getResource().then(res => {
-                    this.resources = res.data
-                    console.log(res)
-                })
-            },
+            // resourceAdd() {
+            //     this.permissionAdd = true
+            //     getResource().then(res => {
+            //         this.resources = res.data
+            //         console.log(res)
+            //     })
+            // },
             commitResource() {
                 var param = {
                     resourceType: this.resourceType,
@@ -100,9 +66,6 @@
                         this.permissionAdd = false
                     }
                 })
-            },
-            selectChange(selection) {
-                this.tableRow = selection
             },
             // 新增角色
             addRole() {
@@ -186,56 +149,6 @@
                 roleDes: '',
                 modelTitle: '新增角色',
                 tableRow: [],
-                total: 10,
-                columns: [
-                    {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                        title: '角色名称',
-                        key: 'roleName'
-                    },
-                    {
-                        title: '标识',
-                        key: 'roleKey'
-                    },
-                    {
-                        title: '状态',
-                        key: 'roleStatus'
-                    },
-                    {
-                        title: '描述',
-                        key: 'roleDes'
-                    },
-                    {
-                        title: '创建时间',
-                        key: 'createTime'
-                    },
-                    {
-                        title: '更新时间',
-                        key: 'updateTime'
-                    }
-                ],
-                roles: [
-                    {
-                        roleName: '超级管理员',
-                        roleKey: 'administrator',
-                        roleStatus: '正常',
-                        roleDes: '超级管理员',
-                        createTime: '2016-10-03',
-                        updateTime: '2016-10-03'
-                    },
-                    {
-                        roleName: '管理员',
-                        roleKey: 'admin',
-                        roleStatus: '正常',
-                        roleDes: '管理员',
-                        createTime: '2016-10-03',
-                        updateTime: '2016-10-03'
-                    }
-                ]
             }
         }
     }
@@ -248,6 +161,9 @@
         border-radius: 4px;
         .pcc-operate {
             margin: 20px 20px;
+            button{
+                margin-right: 15px;
+            }
         }
         .pcc-role-table {
             margin-left: 20px;
@@ -293,6 +209,11 @@
         height: 380px;
         .add-role-input {
             margin-bottom: 20px;
+        }
+    }
+    .padd0{
+        /deep/ .ivu-modal-body{
+            padding: 0;
         }
     }
 </style>

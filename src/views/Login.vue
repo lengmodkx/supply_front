@@ -82,7 +82,11 @@ export default {
               localStorage.userImg = res.userInfo.image;
               localStorage.userName = res.userInfo.userName;
               this.$Message.success("登录成功!");
-              this.$router.push("/home");
+              if (localStorage.companyId){
+                this.$router.push("/org/"+localStorage.companyId);
+              } else {
+                this.$router.push("/home");
+              }
             }
           });
         } else {
