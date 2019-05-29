@@ -40,7 +40,6 @@
     <!--看板视图-->
     <draggable v-if="view==='看板视图'" class="column-main dragscroll" v-model="allTask" :options="{
                   handle:'.handle',
-                  
                   dragClass: 'boxDragClass',
                   fallbackClass: 'boxFallbackClass',
                   forceFallback: true,
