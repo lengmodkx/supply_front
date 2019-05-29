@@ -58,7 +58,10 @@
                 }).join(',')
                 console.log(resources)
                 changePower(this.role,resources).then(res => {
-                    console.log(res)
+                    if (res.result){
+                        this.$emit('close')
+                        this.$Message.success('设置成功');
+                    }
                 })
             }
         }
