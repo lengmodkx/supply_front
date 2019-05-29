@@ -66,6 +66,13 @@ const router = new Router({
       }
     },
     {
+      path: "/org/:id",
+      component: Home,
+      meta: {
+        title: "阿拉丁BIM5D云平台"
+      }
+    },
+    {
       path: "/mine",
       name: "Mine",
       component: mine,

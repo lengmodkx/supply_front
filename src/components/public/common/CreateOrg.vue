@@ -103,7 +103,7 @@
                 if (this.$route.name=='Home'){
                     window.location.reload()
                 } else {
-                    this.$router.push('/home')
+                    this.$router.push('/org/'+localStorage.companyId)
                     this.$emit('closeCreateOrg')
                 }
 
