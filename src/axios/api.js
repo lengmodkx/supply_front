@@ -816,6 +816,18 @@ function $delete(url, params) {
         method: "delete", // 请求方法
         params: params
     });
+}
 
-
+/*
+* 添加标签并绑定
+* */
+export function addTagBindFile(fileId,tagId) {
+    return fetch({
+        url: `/files/addTagBindFile`,
+        method: "post", // 请求方法
+        params: {
+            "fileId": fileId,
+            "tagId": tagId
+        }
+    });
 }
