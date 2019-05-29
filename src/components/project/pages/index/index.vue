@@ -81,7 +81,7 @@
                       <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.completeCount!=0">
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:18px;padding-left:5px;">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>
@@ -131,7 +131,7 @@
                       <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.completeCount!=0">
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:18px;padding-left:5px;">{{a.completeCount}}/{{a.taskList.length}}</span>
                       </span>

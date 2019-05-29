@@ -1,7 +1,7 @@
 <template>
   <div class="file">
       <div    :class="show?'file-side-show':'file-side'">
-       <v-jstree :data="asyncData"  @item-click="itemClick" ref="jstree" ></v-jstree>
+       <v-jstree :data="treeData"  @item-click="itemClick" ref="jstree" ></v-jstree>
       </div> 
       <div class="file-button" @click='show=!show'>
         <div class="root__3UYM"  :class="show?'left':'right'">
@@ -70,7 +70,7 @@
               <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
                 <p></p>
                 <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
-                  <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
+                  <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
                   <div slot="content">
                     <div v-show="rublish" class="rublish">
                       <div class="rublish-header">
@@ -84,7 +84,7 @@
                     </div>
                     <div v-show="showFileEdit" class="rublish">
                       <div class="rublish-header">
-                        <Icon @click="rublish=false" type="ios-arrow-back" />
+                        <Icon @click="showFileEdit=false" type="ios-arrow-back" />
                         修改文件名称
                         <span></span>
                       </div>
@@ -181,12 +181,12 @@
               </div> -->
               <div class="contant-right" >
                 <Icon type="md-arrow-down"  @click="downLoad(file.fileId)" />
-                <Icon type="ios-exit" @click="removeClone('移动')" />
+                <!-- <Icon type="ios-exit" @click="removeClone('移动')" /> -->
               </div>
               <div  @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
                 <p></p>
                 <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
-                  <Icon @click="getFileid(file.fileId)" type="ios-arrow-down" class="mr0" />
+                  <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
                   <div slot="content">
                     <div v-show="rublish" class="rublish">
                       <div class="rublish-header">
@@ -201,12 +201,12 @@
 
                     <div v-show="showFileEdit" class="rublish">
                       <div class="rublish-header">
-                        <Icon @click="rublish=false" type="ios-arrow-back" />
+                        <Icon @click="showFileEdit=false" type="ios-arrow-back" />
                         修改文件名称
                         <span></span>
                       </div>
                       <div class="rublish-input">
-                          <Input v-model.trim="editFileName"   />
+                          <Input v-model.trim="editFileName" />
                       </div>
                       
                       <Button long type="primary"  @click='fileEdit(file.fileId)' >确定</Button>
@@ -360,6 +360,7 @@ export default {
   data() {
     return {
       show:false,
+      asyncData:[],
       curtag:'',
       showIcon: null,
       showFileEdit: false,
@@ -440,7 +441,7 @@ export default {
 
   },
   computed: {
-    ...mapState("file", ["files", "filePath",'asyncData','tags'])
+    ...mapState("file", ["files", "filePath",'treeData','tags'])
   },
   mounted: function() {
     console.log(localStorage)
@@ -488,8 +489,10 @@ export default {
       this.rublish = false;
     },
     // 获取当前文件id
-    getFileid(id) {
+    getFileid(id,name) {
+      
       this.thisFileId = id;
+      this.editFileName=name
     },
     closeDetail() {
       this.showModelDetai = false;
