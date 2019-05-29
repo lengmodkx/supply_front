@@ -1,7 +1,7 @@
 <template>
   <div class="file">
-      <div    :class="show?'file-side-show':'file-side'">
-       <v-jstree :data="treeData"  @item-click="itemClick" ref="jstree" ></v-jstree>
+      <div   :class="show?'file-side-show':'file-side'">
+       <v-jstree :data="treeData"  @item-click="treeClick" ref="jstree" ></v-jstree>
       </div> 
       <div class="file-button" @click='show=!show'>
         <div class="root__3UYM"  :class="show?'left':'right'">
@@ -42,7 +42,6 @@
                 </Select>
           </div>
           <div class="icon-box">
-
             <Icon type="ios-apps"  @click="view='view'"/>
             <Icon type="ios-list"  @click="view='list'"/>
           </div>
@@ -359,7 +358,7 @@ export default {
   },
   data() {
     return {
-      show:false,
+      show:true,
       asyncData:[],
       curtag:'',
       showIcon: null,
@@ -680,13 +679,16 @@ export default {
       this.footerTxt = "跨项目复制时，部分信息不会被保留。";
     },
     // 选中要移动到哪
-    itemClick(node) {
+    treeClick(node) {
       this.folderId = node.data.id;
       console.log(node.data.id);
       let params = { fileId: this.folderId };
       this.initFile( params).then(res => {
       this.loading = false;
      });
+    },
+    itemClick(node){
+
     },
     // 取消 移动复制
     cancelRemoveClone() {
