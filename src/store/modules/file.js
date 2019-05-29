@@ -6,7 +6,8 @@ import {
     getTSFile,
     filePrivacy,
     getFolders,
-    searchFile
+    searchFile,
+    getFileByTag
 } from '../../axios/fileApi'
 
 
@@ -181,15 +182,25 @@ const store = {
         },
         //搜索文件
         searchFile({commit},data){
-            searchFile(data.fileName,data.projectId).then(res=>{
-                commit("searchFile",res.data)
-            })
+            if(data.tag){
+                //tag搜索
+                getFileByTag(data.tag).then(res=>{
+                    commit("searchFile",res.data)
+                })
+            }else{
+                //搜索条
+                searchFile(data.fileName,data.projectId).then(res=>{
+                    commit("searchFile",res.data)
+                })
+            }
+           
         },
         initTag({commit},data){
             allTags(data).then(res=>{
                 commit("initTag",res.data)
             })
-        }
+        },
+        
     }
 };
 

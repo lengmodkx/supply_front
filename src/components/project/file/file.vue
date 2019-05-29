@@ -34,15 +34,15 @@
         <div class="input-box" style="padding:10px 20px 10px 20px;">
           <div class="input-box-left">
                 <Input search enter-button placeholder="请输入文件名搜索" style="width:500px;margin-right:20px;" @on-search="search" v-model="searched" />
-                <!-- <Select v-model="curtag" style="width:200px">
-                    <Option v-for="item in tags" :value="item.tagName" :key="item.tagId">
+                <Select v-model="curtag" style="width:200px">
+                    <Option v-for="item in tags" :value="item.tagId" :key="item.tagId">
                       <div class="circle" :style="`background-color:${item.bgColor}`"></div>
                       {{ item.tagName }}
                       </Option>
-                </Select> -->
+                </Select>
           </div>
           <div class="icon-box">
-          
+
             <Icon type="ios-apps"  @click="view='view'"/>
             <Icon type="ios-list"  @click="view='list'"/>
           </div>
@@ -424,6 +424,15 @@ export default {
     curtag:{
        handler:function(value,oldValue){
           console.log(value)
+          this.searched='';
+          if(value!=''){
+            let data={tag:value}
+            this.searchFile(data).then(res => {
+                this.loading = false;
+           });
+           
+          }
+          
        },
       deep:true,
     },
@@ -487,6 +496,7 @@ export default {
     },
     // 搜索文件
     search(value) {
+      this.curtag='';
       if (value !== "") {
        this.loading = true;
         var data = {fileName:value,projectId:this.projectId}
