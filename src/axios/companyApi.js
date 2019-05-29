@@ -7,6 +7,13 @@ export function getAllOrg() {
         method: "get",
     });
 }
+// 获取企业下的所有项目
+export function getAllProject(orgId) {
+    return fetch({
+        url: `/organizations/${orgId}`,
+        method: "get",
+    });
+}
 // 创建企业
 export function createCompany(data) {
     return fetch({

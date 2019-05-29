@@ -4,14 +4,14 @@
       <Icon class="app-icon" type="md-apps" />
       <div slot="content">
         <ul class="app-con">
-          <router-link tag="li" :to="'/org/'+   companyId" class="app-li">
+          <router-link tag="li" :to="'/org/'+companyId" class="app-li">
             <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
             <p>主页</p>
           </router-link>
-          <router-link tag="li" to="/members" class="app-li">
+          <li @click="goMembers"  class="app-li">
             <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
             <p>成员</p>
-          </router-link>
+          </li>
           <li class="app-li" @click="goBackstage">
             <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_administration.png" alt="">
             <p>管理后台</p>
@@ -35,7 +35,7 @@
         </span>
       </a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
-      <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible">
+      <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
         <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt="">
         <div class="userInfo" slot="content">
           <ul class="org">
@@ -142,6 +142,7 @@ export default {
   methods: {
     ...mapState("user", ["mineRouter", "users"]),
     ...mapActions("company", ["initCompany"]),
+      ...mapActions("project", ["orgProjectInit"]),
     ...mapMutations('app',['changeHeaderTag']),
     initSocket(id) {
       // 建立连接对象
@@ -177,8 +178,10 @@ export default {
     },
     // 点击企业 改变当前企业
     changeOrg (org) {
+      this.orgProjectInit({'id': org.organizationId,'type':'我创建的项目'})
       localStorage.companyId=org.organizationId
       this.$router.push('/org/'+org.organizationId)
+      this.popVisible=false
     },
     mouseOut() {
       if (this.time) return;
@@ -222,8 +225,27 @@ export default {
     },
     // 去管理后台页面
     goBackstage () {
-      window.open('company.html', '_blank')
-    }
+        if (localStorage.companyId){
+            window.open('/company.html', '_blank')
+        } else {
+            this.$Notice.warning({
+                // title: '没有企业',
+                desc: '请先创建企业'
+            });
+        }
+
+    },
+      // 去成员页面
+      goMembers () {
+          if (localStorage.companyId){
+              this.$router.push('/members')
+          } else {
+              this.$Notice.warning({
+                  desc: '请先创建企业'
+              });
+          }
+
+      }
   },
   computed: {
     ...mapState('app', ['activeHeaderTag']),

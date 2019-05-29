@@ -3,15 +3,25 @@ const  store ={
     namespaced: true,
     state: {
         companyList: [],
-        branchId: ''
+        branchId: '',
+        companyId: ''
     },
     mutations: {
         initCompany(state, data){
+            console.log(data)
             state.companyList=data
             if (data[0]){
                 state.companyList=data
+                data.map(v => {
+                    if (v.isSelection){
+                        state.companyId=v.organizationId
+                        localStorage.companyId=v.organizationId
+                    }
+                })
             } else {
                 state.companyList=[]
+                localStorage.companyId=''
+                state.companyId=''
             }
         },
         setBranchId (state, data) {
@@ -21,7 +31,6 @@ const  store ={
     actions: {
         initCompany({commit}){
             getAllOrg().then(res => {
-                console.log(res)
                 commit('initCompany', res.data)
             })
         }

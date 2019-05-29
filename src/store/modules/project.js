@@ -2,6 +2,7 @@ import {
     getProjectList,
     getProject
 } from "../../axios/api.js";
+import {getAllProject} from '../../axios/companyApi'
 const store = {
     namespaced: true,
     state: {
@@ -37,9 +38,7 @@ const store = {
         }
     },
     actions: {
-        init({
-            commit
-        }, params) {
+        init({commit}, params) {
             getProjectList().then(res => {
                 if (res.result === 1) {
                     let data = [];
@@ -85,12 +84,54 @@ const store = {
         }, data) {
             commit('updateProject', data)
         },
-        openSet({
-            commit
-        }, data) {
+        openSet({commit}, data) {
             getProject(data).then(res => {
                 if (res.result === 1) {
                     commit('openSet', res.data)
+                }
+            })
+        },
+        // 初始化企业的项目列表
+        orgProjectInit ({commit}, params) {
+            console.log(params)
+            getAllProject(params.id).then(res => {
+                console.log('我是项目数据',res)
+                if (res.result === 1) {
+                    let data = [];
+                    switch (params.type) {
+                        case "我创建的项目":
+                            data = res.data.filter(v => {
+                                return (
+                                    v.memberLabel == 1 && v.projectDel == 0 && v.projectStatus == 0
+                                );
+                            });
+                            break;
+                        case "我参与的项目":
+                            data = res.data.filter(v => {
+                                return (
+                                    v.memberLabel == 0 && v.projectDel == 0 && v.projectStatus == 0
+                                );
+                            });
+                            break;
+                        case "星标项目":
+                            data = res.data.filter(v => {
+                                return (
+                                    v.collect == 1 && v.projectDel == 0 && v.projectStatus == 0
+                                );
+                            });
+                            break;
+                        case "已归档的项目":
+                            data = res.data.filter(v => {
+                                return v.projectStatus == 1 && v.projectDel == 0;
+                            });
+                            break;
+                        case "回收站的项目":
+                            data = res.data.filter(v => {
+                                return v.projectDel == 1;
+                            });
+                            break;
+                    }
+                    commit('_init', data);
                 }
             })
         }
