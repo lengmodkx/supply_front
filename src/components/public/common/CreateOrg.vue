@@ -80,6 +80,7 @@
     },
     methods:{
         ...mapActions("company", ["initCompany"]),
+      ...mapActions("project",["orgProjectInit"]),
       // 创建企业
       createOrg(){
         if(!(/^1[34578]\d{9}$/.test(this.phone))){
@@ -87,25 +88,19 @@
         }else {
           this.btnLoading=true
           let data={
-            'orgName': this.proName,
-            'orgDes': this.selectmodel1,
+            'organizationName': this.proName,
+            'organizationDes': this.selectmodel1,
             'contact': localStorage.userName,
             'contactPhone': this.phone
           }
-          console.log(data)
           createCompany(data).then(res => {
             this.btnLoading=false
-            console.log(res)
             if (res.result){
               localStorage.companyId=res.data
               this.initCompany()
-                console.log(this.$route.name)
-                if (this.$route.name=='Home'){
-                    window.location.reload()
-                } else {
-                    this.$router.push('/org/'+localStorage.companyId)
-                    this.$emit('closeCreateOrg')
-                }
+              this.$router.push('/org/'+localStorage.companyId)
+              this.orgProjectInit({'id': res.data,'type': '我创建的项目'})
+              this.$emit('closeCreateOrg')
 
             }
           })

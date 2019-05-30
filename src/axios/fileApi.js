@@ -123,10 +123,11 @@ export function searchFile(fileName, projectId) {
 
 //获取文件目录
 
-export function getFolders(fileId) {
+export function getFolders(fileId,projectId) {
     return fetch({
         url: `/files/${fileId}/parent/folders`,
         method: "get",
+        params: {projectId: projectId}
     });
 }
 
