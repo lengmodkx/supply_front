@@ -6,8 +6,8 @@
     <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）" />
     <Input type="textarea" :rows="2" class="inputbox" v-model="proDes" :maxlength="50" placeholder="项目简介（选填）" />
     <div class="create-project-time">
-      <DatePicker placeholder="开始时间" :value="startTime" type="date" @on-change="startDate" :options="options1"></DatePicker>
-      <DatePicker placeholder="结束时间" :value="endTime" type="date" @on-change="endDate" :options="options2"></DatePicker>
+      <DatePicker placeholder="开始时间" :value="startTime" type="datetime" @on-change="startDate" :options="options1"></DatePicker>
+      <DatePicker placeholder="结束时间" :value="endTime" type="datetime" @on-change="endDate" :options="options2"></DatePicker>
     </div>
 
     <Button class="submitBtn" type="primary" size="large" :loading="loading" :disabled="proName==''||startTime==''||endTime==''" @click="create">

@@ -154,7 +154,7 @@
     </div>
 
     <!-- 创建项目 -->
-    <Modal v-model="showproject" class="newPro-modal">
+    <Modal v-model="showproject" class="newPro-modal" :mask-closable="false">
       <CreateProject :showProject='showproject' @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
     </Modal>
     <!-- 项目设置 -->
