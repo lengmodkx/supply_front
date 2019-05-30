@@ -447,11 +447,15 @@ export default {
     if(localStorage.view){
       this.view=localStorage.view
     }
-    let params = { fileId: this.fileId,projectId:this.projectId};
+
+    let params = { fileId: this.fileId };
     this.initFile(params).then(res => {
       this.loading = false;
     });
-    this.initFolders(params).then(res=>{
+
+     let data = { fileId: this.fileId,projectId:this.projectId};
+ 
+    this.initFolders(data).then(res=>{
         
     });
     this.initTag(this.projectId).then(res=>{
