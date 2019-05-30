@@ -1,324 +1,321 @@
 <template>
   <div class="file">
-      <div   :class="show?'file-side-show':'file-side'">
-       <v-jstree :data="treeData"  @item-click="treeClick" ref="jstree" ></v-jstree>
-      </div> 
-      <div class="file-button" @click='show=!show'>
-        <div class="root__3UYM"  :class="show?'left':'right'">
-          <i class="left__1DdF"></i>
-          <i class="indicator__1TO8"></i>
-         </div>
+    <div :class="show?'file-side-show':'file-side'">
+      <v-jstree :data="treeData" @item-click="treeClick"></v-jstree>
+    </div>
+    <div class="file-button" @click='show=!show'>
+      <div class="root__3UYM" :class="show?'left':'right'">
+        <i class="left__1DdF"></i>
+        <i class="indicator__1TO8"></i>
       </div>
+    </div>
 
-      <div class="file-view-wrap fade in">
-        <header class="file-header">
-          <div class="file-header-title">
-            <span @click="whereGo(i,n)" v-for="(i,n) in pathData" :key="n">{{i.name}}＞</span>
-          </div>
-          <div class="file-header-add">
-            <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
-              <Icon type="plus-circled" class="icon-file" size="20"></Icon>创建文件夹
-            </a>
-            <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
-              <a href="javascript:void(0)">
-                <Icon type="plus-circled" class="icon-file" size="20"></Icon>上传
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem name="model">上传模型文件</DropdownItem>
-                <DropdownItem name="commonfile">上传普通文件</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        </header>
-
-        <div class="input-box" style="padding:10px 20px 10px 20px;">
-          <div class="input-box-left">
-                <Input search enter-button placeholder="请输入文件名搜索" style="width:500px;margin-right:20px;" @on-search="search" v-model="searched" />
-                <Select v-model="curtag" style="width:200px">
-                    <Option v-for="item in tags" :value="item.tagId" :key="item.tagId">
-                      <div class="circle" :style="`background-color:${item.bgColor}`"></div>
-                      {{ item.tagName }}
-                      </Option>
-                </Select>
-          </div>
-          <div class="icon-box">
-            <Icon type="ios-apps"  @click="view='view'"/>
-            <Icon type="ios-list"  @click="view='list'"/>
-          </div>
+    <div class="file-view-wrap fade in">
+      <header class="file-header">
+        <div class="file-header-title">
+          <span @click="whereGo(i,n)" v-for="(i,n) in pathData" :key="n">{{i.name}}＞</span>
         </div>
-        <Loading v-if="loading"></Loading>
-        
+        <div class="file-header-add">
+          <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
+            <Icon type="plus-circled" class="icon-file" size="20"></Icon>创建文件夹
+          </a>
+          <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
+            <a href="javascript:void(0)">
+              <Icon type="plus-circled" class="icon-file" size="20"></Icon>上传
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem name="model">上传模型文件</DropdownItem>
+              <DropdownItem name="commonfile">上传普通文件</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </header>
 
-        <!--正常展示-->
-        <ul class="file-content-wrap" v-else-if="files.length && view=='view'" :key="fileId">
-          <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
-            <div class="file-content-view">
-              <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
-              <img v-else-if="file.catalog==1&&(file.filePrivacy==1||file.filePrivacy==2)" src='../../../assets/images/folder.png' style="height:64px;width:80px">
-              <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
-              <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
-                <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-                <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
-                <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
-                <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
-                <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
-                <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
-                <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
-                <img v-else src="@/icons/img/moren.png" alt="">
-              </div>
-              <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
-                <p></p>
-                <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
-                  <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
-                  <div slot="content">
-                    <div v-show="rublish" class="rublish">
-                      <div class="rublish-header">
-                        <Icon @click="rublish=false" type="ios-arrow-back" />
-                        移到回收站
-                        <!--<Icon @click="menuShow=false" type="ios-close" />-->
-                        <span></span>
-                      </div>
-                      <p>您确定要把该文件移到回收站吗？</p>
-                      <Button long type="error" @click="putRecyclebin">移到回收站</Button>
-                    </div>
-                    <div v-show="showFileEdit" class="rublish">
-                      <div class="rublish-header">
-                        <Icon @click="showFileEdit=false" type="ios-arrow-back" />
-                        修改文件名称
-                        <span></span>
-                      </div>
-                      <div class="rublish-input">
-                          <Input v-model.trim="editFileName"   />
-                      </div>
-                      <Button long type="primary"  @click='fileEdit(file.fileId)' >确定</Button>
-                    </div>
+      <div class="input-box" style="padding:10px 20px 10px 20px;">
+        <div class="input-box-left">
+          <Input search enter-button placeholder="请输入文件名搜索" style="width:500px;margin-right:20px;" @on-search="search" v-model="searched" />
+          <Select v-model="curtag" style="width:200px">
+            <Option v-for="item in tags" :value="item.tagId" :key="item.tagId">
+              <div class="circle" :style="`background-color:${item.bgColor}`"></div>
+              {{ item.tagName }}
+            </Option>
+          </Select>
+        </div>
+        <div class="icon-box">
+          <Icon type="ios-apps" @click="view='view'" />
+          <Icon type="ios-list" @click="view='list'" />
+        </div>
+      </div>
+      <Loading v-if="loading"></Loading>
 
-                    <div v-show="!rublish&&!showFileEdit">
-                      <div class="menu-file-title" style="text-align:center;font-size:16px">
-                        <span>文件菜单</span>
-                      </div>
-                      <section v-if="file.catalog" class="file-folder-opt">
-                        <ul>
-                          <li @click="removeClone('移动')">移动文件夹</li>
-                          <li @click="removeClone('复制')">复制文件夹</li>
-                          <li @click="rublish=true">移到回收站</li>
-                          <li @click="rublish=true">可见性设置</li>
-                          <li @click="setCanSee">可见性设置</li>
-                        </ul>
-                      </section>
-                      <section v-else class="file-folder-opt">
-                        <ul>
-                          <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
-                          <li @click="removeClone('移动')">移动文件</li>
-                          <li @click="removeClone('复制')">复制文件</li>
-                          <li @click="showFileEdit=true" >修改名称</li>
-                          <li>复制文件链接</li>
-                          <li @click="collectFile">收藏文件</li>
-                          <li @click="rublish=true">移到回收站</li>
-                        </ul>
-                      </section>
-                      <div class="footer">
-                        <div class="footer-left">
-                          <i class="ivu-icon ivu-icon-unlocked"></i>
-                          <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
-                            <span>隐私模式</span>
-                            <span v-if="file.filePrivacy=='0'">仅参与者可见</span>
-                            <span v-else>所有成员可见</span>
-                          </div>
-                        </div>
-                        <span v-if="file.filePrivacy=='0'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
-                        <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
-                      </div>
-                    </div>
-
-                  </div>
-                </Poptip>
-              </div>
+      <!--正常展示-->
+      <ul class="file-content-wrap" v-else-if="files.length && view=='view'" :key="fileId">
+        <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
+          <div class="file-content-view">
+            <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+            <img v-else-if="file.catalog==1&&(file.filePrivacy==1||file.filePrivacy==2)" src='../../../assets/images/folder.png' style="height:64px;width:80px">
+            <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
+            <div v-else style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
+              <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
+              <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
+              <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
+              <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
+              <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
+              <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
+              <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
+              <img v-else src="@/icons/img/moren.png" alt="">
             </div>
-            <div class="file-content-filename" v-if="file.catalog==1">{{file.fileName}}</div>
-            <div class="file-content-filename" v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</div>
-          </li>
-        </ul>
-        <!-- 列表展示 -->
-        <div class="file-list" v-else-if="files.length && view=='list'" :key="fileId">
-          <div class="titel">
-            <span>名称</span>
-            <span>大小</span>
-            <span>创建者</span>
-            <span>更新时间</span>
-          </div>
-        
-          <ul class="contant">
-            <li v-for="(file,index) in files" :key="index" >
-              <div class="contant-left" @click="fileDetail(file.catalog,file.fileId, file)">
-                <div class="contant-titel">
-                  <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png'>
-                  <img v-else-if="file.catalog==1&&(file.filePrivacy==1||file.filePrivacy==2)" src='../../../assets/images/folder.png'>
-                  <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png'>
-                  <div v-else>
-                    <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-                    <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
-                    <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
-                    <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
-                    <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
-                    <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
-                    <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
-                    <img v-else src="@/icons/img/moren.png" alt="">
+            <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
+              <p></p>
+              <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
+                <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
+                <div slot="content">
+                  <div v-show="rublish" class="rublish">
+                    <div class="rublish-header">
+                      <Icon @click="rublish=false" type="ios-arrow-back" />
+                      移到回收站
+                      <!--<Icon @click="menuShow=false" type="ios-close" />-->
+                      <span></span>
+                    </div>
+                    <p>您确定要把该文件移到回收站吗？</p>
+                    <Button long type="error" @click="putRecyclebin">移到回收站</Button>
                   </div>
-                  <span v-if="file.catalog==1 ">{{file.fileName}}</span>
-                  <span v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</span>
+                  <div v-show="showFileEdit" class="rublish">
+                    <div class="rublish-header">
+                      <Icon @click="showFileEdit=false" type="ios-arrow-back" />
+                      修改文件名称
+                      <span></span>
+                    </div>
+                    <div class="rublish-input">
+                      <Input v-model.trim="editFileName" />
+                    </div>
+                    <Button long type="primary" @click='fileEdit(file.fileId)'>确定</Button>
+                  </div>
+
+                  <div v-show="!rublish&&!showFileEdit">
+                    <div class="menu-file-title" style="text-align:center;font-size:16px">
+                      <span>文件菜单</span>
+                    </div>
+                    <section v-if="file.catalog" class="file-folder-opt">
+                      <ul>
+                        <li @click="removeClone('移动')">移动文件夹</li>
+                        <li @click="removeClone('复制')">复制文件夹</li>
+                        <li @click="rublish=true">移到回收站</li>
+                        <li @click="rublish=true">可见性设置</li>
+                        <li @click="setCanSee">可见性设置</li>
+                      </ul>
+                    </section>
+                    <section v-else class="file-folder-opt">
+                      <ul>
+                        <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
+                        <li @click="removeClone('移动')">移动文件</li>
+                        <li @click="removeClone('复制')">复制文件</li>
+                        <li @click="showFileEdit=true">修改名称</li>
+                        <li>复制文件链接</li>
+                        <li @click="collectFile">收藏文件</li>
+                        <li @click="rublish=true">移到回收站</li>
+                      </ul>
+                    </section>
+                    <div class="footer">
+                      <div class="footer-left">
+                        <i class="ivu-icon ivu-icon-unlocked"></i>
+                        <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
+                          <span>隐私模式</span>
+                          <span v-if="file.filePrivacy=='0'">仅参与者可见</span>
+                          <span v-else>所有成员可见</span>
+                        </div>
+                      </div>
+                      <span v-if="file.filePrivacy=='0'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
+                      <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
+                    </div>
+                  </div>
 
                 </div>
-                <div class="contant-erery">
-                  {{file.size||"无"}}
+              </Poptip>
+            </div>
+          </div>
+          <div class="file-content-filename" v-if="file.catalog==1">{{file.fileName}}</div>
+          <div class="file-content-filename" v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</div>
+        </li>
+      </ul>
+      <!-- 列表展示 -->
+      <div class="file-list" v-else-if="files.length && view=='list'" :key="fileId">
+        <div class="titel">
+          <span>名称</span>
+          <span>大小</span>
+          <span>创建者</span>
+          <span>更新时间</span>
+        </div>
+
+        <ul class="contant">
+          <li v-for="(file,index) in files" :key="index">
+            <div class="contant-left" @click="fileDetail(file.catalog,file.fileId, file)">
+              <div class="contant-titel">
+                <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png'>
+                <img v-else-if="file.catalog==1&&(file.filePrivacy==1||file.filePrivacy==2)" src='../../../assets/images/folder.png'>
+                <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png'>
+                <div v-else>
+                  <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
+                  <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
+                  <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
+                  <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
+                  <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
+                  <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
+                  <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
+                  <img v-else src="@/icons/img/moren.png" alt="">
                 </div>
-                <div class="contant-erery">{{file.memberName||"无"}}</div>
-                <div class="contant-erery">{{file.updateTime | formatDate}}</div>
+                <span v-if="file.catalog==1 ">{{file.fileName}}</span>
+                <span v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</span>
+
               </div>
-              <!-- <div class="file-edit" v-show="showFileEdit==index">
+              <div class="contant-erery">
+                {{file.size||"无"}}
+              </div>
+              <div class="contant-erery">{{file.memberName||"无"}}</div>
+              <div class="contant-erery">{{file.updateTime | formatDate}}</div>
+            </div>
+            <!-- <div class="file-edit" v-show="showFileEdit==index">
                 <Input v-model.trim="editFileName" @on-enter='fileEdit(file.fileId)' />
               </div> -->
-              <div class="contant-right" >
-                <Icon type="md-arrow-down"  @click="downLoad(file.fileId)" />
-                <!-- <Icon type="ios-exit" @click="removeClone('移动')" /> -->
-              </div>
-              <div  @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
-                <p></p>
-                <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
-                  <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
-                  <div slot="content">
-                    <div v-show="rublish" class="rublish">
-                      <div class="rublish-header">
-                        <Icon @click="rublish=false" type="ios-arrow-back" />
-                        移到回收站
-                        <!--<Icon @click="menuShow=false" type="ios-close" />-->
-                        <span></span>
-                      </div>
-                      <p>您确定要把该文件移到回收站吗？</p>
-                      <Button long type="error" @click="putRecyclebin">移到回收站</Button>
+            <div class="contant-right">
+              <Icon type="md-arrow-down" @click="downLoad(file.fileId)" />
+              <!-- <Icon type="ios-exit" @click="removeClone('移动')" /> -->
+            </div>
+            <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
+              <p></p>
+              <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
+                <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
+                <div slot="content">
+                  <div v-show="rublish" class="rublish">
+                    <div class="rublish-header">
+                      <Icon @click="rublish=false" type="ios-arrow-back" />
+                      移到回收站
+                      <!--<Icon @click="menuShow=false" type="ios-close" />-->
+                      <span></span>
                     </div>
-
-                    <div v-show="showFileEdit" class="rublish">
-                      <div class="rublish-header">
-                        <Icon @click="showFileEdit=false" type="ios-arrow-back" />
-                        修改文件名称
-                        <span></span>
-                      </div>
-                      <div class="rublish-input">
-                          <Input v-model.trim="editFileName" />
-                      </div>
-                      
-                      <Button long type="primary"  @click='fileEdit(file.fileId)' >确定</Button>
-                    </div>
-
-                    <div v-show="!rublish&&!showFileEdit">
-                      <div class="menu-file-title" style="text-align:center;font-size:16px">
-                        <span>文件菜单</span>
-                      </div>
-                      <section v-if="file.catalog" class="file-folder-opt">
-                        <ul>
-                          <li @click="removeClone('移动')">移动文件夹</li>
-                          <li @click="removeClone('复制')">复制文件夹</li>               
-                          <li @click="rublish=true">移到回收站</li>
-                          <li @click="rublish=true">可见性设置</li>
-                          <li @click="setCanSee">可见性设置</li>
-                        </ul>
-                      </section>
-                      <section v-else class="file-folder-opt">
-                        <ul>
-                          <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
-                          <li @click="removeClone('移动')">移动文件</li>
-                          <li @click="removeClone('复制')">复制文件</li>
-                          <li @click="showFileEdit=true" >修改名称</li>
-                          <li>复制文件链接</li>
-                          <li @click="collectFile">收藏文件</li>
-                          <li @click="rublish=true">移到回收站</li>
-                        </ul>
-                      </section>
-                      <div class="footer">
-                        <div class="footer-left">
-                          <i class="ivu-icon ivu-icon-unlocked"></i>
-                          <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
-                            <span>隐私模式</span>
-                            <span v-if="file.filePrivacy=='0'">仅参与者可见</span>
-                            <span v-else>所有成员可见</span>
-                          </div>
-                        </div>
-                        <span v-if="file.filePrivacy=='0'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
-                        <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
-                      </div>
-                    </div>
-
+                    <p>您确定要把该文件移到回收站吗？</p>
+                    <Button long type="error" @click="putRecyclebin">移到回收站</Button>
                   </div>
-                </Poptip>
-              </div>
-            </li>
-          </ul>
+
+                  <div v-show="showFileEdit" class="rublish">
+                    <div class="rublish-header">
+                      <Icon @click="showFileEdit=false" type="ios-arrow-back" />
+                      修改文件名称
+                      <span></span>
+                    </div>
+                    <div class="rublish-input">
+                      <Input v-model.trim="editFileName" />
+                    </div>
+
+                    <Button long type="primary" @click='fileEdit(file.fileId)'>确定</Button>
+                  </div>
+
+                  <div v-show="!rublish&&!showFileEdit">
+                    <div class="menu-file-title" style="text-align:center;font-size:16px">
+                      <span>文件菜单</span>
+                    </div>
+                    <section v-if="file.catalog" class="file-folder-opt">
+                      <ul>
+                        <li @click="removeClone('移动')">移动文件夹</li>
+                        <li @click="removeClone('复制')">复制文件夹</li>
+                        <li @click="rublish=true">移到回收站</li>
+                        <li @click="rublish=true">可见性设置</li>
+                        <li @click="setCanSee">可见性设置</li>
+                      </ul>
+                    </section>
+                    <section v-else class="file-folder-opt">
+                      <ul>
+                        <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
+                        <li @click="removeClone('移动')">移动文件</li>
+                        <li @click="removeClone('复制')">复制文件</li>
+                        <li @click="showFileEdit=true">修改名称</li>
+                        <li>复制文件链接</li>
+                        <li @click="collectFile">收藏文件</li>
+                        <li @click="rublish=true">移到回收站</li>
+                      </ul>
+                    </section>
+                    <div class="footer">
+                      <div class="footer-left">
+                        <i class="ivu-icon ivu-icon-unlocked"></i>
+                        <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
+                          <span>隐私模式</span>
+                          <span v-if="file.filePrivacy=='0'">仅参与者可见</span>
+                          <span v-else>所有成员可见</span>
+                        </div>
+                      </div>
+                      <span v-if="file.filePrivacy=='0'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
+                      <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
+                    </div>
+                  </div>
+
+                </div>
+              </Poptip>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div v-else class="no-files">
+        <Icon type="md-folder" />
+        <p>暂无内容</p>
+      </div>
+
+      <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
+        <model ref="model" @close="showModel=false" :fileId="fileId"></model>
+      </Modal>
+      <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
+        <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
+      </Modal>
+      <!--创建文件夹 模态框-->
+      <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
+        <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" @keyup.enter.native="handleSave" />
+        <div>
+          <Button type="info" long @click="handleSave">确定</Button>
         </div>
-
-        <div v-else class="no-files">
-          <Icon type="md-folder" />
-          <p>暂无内容</p>
+      </Modal>
+      <!--复制、移动 模态框-->
+      <Modal v-model="showMove" :z-index=11111 class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
+        <div slot="header">
+          <span style="font-size:18px">移动文件{{fileName}}至</span>
         </div>
+        <div class="move-and-mobile-file">
+          <div class="column-projects flex-static thin-scroll">
+            <div class="project-title">项目</div>
+            <ul>
+              <li v-for="(project, index) in projects" :key="index" :class="{ selected:project.projectId==projectId,unselected:project.projectId!=projectId }" @click="changeProject(project.projectId)">
+                <span>{{project.projectName}}</span>
+              </li>
+            </ul>
+          </div>
+          <div class="picker-column thin-scroll flex-fill flex-vert">
+            <Loading v-show="loading1"></Loading>
+            <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row @item-click="itemClick" ref="jstree" children-field-name="child"></v-jstree>
+          </div>
 
-        <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-          <model ref="model" @close="showModel=false" :fileId="fileId"></model>
-        </Modal>
-        <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-          <common-file @close="showCommon=false" :fileId="fileId" :projectId="projectId"></common-file>
-        </Modal>
-        <!--创建文件夹 模态框-->
-        <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
-          <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" @keyup.enter.native="handleSave" />
-          <div>
-            <Button type="info" long @click="handleSave">确定</Button>
+        </div>
+        <div slot="footer" class="move-footer">
+          <span>{{footerTxt}}</span>
+          <div class="move-footer-btn">
+            <Button type="default" size="large" @click="cancelRemoveClone">取消</Button>
+            <Button type="primary" size="large" @click="removeCloneFile">确定</Button>
           </div>
-        </Modal>
-        <!--复制、移动 模态框-->
-        <Modal v-model="showMove" :z-index=11111 class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
-          <div slot="header">
-            <span style="font-size:18px">移动文件{{fileName}}至</span>
-          </div>
-          <div class="move-and-mobile-file">
-            <div class="column-projects flex-static thin-scroll">
-              <div class="project-title">项目</div>
-              <ul>
-                <li v-for="(project, index) in projects" :key="index" :class="{ selected:project.projectId==projectId,unselected:project.projectId!=projectId }" @click="changeProject(project.projectId)">
-                  <span>{{project.projectName}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="picker-column thin-scroll flex-fill flex-vert">
-              <Loading v-show="loading"></Loading>
-              <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row @item-click="itemClick" ref="jstree" children-field-name="child"></v-jstree>
-            </div>
-
-          </div>
-          <div slot="footer" class="move-footer">
-            <span>{{footerTxt}}</span>
-            <div class="move-footer-btn">
-              <Button type="default" size="large" @click="cancelRemoveClone">取消</Button>
-              <Button type="primary" size="large" @click="removeCloneFile">确定</Button>
-            </div>
-          </div>
-        </Modal>
-        <!--文件详情-->
-        <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
-          <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
-        </Modal>
-        <!--模型文件详情-->
-        <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
-          <!-- <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail> -->
-          <iframe :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/viewer-offline.html?path=${svfUrl}`" style="width:100vw;height:100vh" v-if="showModelFileDetail"></iframe>
-        </Modal>
-        <!--文件夹 可见性设置 模态框-->
-        <Modal v-model="showVisibilityModal" :z-index=2000 :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
-          <fileCanSee v-if="showVisibilityModal"></fileCanSee>
-        </Modal>
-      </div> 
+        </div>
+      </Modal>
+      <!--文件详情-->
+      <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
+        <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
+      </Modal>
+      <!--模型文件详情-->
+      <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
+        <!-- <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail> -->
+        <iframe :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/viewer-offline.html?path=${svfUrl}`" style="width:100vw;height:100vh" v-if="showModelFileDetail"></iframe>
+      </Modal>
+      <!--文件夹 可见性设置 模态框-->
+      <Modal v-model="showVisibilityModal" :z-index=2000 :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
+        <fileCanSee v-if="showVisibilityModal"></fileCanSee>
+      </Modal>
+    </div>
   </div>
-
-  
 
 </template>
 <script>
@@ -336,7 +333,7 @@ import {
   removeFile,
   cloneFile,
   recycleBin,
-  filePrivacy,
+  filePrivacy
 } from "@/axios/fileApi";
 import {
   files,
@@ -358,9 +355,9 @@ export default {
   },
   data() {
     return {
-      show:true,
-      asyncData:[],
-      curtag:'',
+      show: true,
+      asyncData: [],
+      curtag: "",
       showIcon: null,
       showFileEdit: false,
       editFileName: "",
@@ -408,7 +405,8 @@ export default {
         }
       ],
       showModelFileDetail: false,
-      svfUrl: ""
+      svfUrl: "",
+      loading1: false
     };
   },
   watch: {
@@ -421,47 +419,35 @@ export default {
       },
       deep: true
     },
-    curtag:{
-       handler:function(value,oldValue){
-          console.log(value)
-          this.searched='';
-          if(value!=''){
-            let data={tag:value}
-            this.searchFile(data).then(res => {
-                this.loading = false;
-           });
-           
-          }
-          
-       },
-      deep:true,
-    },
-    
-
+    curtag: {
+      handler: function(value, oldValue) {
+        console.log(value);
+        this.searched = "";
+        if (value != "") {
+          let data = { tag: value };
+          this.searchFile(data).then(res => {
+            this.loading = false;
+          });
+        }
+      },
+      deep: true
+    }
   },
   computed: {
-    ...mapState("file", ["files", "filePath",'treeData','tags'])
+    ...mapState("file", ["files", "filePath", "treeData", "tags"])
   },
   mounted: function() {
-
-    if(localStorage.view){
-      this.view=localStorage.view
+    console.log(localStorage);
+    if (localStorage.view) {
+      this.view = localStorage.view;
     }
 
     let params = { fileId: this.fileId };
     this.initFile(params).then(res => {
       this.loading = false;
     });
-
-     let data = { fileId: this.fileId,projectId:this.projectId};
- 
-    this.initFolders(data).then(res=>{
-        
-    });
-    this.initTag(this.projectId).then(res=>{
-      
-    })
-
+    this.initFolders(this.fileId).then(res => {});
+    this.initTag(this.projectId).then(res => {});
   },
   filters: {
     formatDate: function(value) {
@@ -481,34 +467,31 @@ export default {
     }
   },
   methods: {
-    ...mapActions("file", ["initFile",'initFolders','searchFile','initTag']),
+    ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag"]),
     ...mapMutations("file", ["putOneFile"]),
-    leftShow(){
-
-    },
+    leftShow() {},
     setCanSee() {
       this.showVisibilityModal = true;
       this.rublish = false;
     },
     // 获取当前文件id
-    getFileid(id,name) {
-      
+    getFileid(id, name) {
       this.thisFileId = id;
-      this.editFileName=name
+      this.editFileName = name;
     },
     closeDetail() {
       this.showModelDetai = false;
     },
     // 搜索文件
     search(value) {
-      this.curtag='';
+      this.curtag = "";
       if (value !== "") {
-       this.loading = true;
-        var data = {fileName:value,projectId:this.projectId}
+        this.loading = true;
+        var data = { fileName: value, projectId: this.projectId };
         this.searchFile(data).then(res => {
           this.loading = false;
         });
-      }else{
+      } else {
         let params = { fileId: this.fileId };
         this.initFile(params).then(res => {
           this.loading = false;
@@ -522,7 +505,7 @@ export default {
           ? "/api/files/" + fileId + "/download"
           : process.env.VUE_APP_URL + fileId + "/download";
     },
-   
+
     // menuShow(catalog, fileId, e) {
     //   if (catalog == 0) {
     //     this.menu1Show = true;
@@ -538,7 +521,7 @@ export default {
     popHid() {
       setTimeout(() => {
         this.rublish = false;
-        this.showFileEdit=false;
+        this.showFileEdit = false;
       }, 300);
     },
     handleSave() {
@@ -605,10 +588,7 @@ export default {
     fileDetail(catalog, id, file) {
       //获取目录
 
-       this.initFolders(id).then(res=>{
-        
-       });
-
+      this.initFolders(id).then(res => {});
 
       if (".svf".includes(file.ext)) {
         // 模型文件
@@ -686,13 +666,11 @@ export default {
       this.folderId = node.data.id;
       console.log(node.data.id);
       let params = { fileId: this.folderId };
-      this.initFile( params).then(res => {
-      this.loading = false;
-     });
+      this.initFile(params).then(res => {
+        this.loading = false;
+      });
     },
-    itemClick(node){
-
-    },
+    itemClick(node) {},
     // 取消 移动复制
     cancelRemoveClone() {
       this.folderId = "";
@@ -749,24 +727,24 @@ export default {
     },
     // 改变选择的项目
     changeProject(projectId) {
-      this.loading = true;
+      this.loading1 = true;
       this.items = [];
       this.projectId = projectId;
       folderChild(this.projectId).then(res => {
         this.asyncData = res.data;
         this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
-        this.loading = false;
+        this.loading1 = false;
       });
     },
     //文件修改名
     fileEdit(id) {
-      if(this.editFileName==""){
-         this.$Message.info('请输入名称');
+      if (this.editFileName == "") {
+        this.$Message.info("请输入名称");
       }
-      changeName(id,this.editFileName).then(res=>{
-          this.showFileEdit=false
-          this.$Message.info('修改名称成功');
-      })
+      changeName(id, this.editFileName).then(res => {
+        this.showFileEdit = false;
+        this.$Message.info("修改名称成功");
+      });
     }
   }
 };
@@ -777,14 +755,14 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  .input-box-left{
-    display:flex;
-    .circle{
-      width:5px;
+  .input-box-left {
+    display: flex;
+    .circle {
+      width: 5px;
       height: 5px;
       border-radius: 50%;
-      float:left;
-      margin:5px 5px 0 0;
+      float: left;
+      margin: 5px 5px 0 0;
     }
   }
   .icon-box {
@@ -1130,7 +1108,7 @@ export default {
 }
 .rublish {
   padding-bottom: 15px;
-  .rublish-input{
+  .rublish-input {
     margin: 15px 0;
   }
   .rublish-header {
