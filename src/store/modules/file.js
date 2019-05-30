@@ -7,7 +7,8 @@ import {
     filePrivacy,
     getFolders,
     searchFile,
-    getFileByTag
+    getFileByTag,
+    getFileDetails
 } from '../../axios/fileApi'
 
 
@@ -203,10 +204,17 @@ const store = {
         },
         initTag({commit},data){
             allTags(data).then(res=>{
+                console.log(res)
                 commit("initTag",res.data)
             })
         },
-        
+        // 更新文件详情
+        putOneFile ({commit}, data) {
+            getFileDetails(data).then(res => {
+                console.log(res)
+                commit('putOneFile',res)
+            })
+        },
     }
 };
 
