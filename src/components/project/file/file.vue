@@ -443,16 +443,15 @@ export default {
     ...mapState("file", ["files", "filePath",'treeData','tags'])
   },
   mounted: function() {
-    console.log(localStorage)
+
     if(localStorage.view){
       this.view=localStorage.view
     }
-    console.log(this.file);
-    let params = { fileId: this.fileId };
+    let params = { fileId: this.fileId,projectId:this.projectId};
     this.initFile(params).then(res => {
       this.loading = false;
     });
-    this.initFolders(this.fileId).then(res=>{
+    this.initFolders(params).then(res=>{
         
     });
     this.initTag(this.projectId).then(res=>{

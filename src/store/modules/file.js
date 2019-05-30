@@ -176,7 +176,7 @@ const store = {
             })
         },
         initFolders({commit},data){
-            getFolders(data).then(res=>{
+            getFolders(data.fileId,data.projectId).then(res=>{
                 commit("initFolders",res.data)
             })
         },
