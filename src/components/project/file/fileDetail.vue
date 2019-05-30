@@ -346,7 +346,7 @@
 
 <script>
 //import Tags from "@/components/project/pages/index/components/task/Tags";
-import  Tags from  "./Tags.vue";
+import Tags from  "./Tags.vue";
 import AddRelation from "@/components/public/common/AddRelation";
 import log from '@/components/public/log'
 import Emoji from '@/components/public/common/emoji/Emoji'

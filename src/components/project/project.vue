@@ -342,14 +342,11 @@ export default {
                 case "E3":
                     if (result.object.publicType === "任务") {
                         this.$store.dispatch(
-                            "task/addTagAndBind",
+                            "task/changeTask",
                             result.object.publicId
                         );
                     } else if (result.object.publicType === "文件") {
-                        this.$store.commit("fileDetail/addTagBindFile", {
-                            tagId: result.object.tagId,
-                            fileId: result.object.publicId
-                        });
+                        this.$store.dispatch("file/putOneFile", result.object.publicId);
                     }
                     break;
               // 发消息
