@@ -86,9 +86,9 @@ export default {
     register: function(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          userRegister(this.formValidate).then(msg => {
-            if (msg.result == 0) {
-              this.$Message.error("验证码填写错误!");
+          userRegister(this.formValidate).then(res => {
+            if (res.result == 0) {
+              this.$Message.error(res.msg);
             } else {
               this.$Message.success("注册成功!");
               this.$router.push("/");
