@@ -13,7 +13,7 @@
     <div class="file-view-wrap fade in">
       <header class="file-header">
         <div class="file-header-title">
-          <span @click="whereGo(i,n)" v-for="(i,n) in pathData" :key="n">{{i.name}}＞</span>
+          <span @click="breadcrumbClick(item.id)" v-for="(item) in breadcrumb" :key="item.id">{{item.text}}＞</span>
         </div>
         <div class="file-header-add">
           <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
@@ -355,6 +355,7 @@ export default {
   },
   data() {
     return {
+ 
       show: true,
       asyncData: [],
       curtag: "",
@@ -441,7 +442,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("file", ["files", "filePath", "treeData", "tags"])
+    ...mapState("file", ["files", "filePath", "treeData", "tags",'breadcrumb'])
   },
   mounted: function() {
     console.log(localStorage);
@@ -456,9 +457,7 @@ export default {
     let data={fileId:this.fileId,projectId:this.projectId}
     
     this.initFolders(data).then(res => {
-      
-        console.log(data)
-        
+
     });
     this.initTag(this.projectId).then(res => {});
   },
@@ -597,12 +596,36 @@ export default {
         localStorage.fileParentId = res.parentId;
       });
     },
+    // 选中要移动到哪
+    treeClick(node) {
+      this.folderId = node.data.id;
+      console.log(node.data.id);
+      let params = { fileId: this.folderId };
+      this.initFile(params).then(res => {
+        this.loading = false;
+      });
+      let data={fileId:this.folderId,projectId:this.projectId}
+        this.initFolders(data).then(res => {
+      });
+    },
+    // 选中要移动到哪
+    breadcrumbClick(id) {
+      this.folderId = id;
+      let params = { fileId: this.folderId };
+      this.initFile(params).then(res => {
+        this.loading = false;
+      });
+      let data={fileId:id,projectId:this.projectId}
+        this.initFolders(data).then(res => {
+      });
+
+    },
+
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
       //获取目录
-
-      this.initFolders(id).then(res => {});
-
+      let data={fileId:id,projectId:this.projectId}
+      this.initFolders(data).then(res => {});
       if (".svf".includes(file.ext)) {
         // 模型文件
         getFileDetails(id).then(res => {
@@ -618,13 +641,12 @@ export default {
           this.loading = true;
           this.fileId = id;
           this.pathData.push({ name: file.fileName, id: file.fileId });
-          // getChildFiles(id).then(res => {
-          //   console.log(res);
-          //   this.$store.commit("file/initFile", res.data);
-          //   this.loading = false;
-          //   localStorage.fileParentId = res.parentId;
-          // });
-
+          getChildFiles(id).then(res => {
+            console.log(res);
+            this.$store.commit("file/initFile", res.data);
+            this.loading = false;
+            localStorage.fileParentId = res.parentId;
+          });
           localStorage.view = this.view;
           this.$router.push({
             path: `/project/${this.$route.params.id}/files/${id}`
@@ -674,15 +696,7 @@ export default {
       this.showMove = true;
       this.footerTxt = "跨项目复制时，部分信息不会被保留。";
     },
-    // 选中要移动到哪
-    treeClick(node) {
-      this.folderId = node.data.id;
-      console.log(node.data.id);
-      let params = { fileId: this.folderId };
-      this.initFile(params).then(res => {
-        this.loading = false;
-      });
-    },
+    
     itemClick(node) {},
     // 取消 移动复制
     cancelRemoveClone() {

@@ -20,6 +20,12 @@ const store = {
         joinInfoIds: [],
         treeData:[],
         tags:[],
+        breadcrumb:[
+            {
+                text: "项目文件夹",
+                id: 'sss'
+              }
+        ],
     },
     mutations: {
         initFile(state, data) {
