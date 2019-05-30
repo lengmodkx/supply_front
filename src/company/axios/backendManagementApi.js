@@ -43,7 +43,7 @@ export function getAllPower(roleId) {
 export function changePower(role,resources) {
     return fetch({
         url: `/resource_role/${role}/edit_resource`,
-        method: "post",
-        data: {resources:resources}
+        method: "put",
+        params: {resources:resources}
     });
 }

@@ -5,7 +5,7 @@
                 <Checkbox :indeterminate="permission.indeterminate" :value="permission.checkAll" @click.prevent.native="handleCheckAll(permission)">{{permission.group}}</Checkbox>
             </div>
             <CheckboxGroup v-model="permission.checkAllGroup" @on-change="checkAllGroupChange(permission)">
-                <Checkbox class="mb15" v-for="(resource,index) in permission.resources" :label="resource" :key="index"></Checkbox>
+                <Checkbox class="mb15" v-for="(resource,index) in permission.resources" :label="resource.resourceName" :key="index"></Checkbox>
             </CheckboxGroup>
         </div>
         <div class="footer-btn">
@@ -50,14 +50,21 @@
             },
             // 保存 按钮
             savePower () {
-                let arr=this.permissions.map(v => {
-                    return v.checkAllGroup.join(',')
+                let resourcesArr=[]
+                this.permissions.forEach(v => {
+                    resourcesArr=resourcesArr.concat(v.checkAllGroup)
                 })
-                let resources=arr.filter(v => {
-                    return v!== ''
-                }).join(',')
-                console.log(resources)
-                changePower(this.role,resources).then(res => {
+                let idArr=[]
+                resourcesArr.forEach((i,n) => {
+                    this.permissions.forEach((ii,nn) => {
+                        ii.resources.forEach((iii,nnn) => {
+                            if (iii.resourceName===i){
+                                idArr.push(iii.id)
+                            }
+                        })
+                    })
+                })
+                changePower(this.role,idArr.join(',')).then(res => {
                     if (res.result){
                         this.$emit('close')
                         this.$Message.success('设置成功');
