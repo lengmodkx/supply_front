@@ -821,6 +821,7 @@ function $delete(url, params) {
 /*
 * 添加标签并绑定
 * */
+/*
 export function addTagBindFile(fileId,tagId) {
     return fetch({
         url: `/files/addTagBindFile`,
@@ -830,4 +831,4 @@ export function addTagBindFile(fileId,tagId) {
             "tagId": tagId
         }
     });
-}
+}*/
