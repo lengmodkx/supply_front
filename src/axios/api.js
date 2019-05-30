@@ -821,14 +821,14 @@ function $delete(url, params) {
 /*
 * 添加标签并绑定
 * */
-/*
-export function addTagBindFile(fileId,tagId) {
-    return fetch({
+export function addTagBindFile(params) {
+    return $post(`/files/addTagBindFile`, params)
+  /*  fetch({
         url: `/files/addTagBindFile`,
         method: "post", // 请求方法
         params: {
             "fileId": fileId,
             "tagId": tagId
         }
-    });
-}*/
+    });*/
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <div class="share-main"  @click="closeTag">
+    <div class="share-main" >
       <Row>
         <iCol span="6" class="left">
           <div class="share-header">
@@ -45,7 +45,7 @@
             </ul>
           </div>
         </iCol>
-        <iCol span="18" class="right" >
+        <iCol span="18" class="right" @click="closeTag" >
           <div class="share-view" v-if="share">
             <div class="share-text">
               <div class="rng">

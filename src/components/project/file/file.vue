@@ -419,6 +419,13 @@ export default {
       },
       deep: true
     },
+
+    treeData: {
+      handler: function(val, oldVal) {
+         console.log(val,oldVal)
+      },
+      deep: true
+    },
     curtag: {
       handler: function(value, oldValue) {
         console.log(value);
@@ -446,7 +453,13 @@ export default {
     this.initFile(params).then(res => {
       this.loading = false;
     });
-    this.initFolders(this.fileId).then(res => {});
+    let data={fileId:this.fileId,projectId:this.projectId}
+    
+    this.initFolders(data).then(res => {
+      
+        console.log(data)
+        
+    });
     this.initTag(this.projectId).then(res => {});
   },
   filters: {

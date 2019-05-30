@@ -338,6 +338,20 @@ export default {
                   );
                 }
                 break;
+                // 添加新标签并绑定
+                case "E3":
+                    if (result.object.publicType === "任务") {
+                        this.$store.dispatch(
+                            "task/addTagAndBind",
+                            result.object.publicId
+                        );
+                    } else if (result.object.publicType === "文件") {
+                        this.$store.commit("fileDetail/addTagBindFile", {
+                            tagId: result.object.tagId,
+                            fileId: result.object.publicId
+                        });
+                    }
+                    break;
               // 发消息
               case "F1":
                 if (result.object.type === "任务") {
