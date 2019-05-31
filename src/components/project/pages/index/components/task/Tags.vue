@@ -10,9 +10,11 @@
          :style="`background-color:${item.bgColor};`" closable  @on-close="handleClose">
          {{ item.tagName}}
       </Tag>
-      <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow"></Icon>
+      <!-- <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow"></Icon> -->
+      <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="showTag=true"></Icon>
     </div>
-    <div class="content" v-if="Popvisible" :style="{left:offsetLeft}">
+    <Modal v-model="showTag" :mask-closable="false" :width="300" >
+      <div class="content" >
       <div class="div1" v-if="showdiv1">
         <!--无任何标签的情况 -->
         <div class="tag_input clearfix">
@@ -62,9 +64,10 @@
             <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
           </span>
           {{isEdit?'编辑标签':'新建标签'}}
-          <span class="close-tag fr" @click="Popvisible=false;showdiv1=true;showdiv2=false">
+            <span class="close-tag fr"></span>
+          <!-- <span class="close-tag fr" @click="Popvisible=false;showdiv1=true;showdiv2=false">
             <Icon type="md-close" size="24"></Icon>
-          </span>
+          </span> -->
         </div>
         <Input style="padding:8px 8px;" :maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
         <div class="createTag">
@@ -102,6 +105,17 @@
 
       </div>
     </div>
+            
+    </Modal>
+   
+
+
+
+   
+
+
+
+
 
   </div>
 </template>
@@ -121,6 +135,7 @@ export default {
   props: ["taglist", "publicId", "publicType", "projectId",'fileTask'],
   data() {
     return {
+      showTag:false,
       searchTag: "",
       showdiv1: true,
       showdiv2: false,
@@ -467,12 +482,13 @@ export default {
   }
 }
 .content {
-  width: 270px;
-  position: absolute;
-  border: 1px solid #eeeeee;
-  background-color: #fff;
-  border-radius: 5px;
-  z-index: 999;
+  padding-top:30px;
+  // width: 270px;
+  // position: absolute;
+  // border: 1px solid #eeeeee;
+  // background-color: #fff;
+  // border-radius: 5px;
+  // z-index: 999;
 }
 </style>
 
