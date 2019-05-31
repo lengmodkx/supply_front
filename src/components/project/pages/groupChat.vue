@@ -8,16 +8,16 @@
         <div class="chat-text" ref="scrollbox">
 
           <!--有消息-->
-          <div   style="height: 100%">
+          <div style="height: 100%">
             <div v-if="chatData.length" ref="heightbox">
               <div v-for="(item, index) in chatData" :key="index">
-                <div class="me-msg"  v-if="item.isOwn && item.chatDel==0">
+                <div class="me-msg" v-if="item.isOwn && item.chatDel==0">
                   <div class="me">
                     <div class="content" v-html="item.content"></div>
                   </div>
                   <div class="file-box" v-if="item.fileList.length">
-                    <div class="one-file" v-for="(f,i) in item.fileList" :key="i" >
-                      <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="" >
+                    <div class="one-file" v-for="(f,i) in item.fileList" :key="i">
+                      <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
                       <img v-else src="@/icons/img/moren.png" alt="">
                       <p>{{f.fileName}}</p>
                       <span>{{f.size}}</span>
@@ -53,13 +53,8 @@
         <!--发消息-->
         <div class="talk">
           <div class="talkinner">
-            <div class="talkUp" >
-              <div id="input"
-                   style="width: 100%;height: 40px;padding: 5px 10px"
-                     ref="textarea"
-                     placeholder="按Enter快速发布"
-                      contenteditable="true"
-                   @keyup.enter="sendChat">
+            <div class="talkUp">
+              <div id="input" style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true" @keyup.enter="sendChat">
               </div>
             </div>
             <div class="talkDown clearfix">
@@ -67,9 +62,8 @@
                 <Icon @click="showCommon=true" class="up-file" type="md-attach" />
               </Tooltip>
               <!-- 表情包组件 -->
-              <Emoji @choose="chooseEmoji"
-                     ref="emoji"></Emoji>
-              <div class="send fr" >
+              <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
+              <div class="send fr">
                 <Button type="primary" @click="sendChat">发布</Button>
               </div>
             </div>
@@ -84,135 +78,140 @@
 </template>
 
 <script>
-import Emoji from '@/components/public/common/emoji/Emoji'
-import insertText from '@/utils/insertText'
-import upFile from './index/chatUpFile'
-import {sendChat, getChat,recall} from '@/axios/api'
-import {mapActions, mapState} from 'vuex'
+import Emoji from "@/components/public/common/emoji/Emoji";
+import insertText from "@/utils/insertText";
+import upFile from "./index/chatUpFile";
+import { sendChat, getChat, recall } from "@/axios/api";
+import { mapActions, mapState } from "vuex";
 export default {
-  name: 'App',
-  components: { Emoji,upFile },
+  name: "App",
+  components: { Emoji, upFile },
   data() {
     return {
-      files:[],
-      talkvalue: '',
+      files: [],
+      talkvalue: "",
       showCommon: false
-    }
+    };
   },
   mounted() {
-    this.getChat()
+    this.getChat();
   },
-  watch:{
-    chatData () {
+  watch: {
+    chatData() {
       this.$nextTick(() => {
-        this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
-      })
+        if (this.$refs.heightbox) {
+          this.$refs.scrollbox.scrollTop =
+            this.$refs.heightbox.clientHeight + 100;
+        }
+      });
     }
   },
   computed: {
-    ...mapState('chat',['chatData','images'])
+    ...mapState("chat", ["chatData", "images"])
   },
   methods: {
-    ...mapActions('chat',['initChat']),
+    ...mapActions("chat", ["initChat"]),
     // 获取消息
-    getChat(){
+    getChat() {
       this.initChat(this.$route.params.id).then(res => {
-        this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
-      })
+        // this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
+      });
     },
     // 发送消息
-    sendChat(){
-      let con =this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g,"")
-      if (con){
-        sendChat(this.$route.params.id,con,JSON.stringify(this.files)).then(res => {
-          this.$refs.textarea.innerHTML=''
-          this.$nextTick(() => {
-            this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
-            console.log(this.$refs.scrollbox.scrollTop)
-          })
-        })
+    sendChat() {
+      let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
+      if (con) {
+        sendChat(this.$route.params.id, con, JSON.stringify(this.files)).then(
+          res => {
+            this.$refs.textarea.innerHTML = "";
+            this.$nextTick(() => {
+              this.$refs.scrollbox.scrollTop =
+                this.$refs.heightbox.clientHeight + 100;
+              console.log(this.$refs.scrollbox.scrollTop);
+            });
+          }
+        );
       }
     },
-    getFiles(files){
-      this.files = files
-      this.showCommon = false
+    getFiles(files) {
+      this.files = files;
+      this.showCommon = false;
     },
     //下载附件
-    downLoad(id){
+    downLoad(id) {
       window.location.href = "http://192.168.3.189:8090/groupchat/" + id;
     },
-    chooseEmoji (name) {
-      this.$refs.textarea.innerHTML+='<img src="'+name+'" />'
+    chooseEmoji(name) {
+      this.$refs.textarea.innerHTML += '<img src="' + name + '" />';
       // insertText(this.$refs.textarea.$el.children[1], name)
     },
     // 撤回消息
-    chehui (chatId) {
-      recall(chatId,this.$route.params.id).then(res => {
-        console.log(res)
-      })
+    chehui(chatId) {
+      recall(chatId, this.$route.params.id).then(res => {
+        console.log(res);
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less">
-  .file-box{
-    width: 100%;
+.file-box {
+  width: 100%;
+  height: 60px;
+  padding: 0 15px;
+  .one-file {
+    width: 400px;
     height: 60px;
-    padding: 0 15px;
-    .one-file{
-      width: 400px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      padding: 10px 12px;
-      background-color: #e5f6fb;
-      border-radius: 10px;
-      img{
-        width: 32px;
-        height: 40px;
-        margin-right: 8px;
-        flex: none;
-      }
-      p{
-        width: 290px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      span{
-        width: 40px;
-        margin-left: 12px;
-        flex: none;
-        text-align: right;
-      }
-    }
-  }
-  .me-msg{
-    .chehui-btn{
-      display: none;
-    }
-    &:hover{
-      .chehui-btn{
-        display: block;
-      }
-    }
-    .one-file{
-      float: right;
-    }
-
-  }
-  #input{
-    width: 100%;
-    height: 40px;
     display: flex;
     align-items: center;
-    font-size: 12px;
-    img{
-      width: 26px;
-      height: 26px;
+    padding: 10px 12px;
+    background-color: #e5f6fb;
+    border-radius: 10px;
+    img {
+      width: 32px;
+      height: 40px;
+      margin-right: 8px;
+      flex: none;
+    }
+    p {
+      width: 290px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    span {
+      width: 40px;
+      margin-left: 12px;
+      flex: none;
+      text-align: right;
     }
   }
+}
+.me-msg {
+  .chehui-btn {
+    display: none;
+  }
+  &:hover {
+    .chehui-btn {
+      display: block;
+    }
+  }
+  .one-file {
+    float: right;
+  }
+}
+#input {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  img {
+    width: 26px;
+    height: 26px;
+  }
+}
 .group-chat {
   position: absolute;
   left: 0;
@@ -227,7 +226,7 @@ export default {
     margin-top: 5px;
     display: flex;
     align-items: center;
-    span{
+    span {
       cursor: pointer;
       margin: 0 5px;
     }
@@ -236,7 +235,7 @@ export default {
       flex-direction: row-reverse;
     }
   }
-  .other .one-file{
+  .other .one-file {
     float: left;
   }
   .other,
@@ -355,57 +354,57 @@ export default {
     }
   }
 }
-  .up-file{
-    float: left;
-    font-size: 20px;
-    transform: rotate(90deg);
-    cursor: pointer;
-    color: gray;
-    margin-top: 15px;
-    margin-left: 5px;
-    &:hover{
-      color: #3da8f5;
-    }
+.up-file {
+  float: left;
+  font-size: 20px;
+  transform: rotate(90deg);
+  cursor: pointer;
+  color: gray;
+  margin-top: 15px;
+  margin-left: 5px;
+  &:hover {
+    color: #3da8f5;
   }
-  .chehui{
-    width: 330px;
-    margin: 0 auto;
-    margin-top: 25px;
-    text-align: center;
+}
+.chehui {
+  width: 330px;
+  margin: 0 auto;
+  margin-top: 25px;
+  text-align: center;
+  font-size: 12px;
+  padding: 0 10px;
+  height: 28px;
+  line-height: 28px;
+  background-color: #efeeec;
+  color: #a6a6a6;
+  border-radius: 8px;
+}
+.no-msg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #d2d2d2;
+  img {
+    width: 95px;
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  span {
     font-size: 12px;
-    padding: 0 10px;
-    height: 28px;
-    line-height: 28px;
-    background-color: #EFEEEC;
-    color: #a6a6a6;
-    border-radius: 8px;
+    line-height: 20px;
   }
-  .no-msg{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #D2D2D2;
-    img{
-      width: 95px;
-      margin-bottom: 10px;
-    }
-    p{
-      font-size: 16px;
-      line-height: 20px;
-    }
-    span{
-      font-size: 12px;
-      line-height: 20px;
-    }
+}
+.content {
+  display: flex !important;
+  align-items: center;
+  img {
+    width: 26px;
   }
-  .content{
-    display: flex !important;
-    align-items: center;
-    img{
-      width: 26px;
-    }
-  }
+}
 </style>
