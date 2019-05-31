@@ -29,11 +29,19 @@ const router = new Router({
       component: _import("project/project"),
       children: [{
           path: "tasks/group/:groupId",
-          component: _import("project/pages/index/index")
+          component: _import("project/pages/index/index"),
+          meta: {
+            requiresAuth: true,
+            active: '/tasks'
+          }
         },
         {
           path: "shares",
           component: _import("project/share/share"),
+          meta: {
+            requiresAuth: true,
+            active: '/shares'
+          }
         },
         {
           path: "share_detail/:shareId",
@@ -41,19 +49,35 @@ const router = new Router({
         },
         {
           path: "schedules",
-          component: _import("project/pages/schedule")
+          component: _import("project/pages/schedule"),
+          meta: {
+            requiresAuth: true,
+            active: '/schedules'
+          }
         },
         {
           path: "groupchat",
-          component: _import("project/pages/groupChat")
+          component: _import("project/pages/groupChat"),
+          meta: {
+            requiresAuth: true,
+            active: '/groupChat'
+          }
         },
         {
           path: "files/:fileId",
-          component: _import("project/file/file")
+          component: _import("project/file/file"),
+          meta: {
+            requiresAuth: true,
+            active: '/files'
+          }
         },
         {
           path: "statistics",
-          component: _import("project/pages/statistics")
+          component: _import("project/pages/statistics"),
+          meta: {
+            requiresAuth: true,
+            active: '/statistics'
+          }
         }
       ]
     },

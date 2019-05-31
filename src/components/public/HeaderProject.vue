@@ -8,7 +8,7 @@
     </div>
     <!-- :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''" -->
     <div class="menu">
-      <router-link v-for="(menu, index) in menus" :key="index" :to="`/project/${id}${menu.prefix}`">{{menu.funcName}}</router-link>
+      <router-link v-for="(menu, index) in menus" :key="index" :to="`/project/${id}${menu.prefix}`" :class="{'is-active':$route.meta.active === menu.pre}">{{menu.funcName}}</router-link>
     </div>
 
     <div class="fr">
@@ -52,27 +52,27 @@ export default {
         switch (item.funcName) {
           case "任务":
             item.prefix = "/tasks/group/" + item.suffix; //this.$route.params.groupId;
-            item.pre = "tasks";
+            item.pre = "/tasks";
             break;
           case "分享":
             item.prefix = "/shares";
-            item.pre = "shares";
+            item.pre = "/shares";
             break;
           case "文件":
             item.prefix = "/files/" + item.suffix;
-            item.pre = "files";
+            item.pre = "/files";
             break;
           case "日程":
             item.prefix = "/schedules";
-            item.pre = "schedules";
+            item.pre = "/schedules";
             break;
           case "群聊":
             item.prefix = "/groupChat";
-            item.pre = "groupChat";
+            item.pre = "/groupChat";
             break;
           case "统计":
             item.prefix = "/statistics";
-            item.pre = "statistics";
+            item.pre = "/statistics";
             break;
         }
         return item;
@@ -121,7 +121,7 @@ export default {
       color: #495060;
       margin: 0 15px;
       transition: all 0.3s;
-      &.router-link-active,
+      &.is-active,
       &:hover {
         border-bottom: 3px solid #2d8cf0;
       }
