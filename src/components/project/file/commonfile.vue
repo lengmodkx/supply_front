@@ -14,7 +14,7 @@
     </div>
     <div class="model-op">
       <Button type="default" @click="resetFile" class="op-btn">重选</Button>
-      <Button type="primary" @click="uploadFile" class="op-btn">提交</Button>
+      <Button type="primary" @click="uploadFile" class="op-btn" :loading="loading">提交</Button>
     </div>
   </div>
 </template>
@@ -36,7 +36,8 @@ export default {
       dirName: "upload/file/",
       uploadList: [],
       percentage: [],
-      files: []
+      files: [],
+      loading: false
     };
   },
   methods: {
@@ -71,6 +72,7 @@ export default {
       this.showProgress = false;
       this.uploadList = [];
       this.percentage = [];
+      this.$refs.upload.clearFiles();
     },
 
     handleBeforeUpload(file) {
@@ -88,6 +90,7 @@ export default {
       return false;
     },
     uploadFile() {
+      this.loading = true;
       var that = this;
       this.uploadList.forEach((file, index) => {
         var fileName =
@@ -122,6 +125,8 @@ export default {
       };
       uploadCommonFile(this.fileId, params).then(res => {
         if (res.result === 1) {
+          this.resetFile();
+          this.loading = false;
           this.files = [];
           this.$Notice.success({
             title: "上传成功"

@@ -2,7 +2,7 @@
   <div class="model-file-up-box">
     <div class="model-name"><span>模型名称</span><Input v-model="modelName" placeholder="选输入模型文件名称" /></div>
     <div class="model-name"><span>模型文件</span>
-      <Upload :before-upload="handleUpload1" action="/upload/file/Office" v-if="showupload1" accept=".pln,.gsm,.skp,.mod,.svf">
+      <Upload :before-upload="handleUpload1" action="/upload/file/Office" v-if="showupload1" accept=".pln,.gsm,.skp,.mod,.svf" ref="upload1">
         <Button icon="ios-cloud-upload-outline" type="primary">请上传模型文件</Button>
       </Upload>
       <div v-if="showProgress1" class="model-progress">
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="model-name"><span>模型图片</span>
-      <Upload :before-upload="handleUpload2" action="/" v-if="showupload2" accept=".gif,.GIF,.jpg,.JPG,.jpeg,.JPEG,.png,.PNG,.bmp,.BMP">
+      <Upload :before-upload="handleUpload2" action="/" v-if="showupload2" accept=".gif,.GIF,.jpg,.JPG,.jpeg,.JPEG,.png,.PNG,.bmp,.BMP" ref="upload2">
         <Button icon="ios-cloud-upload-outline" type="primary">请上传模型缩略图</Button>
       </Upload>
       <div v-if="showProgress2" class="model-progress">
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="model-op">
-      <Button type="primary" @click="uploadServer" class="op-btn">确定</Button>
+      <Button type="primary" @click="uploadServer" class="op-btn" :loading="loading">确定</Button>
       <Button type="default" @click="cancleUploadServer" class="op-btn">取消</Button>
     </div>
   </div>
@@ -63,7 +63,8 @@ export default {
       file1: null,
       file2: null,
       modelFile: { fileName: "", size: "", fileUrl: "", ext: "" },
-      modelImg: { fileName: "", size: "", fileUrl: "" }
+      modelImg: { fileName: "", size: "", fileUrl: "" },
+      loading: false
     };
   },
   methods: {
@@ -110,6 +111,7 @@ export default {
       this.showProgress1 = false;
       this.percent1 = 0;
       this.modelFile.fileName = "";
+      this.$$refs.upload1.clearFiles();
     },
     // 重选模型缩略图
     resetImg() {
@@ -117,6 +119,7 @@ export default {
       this.showProgress2 = false;
       this.percent2 = 0;
       this.modelImg.fileName = "";
+      this.$$refs.upload2.clearFiles();
     },
     // 模型上传
     uploadModel() {
@@ -191,6 +194,7 @@ export default {
     },
 
     uploadServer() {
+      this.loading = true;
       if (this.modelName == "" || this.modelName == null) {
         this.$Notice.warning({
           title: "请输入模型文件名称"
@@ -218,6 +222,9 @@ export default {
       };
       uploadModel(this.fileId, params).then(res => {
         if (res.result == 1) {
+          this.loading = false;
+          this.resetModel();
+          this.resetImg();
           this.$Notice.success({
             title: "上传成功"
           });

@@ -14,12 +14,12 @@
     </div>
     <div class="model-op">
       <Button type="default" @click="resetFile" class="op-btn">重选</Button>
-      <Button type="primary" @click="uploadFile" class="op-btn">提交</Button>
+      <Button type="primary" @click="uploadFile" class="op-btn" :loading="loading">提交</Button>
     </div>
   </div>
 </template>
 <script>
-import { uploadCommonFile, bind_files} from "@/axios/api2";
+import { uploadCommonFile, bind_files } from "@/axios/api2";
 import OSS from "ali-oss";
 let client = new OSS({
   region: "oss-cn-beijing",
@@ -28,7 +28,7 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 export default {
-  props: ["fileId", "projectId","publicId"],
+  props: ["fileId", "projectId", "publicId"],
   data() {
     return {
       showupload: true,
@@ -36,7 +36,8 @@ export default {
       dirName: "upload/file/",
       uploadList: [],
       percentage: [],
-      files: []
+      files: [],
+      loading: false
     };
   },
   methods: {
@@ -71,6 +72,7 @@ export default {
       this.showProgress = false;
       this.uploadList = [];
       this.percentage = [];
+      this.$refs.upload.clearFiles();
     },
 
     handleBeforeUpload(file) {
@@ -88,6 +90,7 @@ export default {
       return false;
     },
     uploadFile() {
+      this.loading = true;
       var that = this;
       this.uploadList.forEach((file, index) => {
         var fileName =
@@ -104,7 +107,10 @@ export default {
             myfile.fileUrl = result.name;
             myfile.size = that.renderSize(file.size);
             myfile.projectId = that.projectId;
-            myfile.ext = file.name.substr(file.name.indexOf("."),file.name.length);
+            myfile.ext = file.name.substr(
+              file.name.indexOf("."),
+              file.name.length
+            );
             myfile.publicId = that.publicId;
             that.files.push(myfile);
             if (that.uploadList.length == that.files.length) {
@@ -121,16 +127,18 @@ export default {
     uploadServer() {
       let params = {
         files: JSON.stringify(this.files),
-        publicId:this.publicId,
-        projectId:this.projectId
+        publicId: this.publicId,
+        projectId: this.projectId
       };
       bind_files(params).then(res => {
         if (res.result === 1) {
+          this.loading = false;
+          this.resetFile();
           this.files = [];
           this.$Notice.success({
             title: "上传成功"
           });
-          this.files.splice(0,this.files.length)
+          this.files.splice(0, this.files.length);
           this.$emit("close");
         }
       });
