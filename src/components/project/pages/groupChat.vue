@@ -107,8 +107,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('chat',['chatData','images']),
-    ...mapState('project',['projectName'])
+    ...mapState("chat", ["chatData", "images"]),
+    ...mapState("project", ["projectName"])
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
@@ -140,7 +140,11 @@ export default {
     },
     //下载附件
     downLoad(id) {
-      window.location.href = "http://192.168.3.189:8090/groupchat/" + id;
+      var url =
+        process.env.NODE_ENV === "development"
+          ? process.env.VUE_APP_URL
+          : process.env.VUE_APP_URL;
+      window.location.href = url + "/groupchat/" + id;
     },
     chooseEmoji(name) {
       this.$refs.textarea.innerHTML += '<img src="' + name + '" />';
