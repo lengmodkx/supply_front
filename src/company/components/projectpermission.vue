@@ -2,10 +2,12 @@
     <div>
         <div class="modal-per-content" v-for="(permission,index) in permissions" :key="index">
             <div class="checke-title">
-                <Checkbox :indeterminate="permission.indeterminate" :value="permission.checkAll" @click.prevent.native="handleCheckAll(permission)">{{permission.group}}</Checkbox>
+                <Checkbox :disabled="disabled" :indeterminate="permission.indeterminate"
+                          :value="permission.checkAll"
+                          @click.prevent.native="handleCheckAll(permission)">{{permission.group}}</Checkbox>
             </div>
             <CheckboxGroup v-model="permission.checkAllGroup" @on-change="checkAllGroupChange(permission)">
-                <Checkbox class="mb15" v-for="(resource,index) in permission.resources" :label="resource.resourceName" :key="index"></Checkbox>
+                <Checkbox :disabled="disabled" class="mb15" v-for="(resource,index) in permission.resources" :label="resource.resourceName" :key="index"></Checkbox>
             </CheckboxGroup>
         </div>
         <div class="footer-btn">
@@ -16,9 +18,10 @@
 <script>
     import {changePower} from '../axios/backendManagementApi'
     export default {
-        props: ['permissions', 'role'],
+        props: ['permissions', 'role','roleKey'],
         data() {
             return {
+                disabled: this.roleKey==="administrator"
             }
         },
         methods: {

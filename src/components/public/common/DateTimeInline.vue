@@ -15,6 +15,7 @@
         <iCol span="10">
           <TimePicker format="HH:mm"
                       :value="time"
+                      confirm
                       @on-change="timeChange"
                       ref='timePicker'>
           </TimePicker>
@@ -89,11 +90,11 @@ export default {
     timeChange (time) {
       this.time = time
       this.realDateTime = this.date + ' ' + this.time
-      this.$refs.timePicker.visible = false
+      // this.$refs.timePicker.visible = false
     },
     dateChange(date) {
       this.date = date;
-      this.realDateTime = new Date(date).getTime()
+      this.realDateTime = new Date(date+ " " + this.time).getTime()
     },
     init() {
       if (this.datetime) {
@@ -112,7 +113,6 @@ export default {
       this.$emit("clear");
     },
     confirm() {
-      console.log(this.realDateTime)
       this.$emit("confirm", this.realDateTime);
     }
   },
@@ -153,6 +153,9 @@ export default {
     /deep/ .ivu-select-dropdown{
       position: absolute !important;
       top: 10px!important;
+    }
+    /deep/ .ivu-picker-confirm{
+      display: flex !important;
     }
   }
   /deep/ .ivu-select-dropdown{
