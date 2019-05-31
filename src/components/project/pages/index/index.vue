@@ -293,7 +293,13 @@ export default {
     allTasks(newName, oldName) {
       this.allTask = newName;
     },
-    deep: true
+    deep: true,
+    view () {
+      this.init(this.projectId).then(res => {
+        this.loading = false;
+        this.allTask = this.allTasks;
+      });
+    }
   },
   methods: {
     ...mapActions("task", ["init", "initEditTask"]),
