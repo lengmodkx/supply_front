@@ -172,9 +172,9 @@
 
 <style>
   @import "~dhtmlx-gantt/codebase/dhtmlxgantt.css";
-  .gantt_task_line {
+  /* .gantt_task_line {
       border-radius: 30px !important;
-  }
+  } */
 
   .gantt_section_time{
      display: flex !important;

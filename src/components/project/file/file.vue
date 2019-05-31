@@ -13,7 +13,7 @@
     <div class="file-view-wrap fade in">
       <header class="file-header">
         <div class="file-header-title">
-          <span @click="breadcrumbClick(item.id)" v-for="(item) in breadcrumb" :key="item.id">{{item.text}}＞</span>
+          <span v-show='breadcrumb.length' @click="breadcrumbClick(item.fileId)" v-for="(item) in breadcrumb" :key="item.fileId">{{item.fileName}}＞</span>
         </div>
         <div class="file-header-add">
           <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
@@ -324,7 +324,7 @@ import commonFile from "./commonfile.vue";
 import fileDetail from "./fileDetail";
 import modelFileDetail from "./modelFileDetail";
 import fileCanSee from "./fileCanSee";
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations,mapGetters } from "vuex";
 import { getFileDetails, getChildFiles } from "@/axios/fileApi";
 import {
   changeName,
@@ -442,7 +442,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("file", ["files", "filePath", "treeData", "tags",'breadcrumb'])
+    ...mapState("file", ["files", "filePath", "treeData", "tags",'breadcrumb']),
   },
   mounted: function() {
     console.log(localStorage);
