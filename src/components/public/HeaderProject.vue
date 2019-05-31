@@ -2,7 +2,7 @@
   <div class="header-project">
     <div class="fl">
       <Breadcrumb separator=">">
-        <BreadcrumbItem :to="'/org/'+companyId">首页</BreadcrumbItem>
+        <BreadcrumbItem to="/home">首页</BreadcrumbItem>
         <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
       </Breadcrumb>
     </div>

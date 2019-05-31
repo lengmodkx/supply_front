@@ -1,24 +1,24 @@
 <template>
   <header class="header" id="header">
-    <Poptip v-model="mainMenu">
-      <Icon class="app-icon" type="md-apps" />
-      <div slot="content">
-        <ul class="app-con">
-          <router-link tag="li" :to="'/org/'+companyId" class="app-li">
-            <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
-            <p>主页</p>
-          </router-link>
-          <li @click="goMembers"  class="app-li">
-            <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
-            <p>成员</p>
-          </li>
-          <li class="app-li" @click="goBackstage">
-            <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_administration.png" alt="">
-            <p>管理后台</p>
-          </li>
-        </ul>
-      </div>
-    </Poptip>
+    <!--<Poptip v-model="mainMenu">-->
+      <!--<Icon class="app-icon" type="md-apps" />-->
+      <!--<div slot="content">-->
+        <!--<ul class="app-con">-->
+          <!--<router-link tag="li" :to="'/org/'+companyId" class="app-li">-->
+            <!--<img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">-->
+            <!--<p>主页</p>-->
+          <!--</router-link>-->
+          <!--<li @click="goMembers"  class="app-li">-->
+            <!--<img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">-->
+            <!--<p>成员</p>-->
+          <!--</li>-->
+          <!--<li class="app-li" @click="goBackstage">-->
+            <!--<img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_administration.png" alt="">-->
+            <!--<p>管理后台</p>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</Poptip>-->
     <div class="logo">
       <img src="../../assets/images/logo.png" alt="">
       <Icon type="code" @click="openMenu"></Icon>
