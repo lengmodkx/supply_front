@@ -58,14 +58,16 @@ export default {
       this.content = this.$refs.editor.content;
       if (this.title == null || this.title == "") {
         this.$Notice.warning({
-          title: "请输入分享标题"
+          title: "请输入分享标题",
+            duration: 0.5
         });
         return false;
       }
 
       if (this.content == null || this.content == "") {
         this.$Notice.warning({
-          title: "请输入分享内容"
+          title: "请输入分享内容",
+         duration: 0.5
         });
         return false;
       }

@@ -22,11 +22,12 @@ const store = {
         treeData:[],
         tags:[],
         breadcrumb:[
-            {
-                text: "项目文件夹",
-                id: 'sss'
-              }
+            // {
+            //     text: "项目文件夹",
+            //     id: 'sss'
+            //   }
         ],
+
     },
     mutations: {
         initFile(state, data) {
@@ -154,6 +155,10 @@ const store = {
         },
         initFolders(state,data){
             state.treeData=data
+
+        },
+        initBreadcrumb(state,data){
+            state.breadcrumb=data.reverse()
         }
     },
     actions: {
@@ -185,6 +190,7 @@ const store = {
         initFolders({commit},data){
             getFolders(data.fileId,data.projectId).then(res=>{
                 commit("initFolders",res.data)
+                commit("initBreadcrumb",res.data2)
             })
         },
         //搜索文件
