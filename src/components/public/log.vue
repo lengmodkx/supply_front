@@ -7,13 +7,13 @@
       <div class="log-list" v-for="(item, index) in logs" :key="index">
           <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
           <div class="things" v-html="item.content"></div>
-          <p class="time"><Time :time="item.createTime-1000*60" :interval="60" /></p>
+          <p class="time">{{item.createTime | timeFilter3}}</p>
       </div>
       <div v-show="restData.length">
           <div class="log-list" v-for="(item, index) in restData" :key="index">
               <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
               <div class="things" v-html="item.content"></div>
-              <p class="time"><Time :time="item.createTime-1000*60" :interval="60" /></p>
+              <p class="time">{{item.createTime | timeFilter3}}</p>
           </div>
       </div>
   </div>

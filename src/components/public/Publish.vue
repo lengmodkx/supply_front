@@ -51,6 +51,7 @@ export default {
         console.log(datas)
         sendMsg(datas).then(res => {
           this.$refs.textarea.innerHTML=''
+          this.$emit('scroll')
         })
       }
     },

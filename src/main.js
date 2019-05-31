@@ -59,6 +59,11 @@ Vue.filter('timeFilter2', function (value) {
     var birthday = time.getFullYear() + "-" + (time.getMonth() * 1 + 1) + "-" + (time.getDate());
     return birthday
 })
+Vue.filter('timeFilter3', function (value) {
+    var time = new Date(value);
+    var birthday = (time.getMonth() * 1 + 1) + "月" + (time.getDate()) + "日" + time.getHours() + "点" + time.getMinutes() + '分';
+    return birthday
+})
 Date.prototype.Format = function (fmt) {
     //author: meizz
     var o = {
