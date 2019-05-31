@@ -2,7 +2,7 @@
   <div class="group-chat">
     <div class="group-chat-main">
       <div class="group-chat-view">
-        <div class="title">阿拉丁bug管理系统
+        <div class="title">{{projectName}}
           <Icon type="more" class="fr"></Icon>
         </div>
         <div class="chat-text" ref="scrollbox">
@@ -33,7 +33,7 @@
                 <div v-else>
                   <div class="other">
                     <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
-                    <div class="content">{{item.content}}</div>
+                    <div class="content" v-html="item.content"></div>
                   </div>
                   <div class="time">
                     <Time :time="item.createTime" />
@@ -107,7 +107,8 @@ export default {
     }
   },
   computed: {
-    ...mapState("chat", ["chatData", "images"])
+    ...mapState('chat',['chatData','images']),
+    ...mapState('project',['projectName'])
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
