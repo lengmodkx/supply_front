@@ -2,7 +2,7 @@
   <div class="model-file-up-box">
     <div class="model-name"><span>模型名称</span><Input v-model="modelName" placeholder="选输入模型文件名称" /></div>
     <div class="model-name"><span>模型文件</span>
-      <Upload :before-upload="handleUpload1" action="/upload/file/Office" v-if="showupload1" accept=".pln,.gsm,.skp,.mod,.svf" ref="upload1">
+      <Upload :before-upload="handleUpload1" action="/upload/file/Office" v-if="showupload1" accept=".pln,.gsm,.skp,.mod,.svf">
         <Button icon="ios-cloud-upload-outline" type="primary">请上传模型文件</Button>
       </Upload>
       <div v-if="showProgress1" class="model-progress">
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="model-name"><span>模型图片</span>
-      <Upload :before-upload="handleUpload2" action="/" v-if="showupload2" accept=".gif,.GIF,.jpg,.JPG,.jpeg,.JPEG,.png,.PNG,.bmp,.BMP" ref="upload2">
+      <Upload :before-upload="handleUpload2" action="/" v-if="showupload2" accept=".gif,.GIF,.jpg,.JPG,.jpeg,.JPEG,.png,.PNG,.bmp,.BMP">
         <Button icon="ios-cloud-upload-outline" type="primary">请上传模型缩略图</Button>
       </Upload>
       <div v-if="showProgress2" class="model-progress">
@@ -93,7 +93,6 @@ export default {
       this.modelFile.size = file.size;
       this.showupload1 = false;
       this.showProgress1 = true;
-
       return false;
     },
     // 上传模型缩略图前处理
@@ -111,7 +110,6 @@ export default {
       this.showProgress1 = false;
       this.percent1 = 0;
       this.modelFile.fileName = "";
-      this.$$refs.upload1.clearFiles();
     },
     // 重选模型缩略图
     resetImg() {
@@ -119,7 +117,6 @@ export default {
       this.showProgress2 = false;
       this.percent2 = 0;
       this.modelImg.fileName = "";
-      this.$$refs.upload2.clearFiles();
     },
     // 模型上传
     uploadModel() {

@@ -13,7 +13,8 @@
     <div class="file-view-wrap fade in">
       <header class="file-header">
         <div class="file-header-title">
-          <span v-show='breadcrumb.length' @click="breadcrumbClick(item.fileId)" v-for="(item) in breadcrumb" :key="item.fileId">{{item.fileName}}＞</span>
+          <!-- <span v-show='breadcrumb.length' @click="breadcrumbClick(item.fileId)" v-for="(item) in breadcrumb" :key="item.fileId">{{item.fileName}}＞</span> -->
+          项目文件
         </div>
         <div class="file-header-add">
           <a href="javascript:void(0)" @click="showAddFolder=!showAddFolder">
@@ -324,7 +325,7 @@ import commonFile from "./commonfile.vue";
 import fileDetail from "./fileDetail";
 import modelFileDetail from "./modelFileDetail";
 import fileCanSee from "./fileCanSee";
-import { mapState, mapActions, mapMutations,mapGetters } from "vuex";
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import { getFileDetails, getChildFiles } from "@/axios/fileApi";
 import {
   changeName,
@@ -355,7 +356,6 @@ export default {
   },
   data() {
     return {
- 
       show: true,
       asyncData: [],
       curtag: "",
@@ -423,7 +423,7 @@ export default {
 
     treeData: {
       handler: function(val, oldVal) {
-         console.log(val,oldVal)
+        console.log(val, oldVal);
       },
       deep: true
     },
@@ -442,10 +442,10 @@ export default {
     }
   },
   computed: {
-    ...mapState("file", ["files", "filePath", "treeData", "tags",'breadcrumb']),
+    ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb"])
   },
   mounted: function() {
-    console.log(localStorage);
+    console.log(">>>>>>>>", this.fileId);
     if (localStorage.view) {
       this.view = localStorage.view;
     }
@@ -454,11 +454,9 @@ export default {
     this.initFile(params).then(res => {
       this.loading = false;
     });
-    let data={fileId:this.fileId,projectId:this.projectId}
-    
-    this.initFolders(data).then(res => {
+    let data = { fileId: this.fileId, projectId: this.projectId };
 
-    });
+    this.initFolders(data).then(res => {});
     this.initTag(this.projectId).then(res => {});
   },
   filters: {
@@ -604,9 +602,8 @@ export default {
       this.initFile(params).then(res => {
         this.loading = false;
       });
-      let data={fileId:this.folderId,projectId:this.projectId}
-        this.initFolders(data).then(res => {
-      });
+      let data = { fileId: this.folderId, projectId: this.projectId };
+      this.initFolders(data).then(res => {});
     },
     // 选中要移动到哪
     breadcrumbClick(id) {
@@ -615,16 +612,14 @@ export default {
       this.initFile(params).then(res => {
         this.loading = false;
       });
-      let data={fileId:id,projectId:this.projectId}
-        this.initFolders(data).then(res => {
-      });
-
+      let data = { fileId: id, projectId: this.projectId };
+      this.initFolders(data).then(res => {});
     },
 
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file) {
       //获取目录
-      let data={fileId:id,projectId:this.projectId}
+      let data = { fileId: id, projectId: this.projectId };
       this.initFolders(data).then(res => {});
       if (".svf".includes(file.ext)) {
         // 模型文件
@@ -696,7 +691,7 @@ export default {
       this.showMove = true;
       this.footerTxt = "跨项目复制时，部分信息不会被保留。";
     },
-    
+
     itemClick(node) {},
     // 取消 移动复制
     cancelRemoveClone() {

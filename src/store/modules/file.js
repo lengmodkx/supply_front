@@ -19,9 +19,9 @@ const store = {
         files: [],
         file: {},
         joinInfoIds: [],
-        treeData:[],
-        tags:[],
-        breadcrumb:[
+        treeData: [],
+        tags: [],
+        breadcrumb: [
             // {
             //     text: "项目文件夹",
             //     id: 'sss'
@@ -33,13 +33,13 @@ const store = {
         initFile(state, data) {
             state.files = data;
         },
-        searchFile(state,data){
+        searchFile(state, data) {
             state.files = data;
         },
-        initTag(state,data){
-            state.tags=data;
+        initTag(state, data) {
+            state.tags = data;
         },
-        
+
         // 文件详情 赋值
         putOneFile(state, data) {
             state.file = data
@@ -105,7 +105,7 @@ const store = {
         },
         // 推送 关联
         relevance(state, data) {
-            console.log("----------"+JSON.stringify(data));
+            console.log("----------" + JSON.stringify(data));
             if (data.publicType === '任务') {
                 state.file.data.bindTasks = state.file.data.bindTasks.concat(data.bind)
             } else if (data.publicType === '分享') {
@@ -153,16 +153,19 @@ const store = {
         createWjj(state, data) {
             state.files = data
         },
-        initFolders(state,data){
-            state.treeData=data
+        initFolders(state, data) {
+            state.treeData = data
 
         },
-        initBreadcrumb(state,data){
-            state.breadcrumb=data.reverse()
+        initBreadcrumb(state, data) {
+            state.breadcrumb = data.reverse()
         }
     },
     actions: {
-        initFile({  commit,state}, data) {
+        initFile({
+            commit,
+            state
+        }, data) {
             return new Promise((resolve, reject) => {
                 files(data).then(res => {
                     if (res.result == 1) {
@@ -182,43 +185,54 @@ const store = {
             })
         },
         // 推送 隐私模式
-        putMimi({commit }, data) {
+        putMimi({
+            commit
+        }, data) {
             getTSFile(data).then(res => {
                 commit("upFiles", res)
             })
         },
-        initFolders({commit},data){
-            getFolders(data.fileId,data.projectId).then(res=>{
-                commit("initFolders",res.data)
-                commit("initBreadcrumb",res.data2)
+        initFolders({
+            commit
+        }, data) {
+            getFolders(data.fileId, data.projectId).then(res => {
+                commit("initFolders", res.data)
+                commit("initBreadcrumb", res.data2)
+                console.log(">>>>>>>>>", res.data2)
             })
         },
         //搜索文件
-        searchFile({commit},data){
-            if(data.tag){
+        searchFile({
+            commit
+        }, data) {
+            if (data.tag) {
                 //tag搜索
-                getFileByTag(data.tag).then(res=>{
-                    commit("searchFile",res.data)
+                getFileByTag(data.tag).then(res => {
+                    commit("searchFile", res.data)
                 })
-            }else{
+            } else {
                 //搜索条
-                searchFile(data.fileName,data.projectId).then(res=>{
-                    commit("searchFile",res.data)
+                searchFile(data.fileName, data.projectId).then(res => {
+                    commit("searchFile", res.data)
                 })
             }
-           
+
         },
-        initTag({commit},data){
-            allTags(data).then(res=>{
+        initTag({
+            commit
+        }, data) {
+            allTags(data).then(res => {
                 console.log(res)
-                commit("initTag",res.data)
+                commit("initTag", res.data)
             })
         },
         // 更新文件详情
-        putOneFile ({commit}, data) {
+        putOneFile({
+            commit
+        }, data) {
             getFileDetails(data).then(res => {
                 console.log(res)
-                commit('putOneFile',res)
+                commit('putOneFile', res)
             })
         },
     }
