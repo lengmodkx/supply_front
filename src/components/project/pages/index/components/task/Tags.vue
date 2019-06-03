@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <div class="tagtitle" v-if="taglist.length==0">
-      <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow($event)" />
-    </div> -->
     <div class="list" ref="addIcon">
       <Tag v-if="taglist.length>0"
          v-for="(item,index) in taglist" 
@@ -10,113 +7,95 @@
          :style="`background-color:${item.bgColor};`" closable  @on-close="handleClose">
          {{ item.tagName}}
       </Tag>
-      <!-- <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click.native="popShow"></Icon> -->
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="showTag=true"></Icon>
     </div>
-    <Modal v-model="showTag" :mask-closable="false" :width="300" >
+    <Modal v-model="showTag" :mask-closable="false" :width="380" >
       <div class="content" >
-      <div class="div1" v-if="showdiv1">
-        <!--无任何标签的情况 -->
-        <div class="tag_input clearfix">
-          <Input class="search fl" v-model="searchTag" placeholder="搜索标签" autofocus />
-          <div class="add-icon fl">
-            <Tooltip content="新建标签" placement="top">
-              <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="addTag"></Icon>
-            </Tooltip>
-          </div>
-        </div>
-        <div class="conBox">
-          <div class="noTag" v-if="totalTag.length==0" style="text-align:center;padding-top:8px">
-            <img :src="require('@/assets/images/tag.png')" width="50px" />
-            <p style="color:#a6a6a6;">暂无标签</p>
-          </div>
-          <!-- 有默认标签的时候 -->
-          <div class="hasTag" v-if="totalTag.length>0">
-            <div v-for="(tag,index) in totalTag" :key="index" class="clearfix tag-list" @click="chooseTag(tag)">
-              <i class="color" :style="`background-color:${tag.bgColor}`"></i>
-              <span>{{tag.tagName}}</span>
-              <div class="fr">
-                <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
-                <svg-icon name="right" v-if="totalTag.flag" class="right"></svg-icon>
+          <div class="div1" v-if="showdiv1">
+            <!--无任何标签的情况 -->
+            <div class="tag_input clearfix">
+               <Input class="search fl"  enter-button placeholder="搜索标签"  @on-enter="search" v-model="searchTag" />
+              <!-- <Input class="search fl" v-model="searchTag" placeholder="搜索标签" autofocus /> -->
+              <div class="add-icon fl">
+                <Tooltip content="新建标签" placement="top">
+                  <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="addTag"></Icon>
+                </Tooltip>
+              </div>
+            </div>
+            <div class="conBox">
+              <div class="noTag" v-if="taglist.length==0" style="text-align:center;padding-top:8px">
+                <img :src="require('@/assets/images/tag.png')" width="50px" />
+                <p style="color:#a6a6a6;">暂无标签</p>
+              </div>
+              <!-- 有默认标签的时候 -->
+              <div class="hasTag" v-if="taglist.length>0&&showSearch==false">
+                
+                <div v-for="(tag,index) in taglist" :key="index" class="clearfix tag-list" @click="chooseTag(tag)">
+                  <i class="color" :style="`background-color:${tag.bgColor}`"></i>
+                  <span>{{tag.tagName}}</span>
+                  <div class="fr">
+                    <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
+                    <svg-icon name="right" v-if="totalTag.flag" class="right"></svg-icon>
+                  </div>
+                </div>
+              </div>
+              <!-- 搜索的时候 -->
+              <div class="hasTag" v-if="taglist.length>0&showSearch==true">
+                <div v-for="(tag,index) in totalTag" :key="index" class="clearfix tag-list" @click="chooseTag(tag)">
+                  <i class="color" :style="`background-color:${tag.bgColor}`"></i>
+                  <span>{{tag.tagName}}</span>
+                  <div class="fr">
+                    <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
+                    <svg-icon name="right" v-if="totalTag.flag" class="right"></svg-icon>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <!-- <div class="createTag" v-if="tagAdd">
-            <ul class="tagcolor clearfix">
-              <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
-                <div class="circle" :style="`background-color:${color}`">
-                  <span class="markbox" v-if="color==checkedColor">
-                    <Icon type="md-checkmark" class="mark"></Icon>
-                  </span>
-                </div>
-              </li>
-            </ul>
-            <Button type="primary" long @click="createNew">创建</Button>
-          </div> -->
-
-        </div>
-
-      </div>
-      <!-- 新建 -->
-      <div class="div2 clearfix" v-if="showdiv2">
-        <div class="d2Header">
-          <span class="back fl" @click="showdiv2=false;showdiv1=true;">
-            <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
-          </span>
-          {{isEdit?'编辑标签':'新建标签'}}
-            <span class="close-tag fr"></span>
-          <!-- <span class="close-tag fr" @click="Popvisible=false;showdiv1=true;showdiv2=false">
-            <Icon type="md-close" size="24"></Icon>
-          </span> -->
-        </div>
-        <Input style="padding:8px 8px;" :maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
-        <div class="createTag">
-          <ul class="tagcolor clearfix">
-            <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
-              <div class="circle" :style="`background-color:${color}`">
-                <span class="markbox" v-if="color==checkedColor">
-                  <Icon type="md-checkmark" class="mark" v-if="color==checkedColor" />
-                </span>
+          <!-- 新建 -->
+          <div class="div2 clearfix" v-if="showdiv2">
+            <div class="d2Header">
+              <span class="back fl" @click="showdiv2=false;showdiv1=true;">
+                <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
+              </span>
+              {{isEdit?'编辑标签':'新建标签'}}
+                <span class="close-tag fr"></span>
+            </div>
+            <Input style="padding:8px 8px;" :maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
+            <div class="createTag">
+              <ul class="tagcolor clearfix">
+                <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
+                  <div class="circle" :style="`background-color:${color}`">
+                    <span class="markbox" v-if="color==checkedColor">
+                      <Icon type="md-checkmark" class="mark" v-if="color==checkedColor" />
+                    </span>
+                  </div>
+                </li>
+              </ul>
+              <div class="btnBox">
+                <Button long v-if="isEdit" @click="showdiv2=false;showdiv3=true">删除</Button>
+                <Button class="crtBtn" type="primary" long :disabled="!tagName" @click="finish" :loading="loading">{{isEdit?'完成':'创建'}}</Button>
               </div>
-            </li>
-          </ul>
-          <div class="btnBox">
-            <Button long v-if="isEdit" @click="showdiv2=false;showdiv3=true">删除</Button>
-            <Button class="crtBtn" type="primary" long :disabled="!tagName" @click="finish" :loading="loading">{{isEdit?'完成':'创建'}}</Button>
+            </div>
           </div>
-        </div>
-      </div>
-      <!-- 删除标签 页 -->
-      <div class="div3" v-if="showdiv3">
-        <div class="d2Header">
-          <span class="back fl" @click="showdiv3=false;showdiv1=true;">
-            <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
-          </span>
-          删除标签
-          <span class="close-tag fr" @click="Popvisible=false">
-            <Icon type="android-close" size="24"></Icon>
-          </span>
-        </div>
-
-        <div class="confirm">确认删除标签？</div>
-        <div class="btnBox">
-          <Button class="crtBtn" type="error" long @click="deleteTag">删除</Button>
-        </div>
-
-      </div>
-    </div>
-            
+          <!-- 删除标签 页 -->
+          <div class="div3" v-if="showdiv3">
+            <div class="d2Header">
+              <span class="back fl" @click="showdiv3=false;showdiv1=true;">
+                <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
+              </span>
+              删除标签
+              <span class="close-tag fr" @click="Popvisible=false">
+                <Icon type="android-close" size="24"></Icon>
+              </span>
+            </div>
+            <div class="confirm">确认删除标签？</div>
+            <div class="btnBox">
+              <Button class="crtBtn" type="error" long @click="deleteTag">删除</Button>
+            </div>
+          </div>
+       </div>
     </Modal>
-   
-
-
-
-   
-
-
-
-
-
   </div>
 </template>
 <script>
@@ -135,6 +114,7 @@ export default {
   props: ["taglist", "publicId", "publicType", "projectId",'fileTask'],
   data() {
     return {
+      showSearch:false,
       showTag:false,
       searchTag: "",
       showdiv1: true,
@@ -161,32 +141,40 @@ export default {
     };
   },
   watch: {
-    searchTag() {
-      this.search();
-    },
     offsetLeft(newl, oldl){
       console.log(oldl,newl)
-      }
+      },
+    taglist:{
+       handler:function(newValue,oldValue){
+            console.log("taglist"+newValue)
+       },
+       deep:true
+    }
+    
   },
   methods: {
     search() {
       if (this.searchTag) {
+        this.showSearch=true;
         searchTags({ key: this.searchTag }).then(res => {
           if (res.result === 1) {
             this.totalTag = res.data;
           }
         });
-      } else {
-        let params = {
-          publicId: this.publicId,
-          publicType: this.publicType
-        };
-        allTags(this.projectId, params).then(res => {
-          if (res.result === 1) {
-            this.totalTag = res.data;
-          }
-        });
+      } else{
+         this.showSearch=false;
       }
+      // else {
+      //   let params = {
+      //     publicId: this.publicId,
+      //     publicType: this.publicType
+      //   };
+      //   allTags(this.projectId, params).then(res => {
+      //     if (res.result === 1) {
+      //       this.totalTag = res.data;
+      //     }
+      //   });
+      // }
     },
     handleClose(event, id) {
       removeInfoTag(id,this.publicId,this.publicType).then(res => {
@@ -240,8 +228,6 @@ export default {
       this.Popvisible = flag;
     },
     popShow() {
-     
-
       this.Popvisible = !this.Popvisible;
       if (this.Popvisible) {
         let params = {
@@ -315,11 +301,18 @@ export default {
           }
         });
       }
-    }
+    },
+
+  },
+  created(){
+    console.log(this.taglist)
   }
 };
 </script>
 <style scoped lang="less">
+.hasTag{
+  min-height: 100px;
+}
 .div1 {
   .tag_input {
     display: flex;
@@ -483,7 +476,7 @@ export default {
 }
 .content {
   padding-top:30px;
-  // width: 270px;
+  width: 350px;
   // position: absolute;
   // border: 1px solid #eeeeee;
   // background-color: #fff;

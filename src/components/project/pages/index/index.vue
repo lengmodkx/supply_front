@@ -61,7 +61,6 @@
                         dragClass: 'dragClass',
                         fallbackClass: 'fallbackClass'}" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
-
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="check">
                     <div @click.stop class="checkbox-wrap">
