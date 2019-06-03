@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="list" ref="addIcon">
-      <Tag v-if="taglist.length>0"
-         v-for="(item,index) in taglist" 
-         :key="index" :name="item.tagId" 
+      <Tag v-if="taglist.length>0" v-for="(item,index) in taglist" :key="index" :name="item.tagId" 
          :style="`background-color:${item.bgColor};`" closable  @on-close="handleClose">
          {{ item.tagName}}
       </Tag>
@@ -32,8 +30,8 @@
                   <i class="color" :style="`background-color:${tag.bgColor}`"></i>
                   <span>{{tag.tagName}}</span>
                   <div class="fr">
-                    <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
-                    <svg-icon name="right" v-if="tag.flag" class="right"></svg-icon>
+                    <svg-icon name="edit" @click.stop="editTag(tag)" class="edit" style="float:left;margin-right:10px;border: 1px solid #ff0000;"></svg-icon>
+                    <svg-icon name="right" v-if="tag.flag" class="right" style=" float:left; border: 1px solid #ccc;"></svg-icon>
                   </div>
                 </div>
               </div>
@@ -160,6 +158,27 @@ export default {
         this.showSearch=false;
         this.searchTag='';
     },
+     editTag(data) {
+      //编辑
+      this.isEdit = true;
+      this.tag = data;
+      this.showdiv1 = false;
+      this.showdiv2 = true;
+      this.tagName = data.tagName;
+    },
+    addTag() {
+      this.isEdit = false;
+      if (this.searchTag == "") {
+        //输入框里的值为空时，跳到新建页
+        this.showdiv1 = false;
+        this.showdiv2 = true;
+      } else {
+        //输入框里的值不为空时，点击这个加号就发请求(创建)并跳到第一页
+        //如果输入的内容再tag列表中有，那么提示用户不能创建相同名字的标签
+        this.searchTag = "";
+        this.showdiv1 = true;
+      }
+    },
     search() {
       //搜索
       if (this.searchTag) {
@@ -188,30 +207,8 @@ export default {
         }
       })
     },
-    editTag(data) {
-      this.isEdit = true;
-      this.tag = data;
-      this.showdiv1 = false;
-      this.showdiv2 = true;
-      this.tagName = data.tagName;
-    },
-    addTag() {
-      this.isEdit = false;
-      if (this.searchTag == "") {
-        //输入框里的值为空时，跳到新建页
-        this.showdiv1 = false;
-        this.showdiv2 = true;
-      } else {
-        //输入框里的值不为空时，点击这个加号就发请求(创建)并跳到第一页
-        //如果输入的内容再tag列表中有，那么提示用户不能创建相同名字的标签
-        this.searchTag = "";
-        this.showdiv1 = true;
-      }
-    },
-
     deleteTag() {
       this.searchTag=''
-
       //删除标签
       this.showdiv3 = false;
       this.showdiv1 = true;
@@ -219,7 +216,6 @@ export default {
         publicId: this.publicId,
         publicType: this.publicType
       };
-
       delTag(this.tag.tagId).then(res => {
         if (res.result === 1) {
           let i = this.taglist.indexOf(this.tag);
@@ -241,46 +237,9 @@ export default {
               });
         })
     },
-    reset(flag) {
-      alert(flag)
-      //Object.assign(this.$data, this.$options.data());
-      this.Popvisible = flag;
-    },
-    popShow() {
-      this.Popvisible = !this.Popvisible;
-      if (this.Popvisible) {
-        let params = {
-          publicId: this.publicId,
-          publicType: this.publicType
-        };
-        allTags(this.projectId, params).then(res => {
-          if (res.result === 1) {
-            this.totalTag = res.data;
-          }
-        });
-      }
-      if(this.fileTask=='fileTask'){
-         this.offsetLeft=80+"px"
-      }else{
-           if(this.$refs.addIcon.offsetWidth + 45>300){
-            this.offsetLeft=270+"px"
-            }else{
-              this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
-            }
     
-      }
-     
-      console.log(this.offsetLeft)
-    },
-    popHide() {
-      setTimeout(_ => {
-        this.reset();
-      }, 300);
-    },
-    closeTag(){
-      this.Popvisible = false
-    },
     chooseTag(tag) {
+      //绑定标签
       bindingTag(tag.tagId,this.publicId,this.publicType).then(res => {
         if(res.result === 1){
           this.$Message.success(res.msg)
@@ -290,7 +249,7 @@ export default {
       })
     },
     finish() {
-      
+      //修改标签 //创建标签
       if (this.isEdit) {
         //修改标签
         let params = {
@@ -298,12 +257,10 @@ export default {
           tagName: this.tag.tagName,
           bgColor: this.tag.checkedColor
         };
-
         let data = {
           publicId: this.publicId,
           publicType: this.publicType
         };
-
         modifyTag(this.tag.tagId, params).then(res => {
           if (res.result === 1) {
             this.showdiv1 = true;
@@ -327,12 +284,10 @@ export default {
           tagName: this.tagName,
           bgColor: this.checkedColor
         };
-
         let data = {
           publicId: this.publicId,
           publicType: this.publicType
         };
-
         addTagAndBind(params).then(res => {
           this.loading = false;
           if(res.result === 1){
@@ -349,12 +304,47 @@ export default {
                 }
               });
         })
-
-
-        
-        
       }
     },
+    popHide() {
+      setTimeout(_ => {
+        this.reset();
+      }, 300);
+    },
+    reset(flag) {
+      alert(flag)
+      //Object.assign(this.$data, this.$options.data());
+      this.Popvisible = flag;
+    },
+     closeTag(){
+      this.Popvisible = false
+    },
+    // popShow() {
+    //   this.Popvisible = !this.Popvisible;
+    //   if (this.Popvisible) {
+    //     let params = {
+    //       publicId: this.publicId,
+    //       publicType: this.publicType
+    //     };
+    //     allTags(this.projectId, params).then(res => {
+    //       if (res.result === 1) {
+    //         this.totalTag = res.data;
+    //       }
+    //     });
+    //   }
+    //   if(this.fileTask=='fileTask'){
+    //      this.offsetLeft=80+"px"
+    //   }else{
+    //        if(this.$refs.addIcon.offsetWidth + 45>300){
+    //         this.offsetLeft=270+"px"
+    //         }else{
+    //           this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
+    //         }
+    
+    //   }
+     
+    //   console.log(this.offsetLeft)
+    // },
 
   },
   created(){
@@ -398,10 +388,11 @@ export default {
       flex: none;
     }
     span {
-      width: 280px;
+      width: 260px;
+      overflow:hidden;
     }
     .fr {
-        width: 50px;
+        width: 70px;
       svg {
         width: 15px;
         cursor: pointer;
@@ -409,6 +400,7 @@ export default {
       }
       .edit {
         display: none;
+       
         &:hover {
           color: #3da8f5;
         }
