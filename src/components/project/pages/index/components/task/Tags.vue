@@ -7,49 +7,37 @@
          :style="`background-color:${item.bgColor};`" closable  @on-close="handleClose">
          {{ item.tagName}}
       </Tag>
-      <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="showTag=true"></Icon>
+      <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;cursor:pointer" @click="open"></Icon>
     </div>
-    <Modal v-model="showTag" :mask-closable="false" :width="380" >
+    <Modal  v-model="showTag" :mask-closable="false" :width="380" @on-cancel="cancel">
       <div class="content" >
           <div class="div1" v-if="showdiv1">
             <!--无任何标签的情况 -->
             <div class="tag_input clearfix">
                <Input class="search fl"  enter-button placeholder="搜索标签"  @on-enter="search" v-model="searchTag" />
-              <!-- <Input class="search fl" v-model="searchTag" placeholder="搜索标签" autofocus /> -->
               <div class="add-icon fl">
                 <Tooltip content="新建标签" placement="top">
-                  <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;" @click="addTag"></Icon>
+                  <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;cursor:pointer" @click="addTag"></Icon>
                 </Tooltip>
               </div>
             </div>
             <div class="conBox">
-              <div class="noTag" v-if="taglist.length==0" style="text-align:center;padding-top:8px">
+              <div class="noTag" v-if="totalTag.length==0" style="text-align:center;padding-top:8px">
                 <img :src="require('@/assets/images/tag.png')" width="50px" />
                 <p style="color:#a6a6a6;">暂无标签</p>
               </div>
               <!-- 有默认标签的时候 -->
-              <div class="hasTag" v-if="taglist.length>0&&showSearch==false">
-                
-                <div v-for="(tag,index) in taglist" :key="index" class="clearfix tag-list" @click="chooseTag(tag)">
-                  <i class="color" :style="`background-color:${tag.bgColor}`"></i>
-                  <span>{{tag.tagName}}</span>
-                  <div class="fr">
-                    <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
-                    <svg-icon name="right" v-if="totalTag.flag" class="right"></svg-icon>
-                  </div>
-                </div>
-              </div>
-              <!-- 搜索的时候 -->
-              <div class="hasTag" v-if="taglist.length>0&showSearch==true">
+              <div class="hasTag" v-if="totalTag.length>0">
                 <div v-for="(tag,index) in totalTag" :key="index" class="clearfix tag-list" @click="chooseTag(tag)">
                   <i class="color" :style="`background-color:${tag.bgColor}`"></i>
                   <span>{{tag.tagName}}</span>
                   <div class="fr">
                     <svg-icon name="edit" @click.stop="editTag(tag)" class="edit"></svg-icon>
-                    <svg-icon name="right" v-if="totalTag.flag" class="right"></svg-icon>
+                    <svg-icon name="right" v-if="tag.flag" class="right"></svg-icon>
                   </div>
                 </div>
               </div>
+             
             </div>
           </div>
           <!-- 新建 -->
@@ -61,7 +49,8 @@
               {{isEdit?'编辑标签':'新建标签'}}
                 <span class="close-tag fr"></span>
             </div>
-            <Input style="padding:8px 8px;" :maxlength='10'  v-model="tagName" placeholder="标签名称" ref="input" />
+            <Input style="padding:8px 8px;" v-if='isEdit' :maxlength='10'  v-model="tag.tagName" placeholder="编辑标签" ref="input" />
+             <Input style="padding:8px 8px;" v-else :maxlength='10'  v-model="tagName" placeholder="新建标签" ref="input" /> 
             <div class="createTag">
               <ul class="tagcolor clearfix">
                 <li v-for="(color,i) in colorList" :key="i" @click="checkedColor=color">
@@ -153,30 +142,46 @@ export default {
     
   },
   methods: {
+    open(){
+      //打开弹框
+        this.showTag=true;
+        let params = {
+              publicId: this.publicId,
+              publicType: this.publicType
+            };
+        allTags(this.projectId, params).then(res => {
+          if (res.result === 1) {
+            this.totalTag = res.data;
+          }
+        });
+    },
+    cancel(){
+      //关闭弹框
+        this.showSearch=false;
+        this.searchTag='';
+    },
     search() {
+      //搜索
       if (this.searchTag) {
-        this.showSearch=true;
         searchTags({ key: this.searchTag }).then(res => {
           if (res.result === 1) {
             this.totalTag = res.data;
           }
         });
-      } else{
-         this.showSearch=false;
+      } else {
+        let params = {
+          publicId: this.publicId,
+          publicType: this.publicType
+        };
+        allTags(this.projectId, params).then(res => {
+          if (res.result === 1) {
+            this.totalTag = res.data;
+          }
+        });
       }
-      // else {
-      //   let params = {
-      //     publicId: this.publicId,
-      //     publicType: this.publicType
-      //   };
-      //   allTags(this.projectId, params).then(res => {
-      //     if (res.result === 1) {
-      //       this.totalTag = res.data;
-      //     }
-      //   });
-      // }
     },
     handleClose(event, id) {
+      //移除
       removeInfoTag(id,this.publicId,this.publicType).then(res => {
         if(res.result === 1){
           this.$Message.success(res.msg)
@@ -205,9 +210,16 @@ export default {
     },
 
     deleteTag() {
+      this.searchTag=''
+
       //删除标签
       this.showdiv3 = false;
       this.showdiv1 = true;
+      let data = {
+        publicId: this.publicId,
+        publicType: this.publicType
+      };
+
       delTag(this.tag.tagId).then(res => {
         if (res.result === 1) {
           let i = this.taglist.indexOf(this.tag);
@@ -220,7 +232,14 @@ export default {
             });
           }
         }
-      });
+      }).then(res=>{
+              allTags(this.projectId, data).then(res => {
+                if (res.result === 1) {
+                  this.totalTag = res.data;
+
+                }
+              });
+        })
     },
     reset(flag) {
       alert(flag)
@@ -265,10 +284,13 @@ export default {
       bindingTag(tag.tagId,this.publicId,this.publicType).then(res => {
         if(res.result === 1){
           this.$Message.success(res.msg)
+        }else{
+          this.$Message.error(res.msg)
         }
       })
     },
     finish() {
+      
       if (this.isEdit) {
         //修改标签
         let params = {
@@ -276,12 +298,25 @@ export default {
           tagName: this.tag.tagName,
           bgColor: this.tag.checkedColor
         };
+
+        let data = {
+          publicId: this.publicId,
+          publicType: this.publicType
+        };
+
         modifyTag(this.tag.tagId, params).then(res => {
           if (res.result === 1) {
             this.showdiv1 = true;
             this.showdiv2 = false;
           }
-        });
+        }).then(res=>{
+              allTags(this.projectId, data).then(res => {
+                if (res.result === 1) {
+                  this.totalTag = res.data;
+
+                }
+              });
+        })
       } else {
         //创建标签
         this.loading = true;
@@ -292,6 +327,12 @@ export default {
           tagName: this.tagName,
           bgColor: this.checkedColor
         };
+
+        let data = {
+          publicId: this.publicId,
+          publicType: this.publicType
+        };
+
         addTagAndBind(params).then(res => {
           this.loading = false;
           if(res.result === 1){
@@ -299,7 +340,19 @@ export default {
           } else{
             this.$Message.error(res.msg)
           }
-        });
+        }).then(res=>{
+        
+              allTags(this.projectId, data).then(res => {
+                if (res.result === 1) {
+                  this.totalTag = res.data;
+
+                }
+              });
+        })
+
+
+        
+        
       }
     },
 
@@ -312,6 +365,8 @@ export default {
 <style scoped lang="less">
 .hasTag{
   min-height: 100px;
+  max-height: 260px;
+  overflow-y: scroll;
 }
 .div1 {
   .tag_input {
@@ -343,9 +398,10 @@ export default {
       flex: none;
     }
     span {
-      width: 205px;
+      width: 280px;
     }
     .fr {
+        width: 50px;
       svg {
         width: 15px;
         cursor: pointer;
