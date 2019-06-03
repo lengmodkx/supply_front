@@ -130,7 +130,10 @@
               <Icon type="ios-pricetags-outline"></Icon>标签
             </span>
             <!-- 取到data.tag了再添加孙子辈组件 -->
-            <Tags ref="tags" :fileTask='"fileTask"' :taglist="file.data.tagList" :publicId="file.data.fileId" :publicType="publicType" :projectId="file.data.projectId"></Tags>
+
+             <!-- :fileTask='"fileTask"' -->
+            <Tags ref="tags"  :taglist="file.data.tagList" :publicId="file.data.fileId" :publicType="publicType" :projectId="file.data.projectId"></Tags>
+           
           </div>
           <!--关联-->
           <div class="relevance">
@@ -343,7 +346,8 @@
 
 <script>
 //import Tags from "@/components/project/pages/index/components/task/Tags";
-import Tags from "./Tags.vue";
+// import Tags from "./Tags.vue";
+import Tags from "../../public/Tags.vue";
 import AddRelation from "@/components/public/common/AddRelation";
 import log from "@/components/public/log";
 import Emoji from "@/components/public/common/emoji/Emoji";
