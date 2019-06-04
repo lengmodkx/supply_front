@@ -31,10 +31,49 @@
                 <div class="recycle-list" v-for="(item, index) in dataList" :key="index">
                     <p class="name">{{item.name}}</p>
                     <p class="time">{{item.updateTime | timeFilter}}</p>
-                    <div class="operate">
-                        <div><Icon type="md-refresh" @click="recoverIt(item.id)" />恢复内容</div>
+                    <div class="operate">                     
+                        <Poptip class="task-menuwrapper" placement="bottom" transfer  trigger="hover">
+                            <div slot="content" class="task-menuwrapper-content" v-if="nowChecked==='task'">
+                                    <div class="con6" >
+                                    <div class="con5item2">
+                                      <span>项目</span>
+                                        <template>
+                                            <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                                            <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+                                            </Select>
+                                        </template>
+                                    </div>
+                                    <div class="con5item2">
+                                      <span>分组</span>
+                                        <template>
+                                            <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                                            <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+                                            </Select>
+                                        </template>
+                                    </div>
+                                    <div class="con5item2">
+                                      <span>列表</span>
+                                        <template>
+                                            <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                                            <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+                                            </Select>
+                                        </template>
+                                    </div>
+                                    
+                                    <div class="con5tip">你可以在任务板中添加和修改任务分组及任务列表</div>
+                                    <Button type="primary" long @click="removeSure">确定</Button>
+                                    </div>
+                            </div>
+                            <div slot="content"  class="task-menuwrapper-content"  v-else>
+                                <div class="dropdownTitle">
+                                    恢复内容
+                                </div>
+                                <div class="con5tip">恢复内容后将移动至根目录，确认恢复内容？</div>
+                                <Button type="primary" long @click="removeSure">确定</Button>
+                            </div>
+                            <div  @click="recoverIt(item.id)" ><Icon type="md-refresh"/>恢复内容</div>
+                        </Poptip>
                         <div><Icon type="ios-trash-outline" @click="deleteForever(item.id)" />彻底删除</div>
-
                     </div>
                 </div>
             </div>
@@ -52,7 +91,8 @@
             return {
                 dataList: [],
                 nowChecked: 'task',
-                projectId:this.$route.params.id
+                projectId:this.$route.params.id,
+                groupList:[],
             }
         },
         mounted() {
@@ -77,16 +117,58 @@
             },
             // 恢复内容
             recoverIt (id) {
-                alert(id)
+                if(this.nowChecked=='task'){
+                        console.log(this.nowChecked)
+                }
+
+                
             },
             // 永久删除
             deleteForever (id) {
                 alert(id)
             },
+            removeSure(){
+
+            },
+           
+            getMenuLists(groupId) {
+              //获取菜单数据
+            },
         }
     }
 </script>
 <style socped lang="less">
+.task-menuwrapper-content {
+    .con5tip {
+      white-space: pre-wrap;
+      font-size: 12px;
+      font-weight: normal;
+      color: #555;
+      margin: 8px 0;
+    }
+}
+
+.dropdownTitle {
+    color: #555;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 40px;
+    border-bottom: 1px solid #eee;
+   // margin-bottom: 12px;
+    &:hover {
+      background: #fff;
+    }
+    .closePop {
+      vertical-align: middle;
+      width: 15px;
+      height: 15px;
+      fill: #8a8a8a;
+      &:hover {
+        fill: #3da8f5;
+      }
+    }
+  }
 .recycle-con{
     width: 100%;
     height: 100%;
@@ -156,7 +238,9 @@
             white-space: nowrap;
         }
         .operate{
+            
             display: none;
+            
             position: absolute;
             right: 0;
             top: 0;
@@ -164,6 +248,8 @@
             align-items: center;
             background-color: #f7f7f7;
             div{
+                width: 100px;
+                height: 50px;
                 margin-right: 16px;
                 cursor: pointer;
                 display: flex;
