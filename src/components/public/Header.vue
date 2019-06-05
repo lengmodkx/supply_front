@@ -46,7 +46,8 @@
             </li>
           </ul>
           <ul class="admin">
-            <li>账号设置</li>
+            <!-- <li @click="personal"> 账号设置</li> -->
+            <li > 账号设置</li>
           </ul>
           <ul class="logOut">
             <router-link tag="li" to="/">退出登录</router-link>
@@ -172,6 +173,9 @@ export default {
         err => {}
       );
     },
+    personal(){
+      this.$router.push("/personal");
+    },
     pathClick(path) {
       this.$router.push(path);
       this.popVisible=false
@@ -269,4 +273,5 @@ export default {
   height: calc(100% - 48px) !important;
   overflow-y: auto !important;
 }
+
 </style>
