@@ -28,9 +28,9 @@
                 <header class="recycle-head">
                     <span>名称</span><span>修改时间</span>
                 </header>
-                <div class="recycle-list" v-for="(item, index) in dataList" :key="index">
-                    <p class="name">{{item.name}}</p>
-                    <p class="time">{{item.updateTime | timeFilter}}</p>
+                <div class="recycle-list" v-for="(info, index) in dataList" :key="index">
+                    <p class="name">{{info.name}}</p>
+                    <p class="time">{{info.updateTime | timeFilter}}</p>
                     <div class="operate">                     
                         <Poptip class="task-menuwrapper" placement="bottom" transfer  trigger="hover">
                                 <div slot="content" class="task-menuwrapper-content">
@@ -40,13 +40,16 @@
                                         </div>
                                         <div  v-if="nowChecked==='task'">
                                             <div class="con6" >
-                                            <div class="con5item2">
+                                            <div class="con5item2" @on-open-change="getProjectList" @on-change="getGroupList">
                                                 <span>项目</span>
-                                                <template>
-                                                    <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
-                                                    <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
-                                                    </Select>
-                                                </template>
+                                                <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
+                                                    <OptionGroup label="星标项目">
+                                                        <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+                                                    </OptionGroup>
+                                                    <OptionGroup label="非星标项目">
+                                                        <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+                                                    </OptionGroup>
+                                                </Select>
                                             </div>
                                             <div class="con5item2">
                                                 <span>分组</span>
@@ -59,18 +62,18 @@
                                             <div class="con5item2">
                                                 <span>列表</span>
                                                 <template>
-                                                    <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
-                                                    <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+                                                    <Select  style="width:150px" placeholder="当前列表" @on-change="getMenuId">
+                                                    <Option v-for="item in menuList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
                                                     </Select>
                                                 </template>
                                             </div>                                 
                                             <div class="con5tip">你可以在任务板中添加和修改任务分组及任务列表</div>
-                                            <Button type="primary" long @click="removeSure">确定</Button>
+                                            <Button type="primary" long @click="recycleTask(info.id)">确定</Button>
                                             </div>
                                         </div>
                                         <div   v-else>
                                                 <div class="con5tip">恢复内容后将移动至根目录，确认恢复内容？</div>
-                                                <Button type="primary" long @click="removeSure">确定</Button>
+                                                <Button type="primary" long @click="recycleSure(info.id)">确定</Button>
                                         </div>                                     
                                 </div>
                             
@@ -91,6 +94,8 @@
     </div>
 </template>
 <script>
+    import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
+    import {recycle} from "@/axios/recycleBinApi";
     import {getRecycle} from '@/axios/setAndTag'
     export default {
         data: function () {
@@ -98,7 +103,14 @@
                 dataList: [],
                 nowChecked: 'task',
                 projectId:this.$route.params.id,
-                groupList:[],
+
+                starProject: [],
+                notStarProject: [],
+                currProjectId:'',
+                currGroupId:'',
+                currMenuId:'',
+                groupList: [],
+                menuList:[],
             }
         },
         mounted() {
@@ -124,7 +136,7 @@
             // 恢复内容
             recoverIt (id) {
                 if(this.nowChecked=='task'){
-                        console.log(this.nowChecked)
+
                 }
 
                 
@@ -133,12 +145,70 @@
             deleteForever (id) {
                 alert(id)
             },
-            removeSure(){
-
+            recycleTask(publicId){
+                if(this.nowChecked === 'task'){
+                    recycle(publicId,this.nowChecked,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
+                        if(res.result === 1){
+                            getRecycle(this.projectId, this.nowChecked).then(res => {
+                                this.dataList=res.data
+                            })
+                            this.$Message.success("成功")
+                        }
+                    })
+                } else {
+                    recycle(publicId,this.nowChecked).then(res => {
+                        if(res.result === 1){
+                            getRecycle(this.projectId, this.nowChecked).then(res => {
+                                this.dataList=res.data
+                            })
+                            this.$Message.success("成功")
+                        }
+                    })
+                }
             },
-           
-            getMenuLists(groupId) {
-              //获取菜单数据
+            //恢复文件
+            recycleSure(publicId){
+                recycle(publicId,this.nowChecked).then(res => {
+                    if(res.result === 1){
+                        var fileType = 0
+                        getRecycle(this.projectId, this.nowChecked,fileType).then(res => {
+                            this.dataList=res.data
+                        })
+                        this.$Message.success("成功")
+                    }
+                })
+            },
+
+            //获取项目数据
+            getProjectList(){
+                getStarProjectList().then(res => {
+                    if(res.result === 1){
+                        this.notStarProject = res.notStarProject
+                        this.starProject = res.starProject
+                    }
+                })
+            },
+            //获取分组数据
+            getGroupList(projectId){
+                this.currProjectId = projectId
+                getGroupList(projectId).then(res => {
+                    if(res.result === 1){
+                        this.groupList = res.data
+                    }
+                })
+            },
+            //获取菜单数据
+            getMenuLists(groupId){
+                this.currGroupId = groupId
+                getMenuList(groupId).then(res => {
+                    if(res.result === 1){
+                        this.menuList = res.data
+                    }
+                })
+            },
+            //获取选中菜单id
+            getMenuId(menuId){
+                this.currMenuId = menuId
             },
             closePop(){
 
