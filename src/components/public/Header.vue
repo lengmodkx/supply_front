@@ -46,8 +46,8 @@
             </li>
           </ul>
           <ul class="admin">
-            <!-- <li @click="personal"> 账号设置</li> -->
-            <li > 账号设置</li>
+            <li @click="personal"> 账号设置</li>
+            <!-- <li > 账号设置</li> -->
           </ul>
           <ul class="logOut">
             <router-link tag="li" to="/">退出登录</router-link>
