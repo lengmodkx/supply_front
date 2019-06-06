@@ -31,59 +31,58 @@
                 <div class="recycle-list" v-for="(info, index) in dataList" :key="index">
                     <p class="name">{{info.name}}</p>
                     <p class="time">{{info.updateTime | timeFilter}}</p>
-                    <div class="operate">                     
-                        <Poptip class="task-menuwrapper" placement="bottom" transfer  trigger="hover">
-                                <div slot="content" class="task-menuwrapper-content">
-                                        <div class="recyTitle">
-                                                恢复内容                                          
-                                                <Icon type="md-close"  class="closePop" @click="closePop" />
+                    <Poptip class="task-menuwrapper" placement="bottom" transfer  trigger="hover">
+                            <div slot="content" class="task-menuwrapper-content">
+                                    <div class="recyTitle">
+                                            恢复内容                                          
+                                    <!-- <Icon type="md-close"  class="closePop" @click="closePop" /> -->
+                                    </div>
+                                    <div  v-if="nowChecked==='task'">
+                                        <div class="con6" >
+                                        <div class="con5item2" @on-open-change="getProjectList" @on-change="getGroupList">
+                                            <span>项目</span>
+                                            <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
+                                                <OptionGroup label="星标项目">
+                                                    <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+                                                </OptionGroup>
+                                                <OptionGroup label="非星标项目">
+                                                    <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+                                                </OptionGroup>
+                                            </Select>
                                         </div>
-                                        <div  v-if="nowChecked==='task'">
-                                            <div class="con6" >
-                                            <div class="con5item2" @on-open-change="getProjectList" @on-change="getGroupList">
-                                                <span>项目</span>
-                                                <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
-                                                    <OptionGroup label="星标项目">
-                                                        <Option v-for="item in starProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
-                                                    </OptionGroup>
-                                                    <OptionGroup label="非星标项目">
-                                                        <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
-                                                    </OptionGroup>
+                                        <div class="con5item2">
+                                            <span>分组</span>
+                                            <template>
+                                                <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
+                                                <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
                                                 </Select>
-                                            </div>
-                                            <div class="con5item2">
-                                                <span>分组</span>
-                                                <template>
-                                                    <Select  style="width:150px" placeholder="当前分组" @on-change="getMenuLists">
-                                                    <Option v-for="item in groupList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
-                                                    </Select>
-                                                </template>
-                                            </div>
-                                            <div class="con5item2">
-                                                <span>列表</span>
-                                                <template>
-                                                    <Select  style="width:150px" placeholder="当前列表" @on-change="getMenuId">
-                                                    <Option v-for="item in menuList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
-                                                    </Select>
-                                                </template>
-                                            </div>                                 
-                                            <div class="con5tip">你可以在任务板中添加和修改任务分组及任务列表</div>
-                                            <Button type="primary" long @click="recycleTask(info.id)">确定</Button>
-                                            </div>
+                                            </template>
                                         </div>
-                                        <div   v-else>
-                                                <div class="con5tip">恢复内容后将移动至根目录，确认恢复内容？</div>
-                                                <Button type="primary" long @click="recycleSure(info.id)">确定</Button>
-                                        </div>                                     
-                                </div>
-                            
-                            
-                            
+                                        <div class="con5item2">
+                                            <span>列表</span>
+                                            <template>
+                                                <Select  style="width:150px" placeholder="当前列表" @on-change="getMenuId">
+                                                <Option v-for="item in menuList" :value="item.relationId" :key="item.relationId">{{ item.relationName }}</Option>
+                                                </Select>
+                                            </template>
+                                        </div>                                 
+                                        <div class="con5tip">你可以在任务板中添加和修改任务分组及任务列表</div>
+                                        <Button type="primary" long @click="recycleTask(info.id)">确定</Button>
+                                        </div>
+                                    </div>
+                                    <div   v-else>
+                                            <div class="con5tip">恢复内容后将移动至根目录，确认恢复内容？</div>
+                                            <Button type="primary" long @click="recycleSure(info.id)">确定</Button>
+                                    </div>                                     
+                            </div>
+                        
+                        
+                        
 
-                            <div  @click.stop="recoverIt(item.id)" ><Icon type="md-refresh"/>恢复内容</div>
-                        </Poptip>
-                        <div><Icon type="ios-trash-outline" @click="deleteForever(item.id)" />彻底删除</div>
-                    </div>
+                        <div  @click.stop="recoverIt(info.id)" ><Icon type="md-refresh"/>恢复内容</div>
+                    </Poptip>
+                    <div><Icon type="ios-trash-outline" @click="deleteForever(info.id)" />彻底删除</div>
+                       
                 </div>
             </div>
             <div v-else class="no-con">
@@ -111,6 +110,7 @@
                 currMenuId:'',
                 groupList: [],
                 menuList:[],
+                model1:''
             }
         },
         mounted() {
@@ -305,25 +305,29 @@
     }
     .recycle-list{
         position: relative;
+        display: flex;
         .name{
             color: #383838;
-            max-width: 550px;
+            width:300px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+
         .operate{    
             display: none;
             position: absolute;
             right: 0;
             top: 0;
+            width:230px;
             height: 100%;
             align-items: center;
             background-color: #f7f7f7;
             div{
                 width: 100px;
                 height: 50px;
-                margin-right: 16px;
+                margin-right: 15px;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
