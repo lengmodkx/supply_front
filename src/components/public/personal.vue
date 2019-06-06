@@ -36,13 +36,13 @@
                         </li>
                         <li>
                             <h4>生日</h4>
-                             <Select v-model="message.year"  size="large" style="width:90px;margin-right:15px;">
+                             <Select v-model="message.year"   style="width:90px;margin-right:15px;">
                                 <Option v-for="item in yearList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                             <Select v-model="message.month"  size="large" style="width:90px;margin-right:15px;">
+                             <Select v-model="message.month"   style="width:90px;margin-right:15px;">
                                 <Option v-for="item in monthList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                             <Select v-model="message.day"  size="large" style="width:90px">
+                             <Select v-model="message.day"  style="width:90px">
                                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
 
