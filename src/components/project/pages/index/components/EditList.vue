@@ -341,7 +341,7 @@ import SetRepeat from "./SetRepeat";
 import TaskWarn from "./TaskWarn";
 import rcModal from "@/components/public/common/EditRicheng";
 import AddRelation from "@/components/public/common/AddRelation";
-import Tags from "@/components/project/pages/index/components/task/Tags";
+import Tags from "@/components/public/Tags";
 import insertText from "@/utils/insertText";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import SingleTaskMenu from "./SingleTaskMenu";

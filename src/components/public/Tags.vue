@@ -7,7 +7,7 @@
       </Tag>
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;cursor:pointer" @click="open"></Icon>
     </div>
-    <Modal  v-model="showTag" :mask-closable="false" :width="380" @on-cancel="cancel">
+    <Modal  v-model="showTag"   title="标签" :footer-hide="true"  :mask-closable="false" :width="380" @on-cancel="cancel">
       <div class="content" >
           <div class="div1" v-if="showdiv1">
             <!--无任何标签的情况 -->
@@ -30,8 +30,9 @@
                   <i class="color" :style="`background-color:${tag.bgColor}`"></i>
                   <span>{{tag.tagName}}</span>
                   <div class="fr">
-                    <svg-icon name="edit" @click.stop="editTag(tag)" class="edit" style="float:left;margin-right:10px;border: 1px solid #ff0000;"></svg-icon>
-                    <svg-icon name="right" v-if="tag.flag" class="right" style=" float:left; border: 1px solid #ccc;"></svg-icon>
+                   
+                     <svg-icon name="right" v-if="tag.flag" class="right" style=" float:right;margin-left:10px ;"></svg-icon>
+                     <svg-icon name="edit" @click.stop="editTag(tag)" class="edit" style="float:right; "></svg-icon>
                   </div>
                 </div>
               </div>
@@ -364,7 +365,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #eeeeee;
-    padding: 8px 8px;
+    padding: 0px 0 15px 0px;
     .add-icon {
       margin-left: 5px;
     }
@@ -388,7 +389,7 @@ export default {
       flex: none;
     }
     span {
-      width: 260px;
+      width: 230px;
       overflow:hidden;
     }
     .fr {
@@ -523,7 +524,7 @@ export default {
   }
 }
 .content {
-  padding-top:30px;
+  
   width: 350px;
   // position: absolute;
   // border: 1px solid #eeeeee;

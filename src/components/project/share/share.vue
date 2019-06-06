@@ -98,8 +98,10 @@
                       标签
                     </div>
                     <div @click.stop >
+                     
                       <!-- <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag> -->
-                      <tag ref="tags" :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"></tag>
+                      <!-- <tag ref="tags" :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"></tag> -->
+                       <Tags ref="tags" :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"  v-if="share.tagList"> </Tags>
                     </div>
                   </div>
                   <!--关联-->
@@ -275,7 +277,8 @@
 import publish from "../../public/Publish.vue";
 import addShare from "./AddShare.vue";
 import tag from "./Tags.vue";
-// import { shares } from "../../../axios/api2.js";
+import Tags from "../../public/Tags.vue";
+import { shares } from "../../../axios/api2.js";
 import userList from "../../resource/userList.vue";
 import log from "../../public/log";
 import singleFenxiangMenu from "../../public/common/SingleFenxiangMenu.vue";
@@ -287,6 +290,7 @@ export default {
     publish,
     addShare,
     tag,
+    Tags,
     userList,
     singleFenxiangMenu,
     log,

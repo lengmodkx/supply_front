@@ -9,6 +9,7 @@ import mine from '../components/public/Mine'
 import message from '../components/public/message'
 import calendar from '../components/public/calendar'
 import members from "../components/company/members"
+import personal from  '../components/public/personal'
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -19,7 +20,12 @@ Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
-  routes: [{
+  routes: [
+    {
+      path: "/personal", // 成员
+      component: personal,
+    },
+    {
       path: "/members", // 成员
       component: members,
     },
@@ -170,7 +176,8 @@ const router = new Router({
         title: "忘记密码"
       },
       component: Forget
-    }
+    },
+    
   ]
 });
 router.afterEach((to, from) => {
