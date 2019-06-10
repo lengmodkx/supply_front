@@ -846,7 +846,7 @@ export function findUserInfo(userId) {
 }
 
 
-export function updateUserInfo(param) {
+export function updateUserNews(param) {
     return fetch({
           url: `/updateUserInfo`,
           method: "post", // 请求方法
