@@ -70,7 +70,7 @@
     </div>
 </template>
 <script>
-   
+   import {findUserInfo} from '@/axios/api'
     export default {
         data: function () {
             return {
@@ -100,7 +100,10 @@
           
         },
         created(){
-            
+            console.log(localStorage.userId)
+            findUserInfo(localStorage.userId).then(res=>{
+                    console.log(res)
+            })
         }
     }
 </script>
