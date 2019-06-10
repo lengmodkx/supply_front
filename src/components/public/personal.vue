@@ -1,11 +1,10 @@
 <template>
     <div class="personal-box">
         <div class="loading" v-if="loading"><Loading ></Loading></div>
-        
        <div class="personal">
             <div class="personal-left">
                 <div class="titel">
-                    <img src="" alt=""> 
+                    <img  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`"  alt=""> 
                     <span>名子</span>    
                 </div>
                 <ul>
@@ -18,13 +17,16 @@
                 <div class="information">
                     <div class="head">
                         <h4>头像</h4>
-                        <img src="" alt="">
-                        <div  class="chang-head" >更换头像</div>
+                        <img alt="" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`">
+                        <div  class="chang-head" >
+                             <input type="file" ref="inputer" >
+                             <Button class="upLoadButton" >更换头像</Button>
+                        </div>
                     </div>
                     <ul>
                          <li>
                             <h4>姓名</h4>
-                            <Input v-model="message.name" style="width: 300px" />
+                            <Input v-model="message.userName" style="width: 300px" />
                         </li>
                         <li>
                             <h4>职位</h4>
@@ -32,11 +34,12 @@
                         </li>
                         <li>
                             <h4>联系电话</h4>
-                            <Input  v-model="message.phone"  style="width: 300px" />
+                            <Input  v-model="message.telephone"  style="width: 300px" />
                         </li>
                         <li>
                             <h4>生日</h4>
-                             <Select v-model="message.year"   style="width:90px;margin-right:15px;">
+                            <DatePicker :value="message.birthday" type="date"  style="width: 300px" ></DatePicker>
+                             <!-- <Select v-model="message.year"   style="width:90px;margin-right:15px;">
                                 <Option v-for="item in yearList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                              <Select v-model="message.month"   style="width:90px;margin-right:15px;">
@@ -44,7 +47,7 @@
                             </Select>
                              <Select v-model="message.day"  style="width:90px">
                                 <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
+                            </Select> -->
 
                         </li>
                         <li>
@@ -52,12 +55,12 @@
                             <Input v-model="message.address"  style="width: 300px" />
                         </li>
                         <li>
-                            <h4>网址</h4>
-                            <Input v-model="message.path" style="width: 300px" />
+                            <h4>邮箱</h4>
+                            <Input v-model="message.email" style="width: 300px" />
                         </li>
                         <li>
                             <h4> </h4>
-                            <Button type="primary" style="width: 300px" long>保存</Button>
+                            <Button type="primary" style="width: 300px" @click="save" long>保存</Button>
                         </li>
 
                     </ul>
@@ -70,20 +73,21 @@
     </div>
 </template>
 <script>
-   import {findUserInfo} from '@/axios/api'
+   import {findUserInfo,updateUserNews} from '@/axios/api'
     export default {
         data: function () {
             return {
-                loading: false,
+                loading: true,
+           
                 message:{
-                        name:'名子',
+                        userId:localStorage.userId,
+                        defaultImage:'',
+                        userName:'名子',
                         job:'职位',
-                        phone:'13345689455',
-                        year:'',
-                        month:'',
-                        day:'',
+                        telephone:'13345689455',
+                        birthday:'',
                         address:'地址',
-                        path:'www',
+                        email:'www',
 
                 },
                 yearList:[],
@@ -93,21 +97,49 @@
             }
         },
         components: {},
-        methods: {
+        methods: {        
+            save(){
+                let data={
+                      userId:localStorage.userId,
+                        defaultImage:this.defaultImage,
+                        userName:this.userName,
+                        job:this.job,
+                        telephone:this.telephone,
+                        birthday:this.birthday,
+                        address:this.address,
+                        email:this.email,
+                }
+                //保存
+                updateUserNews(this.message).then(res=>{
+                    if(res.result==1){
+                        this.$Message.info('修改成功');
+                    }
+                }).then(res=>{
+                    this.info();
+                })
+
+            },
+            info(){
+                    findUserInfo(this.message.userId).then(res=>{
+                        //获取信息
+                            if(res.result==1){
+                                this.loading=false;
+                                this.message=res.data;
+                            }
+                    })
+            }
 
         },
-        computed:{
-          
-        },
+       
         created(){
-            console.log(localStorage.userId)
-            findUserInfo(localStorage.userId).then(res=>{
-                    console.log(res)
-            })
+            this.info();
         }
     }
 </script>
 <style socped lang="less">
+    .ivu-input-icon{
+        margin-top:-5px;
+    }
     .personal-box{
         width: 100%;
         min-height: 100vh;
@@ -134,7 +166,6 @@
                     width: 60px;
                     height: 60px;
                     border-radius: 50%;
-                    border:1px solid #F0EFEC;
                 }
                 span{
                     padding:10px;
@@ -175,7 +206,7 @@
                 h4{  
                         display: block;
                         width: 125px;
-                        padding:8px 0 0 0;
+                        padding:10px 0 0 0;
                         color: gray;
                         font-size: 14px;
                         font-weight: bold;
@@ -191,20 +222,42 @@
                         width: 100px;
                         height: 100px;
                         border-radius: 50%;
-                        border: 1px solid gray;
+                       
                     }
                     .chang-head{
                         width: 88px;
                         height: 30px;
                         line-height: 30px;
                         text-align: center;
-                        color: #3DA8F5;
-                        border: none;
-                        border:1px solid #3DA8F5;
-                        border-radius: 4px;
-                        background: #ffffff;
+                       
                         margin:30px;
-                        cursor: pointer;                   
+                        position: relative;      
+                        
+                        &:hover {
+                            .upLoadButton{
+                                background: #3da8f5;
+                                color: #fff;
+                                 border-radius: 4px;
+                            }
+                        }
+                            .upLoadButton{
+                                color: #3DA8F5;
+                                width: 88px;
+                                height: 30px;
+                                background: #ffffff;
+                                border-radius: 4px;
+                                border: none;
+                                border:1px solid #3DA8F5;
+                              
+                            }
+                            input{
+                                position: absolute;
+                                left: 0;
+                                top:0;
+                                width: 88px;
+                                height: 32px;
+                                opacity: 0
+                            }     
                          }
                 }
                 ul li{
