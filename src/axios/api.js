@@ -833,6 +833,9 @@ export function addTagBindFile(params) {
     });*/
 }
 
+/*
+ * 查询用户详情
+ */
 export function findUserInfo(userId) {
     return $get(`/getUserInfo/${userId}`)
     /*  fetch({
@@ -845,7 +848,9 @@ export function findUserInfo(userId) {
       });*/
 }
 
-
+/*
+ * 修改用户详情
+ */
 export function updateUserNews(param) {
     return fetch({
           url: `/updateUserInfo`,
