@@ -100,7 +100,7 @@
         methods: {        
             save(){
                 let data={
-                      userId:localStorage.userId,
+                        userId:localStorage.userId,
                         defaultImage:this.defaultImage,
                         userName:this.userName,
                         job:this.job,
@@ -110,12 +110,10 @@
                         email:this.email,
                 }
                 //保存
-                updateUserNews(this.message).then(res=>{
+                updateUserNews(data).then(res=>{
                     if(res.result==1){
                         this.$Message.info('修改成功');
                     }
-                }).then(res=>{
-                    this.info();
                 })
 
             },
