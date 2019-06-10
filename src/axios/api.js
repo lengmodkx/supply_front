@@ -832,3 +832,15 @@ export function addTagBindFile(params) {
         }
     });*/
 }
+
+export function findUserInfo(userId) {
+    return $get(`/getUserInfo/${userId}`)
+    /*  fetch({
+          url: `/files/addTagBindFile`,
+          method: "post", // 请求方法
+          params: {
+              "fileId": fileId,
+              "tagId": tagId
+          }
+      });*/
+}
