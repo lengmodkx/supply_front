@@ -4,7 +4,8 @@
        <div class="personal">
             <div class="personal-left">
                 <div class="titel">
-                    <img  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`"  alt=""> 
+                    <img  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`"  alt="" v-if="pic_show" accept="image/*">
+                    <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
                     <span>名子</span>    
                 </div>
                 <ul>
@@ -17,9 +18,10 @@
                 <div class="information">
                     <div class="head">
                         <h4>头像</h4>
-                        <img alt="" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`">
+                        <img alt="" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`"   v-if="pic_show" accept="image/*">
+                        <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
                         <div  class="chang-head" >
-                             <input type="file" ref="inputer" >
+                             <input type="file" ref="inputer" @change="getFile">
                              <Button class="upLoadButton" >更换头像</Button>
                         </div>
                     </div>
@@ -73,11 +75,24 @@
     </div>
 </template>
 <script>
-   import {findUserInfo,updateUserNews} from '@/axios/api'
+   import {findUserInfo,updateUserNews} from '@/axios/api';
+   import OSS from "ali-oss";
+   let client = new OSS({
+       region: "oss-cn-beijing",
+       accessKeyId: "LTAIP4MyTAbONGJx",
+       accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
+       bucket: "art1001-bim-5d"
+   });
     export default {
         data: function () {
             return {
                 loading: true,
+                imageUrl: "",
+                filename:"",
+                fileName:"",
+                dirName: "upload/project/",
+                pic_show:true,
+                pic_hide:false,
            
                 message:{
                         userId:localStorage.userId,
@@ -97,17 +112,72 @@
             }
         },
         components: {},
-        methods: {        
+        methods: {
+            random_string(len) {
+                len = len || 32;
+                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+                var maxPos = chars.length;
+                var pwd = "";
+                for (var i = 0; i < len; i++) {
+                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+                }
+                return pwd;
+            },
+            get_suffix(filename) {
+                var pos = filename.lastIndexOf(".");
+                var suffix = "";
+                if (pos !== -1) {
+                    suffix = filename.substring(pos);
+                }
+                return suffix;
+            },
+            resetFile() {
+                this.showupload = true;
+                this.showProgress = false;
+                this.uploadList = [];
+                this.percentage = [];
+            },
+            getFile(event) {
+                const files = event.target.files
+                this.filename = files[0].name          //只有一个文件
+                if (this.filename.lastIndexOf('.') <= 0) {
+                    return alert("Please add a valid image!")        //判断图片是否有效
+                }
+                const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
+                fileReader.addEventListener('load', () => {
+                    this.pic_show = false,
+                        this.pic_hide = true,
+                        this.imageUrl = fileReader.result
+                })
+                fileReader.readAsDataURL(files[0])
+                this.image = files[0]
+                //到这里后, 选择图片就可以显示出来了
+
+                this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
+            },
             save(){
+
+                var that = this;
+                client.multipartUpload(this.fileName, this.image, {
+                    progress: function(p) {
+                        //that.percentage.splice(index, 1, Math.floor(p * 100));
+                    }
+                })
+                    .then(function(result){
+                    })
+
+                var dataee=new Date(this.message.birthday).toJSON();
+                var birthDay = new Date(+new Date(dataee)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+
                 let data={
                         userId:localStorage.userId,
-                        defaultImage:this.defaultImage,
-                        userName:this.userName,
-                        job:this.job,
-                        telephone:this.telephone,
-                        birthday:this.birthday,
-                        address:this.address,
-                        email:this.email,
+                        defaultImage:this.fileName,
+                        userName:this.message.userName,
+                        job:this.message.job,
+                        telephone:this.message.telephone,
+                        birthday:birthDay,
+                        address:this.message.address,
+                        email:this.message.email,
                 }
                 //保存
                 updateUserNews(data).then(res=>{
