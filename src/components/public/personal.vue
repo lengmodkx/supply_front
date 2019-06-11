@@ -166,8 +166,8 @@
                     .then(function(result){
                     })
 
-                var dataee=new Date(this.message.birthday).toJSON();
-                var birthDay = new Date(+new Date(dataee)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+                var dataEE=new Date(this.message.birthday).toJSON();
+                var birthDay = new Date(+new Date(dataEE)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
 
                 let data={
                         userId:localStorage.userId,
