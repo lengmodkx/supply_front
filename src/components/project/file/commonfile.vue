@@ -9,12 +9,12 @@
           <span>{{file.name}}</span>
           <Progress :percent="percentage[index]" ref="progress" />
         </div>
-        <Button type="default" @click="removeFile(file)">移除</Button>
+        <!--<Button type="default" @click="removeFile(file)">移除</Button>-->
       </div>
     </div>
     <div class="model-op">
       <Button type="default" @click="resetFile" class="op-btn">重选</Button>
-      <Button type="primary" @click="uploadFile" class="op-btn" :loading="loading">提交</Button>
+      <Button type="primary" @click="uploadFile" class="op-btn" :loading="loading">上传</Button>
     </div>
   </div>
 </template>
@@ -192,7 +192,7 @@ export default {
     justify-content: flex-start;
     margin-bottom: 10px;
     .file-show {
-      width: 420px;
+      width: 100%;
     }
   }
 }
