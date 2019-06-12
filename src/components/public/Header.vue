@@ -36,7 +36,8 @@
       </a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
-        <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt="">
+        <!-- <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt=""> -->
+        <img class="avatar" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${defaultImage}`" alt="">               
         <div class="userInfo" slot="content">
           <ul class="org">
             <div class="createdOrg" @click="addOrgModal=true;popVisible=false;">创建企业</div>
@@ -99,7 +100,7 @@ export default {
       logoMenu: "",
       active: false,
       mainMenu: false,
-      src: localStorage.userImg,
+      //src: localStorage.userImg,
       companyId: localStorage.companyId,
       data: [
         {
@@ -141,7 +142,7 @@ export default {
     this.initCompany();
   },
   methods: {
-    ...mapState("user", ["mineRouter", "users"]),
+    ...mapState("user", ["mineRouter", "users","src"]),
     ...mapActions("company", ["initCompany"]),
       ...mapActions("project", ["orgProjectInit"]),
     ...mapMutations('app',['changeHeaderTag']),
@@ -252,6 +253,7 @@ export default {
       }
   },
   computed: {
+    ...mapState('user', ['defaultImage']),
     ...mapState('app', ['activeHeaderTag']),
     ...mapState("news", ["newsCount"]),
     ...mapState("company", ["companyList"]),

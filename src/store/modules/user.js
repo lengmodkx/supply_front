@@ -1,3 +1,5 @@
+
+import {findUserInfo} from '@/axios/api';
 let userData;
 
 try{
@@ -6,13 +8,16 @@ try{
   userData = sessionStorage.userInfo
 }
 
+console.log(localStorage.userImg)
+
 const store = {
   namespaced: true,
   state: {
     userInfo:userData,
     users:{},
     mineRouter:'/mine/nearThing',
-    projectRouter:'/home'
+    projectRouter:'/home',
+    defaultImage:localStorage.userImg,
   },
   mutations: {
     updateUserInfo(state, data) {
@@ -30,7 +35,10 @@ const store = {
     // 更改项目路由路径
     changeProjectRouter(state, data){
       state.projectRouter=data
-    }
+    },
+    initSrc(state, data) {
+      state.defaultImage = data
+    },
   },
   actions: {
     updateUserInfo({
@@ -42,6 +50,12 @@ const store = {
       commit
     }, data) {
       commit('updateUserId', data)
+    },
+    initSrc({commit},data){
+      findUserInfo(localStorage.userId).then(res=>{
+         commit('initSrc',res.data.defaultImage)
+      })
+     
     }
 
   }
