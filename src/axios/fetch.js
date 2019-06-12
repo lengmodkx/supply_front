@@ -34,8 +34,14 @@ service.interceptors.response.use(
         })
         return
     }
-    // //获取返回的TOKEN
-    const token = response.headers['x-auth-token'];
+
+    var token
+    if(response.data.accessToken){
+        token = response.data.accessToken
+    } else {
+        // //获取返回的TOKEN
+        token = response.headers['x-auth-token'];
+    }
 
     if (token) {
       //将续期的TOKEN存起来

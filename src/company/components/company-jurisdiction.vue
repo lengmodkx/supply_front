@@ -6,8 +6,8 @@
         </header>
         <div class="pcc-operate">
             <Button type="primary" icon="md-add" @click="addRole">新增</Button>
-            <Button type="warning" icon="ios-create-outline" @click="editRole">编辑</Button>
-            <Button type="error" icon="ios-trash-outline" @click="romoveRole">删除</Button>
+            <Button type="warning" icon="ios-create-outline" @click="editRole" :disabled="nowRole.isSystemInit">编辑</Button>
+            <Button type="error" icon="ios-trash-outline" @click="romoveRole" :disabled="nowRole.isSystemInit">删除</Button>
             <Button type="success" icon="ios-filing-outline" @click="givePower">分配权限</Button>
             <!--<Button type="info" icon="ios-man-outline" >设为企业默认角色</Button>-->
             <!--<Button type="success" icon="ios-plus-outline" @click="resourceAdd">添加资源</Button>-->

@@ -17,13 +17,13 @@
       <FormItem>
         <Button type="primary" long size="large" class="login" @click="login('formValidate')" :loading="loading">登录</Button>
       </FormItem>
-      <div class="weixin"><i class="iconfont iconweixin"></i>微信登录</div>
+      <div class="weixin" @click="weChatLogin()"><i class="iconfont iconweixin"></i>微信登录</div>
     </Form>
   </div>
 
 </template>
 <script>
-import { userlogin, getEncrypStr } from "@/axios/api";
+import { userlogin, getEncrypStr, weChatLogin,getWeChatToken } from "@/axios/api";
 import { mapState, mapActions } from "vuex";
 import { Encrypt } from "@/utils/cryptoUtils";
 
@@ -47,6 +47,7 @@ export default {
         accountName: "",
         password: ""
       },
+      code:"",
       userInfo: null,
       ruleValidate: {
         accountName: [{ validator: validatePhone, trigger: "blur" }],
@@ -94,8 +95,40 @@ export default {
           this.$Message.error("用户名或者密码错误");
         }
       });
+    },
+    weChatLogin(){
+      weChatLogin().then(res => {
+        if(res.result === 1){
+          window.location.href=res.url
+        }
+      })
+      //window.location.href = 'https://open.weixin.qq.com/connect/qrconnect?appid=wxb7b91f87460a9d90&redirect_uri=http%3A%2F%2F192.168.1.101%3A8080%2Fwechat_token&response_type=code&scope=snsapi_login&state=1b6ce04096e34958839be9fa6852286f#wechat_redirect'
     }
-  }
+  },
+  beforeRouteEnter (to, from, next) {
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for(var i = 0; i < strs.length; i ++) {
+        theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+      }
+    }
+    var code = theRequest.code
+    next(vm => {
+      if(code){
+        getWeChatToken(code).then(res => {
+          if(res.result === 1){
+            localStorage.userId = res.userInfo.userId;
+            localStorage.userImg = res.userInfo.defaultImage;
+            localStorage.userName = res.userInfo.userName;
+            vm.$router.push('/home')
+          }
+        })
+      }
+    })
+  },
 };
 </script>
 

@@ -726,6 +726,22 @@ export function collectList(type) {
     });
 }
 
+export function weChatLogin() {
+    return fetch({
+        url: `/wechat_code`,
+        method: "get" // 请求方法
+    });
+}
+
+export function getWeChatToken(code) {
+    return fetch({
+        url: `/wechat_token`,
+        method: "get", // 请求方法
+        params:{code:code}
+    });
+}
+
+
 export function group(projectId) {
     return $get(`relations/${projectId}/groups`, '')
 
