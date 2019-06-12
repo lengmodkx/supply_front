@@ -17,6 +17,7 @@
       <FormItem>
         <Button type="primary" long size="large" class="login" @click="login('formValidate')" :loading="loading">登录</Button>
       </FormItem>
+      <div class="weixin"><i class="iconfont iconweixin"></i>微信登录</div>
     </Form>
   </div>
 
@@ -98,7 +99,29 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  .weixin{
+    text-align: center;
+    margin: -5px 0;
+    width: 300px;
+    height: 35px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #00B871;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    &:hover{
+      opacity: 0.8;
+    }
+    i{
+      font-size: 20px;
+      color: #cde6c7;
+      margin-right: 5px;
+    }
+  }
 .login-form-box {
   width: 100vw;
   height: 100vh;

@@ -10,6 +10,7 @@ import "./components/public/common"; //挂载common下组件到全局
 import moment from "moment";
 import gobal from "./global";
 moment.locale("zh-cn");
+import './assets/iconfont/iconfont.css'
 import {
     get,
     post,
