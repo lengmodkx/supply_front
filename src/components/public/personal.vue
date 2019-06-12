@@ -76,6 +76,7 @@
 </template>
 <script>
    import {findUserInfo,updateUserNews} from '@/axios/api';
+   import { mapState, mapActions, mapMutations } from "vuex";
    import OSS from "ali-oss";
    let client = new OSS({
        region: "oss-cn-beijing",
@@ -113,6 +114,7 @@
         },
         components: {},
         methods: {
+             ...mapActions("user", [ "initSrc"]),
             random_string(len) {
                 len = len || 32;
                 var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
@@ -145,7 +147,7 @@
                 }
                 const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
                 fileReader.addEventListener('load', () => {
-                    this.pic_show = false,
+                      this.pic_show = false,
                         this.pic_hide = true,
                         this.imageUrl = fileReader.result
                 })
@@ -154,24 +156,33 @@
                 //到这里后, 选择图片就可以显示出来了
 
                 this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
+                if(this.filename){
+                    this.message.defaultImage=this.fileName
+                }
+                
             },
+            
             save(){
-
                 var that = this;
-                client.multipartUpload(this.fileName, this.image, {
-                    progress: function(p) {
-                        //that.percentage.splice(index, 1, Math.floor(p * 100));
-                    }
-                })
-                    .then(function(result){
-                    })
-
+                if(!(this.message.telephone.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(this.message.telephone)) ) {
+                    
+                    this.$Message.info('请输入正确申请人电话');
+                    return
+                } 
+                if(this.pic_hide==true){
+                        client.multipartUpload(this.fileName, this.image, {
+                            progress: function(p) {
+                                //that.percentage.splice(index, 1, Math.floor(p * 100));
+                            }
+                        })
+                            .then(function(result){
+                        })
+                }
                 var dataEE=new Date(this.message.birthday).toJSON();
                 var birthDay = new Date(+new Date(dataEE)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
-
                 let data={
                         userId:localStorage.userId,
-                        defaultImage:this.fileName,
+                        defaultImage:this.message.defaultImage,
                         userName:this.message.userName,
                         job:this.message.job,
                         telephone:this.message.telephone,
@@ -182,10 +193,15 @@
                 //保存
                 updateUserNews(data).then(res=>{
                     if(res.result==1){
-                        this.$Message.info('修改成功');
+                        this.$Message.info(res.msg);
+                        localStorage.userImg=this.message.defaultImage
                     }
-                })
+                }).then(res=>{
+                    this.initSrc().then(res=>{
 
+                    })
+                })
+               
             },
             info(){
                     findUserInfo(this.message.userId).then(res=>{
@@ -196,9 +212,7 @@
                             }
                     })
             }
-
         },
-       
         created(){
             this.info();
         }
