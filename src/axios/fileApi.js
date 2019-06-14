@@ -113,9 +113,17 @@ export function filePrivacy(id, privacy) {
     });
 }
 // 模糊查询
+// export function searchFile(fileName, projectId) {
+//     return fetch({
+//         url: `/files/${fileName}/seach`,
+//         method: "get",
+//         params: {projectId: projectId}
+//     });
+// }
+
 export function searchFile(fileName, projectId) {
     return fetch({
-        url: `/files/${fileName}/seach`,
+        url: `/files/${fileName}/search_file`,
         method: "get",
         params: {projectId: projectId}
     });
