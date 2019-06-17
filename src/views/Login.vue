@@ -120,6 +120,9 @@ export default {
       if(code){
         getWeChatToken(code).then(res => {
           if(res.result === 1){
+            localStorage.userId = '';
+            localStorage.userImg = '';
+            localStorage.userName = '';
             localStorage.userId = res.userInfo.userId;
             localStorage.userImg = res.userInfo.defaultImage;
             localStorage.userName = res.userInfo.userName;
