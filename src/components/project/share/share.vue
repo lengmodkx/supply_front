@@ -97,8 +97,7 @@
                       <Icon type="ios-pricetags-outline" size="18" />
                       标签
                     </div>
-                    <div @click.stop >
-                     
+                    <div @click.stop >   
                       <!-- <Tag closable v-for="tag in share.tagList" :color="tag.bgColor" @on-close="closeTag" :key="tag.tagId">{{tag.name}}</Tag> -->
                       <!-- <tag ref="tags" :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"></tag> -->
                        <Tags ref="tags" :taglist="share.tagList" :projectId="projectId" :publicId="share.id" :publicType="publicType"  v-if="share.tagList"> </Tags>
@@ -437,6 +436,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+/deep/.ivu-tag-text{
+  color: #fff !important;
+}
+
 .ivu-modal-wrap {
   background-color: #fff;
 }

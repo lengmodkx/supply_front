@@ -660,7 +660,7 @@ export default {
     },
     // 去分享详情
     goShareDetail(shareId) {
-      alert(shareId);
+      // alert(shareId);
       this.$router.push(
         `/project/${this.$route.params.id}/share_detail/${shareId}`
       );

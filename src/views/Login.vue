@@ -145,7 +145,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #00B871;
+    background-color: #2d8cf0;
     border-radius: 5px;
     color: white;
     cursor: pointer;

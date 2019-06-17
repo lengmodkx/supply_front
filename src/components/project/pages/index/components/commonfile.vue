@@ -28,7 +28,7 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 export default {
-  props: ["fileId", "projectId", "publicId"],
+  props: ["fileId", "publicId"],
   data() {
     return {
       showupload: true,
@@ -37,7 +37,8 @@ export default {
       uploadList: [],
       percentage: [],
       files: [],
-      loading: false
+      loading: false,
+      projectId: this.$route.params.id
     };
   },
   methods: {
