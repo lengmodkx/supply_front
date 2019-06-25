@@ -454,7 +454,7 @@ export default {
       window.location.href =
         process.env.NODE_ENV == "development"
           ? "/api/files/" + fileId + "/download"
-          : process.env.VUE_APP_URL + fileId + "/download";
+          : process.env.VUE_APP_URL +"/files/"+ fileId + "/download";
     },
     getFileDetail(fileId) {
       getFileDetails(fileId).then(res => {

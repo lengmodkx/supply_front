@@ -566,11 +566,11 @@ export default {
         this.showCommon = !this.showCommon;
       }
     },
-    download() {
-      window.location.href = `http://192.168.1.103:8080/files/${
-        this.fileIdParam
-      }/download`;
-    },
+    // download() {
+    //   window.location.href = `http://192.168.1.103:8080/files/${
+    //     this.fileIdParam
+    //   }/download`;
+    // },
     // 收藏文件
     collectFile() {
       let data = {
