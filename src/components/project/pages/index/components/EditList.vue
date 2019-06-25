@@ -542,6 +542,7 @@ export default {
     submitSontask() {
       this.addChildrenTask({ taskId: this.task.taskId, taskName: this.son });
       this.showSontask = false;
+      this.son="";
     },
     confirmSonDate(date) {
       this.task.sontaskDate = date;

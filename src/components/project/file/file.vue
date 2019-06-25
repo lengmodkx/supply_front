@@ -896,10 +896,11 @@ export default {
 }
 
 .file-content-wrap {
-  display: flex;
-  flex-wrap: wrap;
+  // display: flex;
+  // flex-wrap: wrap;
+ //justify-content: flex-start;
+
   height: calc(100vh - 250px);
-  justify-content: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -911,6 +912,7 @@ export default {
     background-color: #cecece;
   }
   li {
+      float: left;
     height: 200px;
   }
   .file-content-filename {
