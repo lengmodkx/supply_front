@@ -17,7 +17,7 @@
         </Dropdown>
         <p class="padd8">
           <Icon type="ios-cloud-download-outline" />
-          <a style="color: gray" :download="file.data.fileName" @click="downLoad" ref="xiazai">下载</a></p>
+          <a style="color: gray" :download="file.data.fileName" @click="downLoad(file.data.fileId)" ref="xiazai">下载</a></p>
         <!--<p><Icon type="ios-link-outline" />复制文件链接</p>-->
         <Poptip class="menu-file" v-model="menuShow" @on-popper-hide="popHid">
           <Icon type="ios-more" class="mr0" />
@@ -430,10 +430,11 @@ export default {
     },
     //文件下载
     downLoad(fileId) {
+      
       window.location.href =
         process.env.NODE_ENV == "development"
           ? "/api/files/" + fileId + "/download"
-          : process.env.VUE_APP_URL + fileId + "/download";
+          : process.env.VUE_APP_URL +"/files/" + fileId + "/download";
     },
     popHid() {
       setTimeout(() => {
@@ -479,8 +480,7 @@ export default {
         console.log(this.imgSize);
       }
     },
-    // 下载文件
-    downLoad() {},
+   
     // 添加参与者
     saveInvolveMember(detailList) {
       jionPeople(this.file.data.fileId, detailList).then(res => {

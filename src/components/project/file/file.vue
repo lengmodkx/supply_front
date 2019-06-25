@@ -108,7 +108,7 @@
                     </section>
                     <section v-else class="file-folder-opt">
                       <ul>
-                        <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
+                        <li><a style="color: #333" :download="file.fileName" @click="downLoad(file.fileId)">下载文件</a></li>
                         <li @click="removeClone('移动')">移动文件</li>
                         <li @click="removeClone('复制')">复制文件</li>
                         <li @click="showFileEdit=true">修改名称</li>
@@ -226,7 +226,7 @@
                     </section>
                     <section v-else class="file-folder-opt">
                       <ul>
-                        <li><a style="color: #333" :download="file.fileName" @click="downLoad">下载文件</a></li>
+                        <li><a style="color: #333" :download="file.fileName" @click="downLoad(file.fileId)">下载文件</a></li>
                         <li @click="removeClone('移动')">移动文件</li>
                         <li @click="removeClone('复制')">复制文件</li>
                         <li @click="showFileEdit=true">修改名称</li>
@@ -513,7 +513,7 @@ export default {
       window.location.href =
         process.env.NODE_ENV == "development"
           ? "/api/files/" + fileId + "/download"
-          : process.env.VUE_APP_URL + fileId + "/download";
+          : process.env.VUE_APP_URL + "/files/" + fileId + "/download";
     },
 
     // menuShow(catalog, fileId, e) {
