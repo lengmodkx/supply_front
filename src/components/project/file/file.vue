@@ -890,6 +890,7 @@ export default {
   width: 320px;
   margin-bottom: 15px;
   margin-top: 10px;
+  margin-left: 0px;
 }
 .file-operate {
   line-height: 60px;
