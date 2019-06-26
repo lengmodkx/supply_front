@@ -20,7 +20,7 @@
             style="color:#2d8cf0;vertical-align:middle;"
             @click="Popvisible=true"></Icon>
     </div>
-    <div slot="content">
+    <div  >
       <div class="div1"
            v-if="showdiv1">
         <!--无任何标签的情况 -->
@@ -325,6 +325,13 @@ export default {
 }
 </script>
 <style scoped lang="less">
+.content{
+  width: 350px !important;
+  margin:15px auto !important;
+  .div1{
+    background: #2d8cf0
+  }
+}
 .tag_input {
   border-bottom: 1px solid #eee;
 }

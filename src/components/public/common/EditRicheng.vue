@@ -3,16 +3,15 @@
         <div v-if="!schedule" style="background-color:white;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <Loading></Loading>
         </div>
-        <div v-else class="task-detail"
-             style="height:100%;">
-            <div class="headerTool">
+        <div v-else class="task-detail" style="height:100%;">
+            <div class="headerTool" slot="header">
                 <div class="toolLeft">
                     <span class="proname">{{projectName?projectName:'日程'}}</span>
                 </div>
-                <div class="toolRight">
+                <div class="toolRight"> 
                     <span class="down">
-          <SingleRiChengMenu @closeMenu="$emit('close')" :data=schedule :name="publicType"></SingleRiChengMenu>
-        </span>
+                        <SingleRiChengMenu @closeMenu="$emit('close')" :data=schedule :name="publicType"></SingleRiChengMenu>
+                    </span>
                 </div>
             </div>
             <div class="Conbox">
@@ -114,9 +113,12 @@
                 <div class="tags clearfix">
         <span class="name">
           <Icon type="ios-pricetags-outline"></Icon>标签</span>
-                    <!-- 取到data.tag了再添加孙子辈组件 -->
-                    <Tags class="fl" :taglist="schedule.tagList" :projectId="schedule.projectId" :publicType="publicType" :publicId="schedule.scheduleId"
-                          v-if="schedule.tagList"></Tags>
+                    
+                    <!-- <Tags class="fl" :taglist="schedule.tagList" :projectId="schedule.projectId" :publicType="publicType" :publicId="schedule.scheduleId"
+                          v-if="schedule.tagList"></Tags> -->
+
+                            <!-- 取到data.tag了再添加孙子辈组件 -->
+            <Tags  v-if="schedule.tagList" class="fl" :taglist="schedule.tagList" :publicId="schedule.projectId" :publicType="publicType" :projectId="schedule.scheduleId"  ></Tags>
                 </div>
 
                 <!-- 添加关联 -->
@@ -287,7 +289,8 @@
 import SetRepeat from '@/components/project/pages/index/components/SetRepeat'
 import SetRCWarn from '@/components/project/pages/index/components/SetRiChengWarn'
 import AddRelation from '@/components/public/common/AddRelation'
-import Tags from '@/components/project/share/Tags'
+ //import Tags from '@/components/project/share/Tags'
+import Tags from "@/components/public/Tags.vue";
 import Emoji from '@/components/public/common/emoji/Emoji'
 import SingleRiChengMenu from './SingleRiChengMenu'
 import SetExecutor from '@/components/project/pages/index/components/SetExecutor'

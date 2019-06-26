@@ -4,7 +4,7 @@
       <slot name="projectName" >没有项目名称</slot>
     </div>
     <div class="direct">
-      <textarea class="textarea" v-model="title" placeholder="日程标题"></textarea>
+      <textarea class="textarea" v-model="title" placeholder="请输入日程标题"></textarea>
       <div class="time">
         <Checkbox v-model="checkbox">
           <span>全天</span>
@@ -199,11 +199,15 @@ export default {
           this.loading = false;
           this.$Message.info("成功");
           this.clone()
+          this.clear();
         })
         .catch(err => {
           this.loading = false;
           this.$Message.info("失败");
         });
+    },
+    clear(){
+        this.title="";
     }
   }
 };

@@ -8,7 +8,7 @@
       <Icon type="md-add-circle" size="24" style="color:#2d8cf0;vertical-align:middle;cursor:pointer" @click="open"></Icon>
     </div>
     <Modal  v-model="showTag"   title="标签" :footer-hide="true"  :mask-closable="false" :width="380" @on-cancel="cancel">
-      <div class="content" >
+      <div class="content"  style="width:350px;margin:15px auto" >
           <div class="div1" v-if="showdiv1">
             <!--无任何标签的情况 -->
             <div class="tag_input clearfix">
@@ -355,9 +355,10 @@ export default {
 </script>
 <style scoped lang="less">
 .hasTag{
-  min-height: 100px;
+  min-height: 200px;
   max-height: 260px;
   overflow-y: scroll;
+  margin-bottom: 15px;
 }
 .div1 {
   .tag_input {
