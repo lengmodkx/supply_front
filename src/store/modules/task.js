@@ -67,6 +67,7 @@ const store = {
 
         editTask(state, data) {
             state.task = data
+            console.log(data)
             if (data.joinInfo) {
                 state.joinInfoIds = data.joinInfo.map((v) => {
                     return v.userId

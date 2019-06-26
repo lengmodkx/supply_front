@@ -1,5 +1,12 @@
 import fetch from './fetch' // 引用fetch.js
 import api from './url' // 引用url.js
+// 获取提醒信息
+export function getRemind(taskId) {
+    return fetch({
+        url: `/tasks/${taskId}/remind`,
+        method: 'get',
+    })
+}
 // 获取一个用户的日历信息
 export function getCalendar(userId) {
     return fetch({

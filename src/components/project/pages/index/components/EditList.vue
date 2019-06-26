@@ -75,7 +75,9 @@
               <SetRepeat :repeat="task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
             </div>
             <!--<div class="alarm fl">-->
-            <!--<TaskWarn :remind="task.remind" v-on:updateRepeat="updateRepeat"></TaskWarn>-->
+              <!--<Tooltip :content="task.remind">-->
+                <!--<Icon type="md-alarm" @click="showRemind=true" />-->
+              <!--</Tooltip>-->
             <!--</div>-->
           </div>
           <div class="remark">
@@ -332,6 +334,11 @@
       <Modal v-model="showRCModal" class="myModal myRcModal">
         <rc-modal></rc-modal>
       </Modal>
+      <!--设置提醒-->
+      <Modal v-model="showRemind">
+        <p slot="header" style="text-align:center">任务提醒设置</p>
+        <TaskWarn v-if="showRemind" :taskId="task.taskId"></TaskWarn>
+      </Modal>
     </div>
   </div>
 
@@ -392,6 +399,7 @@ export default {
       glPop: false,
       zan: false,
       aa: false,
+      showRemind: false,
       showRCModal: false,
       childTaskData: null,
       complete: false,
