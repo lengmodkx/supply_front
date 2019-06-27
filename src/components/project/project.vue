@@ -347,6 +347,8 @@ export default {
                         );
                     } else if (result.object.publicType === "文件") {
                         this.$store.dispatch("file/putOneFile", result.object.publicId);
+                    }else if (result.object.publicType === "日程") {
+                        this.$store.dispatch("schedule/getScheduleById",result.object.publicId);
                     }
                     break;
               // 发消息
