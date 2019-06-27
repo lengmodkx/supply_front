@@ -9,7 +9,7 @@
     </div>
     <Modal  v-model="showTag"   title="标签" :footer-hide="true"  :mask-closable="false" :width="380" @on-cancel="cancel">
       <div class="content"  style="width:350px;margin:15px auto" >
-          <div class="div1" v-if="showdiv1">
+          <div class="tagbox" v-if="showdiv1">
             <!--无任何标签的情况 -->
             <div class="tag_input clearfix">
                <Input class="search fl"  enter-button placeholder="搜索标签"  @on-enter="search" v-model="searchTag" />
@@ -40,7 +40,7 @@
             </div>
           </div>
           <!-- 新建 -->
-          <div class="div2 clearfix" v-if="showdiv2">
+          <div class="tagbox2 clearfix" v-if="showdiv2">
             <div class="d2Header">
               <span class="back fl" @click="showdiv2=false;showdiv1=true;">
                 <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
@@ -67,7 +67,7 @@
             </div>
           </div>
           <!-- 删除标签 页 -->
-          <div class="div3" v-if="showdiv3">
+          <div class="tagbox3" v-if="showdiv3">
             <div class="d2Header">
               <span class="back fl" @click="showdiv3=false;showdiv1=true;">
                 <Icon type="ios-arrow-back" size="24" style="margin-top:5px;"></Icon>
@@ -341,9 +341,7 @@ export default {
     //         }else{
     //           this.offsetLeft = this.$refs.addIcon.offsetWidth + 45 + "px";
     //         }
-    
     //   }
-     
     //   console.log(this.offsetLeft)
     // },
 
@@ -360,7 +358,7 @@ export default {
   overflow-y: scroll;
   margin-bottom: 15px;
 }
-.div1 {
+.tagbox {
   .tag_input {
     display: flex;
     justify-content: space-between;
@@ -453,7 +451,7 @@ export default {
     }
   }
 }
-.div2 {
+.tagbox2 {
   height: 180px;
   .btnBox {
     display: flex;
@@ -491,7 +489,7 @@ export default {
     }
   }
 }
-.div3 {
+.tagbox3 {
   .d2Header {
     border-bottom: 1px solid #eee;
     height: 30px;
