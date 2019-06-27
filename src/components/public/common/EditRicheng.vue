@@ -3,8 +3,8 @@
         <div v-if="!schedule" style="background-color:white;width: 100%;height: 100%;display: flex;justify-content: center;align-items: center">
             <Loading></Loading>
         </div>
-        <div v-else class="task-detail" style="height:100%;">
-            <div class="headerTool" slot="header">
+        <div v-else class="task-detail" style="height:100%;position: relative">
+           <div class="headerTool" slot="header">
                 <div class="toolLeft">
                     <span class="proname">{{projectName?projectName:'日程'}}</span>
                 </div>
@@ -14,19 +14,16 @@
                     </span>
                 </div>
             </div>
-            <div class="Conbox">
-                <div class="task_info clearfix">
-
+            <div class="Conbox" ref="scrollbox">
+               <div class="task_info clearfix">
                     <div class="content">
                         <input id="editCon"
                                type="text"
                                @blur="upRCname"
                                v-model="schedule.scheduleName"/>
                     </div>
-
                 </div>
                 <div class="task_attr clearfix">
-
                     <div class="timer fl">
                         <div class="starttime fl">
                             <p class="timeTitle">开始时间</p>
@@ -71,212 +68,210 @@
 
 
                 </div>
-                <!-- 地点 -->
                 <div class="remark clearfix">
-        <span class="name">
-          <Icon type="ios-pin-outline"></Icon>地点</span>
-                    <div class="address fl">
-                        <div v-if="editAddress">
-                            <Input v-model.trim="schedule.address" placeholder="" autofocus/>
-                            <Alert show-icon v-show="!schedule.address" show-icon style="margin-top: 5px">请添加地点</Alert>
-                            <div class="btn-box">
-                                <Button type="primary" @click="saveAddress" style="margin-top:10px;">确定</Button>
-                                <Button  @click="editAddress=false;" style="margin:10px 5px 0 20px;">取消</Button>
-                            </div>
-                        </div>
+                    <span class="name">
+                    <Icon type="ios-pin-outline"></Icon>地点</span>
+                                <div class="address fl">
+                                    <div v-if="editAddress">
+                                        <Input v-model.trim="schedule.address" placeholder="" autofocus/>
+                                        <Alert show-icon v-show="!schedule.address" show-icon style="margin-top: 5px">请添加地点</Alert>
+                                        <div class="btn-box">
+                                            <Button type="primary" @click="saveAddress" style="margin-top:10px;">确定</Button>
+                                            <Button  @click="editAddress=false;" style="margin:10px 5px 0 20px;">取消</Button>
+                                        </div>
+                                    </div>
 
-                        <Tooltip v-else content="点击即可编辑" placement="top" style="width:100%;">
-                            <div class="noLocation" @click="editAddress=true;address=addressValue;">{{schedule.address?schedule.address:'待添加'}}</div>
-                        </Tooltip>
+                                    <Tooltip v-else content="点击即可编辑" placement="top" style="width:100%;">
+                                        <div class="noLocation" @click="editAddress=true;address=addressValue;">{{schedule.address?schedule.address:'待添加'}}</div>
+                                    </Tooltip>
+                                </div>
+
+                            </div>
+
+                            <div class="remark" style="display: flex">
+                    <span class="name" style="flex: none;">
+                    <Icon type="ios-copy-outline" />备注</span>
+                                <div class="editor"
+                                    @click="showEditor=true"
+                                    v-if="!showEditor"
+                                    v-html="schedule.remarks?schedule.remarks:'待添加'">
+                                </div>
+                                <div v-if="showEditor" class="editor-wrap">
+                                    <editor ref="editor" :contents="schedule.remarks" class="editBox"></editor>
+                                    <button type="button" class="fr ivu-btn ivu-btn-info ivu-btn-large" @click="addBeizhu" :loading="loading">
+                                        <span v-if="!loading">立即发布</span>
+                                        <span v-else>Loading...</span>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div class="tags clearfix">
+                    <span class="name">
+                    <Icon type="ios-pricetags-outline"></Icon>标签</span>
+                                
+                                <!-- <Tags class="fl" :taglist="schedule.tagList" :projectId="schedule.projectId" :publicType="publicType" :publicId="schedule.scheduleId"
+                                    v-if="schedule.tagList"></Tags> -->
+
+                                        <!-- 取到data.tag了再添加孙子辈组件 -->
+                        <Tags  v-if="schedule.tagList" class="fl" :taglist="schedule.tagList" :publicId="schedule.projectId" :publicType="publicType" :projectId="schedule.scheduleId"  ></Tags>
+                            </div>
+
+                            <!-- 添加关联 -->
+                            <div class="relevance">
+                                <p class="name" style="float: none;"><Icon type="ios-link-outline"></Icon>关联内容</p>
+                                <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
+                                <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
+                                    <AddRelation :publicId="schedule.scheduleId" :fromType="publicType"></AddRelation>
+                                </Modal>
+                            </div>
+
+                            <div style="margin-bottom: 15px" class="has-relevance" v-if="schedule.scheduleId">
+                                <ul v-if="schedule.bindTasks.length">
+                                    <div class="what-title">关联的任务</div>
+                                    <li class="gl-task-list" v-for="(b,i) in schedule.bindTasks" :key="i" >
+                                        <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
+                                            <Icon type="md-checkbox-outline" size="22" />
+                                            <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
+                                            <Icon type="md-contact" v-else size="26" />
+                                            <div class="gl-con">
+                                                <div class="gl-con-top">
+                                                    <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
+                                                </div>
+                                                <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                            </div>
+                                        </div>
+                                        <Poptip @click.stop>
+                                            <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                            <div slot="content">
+                                                <div class="glpop-list">
+                                                    <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                                </div>
+                                                <div class="glpop-list" @click.stop="cancle(b.taskId)">
+                                                    <Icon type="md-link" size="20" /><span>取消关联</span>
+                                                </div>
+                                            </div>
+                                        </Poptip>
+                                    </li>
+                                </ul>
+                                <ul v-if="schedule.bindFiles.length">
+                                    <div class="what-title">关联的文件</div>
+                                    <li class="gl-task-list" v-for="(b,i) in schedule.bindFiles" :key="i">
+                                        <div class="gl-task-list-con" @click="getFileDetail(b.fileId)">
+                                            <!--<Icon type="md-checkbox-outline" size="22" />-->
+                                            <Icon type="ios-document-outline" size="22" />
+                                            <div class="gl-con">
+                                                <div class="gl-con-top">
+                                                    <span>{{b.fileName}}</span><span>{{b.projectName}}</span>
+                                                </div>
+                                                <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                            </div>
+                                        </div>
+                                        <Poptip>
+                                            <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                            <div slot="content">
+                                                <div class="glpop-list">
+                                                    <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                                </div>
+                                                <div class="glpop-list" @click.stop="cancle(b.fileId)">
+                                                    <Icon type="md-link" size="20" /><span>取消关联</span>
+                                                </div>
+                                            </div>
+                                        </Poptip>
+                                    </li>
+                                </ul>
+                                <ul v-if="schedule.bindSchedules.length">
+                                    <div class="what-title">关联的日程</div>
+                                    <li class="gl-task-list" v-for="(b,i) in schedule.bindSchedules" :key="i" >
+                                        <div class="gl-task-list-con" @click="editSchedule(b.scheduleId)">
+                                            <!--<Icon type="md-checkbox-outline" size="22" />-->
+                                            <Icon type="ios-calendar-outline" size="22" />
+                                            <div class="gl-con">
+                                                <div class="gl-con-top">
+                                                    <span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>
+                                                </div>
+                                                <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                            </div>
+                                        </div>
+                                        <Poptip>
+                                            <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                            <div slot="content">
+                                                <div class="glpop-list">
+                                                    <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                                </div>
+                                                <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
+                                                    <Icon type="md-link" size="20" /><span>取消关联</span>
+                                                </div>
+                                            </div>
+                                        </Poptip>
+                                    </li>
+                                </ul>
+                                <ul v-if="schedule.bindShares.length">
+                                    <div class="what-title">关联的分享</div>
+                                    <li class="gl-task-list" v-for="(b,i) in schedule.bindShares" :key="i">
+                                        <div class="gl-task-list-con" @click="goShareDetail(b.shareId)">
+                                            <Icon type="ios-open-outline" size="22" />
+                                            <div class="gl-con">
+                                                <div class="gl-con-top">
+                                                    <span>{{b.shareName}}</span><span>{{b.projectName}}</span>
+                                                </div>
+                                                <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                                            </div>
+                                        </div>
+                                        <Poptip>
+                                            <Icon class="glpop" type="ios-arrow-down" size="20" />
+                                            <div slot="content">
+                                                <div class="glpop-list">
+                                                    <Icon type="ios-link" size="20" /><span>复制链接</span>
+                                                </div>
+                                                <div class="glpop-list" @click.stop="cancle(b.shareId)">
+                                                    <Icon type="md-link" size="20" /><span>取消关联</span>
+                                                </div>
+                                            </div>
+                                        </Poptip>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- 设置参与者 -->
+                            <div class="participator">
+                                <h5>
+                                    参与者 · {{schedule.joinInfo?schedule.joinInfo.length:0}}
+                                    <Tooltip content="参与者将会收到评论和任务更新通知"
+                                            placement="right"
+                                            transfer>
+                                        <Icon type="ios-help"></Icon>
+                                    </Tooltip>
+                                </h5>
+                                <div class="involve-list clearfix">
+                                    <div class="member-avatar fl"
+                                        v-for="(item,index) in schedule.joinInfo"
+                                        :key="index">
+                                        <Tooltip :content="item.userName"
+                                                placement="top"
+                                                transfer>
+                                            <div class="ava">
+                                                <!-- 删除需要加在关闭按钮上 -->
+                                                <img v-if="item.image"
+                                                    :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image"
+                                                    alt="">
+                                                <svg-icon v-else
+                                                        style="width:24px;height:24px;display:block;"
+                                                        name="allMember"></svg-icon>
+                                                <span class="close" @click="deleteInvolve(item.userId)">×</span>
+                                            </div>
+                                        </Tooltip>
+
+                                    </div>
+                                    <div class="addButton fl">
+                                        <InvolveMember ref="involveMember"
+                                                    :checkedList="schedule.memberIds?schedule.memberIds:[]"
+                                                    :projectId="schedule.projectId"
+                                                    @save="saveInvolveMember"></InvolveMember>
+                                    </div>
+                                </div>
+                                <log :logs="schedule.logs" :unReadMsg="schedule.unReadMsg" :publicId="schedule.scheduleId"></log>
                     </div>
-
-                </div>
-
-                <div class="remark" style="display: flex">
-        <span class="name" style="flex: none;">
-          <Icon type="ios-copy-outline" />备注</span>
-                    <div class="editor"
-                         @click="showEditor=true"
-                         v-if="!showEditor"
-                         v-html="schedule.remarks?schedule.remarks:'待添加'">
-                    </div>
-                    <div v-if="showEditor" class="editor-wrap">
-                        <editor ref="editor" :contents="schedule.remarks" class="editBox"></editor>
-                        <button type="button" class="fr ivu-btn ivu-btn-info ivu-btn-large" @click="addBeizhu" :loading="loading">
-                            <span v-if="!loading">立即发布</span>
-                            <span v-else>Loading...</span>
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="tags clearfix">
-        <span class="name">
-          <Icon type="ios-pricetags-outline"></Icon>标签</span>
-                    
-                    <!-- <Tags class="fl" :taglist="schedule.tagList" :projectId="schedule.projectId" :publicType="publicType" :publicId="schedule.scheduleId"
-                          v-if="schedule.tagList"></Tags> -->
-
-                            <!-- 取到data.tag了再添加孙子辈组件 -->
-            <Tags  v-if="schedule.tagList" class="fl" :taglist="schedule.tagList" :publicId="schedule.projectId" :publicType="publicType" :projectId="schedule.scheduleId"  ></Tags>
-                </div>
-
-                <!-- 添加关联 -->
-                <div class="relevance">
-                    <p class="name" style="float: none;"><Icon type="ios-link-outline"></Icon>关联内容</p>
-                    <div class="addLink" @click="relationModal=true;"><Icon type="ios-add-circle-outline" />添加关联</div>
-                    <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-                        <AddRelation :publicId="schedule.scheduleId" :fromType="publicType"></AddRelation>
-                    </Modal>
-                </div>
-
-                <div style="margin-bottom: 15px" class="has-relevance" v-if="schedule.scheduleId">
-                    <ul v-if="schedule.bindTasks.length">
-                        <div class="what-title">关联的任务</div>
-                        <li class="gl-task-list" v-for="(b,i) in schedule.bindTasks" :key="i" >
-                            <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
-                                <Icon type="md-checkbox-outline" size="22" />
-                                <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
-                                <Icon type="md-contact" v-else size="26" />
-                                <div class="gl-con">
-                                    <div class="gl-con-top">
-                                        <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
-                                    </div>
-                                    <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
-                                </div>
-                            </div>
-                            <Poptip @click.stop>
-                                <Icon class="glpop" type="ios-arrow-down" size="20" />
-                                <div slot="content">
-                                    <div class="glpop-list">
-                                        <Icon type="ios-link" size="20" /><span>复制链接</span>
-                                    </div>
-                                    <div class="glpop-list" @click.stop="cancle(b.taskId)">
-                                        <Icon type="md-link" size="20" /><span>取消关联</span>
-                                    </div>
-                                </div>
-                            </Poptip>
-                        </li>
-                    </ul>
-                    <ul v-if="schedule.bindFiles.length">
-                        <div class="what-title">关联的文件</div>
-                        <li class="gl-task-list" v-for="(b,i) in schedule.bindFiles" :key="i">
-                            <div class="gl-task-list-con" @click="getFileDetail(b.fileId)">
-                                <!--<Icon type="md-checkbox-outline" size="22" />-->
-                                <Icon type="ios-document-outline" size="22" />
-                                <div class="gl-con">
-                                    <div class="gl-con-top">
-                                        <span>{{b.fileName}}</span><span>{{b.projectName}}</span>
-                                    </div>
-                                    <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
-                                </div>
-                            </div>
-                            <Poptip>
-                                <Icon class="glpop" type="ios-arrow-down" size="20" />
-                                <div slot="content">
-                                    <div class="glpop-list">
-                                        <Icon type="ios-link" size="20" /><span>复制链接</span>
-                                    </div>
-                                    <div class="glpop-list" @click.stop="cancle(b.fileId)">
-                                        <Icon type="md-link" size="20" /><span>取消关联</span>
-                                    </div>
-                                </div>
-                            </Poptip>
-                        </li>
-                    </ul>
-                    <ul v-if="schedule.bindSchedules.length">
-                        <div class="what-title">关联的日程</div>
-                        <li class="gl-task-list" v-for="(b,i) in schedule.bindSchedules" :key="i" >
-                            <div class="gl-task-list-con" @click="editSchedule(b.scheduleId)">
-                                <!--<Icon type="md-checkbox-outline" size="22" />-->
-                                <Icon type="ios-calendar-outline" size="22" />
-                                <div class="gl-con">
-                                    <div class="gl-con-top">
-                                        <span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>
-                                    </div>
-                                    <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
-                                </div>
-                            </div>
-                            <Poptip>
-                                <Icon class="glpop" type="ios-arrow-down" size="20" />
-                                <div slot="content">
-                                    <div class="glpop-list">
-                                        <Icon type="ios-link" size="20" /><span>复制链接</span>
-                                    </div>
-                                    <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
-                                        <Icon type="md-link" size="20" /><span>取消关联</span>
-                                    </div>
-                                </div>
-                            </Poptip>
-                        </li>
-                    </ul>
-                    <ul v-if="schedule.bindShares.length">
-                        <div class="what-title">关联的分享</div>
-                        <li class="gl-task-list" v-for="(b,i) in schedule.bindShares" :key="i">
-                            <div class="gl-task-list-con" @click="goShareDetail(b.shareId)">
-                                <Icon type="ios-open-outline" size="22" />
-                                <div class="gl-con">
-                                    <div class="gl-con-top">
-                                        <span>{{b.shareName}}</span><span>{{b.projectName}}</span>
-                                    </div>
-                                    <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
-                                </div>
-                            </div>
-                            <Poptip>
-                                <Icon class="glpop" type="ios-arrow-down" size="20" />
-                                <div slot="content">
-                                    <div class="glpop-list">
-                                        <Icon type="ios-link" size="20" /><span>复制链接</span>
-                                    </div>
-                                    <div class="glpop-list" @click.stop="cancle(b.shareId)">
-                                        <Icon type="md-link" size="20" /><span>取消关联</span>
-                                    </div>
-                                </div>
-                            </Poptip>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- 设置参与者 -->
-                <div class="participator">
-                    <h5>
-                        参与者 · {{schedule.joinInfo?schedule.joinInfo.length:0}}
-                        <Tooltip content="参与者将会收到评论和任务更新通知"
-                                 placement="right"
-                                 transfer>
-                            <Icon type="ios-help"></Icon>
-                        </Tooltip>
-                    </h5>
-                    <div class="involve-list clearfix">
-                        <div class="member-avatar fl"
-                             v-for="(item,index) in schedule.joinInfo"
-                             :key="index">
-                            <Tooltip :content="item.userName"
-                                     placement="top"
-                                     transfer>
-                                <div class="ava">
-                                    <!-- 删除需要加在关闭按钮上 -->
-                                    <img v-if="item.image"
-                                         :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image"
-                                         alt="">
-                                    <svg-icon v-else
-                                              style="width:24px;height:24px;display:block;"
-                                              name="allMember"></svg-icon>
-                                    <span class="close" @click="deleteInvolve(item.userId)">×</span>
-                                </div>
-                            </Tooltip>
-
-                        </div>
-                        <div class="addButton fl">
-                            <InvolveMember ref="involveMember"
-                                           :checkedList="schedule.memberIds?schedule.memberIds:[]"
-                                           :projectId="schedule.projectId"
-                                           @save="saveInvolveMember"></InvolveMember>
-                        </div>
-                    </div>
-                    <log :logs="schedule.logs" :unReadMsg="schedule.unReadMsg" :publicId="schedule.scheduleId"></log>
-                </div>
-
             </div>
             <footer>
                 <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId" :publicType="publicType"></publick>
@@ -503,6 +498,9 @@ export default {
 </script>
 <style scoped lang="less">
 @import './EditRicheng.less';
+    /deep/.ivu-modal-close .ivu-icon-ios-close{
+      color: #ffffff !important;
+    }
     .btn-box{
         display: flex;
         flex-direction: row-reverse;
