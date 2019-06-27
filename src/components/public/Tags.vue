@@ -281,7 +281,7 @@ export default {
         let params = {
           projectId: this.projectId,
           publicId:this.publicId,
-          publicType:"任务",
+          publicType:this.publicType,
           tagName: this.tagName,
           bgColor: this.checkedColor
         };

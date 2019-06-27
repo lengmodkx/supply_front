@@ -35,9 +35,9 @@
         </div>
       </div>
       <div class="handler calendar">
-        <p class="center">
+        <!-- <p class="center">
           <Icon type="calendar"></Icon>
-        </p>
+        </p> -->
         添加新日程，安排会议或其他活动，添加参与者即可通知其他成员参加。
       </div>
     </div>
