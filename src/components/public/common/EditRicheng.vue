@@ -114,7 +114,7 @@
                                     v-if="schedule.tagList"></Tags> -->
 
                                         <!-- 取到data.tag了再添加孙子辈组件 -->
-                        <Tags  v-if="schedule.tagList" class="fl" :taglist="schedule.tagList" :publicId="schedule.scheduleId" :publicType="publicType" :projectId="schedule.scheduleId"  ></Tags>
+                        <Tags  v-if="schedule.tagList" class="fl" :taglist="schedule.tagList" :publicId="schedule.scheduleId" :publicType="publicType" :projectId="schedule.projectId"  ></Tags>
                             </div>
 
                             <!-- 添加关联 -->

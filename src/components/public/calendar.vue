@@ -16,8 +16,8 @@
                     :config="config"
                     :events="fcEvents"
                     @event-render="eventRender"
-            @day-click="clickDay"
-            @event-selected="eventClick">
+                    @day-click="clickDay"
+                    @event-selected="eventClick">
             </full-calendar>
         </div>
         <ul class="create" v-show="showCreate" :style="{left:left,top:top}">
