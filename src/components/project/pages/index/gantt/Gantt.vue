@@ -180,9 +180,9 @@ export default {
         });
         this.tasks.data = listData;
         gantt.parse(this.tasks);
-        gantt.eachTask(function(task) {
-          task.$open = true;
-        });
+        // gantt.eachTask(function(task) {
+        //   task.$open = true;
+        // });
         gantt.render();
       });
     }
