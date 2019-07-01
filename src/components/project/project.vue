@@ -295,6 +295,9 @@ export default {
               case "D10":
               case "D11":
               case "D12":
+              case "D14":
+                this.$store.dispatch("schedule/getScheduleById", result.object);
+                break;
               case "D13":
                 this.$store.dispatch("schedule/init", {
                   projectId: result.object
