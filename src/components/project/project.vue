@@ -301,6 +301,11 @@ export default {
                 });
                 break;
               // 添加标签
+              case "D14":
+                    this.$store.dispatch("schedule/init", {
+                    projectId: result.object
+                    });
+               break;
               case "E1":
                 if (result.object.publicType === "任务") {
                   this.$store.dispatch(
