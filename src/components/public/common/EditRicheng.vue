@@ -498,9 +498,7 @@ export default {
 </script>
 <style scoped lang="less">
 @import './EditRicheng.less';
-    /deep/.ivu-modal-close .ivu-icon-ios-close{
-      color: #ffffff !important;
-    }
+    
     .btn-box{
         display: flex;
         flex-direction: row-reverse;

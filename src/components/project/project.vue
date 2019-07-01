@@ -317,6 +317,8 @@ export default {
                     "share/changeShares",
                     result.object.publicId
                   );
+                } else if (result.object.publicType === "日程") {
+                   this.$store.dispatch("schedule/getScheduleById",result.object.publicId);
                 }
                 break;
               // 移除标签
@@ -336,6 +338,8 @@ export default {
                     "share/changeShares",
                     result.object.publicId
                   );
+                } else if (result.object.publicType === "日程") {
+                   this.$store.dispatch("schedule/getScheduleById",result.object.publicId);
                 }
                 break;
                 // 添加新标签并绑定
