@@ -138,8 +138,6 @@
                 if(this.nowChecked=='task'){
 
                 }
-
-                
             },
             // 永久删除
             deleteForever (id) {
@@ -168,7 +166,8 @@
             },
             //恢复文件
             recycleSure(publicId){
-                recycle(publicId,this.nowChecked).then(res => {
+            
+                recycle(publicId,this.nowChecked,this.projectId).then(res => {
                     if(res.result === 1){
                         var fileType = 0
                         getRecycle(this.projectId, this.nowChecked,fileType).then(res => {
