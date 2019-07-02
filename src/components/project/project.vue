@@ -115,7 +115,7 @@ export default {
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A11":
-                this.$store.dispatch("task/changeTask", result.object);
+                this.$store.dispatch("task/changeTask", result.object.data);
                 break;
               case "A12":
                 this.$store.dispatch("task/changeTask", result.object);
