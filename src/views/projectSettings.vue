@@ -235,9 +235,8 @@ export default {
       priorityChange(data) {
           this.project.isPublic = data;
       },
-      // 点击保存按钮
-      saveSet() {
-          var that = this;
+      saveImg(){
+         var that = this;
          /* let fd = new FormData()              //内置方法new FormData()  新建一个表格
             fd.append('file',this.image)*/
           client.multipartUpload(this.fileName, this.image, {
@@ -252,7 +251,13 @@ export default {
                   //myfile.size = that.renderSize(file.size);
                   that.files.push(myfile);*/
 
-              }),
+              })
+      },
+      // 点击保存按钮
+      saveSet() {
+        if(this.filename!=''){
+              this.saveImg();
+        }
           this.publishAxios().then(res => {
               console.log(res);
           });

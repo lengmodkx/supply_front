@@ -47,13 +47,13 @@
 
 <style>
   html, body {
-    height: 100% !important;
+    height: 100vh;
     margin: 0;
     padding: 0;
   }
 
   .container {
-    height: 500px;
+    height: 100vh;
     width: 100%;
   }
 
