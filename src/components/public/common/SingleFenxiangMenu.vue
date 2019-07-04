@@ -159,7 +159,6 @@ export default {
     copylink() {
       var clipboard = new Clipboard(".tasklink");
       clipboard.on("success", e => {
-        alert("复制成功");
         // 释放内存
         clipboard.destroy();
       });
@@ -257,6 +256,7 @@ export default {
     },
     // 移动分享
     removeRc() {
+      debugger
       moveShare(this.data.id, this.currProjectId,this.projectId).then(res => {
         if (res.result) {
           this.$Message.success("移动成功");

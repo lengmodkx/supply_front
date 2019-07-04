@@ -41,14 +41,14 @@
         <img class="avatar" v-else :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${defaultImage}`" alt="">
         <div class="userInfo" slot="content">
           <ul class="org">
-            <div class="createdOrg" @click="addOrgModal=true;popVisible=false;">创建企业</div>
-            <li class="addOrgPro" v-for="(item, index) in companyList" :key="index" @click="changeOrg(item)">
+            <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div>
+            <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item)">
               {{item.organizationName}}
               <Icon v-if="item.isSelection" type="md-checkmark" />
             </li>
           </ul>
           <ul class="admin">
-            <li @click="personal"> 账号设置</li>
+            <li   :class="hoverClass=='person'?'hoverClass':''"  @click="personal"> 账号设置</li>
             <!-- <li > 账号设置</li> -->
           </ul>
           <ul class="logOut">
@@ -101,6 +101,7 @@ export default {
       logoMenu: "",
       active: false,
       mainMenu: false,
+      hoverClass:"",
       //src: localStorage.userImg,
       companyId: localStorage.companyId,
       data: [
@@ -177,6 +178,7 @@ export default {
     },
     personal(){
       this.$router.push("/personal");
+      this.hoverClass='person'
     },
     pathClick(path) {
       this.$router.push(path);
