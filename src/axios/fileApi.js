@@ -99,9 +99,27 @@ export function getTSFile(fileId) {
     });
 }
 
-//更新文件版本
-export function updateFileVersion() {
+//更新普通文件版本
+export function updateFileVersion(fileId,fileObj) {
+    return fetch({
+        url: `/files/${fileId}/version`,
+        method: "post",
+        params: {fileObj: fileObj}
+    });
+}
 
+//更新模型文件版本
+export function updateModelVersion(fileId,fileCommon,fileModel,filename,publicId) {
+    return fetch({
+        url: `/files/${fileId}/update_model`,
+        method: "post",
+        params: {
+            fileCommon: fileCommon,
+            fileModel: fileModel,
+            filename: filename,
+            publicId:publicId
+        }
+    });
 }
 
 //文件隐私模式
