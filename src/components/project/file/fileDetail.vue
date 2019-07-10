@@ -361,7 +361,7 @@ import {
   removeFile,
   cloneFile,
   recycleBin,
-  filePrivacy
+  filePrivacy,
 } from "@/axios/fileApi";
 import {
   folderChild,

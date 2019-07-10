@@ -20,6 +20,8 @@
 </template>
 <script>
 import { uploadCommonFile } from "../../../axios/api2.js";
+import {updateFileVersion} from "@/axios/fileApi";
+
 import OSS from "ali-oss";
 let client = new OSS({
   region: "oss-cn-beijing",
@@ -124,6 +126,20 @@ export default {
         files: JSON.stringify(this.files)
       };
       console.log(this.fileDetail)
+      if(this.fileDetail){
+          updateFileVersion(this.fileId,params).then(res=>{
+            if (res.result === 1) {
+              this.resetFile();
+              this.loading = false;
+              this.files = [];
+              this.$Notice.success({
+                title: "上传成功"
+              });
+              this.$emit("close");
+            }
+          })
+          return
+      }
       uploadCommonFile(this.fileId, params).then(res => {
         if (res.result === 1) {
           this.resetFile();
