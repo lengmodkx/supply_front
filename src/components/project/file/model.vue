@@ -287,6 +287,9 @@ export default {
           fileModel: JSON.stringify(this.modelFile),
           fileCommon: JSON.stringify(this.modelImg)
         };
+      
+
+
         uploadModel(this.fileId, params).then(res => {
           debugger
           if (res.result == 1) {

@@ -125,9 +125,13 @@ export default {
         projectId: this.projectId,
         files: JSON.stringify(this.files)
       };
+
+       let param = {
+        files: JSON.stringify(this.files)
+      };
       console.log(this.fileDetail)
       if(this.fileDetail){
-          updateFileVersion(this.fileId,params).then(res=>{
+          updateFileVersion(this.fileId,param).then(res=>{
             if (res.result === 1) {
               this.resetFile();
               this.loading = false;
