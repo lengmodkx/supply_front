@@ -255,6 +255,12 @@ export default {
                   fileId: result.object.parentId
                 });
                 break;
+              case "C4":
+                this.$store.dispatch("file/initFile", {
+                  fileId: result.object.parentId
+                });
+                this.$store.dispatch("file/putOneFile", result.object.fileId);
+              break;
               //新建日程
               case "D9":
                 this.$store.dispatch("schedule/init", {
