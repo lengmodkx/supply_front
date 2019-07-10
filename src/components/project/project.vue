@@ -5,9 +5,7 @@
     <ProjectMember v-transfer :class="{active:show==1,animate}" @hideBox="hideBox"></ProjectMember>
     <!-- 项目菜单 -->
     <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideMenuBox="hideBox"></ProjectMenu>
-
     <ProjectView v-transfer :class="{activeMenu:show==3,animate}" @hideMenuBox="hideBox"></ProjectView>
-
     <div class="router-view-box" :class="{zhanWei:show==1||show==2||show==3}">
       <router-view />
     </div>

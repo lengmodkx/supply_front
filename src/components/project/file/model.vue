@@ -235,11 +235,9 @@ export default {
                     console.log(err);
                   });
         } else {
-          var fileName =
-                  this.dirName + this.randomStr(10) + this.getSuffix(file.name);
+          var fileName = this.dirName + this.randomStr(10) + this.getSuffix(file.name);
           zip.file(file.name, file, { type: "blob" });
-          zip
-                  .generateAsync({
+          zip.generateAsync({
                     type: "blob",
                     compression: "DEFLATE",
                     compressionOptions: {
@@ -248,8 +246,7 @@ export default {
                   })
                   .then(function(data) {
                     var file = new File([data], fileName);
-                    client
-                            .multipartUpload(file.name, file, {
+                    client.multipartUpload(file.name, file, {
                               progress: function(p) {
                                 that.percent1 = Math.floor(p * 100);
                               }
@@ -291,6 +288,7 @@ export default {
           fileCommon: JSON.stringify(this.modelImg)
         };
         uploadModel(this.fileId, params).then(res => {
+          debugger
           if (res.result == 1) {
             this.loading = false;
             this.resetModel();

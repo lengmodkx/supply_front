@@ -149,7 +149,7 @@ export default {
       ...mapActions("project", ["orgProjectInit"]),
     ...mapMutations('app',['changeHeaderTag']),
     initSocket(id) {
-      // 建立连接对象
+      // 建立连接对象 
       var url =
         process.env.NODE_ENV === "development"
           ? process.env.VUE_APP_SOCKET

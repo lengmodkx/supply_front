@@ -339,7 +339,7 @@
     </Modal>
     <!--上传普通文件-->
     <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-      <common-file @close="showCommon=false" :fileId="file.data.fileId" :projectId="projectId"></common-file>
+      <common-file @close="showCommon=false" :fileId="file.data.fileId" :projectId="projectId" :fileDetail="'true'"></common-file>
     </Modal>
   </div>
 </template>

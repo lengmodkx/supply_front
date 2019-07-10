@@ -28,7 +28,7 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 export default {
-  props: ["fileId", "projectId"],
+  props: ["fileId", "projectId",'fileDetail'],
   data() {
     return {
       showupload: true,
@@ -123,6 +123,7 @@ export default {
         projectId: this.projectId,
         files: JSON.stringify(this.files)
       };
+      console.log(this.fileDetail)
       uploadCommonFile(this.fileId, params).then(res => {
         if (res.result === 1) {
           this.resetFile();
