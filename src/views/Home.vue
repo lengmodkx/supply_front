@@ -1,174 +1,182 @@
 <template>
-  <div class="container index">
-    <div class="container-title">
-      <div class="search-box">
-        <Input v-model.trim="searchWords" search enter-button
-               placeholder="请输入项目名称关键字进行搜索"
-               @on-search="searchProject" @on-keyup="searchNo" />
-      </div>
-      <div class="filtrate-box">
-        <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
-          <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-        <RadioGroup class="select-view" v-model="selectView" type="button">
-          <Radio label="卡片视图"></Radio>
-          <Radio label="列表视图"></Radio>
-        </RadioGroup>
-        <Button type="primary" style="margin-left:10px" @click="showproject=true">创建新项目</Button>
-      </div>
+  <div class="wrap-box">
+    <!--树形结构-->
+    <div class="project-tree" v-if="selectView==='列表视图'">
+      <p>项目树</p>
+      <Tree :data="treeData" :load-data="loadData" empty-text="暂无项目"></Tree>
     </div>
-<Loading v-if="searchLoading"></Loading>
-    <!--列表视图-->
-    <loading v-if="loading"></loading>
-    <div v-show="selectView=='列表视图'">
-      <h2 class="oh" v-text="projectType">我创建的项目</h2>
-      <!--搜索项目-->
-      <ul v-if="searchData.length">
-        <li class="project-list" v-for="(item,index) in searchData" :key="index" @click="path(item)">
-          <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
-          <div class="project-body">
-            <div class="project-con">
-              <p>{{item.projectName}}</p>
-              <span>{{item.projectDes}}</span>
-            </div>
-            <div class="operate-box">
-              <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
-                <span @click.stop="setStar(item.projectId)">
-                  <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
-                </span>
-              </Tooltip>
-              <Tooltip class="iconpic1" content="打开项目设置" placement="top">
-                <span @click.stop="setProject(item)">
-                  <Icon type="ios-settings-outline" size="22"></Icon>
-                </span>
-              </Tooltip>
-              <Tooltip class="iconpic2" content="删除项目" placement="top">
-                <span @click.stop="confirmHuishou(item)">
-                  <Icon type="ios-trash-outline" size="22" />
-                </span>
-              </Tooltip>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <!--正常显示-->
-      <ul v-else-if="!loading && !isSearch">
-        <li class="project-list" v-for="(item,index) in projects" :key="index" @click="path(item)">
-          <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
-          <div class="project-body">
-            <div class="project-con">
-              <p>{{item.projectName}}</p>
-              <span>{{item.projectDes}}</span>
-            </div>
-            <div class="operate-box" v-if="projectType!='回收站的项目'">
-              <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
-                <span @click.stop="setStar(item.projectId)">
-                  <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
-                </span>
-              </Tooltip>
-              <Tooltip class="iconpic1" content="打开项目设置" placement="top">
-                <span @click.stop="setProject(item)">
-                  <Icon type="ios-settings-outline" size="22"></Icon>
-                </span>
-              </Tooltip>
-              <Tooltip class="iconpic2" content="删除项目" placement="top">
-                <span @click.stop="confirmHuishou(item)">
-                  <Icon type="ios-trash-outline" size="22" />
-                </span>
-              </Tooltip>
-            </div>
-          </div>
-        </li>
-        <li v-show="projectType=='我创建的项目'" class="project-list add-project" @click="showproject=true">
-          <div class="bj-img add-img">
-            <Icon type="md-add" />
-          </div>
-          <div class="add-project-body">创建新项目</div>
-        </li>
-      </ul>
-      <div class="noList" v-if="projects.length==0 && !loading && projectType!='我创建的项目'">
-        <img src="../assets/images/noproject.png">
-        <p>暂无项目</p>
+    <div class="container index">
+      <div class="container-title">
+        <div class="search-box">
+          <Input v-model.trim="searchWords" search enter-button
+                 placeholder="请输入项目名称关键字进行搜索"
+                 @on-search="searchProject" @on-keyup="searchNo" />
+        </div>
+        <div class="filtrate-box">
+          <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
+            <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+          <RadioGroup class="select-view" v-model="selectView" type="button" @on-change="changeView">
+            <Radio label="卡片视图"></Radio>
+            <Radio label="列表视图"></Radio>
+          </RadioGroup>
+          <Button type="primary" style="margin-left:10px" @click="showproject=true">创建新项目</Button>
+        </div>
       </div>
-    </div>
-
-    <!--卡片式图-->
-    <div v-show="selectView=='卡片视图'">
-      <h2 class="oh" v-text="projectType">我创建的项目</h2>
-      <div>
+      <Loading v-if="searchLoading"></Loading>
+      <!--列表视图-->
+      <loading v-if="loading"></loading>
+      <div v-show="selectView=='列表视图'">
+        <h2 class="oh" v-text="projectType">我创建的项目</h2>
         <!--搜索项目-->
-        <Row v-if="searchData.length">
-          <iCol span="6" v-for="(item,index) in searchData" :key="index">
-            <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
-              <h2>{{item.projectName}}</h2>
-              <p>{{item.projectDes}}</p>
-              <div class="iconPic">
-                <Tooltip class="iconpic1" content="打开项目设置" placement="top">
-                  <span @click.stop="setProject(item)">
-                    <Icon type="md-settings" size="18"></Icon>
-                  </span>
-                </Tooltip>
+        <ul v-if="searchData.length">
+          <li class="project-list" v-for="(item,index) in searchData" :key="index" @click="path(item)">
+            <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
+            <div class="project-body">
+              <div class="project-con">
+                <p>{{item.projectName}}</p>
+                <span>{{item.projectDes}}</span>
+              </div>
+              <div class="operate-box">
                 <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
-                  <span @click.stop="setStar(item.projectId)">
-                    <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
-                  </span>
+                <span @click.stop="setStar(item.projectId)">
+                  <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
+                </span>
+                </Tooltip>
+                <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                <span @click.stop="setProject(item)">
+                  <Icon type="ios-settings-outline" size="22"></Icon>
+                </span>
+                </Tooltip>
+                <Tooltip class="iconpic2" content="删除项目" placement="top">
+                <span @click.stop="confirmHuishou(item)">
+                  <Icon type="ios-trash-outline" size="22" />
+                </span>
                 </Tooltip>
               </div>
             </div>
-          </iCol>
-        </Row>
+          </li>
+        </ul>
         <!--正常显示-->
-        <Row v-else-if="!loading && !isSearch" >
-          <iCol span="6" v-for="(item,index) in projects" :key="index">
-            <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
-              <h2>{{item.projectName}}</h2>
-              <p>{{item.projectDes}}</p>
-              <div class="iconPic"  v-if="projectType!='回收站的项目'">
-                <Tooltip class="iconpic1" content="打开项目设置" placement="top">
-                  <span @click.stop="setProject(item)">
-                    <Icon type="md-settings" size="18"></Icon>
-                  </span>
-                </Tooltip>
+        <ul v-else-if="!loading && !isSearch">
+          <li class="project-list" v-for="(item,index) in projects" :key="index" @click="path(item)">
+            <div class="bj-img" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`"></div>
+            <div class="project-body">
+              <div class="project-con">
+                <p>{{item.projectName}}</p>
+                <span>{{item.projectDes}}</span>
+              </div>
+              <div class="operate-box" v-if="projectType!='回收站的项目'">
                 <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
-                  <span @click.stop="setStar(item.projectId)">
-                    <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
-                  </span>
+                <span @click.stop="setStar(item.projectId)">
+                  <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
+                </span>
+                </Tooltip>
+                <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                <span @click.stop="setProject(item)">
+                  <Icon type="ios-settings-outline" size="22"></Icon>
+                </span>
+                </Tooltip>
+                <Tooltip class="iconpic2" content="删除项目" placement="top">
+                <span @click.stop="confirmHuishou(item)">
+                  <Icon type="ios-trash-outline" size="22" />
+                </span>
                 </Tooltip>
               </div>
             </div>
-          </iCol>
-          <iCol span="6" v-show="projectType=='我创建的项目'">
-            <div class="col add-project" @click="showproject=true">
-              <h1 class="center">
-                <Icon type="md-add-circle" />
-              </h1>
-              <h2 class="center">创建新项目</h2>
+          </li>
+          <li v-show="projectType=='我创建的项目'" class="project-list add-project" @click="showproject=true">
+            <div class="bj-img add-img">
+              <Icon type="md-add" />
             </div>
-          </iCol>
-        </Row>
+            <div class="add-project-body">创建新项目</div>
+          </li>
+        </ul>
         <div class="noList" v-if="projects.length==0 && !loading && projectType!='我创建的项目'">
           <img src="../assets/images/noproject.png">
           <p>暂无项目</p>
         </div>
       </div>
-    </div>
 
-    <!-- 创建项目 -->
-    <Modal v-model="showproject" class="newPro-modal" :mask-closable="false">
-      <CreateProject :showProject='showproject' @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
-    </Modal>
-    <!-- 项目设置 -->
-    <Modal v-model="projectSet" class="setPro-modal">
-      <ProjectSettings  @close-settings="closeSettings" ></ProjectSettings>
-    </Modal>
-
-    <Modal class="confirmModal" v-model="showBin" title="移到回收站">
-              <p style="padding:10px;font-size:15px;">一旦将项目「{{this.binName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
-              <div class="doBtn">
-                <Button type="error" @click="okHuishou" >移到回收站</Button>
+      <!--卡片式图-->
+      <div v-show="selectView=='卡片视图'">
+        <h2 class="oh" v-text="projectType">我创建的项目</h2>
+        <div>
+          <!--搜索项目-->
+          <Row v-if="searchData.length">
+            <iCol span="6" v-for="(item,index) in searchData" :key="index">
+              <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
+                <h2>{{item.projectName}}</h2>
+                <p>{{item.projectDes}}</p>
+                <div class="iconPic">
+                  <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                  <span @click.stop="setProject(item)">
+                    <Icon type="md-settings" size="18"></Icon>
+                  </span>
+                  </Tooltip>
+                  <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
+                  <span @click.stop="setStar(item.projectId)">
+                    <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
+                  </span>
+                  </Tooltip>
+                </div>
               </div>
-    </Modal>
+            </iCol>
+          </Row>
+          <!--正常显示-->
+          <Row v-else-if="!loading && !isSearch" >
+            <iCol span="6" v-for="(item,index) in projects" :key="index">
+              <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
+                <h2>{{item.projectName}}</h2>
+                <p>{{item.projectDes}}</p>
+                <div class="iconPic"  v-if="projectType!='回收站的项目'">
+                  <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                  <span @click.stop="setProject(item)">
+                    <Icon type="md-settings" size="18"></Icon>
+                  </span>
+                  </Tooltip>
+                  <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
+                  <span @click.stop="setStar(item.projectId)">
+                    <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
+                  </span>
+                  </Tooltip>
+                </div>
+              </div>
+            </iCol>
+            <iCol span="6" v-show="projectType=='我创建的项目'">
+              <div class="col add-project" @click="showproject=true">
+                <h1 class="center">
+                  <Icon type="md-add-circle" />
+                </h1>
+                <h2 class="center">创建新项目</h2>
+              </div>
+            </iCol>
+          </Row>
+          <div class="noList" v-if="projects.length==0 && !loading && projectType!='我创建的项目'">
+            <img src="../assets/images/noproject.png">
+            <p>暂无项目</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 创建项目 -->
+      <Modal v-model="showproject" class="newPro-modal" :mask-closable="false">
+        <CreateProject :showProject='showproject' @hideModal="showproject=false" @getNewList="getNewList"></CreateProject>
+      </Modal>
+      <!-- 项目设置 -->
+      <Modal v-model="projectSet" class="setPro-modal">
+        <ProjectSettings  @close-settings="closeSettings" ></ProjectSettings>
+      </Modal>
+
+      <Modal class="confirmModal" v-model="showBin" title="移到回收站">
+        <p style="padding:10px;font-size:15px;">一旦将项目「{{this.binName}}」移到回收站，所有与项目有关的信息将会被移到回收站，其中的内容也不会被统计和搜索收录，需要去回收站恢复后才能继续使用。</p>
+        <div class="doBtn">
+          <Button type="error" @click="okHuishou" >移到回收站</Button>
+        </div>
+      </Modal>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -183,7 +191,8 @@ import {
   recycleProject,
   recoverProject,
   delProject,
-  searchProjects
+  searchProjects,
+  getProjectTree
 } from "@/axios/api";
 export default {
   name: "index",
@@ -227,6 +236,13 @@ export default {
       companyId: this.$route.params.id?this.$route.params.id:'',
       projectType: "我创建的项目",
       selectView: "卡片视图",
+      treeData: [
+        {
+          title: 'parent',
+          loading: false,
+          children: []
+        }
+      ],
       projectList: [
         {
           value: "我创建的项目",
@@ -296,6 +312,11 @@ export default {
     },
     getNewList(value) {
       this.init(value);
+      if (this.selectView==='列表视图'){
+        getProjectTree('').then(res => {
+          this.treeData=res.data
+        })
+      }
       // this.orgProjectInit({'id': this.companyId,'type':value})
     },
     //打开项目设置
@@ -357,12 +378,70 @@ export default {
           }       
       })
 
+    },
+    // 卡片，列表视图切换
+    changeView (data) {
+      if (data==='列表视图') {
+        getProjectTree('').then(res => {
+          console.log(555555,res)
+          this.treeData=res.data
+        })
+      }
+    },
+    // 加载树形 子项目
+    loadData (item, callback) {
+      console.log(item)
+      getProjectTree(item.id).then(res => {
+        console.log(res)
+        callback(res.data);
+      })
+      setTimeout(() => {
+        const data = [
+          {
+            title: 'children',
+            loading: false,
+            children: []
+          },
+          {
+            title: 'children',
+            loading: false,
+            children: []
+          }
+        ];
+
+      }, 1000);
     }
   }
 
 };
 </script>
 <style scoped lang="less">
+.wrap-box{
+  width: 100%;
+  display: flex;
+  .project-tree{
+    width: 250px;
+    height: 100vh ;
+    flex: none;
+    padding: 70px 10px 10px 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 8px;
+      background-color: #e5e5e5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #cecece;
+    }
+    /deep/ .ivu-tree-title{
+      width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
 .starOn {
   color: #ffaa31 !important;
 }
@@ -402,7 +481,7 @@ export default {
 }
 
 .project-list {
-  width: 1080px;
+  width: calc(100% - 100px) ;
   height: 72px;
   padding: 0 20px;
   display: flex;
