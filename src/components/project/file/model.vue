@@ -291,7 +291,7 @@ export default {
 
 
         uploadModel(this.fileId, params).then(res => {
-          debugger
+          
           if (res.result == 1) {
             this.loading = false;
             this.resetModel();
