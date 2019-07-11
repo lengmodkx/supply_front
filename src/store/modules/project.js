@@ -9,7 +9,8 @@ const store = {
         projects: [],
         loading: true,
         project: null,
-        projectName: null
+        projectName: null,
+        allProject: [],
     },
     mutations: {
         _init(state, data) {
@@ -35,6 +36,10 @@ const store = {
                 console.log(state.projects)
             })
 
+        },
+        // 获取全部项目
+        projectTotle (state, data) {
+            state.allProject=data
         }
     },
     actions: {
@@ -42,6 +47,7 @@ const store = {
             getProjectList().then(res => {
                 if (res.result === 1) {
                     let data = [];
+                    commit('projectTotle',res.data)
                     switch (params) {
                         case "我创建的项目":
                             data = res.data.filter(v => {

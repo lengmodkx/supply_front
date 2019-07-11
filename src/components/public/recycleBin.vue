@@ -81,7 +81,7 @@
 
                         <div  @click.stop="recoverIt(info.id)" ><Icon type="md-refresh"/>恢复内容</div>
                     </Poptip>
-                    <div><Icon type="ios-trash-outline" @click="deleteForever(info.id)" />彻底删除</div>
+                    <div v-if="nowChecked!=='file'"><Icon type="ios-trash-outline" @click="deleteForever(info.id)" />彻底删除</div>
                        
                 </div>
             </div>

@@ -5,6 +5,9 @@
     <p class="myindex">为不同的事物建立各自的项目</p>
     <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）" />
     <Input type="textarea" :rows="2" class="inputbox" v-model="proDes" :maxlength="50" placeholder="项目简介（选填）" />
+    <Select v-model="parentProject" filterable placeholder="选择父项目">
+      <Option v-for="item in allProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+    </Select>
     <div class="create-project-time">
       <DatePicker placeholder="开始时间" :value="startTime" type="datetime" @on-change="startDate" :options="options1"></DatePicker>
       <DatePicker placeholder="结束时间" :value="endTime" type="datetime" @on-change="endDate" :options="options2"></DatePicker>
@@ -18,6 +21,7 @@
 </template>
 <script>
 import { createProject } from "@/axios/api";
+import {mapState} from 'vuex'
 export default {
   props: ["showProject"],
   data() {
@@ -29,7 +33,8 @@ export default {
       startTime: "",
       endTime: "",
       options1: {},
-      options2: {}
+      options2: {},
+      parentProject: ''
     };
   },
   watch:{
@@ -45,6 +50,9 @@ export default {
           },
           deep: true
     },
+  computed: {
+    ...mapState('project', ['allProject'])
+  },
   
   methods: {
     create() {
@@ -65,10 +73,10 @@ export default {
       let data = {
         projectName: this.proName,
         projectDes: this.proDes,
+        parentId: this.parentProject,
         startTime: new Date(this.startTime).getTime(),
         endTime: new Date(this.endTime).getTime()
       };
-
       createProject(data).then(msg => {
         if (msg.result == 1) {
           this.loading = true;

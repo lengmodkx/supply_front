@@ -102,6 +102,14 @@ export function createProject(data) {
         data: data
     });
 }
+// 获取项目树形菜单
+export function getProjectTree(projectId) {
+    return fetch({
+        url: '/projects/tree',
+        method: "get", // 请求方法
+        params: {projectId:projectId}
+    });
+}
 //获取单个项目
 export function getProject(projectId) {
     return $get(`/projects/${projectId}`);

@@ -6,23 +6,45 @@
         </header>
         <div class="pcc-operate">
             <Button type="primary" icon="md-add" @click="addRole">新增</Button>
-            <Button type="warning" icon="ios-create-outline" @click="editRole">编辑</Button>
-            <Button type="error" icon="ios-trash-outline" @click="romoveRole">删除</Button>
-            <Button type="success" icon="ios-filing-outline" @click="permissionAssign=true">分配权限</Button>
+            <Button type="warning" icon="ios-create-outline" @click="editRole" :disabled="nowRole.isSystemInit">编辑</Button>
+            <Button type="error" icon="ios-trash-outline" @click="romoveRole" :disabled="nowRole.isSystemInit">删除</Button>
+            <Button type="success" icon="ios-filing-outline" @click="givePower">分配权限</Button>
+            <!--<Button type="info" icon="ios-man-outline" >设为企业默认角色</Button>-->
             <!--<Button type="success" icon="ios-plus-outline" @click="resourceAdd">添加资源</Button>-->
         </div>
         <div class="pcc-role-table">
-            11133
+            <div class="role-li role-head">
+                <div class="radio-wrap"></div>
+                <div class="w25">角色名称</div>
+                <div class="w25">角色描述</div>
+                <div class="w25">企业默认角色</div>
+                <div class="w30">创建时间</div>
+                <div class="w30">更新时间</div>
+            </div>
+            <RadioGroup v-model="role" style="width: 100%" @on-change="cahngeRole">
+                <div class="role-li" v-for="(item, index) in roleList" :key="index">
+                    <div class="radio-wrap">
+                        <Radio :label="item.roleId">
+                            <span></span>
+                        </Radio>
+                    </div>
+                    <div class="w25">{{item.roleName}}</div>
+                    <div class="w25">{{item.roleDes}}</div>
+                    <div class="w25">{{item.isDefault?'企业默认角色':'-'}}</div>
+                    <div class="w30">{{item.createTime | timeFilter}}</div>
+                    <div class="w30">{{item.updateTime | timeFilter}}</div>
+                </div>
+            </RadioGroup>
         </div>
         <Modal v-model="roleAdd" :title="modelTitle" transfer footer-hide>
             <div class="add-role">
-                <Input v-model="roleName" class="add-role-input" placeholder="超级管理员">
+                <Input v-model="roleName" class="add-role-input" placeholder="管理员">
                     <span slot="prepend">角色名称</span>
                 </Input>
-                <Input v-model="roleKey" class="add-role-input" placeholder="administrator">
+                <Input v-model="roleKey" class="add-role-input" placeholder="admin">
                     <span slot="prepend">角色标识</span>
                 </Input>
-                <Input v-model="roleDes" class="add-role-input" placeholder="超级管理员">
+                <Input v-model="roleDes" class="add-role-input" placeholder="管理员">
                     <span slot="prepend">角色描述</span>
                 </Input>
                 <div class="model-op">
@@ -31,105 +53,17 @@
                 </div>
             </div>
         </Modal>
-        <Modal v-model="permissionAssign" title="项目权限分配" width="850px" class="padd0">
-            <project-permission ref="permission" @close="permissionAssign=false"></project-permission>
+        <Modal v-model="permissionAssign" title="企业权限分配" width="850px" class="padd0" footer-hide>
+            <project-permission :permissions="permissions" :roleKey="nowRole.roleKey" :role="role" v-if="permissionAssign" ref="permission" @close="permissionAssign=false"></project-permission>
         </Modal>
     </div>
 </template>
 <script>
     import projectPermission from './projectpermission.vue'
+    import {getRole, getAllPower, addRole, deleteRole, updateRole} from '../axios/backendManagementApi'
     export default {
         components: {
             projectPermission
-        },
-
-        methods: {
-            // resourceAdd() {
-            //     this.permissionAdd = true
-            //     getResource().then(res => {
-            //         this.resources = res.data
-            //         console.log(res)
-            //     })
-            // },
-            commitResource() {
-                var param = {
-                    resourceType: this.resourceType,
-                    parentId: this.resourceId,
-                    resourceName: this.resourceName,
-                    resourceKey: this.resourceKey,
-                    resourceUrl: this.resourceUrl,
-                    resourceDes: this.resourceDes
-                }
-                console.log(param.parentId)
-                addResource(param).then(res => {
-                    if (res.result == 1) {
-                        this.permissionAdd = false
-                    }
-                })
-            },
-            // 新增角色
-            addRole() {
-                this.roleAdd = true
-                this.modelTitle = '新增角色'
-                this.roleName = ''
-                this.roleKey = ''
-                this.roleDes = ''
-            },
-            // 编辑角色
-            editRole() {
-                if (this.tableRow.length == 0) {
-                    this.$Notice.warning({
-                        title: '请选择一个角色进行编辑'
-                    })
-                } else if (this.tableRow.length == 1) {
-                    this.roleAdd = true
-                    this.modelTitle = '编辑角色'
-                    this.roleName = this.tableRow[0].roleName
-                    this.roleKey = this.tableRow[0].roleKey
-                    this.roleDes = this.tableRow[0].roleDes
-                } else {
-                    this.$Notice.warning({
-                        title: '同时只能编辑一个角色'
-                    })
-                }
-            },
-            // 移除角色
-            romoveRole() {
-                if (this.tableRow.length == 0) {
-                    this.$Notice.warning({
-                        title: '请选择角色进行删除'
-                    })
-                } else {
-                    for (var i = 0; i < this.tableRow.length; i++) {
-                        for (var j = 0; j < this.roles.length; j++) {
-                            if (this.roles[j].roleKey == this.tableRow[i].roleKey) {
-                                this.roles.splice(j, 1)
-                            }
-                        }
-                    }
-                }
-            },
-            changePage() {},
-            commitRole() {
-                if (this.roleName == '' || this.roleName == null) {
-                    this.$Notice.warning({
-                        title: '请输入角色名称'
-                    })
-                    return false
-                }
-                if (this.roleKey == '' || this.roleKey == null) {
-                    this.$Notice.warning({
-                        title: '请输入角色标识'
-                    })
-                    return false
-                }
-                if (this.roleDes == '' || this.roleDes == null) {
-                    this.$Notice.warning({
-                        title: '请输入角色描述'
-                    })
-                    return false
-                }
-            }
         },
         data() {
             return {
@@ -149,8 +83,147 @@
                 roleDes: '',
                 modelTitle: '新增角色',
                 tableRow: [],
+                total: 10,
+                roleList: [],
+                role: '',
+                nowRole: {},
+                permissions: []
             }
-        }
+        },
+        mounted () {
+            this.getAllRole()
+        },
+        methods: {
+            // 获取企业角色
+            getAllRole () {
+                getRole(localStorage.companyId).then(res => {
+                    if (res.result) {
+                        this.roleList=res.data.records
+                        console.log(this.roleList)
+                    }
+                })
+            },
+            // 点击单选按钮
+            cahngeRole (data) {
+                this.roleList.forEach(v => {
+                    if (v.roleId===data) {
+                        this.nowRole=v
+                    }
+                })
+                console.log(this.nowRole)
+            },
+            // 分配权限
+            givePower () {
+                if (this.role == '') {
+                    this.$Notice.warning({
+                        title: '请选择一个角色进行分配'
+                    })
+                }else {
+                    getAllPower(this.role).then(res => {
+                        console.log(res)
+                        this.permissions=res.data
+                        this.permissionAssign=true
+                    })
+
+                }
+            },
+            // 新增角色
+            addRole() {
+                this.roleAdd = true
+                this.modelTitle = '新增角色'
+                this.roleName = ''
+                this.roleKey = ''
+                this.roleDes = ''
+            },
+            commitRole() {
+                if (this.roleName == '' || this.roleName == null) {
+                    this.$Notice.warning({
+                        title: '请输入角色名称'
+                    })
+                    return false
+                }
+                if (this.roleKey == '' || this.roleKey == null) {
+                    this.$Notice.warning({
+                        title: '请输入角色标识'
+                    })
+                    return false
+                }
+                if (this.roleDes == '' || this.roleDes == null) {
+                    this.$Notice.warning({
+                        title: '请输入角色描述'
+                    })
+                    return false
+                }
+                // 编辑角色
+                if (this.modelTitle==='编辑角色') {
+                    updateRole(this.nowRole.roleId,this.roleName,this.roleDes,this.roleKey).then(res => {
+                        console.log(res)
+                        this.roleList.forEach((i,n) => {
+                            if (i.roleId===this.nowRole.roleId) {
+                                this.roleList[n].roleName=this.roleName
+                                this.roleList[n].roleDes=this.roleDes
+                                this.roleList[n].roleKey=this.roleKey
+                            }
+                        })
+                        this.roleAdd = false
+                        this.$Message.success('修改成功');
+                    })
+                }else {
+                    let data= {
+                        'orgId': localStorage.companyId,
+                        'roleName': this.roleName,
+                        'roleDes': this.roleDes,
+                        'roleKey': this.roleKey
+                    }
+                    // 添加角色
+                    addRole(data).then(res => {
+                        console.log(res)
+                        if (res.result){
+                            this.roleAdd = false
+                            this.$Message.success('添加成功');
+                            this.roleList.push(res.data)
+                        }
+                    })
+                }
+            },
+            // 编辑角色
+            editRole() {
+                if (this.role == '') {
+                    this.$Notice.warning({
+                        title: '请选择一个角色进行编辑'
+                    })
+                } else {
+                    this.roleAdd = true
+                    this.modelTitle = '编辑角色'
+                    this.roleName = this.nowRole.roleName
+                    this.roleKey =this.nowRole.roleKey
+                    this.roleDes = this.nowRole.roleDes
+                }
+            },
+            // 移除角色
+            romoveRole() {
+                if (this.role == '') {
+                    this.$Notice.warning({
+                        title: '请选择角色进行删除'
+                    })
+                } else {
+                    deleteRole(this.nowRole.roleId, localStorage.companyId).then(res => {
+                        if (res.result){
+                            this.roleList=this.roleList.filter(v => {
+                                if (v.roleId != this.nowRole.roleId) {
+                                    return v
+                                }
+                            })
+                            this.nowRole=null
+                            this.role=''
+                            this.$Message.success('删除成功');
+                        }
+
+                    })
+                }
+            },
+            changePage() {},
+        },
     }
 </script>
 
@@ -197,7 +270,6 @@
         }
     }
     .model-op {
-        border-top: 1px solid #e5e5e5;
         .op-btn {
             float: right;
             margin-right: 10px;
@@ -214,6 +286,39 @@
     .padd0{
         /deep/ .ivu-modal-body{
             padding: 0;
+        }
+    }
+    .role-li>div{
+        display: flex;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid #d5d5d5;
+        border-right: 1px solid #d5d5d5;
+    }
+    .role-head{
+        font-size: 14px;
+        font-weight: 600;
+        background-color: #f8f8f9;
+    }
+    .role-li:nth-of-type(2n){
+        background-color: #f8f8f9;
+    }
+    .role-li{
+        width: 100%;
+        height: 40px;
+        display: flex;
+        border-top: 1px solid #d5d5d5;
+        border-left: 1px solid #d5d5d5;
+        .radio-wrap{
+            width: 60px;
+            flex: none;
+        }
+        .w25{
+            width: 25%;
+        }
+        .w30{
+            width: 30%;
         }
     }
 </style>
