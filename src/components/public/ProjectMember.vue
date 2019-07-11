@@ -37,7 +37,8 @@
                     <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
                   </div>
                   <div class="memberInfo">
-                    <p class="uname">{{user.memberName}}</p>
+                    <span class="uname">{{user.memberName}} &nbsp;&nbsp;&nbsp;职位：{{user.job?user.job:'无'}}</span>
+                    <span>{{user.accountName}}</span>
                   </div>
                   <Icon type="ios-arrow-down" size="18" />
                 </div>
@@ -276,20 +277,24 @@ export default {
 
   .memberInfo {
     flex: 1;
+    width: 100%;
+    height: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-
+    justify-content: space-between;
+    span{
+      color: #a6a6a6;
+      height: 20px;
+      line-height: 20px;
+    }
     .uname {
       max-width: 200px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 14px;
+      font-size: 13px;
       color: #555;
-      
     }
-
     .email {
       color: #a6a6a6;
       max-width: 260px;
