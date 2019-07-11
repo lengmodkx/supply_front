@@ -54,6 +54,13 @@ export function uploadCommonFile(parentId, params) {
     return $post(`/files/${parentId}/upload`, params)
 }
 
+
+//更新模型文件版本
+
+export function updateModelVersion(parentId, params) {
+    return $post(`/files/${parentId}/upload`, params)
+}
+
 export function bind_files(params) {
     return fetch({
         url: '/files/bind_files',

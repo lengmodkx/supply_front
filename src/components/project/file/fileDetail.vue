@@ -335,7 +335,7 @@
     </Modal>
     <!--上传模型文件-->
     <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-      <model ref="model" @close="showModel=false" :fileId="file.data.fileId"></model>
+      <model ref="model" @close="showModel=false" :fileId="file.data.fileId" :fileDetail="'true'"></model>
     </Modal>
     <!--上传普通文件-->
     <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
