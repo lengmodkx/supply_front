@@ -17,6 +17,9 @@
         <FormItem prop="userName">
           <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
         </FormItem>
+        <FormItem prop="job">
+          <Input type="text" size="large" placeholder="请输入您的职位" v-model="formValidate.job" clearable />
+        </FormItem>
         <FormItem>
           <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
         </FormItem>
@@ -51,7 +54,8 @@ export default {
         password: "",
         captcha: "",
         userName: "",
-        captchaUrl: "/api/captcha"
+        captchaUrl: "/api/captcha",
+        job: ''
       },
       rules: {
         accountName: [{ validator: validatePhone, trigger: "blur" }],
@@ -73,6 +77,13 @@ export default {
           {
             required: true,
             message: "请输入昵称",
+            trigger: "blur"
+          }
+        ],
+        job: [
+          {
+            required: true,
+            message: "请输入职位",
             trigger: "blur"
           }
         ]
