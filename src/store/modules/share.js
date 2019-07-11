@@ -26,8 +26,9 @@ const store = {
             state.share.logs.unshift(data)
         },
         // 清空分享详情、
-        removeShare (state) {
-            state.share={}
+        removeShare ( ) {
+           
+            state.share=null
         },
     },
     actions: {
@@ -45,24 +46,21 @@ const store = {
         changeShares ({commit}, data) {
             return new Promise(resolve => {
                 getShareDetail(data).then(res => {
-                    console.log('啊啊啊啊啊啊啊啊啊',res)
                     commit('changeShare',res.data)
                     resolve()
                 })
             })
         },
         // 删除分享 推送
-        deleteSahre ({commit}, daata) {
+        deleteSahre ({commit}, data) {
             getShareDetail(data).then(res => {
                 commit('changeShare',res.data)
                 commit('removeShare', '')
             })
         },
         // 移动分享 推送
-        removeShare ({commit}, data) {
-            alert('a',data)
+        removeShare ({commit}, data) {   
             shares(data).then(res => {
-                alert('b',data)
                 if (res.result === 1) {
                     commit('init', res.data)
                     if (res.data.length){
@@ -71,7 +69,7 @@ const store = {
                             commit('changeShare',res.data)
                         })
                     }else {
-                        commit('removeShare')
+                        commit('removeShare','')
                     }
                 }
             })
