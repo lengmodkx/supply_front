@@ -109,18 +109,14 @@ export function updateFileVersion(fileId,fileObj) {
 }
 
 //更新模型文件版本
-export function updateModelVersion(fileId,fileCommon,fileModel,filename,publicId) {
-    return fetch({
-        url: `/files/${fileId}/update_model`,
-        method: "post",
-        params: {
-            fileCommon: fileCommon,
-            fileModel: fileModel,
-            filename: filename,
-            publicId:publicId
-        }
-    });
-}
+// export function updateModelVersion(fileId,params) {
+//     return fetch({
+//         url: `/files/${fileId}/update_model`,
+//         method: "post",
+//         params: params
+//     });
+// }
+
 
 //文件隐私模式
 export function filePrivacy(id, privacy) {

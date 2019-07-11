@@ -37,7 +37,8 @@
 <script>
 import OSS from "ali-oss";
 import JSZip from "jszip";
-import { uploadModel } from "../../../axios/api2.js";
+import { uploadModel,updateModelVersion} from "../../../axios/api2.js";
+
 let client = new OSS({
   region: "oss-cn-beijing",
   accessKeyId: "LTAIP4MyTAbONGJx",
@@ -45,7 +46,7 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 export default {
-  props: ["fileId"],
+  props: ["fileId",'fileDetail'],
   data() {
     return {
       showupload1: true,
@@ -287,11 +288,21 @@ export default {
           fileModel: JSON.stringify(this.modelFile),
           fileCommon: JSON.stringify(this.modelImg)
         };
-      
-
-
+          if(this.fileDetail){
+              updateModelVersion(this.fileId, params).then(res=>{
+                if (res.result == 1) {
+                  this.loading = false;
+                  this.resetModel();
+                  this.resetImg();
+                  this.$Notice.success({
+                    title: "上传成功"
+                  });
+                  this.$emit("close");
+              }
+              })
+              return
+          }
         uploadModel(this.fileId, params).then(res => {
-          debugger
           if (res.result == 1) {
             this.loading = false;
             this.resetModel();

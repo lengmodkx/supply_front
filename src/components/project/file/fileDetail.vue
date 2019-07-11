@@ -11,8 +11,8 @@
           <p class="padd8">
             <Icon type="ios-cloud-upload-outline" />更新版本</p>
           <DropdownMenu slot="list">
-            <DropdownItem name="model" v-if="file.data.publicLable=='1'">上传模型文件</DropdownItem>
-            <DropdownItem name="commonfile" v-else-if="file.data.publicLable=='0'">上传普通文件</DropdownItem>
+            <DropdownItem name="model" v-if="file.data.isModel=='1'">上传模型文件</DropdownItem>
+            <DropdownItem name="commonfile" v-else-if="file.data.isModel=='0'">上传普通文件</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <p class="padd8">
@@ -335,7 +335,7 @@
     </Modal>
     <!--上传模型文件-->
     <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-      <model ref="model" @close="showModel=false" :fileId="file.data.fileId"></model>
+      <model ref="model" @close="showModel=false" :fileId="file.data.fileId" :fileDetail="'true'"></model>
     </Modal>
     <!--上传普通文件-->
     <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
