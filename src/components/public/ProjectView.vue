@@ -35,7 +35,8 @@ export default {
     filterTask() {
       var data = {projectId:this.projectId,name:this.keyword}
       this.init2(data).then(res => {
-        this.$store.commit("task/initTask",res.menus)
+      
+         // this.$store.commit("task/initTask",res.menus)
       });
     },
     // 视图方式改变、

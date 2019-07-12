@@ -197,7 +197,10 @@ const store = {
         }, data) {
             getFolders(data.fileId, data.projectId).then(res => {
                 commit("initFolders", res.data)
-                commit("initBreadcrumb", res.data2)
+                if(res.data2){
+                    commit("initBreadcrumb", res.data2)
+                }
+               
                 console.log(">>>>>>>>>", res.data2)
             })
         },

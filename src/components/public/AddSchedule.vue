@@ -351,7 +351,7 @@ export default {
       font-size: 13px !important;
     }
     .ivu-icon {
-      margin-left: 15px;
+      // margin-left: 15px;
       font-size: 20px;
       float: left;
       cursor: pointer;
@@ -388,6 +388,15 @@ export default {
   .ivu-modal-footer .fl {
     text-align: left;
     cursor: pointer;
+  }
+  .ivu-icon-ios-arrow-forward:before{
+    content:''
+  }
+  .ivu-icon-ios-arrow-back:before{
+    content:''
+  }
+  .ivu-date-picker-prev-btn-arrow-double{
+    margin-left: 0px;
   }
 }
 </style>

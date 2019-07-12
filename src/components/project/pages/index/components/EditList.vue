@@ -182,7 +182,7 @@
                 <Poptip @click.stop>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
+                    <div class="glpop-list" @click.stop="clone(b.taskId)">
                       <Icon type="ios-link" size="20" /><span>复制链接</span>
                     </div>
                     <div class="glpop-list" @click.stop="cancle(b.taskId)">
@@ -208,7 +208,7 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
+                    <div class="glpop-list"  @click.stop="clone(b.taskId)">
                       <Icon type="ios-link" size="20" /><span>复制链接</span>
                     </div>
                     <div class="glpop-list" @click.stop="cancle(b.fileId)">
@@ -234,7 +234,7 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
+                    <div class="glpop-list"  @click.stop="clone(b.taskId)">
                       <Icon type="ios-link" size="20" /><span>复制链接</span>
                     </div>
                     <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
@@ -259,7 +259,7 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
+                    <div class="glpop-list"  @click.stop="clone(b.taskId)">
                       <Icon type="ios-link" size="20" /><span>复制链接</span>
                     </div>
                     <div class="glpop-list" @click.stop="cancle(b.shareId)">
@@ -374,6 +374,7 @@ import {
   taskExecutor,
   cancle
 } from "@/axios/api";
+import {setSysClip} from "@/axios/api2.js";
 import { downloadFile, getFileDetails } from "@/axios/fileApi";
 export default {
   components: {
@@ -503,6 +504,7 @@ export default {
         console.log(res);
       });
     },
+    //取消关联
     cancle(id) {
       cancle(id, this.task.projectId, this.publicType, this.task.taskId).then(
         res => {
@@ -511,6 +513,15 @@ export default {
           }
         }
       );
+    },
+    //复制关联
+    clone(id){
+      let url= "http://"+ process.env.NODE_ENV == "development"? "/tasks/" + id : process.env.VUE_APP_URL +"/tasks/" + id ;
+      setSysClip(url).then(res=>{
+         if (res.result === 1) {
+              this.$Message.success(res.msg);
+         }
+      })
     },
     showaa(taskId) {
       const msg = this.$Message.loading("正在加载中...", 0);

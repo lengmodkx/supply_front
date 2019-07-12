@@ -408,15 +408,12 @@ export default {
     },
     //复制关联
     clone(id){
-
       let url= "http://"+ process.env.NODE_ENV == "development"? "/shares/" + id : process.env.VUE_APP_URL +"/shares/" + id ;
-
       setSysClip(url).then(res=>{
          if (res.result === 1) {
               this.$Message.success(res.msg);
          }
       })
-
     },
     showMember() {
       this.showAddMember = !this.showAddMember;
