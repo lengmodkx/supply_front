@@ -155,3 +155,15 @@ export function updateProjectInfo(projectId,projectName,startTime,endTime) {
         }
     })
 }
+
+//关联复制联接
+
+export function setSysClip(url) {
+    return fetch({
+        url: `/tasks/setSysClip/`,
+        method: 'post', // 请求方法
+        params: {
+            'url': url
+        }
+    })
+}

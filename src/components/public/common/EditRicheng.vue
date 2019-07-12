@@ -130,7 +130,7 @@
                                 <ul v-if="schedule.bindTasks.length">
                                     <div class="what-title">关联的任务</div>
                                     <li class="gl-task-list" v-for="(b,i) in schedule.bindTasks" :key="i" >
-                                        <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
+                                        <div class="gl-task-list-con" >
                                             <Icon type="md-checkbox-outline" size="22" />
                                             <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
                                             <Icon type="md-contact" v-else size="26" />
@@ -144,7 +144,7 @@
                                         <Poptip @click.stop>
                                             <Icon class="glpop" type="ios-arrow-down" size="20" />
                                             <div slot="content">
-                                                <div class="glpop-list">
+                                                <div class="glpop-list" @click.stop="clone(b.taskId)">
                                                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                                                 </div>
                                                 <div class="glpop-list" @click.stop="cancle(b.taskId)">
@@ -170,7 +170,7 @@
                                         <Poptip>
                                             <Icon class="glpop" type="ios-arrow-down" size="20" />
                                             <div slot="content">
-                                                <div class="glpop-list">
+                                                <div class="glpop-list" @click.stop="clone(b.fileId)">
                                                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                                                 </div>
                                                 <div class="glpop-list" @click.stop="cancle(b.fileId)">
@@ -196,10 +196,10 @@
                                         <Poptip>
                                             <Icon class="glpop" type="ios-arrow-down" size="20" />
                                             <div slot="content">
-                                                <div class="glpop-list">
+                                                <div class="glpop-list" @click.stop="clone(b.taskId)">
                                                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                                                 </div>
-                                                <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
+                                                <div class="glpop-list" @click.stop="cancle(b.taskId)">
                                                     <Icon type="md-link" size="20" /><span>取消关联</span>
                                                 </div>
                                             </div>
@@ -221,7 +221,7 @@
                                         <Poptip>
                                             <Icon class="glpop" type="ios-arrow-down" size="20" />
                                             <div slot="content">
-                                                <div class="glpop-list">
+                                                <div class="glpop-list"  @click.stop="clone(b.shareId)">
                                                     <Icon type="ios-link" size="20" /><span>复制链接</span>
                                                 </div>
                                                 <div class="glpop-list" @click.stop="cancle(b.shareId)">
@@ -294,6 +294,7 @@ import log from '@/components/public/log'
 import publick from '@/components/public/Publish'
 import {mapState,mapMutations,mapActions} from 'vuex'
 import {sendMsg, cancle} from '@/axios/api'
+import {setSysClip} from "@/axios/api2.js";
 import {upRichengName, beginDate, endDate,changeRepeat,changeRemind,changeAddress,changeRemarks,playPeople} from '@/axios/scheduleApi'
 
 export default {
@@ -438,6 +439,15 @@ export default {
               }
           );
       },
+      //复制关联
+    clone(id){
+      let url= "http://"+ process.env.NODE_ENV == "development"? "/schedules/" + id : process.env.VUE_APP_URL +"/schedules/" + id ;
+      setSysClip(url).then(res=>{
+         if (res.result === 1) {
+              this.$Message.success(res.msg);
+         }
+      })
+    },
 
     deleteStart (){
       this.schedule.startTime = ''

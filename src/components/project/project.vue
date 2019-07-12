@@ -192,9 +192,9 @@ export default {
                 this.$store.dispatch("share/init", result.object);
                 break;
               // 编辑分享
-              case "B2":
-                this.$store.commit("share/editShare", result.object);
+              case "B2":   
                 this.$store.dispatch("share/init", result.object.projectId);
+                this.$store.dispatch("share/changeShares", result.object.id);
                 break;
               // 移动分享
               case "B5":

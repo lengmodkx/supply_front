@@ -37,6 +37,7 @@ export default {
 
       //更新甘特图
       gantt.attachEvent("onAfterTaskUpdate", (id, task) => {
+       // debugger
         let itemId = task.publicId;
         let text = task.text;
         let start = task.start_date.getTime();

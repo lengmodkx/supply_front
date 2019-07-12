@@ -46,7 +46,8 @@
           </div>
         </iCol>
         <iCol span="18" class="right" @click="closeTag" >
-          <div class="share-view" v-if="share">
+         
+          <div class="share-view" v-if="share&&open">
             <div class="share-text">
               <div class="rng">
                 <div class="share-title">
@@ -125,7 +126,7 @@
                         <Poptip @click.stop>
                           <Icon class="glpop" type="ios-arrow-down" size="20" />
                           <div slot="content">
-                            <div class="glpop-list">
+                            <div class="glpop-list" @click.stop="clone(b.taskId)">
                               <Icon type="ios-link" size="20" /><span>复制链接</span>
                             </div>
                             <div class="glpop-list" @click.stop="cancle(b.taskId)">
@@ -151,7 +152,7 @@
                         <Poptip>
                           <Icon class="glpop" type="ios-arrow-down" size="20" />
                           <div slot="content">
-                            <div class="glpop-list">
+                            <div class="glpop-list" @click.stop="clone(b.taskId)">
                               <Icon type="ios-link" size="20" /><span>复制链接</span>
                             </div>
                             <div class="glpop-list" @click.stop="cancle(b.fileId)">
@@ -177,7 +178,7 @@
                         <Poptip>
                           <Icon class="glpop" type="ios-arrow-down" size="20" />
                           <div slot="content">
-                            <div class="glpop-list">
+                            <div class="glpop-list" @click.stop="clone(b.taskId)">
                               <Icon type="ios-link" size="20" /><span>复制链接</span>
                             </div>
                             <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
@@ -202,7 +203,7 @@
                         <Poptip>
                           <Icon class="glpop" type="ios-arrow-down" size="20" />
                           <div slot="content">
-                            <div class="glpop-list">
+                            <div class="glpop-list" @click.stop="clone(b.taskId)">
                               <Icon type="ios-link" size="20" /><span>复制链接</span>
                             </div>
                             <div class="glpop-list" @click.stop="cancle(b.shareId)">
@@ -277,7 +278,7 @@ import publish from "../../public/Publish.vue";
 import addShare from "./AddShare.vue";
 import tag from "./Tags.vue";
 import Tags from "../../public/Tags.vue";
-import { shares } from "../../../axios/api2.js";
+import { shares,setSysClip} from "../../../axios/api2.js";
 import userList from "../../resource/userList.vue";
 import log from "../../public/log";
 import singleFenxiangMenu from "../../public/common/SingleFenxiangMenu.vue";
@@ -316,6 +317,7 @@ export default {
       publicType: "分享",
       showAddMember: false,
       zan: 0,
+      open:false,
     };
   },
   computed: {
@@ -351,8 +353,8 @@ export default {
     // });
   },
   methods: {
-    ...mapActions("share", ["init",'changeShares']),
-    ...mapMutations("share", ["changeShare"]),
+    ...mapActions("share", ["init",'changeShares','destroyShare']),
+    ...mapMutations("share", ["changeShare",'removeShare']),
     closeTag(){
       this.$refs.tags.closeTag()
     },
@@ -370,6 +372,7 @@ export default {
     },
       // 点击左侧分享
     changeContent(index,id) {
+      this.open=true
       this.indexNow = index;
       this.changeShares(id);
     },
@@ -403,6 +406,15 @@ export default {
               }
       );
     },
+    //复制关联
+    clone(id){
+      let url= "http://"+ process.env.NODE_ENV == "development"? "/shares/" + id : process.env.VUE_APP_URL +"/shares/" + id ;
+      setSysClip(url).then(res=>{
+         if (res.result === 1) {
+              this.$Message.success(res.msg);
+         }
+      })
+    },
     showMember() {
       this.showAddMember = !this.showAddMember;
     },
@@ -430,6 +442,9 @@ export default {
       //   this.$store.dispatch("member/init", this.shareList[0].joinInfo);
       // });
     }
+  },
+  created:function(){
+        
   }
 };
 </script>
