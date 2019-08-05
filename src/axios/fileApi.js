@@ -17,6 +17,14 @@ export function changeName(fileId, fileName) {
         }
     });
 }
+// 标记为重要文件
+export function putImportant(fileId,label) {
+    return fetch({
+        url: `/files/sing_cancel/important_label`,
+        method: "put",
+        params: {fileId:fileId,label:label}
+    });
+}
 //获取文件的url
 export function getFileUrl(fileId){
     return fetch({

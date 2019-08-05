@@ -53,6 +53,7 @@
       <ul class="file-content-wrap" v-else-if="files.length && view=='view'" :key="fileId">
         <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
           <div class="file-content-view">
+            <span class="important" v-if="file.important">重要</span>
             <img v-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder.png' style="height:64px;width:80px">
             <img v-else-if="file.catalog==1&&(file.filePrivacy==1||file.filePrivacy==2)" src='../../../assets/images/folder.png' style="height:64px;width:80px">
             <img v-else-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/folder_privacy.png' style="height:64px;width:80px">
@@ -111,6 +112,7 @@
                         <li @click="downLoad(file.fileId)" ><a style="color: #333" :download="file.fileName" >下载文件</a></li>
                         <li @click="removeClone('移动')">移动文件</li>
                         <li @click="removeClone('复制')">复制文件</li>
+                        <li @click="setImp(file.fileId,file.important)">{{file.important?'取消标记重要文件':'标记为重要文件'}}</li>
                         <li @click="showFileEdit=true">修改名称</li>
                         <li>复制文件链接</li>
                         <li @click="collectFile">收藏文件</li>
@@ -326,7 +328,7 @@ import fileDetail from "./fileDetail";
 import modelFileDetail from "./modelFileDetail";
 import fileCanSee from "./fileCanSee";
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
-import { getFileDetails, getChildFiles } from "@/axios/fileApi";
+import { getFileDetails, getChildFiles, putImportant } from "@/axios/fileApi";
 import {
   changeName,
   downloadFile,
@@ -445,7 +447,6 @@ export default {
     ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb"])
   },
   mounted: function() {
-    console.log(">>>>>>>>", this.fileId);
     if (localStorage.view) {
       this.view = localStorage.view;
     }
@@ -491,6 +492,18 @@ export default {
     },
     closeDetail() {
       this.showModelDetai = false;
+    },
+    // 标记为重要文件
+    setImp (id,important) {
+      let lable=0
+      if (important){
+        lable = 0
+      } else {
+        lable = 1
+      }
+      putImportant(id,lable).then(res => {
+       this.$Message.success('操作成功!')
+      })
     },
     // 搜索文件
     search(value) {
@@ -900,7 +913,6 @@ export default {
   // display: flex;
   // flex-wrap: wrap;
  //justify-content: flex-start;
-
   height: calc(100vh - 250px);
   overflow-x: hidden;
   overflow-y: auto;
@@ -915,6 +927,32 @@ export default {
   li {
       float: left;
     height: 200px;
+    position: relative;
+    .important{
+      position: absolute;
+      font-size: 12px;
+      bottom: 0;
+      right: 0;
+      transform: rotate(-45deg);
+      z-index: 300;
+      width: 26px;
+      height: 26px;
+      line-height: 30px;
+      color: white;
+      &:after{
+        position: absolute;
+        bottom: 2px;
+        right: -7px;
+        content: '';
+        width: 0;
+        height: 0;
+        border-width: 20px;
+        border-style: solid;
+        z-index: -1;
+        border-color: #ed4014 #ed4014 transparent transparent;
+        transform: rotate(135deg);
+      }
+    }
   }
   .file-content-filename {
     height: 30px;
@@ -931,9 +969,9 @@ export default {
     width: 160px;
     margin-top: 20px;
     margin-left: 20px;
-    position: relative;
     border-radius: 5px;
     cursor: pointer;
+    position: relative;
     img {
       max-width: 100%;
       max-height: 100%;
