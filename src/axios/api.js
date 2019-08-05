@@ -605,7 +605,7 @@ export function addChildTask(taskId, params) {
 //获取当前用户消息
 export function getNews(data) {
     if (!data) {
-        return $get(`news/${data.userId}`, {
+        return $get(`news`, {
             isRead: data.isRead
         })
     } else {
