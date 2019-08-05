@@ -18,6 +18,15 @@ export default {
       messages: []
     };
   },
+  props: [ 'fullscreen',],
+  watch:{
+     fullscreen: function(val, oldVal) {   
+       console.log(val)   
+                       
+        },
+      deep: true
+
+  },
 
   methods: {
     $_initGanttEvents: function() {

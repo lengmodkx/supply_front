@@ -265,6 +265,7 @@ export function updatePriority(taskId, priority) {
 
 // 任务移入回收站
 export function taskToRecycle(taskId) {
+    debugger
     return $put(`/tasks/${taskId}/recyclebin`);
 }
 
@@ -604,8 +605,8 @@ export function addChildTask(taskId, params) {
 //获取当前用户消息
 export function getNews(data) {
     if (!data) {
-        return $get(`news`, {
-            isRead: data
+        return $get(`news/${data.userId}`, {
+            isRead: data.isRead
         })
     } else {
         return $get(`news`, {})

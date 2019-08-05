@@ -218,7 +218,8 @@
 </template>
 <script>
 import Clipboard from 'clipboard'
-import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
+import {collectTask,updateTaskPrivacy,cancelCollect,
+taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
 
 export default {
   props: ['data'],
@@ -366,6 +367,7 @@ export default {
     },
     //任务移入回收站
     recycle() {
+      debugger
         taskToRecycle(this.data.taskId).then(res => {
             console.log(this.data.task)
         })

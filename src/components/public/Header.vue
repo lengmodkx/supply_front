@@ -27,7 +27,6 @@
       <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="clickHeaderTag(1)"><span class="text">我的</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)"><span class="text">日历</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==3}" @click="clickHeaderTag(3)">
-
         <span class="text" style="border-right:none;">
           <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
             <Icon type="ios-notifications-outline" size="22" />
@@ -212,6 +211,7 @@ export default {
       this.$store.dispatch("news/getNewsCount");
     },
     clickHeaderTag(id) {
+      
       this.changeHeaderTag(id)
       if (
         this.$route.fullPath.includes("home") ||

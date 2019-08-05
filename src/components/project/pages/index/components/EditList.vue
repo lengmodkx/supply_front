@@ -151,7 +151,6 @@
                 <Button type="text" @click="showSontask=true;">取消</Button>
                 <Button type="primary" @click="submitSontask" style="padding:6px 20px;">保存</Button>
               </div>
-
             </div>
           </div>
           <!-- 添加关联 -->

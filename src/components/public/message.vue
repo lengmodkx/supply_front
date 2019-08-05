@@ -104,13 +104,17 @@
                     }
                 })
             },
-            getNews(isRead){
+            getNews(isRead,userId){
+                let obj={
+                    isRead:isRead,
+                    userId:userId
+                }
                 if(!isRead){
                     this.msgType = '未读通知'
-                    this.$store.dispatch("news/getNewsList",isRead)
+                    this.$store.dispatch("news/getNewsList",obj)
                 } else{
                     this.msgType = '全部通知'
-                    this.$store.dispatch("news/getNewsList")
+                    this.$store.dispatch("news/getNewsList",obj)
                 }
                 this.msgTypeShow = false
             },
@@ -158,7 +162,8 @@
             ...mapState('task', ['task'])
         },
         created(){
-            this.getNews()
+            this.getNews(false,localStorage.userId)
+            console.log(localStorage.userId)
         }
     }
 </script>
