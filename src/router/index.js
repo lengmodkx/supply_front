@@ -10,6 +10,7 @@ import message from '../components/public/message'
 import calendar from '../components/public/calendar'
 import members from "../components/company/members"
 import personal from  '../components/public/personal'
+import down from '../components/public/down'
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -145,6 +146,13 @@ const router = new Router({
         title: "消息"
       },
       component: message
+    },
+     {
+      path: "/down",
+      meta: {
+        title: "下载"
+      },
+      component: down
     },
     {
       path: "/calendar",
