@@ -12,7 +12,7 @@
                                 <span>
                                     阿拉丁BIM云平台客户端 
                                 </span>
-                                 <Icon @click="getDown()" type="md-arrow-down" class="mr0" /> 
+                                 <!-- <Icon @click="getDown()" type="md-arrow-down" class="mr0" />  -->
                         </div>
                     </li>
                     <li>
@@ -23,7 +23,7 @@
                                 <span>
                                    阿拉丁BIM-CAD专业版
                                 </span>
-                                 <Icon @click="getDown()" type="md-arrow-down" class="mr0" /> 
+                                 <Icon @click="getDown(2)" type="md-arrow-down" class="mr0" /> 
                         </div>
                     </li>
                     <li>
@@ -34,7 +34,7 @@
                                 <span>
                                     阿拉丁BIM-CAD建筑版
                                 </span>
-                                 <Icon @click="getDown()" type="md-arrow-down" class="mr0" /> 
+                                 <!-- <Icon @click="getDown()" type="md-arrow-down" class="mr0" />  -->
                         </div>
                     </li>
                     <li>
@@ -45,7 +45,7 @@
                                 <span>
                                    阿拉丁BIM-CAD装饰版
                                 </span>
-                                 <Icon @click="getDown()" type="md-arrow-down" class="mr0" /> 
+                                 <!-- <Icon @click="getDown()" type="md-arrow-down" class="mr0" />  -->
                         </div>
                     </li>
                 </ul>
@@ -64,7 +64,10 @@
         },
         components: {},
         methods: {
-            getDown(){
+            getDown(type){
+                if(type==2){
+                  window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/aldbim2019.msi"
+                }
 
             }
            
@@ -103,30 +106,30 @@
                 display: flex;
                 cursor: pointer;
                 border-bottom: 1px solid #e7e6e3;
+                display: flex;
             }
             ul li:hover{
                  background-color: #f5f5f5;
             }
             .down-img{
-                width: 40px;
-                height: 40px;
-                margin:15px;
+                flex:0 1  40px;
+                
                 img{
+                     margin:15px;
                      width: 40px;
                      height: 40px;
                 }
             }
             .down-titel{
-                width:920px;
-                height: 80px;
-               
+                flex:1 1 auto;
+                height: 72px;
+                overflow:hidden;
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: space-between;
-                line-height: 70px;
-                span{
-                    font-size: 16px;  
-                }
+                line-height: 72px;
+                font-size: 16px;  
+               
                 i{
                      font-size: 22px;
                     padding:25px 10px;
