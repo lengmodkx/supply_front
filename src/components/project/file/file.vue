@@ -612,9 +612,12 @@ export default {
       this.folderId = node.data.id;
       console.log(node.data.id);
       let params = { fileId: this.folderId };
-      this.initFile(params).then(res => {
-        this.loading = false;
-      });
+      // this.initFile(params).then(res => {
+      //   this.loading = false;
+      // });
+      this.$router.push({
+        path: `/project/${this.$route.params.id}/files/${this.folderId}`
+      })
       let data = { fileId: this.folderId, projectId: this.projectId };
       this.initFolders(data).then(res => {});
     },
