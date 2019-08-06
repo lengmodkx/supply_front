@@ -6,6 +6,7 @@ import {
     getTSFile,
     filePrivacy,
     getFolders,
+    getFileTree,
     searchFile,
     getFileByTag,
     getFileDetails
@@ -196,12 +197,14 @@ const store = {
             commit
         }, data) {
             getFolders(data.fileId, data.projectId).then(res => {
-                commit("initFolders", res.data)
+
                 if(res.data2){
                     commit("initBreadcrumb", res.data2)
                 }
-               
-                console.log(">>>>>>>>>", res.data2)
+            })
+            getFileTree(data.projectId).then(res => {
+                console.log(88888888888,res)
+                commit("initFolders", res.data)
             })
         },
         //搜索文件

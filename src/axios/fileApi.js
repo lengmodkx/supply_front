@@ -160,6 +160,14 @@ export function getFolders(fileId,projectId) {
         params: {projectId: projectId}
     });
 }
+// 获取文件树
+export function getFileTree(projectId) {
+    return fetch({
+        url: `/files//folder_all_tree`,
+        method: "get",
+        params: {projectId: projectId}
+    });
+}
 
 //获取文件目录
 
