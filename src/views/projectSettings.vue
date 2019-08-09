@@ -13,6 +13,10 @@
           <li :class="{tabactive:active==3}" @click="choose(3)">
             <Icon type="ios-more"></Icon>更多
           </li>
+          <li :class="{tabactive:active==4}" @click="choose(4)">
+            <Icon type="ios-git-compare" />自动化规则
+          </li>
+
         </ul>
       </div>
       <div class="content fl">
@@ -95,6 +99,31 @@
             </Modal>
           </div>
         </div>
+        <div class="div4" v-if="active==4">
+          <div v-if="!createRule" class="rule-list-wrap">
+            <div class="rule-list" v-for="(item,index) in ruleList" :key="index">
+              <div class="rule-con" @click="clickRule(item)">
+                <div v-if="!item.isEdit" class="rule-name">{{item.name}}</div>
+                <input v-if="item.isEdit" @blur="changeRuleName(item)" type="text" class="change-name" v-model="item.name">
+                <div class="icon-box">
+                  <Tooltip content="编辑标题" >
+                    <Icon @click.stop="item.isEdit=true" type="md-create" />
+                  </Tooltip>
+                  <Tooltip content="删除">
+                    <Icon type="ios-trash-outline" @click.stop="deleteRule(item)" />
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+            <div class="rule-list">
+              <div class="rule-con" @click="addRule">
+                <div class="rule-name" style="color: #3da8f5;font-size: 16px"><Icon type="md-add" size="18" style="margin-right: 10px" />创建</div>
+              </div>
+            </div>
+          </div>
+
+          <rule v-else @cancelRule="getRuleList" :projectId="this.project.projectId" :hasData="ruleData"></rule>
+        </div>
       </div>
     </div>
   </div>
@@ -105,6 +134,8 @@ import OSS from "ali-oss";
 import { mapState, mapMutations } from "vuex";
 import { updateProject,recycleProject } from "@/axios/api";
 import { updataProjectPic } from "@/axios/api2";
+import {getAllRule,ruleName,deleteRule,editRule} from '@/axios/ruleApi'
+import rule from './createRule'
 let client = new OSS({
     region: "oss-cn-beijing",
     accessKeyId: "LTAIP4MyTAbONGJx",
@@ -127,6 +158,9 @@ export default {
       pic_hide:false,
       modal1: false,
       modal2: false,
+      createRule: false,
+      ruleList: [],
+      ruleData: null,
       List: [
         {
           value: "0",
@@ -140,6 +174,9 @@ export default {
       options1: {},
       options2: {}
     };
+  },
+  components: {
+    rule
   },
   computed: {
     ...mapState("project", ["project"])
@@ -204,6 +241,16 @@ export default {
       },
       choose(flag) {
           this.active = flag;
+          if (flag===4){
+            getAllRule(this.project.projectId).then(res => {
+              if (res.result) {
+                this.ruleList=res.data
+                this.ruleList.map(v => {
+                  this.$set(v,'isEdit',false)
+                })
+              }
+            })
+          }
       },
       publishAxios() {
           return new Promise((resolve, reject) => {
@@ -286,7 +333,54 @@ export default {
           //     this.$emit('close-settings', false);
           // }
 
-      }
+      },
+    // 修改 规则 名称
+    changeRuleName(item) {
+        item.isEdit=false
+      ruleName(item.id,item.name).then(res => {
+        if (res.result) {
+          this.$Message.success('操作成功');
+        }
+      })
+
+    },
+    getRuleList() {
+      this.createRule=false
+      getAllRule(this.project.projectId).then(res => {
+        if (res.result) {
+          this.ruleList=res.data
+          console.log()
+          this.ruleList.map(v => {
+            this.$set(v,'isEdit',false)
+          })
+        }
+      })
+    },
+    // 删除自动化规则
+    deleteRule(item) {
+      deleteRule(item.id).then(res => {
+        if (res.result) {
+          this.$Message.success('删除成功');
+          this.ruleList.forEach((i,n) => {
+            if (i.id===item.id){
+              this.ruleList.splice(n,1)
+            }
+          })
+        }
+      })
+    },
+    // 点击规则进入 编辑规则页面
+    clickRule(item) {
+      editRule(item.id).then(res => {
+        console.log(res)
+        this.ruleData=res.data
+        this.createRule=true
+      })
+    },
+    addRule() {
+      this.ruleData=null
+      this.createRule=true
+    }
   }
 };
 </script>
@@ -459,5 +553,65 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
+}
+.div4{
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
+  }
+  .rule-list-wrap{
+    width: 100%;
+    .rule-list{
+      width: 100%;
+      height: 56px;
+      padding-left: 20px;
+      &:hover{
+        background-color: #f7f7f7;
+      }
+      .rule-con{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #d7d7d7;
+        cursor: pointer;
+        &:hover{
+          .icon-box{
+            display: flex;
+          }
+        }
+        .change-name{
+          width: 400px;
+          border: 0 none;
+          background-color: #a6a6a6;
+        }
+        .rule-name{
+          width: 500px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .icon-box{
+          display: none;
+          flex: none;
+          color: gray;
+          font-size: 16px;
+          div{
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
