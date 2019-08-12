@@ -83,6 +83,7 @@ export default {
               localStorage.userId = res.userInfo.userId;
               localStorage.userImg = res.userInfo.image;
               localStorage.userName = res.userInfo.userName;
+              localStorage.fileId=res.fileId;
               this.$Message.success("登录成功!");
               if (localStorage.companyId){
                 this.$router.push("/org/"+localStorage.companyId);

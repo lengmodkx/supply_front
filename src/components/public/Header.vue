@@ -40,6 +40,7 @@
         <img class="avatar" v-if="defaultImage.includes('http')" :src="`${defaultImage}`" alt="">
         <img class="avatar" v-else :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${defaultImage}`" alt="">
         <div class="userInfo" slot="content">
+          <div class="sck" @click="goSucai">素材库</div>
           <ul class="org">
             <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div>
             <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item)">
@@ -91,7 +92,7 @@ export default {
   name: "header-main",
   components: {
     // Mine,
-    CreateOrg
+    CreateOrg,
   },
   data() {
     return {
@@ -102,6 +103,7 @@ export default {
       active: false,
       mainMenu: false,
       hoverClass:"",
+      showSck: false,
       //src: localStorage.userImg,
       companyId: localStorage.companyId,
       data: [
@@ -256,7 +258,12 @@ export default {
               });
           }
 
-      }
+      },
+    // 去素材库页面
+    goSucai() {
+      this.popVisible=false
+      this.$router.push('/sucai/'+localStorage.fileId)
+    }
   },
   computed: {
     ...mapState('user', ['defaultImage']),
@@ -281,5 +288,15 @@ export default {
   height: calc(100% - 48px) !important;
   overflow-y: auto !important;
 }
-
+.sck{
+  width: 100%;
+  height: 37px;
+  line-height: 37px;
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 14px;
+  &:hover{
+    background-color: #f5f5f5;
+  }
+}
 </style>

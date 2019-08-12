@@ -11,6 +11,7 @@ import calendar from '../components/public/calendar'
 import members from "../components/company/members"
 import personal from  '../components/public/personal'
 import down from '../components/public/down'
+import sucai from  '../components/public/sucai'
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -22,6 +23,10 @@ Vue.use(Router);
 const router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: "/sucai/:id", // 素材壳
+      component: sucai,
+    },
     {
       path: "/personal", // 成员
       component: personal,

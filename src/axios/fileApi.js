@@ -177,3 +177,14 @@ export function getFileByTag(tagId) {
         method: "get",
     });
 }
+// 获取素材库 数据
+export function getSucai(folderId,current) {
+    return fetch({
+        url: `/files/${folderId}/material`,
+        method: "get",
+        params: {
+            current:current,
+            size: 50
+        }
+    });
+}
