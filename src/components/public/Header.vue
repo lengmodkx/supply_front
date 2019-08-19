@@ -5,7 +5,7 @@
       <div slot="content">
         <ul class="app-con">
           <router-link tag="li" :to="'/org/'+companyId" class="app-li">
-            <img @click="mainMenu=false" src="http://ald.art1001.com/favicon.ico" alt="">
+            <img @click="mainMenu=false" src="@/assets/images/home.png" alt="">
             <p>主页</p>
           </router-link>
           <li @click="goMembers"  class="app-li">
