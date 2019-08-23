@@ -208,6 +208,7 @@
         mounted() {
             console.log(this.hasData)
             if (this.hasData) {
+               this.ruleData.id=this.hasData.id
                 this.ruleData.name=this.hasData.name
                 this.ruleData.object=this.hasData.object.relationId
                 this.ruleData.conditionName=this.hasData.conditionName
