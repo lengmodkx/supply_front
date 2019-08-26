@@ -2,7 +2,7 @@
   <div class="model-file-up-box">
     <div class="model-name"><span>模型名称</span><Input v-model="modelName" placeholder="选输入模型文件名称" /></div>
     <div class="model-name"><span>模型文件</span>
-      <Upload :before-upload="handleUpload1" action="/upload/file/Office" v-if="showupload1" accept=".pln,.gsm,.skp,.mod,.svf">
+      <Upload :before-upload="handleUpload1" action="/upload/file/Office" v-if="showupload1" accept=".pln,.gsm,.skp,.mod,.svf,.zip,.rar">
         <Button icon="ios-cloud-upload-outline" type="primary">请选择模型文件</Button>
       </Upload>
       <div v-if="showProgress1" class="model-progress">
