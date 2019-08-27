@@ -14,7 +14,7 @@ const service = axios.create({
 
 service.interceptors.request.use(config => {
   //如果要加token的话，先要在登录后将token存入session：
-  if (sessionStorage.token) config.headers['x-auth-token'] = `${localStorage.token}`
+  if (localStorage.token) config.headers['x-auth-token'] = `${localStorage.token}`
   if (config.method == 'post' && !config.isJson) {
       if (config.specialPost){
           console.log('aaaaaaaaaaaaaaa')
