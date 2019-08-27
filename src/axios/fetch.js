@@ -58,6 +58,7 @@ service.interceptors.response.use(
   }, error => {
         if(error.response.status === 401){
             console.log(window.location.origin);
+            localStorage.token=""
             window.location.href = '/';
         }
         return Promise.reject(error)
