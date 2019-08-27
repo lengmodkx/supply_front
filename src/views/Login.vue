@@ -66,6 +66,11 @@ export default {
   computed: {
     ...mapState("app", ["loading"])
   },
+  mounted() {
+    if (localStorage.token){
+      this.$router.push('/home')
+    }
+  },
   methods: {
     ...mapActions("user", ["updateUserInfo", "updateUserId"]),
     login: function(name) {

@@ -168,7 +168,7 @@ const router = new Router({
     },
     {
       path: "/",
-      name: "login",
+      name: "home",
       meta: {
         title: "登录"
       },
