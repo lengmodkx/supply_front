@@ -52,7 +52,7 @@
             <li   :class="hoverClass=='person'?'hoverClass':''"  @click="personal"> 账号设置</li>
             <!-- <li > 账号设置</li> -->
           </ul>
-          <ul class="logOut">
+          <ul class="logOut" @click="goout">
             <router-link tag="li" to="/">退出登录</router-link>
           </ul>
         </div>
@@ -263,6 +263,9 @@ export default {
     goSucai() {
       this.popVisible=false
       this.$router.push('/sucai/'+localStorage.fileId)
+    },
+    goout() {
+      localStorage.token=''
     }
   },
   computed: {
