@@ -52,8 +52,8 @@
             <li   :class="hoverClass=='person'?'hoverClass':''"  @click="personal"> 账号设置</li>
             <!-- <li > 账号设置</li> -->
           </ul>
-          <ul class="logOut" @click="goout">
-            <router-link tag="li" to="/">退出登录</router-link>
+          <ul class="logOut" >
+            <li @click="goout">退出登录</li>
           </ul>
         </div>
       </Poptip>
@@ -266,6 +266,7 @@ export default {
     },
     goout() {
       localStorage.token=''
+      this.$router.push('/')
     }
   },
   computed: {
