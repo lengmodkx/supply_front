@@ -213,8 +213,9 @@ const store = {
         }, data) {
             if (data.tag) {
                 //tag搜索
-                getFileByTag(data.tag).then(res => {
+                searchFile(data.tag, data.projectId).then(res => {
                     commit("searchFile", res.data)
+                    console.log(res)
                 })
             } else {
                 //搜索条

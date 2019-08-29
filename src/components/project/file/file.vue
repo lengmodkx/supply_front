@@ -34,12 +34,16 @@
 
       <div class="input-box" style="padding:10px 20px 10px 20px;">
         <div class="input-box-left">
-          <Input search enter-button placeholder="请输入文件名搜索" style="width:500px;margin-right:20px;" @on-search="search" v-model="searched" />
-          <Select v-model="curtag" style="width:200px">
-            <Option v-for="item in tags" :value="item.tagId" :key="item.tagId">
+          <Input search enter-button placeholder="请输入文件名搜索" style="width:350px;margin-right:20px;" @on-search="search" v-model="searched" />
+          <Select @on-change="selectTag" v-model="curtag" style="width:200px" placeholder="选择标签">
+            <Option v-for="item in tags" :value="item.tagName" :key="item.tagId">
               <div class="circle" :style="`background-color:${item.bgColor}`"></div>
               {{ item.tagName }}
             </Option>
+          </Select>
+          <Select @on-change="selectPaixu" v-model="paixu" style="width:200px;margin-left: 20px" placeholder="选择排序方式">
+            <Option value="按时间降序">按时间降序</Option>
+            <Option value="按下载量">按下载量</Option>
           </Select>
         </div>
         <div class="icon-box">
@@ -359,6 +363,7 @@ export default {
   data() {
     return {
       show: true,
+      paixu: '',
       asyncData: [],
       curtag: "",
       showIcon: null,
@@ -429,19 +434,19 @@ export default {
       },
       deep: true
     },
-    curtag: {
-      handler: function(value, oldValue) {
-        console.log(value);
-        this.searched = "";
-        if (value != "") {
-          let data = { tag: value };
-          this.searchFile(data).then(res => {
-            this.loading = false;
-          });
-        }
-      },
-      deep: true
-    }
+    // curtag: {
+    //   handler: function(value, oldValue) {
+    //     console.log(value);
+    //     this.searched = "";
+    //     if (value != "") {
+    //       let data = { tag: value };
+    //       this.searchFile(data).then(res => {
+    //         this.loading = false;
+    //       });
+    //     }
+    //   },
+    //   deep: true
+    // }
   },
   computed: {
     ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb"])
@@ -504,6 +509,37 @@ export default {
       putImportant(id,lable).then(res => {
        this.$Message.success('操作成功!')
       })
+    },
+    // 选择排序方式
+    selectPaixu(value) {
+      if (value==='按时间降序') {
+        let params = {
+          fileId: this.fileId,
+          orderType: 1
+        };
+        this.initFile(params).then(res => {
+          this.loading = false;
+        });
+      }else if (value==='按下载量'){
+        let params = {
+          fileId: this.fileId,
+          orderType: 2
+        };
+        this.initFile(params).then(res => {
+          this.loading = false;
+        });
+      }
+    },
+    // 选择标签
+    selectTag(value) {
+      console.log(value)
+      let data={
+        tag:value,
+        projectId: this.projectId
+      }
+      this.searchFile(data).then(res => {
+        this.loading = false;
+      });
     },
     // 搜索文件
     search(value) {
