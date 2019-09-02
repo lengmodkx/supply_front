@@ -241,7 +241,7 @@ export default {
           if(runPlatform == 'browse') {
                 ALDObj.RunALDCAD()
            }else if(runPlatform ==undefined || runPlatform ==''|| runPlatform ==null ){
-              this.$Message.success('设计系统必须在阿拉丁BIM云平台客户端打开');              
+              this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开');              
            }
       }
     },
