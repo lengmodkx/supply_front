@@ -237,11 +237,11 @@ export default {
       }else if (id === 4) {
         this.$router.push("/down");
       }else if(id === 5){
-          let runPlatform;
+          let runPlatform='browse';
           if(runPlatform == 'browse') {
-                ALDObj.RunALDCAD()
-           }else if(runPlatform ==undefined || runPlatform ==''|| runPlatform ==null ){
-              this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开');              
+            this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开'); 
+           }else {
+                ALDObj.RunALDCAD()           
            }
       }
     },
