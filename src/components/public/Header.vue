@@ -27,7 +27,6 @@
       <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="clickHeaderTag(1)"><span class="text">我的</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)"><span class="text">日历</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)"><span class="text">下载</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="clickHeaderTag(5)"><span class="text">设计</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==3}" @click="clickHeaderTag(3)">
         <span class="text" style="border-right:none;">
           <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
@@ -35,6 +34,8 @@
           </Badge>
         </span>
       </a>
+
+    <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="clickHeaderTag(5)"><span class="text">设计</span></a>
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
         <!-- <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt=""> -->
@@ -237,12 +238,12 @@ export default {
       }else if (id === 4) {
         this.$router.push("/down");
       }else if(id === 5){
-         
-          if(runPlatform == 'browse') {
-            this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开'); 
-           }else {
-                ALDObj.RunALDCAD()           
-           }
+        window.open('https://www.baidu.com', '_blank')
+        // if(runPlatform == 'browse') {
+        //   this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开'); 
+        //  }else {
+        //       ALDObj.RunALDCAD()           
+        //  }
       }
     },
     // 去管理后台页面
