@@ -237,11 +237,11 @@ export default {
         this.$router.push("/down");
       }else if(id === 5){
           var userAgent = navigator.userAgent;
-          if(userAgent.indexOf("Firefox") > -1) {
-            this.$Message.success('设计系统必须在阿拉丁BIM云平台客户端打开');
-            return;
+          if(userAgent.indexOf("browse") > -1) {
+                ALDObj.RunALDCAD()
+           }else{
+              this.$Message.success('设计系统必须在阿拉丁BIM云平台客户端打开');              
            }
-         ALDObj.RunALDCAD()
       }
     },
     // 去管理后台页面
