@@ -237,7 +237,7 @@ export default {
       }else if (id === 4) {
         this.$router.push("/down");
       }else if(id === 5){
-          let runPlatform='browse';
+         
           if(runPlatform == 'browse') {
             this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开'); 
            }else {
