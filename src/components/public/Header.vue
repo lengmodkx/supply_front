@@ -236,6 +236,7 @@ export default {
       }else if (id === 4) {
         this.$router.push("/down");
       }else if(id === 5){
+          var userAgent = navigator.userAgent;
           if(userAgent.indexOf("Firefox") > -1) {
             this.$Message.success('设计系统必须在阿拉丁BIM云平台客户端打开');
             return;
