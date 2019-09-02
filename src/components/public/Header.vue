@@ -237,7 +237,7 @@ export default {
       }else if (id === 4) {
         this.$router.push("/down");
       }else if(id === 5){
-         
+          let runPlatform;
           if(runPlatform == 'browse') {
                 ALDObj.RunALDCAD()
            }else if(runPlatform ==undefined || runPlatform ==''|| runPlatform ==null ){
