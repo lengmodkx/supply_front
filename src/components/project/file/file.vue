@@ -73,7 +73,7 @@
             </div>
             <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
               <p></p>
-              <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
+              <Poptip class="menu-file" width="250" transfer  @on-popper-show='popShow(file.fileId)' @on-popper-hide="popHid">
                 <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
                 <div slot="content">
                   <div v-show="rublish" class="rublish">
@@ -98,7 +98,7 @@
                     <Button long type="primary" @click='fileEdit(file.fileId)'>确定</Button>
                   </div>
 
-                  <div v-show="!rublish&&!showFileEdit">
+                  <div v-show="!rublish&&!showFileEdit&&menuId==file.fileId">
                     <div class="menu-file-title" style="text-align:center;font-size:16px">
                       <span>文件菜单</span>
                     </div>
@@ -362,6 +362,7 @@ export default {
   },
   data() {
     return {
+      menuId:null,
       show: true,
       paixu: '',
       asyncData: [],
@@ -492,6 +493,11 @@ export default {
     },
     // 获取当前文件id
     getFileid(id, name) {
+      
+
+      this.rublish = false;
+      this.showFileEdit = false;
+      
       this.thisFileId = id;
       this.editFileName = name;
     },
@@ -583,6 +589,11 @@ export default {
         this.showFileEdit = false;
       }, 300);
     },
+    popShow(id){
+      this.menuId=id;
+       
+    },
+
     handleSave() {
       //创建文件夹
       if (this.folderName == null || this.folderName == "") {
