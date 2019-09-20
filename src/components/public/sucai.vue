@@ -1,6 +1,6 @@
 <template>
      <div class="file">
-        <div :class="show?'file-side-show':'file-side'">
+        <!-- <div :class="show?'file-side-show':'file-side'">
         <v-jstree  :data="treeData"  ></v-jstree>
         </div>
         <div class="file-button" @click='show=!show'>
@@ -8,7 +8,7 @@
             <i class="left__1DdF"></i>
             <i class="indicator__1TO8"></i>
         </div>
-        </div>
+        </div> -->
 
         <div class="file-view-wrap fade in">
         <header class="file-header">
