@@ -261,9 +261,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         this.total = res.data.total
                     }
                 });
-                 getFileTree(this.fileId).then(res => {
-                    this.treeData=res.data;
-                })
+                //  getFileTree(this.fileId).then(res => {
+                //     this.treeData=res.data;
+                // })
             },
 
             // 下载文件
