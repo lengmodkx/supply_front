@@ -26,6 +26,7 @@
     <div class="fr menu">
       <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="clickHeaderTag(1)"><span class="text">我的</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)"><span class="text">日历</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="goSucai"><span class="text">素材</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)"><span class="text">下载</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="clickHeaderTag(3)">
         <span class="text" style="border-right:none;">
