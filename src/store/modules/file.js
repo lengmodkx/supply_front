@@ -156,7 +156,6 @@ const store = {
         },
         initFolders(state, data) {
             state.treeData = data
-
         },
         initBreadcrumb(state, data) {
             state.breadcrumb = data.reverse()
@@ -197,7 +196,6 @@ const store = {
             commit
         }, data) {
             getFolders(data.fileId, data.projectId).then(res => {
-
                 if(res.data2){
                     commit("initBreadcrumb", res.data2)
                 }

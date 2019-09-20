@@ -1,5 +1,37 @@
 <template>
-    <div class="file-home" style="padding-top: 60px">
+     <div class="file">
+        <div :class="show?'file-side-show':'file-side'">
+        <v-jstree  :data="treeData"  ></v-jstree>
+        </div>
+        <div class="file-button" @click='show=!show'>
+        <div class="root__3UYM" :class="show?'left':'right'">
+            <i class="left__1DdF"></i>
+            <i class="indicator__1TO8"></i>
+        </div>
+        </div>
+
+        <div class="file-view-wrap fade in">
+        <header class="file-header">
+            <div class="file-header-title">
+            <!-- <span v-show='breadcrumb.length' @click="breadcrumbClick(item.fileId)" v-for="(item) in breadcrumb" :key="item.fileId">{{item.fileName}}＞</span> -->
+            素材库
+            </div>
+            
+        </header>
+
+         <div class="input-box" style="padding:10px 20px 10px 20px;">
+            <div class="input-box-left">
+            <Input search enter-button placeholder="请输入搜索" style="width:350px;margin-right:20px;" @on-search="search" v-model="searched" />
+            
+            </div>
+            <div class="icon-box">
+            <Icon type="ios-apps" @click="view='view'" />
+            <Icon type="ios-list" @click="view='list'" />
+            </div>
+        </div>
+        <Loading v-if="loading"></Loading>
+
+         <div class="file-home">
         <div class="main-content">
             <div v-if="isSearch" style="width: 100%">
                 <!--缩略图模式搜索-->
@@ -21,10 +53,10 @@
                                     <Input v-model="fileName" />
                                     <Button @click="changeFileName(file.fileId)" style="margin-top: 10px;display: block" type="info" long>确定</Button>
                                 </div>
-                                <div class="change-name" v-show="opearteShow==='删除文件'">
+                                <!-- <div class="change-name" v-show="opearteShow==='删除文件'">
                                     <p>您确定要删除该文件吗</p>
                                     <Button @click.stop="deleteFile(file.fileId)" style="margin-top: 10px" type="error" long>删除</Button>
-                                </div>
+                                </div> -->
                             </div>
                         </Poptip>
 
@@ -76,9 +108,9 @@
                             <Tooltip v-if="!file.catalog" content="下载" style="margin-right: 15px">
                                 <Icon type="md-arrow-down" @click="downLoad(file.fileId)" />
                             </Tooltip>
-                            <Tooltip content="删除">
+                            <!-- <Tooltip content="删除">
                                 <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
-                            </Tooltip>
+                            </Tooltip> -->
 
 
                         </div>
@@ -139,13 +171,10 @@
                             <Tooltip v-if="!file.catalog" content="下载" style="margin-right: 15px">
                                 <Icon type="md-arrow-down" @click="downLoad(file.fileId)" />
                             </Tooltip>
-                            <Tooltip content="删除">
+                            <!-- <Tooltip content="删除">
                                 <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
-                            </Tooltip>
-
-
+                            </Tooltip> -->
                         </div>
-
                     </li>
                 </ul>
             </div>
@@ -155,13 +184,21 @@
         <div class="page">
             <Page :page-size="50" :total="total" @on-change="clickPage" />
         </div>
-    </div>
+      </div>
+        </div>
+  </div>
+
 </template>
 <script>
-import {getSucai} from '@/axios/fileApi'
+import VJstree from "vue-jstree";
+import {getSucai,getFileTree,getSucaiSearch} from '@/axios/fileApi'
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     export default {
         data () {
             return {
+                searched: "",
+                loading: true,
+                show: true,
                 showModel: false,
                 showCommon: false,
                 fileId:this.$route.params.id,
@@ -178,13 +215,19 @@ import {getSucai} from '@/axios/fileApi'
                 searchData: [],
                 opearteShow: '文件菜单',
                 fileName: '',
+                treeData:[],
             }
         },
         components : {
+              VJstree,
         },
         mounted () {
-            this.init()
+            this.init();
+            this.treeInit();
 
+        },
+        computed: {
+             ...mapState("file", ["files", "filePath", "tags", "breadcrumb"])
         },
         watch: {
             '$route'(to, from) {
@@ -195,6 +238,9 @@ import {getSucai} from '@/axios/fileApi'
             }
         },
         methods: {
+            treeInit(){
+               
+            },
             // 分页
             clickPage (data) {
                 this.pageNum=data
@@ -210,11 +256,16 @@ import {getSucai} from '@/axios/fileApi'
             init () {
                 getSucai(this.fileId,this.pageNum).then(res => {
                     if (res.result) {
+                        this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
                     }
+                });
+                 getFileTree(this.fileId).then(res => {
+                    this.treeData=res.data;
                 })
             },
+
             // 下载文件
             downLoad (fileId) {
                 window.location.href =
@@ -227,16 +278,35 @@ import {getSucai} from '@/axios/fileApi'
                     this.opearteShow='文件菜单'
                 }, 300);
             },
+            // 搜索文件
+            search(value) {
+            if (value !== "") {
+                this.loading = true;
+
+                getSucaiSearch(value,this.pageNum).then(res => {
+                    if (res.result) {
+                        this.loading = false;
+                        this.allFile =res.data.records
+                        this.total = res.data.total
+                    }
+                });
+               
+            } else {
+                 this.init();//重新加载数据
+            }
+            },
         }
     }
 </script>
 <style scoped lang="less">
+@import "./file";
     .file-home{
+      padding-top:20px;
     }
     .main-content{
         width: 100%;
         display: flex;
-        min-height: calc(100vh - 94px) ;
+        min-height: calc(100vh - 300px) ;
         position: relative;
         .left-tree{
             position: absolute;
@@ -280,8 +350,8 @@ import {getSucai} from '@/axios/fileApi'
         }
     }
     .list-file-box{
-        width: calc(100% - 220px) ;
-        margin-left: 220px;
+        width: 100%;
+       
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -472,5 +542,427 @@ import {getSucai} from '@/axios/fileApi'
         width: 170px;
         margin: 0 auto;
     }
+
+.file{
+    padding-top:50px;
+}
+
+    .input-box {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  .input-box-left {
+    display: flex;
+    .circle {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      float: left;
+      margin: 5px 5px 0 0;
+    }
+  }
+  .icon-box {
+    color: #2d8cf0;
+    line-height: 22px;
+    font-size: 22px;
+    i {
+      cursor: pointer;
+      padding-left: 10px;
+    }
+    i:last-child {
+      font-size: 34px;
+      font-weight: bold;
+    }
+  }
+}
+
+.can-see-modal {
+  /deep/ .ivu-modal-body {
+    padding: 0 !important;
+    height: 480px;
+  }
+}
+
+.no-files {
+  width: 100%;
+  margin-top: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+  i {
+    font-size: 40px;
+  }
+  p {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+}
+.project-main {
+  background: #f7f7f7;
+}
+.file-view-wrap {
+  width: 1000px;
+  min-height: 300px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  margin: 0 auto;
+}
+
+.fade.in {
+  opacity: 1;
+}
+.fade {
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+.file-header {
+  height: 60px;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 20px;
+}
+.file-header-title {
+  font-size: 18px;
+  line-height: 60px;
+  float: left;
+  display: flex;
+  span {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}
+.file-header-add {
+  float: right;
+  line-height: 60px;
+}
+.file-header-add a {
+  font-size: 16px;
+  margin-left: 15px;
+  .icon-file {
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+}
+.folder-add {
+  border: 1px solid #e5e5e5;
+  width: 164px;
+  height: 164px;
+  text-align: center;
+  line-height: 164px;
+  .icon-folder {
+    font-size: 32px;
+  }
+}
+.ivu-dropdown-menu {
+  width: 180px;
+}
+.folderName {
+  width: 320px;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-left: 0px;
+}
+.file-operate {
+  line-height: 60px;
+}
+
+.file-content-wrap {
+  // display: flex;
+  // flex-wrap: wrap;
+ //justify-content: flex-start;
+  height: calc(100vh - 250px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
+  }
+  li {
+      float: left;
+    height: 200px;
+    position: relative;
+    .important{
+      position: absolute;
+      font-size: 12px;
+      bottom: 0;
+      right: 0;
+      transform: rotate(-45deg);
+      z-index: 300;
+      width: 26px;
+      height: 26px;
+      line-height: 30px;
+      color: white;
+      &:after{
+        position: absolute;
+        bottom: 2px;
+        right: -7px;
+        content: '';
+        width: 0;
+        height: 0;
+        border-width: 20px;
+        border-style: solid;
+        z-index: -1;
+        border-color: #ed4014 #ed4014 transparent transparent;
+        transform: rotate(135deg);
+      }
+    }
+  }
+  .file-content-filename {
+    height: 30px;
+    margin-left: 20px;
+    text-align: center;
+    line-height: 30px;
+    &:hover {
+      background: #f7f7f7;
+    }
+  }
+  .file-content-view {
+    border: 1px solid #e5e5e5;
+    height: 160px;
+    width: 160px;
+    margin-top: 20px;
+    margin-left: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .file-content-view-checkbox {
+      position: absolute;
+      left: 3px;
+      display: block;
+    }
+    .ivu-icon-folder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .file-content-opt {
+      position: absolute;
+      display: flex;
+      width: 25px;
+      height: 25px;
+      top: 0;
+      right: 0;
+      justify-content: space-between;
+      i {
+        display: none;
+      }
+    }
+    &:hover i {
+      display: block;
+    }
+  }
+}
+.ivu-checkbox-large .ivu-checkbox-inner {
+  width: 24px;
+  height: 24px;
+}
+.footer {
+  .footer-left {
+    display: flex;
+  }
+
+  display: flex;
+  justify-content: space-between;
+  .footer-privacy-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ivu-icon {
+    margin-right: 10px;
+  }
+}
+
+.file-handler {
+  height: 40px;
+  font-size: 14px;
+  padding-left: 15px;
+  line-height: 40px;
+  &:hover {
+    background: #f7f7f7;
+  }
+}
+.optactive {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 160px;
+  height: 25px;
+  text-align: center;
+  .arrow_down {
+    margin-right: 10px;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+.move-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.move-and-mobile-file {
+  display: flex;
+}
+.flex-static {
+  flex-shrink: 0;
+}
+.column-projects {
+  width: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 438px;
+  border-right: 1px solid #e5e5e5;
+  .project-title {
+    font-size: 14px;
+    color: gray;
+    font-weight: 700;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 14px;
+  }
+  .project-list {
+    height: 30px;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    line-height: 30px;
+    padding-left: 14px;
+  }
+}
+.selected {
+  background: #3da8f5;
+  color: white;
+  height: 30px;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 30px;
+  padding-left: 10px;
+}
+.unselected {
+  &:hover {
+    background: #eee;
+  }
+  height: 30px;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+.file-folder-opt {
+  li {
+    height: 35px;
+    line-height: 35px;
+    padding-left: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      background: #e5e5e5;
+    }
+  }
+}
+.picker-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0%;
+  background-color: #fff;
+}
+.flex-fill {
+  flex: 1 1 auto;
+}
+.menu-file-title {
+  height: 40px;
+  line-height: 40px;
+}
+.menu-file {
+  margin-right: 15px;
+  i {
+    cursor: pointer;
+    font-size: 20px;
+    &:hover {
+      color: #3da8f5;
+    }
+  }
+  /deep/ .ivu-poptip-body {
+    padding: 0;
+  }
+  .footer {
+    padding-top: 10px;
+    border-top: 1px solid #e5e5e5;
+    .footer-left {
+      display: flex;
+    }
+
+    display: flex;
+    justify-content: space-between;
+    .footer-privacy-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .ivu-icon {
+      margin-right: 10px;
+    }
+  }
+}
+.rublish {
+  padding-bottom: 15px;
+  .rublish-input {
+    margin: 15px 0;
+  }
+  .rublish-header {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e5e5;
+    i {
+      color: grey;
+      font-size: 20px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+  }
+  p {
+    margin: 15px 0;
+    font-size: 14px;
+  }
+}
+.nopadding {
+  /deep/ .ivu-modal-body {
+    padding: 0;
+  }
+  /deep/ .ivu-modal-close {
+    z-index: 999999;
+  }
+}
 
 </style>

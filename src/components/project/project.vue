@@ -69,7 +69,6 @@ export default {
     //   this.place = this.showMenu
     // }
     initSocket(id) {
-      
       // 建立连接对象
       var url =
         process.env.NODE_ENV === "development"

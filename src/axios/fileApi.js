@@ -188,3 +188,15 @@ export function getSucai(folderId,current) {
         }
     });
 }
+
+
+export function getSucaiSearch(fileName,current) {
+    return fetch({
+        url: `/files/${fileName}/material_base_search`,
+        method: "get",
+        params: {
+            current:current,
+            size: 50
+        }
+    });
+}

@@ -310,6 +310,7 @@ export default {
   cursor: pointer;
   padding: 0 10px;
   font-size: 14px;
+  border-bottom: 1px solid #efefef;
   &:hover{
     background-color: #f5f5f5;
   }
