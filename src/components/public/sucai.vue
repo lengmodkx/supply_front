@@ -208,7 +208,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 wjj: 0,
                 allFile:[],
                 total: 0,
-                pageNum: 1,
+                pageNum: 0,
                 view: 'view',
                 searchFont: '',
                 isSearch: false,
@@ -244,7 +244,14 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             // 分页
             clickPage (data) {
                 this.pageNum=data
-                this.init()
+                console.log(this.searched)
+                if(this.searched){
+                  
+                    this.search(data)
+                }else{
+                   this.init()
+                }
+              
             },
             // 点击的是文件夹
             goNext (type, id) {
@@ -286,8 +293,8 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 getSucaiSearch(value,this.pageNum).then(res => {
                     if (res.result) {
                         this.loading = false;
-                        this.allFile =res.data.records
-                        this.total = res.data.total
+                        this.allFile =res.data
+                        this.total = res.totle
                     }
                 });
                
