@@ -246,7 +246,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 this.pageNum=data
                 console.log(this.searched)
                 if(this.searched){                
-                    this.search(data)
+                    this.search(this.searched)
                 }else{
                    this.init()
                 }
