@@ -289,7 +289,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             if (value !== "") {
                 this.loading = true;
 
-                getSucaiSearch(value,this.pageNum).then(res => {
+                getSucaiSearch(value,this.pageNum-1).then(res => {
                     if (res.result) {
                         this.loading = false;
                         this.allFile =res.data
