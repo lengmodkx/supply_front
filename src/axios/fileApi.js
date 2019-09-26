@@ -195,7 +195,7 @@ export function getSucaiSearch(fileName,current) {
         url: `/files/${fileName}/material_base_search`,
         method: "get",
         params: {
-            current:current,
+            page:current,
             size: 50
         }
     });

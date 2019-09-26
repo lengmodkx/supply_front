@@ -44,7 +44,7 @@
         <img class="avatar" v-if="defaultImage.indexOf('http')>-1" :src="`${defaultImage}`" alt="">
         <img class="avatar" v-else :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${defaultImage}`" alt="">
         <div class="userInfo" slot="content">
-          <div class="sck" @click="goSucai">素材库</div>
+          <!-- <div class="sck" @click="goSucai">素材库</div> -->
           <ul class="org">
             <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div>
             <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item)">
