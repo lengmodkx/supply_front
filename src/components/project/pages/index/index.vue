@@ -227,7 +227,8 @@ import {
   addTask,
   group,
   addGroup,
-  changeGroup
+  changeGroup,
+  getIsGroupPower
 } from "@/axios/api";
 export default {
   name: "",
@@ -274,7 +275,8 @@ export default {
       showAddGroup: false,
       groupName: "",
       loading: true,
-      allTask: []
+      allTask: [],
+      showGroupPower:'',
     };
   },
   mounted() {
@@ -307,6 +309,12 @@ export default {
       this.currentEditId = "";
     },
     changeGroup(groupId) {
+      
+      if(this.showGroupPower=='0'){
+          //0是没有权限
+        this.$Message.error("您没有当前权限");
+        return
+      }
       this.taskGroupId = groupId;
       this.loading = true;
       changeGroup(groupId, this.projectId).then(res => {
@@ -336,8 +344,14 @@ export default {
       });
     },
     getGroup() {
+      getIsGroupPower(this.taskGroupId).then(res=>{
+          //检测是否进入分组权限
+          
+          this.showGroupPower=res.data
+      })
       this.show = !this.show;
     },
+    
     //打开任务详情
     initTask(taskId) {
       this.showModal = true;

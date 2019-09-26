@@ -883,3 +883,17 @@ export function updateUserNews(param) {
           params: param
       });
 }
+
+/*
+ * 检测是否进入分组权限
+ */
+
+export function getIsGroupPower(groupId) {
+    return fetch({
+        url: `/relations/check_access/permissions`,
+        method: "get", // 请求方法
+        params: {
+            "groupId": groupId,
+        }
+    });
+}
