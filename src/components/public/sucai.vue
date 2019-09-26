@@ -208,7 +208,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 wjj: 0,
                 allFile:[],
                 total: 0,
-                pageNum: 0,
+                pageNum: 1,
                 view: 'view',
                 searchFont: '',
                 isSearch: false,
@@ -245,8 +245,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             clickPage (data) {
                 this.pageNum=data
                 console.log(this.searched)
-                if(this.searched){
-                  
+                if(this.searched){                
                     this.search(data)
                 }else{
                    this.init()
@@ -299,6 +298,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 });
                
             } else {
+                 this.pageNum=1
                  this.init();//重新加载数据
             }
             },
