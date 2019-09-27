@@ -170,12 +170,12 @@ export function getFileTree(projectId) {
     });
 }
 
-// 获取素材库树
+// 获取素材加
 export function getSuCaiTree(projectId) {
     return fetch({
         url: `/files/folder_tree_admin`,
         method: "get",
-        params: {file: projectId}
+        params: {fileId: projectId}
     });
 }
 
