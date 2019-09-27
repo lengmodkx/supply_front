@@ -235,7 +235,16 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     this.fileId=to.params.id
                     this.init();//重新加载数据
                 }
-            }
+            },
+
+            searched: function(val, oldVal) {            
+                if(val!=oldVal){
+                  this.pageNum=1
+                }
+                
+             },
+             deep: true
+
         },
         methods: {
             treeInit(){
