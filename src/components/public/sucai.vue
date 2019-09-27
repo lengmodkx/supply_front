@@ -195,7 +195,7 @@
 </template>
 <script>
 import VJstree from "vue-jstree";
-import {getSucai,getFileTree,getSucaiSearch} from '@/axios/fileApi'
+import {getSucai,getSuCaiTree,getSucaiSearch} from '@/axios/fileApi'
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     export default {
         data () {
@@ -279,7 +279,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         this.total = res.data.total
                     }
                 });
-                 getFileTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
+                 getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
                     this.treeData=res.data;
                 })
                 //  getFileTree(this.fileId).then(res => {
