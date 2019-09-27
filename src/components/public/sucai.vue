@@ -1,6 +1,6 @@
 <template>
      <div class="file">
-        <!-- <div :class="show?'file-side-show':'file-side'">
+        <div :class="show?'file-side-show':'file-side'">
         <v-jstree  :data="treeData"  ></v-jstree>
         </div>
         <div class="file-button" @click='show=!show'>
@@ -8,7 +8,7 @@
             <i class="left__1DdF"></i>
             <i class="indicator__1TO8"></i>
         </div>
-        </div> -->
+        </div>
 
         <div class="file-view-wrap fade in">
         <header class="file-header">
@@ -186,6 +186,10 @@
         </div>
       </div>
         </div>
+        <div class="finish-down">
+          
+        已下载
+       </div>
   </div>
 
 </template>
@@ -223,7 +227,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         },
         mounted () {
             this.init();
-            this.treeInit();
+            // this.treeInit();
 
         },
         computed: {
@@ -240,16 +244,15 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             searched: function(val, oldVal) {            
                 if(val!=oldVal){
                   this.pageNum=1
-                }
-                
+                }              
              },
              deep: true
 
         },
         methods: {
-            treeInit(){
+            // treeInit(){
                
-            },
+            // },
             // 分页
             clickPage (data) {
                 this.pageNum=data
@@ -276,6 +279,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         this.total = res.data.total
                     }
                 });
+                 getFileTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
+                    this.treeData=res.data;
+                })
                 //  getFileTree(this.fileId).then(res => {
                 //     this.treeData=res.data;
                 // })
@@ -979,6 +985,18 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
   /deep/ .ivu-modal-close {
     z-index: 999999;
   }
+}
+.finish-down{
+   width:60px;
+   height: 60px;
+   border-radius: 50%;
+   position: absolute;
+   bottom: 30px;
+   right: 30px;
+   text-align: center;
+   line-height: 60px;
+   color:#2d8cf0; 
+   border:2px solid #2d8cf0;
 }
 
 </style>

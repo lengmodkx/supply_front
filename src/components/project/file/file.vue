@@ -322,6 +322,9 @@
         <fileCanSee v-if="showVisibilityModal"></fileCanSee>
       </Modal>
     </div>
+     <div class="finish-down">
+        已下载
+       </div>
   </div>
 
 </template>
@@ -1252,6 +1255,18 @@ export default {
   /deep/ .ivu-modal-close {
     z-index: 999999;
   }
+}
+.finish-down{
+   width:60px;
+   height: 60px;
+   border-radius: 50%;
+   position: absolute;
+   bottom: 30px;
+   right: 30px;
+   text-align: center;
+   line-height: 60px;
+   color:#2d8cf0; 
+   border:2px solid #2d8cf0;
 }
 // .tree-themeicon-custom{
 

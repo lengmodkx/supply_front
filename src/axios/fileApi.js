@@ -163,9 +163,9 @@ export function getFolders(fileId,projectId) {
 // 获取文件树
 export function getFileTree(projectId) {
     return fetch({
-        url: `/files//folder_all_tree`,
+        url: `/files/folder_tree_admin`,
         method: "get",
-        params: {projectId: projectId}
+        params: {fileId: projectId}
     });
 }
 
