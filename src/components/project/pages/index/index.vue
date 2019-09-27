@@ -310,23 +310,28 @@ export default {
     },
     changeGroup(groupId) {
       
-      if(this.showGroupPower=='0'){
-          //0是没有权限
-        this.$Message.error("您没有当前权限");
-        return
-      }
-      this.taskGroupId = groupId;
-      this.loading = true;
-      changeGroup(groupId, this.projectId).then(res => {
-        if (res.result == 1) {
-          this.$router.replace(
-            `/project/${this.projectId}/tasks/group/${groupId}`
-          );
-          this.init(this.projectId).then(res => {
-            this.loading = false;
-          });
-        }
-      });
+
+       getIsGroupPower(groupId).then(res=>{
+          //检测是否进入分组权限
+           if(res.data=='0'){
+           //0是没有权限
+              this.$Message.error("您没有当前权限");
+             return
+          }else{
+                this.taskGroupId = groupId;
+                this.loading = true;
+                changeGroup(groupId, this.projectId).then(res => {
+                  if (res.result == 1) {
+                    this.$router.replace(
+                      `/project/${this.projectId}/tasks/group/${groupId}`
+                    );
+                    this.init(this.projectId).then(res => {
+                      this.loading = false;
+                    });
+                  }
+                });
+          }         
+      })
     },
     handleSave() {
       this.loading = true;
@@ -344,11 +349,7 @@ export default {
       });
     },
     getGroup() {
-      getIsGroupPower(this.taskGroupId).then(res=>{
-          //检测是否进入分组权限
-          
-          this.showGroupPower=res.data
-      })
+     
       this.show = !this.show;
     },
     
