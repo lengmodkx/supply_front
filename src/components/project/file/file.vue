@@ -1260,7 +1260,7 @@ export default {
    width:60px;
    height: 60px;
    border-radius: 50%;
-   position: absolute;
+   position:fixed;
    bottom: 30px;
    right: 30px;
    text-align: center;
@@ -1269,7 +1269,6 @@ export default {
    border:2px solid #2d8cf0;
 }
 // .tree-themeicon-custom{
-
 // }
 </style>
 

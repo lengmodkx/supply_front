@@ -15,8 +15,7 @@
             <div class="file-header-title">
             <!-- <span v-show='breadcrumb.length' @click="breadcrumbClick(item.fileId)" v-for="(item) in breadcrumb" :key="item.fileId">{{item.fileName}}＞</span> -->
             素材库
-            </div>
-            
+            </div>           
         </header>
 
          <div class="input-box" style="padding:10px 20px 10px 20px;">
@@ -186,7 +185,7 @@
         </div>
       </div>
         </div>
-        <div class="finish-down">
+        <div class="finish-down" id='finishDown'>
           
         已下载
        </div>
@@ -228,7 +227,6 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         mounted () {
             this.init();
             // this.treeInit();
-
         },
         computed: {
              ...mapState("file", ["files", "filePath", "tags", "breadcrumb"])
@@ -248,6 +246,15 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
              },
              deep: true
 
+        },
+        updated:function(){
+
+          //  this.$nextTick(function(){
+          //   var button = document.getElementById('finishDown');
+          //   var file=document.getElementsByClassName("file")[0]
+          //  console.log(file.scrollHeight)
+          //   })
+            
         },
         methods: {
             // treeInit(){
@@ -281,10 +288,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 });
                  getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
                     this.treeData=res.data;
-                })
-                //  getFileTree(this.fileId).then(res => {
-                //     this.treeData=res.data;
-                // })
+                })             
             },
 
             // 下载文件
@@ -990,7 +994,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
    width:60px;
    height: 60px;
    border-radius: 50%;
-   position: absolute;
+   position: fixed;
    bottom: 30px;
    right: 30px;
    text-align: center;
