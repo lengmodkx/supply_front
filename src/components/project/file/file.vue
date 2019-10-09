@@ -52,7 +52,6 @@
         </div>
       </div>
       <Loading v-if="loading"></Loading>
-
       <!--正常展示-->
       <ul class="file-content-wrap" v-else-if="files.length && view=='view'" :key="fileId">
         <li v-for="(file,index) in files" :key="index" @click="fileDetail(file.catalog,file.fileId, file)">
@@ -213,7 +212,6 @@
                     <div class="rublish-input">
                       <Input v-model.trim="editFileName" />
                     </div>
-
                     <Button long type="primary" @click='fileEdit(file.fileId)'>确定</Button>
                   </div>
 
@@ -1209,7 +1207,6 @@ export default {
     .footer-left {
       display: flex;
     }
-
     display: flex;
     justify-content: space-between;
     .footer-privacy-text {
