@@ -253,6 +253,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
              deep: true
 
         },
+        created(){
+                     this.treeInit();
+        },
         updated:function(){
 
           //  this.$nextTick(function(){
@@ -265,9 +268,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         methods: {
           // 选中要移动到哪
           treeClick(node) {
-            
               this.searched='';//重置搜索
               this.flagTree=true;
+              console.log(node.data.id)
               this.treeId=node.data.id
               getSuCaiTreeDate(this.treeId,this.page-1).then(res => {
                 this.allFile =res.data
@@ -276,10 +279,14 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 this.pageNum=res.page+1
               });
           },
-            // treeInit(){
-            // },
+           treeInit(){
+              getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
+                                this.treeData=res.data;
+                 })
+            },
             // 分页
             clickPage (data) {
+              
                 this.pageNum=data
                 if(this.flagTree){
                     //树形分页
@@ -287,6 +294,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     this.allFile =res.data
                     this.total = res.totle
                     this.pageNum=res.page+1
+                    this.treeId=res.parentId
                   });
                   return
                 }
@@ -297,7 +305,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                  return
                }              
                  getSucai(this.fileId,this.pageNum-1).then(res => {
-                    if (res.result) {
+                    if (res.result) {                  
                         this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
@@ -317,9 +325,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         // this.pageNum=res.data.pages+1
                     }
                 });
-                 getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
-                    this.treeData=res.data;
-                })             
+                     
             },
            // 搜索文件
             search(value) {
@@ -345,6 +351,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             goNext (type, id) {
                 if (type){
                     this.$router.push(`/sucai/${id}`)
+                    this.flagTree=false
                 }
             },
             
