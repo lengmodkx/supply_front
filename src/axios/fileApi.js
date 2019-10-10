@@ -203,7 +203,7 @@ export function getSucai(folderId,current) {
         url: `/files/${folderId}/material`,
         method: "get",
         params: {
-            current:current,
+            page:current,
             size: 10
         }
     });
