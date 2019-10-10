@@ -13,7 +13,7 @@ export function getSuCaiTreeDate(fileId,page) {
     return fetch({
         url: `/files/folder_tree_data`,
         method: "get",
-        params: {fileId: fileId,page:page}
+        params: {fileId: fileId,page:page,size:10}
     });
 }
 

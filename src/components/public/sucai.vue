@@ -279,7 +279,6 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             // },
             // 分页
             clickPage (data) {
-              debugger
                 this.pageNum=data
                 if(this.flagTree){
                     //树形分页
@@ -323,7 +322,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             },
            // 搜索文件
             search(value) {
-                 debugger
+                 
                 if (value !== "") {
                     this.loading = true;
                     getSucaiSearch(value,this.pageNum-1).then(res => {
