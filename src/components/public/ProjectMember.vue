@@ -28,7 +28,7 @@
         </div>
         <Icon type="ios-arrow-down" size="18" @click="showModal1(user.userId,$event)"/>
       </li>
-    </ul>-->
+    </ul> -->
     <div class="userBox">
         <Collapse v-model="value" accordion>
               <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">

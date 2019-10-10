@@ -7,6 +7,16 @@ export function getFileDetails(fileId) {
         method: "get",
     });
 }
+
+// 获取素材数据
+export function getSuCaiTreeDate(fileId,page) {
+    return fetch({
+        url: `/files/folder_tree_data`,
+        method: "get",
+        params: {fileId: fileId,page:page}
+    });
+}
+
 // 修改文件名称
 export function changeName(fileId, fileName) {
     return fetch({
@@ -194,7 +204,7 @@ export function getSucai(folderId,current) {
         method: "get",
         params: {
             current:current,
-            size: 50
+            size: 10
         }
     });
 }
@@ -206,7 +216,7 @@ export function getSucaiSearch(fileName,current) {
         method: "get",
         params: {
             page:current,
-            size: 50
+            size: 10
         }
     });
 }

@@ -1,7 +1,7 @@
 <template>
      <div class="file">
         <div :class="show?'file-side-show':'file-side'">
-        <v-jstree  :data="treeData"  ></v-jstree>
+        <v-jstree  :data="treeData"  @item-click="treeClick"></v-jstree>
         </div>
         <div class="file-button" @click='show=!show'>
         <div class="root__3UYM" :class="show?'left':'right'">
@@ -181,7 +181,7 @@
 
         <!--分页-->
         <div class="page">
-            <Page :page-size="50" :total="total" @on-change="clickPage" />
+            <Page :page-size="10"  :current="pageNum"  :total="total" @on-change="clickPage" />
         </div>
       </div>
         </div>
@@ -194,7 +194,7 @@
 </template>
 <script>
 import VJstree from "vue-jstree";
-import {getSucai,getSuCaiTree,getSucaiSearch} from '@/axios/fileApi'
+import {getSuCaiTreeDate,getSucai,getSuCaiTree,getSucaiSearch} from '@/axios/fileApi'
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     export default {
         data () {
@@ -219,12 +219,16 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 opearteShow: '文件菜单',
                 fileName: '',
                 treeData:[],
+                flagTree:false,
+                treeId:'',
+                
             }
         },
         components : {
               VJstree,
         },
         mounted () {
+           
             this.init();
             // this.treeInit();
         },
@@ -233,9 +237,11 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         },
         watch: {
             '$route'(to, from) {
+              
                 if(to.params.id != from.params.id){
                     this.fileId=to.params.id
-                    this.init();//重新加载数据
+                      this.pageNum=1
+                      this.init();//重新加载数据
                 }
             },
 
@@ -257,39 +263,91 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             
         },
         methods: {
+          // 选中要移动到哪
+          treeClick(node) {
+            
+              this.searched='';//重置搜索
+              this.flagTree=true;
+              this.treeId=node.data.id
+              getSuCaiTreeDate(this.treeId).then(res => {
+                this.allFile =res.data
+                this.total = res.totle
+                this.page=res.page+1
+              });
+          },
             // treeInit(){
-               
             // },
             // 分页
             clickPage (data) {
+              debugger
                 this.pageNum=data
-                console.log(this.searched)
-                if(this.searched){                
-                    this.search(this.searched)
-                }else{
-                   this.init()
+                if(this.flagTree){
+                    //树形分页
+                    getSuCaiTreeDate(this.treeId,this.pageNum-1).then(res => {
+                    this.allFile =res.data
+                    this.total = res.totle
+                    //this.pageNum=res.page+1
+                  });
+                  return
                 }
-              
-            },
-            // 点击的是文件夹
-            goNext (type, id) {
-                if (type){
-                    this.$router.push(`/sucai/${id}`)
-                }
-            },
-            // 初始化 页面信息
-            init () {
-                getSucai(this.fileId,this.pageNum).then(res => {
+               
+               if(this.searched){
+                  //搜索
+                 this.search(this.searched)
+                 return
+               }              
+                 getSucai(this.fileId,this.pageNum-1).then(res => {
                     if (res.result) {
                         this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
+                        // this.pageNum=res.data.pages+1
+                    }
+                });
+              
+            },
+
+            // 初始化 页面信息和分页
+            init () {
+                getSucai(this.fileId,this.pageNum-1).then(res => {
+                    if (res.result) {
+                        this.loading = false;
+                        this.allFile =res.data.records
+                        this.total = res.data.total
+                        // this.pageNum=res.data.pages+1
                     }
                 });
                  getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
                     this.treeData=res.data;
                 })             
             },
+           // 搜索文件
+            search(value) {
+                 debugger
+                if (value !== "") {
+                    this.loading = true;
+                    getSucaiSearch(value,this.pageNum-1).then(res => {
+                        if (res.result) {
+                            this.loading = false;
+                            this.allFile =res.data
+                            this.total = res.totle
+                        }
+                    });
+                  
+                } else {
+                     this.$Notice.warning({
+                        title: "请输入搜索关键字"
+                      });
+               }
+            },
+
+            // 点击的是文件夹
+            goNext (type, id) {
+                if (type){
+                    this.$router.push(`/sucai/${id}`)
+                }
+            },
+            
 
             // 下载文件
             downLoad (fileId) {
@@ -303,24 +361,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     this.opearteShow='文件菜单'
                 }, 300);
             },
-            // 搜索文件
-            search(value) {
-            if (value !== "") {
-                this.loading = true;
-
-                getSucaiSearch(value,this.pageNum-1).then(res => {
-                    if (res.result) {
-                        this.loading = false;
-                        this.allFile =res.data
-                        this.total = res.totle
-                    }
-                });
-               
-            } else {
-                 this.pageNum=1
-                 this.init();//重新加载数据
-            }
-            },
+          
         }
     }
 </script>
@@ -332,7 +373,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     .main-content{
         width: 100%;
         display: flex;
-        min-height: calc(100vh - 300px) ;
+        min-height: calc(100vh - 480px) ;
         position: relative;
         .left-tree{
             position: absolute;
@@ -350,6 +391,14 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             }
         }
     }
+    @media screen and (max-width:1440px){
+          
+            .main-content{
+               min-height: calc(100vh - 480px) ;
+            }
+          
+        }
+
     .bth-box{
         display: flex;
         margin-bottom: 40px;
@@ -530,7 +579,36 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 white-space: nowrap;
             }
         }
+
+         @media screen and (max-width:1440px){
+          
+         
+                  li{
+                width: 150px;
+                height: 150px;
+                
+                .top-img{
+                    width: 106px;
+                    height:106px;
+                }
+                .bottom-font{
+                margin-top: 5px;
+                height: 30px;
+                width: 106px;
+                font-size: 12px;
+                line-height: 30px;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+            }
+
+        }
     }
+
+    
+        
     .page{
         width: 100%;
         padding: 10px;
