@@ -296,6 +296,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     this.pageNum=res.page+1
                     this.treeId=res.parentId
                   });
+                  debugger
                   return
                 }
                
@@ -309,7 +310,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
-                        this.pageNum=res.data.pages+1
+                        this.pageNum=res.data.current+1
                     }
                 });
               

@@ -86,11 +86,24 @@ export function checkFolder(fileId) {
 export function getUsers(keyword) {
     return $get(`/members/${keyword}`, null)
 }
+//获取指定项目中的某个成员信息
+
+export function getAssignUsers(projectId,keyword) {
+    return $get(`/members/project/${projectId}`, {
+        'accountName': keyword
+    })
+
+}
 
 //给项目添加成员
 export function addUser(params) {
     return $post('/members', params)
 }
+//添加分组成员
+export function addProjectUser(groupId,userId) {
+    return $post(`/group_user/addition_group_user/${groupId}`, {userId:userId})
+}
+
 //移除项目成员
 export function removeUser(userId) {
     return $delete(`/members/${userId}`, null)

@@ -15,7 +15,7 @@
       </div>
 
     <div class="invite" @click="modal=true">
-      <Icon type="md-add-circle"></Icon>邀请新成员
+      <Icon type="md-add-circle"></Icon>邀请分组成员 
     </div>
     <!-- <ul class="programMember">
       <li class="member-item clearfix" v-for="(user,index) in users" :key="index">
@@ -64,18 +64,26 @@
       </p>
       <div style="text-align:center;height:400px">
         <div>
-          <Input search enter-button placeholder="请输入手机号/邮箱查找" @on-search="searchUser" v-model="keyword2" />
+          <Input search enter-button placeholder="请输入手机号" @on-search="searchUser" v-model="keyword2" />
         </div>
         <loading v-if="loading"></loading>
         <div style="height:360px;padding-top:10px">
           <ul>
-            <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
+
+            <li  v-if='invitUsers' class="invit-user">
               <div class="invit-user-name">
-                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`">
-                <p>{{user.userName}}</p>
+                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${invitUsers.image}`">
+                <p>{{invitUsers.accountName}}</p>
+              </div>
+              <Button type="primary" @click="adduser(invitUsers.userId)">添加</Button>
+            </li>
+            <!-- <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
+              <div class="invit-user-name">
+                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
+                <p>{{user.accountName}}</p>
               </div>
               <Button type="primary" @click="adduser(user.userId)">添加</Button>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -84,7 +92,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, addUser, removeUser } from "../../axios/api2.js";
+import { getUsers, getAssignUsers,addUser,addProjectUser, removeUser } from "../../axios/api2.js";
 import loading from "./common/Loading.vue";
 export default {
   name: "",
@@ -96,7 +104,7 @@ export default {
       keyword: "",
       keyword2: "",
       modal: false,
-      invitUsers: [],
+      invitUsers:null,
       loading: false,
       value: "-1"
     };
@@ -117,16 +125,30 @@ export default {
         return false;
       }
       this.loading = true;
-      getUsers(this.keyword2).then(res => {
+      let  projectId=this.$route.params.id;
+      getAssignUsers(projectId, this.keyword2).then(res => {
         this.loading = false;
         if (res.result === 1) {
-          this.invitUsers = res.data;
+          console.log(res.data)
+          if(res.data){
+             this.invitUsers = res.data;
+          }else{
+           this.$Message.warning('搜索失败');
+          }
+        
         }
       });
+
+      // getUsers(this.keyword2).then(res => {
+      //   this.loading = false;
+      //   if (res.result === 1) {
+      //     this.invitUsers = res.data;
+      //   }
+      // });
     },
     //筛选用户
     FUser(keyword) {
-      debugger
+      
       if(keyword!=''){
           this.filterUser(keyword)
       }else{
@@ -135,20 +157,32 @@ export default {
        
     },
     adduser(userId) {
-      let params = {
-        projectId: this.$route.params.id,
-        memberId: userId
-      };
+      let groupId = this.$route.params.groupId
+     
+      //添加分组成员
 
-      addUser(params).then(res => {
+      addProjectUser(groupId,userId).then(res => {
         if (res.result === 1) {
           this.initUser(this.$route.params.id);
+          this.$Message.info('添加成功');
         } else {
           this.$Notice.warning({
             title: res.msg
           });
         }
       });
+
+      //添加项目成员
+      
+      // addUser(params).then(res => {
+      //   if (res.result === 1) {
+      //     this.initUser(this.$route.params.id);
+      //   } else {
+      //     this.$Notice.warning({
+      //       title: res.msg
+      //     });
+      //   }
+      // });
     },
     //移除项目成员
     remove(userId) {
