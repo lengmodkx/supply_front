@@ -269,10 +269,11 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
               this.searched='';//重置搜索
               this.flagTree=true;
               this.treeId=node.data.id
-              getSuCaiTreeDate(this.treeId).then(res => {
+              getSuCaiTreeDate(this.treeId,this.page-1).then(res => {
                 this.allFile =res.data
                 this.total = res.totle
                 this.page=res.page+1
+                this.pageNum=res.page+1
               });
           },
             // treeInit(){
@@ -282,10 +283,10 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 this.pageNum=data
                 if(this.flagTree){
                     //树形分页
-                    getSuCaiTreeDate(this.treeId,this.pageNum-1).then(res => {
+                    getSuCaiTreeDate(this.treeId,this.pageNum-1).then(res => {                    
                     this.allFile =res.data
                     this.total = res.totle
-                    //this.pageNum=res.page+1
+                    this.pageNum=res.page+1
                   });
                   return
                 }
@@ -300,7 +301,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
-                        // this.pageNum=res.data.pages+1
+                        this.pageNum=res.data.pages+1
                     }
                 });
               

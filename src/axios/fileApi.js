@@ -198,24 +198,24 @@ export function getFileByTag(tagId) {
     });
 }
 // 获取素材库 数据
-export function getSucai(folderId,current) {
+export function getSucai(folderId,page) {
     return fetch({
         url: `/files/${folderId}/material`,
         method: "get",
         params: {
-            page:current,
+            page:page,
             size: 10
         }
     });
 }
 
 
-export function getSucaiSearch(fileName,current) {
+export function getSucaiSearch(fileName,page) {
     return fetch({
         url: `/files/${fileName}/material_base_search`,
         method: "get",
         params: {
-            page:current,
+            page:page,
             size: 10
         }
     });
