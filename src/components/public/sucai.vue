@@ -296,7 +296,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     this.pageNum=res.page+1
                     this.treeId=res.parentId
                   });
-                  debugger
+                  
                   return
                 }
                
