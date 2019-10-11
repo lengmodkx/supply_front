@@ -17,7 +17,7 @@ service.interceptors.request.use(config => {
   if (localStorage.token) config.headers['x-auth-token'] = `${localStorage.token}`
   if (config.method == 'post' && !config.isJson) {
       if (config.specialPost){
-          console.log('aaaaaaaaaaaaaaa')
+
       }else {
           config.data = qs.stringify({
               ...config.data
@@ -25,7 +25,6 @@ service.interceptors.request.use(config => {
       }
 
   }
-  // console.log("请求参数========", config.data)
   return config
 }, error => {
   return Promise.reject(error)

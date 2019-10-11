@@ -181,7 +181,6 @@
             //获取项目数据
             getProjectList(){
                 getStarProjectList().then(res => {
-                    console.log(3333333,res)
                     if(res.result === 1){
                         this.notStarProject = res.notStarProject
                         this.starProject = res.starProject

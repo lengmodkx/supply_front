@@ -82,8 +82,6 @@ export default {
           nearThing().then(res => {
               this.nearThingTask = res.data.task
               this.nearThingSchedule = res.data.schedule
-              console.log(this.nearThingTask)
-              console.log(this.nearThingSchedule)
           })
       },
       // 显示任务详情

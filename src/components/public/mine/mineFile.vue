@@ -212,7 +212,6 @@ export default {
         // 选中要移动到哪
         itemClick(node) {
             this.folderId = node.data.id;
-            console.log(node.data.id);
         },
         // 取消 移动复制
         cancelRemoveClone() {
@@ -237,7 +236,6 @@ export default {
                 if (this.caozuo === "移动") {
                     removeFile(this.folderId, this.thisFileId, this.projectId).then(
                         res => {
-                            console.log(res)
                             if (res.result) {
                                 this.$Message.success("移动成功");
                                 this.showMove = false;

@@ -9,7 +9,6 @@ const store = {
     mutations: {
         init(state, data) {
             state.shareList = data
-            console.log(66666666666,data)
             // if (data.length > 0) {
             //     state.share = data[0]
             // }

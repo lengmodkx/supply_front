@@ -3,7 +3,6 @@ import fetch from "./fetch"; // 引用fetch.js
 
 // 根据项目id获取分组信息
 export function getFenzu(projectId) {
-    console.log(555555)
     return fetch({
         url: `/relations/${projectId}/bind/group_info`,
         method: "get"

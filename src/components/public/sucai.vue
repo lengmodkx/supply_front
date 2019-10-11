@@ -310,7 +310,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
-                        this.pageNum=res.data.current+1
+                        this.pageNum=res.data.current
                     }
                 });
               

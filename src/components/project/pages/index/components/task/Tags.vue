@@ -129,7 +129,6 @@ export default {
   },
   watch: {
     offsetLeft(newl, oldl){
-      console.log(oldl,newl)
       },
     taglist:{
        handler:function(newValue,oldValue){
@@ -224,7 +223,6 @@ export default {
             this.$nextTick(() => {
               console.log(">>>>>>>", this.$refs.addIcon.offsetWidth);
               this.offsetLeft = this.$refs.addIcon.offsetWidth - 30 + "px";
-              console.log(this.offsetLeft)
             });
           }
         }
@@ -342,8 +340,6 @@ export default {
     //         }
     
     //   }
-     
-    //   console.log(this.offsetLeft)
     // },
 
   },

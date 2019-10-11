@@ -76,7 +76,6 @@
                     searchMembers(value, localStorage.companyId).then(res => {
                         this.isSearch=true
                         this.loading=false
-                        console.log(33333333,res)
                         this.searchPeople=res.data
                     })
                 }
