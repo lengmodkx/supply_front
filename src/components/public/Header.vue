@@ -28,6 +28,9 @@
       <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)"><span class="text">日历</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="goSucai"><span class="text">素材</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)"><span class="text">下载</span></a>
+       <Poptip trigger="hover" class="desing" content="请打开设计系统">
+       <a @click="clickHeaderTag(5)"><span class="text ">设计</span></a>
+      </Poptip>
       <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="clickHeaderTag(3)">
         <span class="text" style="border-right:none;">
           <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
@@ -35,9 +38,7 @@
           </Badge>
         </span>
       </a>
-      <Poptip trigger="hover" class="desing" content="请打开设计系统">
-       <a @click="clickHeaderTag(5)"><span class="text ">设计</span></a>
-      </Poptip>
+     
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
         <!-- <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt=""> -->
