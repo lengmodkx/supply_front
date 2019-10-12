@@ -24,9 +24,15 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: "/sucai/:id", // 素材壳
+      path: "/sucai/:id", // 素材裤
       component: sucai,
     },
+    {
+      path: "/sucai/", // 素材裤
+      component: sucai,
+    },
+    
+
     {
       path: "/personal", // 成员
       component: personal,

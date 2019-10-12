@@ -59,7 +59,7 @@
                             </div>
                         </Poptip>
 
-                        <div class="top-img" v-if="file.catalog">
+                        <div class="top-img"  v-if="file.catalog">
                             <img src=' @/assets/images/folder.png'>
                         </div>
                         <div class="top-img" v-else>
@@ -122,10 +122,12 @@
                 <ul v-if="view==='view'" class="view-file-box">
                     <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId)" :class="{'cur':file.catalog}">
                         <Icon class="xiazai" v-if="!file.catalog" @click="downLoad(file.fileId)" type="md-cloud-download" />
-                        <div class="top-img" v-if="file.catalog">
+                        <div class="top-img"  :data-id='file.fileId' v-if="file.catalog">
+                             <span class="down-img">已下载</span>
                             <img src='@/assets/images/folder.png'>
                         </div>
-                        <div class="top-img" v-else>
+                        <div class="top-img" :data-id='file.fileId' v-else>
+                            <span class="down-img">已下载</span>
                             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
                             <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
                             <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
@@ -148,10 +150,12 @@
                     </div>
                     <li v-for="(file, index) in allFile" :key="index" >
                         <div class="list-file-part" @click="goNext(file.catalog, file.fileId)">
-                            <div class="list-file-img" v-if="file.catalog">
+                            <div class="list-file-img" :data-id='file.fileId' v-if="file.catalog">
+                               <span class="down-img">已下载</span>
                                 <img src='@/assets/images/folder.png'>
                             </div>
-                            <div class="list-file-img" v-else>
+                            <div class="list-file-img" :data-id='file.fileId'  v-else>
+                              <span class="down-img">已下载</span>
                                 <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
                                 <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
                                 <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
@@ -185,10 +189,10 @@
         </div>
       </div>
         </div>
-        <div class="finish-down" id='finishDown'>
+        <!-- <div class="finish-down" id='finishDown'>
           
         已下载
-       </div>
+       </div> -->
   </div>
 
 </template>
@@ -204,7 +208,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 show: true,
                 showModel: false,
                 showCommon: false,
-                fileId:this.$route.params.id,
+                fileId:this.$route.params.id||'ef6ba5f0e3584e58a8cc0b2d28286c93',
                 projectId: '',
                 showAddFolder: false,
                 folderName: '',
@@ -236,8 +240,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
              ...mapState("file", ["files", "filePath", "tags", "breadcrumb"])
         },
         watch: {
-            '$route'(to, from) {
-              
+            '$route'(to, from) {              
                 if(to.params.id != from.params.id){
                     this.fileId=to.params.id
                       this.pageNum=1
@@ -437,13 +440,13 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     }
     .list-file-box{
         width: 100%;
-       
+        overflow-x: auto; 
         display: flex;
         flex-direction: column;
         align-items: center;
         .list-file-title{
             width: 90%;
-            height: 50px;
+            // height: 50px;
             display: flex;
             span{
                 height: 100%;
@@ -459,7 +462,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         }
         li{
             width: 90%;
-            height: 50px;
+            height: 60px;
             border-bottom: 1px solid #e5e5e5;
             list-style: none;
             cursor: pointer;
@@ -478,14 +481,34 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 align-items: center;
                 justify-content: center;
                 .list-file-img{
-                    width: 32px;
-                    height: 32px;
+                    position: relative;
+                    width: 55px;
+                    height: 55px;
                     margin-right: 10px;
                     flex: none;
                     img{
                         width: 100%;
                         height: 100%;
                     }
+                      .down-img{
+                      position: absolute;
+                      background: #ffffff;
+                      z-index: 999;
+                      border-radius: 3px;
+                      color: #3f9dd7;
+                      font-size: 70%;
+                      padding: 2px 4px 0;
+                      bottom:5px;
+                      left: 5px;
+                      line-height: 1.4;
+                      -ms-transform: rotate(7deg);
+                      -webkit-transform: rotate(7deg);
+                      transform: rotate(7deg);
+                      -webkit-transition: 0 0.1s ease-in;
+                      -moz-transition: 0 0.1s ease-in;
+                      -o-transition: 0 0.1s ease-in;
+                      transition: transform 0.1s ease-in;
+                  }
                 }
                 p{
                     width: 100%;
@@ -511,6 +534,15 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
         }
     }
+
+    @media screen and (max-width:1440px){
+          
+             .list-file-box{
+               max-height: 330px;
+            }
+          
+        }
+
     .view-file-box{
         width: 100%;
         display: flex;
@@ -531,6 +563,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     display: block;
                 }
                 .xiazai{
+                  z-index: 99999;
                     display: block;
                 }
             }
@@ -567,6 +600,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 /*}*/
             }
             .top-img{
+                position: relative;
                 width: 165px;
                 height: 165px;
                 display: flex;
@@ -576,6 +610,25 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 img{
                     max-width: 90%;
                     max-height: 90%;
+                }
+                .down-img{
+                   position: absolute;
+                    background: #3f9dd7;
+                    z-index: 999;
+                    border-radius: 3px;
+                    color: #fff;
+                    font-size: 70%;
+                    padding: 2px 4px 0;
+                    bottom: 10px;
+                    left: 10px;
+                    line-height: 1.4;
+                    -ms-transform: rotate(7deg);
+                    -webkit-transform: rotate(7deg);
+                    transform: rotate(7deg);
+                    -webkit-transition: 0 0.1s ease-in;
+                    -moz-transition: 0 0.1s ease-in;
+                    -o-transition: 0 0.1s ease-in;
+                    transition: transform 0.1s ease-in;
                 }
             }
             .bottom-font{
@@ -595,9 +648,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
           
          
                   li{
-                width: 150px;
+                width: 106px;
                 height: 150px;
-                
+                margin-left: 60px;
                 .top-img{
                     width: 106px;
                     height:106px;
