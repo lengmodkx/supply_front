@@ -86,7 +86,6 @@ export default {
       this.editrc = true;
       this.getScheduleById(item.scheduleId);
       // getRicheng(item.scheduleId).then(res => {
-      //   console.log(res.data)
       //   this.oneSchedule(res.data);
       //   // this.load=false
       // })
@@ -99,7 +98,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route);
     this.init(this.parameter);
   }
 };

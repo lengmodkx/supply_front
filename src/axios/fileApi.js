@@ -210,6 +210,8 @@ export function getSucai(folderId,page) {
 }
 
 
+
+
 export function getSucaiSearch(fileName,page) {
     return fetch({
         url: `/files/${fileName}/material_base_search`,

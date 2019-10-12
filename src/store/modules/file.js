@@ -201,7 +201,6 @@ const store = {
                 }
             })
             getFileTree(data.projectId).then(res => {
-                console.log(88888888888,res)
                 commit("initFolders", res.data)
             })
         },

@@ -354,7 +354,6 @@ export default {
       })
     },
     searchNo(){
-      console.log(this.searchWords)
       if (this.searchWords==''){
         this.searchData=[]
         this.isSearch=false
@@ -366,7 +365,6 @@ export default {
     },
     //删除项目
     confirmHuishou:function(data){
-      console.log(data)
       this.showBin=true;
       this.binName=data.projectName
       this.binProjectId=data.projectId
@@ -383,16 +381,13 @@ export default {
     changeView (data) {
       if (data==='列表视图') {
         getProjectTree('').then(res => {
-          console.log(555555,res)
           this.treeData=res.data
         })
       }
     },
     // 加载树形 子项目
     loadData (item, callback) {
-      console.log(item)
       getProjectTree(item.id).then(res => {
-        console.log(res)
         callback(res.data);
       })
       setTimeout(() => {

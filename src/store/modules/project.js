@@ -33,7 +33,6 @@ const store = {
                 if (i.projectId == data.projectId) {
                     state.projects[n] = data
                 }
-                console.log(state.projects)
             })
 
         },
@@ -99,7 +98,6 @@ const store = {
         },
         // 初始化企业的项目列表
         orgProjectInit ({commit}, params) {
-            console.log(params)
             getAllProject(params.id).then(res => {
                 console.log('我是项目数据',res)
                 if (res.result === 1) {

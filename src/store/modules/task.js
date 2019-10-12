@@ -172,7 +172,6 @@ const store = {
             state.simpleTasks.forEach((menu, mIndex) => {
                 menu.taskList.forEach((task, tIndex) => {
                     if (data.taskId === task.taskId) {
-                        console.log("1111111");
                         state.simpleTasks[mIndex].taskList.splice(tIndex, 1)
                     }
                 })

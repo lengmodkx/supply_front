@@ -11,7 +11,6 @@ const store = {
                 i.showOpearte=false
             })
             state.tags = data
-            console.log(2222222, state.tags)
         },
         // 关闭 标签菜单框
         closeMenu (state, data) {
