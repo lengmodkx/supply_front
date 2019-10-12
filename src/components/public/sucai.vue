@@ -250,10 +250,14 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         watch: {
             '$route'(to, from) {              
                 if(to.params.id != from.params.id){
-                    this.fileId=to.params.id
+                      this.fileId=to.params.id || 'ef6ba5f0e3584e58a8cc0b2d28286c93'
                       this.pageNum=1
                       this.init();//重新加载数据
+                      return
                 }
+                
+               
+                
             },
 
             searched: function(val, oldVal) {            
