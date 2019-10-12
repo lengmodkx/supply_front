@@ -491,6 +491,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         height: 100%;
                     }
                       .down-img{
+                        display: none;
                       position: absolute;
                       background: #ffffff;
                       z-index: 999;
@@ -612,6 +613,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     max-height: 90%;
                 }
                 .down-img{
+                  display: none;
                    position: absolute;
                     background: #3f9dd7;
                     z-index: 999;
