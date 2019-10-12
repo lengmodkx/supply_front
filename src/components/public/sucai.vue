@@ -123,11 +123,15 @@
                     <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId)" :class="{'cur':file.catalog}">
                         <Icon class="xiazai" v-if="!file.catalog" @click="downLoad(file.fileId)" type="md-cloud-download" />
                         <div class="top-img"  :data-id='file.fileId' v-if="file.catalog">
-                             <span class="down-img">已下载</span>
+                             <div class="down-img" >
+                                  <span>已下载</span> 
+                               </div>
                             <img src='@/assets/images/folder.png'>
                         </div>
                         <div class="top-img" :data-id='file.fileId' v-else>
-                            <span class="down-img">已下载</span>
+                             <div class="down-img" >
+                                  <span>已下载</span> 
+                               </div>
                             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
                             <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
                             <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
@@ -151,11 +155,15 @@
                     <li v-for="(file, index) in allFile" :key="index" >
                         <div class="list-file-part" @click="goNext(file.catalog, file.fileId)">
                             <div class="list-file-img" :data-id='file.fileId' v-if="file.catalog">
-                               <span class="down-img">已下载</span>
+                                <div class="down-img" >
+                                  <span>已下载</span> 
+                               </div>
                                 <img src='@/assets/images/folder.png'>
                             </div>
                             <div class="list-file-img" :data-id='file.fileId'  v-else>
-                              <span class="down-img">已下载</span>
+                               <div class="down-img" >
+                                  <span>已下载</span> 
+                               </div>
                                 <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
                                 <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
                                 <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
@@ -440,7 +448,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     }
     .list-file-box{
         width: 100%;
-        overflow-x: auto; 
+        
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -490,8 +498,31 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                         width: 100%;
                         height: 100%;
                     }
-                      .down-img{
-                        display: none;
+                   
+                  
+                   .down-img span{
+                      display: none;   
+                       position: absolute;
+                      background: #ffffff;
+                      z-index: 999;
+                      border-radius: 3px;
+                      color: #3f9dd7;
+                      font-size: 70%;
+                      padding: 2px 4px 0;
+                      bottom:5px;
+                      left: 5px;
+                      line-height: 1.4;
+                      -ms-transform: rotate(7deg);
+                      -webkit-transform: rotate(7deg);
+                      transform: rotate(7deg);
+                      -webkit-transition: 0 0.1s ease-in;
+                      -moz-transition: 0 0.1s ease-in;
+                      -o-transition: 0 0.1s ease-in;
+                      transition: transform 0.1s ease-in;                  
+                   }
+
+                   .down-img-show span{
+                     display: block;
                       position: absolute;
                       background: #ffffff;
                       z-index: 999;
@@ -540,6 +571,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
           
              .list-file-box{
                max-height: 330px;
+               overflow-x: auto; 
             }
           
         }
@@ -612,9 +644,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     max-width: 90%;
                     max-height: 90%;
                 }
-                .down-img{
-                  display: none;
-                   position: absolute;
+                .down-img span{
+                    display: none;
+                    position: absolute;
                     background: #3f9dd7;
                     z-index: 999;
                     border-radius: 3px;
@@ -632,6 +664,28 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                     -o-transition: 0 0.1s ease-in;
                     transition: transform 0.1s ease-in;
                 }
+
+                .down-img-show span{
+                    display: block;
+                    position: absolute;
+                    background: #3f9dd7;
+                    z-index: 999;
+                    border-radius: 3px;
+                    color: #fff;
+                    font-size: 70%;
+                    padding: 2px 4px 0;
+                    bottom: 10px;
+                    left: 10px;
+                    line-height: 1.4;
+                    -ms-transform: rotate(7deg);
+                    -webkit-transform: rotate(7deg);
+                    transform: rotate(7deg);
+                    -webkit-transition: 0 0.1s ease-in;
+                    -moz-transition: 0 0.1s ease-in;
+                    -o-transition: 0 0.1s ease-in;
+                    transition: transform 0.1s ease-in;
+                }
+               
             }
             .bottom-font{
                 margin-top: 5px;
