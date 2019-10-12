@@ -2,6 +2,7 @@
 .file{
   display: flex;
   flex-flow: row nowrap;
+  height: 100vh;
   
 }
 
@@ -17,10 +18,13 @@
 
 
 .file-side{
-   width:0px;
-   background: #ffffff;
+  width:0px;
+  // max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: #ffffff;
    max-height: calc(100vh - 50px);
-   transition: 0.3s;
+  transition: 0.3s;
 
 }
 

@@ -1,7 +1,7 @@
 <template>
      <div class="file">
         <div :class="show?'file-side-show':'file-side'">
-        <v-jstree  :data="treeData"  @item-click="treeClick"></v-jstree>
+        <v-jstree  opened  multiple allow-batch whole-row :data="treeData"  @item-click="treeClick"></v-jstree>
         </div>
         <div class="file-button" @click='show=!show'>
         <div class="root__3UYM" :class="show?'left':'right'">
@@ -255,6 +255,9 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         },
         created(){
                      this.treeInit();
+
+
+
         },
         updated:function(){
 
