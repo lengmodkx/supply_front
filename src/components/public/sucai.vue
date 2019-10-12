@@ -1,6 +1,7 @@
 <template>
      <div class="file">
         <div :class="show?'file-side-show':'file-side'">
+          <Loading v-if="treeLoading"></Loading>
         <v-jstree  opened  multiple allow-batch whole-row :data="treeData"  @item-click="treeClick"></v-jstree>
         </div>
         <div class="file-button" @click='show=!show'>
@@ -212,6 +213,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         data () {
             return {
                 searched: "",
+                treeLoading:true,
                 loading: true,
                 show: true,
                 showModel: false,
@@ -300,6 +302,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
            treeInit(){
               getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
                                 this.treeData=res.data;
+                                this.treeLoading=false;
                  })
             },
             // 分页
