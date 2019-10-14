@@ -58,7 +58,7 @@
     </div>
    
 
-    <Modal v-model="modal" width="360" footer-hide>
+    <Modal v-model="modal"   @on-cancel="cancel" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请新成员</span>
       </p>
@@ -109,6 +109,7 @@ export default {
       value: "-1"
     };
   },
+ 
   computed: {
     ...mapState("member", ["users"])
   },
@@ -117,6 +118,11 @@ export default {
   },
   methods: {
     ...mapActions("member", ["initUser",'filterUser']),
+    //关闭弹框
+    cancel () {
+              this.keyword2='';
+               this.invitUsers=[]
+    },
     searchUser() {
       if (!this.keyword2) {
         this.$Notice.warning({
@@ -201,6 +207,7 @@ export default {
     closebox() {
       this.modal1 = false;
       this.$emit("hideBox");
+      
     }
   }
 };
@@ -346,8 +353,18 @@ export default {
   width: 320px;
   padding-top: 5px;
   margin: 0px auto;
- 
-  
+ .ivu-collapse{
+    
+     margin-bottom: 30px;
+     border: none
+ }
+  .ivu-collapse-item{
+     background: #fff;
+    margin-bottom: 10px;
+  }
+  .ivu-collapse>.ivu-collapse-item {
+    border-top: none;
+    }
 }
 
 
