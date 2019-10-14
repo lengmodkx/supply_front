@@ -70,20 +70,20 @@
         <div style="height:360px;padding-top:10px">
           <ul>
 
-            <li  v-if='invitUsers' class="invit-user">
+            <!-- <li  v-if='invitUsers' class="invit-user">
               <div class="invit-user-name">
                 <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${invitUsers.image}`">
                 <p>{{invitUsers.accountName}}</p>
               </div>
               <Button type="primary" @click="adduser(invitUsers.userId)">添加</Button>
-            </li>
-            <!-- <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
+            </li> -->
+            <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
               <div class="invit-user-name">
                 <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
-                <p>{{user.accountName}}</p>
+                <p>{{user.userName}}</p>
               </div>
               <Button type="primary" @click="adduser(user.userId)">添加</Button>
-            </li> -->
+            </li>
           </ul>
         </div>
       </div>
@@ -104,7 +104,7 @@ export default {
       keyword: "",
       keyword2: "",
       modal: false,
-      invitUsers:null,
+      invitUsers:[],
       loading: false,
       value: "-1"
     };
