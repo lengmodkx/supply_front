@@ -90,7 +90,7 @@ export function getUsers(keyword) {
 
 export function getAssignUsers(projectId,keyword) {
     return $get(`/members/project/${projectId}`, {
-        'accountName': keyword
+        'keyWord': keyword
     })
 
 }
