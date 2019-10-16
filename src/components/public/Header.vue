@@ -25,14 +25,13 @@
     </div>
     <div class="fr menu">
       <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="clickHeaderTag(1)"><span class="text">我的</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="clickHeaderTag(2)"><span class="text">日历</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="goSucai"><span class="text">素材</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)"><span class="text">下载</span></a>
-      <a @click="clickHeaderTag(5)"><span class="text ">设计</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="showHeaderTag(2)"><span class="text">日历</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="showHeaderTag(6)"><span class="text">素材</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="showHeaderTag(4)"><span class="text">下载</span></a>
+      <a @click="showHeaderTag(5)"><span class="text ">设计</span></a>
        <!-- <Poptip trigger="hover" class="desing" content="请打开设计系统">
-       
       </Poptip> -->
-      <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="clickHeaderTag(3)">
+      <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="showHeaderTag(3)">
         <span class="text" style="border-right:none;">
           <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
             <Icon type="ios-notifications-outline" size="22" />
@@ -85,11 +84,30 @@
     <Modal v-model="addOrgModal" class="newOrg">
       <CreateOrg @closeCreateOrg="addOrgModal=false" v-if="addOrgModal"></CreateOrg>
     </Modal>
+    <!-- 日历 -->
+
+    <Modal v-model="tagHeader"  :mask='false' width='100vh' @on-cancel='closeTag'  :styles="{top: '50px',}" class="tab-content">
+        <Mine v-if="showtag=='Mine'"></Mine>
+      <calendar v-if="showtag=='canlender'"></calendar>
+      <suCai v-else-if="showtag=='sucai'"></suCai>
+      <down v-else-if="showtag=='down'"></down>
+       <message  v-else-if="showtag=='message'"></message>
+      <div slot="footer"></div>
+     
+    </Modal>
+
+
   </header>
 </template>
 
 <script>
 // import Mine from './Mine'
+import calendar from './calendar';//日历
+import suCai from './sucai';//素材
+import down from './down';//下载
+import message from './message';//消息
+import Mine from './Mine';//消息
+
 import CreateOrg from "./common/CreateOrg";
 import { mapState, mapActions, mapMutations } from "vuex";
 import SockJS from "sockjs-client";
@@ -99,9 +117,15 @@ export default {
   components: {
     // Mine,
     CreateOrg,
+    calendar,//日历
+    suCai,//素材库
+    down,//下载
+    message,//消息
   },
   data() {
     return {
+      tagHeader:false,//显示日历
+      showtag:'',
       defaultImage:localStorage.userImg,
       display: "none",
       popVisible: false,
@@ -220,13 +244,39 @@ export default {
     getNewsCount() {
       this.$store.dispatch("news/getNewsCount");
     },
-    clickHeaderTag(id) {
-      
+    showHeaderTag(id){
+         if (id === 2) {
+           //日历
+            this.tagHeader=true;
+            this.showtag='canlender'
+         }else if(id === 3){
+           //素材
+            this.tagHeader=true;
+            this.showtag='message'
+
+         }else if(id === 6){
+           //素材
+            this.tagHeader=true;
+            this.showtag='sucai'
+         }else if(id === 4){
+           //下载
+           this.tagHeader=true;
+            this.showtag='down'
+         }else if(id === 5){
+              if(runPlatform == 'browse') {
+                this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开'); 
+              }else {
+                    ALDObj.RunALDCAD()           
+              }
+         }
+    },
+    closeTag(){
+               this.tagHeader=false;
+               this.showtag=''
+    },
+    clickHeaderTag(id) {     
       this.changeHeaderTag(id)
-      if (
-        this.$route.fullPath.includes("home") ||
-        this.$route.fullPath.includes("project")
-      ) {
+      if (this.$route.fullPath.includes("home") || this.$route.fullPath.includes("project") ) {
         localStorage.projectRouter = this.$route.fullPath;
       }
       if (id === 1) {
@@ -241,8 +291,7 @@ export default {
         this.$router.push("/message");
       }else if (id === 4) {
         this.$router.push("/down");
-      }else if(id === 5){
-         
+      }else if(id === 5){        
         if(runPlatform == 'browse') {
           this.$Message.error('设计系统必须在阿拉丁BIM云平台客户端打开'); 
          }else {
@@ -296,6 +345,20 @@ export default {
 };
 </script>
 <style scoped lang="less">
+    /deep/.ivu-modal-wrap{
+      overflow: hidden;
+    }
+    /deep/.ivu-modal-body{
+      padding:0;
+      height: 100vh;
+    
+      }
+    /deep/ .ivu-modal-content{
+        box-shadow: none
+        }
+    /deep/.ivu-modal-footer{
+      border-top:none 
+      }
 .menu .activeHeaderTag {
   color: #2d8cf0;
   background-color: #f5f5f5;

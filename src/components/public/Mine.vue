@@ -27,7 +27,13 @@ import {mapMutations,mapState} from 'vuex'
         closeMine(){
             this.$router.push(localStorage.projectRouter)
         }
-    },
+    }, 
+    beforeRouteLeave(to, from, next){
+        localStorage.mineRouter=from.fullPath
+        next(vm => {
+            // vm.changeMineRouter(from.fullPath)
+        })
+    }
     // beforeRouteEnter(to, from, next){
     //     localStorage.projectRouter=from.fullPath
     //     next(vm => {
@@ -35,12 +41,6 @@ import {mapMutations,mapState} from 'vuex'
     //
     //     })
     // },
-    beforeRouteLeave(to, from, next){
-        localStorage.mineRouter=from.fullPath
-        next(vm => {
-            // vm.changeMineRouter(from.fullPath)
-        })
-    }
   }
 </script>
 <style scoped lang="less">

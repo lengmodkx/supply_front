@@ -3,7 +3,7 @@
         <div class="loading" v-if="loading"><Loading ></Loading></div>
         <!--头部-->
         <header class="message-head">
-            <Icon type="md-close" class="close" @click="closeMsg" />
+            <!-- <Icon type="md-close" class="close" @click="closeMsg" /> -->
             <div class="head-con">
                 <div class="head-left">
                     <span></span>
@@ -147,6 +147,7 @@
                         }
                         if(publicType === '任务'){
                             this.$store.dispatch('task/editTask', publicId).then(() => {
+                              //  debugger
                                 this.loading=false
                                 this.task = res.data
                                 this.isShow = true

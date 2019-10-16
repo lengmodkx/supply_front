@@ -218,7 +218,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 show: true,
                 showModel: false,
                 showCommon: false,
-                fileId:this.$route.params.id||'ef6ba5f0e3584e58a8cc0b2d28286c93',
+                fileId:localStorage.fileId||'ef6ba5f0e3584e58a8cc0b2d28286c93',
                 projectId: '',
                 showAddFolder: false,
                 folderName: '',
@@ -242,7 +242,6 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
               VJstree,
         },
         mounted () {
-           
             this.init();
             // this.treeInit();
         },
@@ -250,31 +249,39 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
              ...mapState("file", ["files", "filePath", "tags", "breadcrumb"])
         },
         watch: {
-            '$route'(to, from) {              
-                if(to.params.id != from.params.id){
-                      this.fileId=to.params.id || 'ef6ba5f0e3584e58a8cc0b2d28286c93'
-                      this.pageNum=1
-                      this.init();//重新加载数据
-                      return
-                }
-                
-               
-                
-            },
+            // '$route'(to, from) {              
+            //     if(to.params.id != from.params.id){
+            //           this.fileId=to.params.id || 'ef6ba5f0e3584e58a8cc0b2d28286c93'
+            //           this.pageNum=1
+            //           this.init();//重新加载数据
+            //           return
+            //     }          
+            // },
+            
 
             searched: function(val, oldVal) {            
                 if(val!=oldVal){
                   this.pageNum=1
-                }              
+                }    
+                deep: true          
              },
-             deep: true
 
-        },
+             fileId: function(val, oldVal) {        
+                 debugger;    
+                if(val!=oldVal){
+                      this.fileId=val || 'ef6ba5f0e3584e58a8cc0b2d28286c93'
+                      this.pageNum=1
+                      this.init();//重新加载数据
+                      return
+                }    
+                deep: true          
+             },
+           
+
+           },
         created(){
+                     
                      this.treeInit();
-
-
-
         },
         updated:function(){
 
@@ -372,8 +379,10 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             // 点击的是文件夹
             goNext (type, id) {
                 if (type){
-                    this.$router.push(`/sucai/${id}`)
+                    this.fileId=id;
                     this.flagTree=false
+                   // this.$router.push(`/sucai/${id}`)
+                    
                 }
             },
             
@@ -774,9 +783,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         margin: 0 auto;
     }
 
-.file{
-    padding-top:50px;
-}
+
 
     .input-box {
   width: 100%;
@@ -849,12 +856,12 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
   transition: opacity 0.15s linear;
 }
 .file-header {
-  height: 60px;
+  height: 30px;
   width: 100%;
   border-bottom: 1px solid #e5e5e5;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 20px;
+  padding:30px 20px 0;
+  // margin-top: 20px;
+
 }
 .file-header-title {
   font-size: 18px;

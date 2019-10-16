@@ -1,8 +1,8 @@
 <template>
     <div class="calendar-wrap">
-        <header class="calendar-header">
+        <!-- <header class="calendar-header">
             <Icon @click="close" class="close" type="md-close" />
-        </header>
+        </header> -->
         <div class="calendar-con">
             <div class="left-filter">
                 <p>要查看的人员</p>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-    import 'fullcalendar/dist/fullcalendar.css'
+import 'fullcalendar/dist/fullcalendar.css'
 import AddSchedule from './calendar/AddSchedule'
 import myModal from "@/components/project/pages/index/components/EditList";
 import editRicheng from "@/components/public/common/EditRicheng"
@@ -599,9 +599,14 @@ export default {
 </script>
 
 <style scoped lang="less">
+ /deep/.fc-view {
+          max-height: 80vh;
+          overflow: auto;
+      }
 .calendar-wrap{
+    height: calc(100vh - 80px);
+    overflow: hidden;
     width: 100%;
-    padding-top: 50px;
 }
 .calendar-header{
     width: 100%;
@@ -633,7 +638,7 @@ export default {
     .left-filter{
         width: 250px;
         flex: none;
-        height: calc(100vh - 50px) ;
+       
         padding: 60px 10px 10px 10px;
         p{
             font-size: 15px;
