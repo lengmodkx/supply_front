@@ -15,7 +15,7 @@
       </div>
 
     <div class="invite" @click="modal=true">
-      <Icon type="md-add-circle"></Icon>邀请分组成员 
+      <Icon type="md-add-circle"></Icon>邀请成员
     </div>
     <!-- <ul class="programMember">
       <li class="member-item clearfix" v-for="(user,index) in users" :key="index">
