@@ -34,7 +34,8 @@
               <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
                 <div class="member-item clearfix" style="padding-left:0px;">
                   <div class="avatar">
-                    <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
+                    <img v-if='user.memberImg'  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.memberImg}`">
+                    <img v-else :src="user.defaultImage.search('http://')!=-1?user.defaultImage:`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`">
                   </div>
                   <div class="memberInfo">
                     <span class="uname">{{user.memberName}} &nbsp;&nbsp;&nbsp;职位：{{user.job?user.job:'无'}}</span>
@@ -79,7 +80,8 @@
             </li> -->
             <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
               <div class="invit-user-name">
-                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
+                <img v-if='user.image' :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
+                <img v-else :src="user.defaultImage.search('http://')!=-1?user.defaultImage:`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`">
                 <p>{{user.userName}}</p>
               </div>
               <Button type="primary" @click="adduser(user.userId)">添加</Button>
@@ -178,7 +180,11 @@ export default {
       //   }
       // });
 
-      添加项目成员
+      //添加项目成员
+       let params={
+             projectId:this.$route.params.id,
+             memberId:userId
+       }
       
       addUser(params).then(res => {
         if (res.result === 1) {
