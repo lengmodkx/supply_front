@@ -163,32 +163,32 @@ export default {
        
     },
     adduser(userId) {
-      let groupId = this.$route.params.groupId
+      // let groupId = this.$route.params.groupId
      
-      //添加分组成员
+      // //添加分组成员
 
-      addProjectUser(groupId,userId).then(res => {
-        if (res.result === 1) {
-          this.initUser(this.$route.params.id);
-          this.$Message.info('添加成功');
-        } else {
-          this.$Notice.warning({
-            title: res.msg
-          });
-        }
-      });
-
-      //添加项目成员
-      
-      // addUser(params).then(res => {
+      // addProjectUser(groupId,userId).then(res => {
       //   if (res.result === 1) {
       //     this.initUser(this.$route.params.id);
+      //     this.$Message.info('添加成功');
       //   } else {
       //     this.$Notice.warning({
       //       title: res.msg
       //     });
       //   }
       // });
+
+      添加项目成员
+      
+      addUser(params).then(res => {
+        if (res.result === 1) {
+          this.initUser(this.$route.params.id);
+        } else {
+          this.$Notice.warning({
+            title: res.msg
+          });
+        }
+      });
     },
     //移除项目成员
     remove(userId) {
