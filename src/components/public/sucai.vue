@@ -235,6 +235,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 treeData:[],
                 flagTree:false,
                 treeId:'',
+                page:0
                 
             }
         },
@@ -299,11 +300,11 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
               this.flagTree=true;
               console.log(node.data.id)
               this.treeId=node.data.id
-              getSuCaiTreeDate(this.treeId,this.page-1).then(res => {
-                this.allFile =res.data
-                this.total = res.totle
+              getSuCaiTreeDate(this.treeId,this.pageNum).then(res => {
+                this.allFile =res.data.records
+                this.total = res.data.totle
                 this.page=res.page+1
-                this.pageNum=res.page+1
+                this.pageNum=res.data.current
               });
           },
            treeInit(){
@@ -318,10 +319,10 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 this.pageNum=data
                 if(this.flagTree){
                     //树形分页
-                    getSuCaiTreeDate(this.treeId,this.pageNum-1).then(res => {                    
-                    this.allFile =res.data
-                    this.total = res.totle
-                    this.pageNum=res.page+1
+                    getSuCaiTreeDate(this.treeId,this.pageNum).then(res => {
+                    this.allFile =res.data.records
+                    this.total = res.data.total
+                    this.pageNum=res.data.current
                     this.treeId=res.parentId
                   });
                   
@@ -333,7 +334,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                  this.search(this.searched)
                  return
                }              
-                 getSucai(this.fileId,this.pageNum-1).then(res => {
+                 getSucai(this.fileId,this.pageNum).then(res => {
                     if (res.result) {                  
                         this.loading = false;
                         this.allFile =res.data.records
@@ -346,12 +347,12 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
             // 初始化 页面信息和分页
             init () {
-                getSucai(this.fileId,this.pageNum-1).then(res => {
+                getSucai(this.fileId,this.pageNum).then(res => {
                     if (res.result) {
                         this.loading = false;
                         this.allFile =res.data.records
                         this.total = res.data.total
-                        // this.pageNum=res.data.pages+1
+                        this.pageNum=1
                     }
                 });
                      

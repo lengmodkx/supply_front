@@ -11,9 +11,9 @@ export function getFileDetails(fileId) {
 // 获取素材数据
 export function getSuCaiTreeDate(fileId,page) {
     return fetch({
-        url: `/files/folder_tree_data`,
+        url: `/files/${fileId}/material`,
         method: "get",
-        params: {fileId: fileId,page:page,size:10}
+        params: {page:page,size:10}
     });
 }
 
