@@ -67,7 +67,7 @@
           <Input search enter-button placeholder="请输入手机号" @on-search="searchUser" v-model="keyword2" />
         </div>
         <loading v-if="loading"></loading>
-        <div style="height:360px;padding-top:10px">
+        <div style="height:330px;padding-top:10px;overflow:auto;margin-top:10px;">
           <ul>
 
             <!-- <li  v-if='invitUsers' class="invit-user">
