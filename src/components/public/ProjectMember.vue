@@ -132,25 +132,25 @@ export default {
       }
       this.loading = true;
       let  projectId=this.$route.params.id;
-      getAssignUsers(projectId, this.keyword2).then(res => {
-        this.loading = false;
-        if (res.result === 1) {
-          console.log(res.data)
-          if(res.data){
-             this.invitUsers = res.data;
-          }else{
-           this.$Message.warning('搜索失败');
-          }
-        
-        }
-      });
-
-      // getUsers(this.keyword2).then(res => {
+      // getAssignUsers(projectId, this.keyword2).then(res => {
       //   this.loading = false;
       //   if (res.result === 1) {
-      //     this.invitUsers = res.data;
+      //     console.log(res.data)
+      //     if(res.data){
+      //        this.invitUsers = res.data;
+      //     }else{
+      //      this.$Message.warning('搜索失败');
+      //     }
+        
       //   }
       // });
+
+      getUsers(this.keyword2).then(res => {
+        this.loading = false;
+        if (res.result === 1) {
+          this.invitUsers = res.data;
+        }
+      });
     },
     //筛选用户
     FUser(keyword) {
