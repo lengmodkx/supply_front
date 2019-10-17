@@ -268,7 +268,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
              },
 
              fileId: function(val, oldVal) {        
-                 debugger;    
+                     
                 if(val!=oldVal){
                       this.fileId=val || 'ef6ba5f0e3584e58a8cc0b2d28286c93'
                       this.pageNum=1
@@ -295,8 +295,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         },
         methods: {
           // 选中要移动到哪
-          treeClick(node) {
-              
+          treeClick(node) {             
               if(this.treeId!=node.data.id){
                 this.pageNum=1
               }
