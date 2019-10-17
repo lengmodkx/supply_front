@@ -24,7 +24,7 @@
       <Icon type="code" @click="openMenu"></Icon>
     </div>
     <div class="fr menu">
-      <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="clickHeaderTag(1)"><span class="text">我的</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="showHeaderTag(1)"><span class="text">我的</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="showHeaderTag(2)"><span class="text">日历</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="showHeaderTag(6)"><span class="text">素材</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="showHeaderTag(4)"><span class="text">下载</span></a>
@@ -91,7 +91,7 @@
       <calendar v-if="showtag=='canlender'"></calendar>
       <suCai v-else-if="showtag=='sucai'"></suCai>
       <down v-else-if="showtag=='down'"></down>
-       <message  v-else-if="showtag=='message'"></message>
+        <message  v-else-if="showtag=='message'"></message>
       <div slot="footer"></div>
      
     </Modal>
@@ -115,7 +115,7 @@ import Stomp from "stompjs";
 export default {
   name: "header-main",
   components: {
-    // Mine,
+     Mine,//我的
     CreateOrg,
     calendar,//日历
     suCai,//素材库
@@ -245,7 +245,12 @@ export default {
       this.$store.dispatch("news/getNewsCount");
     },
     showHeaderTag(id){
-         if (id === 2) {
+         if(id===1){
+            //我的
+            this.tagHeader=true;
+            this.showtag='Mine'
+         }
+         else if (id === 2) {
            //日历
             this.tagHeader=true;
             this.showtag='canlender'
