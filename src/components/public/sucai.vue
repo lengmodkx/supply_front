@@ -296,14 +296,17 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
         methods: {
           // 选中要移动到哪
           treeClick(node) {
+              
+              if(this.treeId!=node.data.id){
+                this.pageNum=1
+              }
               this.searched='';//重置搜索
-              this.flagTree=true;
-              console.log(node.data.id)
+              this.flagTree=true;           
               this.treeId=node.data.id
               getSuCaiTreeDate(this.treeId,this.pageNum).then(res => {
                 this.allFile =res.data.records
-                this.total = res.data.totle
-                this.page=res.page+1
+                this.total = res.data.total
+                // this.page=res.page
                 this.pageNum=res.data.current
               });
           },
@@ -362,7 +365,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                  
                 if (value !== "") {
                     this.loading = true;
-                    getSucaiSearch(value,this.pageNum-1).then(res => {
+                    getSucaiSearch(value,this.pageNum).then(res => {
                         if (res.result) {
                             this.loading = false;
                             this.allFile =res.data
