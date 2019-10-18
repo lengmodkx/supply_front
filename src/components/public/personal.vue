@@ -16,56 +16,43 @@
             <div class="personal-right">
                 <div class="title">个人信息</div>
                 <div class="information">
-                    <div class="head">
-                        <h4>头像</h4>
-                        <img alt="" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`"   v-if="pic_show" accept="image/*">
-                        <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
-                        <div  class="chang-head" >
-                             <input type="file" ref="inputer" @change="getFile">
-                             <Button class="upLoadButton" >更换头像</Button>
-                        </div>
-                    </div>
-                    <ul>
-                         <li>
-                            <h4>姓名</h4>
-                            <Input v-model="message.userName" style="width: 300px" />
-                        </li>
-                        <li>
-                            <h4>职位</h4>
-                            <Input  v-model="message.job" style="width: 300px" />
-                        </li>
-                        <li>
-                            <h4>联系电话</h4>
-                            <Input  v-model="message.telephone"  style="width: 300px" />
-                        </li>
-                        <li>
-                            <h4>生日</h4>
-                            <DatePicker :value="message.birthday" type="date"  style="width: 300px" ></DatePicker>
-                             <!-- <Select v-model="message.year"   style="width:90px;margin-right:15px;">
-                                <Option v-for="item in yearList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
-                             <Select v-model="message.month"   style="width:90px;margin-right:15px;">
-                                <Option v-for="item in monthList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
-                             <Select v-model="message.day"  style="width:90px">
-                                <Option v-for="item in dayList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select> -->
+                    <Form   :model="message" :rules="rules" ref="message" :label-width="80" >	
 
-                        </li>
-                        <li>
-                            <h4>所在地</h4>
-                            <Input v-model="message.address"  style="width: 300px" />
-                        </li>
-                        <li>
-                            <h4>邮箱</h4>
-                            <Input v-model="message.email" style="width: 300px" />
-                        </li>
-                        <li>
-                            <h4> </h4>
-                            <Button type="primary" style="width: 300px" @click="save" long>保存</Button>
-                        </li>
+                            <FormItem label="头像">
+                                <div class="head">
+                                    <img alt="" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${message.defaultImage}`"   v-if="pic_show" accept="image/*">
+                                    <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
+                                    <div  class="chang-head" >
+                                        <input type="file" ref="inputer" @change="getFile">
+                                        <Button class="upLoadButton" >更换头像</Button>
+                                    </div>
+                                </div>    
+                            </FormItem>               
+                             <FormItem label="姓名" prop="userName">
+                                <Input v-model="message.userName" placeholder="请输入姓名"></Input>
+                             </FormItem>
+                             <FormItem label="职位" prop="job">
+                                <Input v-model="message.job" placeholder="请输入职位"></Input>
+                             </FormItem>
+                             <FormItem label="联系电话" prop="telephone">
+                                <Input v-model="message.telephone" placeholder="请输入联系电话"></Input>
+                             </FormItem>
+                              <FormItem  label="生日" prop="birthday">
+                                <DatePicker type="date" placeholder="请输入生日" v-model="message.birthday"></DatePicker>
+                            </FormItem>
 
-                    </ul>
+                             <FormItem label="所在地" prop="address">
+                                <Input v-model="message.address" placeholder="请输入所在地"></Input>
+                             </FormItem>
+
+                              <FormItem label="邮箱" prop="email">
+                                <Input v-model="message.email" placeholder="请输入邮箱"></Input>
+                             </FormItem>
+                            
+                             <FormItem>
+                                <Button   type="primary" @click="handleSubmit('message')">保存</Button>
+                             </FormItem>
+                    </Form>
                    
 
                 </div>
@@ -109,6 +96,29 @@
                 yearList:[],
                 monthList:[],
                 dayList:[],
+                //验证
+                rules: {
+                    userName: [
+                        { required: true, message: '请输入姓名', trigger: 'blur' }
+                    ],
+                    job: [
+                        { required: true, message: '请输入职位', trigger: 'blur' }
+                    ],
+                    telephone: [
+                        { required: true,validator:validatePhone, trigger: 'blur' }
+                    ],
+                    address: [
+                        { required: true, message: '请输入所在地', trigger: 'blur' }
+                    ],
+                    email: [
+                        { required: true, validator:validateEmail,   trigger: 'blur' }
+                    ],
+                    birthday: [
+                        { required: true, type: 'date', message: '请输入生日', trigger: 'change' }
+                    ],
+
+                },
+                
 
             }
         },
@@ -161,14 +171,20 @@
                 }
                 
             },
+
+             handleSubmit (name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                       // this.$Message.success('Success!');
+                        this.save();
+                    } else {
+                         this.$Message.error('请填完整写个人信息');
+                    }
+                })
+            },
             
             save(){
                 var that = this;
-                if(!(this.message.telephone.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(this.message.telephone)) ) {
-                    
-                    this.$Message.info('请输入正确申请人电话');
-                    return
-                } 
                 if(this.pic_hide==true){
                         client.multipartUpload(this.fileName, this.image, {
                             progress: function(p) {
@@ -216,7 +232,32 @@
         created(){
             this.info();
         }
+
+        
+
+
     }
+    const validatePhone = (rule, value, callback) => {
+                    if (!value) {
+                        return callback(new Error('请输入手机号'));
+                    } else if (!/^1[34578]\d{9}$/.test(value)) {
+                        callback('手机号格式不正确');
+                    } else {
+                        callback();
+                    }   
+       }
+    const validateEmail = (rule, value, callback) => {
+        
+              
+                    if (!value) {
+                        return callback(new Error('请输入邮箱'));
+                    } else if (!/^.*@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+                        callback('邮箱格式不正确');
+                    } else {
+                        callback();
+                    }   
+       }
+
 </script>
 <style socped lang="less">
     .ivu-input-icon{
@@ -281,22 +322,27 @@
             padding:20px;
             .title{
                 font-size: 16px;
-                font-weight: bold;
+               
             }
             .information{
                 padding: 20px 0;
                 h4{  
                         display: block;
-                        width: 125px;
-                        padding:10px 0 0 0;
-                        color: gray;
-                        font-size: 14px;
-                        font-weight: bold;
+                        text-align: right;
+                        vertical-align: middle;
+                        float: left;
+                        font-size: 12px;
+                        color: #515a6e;
+                        line-height: 1;
+                        padding: 10px 12px 10px 0;
+                        box-sizing: border-box;
+                        font-weight: 350px !important;
+                        width:80px;
                     }
 
                 .head{
                     display: flex;
-                    margin-bottom: 40px;   
+                   // margin-bottom: 40px;   
                     h4{
                         padding-top:20px;
                     }             
