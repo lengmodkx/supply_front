@@ -193,7 +193,7 @@
         </div>
 
         <!--分页-->
-        <div class="page">
+        <div class="page" v-if='total>0'>
             <Page :page-size="10"  :current="pageNum"  :total="total" @on-change="clickPage" />
         </div>
       </div>
