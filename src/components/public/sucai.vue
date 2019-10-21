@@ -116,6 +116,7 @@
                         </div>
 
                     </li>
+                    
                 </ul>
             </div>
             <div v-else style="width: 100%;">
@@ -190,7 +191,14 @@
                     </li>
                 </ul>
             </div>
+
+             <div v-show='total==0' class="no-files">
+                  <Icon type="md-folder" />
+                  <p>暂无内容</p>
+            </div>
         </div>
+
+       
 
         <!--分页-->
         <div class="page" v-if='total>0'>
@@ -825,6 +833,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 }
 
 .no-files {
+  position: absolute;
   width: 100%;
   margin-top: 200px;
   display: flex;
