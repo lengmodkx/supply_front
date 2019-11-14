@@ -320,9 +320,7 @@
         <fileCanSee v-if="showVisibilityModal"></fileCanSee>
       </Modal>
     </div>
-     <div class="finish-down">
-        已下载
-       </div>
+    
   </div>
 
 </template>
