@@ -1,10 +1,10 @@
 <template>
   <div class="wrap-box">
     <!--树形结构-->
-    <div class="project-tree" v-if="selectView==='列表视图'">
+    <!-- <div class="project-tree" v-if="selectView==='列表视图'">
       <p>项目树</p>
       <Tree :data="treeData" :load-data="loadData" empty-text="暂无项目"></Tree>
-    </div>
+    </div> -->
     <div class="container index">
       <div class="container-title">
         <div class="search-box">

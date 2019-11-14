@@ -93,7 +93,6 @@
       <down v-else-if="showtag=='down'"></down>
         <message  v-else-if="showtag=='message'"></message>
       <div slot="footer"></div>
-     
     </Modal>
 
 
