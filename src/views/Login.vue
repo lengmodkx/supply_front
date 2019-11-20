@@ -157,7 +157,7 @@ export default {
 <style scoped lang="less">
     .weChat{
        width:300px;
-       height: 300px;
+       min-height: 300px;
     }
   .weixin{
     text-align: center;
