@@ -2,7 +2,10 @@
   <div class="login-form-box">
     <Form ref="formValidate" @keyup.native.enter="login('formValidate')" :model="formValidate" :rules="ruleValidate" class="login-box">
       <div class="login-title">阿拉丁BIM云平台</div>
-      <FormItem prop="accountName">
+      <div class="weChat" id="wx_qrcode">
+        <wxlogin  :appid="'wxb7b91f87460a9d90'" :scope="'snsapi_login'"  :redirect_uri="'https://www.aldbim.com/home'"  ></wxlogin>
+      </div>
+      <!-- <FormItem prop="accountName">
         <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
       </FormItem>
       <FormItem prop="password">
@@ -17,17 +20,24 @@
       <FormItem>
         <Button type="primary" long size="large" class="login" @click="login('formValidate')" :loading="loading">登录</Button>
       </FormItem>
-      <div class="weixin" @click="weChatLogin()"><i class="iconfont iconweixin"></i>微信登录</div>
+      <div class="weixin" @click="weChatLogin()"><i class="iconfont iconweixin"></i>微信登录</div> -->
     </Form>
   </div>
 
 </template>
+
+
+
+
 <script>
 import { userlogin, getEncrypStr, weChatLogin,getWeChatToken } from "@/axios/api";
 import { mapState, mapActions } from "vuex";
 import { Encrypt } from "@/utils/cryptoUtils";
+import wxlogin from 'vue-wxlogin';
+
 
 export default {
+  components: {wxlogin},
   data() {
     const validatePhone = (rule, value, callback) => {
       if (
@@ -67,6 +77,9 @@ export default {
     ...mapState("app", ["loading"])
   },
   mounted() {
+
+        
+
     if (localStorage.token){
       this.$router.push('/home')
     }
@@ -142,6 +155,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+    .weChat{
+       width:300px;
+       height: 300px;
+    }
   .weixin{
     text-align: center;
     margin: -5px 0;
