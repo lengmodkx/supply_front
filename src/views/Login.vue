@@ -185,7 +185,7 @@ export default {
 .login-form-box {
   width: 100vw;
   height: 100vh;
-  background: url("../assets/images/login-bg2.jpg");
+  background: url("../assets/images/login-bg2.jpg") no-repeat center/cover;
   position: relative;
 }
 
