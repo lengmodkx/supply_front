@@ -185,7 +185,7 @@
                   <FormItem prop="password" class="boundInput">
                      <Row>
                          <Col span="18">
-                           <Input type="password" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable />
+                           <Input  size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable />
                          </Col>
                            <Button  v-show="showCodeButton"  type="primary" @click="firstverification('formValidate')" >获取验证码</Button>  
                           <Button  v-show="!showCodeButton" type="dashed"  >{{count}}S重新获取</Button> 
