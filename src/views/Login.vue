@@ -125,7 +125,6 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    alert(1)
     var url = location.search; //获取url中"?"符后的字串
     var theRequest = new Object();
     if (url.indexOf("?") != -1) {
