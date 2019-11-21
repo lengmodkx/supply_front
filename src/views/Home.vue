@@ -174,6 +174,32 @@
           <Button type="error" @click="okHuishou" >移到回收站</Button>
         </div>
       </Modal>
+
+
+        <Modal class="confirmModal" v-model="showFirst" :closable="false" title="绑定手机号"  :mask-closable="false">
+           <div  class="boundBox">
+                <Form ref="formValidate"  :model="formValidate" :rules="ruleValidate" class="login-box">
+                  <FormItem prop="accountName">
+                    <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
+                  </FormItem>
+                  <FormItem prop="password" class="boundInput">
+                     <Row>
+                         <Col span="18">
+                           <Input type="password" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable />
+                         </Col>
+                           <Button  v-show="showCodeButton"  type="primary" @click="firstverification('formValidate')" >获取验证码</Button>  
+                          <Button  v-show="!showCodeButton" type="dashed"  >{{count}}S重新获取</Button> 
+                          <!-- <span v-show="!showCodeButton" class="count">{{count}} s</span> @click="getCode" -->
+                     </Row>                   
+                  </FormItem>   
+                  <FormItem class="boundButton" >
+                    <Button type="primary"  @click="firstOk()">确定</Button> 
+                    <Button    @click="firstCancel()" >取消</Button>
+                  </FormItem>
+                          
+                </Form>
+           </div>
+        </Modal>
     </div>
   </div>
 
@@ -184,7 +210,7 @@ import CreateProject from "./CreateProject.vue";
 import ProjectSettings from "./projectSettings.vue";
 import Loading from "../components/public/common/Loading.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
-
+import { getPhoneCode, bindPhone,showBindPhone } from "@/axios/api";
 import {
   setStarProject,
   guidangProject,
@@ -203,6 +229,21 @@ export default {
   },
   data() {
     return {
+      formValidate:{
+        accountName: "",
+        captcha:""//验证码
+      },//手机号
+      ruleValidate: {
+                    accountName: [
+                        { required: true,validator:validatePhone, trigger: 'blur' }
+                    ],
+                   
+                },//手机验证
+      dis:true,  //取消显示状态
+      showCodeButton:true,//验证码倒计时  
+      count: '',
+       timer: null,      
+      showFirst:true,//显示第一次手机号验证框
       //用变量承接一下要传入modal的每个id或参数
       showBin:false,//显示回收站
       binName:'',//回收站项目名称
@@ -279,9 +320,79 @@ export default {
     this.init("我创建的项目");
 
   },
+  created:function(){
+      this.showFirstBox();
+
+  },
   methods: {
     ...mapActions("project", ["init", "updateProject", "openSet",'orgProjectInit']),
     ...mapMutations("project", ["setName"]),
+
+    showFirstBox(){
+          
+      showBindPhone().then(
+                res => {                 
+                    this.showFirst=res.bindPhone
+                }
+         );
+    },
+
+    //倒计时60秒
+
+      getCode(){
+          const TIME_COUNT = 60;
+          if (!this.timer) {
+            this.count = TIME_COUNT;
+            this.showCodeButton = false;
+            this.timer = setInterval(() => {
+            if (this.count > 0 && this.count <= TIME_COUNT) {
+              this.count--;
+              } else {
+              this.showCodeButton = true;
+              clearInterval(this.timer);
+              this.timer = null;
+              }
+            }, 1000)
+            }
+     } ,
+    //获取验证码
+    getverification(){
+          getPhoneCode(this.formValidate.accountName).then(
+                res => {
+                  console.log(res);
+                }
+          );
+    },
+    firstverification(name){
+        this.$refs[name].validate((valid) => {
+            if (valid) {       
+                this.getCode(); //倒计时
+                this.getverification();//获取验证码
+            } else {
+            this.$Message.error('请填写手机号');
+        }
+    })
+    },
+    //绑定手机号取消
+    firstCancel(){
+      localStorage.token=''
+      this.$router.push('/')
+    },
+    //绑定手机号确定
+    firstOk(){
+      console.log(this.formValidate.accountName,this.formValidate.captcha)
+
+      bindPhone(this.formValidate.accountName,this.formValidate.captcha).then(
+                res => {
+                  if(res.result==1){
+                    this.showFirst=false
+                  }else{
+                    this.$Message.success(res.msg);
+                  }
+                }
+          );
+        
+    },
     // 选择项目类型
     selectProjectType(value) {
       this.projectType = value;
@@ -409,8 +520,33 @@ export default {
   }
 
 };
+
+ const validatePhone = (rule, value, callback) => {
+                    if (!value) {
+                        return callback(new Error('请输入手机号'));
+                    } else if (!/^1[34578]\d{9}$/.test(value)) {
+                        callback('手机号格式不正确');
+                    } else {
+                        callback();
+                    }   
+       }
 </script>
 <style scoped lang="less">
+
+.boundBox{
+  padding-bottom: 40px;
+  .boundInput{
+    button{
+    margin-left: 20px;
+   }
+  }
+  .boundButton{
+    float: right;
+    button{
+      margin-right: 10px;
+    }
+  }
+}
 .wrap-box{
   width: 100%;
   display: flex;

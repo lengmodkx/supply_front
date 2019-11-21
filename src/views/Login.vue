@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-box">
     <Form ref="formValidate" @keyup.native.enter="login('formValidate')" :model="formValidate" :rules="ruleValidate" class="login-box">
-      <div class="login-title">阿拉丁BIM云平台</div>
+      <!-- <div class="login-title">阿拉丁BIM云平台</div> -->
       <div class="weChat" id="wx_qrcode">
         <wxlogin  :appid="'wxb7b91f87460a9d90'" :scope="'snsapi_login'"  :redirect_uri="'https://www.aldbim.com/login'"  ></wxlogin>
       </div>
@@ -184,15 +184,16 @@ export default {
 .login-form-box {
   width: 100vw;
   height: 100vh;
-  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg") no-repeat center/cover;
+  background: url("../assets/images/login-bg2.jpg");
   position: relative;
 }
+
 .login-box {
   width: 340px;
   position: absolute;
   top: 50%;
   right: 200px;
-  margin-top: -245px;
+  margin-top: -223px;
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
