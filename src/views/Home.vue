@@ -176,7 +176,7 @@
       </Modal>
 
 
-        <Modal class="confirmModal" v-model="showFirst" :closable="false" title="绑定手机号"  :mask-closable="false">
+        <Modal class="confirmModal" v-model="showFirst" :closable="false" title="由于相关法规要求 请绑定手机号码"  :mask-closable="false">
            <div  class="boundBox">
                 <Form ref="formValidate"  :model="formValidate" :rules="ruleValidate" class="login-box">
                   <FormItem prop="accountName">
@@ -243,7 +243,7 @@ export default {
       showCodeButton:true,//验证码倒计时  
       count: '',
        timer: null,      
-      showFirst:true,//显示第一次手机号验证框
+      showFirst:false,//显示第一次手机号验证框
       //用变量承接一下要传入modal的每个id或参数
       showBin:false,//显示回收站
       binName:'',//回收站项目名称
