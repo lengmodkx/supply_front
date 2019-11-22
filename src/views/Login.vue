@@ -1,11 +1,11 @@
 <template>
   <div class="login-form-box">
     <Form ref="formValidate" @keyup.native.enter="login('formValidate')" :model="formValidate" :rules="ruleValidate" class="login-box">
-      <!-- <div class="login-title">阿拉丁BIM云平台</div> -->
-      <div class="weChat" id="wx_qrcode">
+      <div class="login-title">阿拉丁BIM云平台</div>
+      <!-- <div class="weChat" id="wx_qrcode">
         <wxlogin  :appid="'wxb7b91f87460a9d90'" :response_type="'code'" :scope="'snsapi_login'"  :redirect_uri="'https://www.aldbim.com'"></wxlogin>
-      </div>
-      <!-- <FormItem prop="accountName">
+      </div> -->
+      <FormItem prop="accountName">
         <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
       </FormItem>
       <FormItem prop="password">
@@ -20,7 +20,7 @@
       <FormItem>
         <Button type="primary" long size="large" class="login" @click="login('formValidate')" :loading="loading">登录</Button>
       </FormItem>
-      <div class="weixin" @click="weChatLogin()"><i class="iconfont iconweixin"></i>微信登录</div> -->
+      <div class="weixin" @click="weChatLogin()"><i class="iconfont iconweixin"></i>微信登录</div>
     </Form>
   </div>
 
@@ -156,6 +156,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+
     .weChat{
        width:300px;
        min-height: 300px;

@@ -321,7 +321,7 @@ export default {
 
   },
   created:function(){
-      this.showFirstBox();
+      //this.showFirstBox();
 
   },
   methods: {
