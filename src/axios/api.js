@@ -772,14 +772,14 @@ export function collectList(type) {
 
 export function weChatLogin() {
     return fetch({
-        url: `/wechat_code`,
+        url: `/wechatcode`,
         method: "get" // 请求方法
     });
 }
 
 export function getWeChatToken(code) {
     return fetch({
-        url: `/wechat_token`,
+        url: `/wechattoken`,
         method: "get", // 请求方法
         params:{code:code}
     });
