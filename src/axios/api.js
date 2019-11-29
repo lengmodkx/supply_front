@@ -54,6 +54,16 @@ export function userlogin(data) {
         data: data
     });
 }
+//获取手机绑定框
+
+
+export function showBindPhone() {
+    return fetch({
+        url: '/is_bind_phone',
+        method: "get",
+    });
+}
+
 // 获取手机验证码
 export function getPhone(accountName, captcha) {
     return fetch({
@@ -65,6 +75,31 @@ export function getPhone(accountName, captcha) {
         }
     });
 }
+//通过手机获取验证码
+
+export function getPhoneCode(phone) {
+    return fetch({
+        url: '/message/code',
+        method: "post",
+        params: {
+            'phone': phone,
+        }
+    });
+}
+
+//绑定手机号
+
+export function bindPhone(phone,code) {
+    return fetch({
+        url: '/bind/phone',
+        method: "post",
+        params: {
+            'phone': phone,
+            'code': code,
+        }
+    });
+}
+
 // 重置密码
 export function resetPwd(data) {
     return fetch({
@@ -737,14 +772,14 @@ export function collectList(type) {
 
 export function weChatLogin() {
     return fetch({
-        url: `/wechat_code`,
+        url: `/wechatcode`,
         method: "get" // 请求方法
     });
 }
 
 export function getWeChatToken(code) {
     return fetch({
-        url: `/wechat_token`,
+        url: `/wechattoken`,
         method: "get", // 请求方法
         params:{code:code}
     });
