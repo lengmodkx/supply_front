@@ -12,7 +12,7 @@ import members from "../components/company/members"
 import personal from  '../components/public/personal'
 import down from '../components/public/down'
 import sucai from  '../components/public/sucai'
-
+import Bind from '../views/bindPhone.vue'
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -196,7 +196,14 @@ const router = new Router({
       },
       component: Forget
     },
-    
+    {
+      path: "/bind",
+      name: "bind",
+      meta: {
+        title: "绑定手机号"
+      },
+      component: Bind
+    },
   ]
 });
 router.afterEach((to, from) => {

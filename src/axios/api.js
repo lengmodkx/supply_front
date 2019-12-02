@@ -89,13 +89,15 @@ export function getPhoneCode(phone) {
 
 //绑定手机号
 
-export function bindPhone(phone,code) {
+export function bindPhone(phone,code,userId,nickName) {
     return fetch({
         url: '/bind/phone',
         method: "post",
         params: {
             'phone': phone,
             'code': code,
+            'userId':userId,
+            'nickName':nickName
         }
     });
 }

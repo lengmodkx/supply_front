@@ -77,9 +77,6 @@ export default {
     ...mapState("app", ["loading"])
   },
   mounted() {
-
-        
-
     if (localStorage.token){
       this.$router.push('/home')
     }
@@ -96,7 +93,7 @@ export default {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
-              sessionStorage.token = res.accessToken;
+              localStorage.token = res.accessToken;
               this.updateUserId(res.userInfo); //存储、更新用户信息
               localStorage.userId = res.userInfo.userId;
               localStorage.userImg = res.userInfo.image;
@@ -121,32 +118,36 @@ export default {
           window.location.href=res.url
         }
       })
-      //window.location.href = 'https://open.weixin.qq.com/connect/qrconnect?appid=wxb7b91f87460a9d90&redirect_uri=http%3A%2F%2F192.168.1.101%3A8080%2Fwechat_token&response_type=code&scope=snsapi_login&state=1b6ce04096e34958839be9fa6852286f#wechat_redirect'
     }
   },
-  beforeRouteEnter (to, from, next) {
-    var url = location.search; //获取url中"?"符后的字串
-    var theRequest = new Object();
-    if (url.indexOf("?") != -1) {
-      var str = url.substr(1);
-      var strs = str.split("&");
-      for(var i = 0; i < strs.length; i ++) {
-        theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-      }
+  getQueryValue(queryName) {
+    var query = decodeURI(window.location.search.substring(1));
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split("=");
+      if (pair[0] == queryName) { return pair[1]; }
     }
-    var code = theRequest.code
-      console.log(code)
+    return null;
+ },
+  beforeRouteEnter (to, from, next) {
+    localStorage.userId = '';
+    localStorage.userImg = '';
+    localStorage.userName = '';
+    var code = getQueryValue('code');
+    console.log(code);
     next(vm => {
       if(code){
         getWeChatToken(code).then(res => {
           if(res.result === 1){
-            localStorage.userId = '';
-            localStorage.userImg = '';
-            localStorage.userName = '';
-            localStorage.userId = res.userInfo.userId;
-            localStorage.userImg = res.userInfo.defaultImage;
-            localStorage.userName = res.userInfo.userName;
-            vm.$router.push('/home')
+            if(!res.bindPhone){
+              localStorage.token = res.accessToken;
+              localStorage.userId = res.userInfo.userId;
+              localStorage.userImg = res.userInfo.defaultImage;
+              localStorage.userName = res.userInfo.userName;
+              vm.$router.push('/home')
+            }else{
+              this.$router.push({name:'bind',query: {name:res.userInfo.userName,userId:res.userInfo.userId}})
+            }
           }
         })
       }
