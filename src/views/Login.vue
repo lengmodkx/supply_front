@@ -139,7 +139,7 @@ export default {
       if(code){
         getWeChatToken(code).then(res => {
           if(res.result === 1){
-            if(res.bindPhone==false){
+            if(!res.bindPhone){
               localStorage.token = res.accessToken;
               localStorage.userId = res.userInfo.userId;
               localStorage.userImg = res.userInfo.defaultImage;
