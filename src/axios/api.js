@@ -65,13 +65,13 @@ export function showBindPhone() {
 }
 
 // 获取手机验证码
-export function getPhone(accountName, captcha) {
+export function getPhone(accountName, userId) {
     return fetch({
         url: '/code',
         method: "get",
         params: {
-            'accountName': accountName,
-            'captcha': captcha
+            'phone': accountName,
+            'userId': userId
         }
     });
 }

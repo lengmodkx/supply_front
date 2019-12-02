@@ -108,7 +108,7 @@ export default {
                clearInterval(time);
             }
          }, 1000);
-         getPhone(this.formValidate.phone).then(res => {console.log(res);});
+         getPhone(this.formValidate.phone,this.formValidate.userId).then(res => {console.log(res);});
       },
       showPage(){
          this.show = false;
@@ -122,6 +122,7 @@ export default {
    width: 100%;
    height: 100vh;
    position: relative;
+   background: white;
 //    background: url("../assets/images/login-bg2.jpg") no-repeat center/cover;
 }
 .bind-box-form{
