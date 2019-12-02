@@ -42,7 +42,7 @@
    </div>
 </template>
 <script>
-import { bindPhone, getPhone } from "@/axios/api";
+import { bindPhone, getPhoneCode } from "@/axios/api";
 export default {
     data() {
        const validatePhone = (rule, value, callback) => {
@@ -108,7 +108,7 @@ export default {
                clearInterval(time);
             }
          }, 1000);
-         getPhone(this.formValidate.phone,this.formValidate.userId).then(res => {console.log(res);});
+         getPhoneCode(this.formValidate.phone,this.formValidate.userId).then(res => {console.log(res);});
       },
       showPage(){
          this.show = false;

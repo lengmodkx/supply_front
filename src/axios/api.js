@@ -65,24 +65,25 @@ export function showBindPhone() {
 }
 
 // 获取手机验证码
-export function getPhone(accountName, userId) {
+export function getPhone(accountName, captcha) {
     return fetch({
         url: '/code',
         method: "get",
         params: {
-            'phone': accountName,
-            'userId': userId
+            'accountName': accountName,
+            'captcha': captcha
         }
     });
 }
 //通过手机获取验证码
 
-export function getPhoneCode(phone) {
+export function getPhoneCode(phone,userId) {
     return fetch({
         url: '/message/code',
         method: "post",
         params: {
             'phone': phone,
+            'userId':userId
         }
     });
 }
