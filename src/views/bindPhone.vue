@@ -88,6 +88,11 @@ export default {
                      this.$Message.error('绑定失败');
                   } else {
                      localStorage.token = res.accessToken;
+                     this.updateUserId(res.userInfo); //存储、更新用户信息
+                     localStorage.userId = res.userInfo.userId;
+                     localStorage.userImg = res.userInfo.image;
+                     localStorage.userName = res.userInfo.userName;
+                     localStorage.fileId=res.fileId;
                      this.$Message.success("绑定成功!");
                      this.$router.push("/home");
                   }
