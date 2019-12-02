@@ -146,7 +146,7 @@ export default {
               localStorage.userName = res.userInfo.userName;
               vm.$router.push('/home')
             }else{
-              this.$router.push({name:'bind',query: {name:res.userInfo.userName,userId:res.userInfo.userId}})
+              vm.$router.push({name:'bind',query: {name:res.userInfo.userName,userId:res.userInfo.userId}})
             }
           }
         })
