@@ -63,6 +63,7 @@ export default {
           show:true,
           showTxt:true,
           isTimes:false,
+          timeNum:0,
           formValidate:{
              phone: "",
              code: "",
