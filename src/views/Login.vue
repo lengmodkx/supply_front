@@ -120,26 +120,26 @@ export default {
       })
     }
   },
-  getQueryValue(queryName) {
-    var query = decodeURI(window.location.search.substring(1));
-    var vars = query.split("&");
-    for (var i = 0; i < vars.length; i++) {
-      var pair = vars[i].split("=");
-      if (pair[0] == queryName) { return pair[1]; }
-    }
-    return null;
- },
   beforeRouteEnter (to, from, next) {
     localStorage.userId = '';
     localStorage.userImg = '';
     localStorage.userName = '';
-    var code = this.getQueryValue('code');
-    console.log(code);
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for(var i = 0; i < strs.length; i ++) {
+        theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+      }
+    }
+    var code = theRequest.code
+    console.log(code)
     next(vm => {
       if(code){
         getWeChatToken(code).then(res => {
           if(res.result === 1){
-            if(!res.bindPhone){
+            if(res.bindPhone==false){
               localStorage.token = res.accessToken;
               localStorage.userId = res.userInfo.userId;
               localStorage.userImg = res.userInfo.defaultImage;
