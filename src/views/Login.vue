@@ -133,7 +133,7 @@ export default {
     localStorage.userId = '';
     localStorage.userImg = '';
     localStorage.userName = '';
-    var code = getQueryValue('code');
+    var code = this.getQueryValue('code');
     console.log(code);
     next(vm => {
       if(code){
