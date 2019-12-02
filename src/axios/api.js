@@ -90,16 +90,11 @@ export function getPhoneCode(phone,userId) {
 
 //绑定手机号
 
-export function bindPhone(phone,code,userId,nickName) {
+export function bindPhone(data) {
     return fetch({
         url: '/bind/phone',
         method: "post",
-        params: {
-            'phone': phone,
-            'code': code,
-            'userId':userId,
-            'nickName':nickName
-        }
+        data: data
     });
 }
 
