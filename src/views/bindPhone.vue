@@ -43,6 +43,7 @@
 </template>
 <script>
 import { bindPhone, getPhoneCode } from "@/axios/api";
+import { mapState, mapActions } from "vuex";
 export default {
     data() {
        const validatePhone = (rule, value, callback) => {
@@ -80,6 +81,7 @@ export default {
        }
     },
     methods:{
+       ...mapActions("user", ["updateUserInfo", "updateUserId"]),
        bind: function(name) {
           this.$refs[name].validate(valid => {
             if (valid) {
