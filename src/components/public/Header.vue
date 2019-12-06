@@ -42,8 +42,7 @@
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
         <!-- <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt=""> -->
-        <img class="avatar" v-if="defaultImage.search('http://')!=-1" :src="`${defaultImage}`" alt="">
-        <img class="avatar" v-else :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${defaultImage}`" alt="">
+        <img class="avatar" :src="`${userImg}`" alt="">
         <div class="userInfo" slot="content">
           <!-- <div class="sck" @click="goSucai">素材库</div> -->
           <ul class="org">
@@ -125,7 +124,7 @@ export default {
     return {
       tagHeader:false,//显示日历
       showtag:'',
-      defaultImage:localStorage.userImg,
+      userImg:localStorage.userImg,
       display: "none",
       popVisible: false,
       addOrgModal: false,

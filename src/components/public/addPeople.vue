@@ -18,7 +18,7 @@
                 <!--搜索显示的-->
                 <div class="invit-user" v-if="isSearch">
                     <div class="invit-user-name">
-                        <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${searchPeople.user.image}`">
+                        <img :src="`${searchPeople.user.image}`">
                         <p>{{searchPeople.user.userName}}</p>
                     </div>
                     <Button type="primary" :disabled="searchPeople.isExist" @click="adduser(searchPeople.user.userId)">添加</Button>

@@ -6,7 +6,7 @@
         <wxlogin  :appid="'wxb7b91f87460a9d90'" :response_type="'code'" :scope="'snsapi_login'"  :redirect_uri="'https://www.aldbim.com'"></wxlogin>
       </div> -->
       <FormItem prop="accountName">
-        <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
+        <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
       </FormItem>
       <FormItem prop="password">
         <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
@@ -46,7 +46,7 @@ export default {
         ) &&
         !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value) && value !== 'admin'
       ) {
-        return callback(new Error("请输入正确的手机号码或邮箱"));
+        return callback(new Error("请输入正确的手机号码"));
       } else {
         callback();
       }
@@ -98,7 +98,6 @@ export default {
               localStorage.userId = res.userInfo.userId;
               localStorage.userImg = res.userInfo.image;
               localStorage.userName = res.userInfo.userName;
-              localStorage.fileId=res.fileId;
               this.$Message.success("登录成功!");
               if (localStorage.companyId){
                 this.$router.push("/org/"+localStorage.companyId);
@@ -113,7 +112,7 @@ export default {
       });
     },
     weChatLogin(){
-      weChatLogin().then(res => {
+      weChatLogin("https://www.aldbim.com").then(res => {
         if(res.result === 1){
           window.location.href=res.url
         }
@@ -142,7 +141,7 @@ export default {
             if(!res.bindPhone){
               localStorage.token = res.accessToken;
               localStorage.userId = res.userInfo.userId;
-              localStorage.userImg = res.userInfo.defaultImage;
+              localStorage.userImg = res.userInfo.image;
               localStorage.userName = res.userInfo.userName;
               vm.$router.push('/home')
             }else{

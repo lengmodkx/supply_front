@@ -4,7 +4,7 @@
       <div class="register-title">欢迎注册阿拉丁BIM云平台</div>
       <Form ref="formValidate" @keyup.native.enter="register('formValidate')" :model="formValidate" :rules="rules">
         <FormItem prop="accountName">
-          <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable />
+          <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
         </FormItem>
         <FormItem prop="password">
           <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
@@ -37,12 +37,9 @@ export default {
   data() {
     const validatePhone = (rule, value, callback) => {
       if (
-        !/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(
-          value
-        ) &&
-        !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)
+        !/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(value)
       ) {
-        return callback(new Error("请输入正确的手机号码或邮箱"));
+        return callback(new Error("请输入正确的手机号"));
       } else {
         callback();
       }

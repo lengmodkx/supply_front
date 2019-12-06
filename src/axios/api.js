@@ -768,11 +768,8 @@ export function collectList(type) {
     });
 }
 
-export function weChatLogin() {
-    return fetch({
-        url: `/wechatcode`,
-        method: "get" // 请求方法
-    });
+export function weChatLogin(url) {
+    return $get(`/wechatcode`, {redirectUri:url})
 }
 
 export function getWeChatToken(code) {
