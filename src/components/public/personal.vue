@@ -56,14 +56,15 @@
                 <div class="title">第三方帐号</div>
                 <div class="divide">
                     <img src="../../assets/images/weixin.png" alt="">
-                    <Button type="primary" ghost  @click="weChatLogin()">去绑定</Button>
+                    <Button type="primary" ghost  @click="bind()" v-if="message.wxOpenId">绑定</Button>
+                    <Button type="error" ghost v-else @click="notBind()">解除绑定</Button>
                 </div>
             </div>
        </div>
     </div>
 </template>
 <script>
-import {findUserInfo,updateUserNews,weChatLogin} from '@/axios/api';
+import {findUserInfo,updateUserNews,weChatLogin,bindWx,notBindWx} from '@/axios/api';
 import { mapState, mapActions, mapMutations } from "vuex";
 import OSS from "ali-oss";
 let client = new OSS({
@@ -94,7 +95,7 @@ export default {
                 birthday:'',
                 address:'',
                 email:'',
-                wx_openId:''
+                wxOpenId:''
             },
             yearList:[],
             monthList:[],
@@ -110,15 +111,21 @@ export default {
             },
         }
     },
-    components: {},
     methods: {
         ...mapActions("user", [ "initSrc"]),
-        weChatLogin(){
+        bind(){
             weChatLogin("https://www.aldbim.com/personal").then(res => {
                 if(res.result === 1){
                     window.location.href=res.url
                 }
             })
+        },
+        notBind(){
+            notBindWx(this.message.userId).then(res=>{
+                if(res.result==1){
+                    this.$Message.success(res.msg);
+                }
+            })     
         },
         getItem(index,item) {
             this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
@@ -219,6 +226,26 @@ export default {
                     this.loading=false;
                     this.message=res.data;
                 }
+            })
+        },
+        beforeRouteEnter (to, from, next) {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                var strs = str.split("&");
+                for(var i = 0; i < strs.length; i ++) {
+                    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+                }
+            }
+            var code = theRequest.code
+            console.log(code)
+            next(vm => { 
+                bindWx(code,this.message.userId).then(res => {
+                    if(res.result==1){
+                        this.$Message.success(res.msg);
+                    }
+                }) 
             })
         }
     },

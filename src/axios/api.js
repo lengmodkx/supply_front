@@ -780,6 +780,13 @@ export function getWeChatToken(code) {
     });
 }
 
+export function bindWx(code,userId) {
+    return $post(`/bind/wechat`, {code:code,userId:userId})
+}
+
+export function notBindWx(userId) {
+    return $post(`/notbind/wechat`, {userId:userId})
+}
 
 export function group(projectId) {
     return $get(`relations/${projectId}/groups`, '')
