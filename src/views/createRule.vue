@@ -55,7 +55,7 @@
                         </div>
                         <div v-show="option==='设置执行人'">
                             <div class="option-item zxr" v-for="(item, index) in projectPeople" @click="selectConditionValue(item.memberId,item.memberName)" :key="index">
-                                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
+                                <img :src="item.memberImg" alt="">
                                 <span>{{item.memberName}}</span>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         </div>
                         <div v-show="resultType==='默认指派给'">
                             <div class="option-item zxr" v-for="(item, index) in projectPeople" @click="selectDefaultAssign(item.memberId,item.memberName)" :key="index">
-                                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
+                                <img :src="item.memberImg" alt="">
                                 <span>{{item.memberName}}</span>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
                        </div>
                        <div v-show="resultType==='默认指派给'">
                            <div class="option-item zxr" v-for="(item, index) in projectPeople" @click="selectDefaultAssign(item.memberId,item.memberName,'last')" :key="index">
-                               <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
+                               <img :src="item.memberImg" alt="">
                                <span>{{item.memberName}}</span>
                            </div>
                        </div>

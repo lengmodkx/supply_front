@@ -24,7 +24,7 @@
             :key="index"
             @click="check(index,item.check)">
           <div class="avator">
-            <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.image}`">
+            <img :src="item.image">
             {{item.userName}}
             <svg-icon class="right"
                       name="right"

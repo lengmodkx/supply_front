@@ -17,18 +17,7 @@
     <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请成员
     </div>
-    <!-- <ul class="programMember">
-      <li class="member-item clearfix" v-for="(user,index) in users" :key="index">
-        <div class="avatar">
-          <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.defaultImage}`" alt>
-        </div>
-        <div class="memberInfo">
-          <p class="uname">{{user.userName}}</p>
-          <p class="email">{{user.email}}</p>
-        </div>
-        <Icon type="ios-arrow-down" size="18" @click="showModal1(user.userId,$event)"/>
-      </li>
-    </ul> -->
+    
     <div class="userBox">
         <Collapse v-model="value" accordion>
               <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
@@ -69,14 +58,6 @@
         <loading v-if="loading"></loading>
         <div style="height:330px;padding-top:10px;overflow:auto;margin-top:10px;">
           <ul>
-
-            <!-- <li  v-if='invitUsers' class="invit-user">
-              <div class="invit-user-name">
-                <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${invitUsers.image}`">
-                <p>{{invitUsers.accountName}}</p>
-              </div>
-              <Button type="primary" @click="adduser(invitUsers.userId)">添加</Button>
-            </li> -->
             <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
               <div class="invit-user-name">
                 <img :src="`${user.image}`">

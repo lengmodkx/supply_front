@@ -23,9 +23,8 @@
             <div class="participant" v-if="i.joinInfo">
               <p class="cyu">参与者 · {{i.joinInfo.length}}</p>
               <p class="user">
-                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+m.defaultImage" v-for="(m,n) in i.joinInfo" :key="n" alt="">
+                <img :src="m.defaultImage" v-for="(m,n) in i.joinInfo" :key="n" alt="">
                 <Icon type="plus-circled"></Icon>
-                <!--<userList :id='parameter.projectId'></userList>-->
               </p>
             </div>
           </div>

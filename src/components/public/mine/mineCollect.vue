@@ -30,7 +30,7 @@
                         </div>
                         <div class="item-title clearfix">
                             <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>
-                            <span class="img"><img v-if="c.collectType !== '日程'" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${c.item.userImage}`" /></span>
+                            <span class="img"><img v-if="c.collectType !== '日程'" :src="c.item.userImage" /></span>
                             <span class="title">{{c.item.taskName}}{{c.item.fileName}}{{c.item.title}}{{c.item.scheduleName}}</span>
                             <!--<span class="update fr">已更新</span>-->
                         </div>

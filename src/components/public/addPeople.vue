@@ -7,13 +7,7 @@
             <loading v-if="loading"></loading>
             <div class="people-wrap" >
                 <ul v-if="invitUsers.length && !isSearch">
-                    <!--<li v-for="(user,index) in invitUsers" :key="index" class="invit-user">-->
-                        <!--<div class="invit-user-name">-->
-                            <!--<img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.user.image}`">-->
-                            <!--<p>{{user.user.userName}}</p>-->
-                        <!--</div>-->
-                        <!--<Button type="primary" :disabled="user.isExist" @click="adduser(user.user.userId)">添加</Button>-->
-                    <!--</li>-->
+                   
                 </ul>
                 <!--搜索显示的-->
                 <div class="invit-user" v-if="isSearch">

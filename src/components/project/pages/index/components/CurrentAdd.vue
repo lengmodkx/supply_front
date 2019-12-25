@@ -13,8 +13,7 @@
             <svg-icon name="people"
                       v-if="!scope.executor"></svg-icon>
             <span class="conText">
-              <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${scope.executor?scope.executor.image:''}`"
-                   alt="">
+              <img :src="scope.executor?scope.executor.image:''"alt="">
               {{scope.executor?scope.executor.userName:'待认领'}}
               <!-- {{scope.executor?scope.executor.userId:''}} -->
 
@@ -140,7 +139,7 @@
             <div class="ava">
               <!-- 删除需要加在关闭按钮上 -->
               <img v-if="item.image"
-                   :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.image}`"
+                   :src="item.image"
                    alt="">
               <svg-icon v-else
                         style="width:24px;height:24px;display:block;"

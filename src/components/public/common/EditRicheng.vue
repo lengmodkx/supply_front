@@ -132,7 +132,7 @@
                                     <li class="gl-task-list" v-for="(b,i) in schedule.bindTasks" :key="i" >
                                         <div class="gl-task-list-con" >
                                             <Icon type="md-checkbox-outline" size="22" />
-                                            <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
+                                            <img v-if="b.userImage" :src="b.userImage" alt="执行者">
                                             <Icon type="md-contact" v-else size="26" />
                                             <div class="gl-con">
                                                 <div class="gl-con-top">
@@ -252,9 +252,7 @@
                                                 transfer>
                                             <div class="ava">
                                                 <!-- 删除需要加在关闭按钮上 -->
-                                                <img v-if="item.image"
-                                                    :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image"
-                                                    alt="">
+                                                <img v-if="item.image" :src="item.image" alt="">
                                                 <svg-icon v-else
                                                         style="width:24px;height:24px;display:block;"
                                                         name="allMember"></svg-icon>

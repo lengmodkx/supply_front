@@ -58,7 +58,7 @@
                                 class="renwu-list"
                                 @click="showChild(n,nn,ii.taskId)">
                                 <span></span>
-                                <img :src="ii.executorImg?'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ii.executorImg:morenImg" alt="">
+                                <img :src="ii.executorImg?ii.executorImg:morenImg" alt="">
                                 <p>{{ii.taskName}}</p>
                             </li>
                         </ul>
@@ -72,7 +72,7 @@
                             class="renwu-list"
                             v-for="(item,index) in zirenwuData" :key="index">
                             <span></span>
-                            <img :src="item.executorImg?'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.executorImg:morenImg" alt="">
+                            <img :src="item.executorImg?item.executorImg:morenImg" alt="">
                             <p>{{item.taskName}}</p>
                         </li>
                     </ul>

@@ -109,7 +109,7 @@
                         <!--点击成员显示-->
                         <ul v-if="nowType==='成员' && peopleList.length">
                             <li class="one-member" v-for="(item, index) in peopleList" :key="index">
-                                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.userEntity.image" alt="">
+                                <img :src="item.userEntity.image" alt="">
                                 <p>{{item.userEntity.userName}}</p>
                                 <span>{{item.organizationLable?'拥有者':'参与者'}}</span>
                             </li>
@@ -123,7 +123,7 @@
                             </div>
                             <li class="branch-list" v-for="(i,n) in peopleList" :key="n">
                                 <div class="branch-people">
-                                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+i.userEntity.image" alt="">
+                                    <img :src="i.userEntity.image" alt="">
                                     <div>
                                         <p>{{i.userEntity.userName}}</p>
                                         <!--<span>243967393qq.com</span>-->
@@ -204,7 +204,7 @@
                         <ul>
                             <li class="group-people" v-for="(item, index) in groupPeople" :key="index">
                                 <div class="group-people-con">
-                                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image" alt="">
+                                    <img :src="item.image" alt="">
                                     <p>{{item.userName}}　{{item.isOwner?'（拥有者）':''}}</p>
                                 </div>
                                 <span>{{item.isOwner?'退出':'移除'}}</span>
@@ -246,7 +246,7 @@
                 <ul class="people-ul">
                     <li v-for="(item, index) in allOrgPeople" :key="index" @click="checkedPeople(index)">
                         <div>
-                            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.userEntity.image" alt="">
+                            <img :src="item.userEntity.image" alt="">
                             <p>{{item.userEntity.userName}}</p>
                         </div>
                         <Icon v-show="item.isChecked" type="md-checkmark" />

@@ -36,7 +36,7 @@
             <Loading v-if="loading"></Loading>
             <ul v-if="shareList.length">
               <li v-for="(item,index) in shareList" :key="item.id" :class="{ active: index==indexNow }" @click="changeContent(index,item.id)">
-                <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.memberImg}`">
+                <img class="ava" v-bind:src="item.memberImg">
                 <div class="">
                   <p class="t">{{item.title}}</p>
                   <p class="c"> {{item.memberName}}发布于{{item.createTimeStr}}</p>
@@ -114,7 +114,7 @@
                       <li class="gl-task-list" v-for="(b,i) in share.bindTasks" :key="i" >
                         <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
                           <Icon type="md-checkbox-outline" size="22" />
-                          <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
+                          <img v-if="b.userImage" :src="b.userImage" alt="执行者">
                           <Icon type="md-contact" v-else size="26" />
                           <div class="gl-con">
                             <div class="gl-con-top">
@@ -234,7 +234,7 @@
                     <Tooltip :content="item.userName" placement="top" transfer>
                       <div class="ava">
                         <!-- 删除需要加在关闭按钮上 -->
-                        <img v-if="item.image" :src="prefix + item.image" alt="">
+                        <img v-if="item.image" :src="item.image" alt="">
                         <svg-icon v-else style="width:24px;height:24px;display:block;" name="allMember"></svg-icon>
                         <span class="close" @click="deleteInvolve(item.userId)">×</span>
                       </div>
@@ -246,15 +246,7 @@
                 </div>
                 <log :logs="share.logs" :unReadMsg="share.unReadMsg" :publicId="share.id"></log>
               </div>
-              <!--<div class="omg">-->
-                <!--<p class="ot">参与者 · {{share.joinInfo.length}}</p>-->
-                <!--<p class="oc" v-for="user in share.joinInfo" :key="user.userId">-->
-                  <!--<img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">-->
-                  <!--<Icon type="md-add-circle" size="28" color="#2d8cf0" style="cursor: pointer" @click.native="showMember"></Icon>-->
-                <!--</p>-->
-
-                <!--<log :logs="share.logs" :unReadMsg="share.unReadMsg" :publicId="share.id"></log>-->
-              <!--</div>-->
+            
             </div>
             <publish :publicId="share.id" :projectId="share.projectId" :publicType="publicType"></publish>
           </div>
@@ -300,7 +292,6 @@ export default {
     return {
       loading: true,
       type: 1,
-      prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       editShare: false,
       showAddshare: false,
       projectId: this.$route.params.id,

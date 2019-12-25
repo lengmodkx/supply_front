@@ -67,7 +67,7 @@
                       <Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     </div>
                     <div class="cont">{{a.taskName}}</div>
-                    <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg" alt="">
+                    <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="">
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -116,7 +116,7 @@
                       <Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event,k,b,a.taskId)"></Checkbox>
                     </div>
                     <div class="cont">{{a.taskName}}</div>
-                    <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${a.executorImg}`" class="ava" v-if="a.executorImg!=null" alt="">
+                    <img :src="a.executorImg" class="ava" v-if="a.executorImg!=null" alt="">
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">

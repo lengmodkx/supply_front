@@ -73,7 +73,7 @@
           <Input class="findInput" v-model="findMember" :autofocus="true" placeholder="查找成员" />
           <ul class="memberList">
             <li v-for='item  in memberList' :key="item.userId" @click="chooseExecutor(item.userId)">
-              <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image">
+              <img :src="item.image">
               {{item.userName}}
               <div class="memberListIcon" v-if="curId==item.userId">
                 <Icon style="margin-top: 5px" class="right" type="md-checkmark" size="20" />

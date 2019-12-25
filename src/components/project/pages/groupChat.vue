@@ -32,7 +32,7 @@
                 <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
                 <div v-else>
                   <div class="other">
-                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.user.image" alt="">
+                    <img :src="item.user.image" alt="">
                     <div class="content" v-html="item.content"></div>
                   </div>
                   <div class="time">

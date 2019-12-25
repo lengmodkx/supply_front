@@ -5,13 +5,13 @@
           <span v-if="!restData.length" @click="loadMore">查看剩余{{unReadMsg}}条消息...</span><span v-else @click="shouqi" style="color: #3da8f5">收起</span>
       </div>
       <div class="log-list" v-for="(item, index) in logs" :key="index">
-          <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
+          <img :src="item.memberImg" alt="">
           <div class="things" v-html="item.content"></div>
           <p class="time">{{item.createTime | timeFilter3}}</p>
       </div>
       <div v-show="restData.length">
           <div class="log-list" v-for="(item, index) in restData" :key="index">
-              <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.memberImg" alt="">
+              <img :src="item.memberImg" alt="">
               <div class="things" v-html="item.content"></div>
               <p class="time">{{item.createTime | timeFilter3}}</p>
           </div>

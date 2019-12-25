@@ -61,7 +61,7 @@
               <div class="ava">
                 <!-- 删除需要加在关闭按钮上 -->
                 <img v-if="item.image"
-                     :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.image"
+                     :src="item.image"
                      alt="">
                 <svg-icon v-else
                           style="width:24px;height:24px;display:block;"

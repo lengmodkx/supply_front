@@ -29,8 +29,7 @@
                   v-if="checkedList.indexOf(item.userId)>=0"
                   @click="checkUser(index)">
                 <div class="img fl">
-                  <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.image}`"
-                       v-if="item.image" />
+                  <img :src="item.image" v-if="item.image" />
                   <svg-icon v-else
                             style="margin-top:3px;"
                             name="allMember"></svg-icon>
@@ -53,9 +52,7 @@
                   v-if="checkedList.indexOf(item.userId)<0"
                   @click="checkUser(index)">
                 <div class="img fl">
-                  <img v-if="item.image"
-                       :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.image}`"
-                       alt="">
+                  <img v-if="item.image" :src="item.image" alt="">
                   <svg-icon v-else
                             style="margin-top:3px;"
                             name="allMember"></svg-icon>
