@@ -1,8 +1,8 @@
 <template>
   <header class="header" id="header">
-    <Poptip v-model="mainMenu">
+    <Poptip v-model="mainMenu"   >
       <Icon class="app-icon" type="md-apps" />
-      <div slot="content">
+      <div slot="content"  >
         <ul class="app-con">
           <router-link tag="li" :to="'/org/'+companyId" class="app-li">
             <img @click="mainMenu=false" src="@/assets/images/home.png" alt="">
@@ -85,12 +85,12 @@
     </Modal>
     <!-- 日历 -->
 
-    <Modal v-model="tagHeader"  :mask='false' width='100vh' @on-cancel='closeTag'  :styles="{top: '50px',}" class="tab-content">
-        <Mine v-if="showtag=='Mine'"></Mine>
+    <Modal v-model="tagHeader"  :mask='false' width='100vh' :z-index=66  @on-cancel='closeTag'  :styles="{top: '50px',}" class="tab-content">
+      <Mine v-if="showtag=='Mine'"></Mine>
       <calendar v-if="showtag=='canlender'"></calendar>
       <suCai v-else-if="showtag=='sucai'"></suCai>
       <down v-else-if="showtag=='down'"></down>
-        <message  v-else-if="showtag=='message'"></message>
+      <message  v-else-if="showtag=='message'"></message>
       <div slot="footer"></div>
     </Modal>
 
@@ -348,6 +348,7 @@ export default {
 };
 </script>
 <style scoped lang="less">
+   
     /deep/.ivu-modal-wrap{
       overflow: hidden;
     }

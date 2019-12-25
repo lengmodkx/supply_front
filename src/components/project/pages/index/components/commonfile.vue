@@ -91,6 +91,8 @@ export default {
       return false;
     },
     uploadFile() {
+    
+     
       this.loading = true;
       var that = this;
       this.uploadList.forEach((file, index) => {
@@ -139,6 +141,7 @@ export default {
           this.$Notice.success({
             title: "上传成功"
           });
+           this.$Modal.remove();
           this.files.splice(0, this.files.length);
           this.$emit("close");
         }

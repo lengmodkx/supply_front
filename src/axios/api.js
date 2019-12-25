@@ -934,3 +934,15 @@ export function getIsGroupPower(groupId) {
         }
     });
 }
+
+//项目视图修改信息
+export function changePassword(oldPassword,newPassword) {
+    return fetch({
+        url: `/change_password`,
+        method: 'post', // 请求方法
+        params: {
+            'oldPassword': oldPassword,
+            'newPassword': newPassword,
+        }
+    })
+}

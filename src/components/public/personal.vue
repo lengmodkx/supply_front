@@ -60,11 +60,31 @@
                     <Button type="error" ghost v-else @click="notBind()">解除绑定</Button>
                 </div>
             </div>
+
+            <div class="personal-right"   v-show="activeItem=='更改密码'">
+                <div class="title">更改密码</div>
+                <div class="information">
+                    <Form  :model="password"  ref="password"   :rules="rulesPassword" :label-width="80" >	
+                        <FormItem label="原密码" prop="old">
+                        <Input v-model="password.old" type="password" placeholder="请输入原密码"></Input>
+                        </FormItem>
+                        <FormItem label="新密码" prop="new">
+                        <Input v-model="password.new" type="password" placeholder="请输入新密码"></Input>
+                        </FormItem>
+                        <FormItem label="确认密码" prop="moreNew">
+                        <Input v-model="password.moreNew" type="password" placeholder="请输入新密码"></Input>
+                        </FormItem>
+                        <FormItem>
+                        <Button   type="primary" @click="submitPassword('password')">确认</Button>
+                        </FormItem>
+                    </Form>
+                </div>
+            </div>
        </div>
     </div>
 </template>
 <script>
-import {findUserInfo,updateUserNews,weChatLogin,bindWx,notBindWx} from '@/axios/api';
+import {findUserInfo,updateUserNews,weChatLogin,bindWx,notBindWx,changePassword} from '@/axios/api';
 import { mapState, mapActions, mapMutations } from "vuex";
 import OSS from "ali-oss";
 let client = new OSS({
@@ -76,6 +96,17 @@ let client = new OSS({
 export default {
     data: function () {
         return {
+            password:{
+                old:'',
+                new:'',
+                moreNew:''
+            },
+            //验证
+            rulesPassword: {
+                 old: [{ required: true, message: "请输入旧密码", trigger: "blur" }],
+                  new: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+                  moreNew: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+            }, 
             loading: true,
             imageUrl: "",
             filename:"",
@@ -85,7 +116,7 @@ export default {
             pic_hide:false,
             activeClass:0,
             activeItem:'个人信息',
-            itemList:["个人信息","第三方账号"],
+            itemList:["个人信息","第三方账号","更改密码"],
             message:{
                 userId:localStorage.userId,
                 defaultImage:'',
@@ -113,6 +144,26 @@ export default {
     },
     methods: {
         ...mapActions("user", [ "initSrc"]),
+
+        // 确认密码
+        submitPassword (name) {
+            console.log(name)
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                     this.savePassword ();
+                     this.$Message.error('正确');
+                } else {
+                    this.$Message.error('填写不正确');
+                }
+            })
+        },
+        savePassword(){            
+                changePassword(this.password.old,this.password.new).then(res=>{
+                    if(res.result==1){
+                        this.$Message.success("修改密码成功");
+                    }
+                })  
+        },
         bind(){
             weChatLogin("https://www.aldbim.com/personal").then(res => {
                 if(res.result === 1){

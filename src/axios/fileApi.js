@@ -198,13 +198,14 @@ export function getFileByTag(tagId) {
     });
 }
 // 获取素材库 数据
-export function getSucai(folderId,page) {
+export function getSucai(folderId,page,orderType) {
     return fetch({
         url: `/files/${folderId}/material`,
         method: "get",
         params: {
             page:page,
-            size: 10
+            size: 10,
+            downloadCount:orderType
         }
     });
 }
