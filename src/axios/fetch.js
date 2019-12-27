@@ -8,7 +8,7 @@ if(process.env.NODE_ENV=='test'){
 }else if(process.env.NODE_ENV=='production'){
   url=process.env.VUE_APP_URL
 }else{
-  url='http://192.168.1.105:8080/webSocketServer'
+  url='/api'
 }
 const service = axios.create({
   //baseURL: "/api",

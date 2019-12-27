@@ -36,9 +36,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     const validatePhone = (rule, value, callback) => {
-      if (
-        !/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(value)
-      ) {
+      if (!(/^1[3456789]\d{9}$/.test(value))) {
         return callback(new Error("请输入正确的手机号"));
       } else {
         callback();
