@@ -36,7 +36,7 @@
             <Loading v-if="loading"></Loading>
             <ul v-if="shareList.length">
               <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index)">
-                <img class="ava" v-bind:src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${share.memberImg}`">
+                <img class="ava" v-bind:src="share.memberImg">
                 <div class="">
                   <p class="t">{{share.title}}</p>
                   <p class="c"> {{share.memberName}}发布于{{share.createTimeStr}}</p>
@@ -119,7 +119,7 @@
               <div class="omg" v-if="members">
                 <p class="ot">参与者 · {{members.length}}</p>
                 <p class="oc" v-for="user in members" :key="user.id">
-                  <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${user.image}`">
+                  <img :src="user.image">
                   <Icon type="md-add-circle" size="28" color="#2d8cf0" @click.native="showMember"></Icon>
                 </p>
 

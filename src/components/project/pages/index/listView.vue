@@ -21,7 +21,7 @@
                 <Tooltip  placement="top-end" v-if="item.parentTask" class="long-task-menu" :content="item.parentTask.taskName">
                     属于任务：{{item.parentTask.taskName}}
                 </Tooltip>
-                <img v-if="item.executorImg" class="zxz-touxiang" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.executorImg" alt="">
+                <img v-if="item.executorImg" class="zxz-touxiang" :src="item.executorImg" alt="">
                 <Icon v-else type="md-contact" class="zxz-touxiang" size="24" />
             </div>
         </div>

@@ -7,7 +7,7 @@
         <!-- <div>:class="{forbid:members.length===1}"</div> -->
         <li class="people-lsit" v-for="(item, index) in members" :key="index" @click="choose(index)">
           <div class="people-info">
-            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.defaultImage" alt="">
+            <img :src="item.defaultImage" alt="">
             <p>{{item.userName}}</p>
           </div>
           <Icon class="gou" size="16" type="md-checkmark" v-if="item.isActive" />
@@ -17,7 +17,7 @@
       <ul>
         <li class="people-lsit" v-for="(item, index) in data" :key="index" @click="choose2(index)">
           <div class="people-info">
-            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+item.defaultImage" alt="">
+            <img :src="item.defaultImage" alt="">
             <p>{{item.userName}}</p>
           </div>
           <Icon class="gou" size="16" type="md-checkmark" v-if="item.isActive" />

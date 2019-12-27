@@ -3,7 +3,7 @@
   <Poptip v-model="visible" class="involvelistBox" @on-popper-show="popShow" @on-popper-hide="popHide" transfer>
     <slot :close="close">
         <div class="rlz fl" v-if="task.executor">
-            <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+task.executorImg" alt="">
+            <img :src="task.executorImg" alt="">
             <span>{{task.executorName}}</span>
             <Icon @click.stop="deleteExecutor" type="ios-close" />
         </div>
@@ -31,7 +31,7 @@
               </li>
               <li class="member-menu-item clearfix" @click="visible=false" v-else>
                 <div class="img fl">
-                  <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ task.executorImg" alt="执行者">
+                  <img :src="task.executorImg" alt="执行者">
                 </div>
                 <div class="membername fl" >{{task.executorName}}</div>
                 <div class="tick fr">
@@ -45,7 +45,7 @@
             <div class="option-group-label">推荐</div>
             <ul>
               <li class="member-menu-item clearfix" @click="itemClick(i.memberId)" v-for="(i,index) in memberList" :key="index" v-if="i.memberId !== task.executor">
-                <div class="img fl"><img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${i.memberImg}`" alt=""></div>
+                <div class="img fl"><img :src="i.memberImg" alt=""></div>
                 <div class="membername fl">{{i.memberName}}</div>
               </li>
             </ul>

@@ -40,12 +40,7 @@ export default {
   components: {wxlogin},
   data() {
     const validatePhone = (rule, value, callback) => {
-      if (
-        !/^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(
-          value
-        ) &&
-        !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value) && value !== 'admin'
-      ) {
+      if (!(/^1[3456789]\d{9}$/.test(value)) && value !== 'admin') {
         return callback(new Error("请输入正确的手机号码"));
       } else {
         callback();
@@ -93,14 +88,15 @@ export default {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
-              localStorage.token = res.accessToken;
-              this.updateUserId(res.userInfo); //存储、更新用户信息
-              localStorage.userId = res.userInfo.userId;
-              localStorage.userImg = res.userInfo.image;
-              localStorage.userName = res.userInfo.userName;
+              console.log(res.data)
+              this.updateUserId(res.data); //存储、更新用户信息
+              localStorage.userId = res.data.userId;
+              localStorage.userImg = res.data.image;
+              localStorage.userName = res.data.userName;
+              localStorage.token = res.data.accessToken;
               this.$Message.success("登录成功!");
-              if (localStorage.companyId){
-                this.$router.push("/org/"+localStorage.companyId);
+              if (res.data.orgId){
+                this.$router.push("/org/"+res.data.orgId);
               } else {
                 this.$router.push("/home");
               }

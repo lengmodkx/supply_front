@@ -7,7 +7,7 @@
             <div class="left-filter">
                 <p>要查看的人员</p>
                 <div class="member-list">
-                    <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+img" alt="">
+                    <img :src="img" alt="">
                     <span>{{name}}</span>
                     <Icon type="md-checkmark" size="20" />
                 </div>
@@ -108,7 +108,7 @@ export default {
                schedulesData.forEach((i,n) => {
                    var executorImg = ''
                    if(i.img){
-                       executorImg =  '<img class="img20" src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+i.img+'" />'+i.scheduleName
+                       executorImg =  '<img class="img20" src="'+i.img+'" />'+i.scheduleName
                    } else{
                        executorImg = executorImg = '<img class="img20" src="'+this.morenImg+'" />'+i.scheduleName
                    }
@@ -123,7 +123,7 @@ export default {
                tasksData.forEach(i => {
                    var executorImg = ''
                    if(i.executorImg){
-                       executorImg =  '<img class="img20" src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+i.executorImg+'" />'+i.taskName
+                       executorImg =  '<img class="img20" src="'+i.executorImg+'" />'+i.taskName
                    } else{
                        executorImg = '<img class="img20" src="'+this.morenImg+'" />'+i.taskName
                    }

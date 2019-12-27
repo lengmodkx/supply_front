@@ -169,7 +169,7 @@
               <li class="gl-task-list" v-for="(b,i) in task.bindTasks" :key="i">
                 <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
                   <Icon type="md-checkbox-outline" size="22" />
-                  <img v-if="b.userImage" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+ b.userImage" alt="执行者">
+                  <img v-if="b.userImage" :src="b.userImage" alt="执行者">
                   <Icon type="md-contact" v-else size="26" />
                   <div class="gl-con">
                     <div class="gl-con-top">
@@ -306,7 +306,7 @@
                 <Tooltip :content="item.userName" placement="top" transfer>
                   <div class="ava">
                     <!-- 删除需要加在关闭按钮上 -->
-                    <img v-if="item.image" :src="prefix + item.image" alt="">
+                    <img v-if="item.image" :src="item.image" alt="">
                     <svg-icon v-else style="width:24px;height:24px;display:block;" name="allMember"></svg-icon>
                     <span class="close" @click="deleteInvolve(item.userId)">×</span>
                   </div>
@@ -395,7 +395,6 @@ export default {
   },
   data() {
     return {
-      prefix: "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/",
       glPop: false,
       zan: false,
       aa: false,

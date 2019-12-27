@@ -41,7 +41,7 @@
      
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
-        <!-- <img class="avatar" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+src" alt=""> -->
+        
         <img class="avatar" :src="`${userImg}`" alt="">
         <div class="userInfo" slot="content">
           <!-- <div class="sck" @click="goSucai">素材库</div> -->
@@ -181,10 +181,14 @@ export default {
     ...mapMutations('app',['changeHeaderTag']),
     initSocket(id) {
       // 建立连接对象 
-      var url =
-        process.env.NODE_ENV === "development"
-          ? process.env.VUE_APP_SOCKET
-          : process.env.VUE_APP_SOCKET;
+      var url='';
+      if(process.env.NODE_ENV=='test'){
+        url=process.env.VUE_APP_TEST_URL
+      }else if(process.env.NODE_ENV=='production'){
+        url=process.env.VUE_APP_URL
+      }else{
+        url='http://192.168.1.115:8080/webSocketServer'
+      }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
@@ -332,6 +336,7 @@ export default {
     },
     goout() {
       localStorage.token=''
+      localStorage.companyId=''
       this.$router.push('/')
     }
   },

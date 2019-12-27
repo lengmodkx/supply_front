@@ -43,7 +43,7 @@
                         <p class="mag-num" v-if="n.newsCount > 0">{{n.newsCount}}</p>
                     </header>
                     <div class="message-list-con">
-                        <img :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${n.newsFromUser.defaultImage}`" alt="">
+                        <img :src="n.newsFromUser.defaultImage" alt="">
                         <div class="msg">
                             <p v-html="n.newsContent"></p>
                             <p class="msg-time"><Time :time="n.updateTime" /></p>

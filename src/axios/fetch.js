@@ -2,13 +2,21 @@ import axios from 'axios'
 import qs from 'qs'
 import store from '@/store'
 import iView,{Notice} from 'iview'
+let url='';
+if(process.env.NODE_ENV=='test'){
+  url=process.env.VUE_APP_TEST_URL
+}else if(process.env.NODE_ENV=='production'){
+  url=process.env.VUE_APP_URL
+}else{
+  url='/api'
+}
 const service = axios.create({
   //baseURL: "/api",
   // headers: {
   // 'token_in_header': "123",//  token从全局变量那里传过来
   // },
   //判断是生产环境还是开发环境
-  baseURL: process.env.NODE_ENV == 'development' ? "/api" : process.env.VUE_APP_URL,
+  baseURL: url,
   timeout: 1000 * 30
 })
 
