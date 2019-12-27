@@ -27,16 +27,17 @@
             <div class="icon-box">
             <Icon type="ios-apps" @click="view='view'" />
             <Icon type="ios-list" @click="view='list'" />
+            <Icon type="ios-arrow-round-down" @click="!orderType" />
+            
             </div>
         </div>
         <Loading v-if="loading"></Loading>
-
          <div class="file-home">
         <div class="main-content">
             <div v-if="isSearch" style="width: 100%">
                 <!--缩略图模式搜索-->
                 <ul v-show="view==='view'" class="view-file-box">
-                    <li v-for="(file, index) in searchData" :key="index" @click="goNext(file.catalog, file.fileId)" :class="{'cur':file.catalog}">
+                    <li v-for="(file, index) in searchData" :key="index" @click="goNext(file.catalog, file.fileId,file)" :class="{'cur':file.catalog}">
                         <Poptip trigger="hover" @click.stop class="poptip" width="200" @on-popper-hide="popHid" @on-popper-show="fileName=file.fileName">
                             <Icon class="deletes" type="ios-arrow-dropdown" size="20" />
                             <div slot="title" style="text-align: center">
@@ -85,7 +86,7 @@
                         <span>更新时间</span>
                     </div>
                     <li v-for="(file, index) in searchData" :key="index" >
-                        <div class="list-file-part" @click="goNext(file.catalog, file.fileId)">
+                        <div class="list-file-part" @click="goNext(file.catalog, file.fileId,file)">
                             <div class="list-file-img" v-if="file.catalog">
                                 <img src='@/assets/images/folder.png'>
                             </div>
@@ -122,7 +123,7 @@
             <div v-else style="width: 100%;">
                 <!--缩略图模式-->
                 <ul v-if="view==='view'" class="view-file-box">
-                    <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId)" :class="{'cur':file.catalog}">
+                    <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId,file)" :class="{'cur':file.catalog}">
                         <Icon class="xiazai" v-if="!file.catalog" @click="downLoad(file.fileId)" type="md-cloud-download" />
                         <div class="top-img"  :data-id='file.fileId' v-if="file.catalog">
                              <div class="down-img" >
@@ -155,7 +156,7 @@
                         <span>更新时间</span>
                     </div>
                     <li v-for="(file, index) in allFile" :key="index" >
-                        <div class="list-file-part" @click="goNext(file.catalog, file.fileId)">
+                        <div class="list-file-part" @click="goNext(file.catalog, file.fileId,file)">
                             <div class="list-file-img" :data-id='file.fileId' v-if="file.catalog">
                                 <div class="down-img" >
                                   <span>已下载</span> 
@@ -210,16 +211,22 @@
           
         已下载
        </div> -->
+        <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" >
+           <sucaiDetail @close="closeDetail" :file='curFile' v-if="showModelDetai"></sucaiDetail>
+       </Modal>
   </div>
 
 </template>
 <script>
+import sucaiDetail from "./sucaiDetail";
 import VJstree from "vue-jstree";
-import {getSuCaiTreeDate,getSucai,getSuCaiTree,getSucaiSearch} from '@/axios/fileApi'
+import {getSuCaiTreeDate,getSucai,getSuCaiTree,getSucaiSearch,getFileDetails, getChildFiles, putImportant} from '@/axios/fileApi'
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
     export default {
         data () {
             return {
+                orderType:false,
+                showModelDetai: false,
                 searched: "",
                 treeLoading:true,
                 loading: true,
@@ -243,12 +250,14 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 treeData:[],
                 flagTree:false,
                 treeId:'',
-                page:0
+                page:0,
+                curFile:{},
                 
             }
         },
         components : {
               VJstree,
+              sucaiDetail
         },
         mounted () {
             this.init();
@@ -302,6 +311,10 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             
         },
         methods: {
+          //关闭详情
+           closeDetail() {
+              this.showModelDetai = false;
+            },
           // 选中要移动到哪
           treeClick(node) {             
               if(this.treeId!=node.data.id){
@@ -344,7 +357,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                  this.search(this.searched)
                  return
                }              
-                 getSucai(this.fileId,this.pageNum).then(res => {
+                 getSucai(this.fileId,this.pageNum,this.orderType).then(res => {
                     if (res.result) {                  
                         this.loading = false;
                         this.allFile =res.data.records
@@ -357,7 +370,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
             // 初始化 页面信息和分页
             init () {
-                getSucai(this.fileId,this.pageNum).then(res => {
+                getSucai(this.fileId,this.pageNum,this.orderType).then(res => {
                     if (res.result) {
                         this.loading = false;
                         this.allFile =res.data.records
@@ -388,12 +401,18 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             },
 
             // 点击的是文件夹
-            goNext (type, id) {
+            goNext (type, id,file) {
+                
+              console.log(type)
                 if (type){
-                    this.fileId=id;
+                  this.fileId=id;
                     this.flagTree=false
-                   // this.$router.push(`/sucai/${id}`)
-                    
+                   
+                }
+                else{
+                    this.showModelDetai = true;
+                    this.curFile=file
+                     // this.$router.push(`/sucai/${id}`) 
                 }
             },
             
