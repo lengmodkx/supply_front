@@ -4,7 +4,7 @@
       <div class="forget-title">阿拉丁BIM云平台</div>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
         <FormItem prop="accountName">
-          <Input type="text" size="large" placeholder="请输入手机号或者邮箱" v-model="formValidate.accountName" clearable class="forget-input" />
+          <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable class="forget-input" />
         </FormItem>
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />

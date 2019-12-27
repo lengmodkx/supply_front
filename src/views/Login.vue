@@ -88,11 +88,12 @@ export default {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
+              console.log(res.data)
               this.updateUserId(res.data); //存储、更新用户信息
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
-              localStorage.accessToken = res.data.accessToken;
+              localStorage.token = res.data.accessToken;
               this.$Message.success("登录成功!");
               if (res.data.orgId){
                 this.$router.push("/org/"+res.data.orgId);
