@@ -151,7 +151,7 @@ export default {
             this.$refs[name].validate((valid) => {
                 if (valid) {
                      this.savePassword ();
-                     this.$Message.error('正确');
+                     
                 } else {
                     this.$Message.error('填写不正确');
                 }
@@ -325,10 +325,11 @@ const validateEmail = (rule, value, callback) => {
 
 </script>
 <style socped lang="less">
-.ivu-input-icon{
-    margin-top:-5px;
-}
+
 .personal-box{
+    .ivu-input-icon{
+            margin-top:-5px;
+        }
     width: 100%;
     min-height: 100vh;
     padding-top: 50px;

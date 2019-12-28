@@ -17,10 +17,7 @@
             <div class="Conbox" ref="scrollbox">
                <div class="task_info clearfix">
                     <div class="content">
-                        <input id="editCon"
-                               type="text"
-                               @blur="upRCname"
-                               v-model="schedule.scheduleName"/>
+                        <input id="editCon"  type="text" @blur="upRCname" v-model="schedule.scheduleName"/>
                     </div>
                 </div>
                 <div class="task_attr clearfix">
@@ -409,6 +406,10 @@ export default {
     },
       // 改备注
     addBeizhu () {
+        if(this.beizhuContent==''){
+                this.$Message.error('请输入备注内容');
+                return
+        }
         this.beizhuContent = this.$refs.editor.content;
         this.loading = true;
         changeRemarks(this.schedule.scheduleId,this.beizhuContent).then(res => {

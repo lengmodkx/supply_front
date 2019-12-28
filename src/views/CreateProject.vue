@@ -46,6 +46,7 @@ export default {
               this.startTime = "";
               this.endTime = "";
               this.loading = false;
+              this.parentProject='';
             }
           },
           deep: true
@@ -115,11 +116,15 @@ export default {
     this.startTime = "";
     this.endTime = "";
     this.loading = false;
+    this.parentProject='';
 
   }
 };
 </script>
 <style scoped lang="less">
+// /deep/.ivu-input-icon{
+//   padding-top:10px;
+// }
 .contentPro {
   overflow: hidden;
   .title {
@@ -163,6 +168,7 @@ export default {
   justify-content: space-between;
   width: 320px;
   margin: 15px auto;
+ 
 }
 .create-project-time  .ivu-date-picker{
   width:150px !important;

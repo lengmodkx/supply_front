@@ -550,6 +550,9 @@ export default {
   }
 }
 .create-project-time {
+   /deep/.ivu-input{
+            height:40px !important
+    }
   display: flex;
   justify-content: space-between;
   margin-top: 15px;

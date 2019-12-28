@@ -557,9 +557,13 @@ export default {
     },
     // 添加子任务
     submitSontask() {
+      if(this.son==""){
+        this.$Message.error("请输入子任务内容");
+      }
       this.addChildrenTask({ taskId: this.task.taskId, taskName: this.son });
       this.showSontask = false;
       this.son="";
+      this.$Message.success("保存成功")
     },
     confirmSonDate(date) {
       this.task.sontaskDate = date;

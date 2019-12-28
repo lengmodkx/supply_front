@@ -129,15 +129,15 @@
               <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
                 <h2>{{item.projectName}}</h2>
                 <p>{{item.projectDes}}</p>
-                <div class="iconPic"  v-if="projectType!='回收站的项目'">
-                  <Tooltip class="iconpic1" content="打开项目设置" placement="top">
-                  <span @click.stop="setProject(item)">
-                    <Icon type="md-settings" size="18"></Icon>
-                  </span>
-                  </Tooltip>
+                <div class="iconPic"  v-if="projectType!='回收站的项目'">                
                   <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
                   <span @click.stop="setStar(item.projectId)">
                     <Icon type="md-star" size="18" :class="{starOn:item.collect}"></Icon>
+                  </span>
+                  </Tooltip>
+                   <Tooltip class="iconpic1" content="打开项目设置" placement="top">
+                  <span @click.stop="setProject(item)">
+                    <Icon type="md-settings" size="18"></Icon>
                   </span>
                   </Tooltip>
                 </div>
