@@ -106,7 +106,7 @@
                         <li @click="removeClone('移动')">移动文件夹</li>
                         <li @click="removeClone('复制')">复制文件夹</li>
                         <li @click="rublish=true">移到回收站</li>
-                        <li @click="rublish=true">可见性设置</li>
+                 
                         <li @click="setCanSee">可见性设置</li>
                       </ul>
                     </section>
@@ -224,7 +224,7 @@
                         <li @click="removeClone('移动')">移动文件夹</li>
                         <li @click="removeClone('复制')">复制文件夹</li>
                         <li @click="rublish=true">移到回收站</li>
-                        <li @click="rublish=true">可见性设置</li>
+                      
                         <li @click="setCanSee">可见性设置</li>
                       </ul>
                     </section>
@@ -634,7 +634,7 @@ export default {
     collectFile() {
       let data = {
         projectId: this.projectId,
-        publicId: this.file.data.fileId,
+        publicId: this.fileId,
         collectType: "文件"
       };
       collect(data).then(res => {
