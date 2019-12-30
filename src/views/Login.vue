@@ -110,7 +110,7 @@ export default {
     weChatLogin(){
       weChatLogin("https://www.aldbim.com").then(res => {
         if(res.result === 1){
-          window.location.href=res.url
+          window.location.href=res.data
         }
       })
     }
