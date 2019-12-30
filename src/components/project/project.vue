@@ -72,9 +72,9 @@ export default {
       // 建立连接对象
       var url='';
       if(process.env.NODE_ENV=='test'){
-        url=process.env.VUE_APP_TEST_URL
+        url=process.env.VUE_APP_TEST_SOCKET
       }else if(process.env.NODE_ENV=='production'){
-        url=process.env.VUE_APP_URL
+        url=process.env.VUE_APP_SOCKET
       }else{
         url='http://192.168.1.115:8080/webSocketServer'
       }
