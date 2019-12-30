@@ -68,20 +68,27 @@
               </div>
               <div class="operate-box" v-if="projectType!='回收站的项目'">
                 <Tooltip class="iconpic2" :class="{showStar:item.collect}" content="星标" placement="top">
-                <span @click.stop="setStar(item.projectId)">
-                  <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
-                </span>
+                  <span @click.stop="setStar(item.projectId)">
+                    <Icon type="md-star" size="22" :class="{starOn:item.collect}"></Icon>
+                  </span>
                 </Tooltip>
                 <Tooltip class="iconpic1" content="打开项目设置" placement="top">
-                <span @click.stop="setProject(item)">
-                  <Icon type="ios-settings-outline" size="22"></Icon>
-                </span>
+                  <span @click.stop="setProject(item)">
+                    <Icon type="ios-settings-outline" size="22"></Icon>
+                  </span>
                 </Tooltip>
                 <Tooltip class="iconpic2" content="删除项目" placement="top">
-                <span @click.stop="confirmHuishou(item)">
-                  <Icon type="ios-trash-outline" size="22" />
-                </span>
+                  <span @click.stop="confirmHuishou(item)">
+                    <Icon type="ios-trash-outline" size="22" />
+                  </span>
                 </Tooltip>
+              </div>
+              <div v-else class="operate-box">
+                  <Tooltip class="iconpic2" content="恢复项目" placement="top">
+                    <span @click.stop="recover(item.projectId)">
+                      <Icon type="md-refresh" size="22"/>
+                    </span>
+                  </Tooltip>
               </div>
             </div>
           </li>
@@ -108,7 +115,7 @@
               <div @click="path(item)" class="col" :style="`background-image: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover})`">
                 <h2>{{item.projectName}}</h2>
                 <p>{{item.projectDes}}</p>
-                <div class="iconPic">
+                <div class="iconPic" v-if="projectType!='回收站的项目'">
                   <Tooltip class="iconpic1" content="打开项目设置" placement="top">
                   <span @click.stop="setProject(item)">
                     <Icon type="md-settings" size="18"></Icon>
@@ -139,6 +146,13 @@
                   <span @click.stop="setProject(item)">
                     <Icon type="md-settings" size="18"></Icon>
                   </span>
+                  </Tooltip>
+                </div>
+                <div v-else class="iconPic">
+                  <Tooltip class="iconpic2" content="恢复项目" placement="top">
+                    <span @click.stop="recover(item.projectId)">
+                      <Icon type="md-refresh" size="22"/>
+                    </span>
                   </Tooltip>
                 </div>
               </div>
@@ -174,32 +188,6 @@
           <Button type="error" @click="okHuishou" >移到回收站</Button>
         </div>
       </Modal>
-
-
-        <Modal class="confirmModal" v-model="showFirst" :closable="false" title="由于相关法规要求 请绑定手机号码"  :mask-closable="false">
-           <div  class="boundBox">
-                <Form ref="formValidate"  :model="formValidate" :rules="ruleValidate" class="login-box">
-                  <FormItem prop="accountName">
-                    <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
-                  </FormItem>
-                  <FormItem prop="password" class="boundInput">
-                     <Row>
-                         <Col span="18">
-                           <Input  size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable />
-                         </Col>
-                           <Button  v-show="showCodeButton"  type="primary" @click="firstverification('formValidate')" >获取验证码</Button>  
-                          <Button  v-show="!showCodeButton" type="dashed"  >{{count}}S重新获取</Button> 
-                          <!-- <span v-show="!showCodeButton" class="count">{{count}} s</span> @click="getCode" -->
-                     </Row>                   
-                  </FormItem>   
-                  <FormItem class="boundButton" >
-                    <Button type="primary"  @click="firstOk()">确定</Button> 
-                    <Button    @click="firstCancel()" >取消</Button>
-                  </FormItem>
-                          
-                </Form>
-           </div>
-        </Modal>
     </div>
   </div>
 
@@ -229,16 +217,6 @@ export default {
   },
   data() {
     return {
-      formValidate:{
-        accountName: "",
-        captcha:""//验证码
-      },//手机号
-      ruleValidate: {
-                    accountName: [
-                        { required: true,validator:validatePhone, trigger: 'blur' }
-                    ],
-                   
-                },//手机验证
       dis:true,  //取消显示状态
       showCodeButton:true,//验证码倒计时  
       count: '',
@@ -327,72 +305,6 @@ export default {
   methods: {
     ...mapActions("project", ["init", "updateProject", "openSet",'orgProjectInit']),
     ...mapMutations("project", ["setName"]),
-
-    showFirstBox(){
-          
-      showBindPhone().then(
-                res => {                 
-                    this.showFirst=res.bindPhone
-                }
-         );
-    },
-
-    //倒计时60秒
-
-      getCode(){
-          const TIME_COUNT = 60;
-          if (!this.timer) {
-            this.count = TIME_COUNT;
-            this.showCodeButton = false;
-            this.timer = setInterval(() => {
-            if (this.count > 0 && this.count <= TIME_COUNT) {
-              this.count--;
-              } else {
-              this.showCodeButton = true;
-              clearInterval(this.timer);
-              this.timer = null;
-              }
-            }, 1000)
-            }
-     } ,
-    //获取验证码
-    getverification(){
-          getPhoneCode(this.formValidate.accountName).then(
-                res => {
-                  console.log(res);
-                }
-          );
-    },
-    firstverification(name){
-        this.$refs[name].validate((valid) => {
-            if (valid) {       
-                this.getCode(); //倒计时
-                this.getverification();//获取验证码
-            } else {
-            this.$Message.error('请填写手机号');
-        }
-    })
-    },
-    //绑定手机号取消
-    firstCancel(){
-      localStorage.token=''
-      this.$router.push('/')
-    },
-    //绑定手机号确定
-    firstOk(){
-      console.log(this.formValidate.accountName,this.formValidate.captcha)
-
-      bindPhone(this.formValidate.accountName,this.formValidate.captcha).then(
-                res => {
-                  if(res.result==1){
-                    this.showFirst=false
-                  }else{
-                    this.$Message.success(res.msg);
-                  }
-                }
-          );
-        
-    },
     // 选择项目类型
     selectProjectType(value) {
       this.projectType = value;

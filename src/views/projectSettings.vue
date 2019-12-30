@@ -322,6 +322,7 @@ export default {
       okHuishou() {
           recycleProject(this.project.projectId).then(res => {
               if (res.result === 1) {
+                this.modal2=false
                   this.$Message.success("成功!")
               } else {
                   this.$Message.error("失败!")
