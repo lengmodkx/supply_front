@@ -589,10 +589,8 @@ export default {
       }, 300);
     },
     popShow(id){
-      this.menuId=id;
-       
+      this.menuId=id; 
     },
-
     handleSave() {
       //创建文件夹
       if (this.folderName == null || this.folderName == "") {

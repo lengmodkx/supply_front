@@ -9,8 +9,8 @@
         <FormItem prop="password">
           <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
         </FormItem>
-        <FormItem prop="password">
-          <Input type="password" size="large" placeholder="请再次输入密码" v-model="formValidate.password" clearable />
+        <FormItem prop="passwordSure">
+          <Input type="password" size="large" placeholder="请再次输入密码" v-model="formValidate.passwordSure" clearable />
         </FormItem>
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
@@ -303,6 +303,7 @@ export default {
       formValidate: {
         accountName: "",
         password: "",
+        passwordSure,
         captcha: "",
         userName: "",
         captchaUrl: "/api/captcha",
@@ -314,6 +315,13 @@ export default {
           {
             required: true,
             message: "请输入验证码",
+            trigger: "blur"
+          }
+        ],
+        passwordSure:[
+          {
+            required: true,
+            message: "请输入密码",
             trigger: "blur"
           }
         ],
