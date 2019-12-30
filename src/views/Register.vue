@@ -303,7 +303,7 @@ export default {
       formValidate: {
         accountName: "",
         password: "",
-        passwordSure,
+        passwordSure:"",
         captcha: "",
         userName: "",
         captchaUrl: "/api/captcha",
