@@ -4,7 +4,19 @@
           <h2>下载列表</h2>
             <div class="down">
                 <ul>
+
                     <li>
+                        <div class="down-img">
+                            <img data-v-51a1b09a="" src="http://ald.art1001.com/favicon.ico" alt="">
+                        </div>
+                        <div class="down-titel">
+                                <span>
+                                  阿拉丁BIM云平台客户端
+                                </span>
+                                 <Icon @click="getDown(1)" type="md-arrow-down" class="mr0" /> 
+                        </div>
+                    </li>
+                    <!-- <li>
                         <div class="down-img">
                             <img data-v-51a1b09a="" src="http://ald.art1001.com/favicon.ico" alt="">
                         </div>
@@ -12,7 +24,7 @@
                                 <span>
                                     阿拉丁BIM云平台客户端 
                                 </span>
-                                 <!-- <Icon @click="getDown()" type="md-arrow-down" class="mr0" />  -->
+                                
                         </div>
                     </li>
                     <li>
@@ -34,7 +46,7 @@
                                 <span>
                                     阿拉丁BIM-CAD建筑版
                                 </span>
-                                 <!-- <Icon @click="getDown()" type="md-arrow-down" class="mr0" />  -->
+                                
                         </div>
                     </li>
                     <li>
@@ -45,9 +57,9 @@
                                 <span>
                                    阿拉丁BIM-CAD装饰版
                                 </span>
-                                 <!-- <Icon @click="getDown()" type="md-arrow-down" class="mr0" />  -->
+                                
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             
@@ -65,6 +77,12 @@
         components: {},
         methods: {
             getDown(type){
+                if(type==1){
+                     
+                        window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe"
+                        
+                        return
+                }
                 if(type==2){
                   window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/aldbim2019.msi"
                 }
