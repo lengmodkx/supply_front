@@ -15,7 +15,7 @@
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
           <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg">
-          <span class="changeCaptcha">看不清，点击图片换一张</span>
+          <span class="changeCaptcha" @click="changeImg">看不清，点击图片换一张</span>
         </FormItem>
         <FormItem prop="userName">
           <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
@@ -354,13 +354,17 @@ export default {
   },
   methods: {
     register: function(name) {    
-      if(!this.single){
-        // 校验是否勾选用户协议
-              this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
-              return
-      }
       this.$refs[name].validate(valid => {
         if (valid) {
+          if(!this.single){// 校验是否勾选用户协议
+              this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
+              return;
+          }
+          if(this.formValidate.password!==this.formValidate.passwordSure){
+              this.$Message.error("两次密码输入不一致，请修改！");
+              return;
+          }
+
           userRegister(this.formValidate).then(res => {
             if (res.result == 0) {
               this.$Message.error(res.msg);

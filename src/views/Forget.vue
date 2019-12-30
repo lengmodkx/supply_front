@@ -13,8 +13,7 @@
         <FormItem prop="code">
           <Input type="text" size="large" placeholder="请输入短信验证码" v-model="formValidate.code" clearable class="captcha-input" />
           <span v-if="isTimes" class="code" style="background-color: #e5e5e5">{{timeNum}}秒后重新发送</span>
-          <span v-else class="code" @click="getPhoneCode">获取短信验证码</span>
-
+          <Button type="primary" v-else class="code" @click="getPhoneCode" :disabled="!formValidate.accountName||!formValidate.captcha">获取短信验证码</Button>
         </FormItem>
         <FormItem prop="password">
           <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable class="forget-input" />
@@ -87,11 +86,13 @@ export default {
         if (valid) {
           console.log(this.formValidate);
           resetPwd(this.formValidate).then(res => {
-            this.$Message.success("修改成功!");
-            this.$router.push("/");
+            if(res.result==1){
+              this.$Message.success("修改成功!");
+              this.$router.push("/");
+            }else{
+              this.$Message.error("修改失败");
+            }
           });
-        } else {
-          this.$Message.error("修改失败");
         }
       });
     },
@@ -157,16 +158,18 @@ export default {
   width: 35%;
   height: 36px;
   margin-left: 5%;
-  background-color: #2d8cf0;
-  color: #ffffff;
   border-radius: 4px;
   line-height: 36px;
   text-align: center;
-  cursor: pointer;
-  position: absolute;
-  right: 0;
+  padding: 0;
 }
 .code:hover {
   opacity: 0.8;
 }
+.go-login{
+    margin: -10px 0 0 auto;
+    cursor: pointer;
+    color: #3da8f5;
+    float: right;
+  }
 </style>
