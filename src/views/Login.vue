@@ -116,9 +116,6 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    localStorage.userId = '';
-    localStorage.userImg = '';
-    localStorage.userName = '';
     var url = location.search; //获取url中"?"符后的字串
     var theRequest = new Object();
     if (url.indexOf("?") != -1) {
