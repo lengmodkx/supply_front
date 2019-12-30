@@ -306,7 +306,11 @@ export default {
               this.saveImg();
         }
           this.publishAxios().then(res => {
-              console.log(res);
+            if(res.result==1){
+              this.$Message.success("保存成功!")
+            }else{
+              this.$Message.error("保存失败!")
+            }
           });
       },
       okGuidang() {

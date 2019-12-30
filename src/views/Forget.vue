@@ -23,6 +23,7 @@
           <Button type="primary" long size="large" @click="forget('formValidate')">重置密码</Button>
         </FormItem>
       </Form>
+      <router-link class="go-login" to="/">去登录</router-link>
     </div>
   </div>
 </template>
@@ -86,10 +87,11 @@ export default {
         if (valid) {
           console.log(this.formValidate);
           resetPwd(this.formValidate).then(res => {
-            console.log(res);
+            this.$Message.success("修改成功!");
+            this.$router.push("/");
           });
         } else {
-          this.$Message.error("请填写完整!");
+          this.$Message.error("修改失败");
         }
       });
     },

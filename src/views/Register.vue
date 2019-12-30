@@ -30,7 +30,7 @@
           <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
         </FormItem>
       </Form>
-      <router-link class="go-login" to="/">去登陆</router-link>
+      <router-link class="go-login" to="/">去登录</router-link>
     </div>
 
       <Modal v-model="userDeal"  :footer-hide="true" >
