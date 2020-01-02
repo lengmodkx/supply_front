@@ -43,7 +43,7 @@
       <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
         
-        <img class="avatar" :src="`${userImg}`" alt="">
+        <img class="avatar" :src="`${defaultImage}`" alt="">
         <div class="userInfo" slot="content">
           <!-- <div class="sck" @click="goSucai">素材库</div> -->
           <ul class="org">
@@ -125,7 +125,6 @@ export default {
     return {
       tagHeader:false,//显示日历
       showtag:'',
-      userImg:localStorage.userImg,
       display: "none",
       popVisible: false,
       addOrgModal: false,
@@ -176,9 +175,8 @@ export default {
     this.initCompany();
   },
   methods: {
-    ...mapState("user", ["mineRouter", "users","src"]),
     ...mapActions("company", ["initCompany"]),
-      ...mapActions("project", ["orgProjectInit"]),
+    ...mapActions("project", ["orgProjectInit"]),
     ...mapMutations('app',['changeHeaderTag']),
     initSocket(id) {
       // 建立连接对象 
@@ -345,7 +343,7 @@ export default {
     }
   },
   computed: {
-    // ...mapState('user', ['defaultImage']),
+    ...mapState("user", ["mineRouter", "users",'defaultImage']),
     ...mapState('app', ['activeHeaderTag']),
     ...mapState("news", ["newsCount"]),
     ...mapState("company", ["companyList"]),

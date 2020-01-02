@@ -3,9 +3,9 @@ import {findUserInfo} from '@/axios/api';
 let userData;
 
 try{
-   userData = JSON.parse(sessionStorage.userInfo)
+   userData = JSON.parse(localStorage.userInfo)
 }catch(err){
-  userData = sessionStorage.userInfo
+  userData = localStorage.userInfo
 }
 
 console.log(localStorage.userImg)
@@ -52,10 +52,7 @@ const store = {
       commit('updateUserId', data)
     },
     initSrc({commit},data){
-      findUserInfo(localStorage.userId).then(res=>{
-         commit('initSrc',res.data.defaultImage)
-      })
-     
+      commit('initSrc',data)
     }
 
   }

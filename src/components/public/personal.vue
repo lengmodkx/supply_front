@@ -230,6 +230,7 @@ export default {
                     progress: function(p) {
                     }
                 }).then(function(result){
+                    console.log(result)
                     let data={
                         userId:localStorage.userId,
                         image:that.message.defaultImage,
@@ -237,9 +238,9 @@ export default {
                     //保存
                     updateUserNews(data).then(res=>{
                         if(res.result==1){
-                            localStorage.userImg = that.message.defaultImage
-                            this.$Message.info(res.msg);
-                            this.initSrc();
+                            localStorage.userImg = that.message.defaultImage;
+                            that.initSrc(that.message.defaultImage);
+                            that.$Message.info(res.msg);
                         }
                     });
                 })
@@ -285,9 +286,7 @@ export default {
                 if(res.result==1){
                     this.$Message.info(res.msg);
                 }
-            }).then(res=>{
-                this.initSrc();
-            })
+            });
             
         },
         info(){
