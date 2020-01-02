@@ -238,13 +238,10 @@ export function delProject(projectId) {
     });
 }
 //点击项目进入任务主页
-export function enterTask(projectId, name) {
+export function enterTask(projectId, groupId) {
     return fetch({
-        url: `${api.projects}/${projectId}/tasks`,
-        method: "get", // 请求方法
-        params: {
-            name: name
-        }
+        url: `${api.projects}/${projectId}/tasks/${groupId}`,
+        method: "get" // 请求方法
     });
 }
 // 添加任务

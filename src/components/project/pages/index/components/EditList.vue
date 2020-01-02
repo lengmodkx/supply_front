@@ -7,12 +7,12 @@
       <!--固定顶部-->
       <div slot="header" style="height:24px;">
         <div class="toolRight">
-          <Tooltip content="点个赞" placement="bottom-start">
+          <!-- <Tooltip content="点个赞" placement="bottom-start">
             <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
               <Icon type="md-thumbs-up" size="20" />
               <span class="zanNum" v-if="task.fabulousCount !== 0">{{task.fabulousCount}}</span>
             </span>
-          </Tooltip>
+          </Tooltip> -->
           <span class="down">
             <SingleTaskMenu :data="task"></SingleTaskMenu>
           </span>

@@ -362,9 +362,9 @@ const store = {
             commit
         }, data) {
             return new Promise((resolve, reject) => {
-                enterTask(data).then(res => {
+                enterTask(data.projectId,data.groupId).then(res => {
                     if (res.result === 1) {
-                        dispatch('initGroup', data)
+                        dispatch('initGroup', data.projectId)
                         commit('initTask', res.menus)
                         resolve()
                     }
@@ -379,7 +379,7 @@ const store = {
             return new Promise((resolve, reject) => {
                 enterTask(data.projectId,data.name).then(res => {
                     if (res.result === 1) {
-                        dispatch('initGroup', data)
+                        dispatch('initGroup', data.projectId)
                         commit('initTask', res.menus)
                         resolve()
                     }

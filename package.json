@@ -16,7 +16,7 @@
     "css-loader": "^2.1.1",
     "dhtmlx-gantt": "^6.1.5",
     "highcharts": "^7.1.1",
-    "iview": "^3.3.2",
+    "view-design": "^4.0.0",
     "jquery": "^3.4.1",
     "jszip": "^3.2.0",
     "moment": "^2.24.0",

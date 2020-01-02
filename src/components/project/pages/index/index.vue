@@ -190,6 +190,7 @@
     </div>
     <!-- 点击列表出来的弹框。编辑列表 -->
     <Modal v-model="showModal" class="myModal" :mask-closable="false">
+      
       <my-modal v-if="showModal"></my-modal>
     </Modal>
     <Modal v-model="showAddGroup" :footer-hide="true" title="创建分组" :width="350">
@@ -281,7 +282,7 @@ export default {
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
-    this.init(this.projectId).then(res => {
+    this.init({projectId:this.projectId,groupId:this.taskGroupId}).then(res => {
       this.loading = false;
       this.allTask = this.allTasks;
     });
@@ -309,29 +310,28 @@ export default {
       this.currentEditId = "";
     },
     changeGroup(groupId) {
-      
-
-       getIsGroupPower(groupId).then(res=>{
-          //检测是否进入分组权限
-           if(res.data=='0'){
-           //0是没有权限
-              this.$Message.error("您没有当前权限");
-             return
-          }else{
-                this.taskGroupId = groupId;
-                this.loading = true;
-                changeGroup(groupId, this.projectId).then(res => {
-                  if (res.result == 1) {
-                    this.$router.replace(
-                      `/project/${this.projectId}/tasks/group/${groupId}`
-                    );
-                    this.init(this.projectId).then(res => {
-                      this.loading = false;
-                    });
-                  }
-                });
-          }         
-      })
+      this.taskGroupId = groupId;
+        this.loading = true;
+        changeGroup(groupId, this.projectId).then(res => {
+          if (res.result == 1) {
+            this.$router.replace(
+              `/project/${this.projectId}/tasks/group/${groupId}`
+            );
+            this.init(this.projectId).then(res => {
+              this.loading = false;
+            });
+          }
+        });
+      //  getIsGroupPower(groupId).then(res=>{
+      //     //检测是否进入分组权限
+      //      if(res.data=='0'){
+      //      //0是没有权限
+      //         this.$Message.error("您没有当前权限");
+      //        return
+      //     }else{
+                
+      //     }         
+      // })
     },
     handleSave() {
       this.loading = true;
