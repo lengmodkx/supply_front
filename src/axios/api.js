@@ -238,9 +238,9 @@ export function delProject(projectId) {
     });
 }
 //点击项目进入任务主页
-export function enterTask(projectId, groupId) {
+export function enterTask(projectId) {
     return fetch({
-        url: `${api.projects}/${projectId}/tasks/${groupId}`,
+        url: `${api.projects}/${projectId}/tasks`,
         method: "get" // 请求方法
     });
 }
