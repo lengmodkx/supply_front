@@ -359,10 +359,11 @@ const store = {
     actions: {
         init({
             dispatch,
-            commit
+            commit,
+            state
         }, data) {
             return new Promise((resolve, reject) => {
-                enterTask(data.projectId,data.groupId).then(res => {
+                enterTask(data).then(res => {
                     if (res.result === 1) {
                         dispatch('initGroup', data.projectId)
                         commit('initTask', res.menus)
