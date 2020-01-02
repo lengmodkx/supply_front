@@ -15,7 +15,11 @@
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
           <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg">
+<<<<<<< HEAD
           <!-- <span class="changeCaptcha">看不清，点击图片换一张</span> -->
+=======
+          <span class="changeCaptcha" @click="changeImg">看不清，点击图片换一张</span>
+>>>>>>> e86dcf4da6eac4bc96e6ffb41ad47b7f0f3160ef
         </FormItem>
         <FormItem prop="userName">
           <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
@@ -30,7 +34,7 @@
           <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
         </FormItem>
       </Form>
-      <router-link class="go-login" to="/">去登陆</router-link>
+      <router-link class="go-login" to="/">去登录</router-link>
     </div>
 
       <Modal v-model="userDeal" footer-hide  title="用户协议"  :closable="false" :mask-closable='false'>
@@ -357,6 +361,7 @@ export default {
     ...mapState("app", ["loading"])
   },
   methods: {
+<<<<<<< HEAD
     //请您阅读《隐私条款》
     privacyDealSure:function(){
         this.privacyDeal=false;
@@ -385,8 +390,20 @@ export default {
               this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
               return
       }
+=======
+    register: function(name) {    
+>>>>>>> e86dcf4da6eac4bc96e6ffb41ad47b7f0f3160ef
       this.$refs[name].validate(valid => {
         if (valid) {
+          if(!this.single){// 校验是否勾选用户协议
+              this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
+              return;
+          }
+          if(this.formValidate.password!==this.formValidate.passwordSure){
+              this.$Message.error("两次密码输入不一致，请修改！");
+              return;
+          }
+
           userRegister(this.formValidate).then(res => {
             if (res.result == 0) {
               this.$Message.error(res.msg);

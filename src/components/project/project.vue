@@ -72,11 +72,11 @@ export default {
       // 建立连接对象
       var url='';
       if(process.env.NODE_ENV=='test'){
-        url=process.env.VUE_APP_TEST_URL
+        url=process.env.VUE_APP_TEST_SOCKET
       }else if(process.env.NODE_ENV=='production'){
-        url=process.env.VUE_APP_URL
+        url=process.env.VUE_APP_SOCKET
       }else{
-        url='http://192.168.1.105:8080/webSocketServer'
+        url='http://192.168.1.115:8080/webSocketServer'
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象

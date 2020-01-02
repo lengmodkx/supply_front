@@ -152,14 +152,7 @@ export function updateProject(data) {
     return fetch({
         url: `/projects/${data.projectId}`,
         method: "put", // 请求方法
-        params: {
-            'projectName': data.projectName,
-            'projectDes': data.projectDes,
-            'isPublic': data.isPublic,
-            'projectDel': data.projectDel,
-            'projectStatus': data.projectStatus,
-            'projectCover': data.projectCover
-        }
+        params: data
     });
 }
 // 搜索项目
@@ -245,13 +238,10 @@ export function delProject(projectId) {
     });
 }
 //点击项目进入任务主页
-export function enterTask(projectId, name) {
+export function enterTask(projectId, groupId) {
     return fetch({
-        url: `${api.projects}/${projectId}/tasks`,
-        method: "get", // 请求方法
-        params: {
-            name: name
-        }
+        url: `${api.projects}/${projectId}/tasks/${groupId}`,
+        method: "get" // 请求方法
     });
 }
 // 添加任务

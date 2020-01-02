@@ -7,12 +7,12 @@
       <!--固定顶部-->
       <div slot="header" style="height:24px;">
         <div class="toolRight">
-          <Tooltip content="点个赞" placement="bottom-start">
+          <!-- <Tooltip content="点个赞" placement="bottom-start">
             <span class="zan" :class="{zan_blue:task.isFabulous}" @click="dianZan">
               <Icon type="md-thumbs-up" size="20" />
               <span class="zanNum" v-if="task.fabulousCount !== 0">{{task.fabulousCount}}</span>
             </span>
-          </Tooltip>
+          </Tooltip> -->
           <span class="down">
             <SingleTaskMenu :data="task"></SingleTaskMenu>
           </span>
@@ -56,7 +56,7 @@
               <DateTimePicker type="start" @clear="clearTime('开始')" :max="task.endTime" @confirm="confirm1">
                 <div class="init" v-if="!task.startTime">开始时间</div>
                 <div class="setTime" v-if="task.startTime">
-                  {{$moment(task.startTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+                  {{$moment(task.startTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'Y年M月D日LT'})}}
                   <span @click.stop="clearTime('开始')">&times;</span>
                 </div>
               </DateTimePicker>
@@ -64,7 +64,7 @@
               <DateTimePicker @clear="clearTime('截止')" type="end" :min="task.startTime" @confirm="confirm2">
                 <div class="init" v-if="!task.endTime">截止时间</div>
                 <div class="setTime" v-if="task.endTime">
-                  {{$moment(task.endTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+                  {{$moment(task.endTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'Y年M月D日LT'})}}
                   <!-- {{data.endDate}} -->
                   <span @click.stop="clearTime('截止')">&times;</span>
                 </div>
@@ -126,7 +126,7 @@
                     <div>
                       <Icon class="icon" type="calendar" v-if="!i.sontaskDate" size="20"></Icon>
                       <span v-else class="timeBox">
-                      {{$moment(i.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}}
+                      {{$moment(i.sontaskDate).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'Y年M月D日LT'})}}
                     </span>
                     </div>
                   </DateTimePicker>
@@ -479,6 +479,10 @@ export default {
     },
     // 添加备注
     addBeizhu() {
+      if(this.$refs.editor.content==null||this.$refs.editor.content==""){
+          this.$Message.error('请输入内容')
+          return;
+      }
       this.beizhuContent = this.$refs.editor.content;
       updateTaskRemarks(this.task.taskId, this.beizhuContent).then(res => {
         if (res.result === 1) {
@@ -559,6 +563,7 @@ export default {
     submitSontask() {
       if(this.son==""){
         this.$Message.error("请输入子任务内容");
+        return;
       }
       this.addChildrenTask({ taskId: this.task.taskId, taskName: this.son });
       this.showSontask = false;

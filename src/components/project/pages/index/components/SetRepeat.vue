@@ -6,8 +6,8 @@
               transfer
               @on-click="itemClick">
       <slot :repeat="curRepeat">
-        <Icon type="ios-color-filter-outline"
-              size="18"></Icon>
+        <Icon type="ios-color-filter-outline" size="18" v-if="repeat!='不重复'" color="#2d8cf0"></Icon>
+        <Icon type="ios-color-filter-outline" size="18" v-else></Icon>
       </slot>
       <DropdownMenu slot="list"
                     class="aaaaaab">

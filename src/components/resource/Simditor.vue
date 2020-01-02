@@ -113,7 +113,7 @@ export default {
 </script>
 <style>
 .quill-editor {
-  height: 400px;
+  height: 350px;
 }
 .w-e-toolbar{
   flex-wrap: wrap;

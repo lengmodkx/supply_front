@@ -48,13 +48,13 @@
           <!-- <div class="sck" @click="goSucai">素材库</div> -->
           <ul class="org">
             <!-- <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div> -->
-            <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item)">
+            <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item);">
               {{item.organizationName}}
               <Icon v-if="item.isSelection" type="md-checkmark" />
             </li>
           </ul>
           <ul class="admin">
-            <li   :class="hoverClass=='person'?'hoverClass':''"  @click="personal"> 账号设置</li>
+            <li   :class="hoverClass=='person'?'hoverClass':''"  @click="personal();popVisible=false"> 账号设置</li>
             <!-- <li > 账号设置</li> -->
           </ul>
           <ul class="logOut" >
@@ -184,11 +184,11 @@ export default {
       // 建立连接对象 
       var url='';
       if(process.env.NODE_ENV=='test'){
-        url=process.env.VUE_APP_TEST_URL
+        url=process.env.VUE_APP_TEST_SOCKET
       }else if(process.env.NODE_ENV=='production'){
-        url=process.env.VUE_APP_URL
+        url=process.env.VUE_APP_SOCKET
       }else{
-        url='http://192.168.1.105:8080/webSocketServer'
+        url='http://192.168.1.115:8080/webSocketServer'
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象

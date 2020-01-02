@@ -17,37 +17,37 @@
             <div class="personal-right" v-show="activeItem=='个人信息'">
                 <div class="title">个人信息</div>
                 <div class="information">
-                    <Form  :model="message" :rules="rules" ref="message" :label-width="80" >	
-                    <FormItem label="头像">
-                        <div class="head">
-                            <img alt="" :src="`${message.defaultImage}`"   v-if="pic_show" accept="image/*">
-                            <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
-                            <div  class="chang-head" >
-                                <input type="file" ref="inputer" @change="getFile">
-                                <Button class="upLoadButton" >更换头像</Button>
-                            </div>
-                        </div>    
-                    </FormItem>               
-                        <FormItem label="姓名" prop="userName">
+                    <Form  :model="message" ref="message" :label-width="80" >	
+                        <FormItem label="头像">
+                            <div class="head">
+                                <img alt="" :src="`${message.defaultImage}`"   v-if="pic_show" accept="image/*">
+                                <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
+                                <div  class="chang-head" >
+                                    <input type="file" ref="inputer" @change="getFile">
+                                    <Button class="upLoadButton" >更换头像</Button>
+                                </div>
+                            </div>    
+                        </FormItem>               
+                        <FormItem label="姓名">
                         <Input v-model="message.userName" placeholder="请输入姓名"></Input>
                         </FormItem>
-                        <FormItem label="职位" prop="job">
+                        <FormItem label="职位">
                         <Input v-model="message.job" placeholder="请输入职位"></Input>
                         </FormItem>
-                        <FormItem label="联系电话" prop="telephone">
-                        <Input v-model="message.telephone" placeholder="请输入联系电话"></Input>
+                        <FormItem label="联系电话">
+                        <Input v-model="message.accountName" placeholder="请输入联系电话"></Input>
                         </FormItem>
-                        <FormItem  label="生日" prop="birthday">
+                        <FormItem  label="生日">
                         <DatePicker type="date" placeholder="请输入生日" v-model="message.birthday"></DatePicker>
-                    </FormItem>
-                        <FormItem label="所在地" prop="address">
+                        </FormItem>
+                        <FormItem label="所在地">
                         <Input v-model="message.address" placeholder="请输入所在地"></Input>
                         </FormItem>
-                        <FormItem label="邮箱" prop="email">
+                        <FormItem label="邮箱">
                         <Input v-model="message.email" placeholder="请输入邮箱"/></Input>
                         </FormItem>
                         <FormItem>
-                        <Button   type="primary" @click="handleSubmit('message')">保存</Button>
+                        <Button   type="primary" @click="handleSubmit()">保存</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -122,7 +122,7 @@ export default {
                 defaultImage:'',
                 userName:'',
                 job:'',
-                telephone:'',
+                accountName:'',
                 birthday:'',
                 address:'',
                 email:'',
@@ -133,11 +133,11 @@ export default {
             dayList:[],
             //验证
             rules: {
-                telephone: [
-                    { validator:validatePhone, trigger: 'blur' }
+                accountName: [
+                    { required:false,validator:validatePhone, trigger: 'blur' }
                 ],
                 email: [
-                    { validator:validateEmail,   trigger: 'blur' }
+                    { required:false,validator:validateEmail, trigger: 'blur' }
                 ],
             },
         }
@@ -226,14 +226,21 @@ export default {
                 this.message.defaultImage="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/"+this.fileName
             }
         },
-        handleSubmit (name) {
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    this.save();
-                } else {
-                    this.$Message.error('请填完整写个人信息');
+        handleSubmit () {
+            if(this.message.accountName!=null&&this.message.accountName!=""){
+                if(!/^1[345789]\d{9}$/.test(this.message.accountName)){
+                    this.$Message.error('手机号格式不正确');
+                    return;
                 }
-            })
+            }
+
+            if(this.message.email!=null&&this.message.email!=""){
+                if(!/^.*@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.message.email)){
+                    this.$Message.error('邮箱格式不正确');
+                    return;
+                }
+            }
+            this.save();
         },
         save(){
             var that = this;
@@ -245,8 +252,12 @@ export default {
                         console.log(result)
                     })
             }
-            var dataEE=new Date(this.message.birthday).toJSON();
-            var birthDay = new Date(+new Date(dataEE)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            if(this.message.birthday!=null&&this.message.birthday!=""){
+                console.log(this.message.birthday)
+                var dataEE=new Date(this.message.birthday).toJSON();
+                var birthDay = new Date(new Date(dataEE).getTime()+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            }
+            
             let data={
                 userId:localStorage.userId,
                 image:this.message.defaultImage,
@@ -261,12 +272,9 @@ export default {
             updateUserNews(data).then(res=>{
                 if(res.result==1){
                     this.$Message.info(res.msg);
-                    localStorage.userImg=this.message.defaultImage
                 }
             }).then(res=>{
-                this.initSrc().then(res=>{
-
-                })
+                this.initSrc();
             })
             
         },
@@ -307,7 +315,7 @@ export default {
 const validatePhone = (rule, value, callback) => {
     if (!value) {
         return callback(new Error('请输入手机号'));
-    } else if (!/^1[34578]\d{9}$/.test(value)) {
+    } else if (!/^1[345789]\d{9}$/.test(value)) {
         callback('手机号格式不正确');
     } else {
         callback();

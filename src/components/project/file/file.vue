@@ -48,7 +48,7 @@
         </div>
         <div class="icon-box">
           <Icon type="ios-apps" @click="view='view'" />
-          <Icon type="ios-list" @click="view='list'" />
+          <Icon type="md-list" @click="view='list'"/>
         </div>
       </div>
       <Loading v-if="loading"></Loading>
@@ -71,73 +71,7 @@
               <img v-else src="@/icons/img/moren.png" alt="">
             </div>
             <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
-              <p></p>
-              <Poptip class="menu-file" width="250" transfer  @on-popper-show='popShow(file.fileId)' @on-popper-hide="popHid">
-                <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
-                <div slot="content">
-                  <div v-show="rublish" class="rublish">
-                    <div class="rublish-header">
-                      <Icon @click="rublish=false" type="ios-arrow-back" />
-                      移到回收站
-                      <!--<Icon @click="menuShow=false" type="ios-close" />-->
-                      <span></span>
-                    </div>
-                    <p>您确定要把该文件移到回收站吗？</p>
-                    <Button long type="error" @click="putRecyclebin">移到回收站</Button>
-                  </div>
-                  <div v-show="showFileEdit" class="rublish">
-                    <div class="rublish-header">
-                      <Icon @click="showFileEdit=false" type="ios-arrow-back" />
-                      修改文件名称
-                      <span></span>
-                    </div>
-                    <div class="rublish-input">
-                      <Input v-model.trim="editFileName" />
-                    </div>
-                    <Button long type="primary" @click='fileEdit(file.fileId)'>确定</Button>
-                  </div>
-
-                  <div v-show="!rublish&&!showFileEdit&&menuId==file.fileId">
-                    <div class="menu-file-title" style="text-align:center;font-size:16px">
-                      <span>文件菜单</span>
-                    </div>
-                    <section v-if="file.catalog" class="file-folder-opt">
-                      <ul>
-                        <li @click="removeClone('移动')">移动文件夹</li>
-                        <li @click="removeClone('复制')">复制文件夹</li>
-                        <li @click="rublish=true">移到回收站</li>
-                 
-                        <li @click="setCanSee">可见性设置</li>
-                      </ul>
-                    </section>
-                    <section v-else class="file-folder-opt">
-                      <ul>
-                        <li @click="downLoad(file.fileId)" ><a style="color: #333" :download="file.fileName" >下载文件</a></li>
-                        <li @click="removeClone('移动')">移动文件</li>
-                        <li @click="removeClone('复制')">复制文件</li>
-                        <li @click="setImp(file.fileId,file.important)">{{file.important?'取消标记重要文件':'标记为重要文件'}}</li>
-                        <li @click="showFileEdit=true">修改名称</li>
-                        <li>复制文件链接</li>
-                        <li @click="collectFile">收藏文件</li>
-                        <li @click="rublish=true">移到回收站</li>
-                      </ul>
-                    </section>
-                    <div class="footer">
-                      <div class="footer-left">
-                        <i class="ivu-icon ivu-icon-unlocked"></i>
-                        <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
-                          <span>隐私模式</span>
-                          <span v-if="file.filePrivacy===1">仅参与者可见</span>
-                          <span v-else>所有成员可见</span>
-                        </div>
-                      </div>
-                      <span v-if="file.filePrivacy===1" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
-                      <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
-                    </div>
-                  </div>
-
-                </div>
-              </Poptip>
+              <Button icon="ios-arrow-down" size="small" @click="getFileid($event,file)" ref="menuBtn"></Button>
             </div>
           </div>
           <div class="file-content-filename" v-if="file.catalog==1">{{file.fileName}}</div>
@@ -178,7 +112,7 @@
                 {{file.size||"无"}}
               </div>
               <div class="contant-erery">{{file.memberName||"无"}}</div>
-              <div class="contant-erery">{{file.updateTime | formatDate}}</div>
+              <div class="contant-erery">{{file.updateTime | timeFilter2}}</div>
             </div>
             <!-- <div class="file-edit" v-show="showFileEdit==index">
                 <Input v-model.trim="editFileName" @on-enter='fileEdit(file.fileId)' />
@@ -188,73 +122,7 @@
               <!-- <Icon type="ios-exit" @click="removeClone('移动')" /> -->
             </div>
             <div @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
-              <p></p>
-              <Poptip class="menu-file" width="250" :transfer="true" @on-popper-hide="popHid">
-                <Icon @click="getFileid(file.fileId,file.fileName)" type="ios-arrow-down" class="mr0" />
-                <div slot="content">
-                  <div v-show="rublish" class="rublish">
-                    <div class="rublish-header">
-                      <Icon @click="rublish=false" type="ios-arrow-back" />
-                      移到回收站
-                      <!--<Icon @click="menuShow=false" type="ios-close" />-->
-                      <span></span>
-                    </div>
-                    <p>您确定要把该文件移到回收站吗？</p>
-                    <Button long type="error" @click="putRecyclebin">移到回收站</Button>
-                  </div>
-
-                  <div v-show="showFileEdit" class="rublish">
-                    <div class="rublish-header">
-                      <Icon @click="showFileEdit=false" type="ios-arrow-back" />
-                      修改文件名称
-                      <span></span>
-                    </div>
-                    <div class="rublish-input">
-                      <Input v-model.trim="editFileName" />
-                    </div>
-                    <Button long type="primary" @click='fileEdit(file.fileId)'>确定</Button>
-                  </div>
-
-                  <div v-show="!rublish&&!showFileEdit">
-                    <div class="menu-file-title" style="text-align:center;font-size:16px">
-                      <span>文件菜单</span>
-                    </div>
-                    <section v-if="file.catalog" class="file-folder-opt">
-                      <ul>
-                        <li @click="removeClone('移动')">移动文件夹</li>
-                        <li @click="removeClone('复制')">复制文件夹</li>
-                        <li @click="rublish=true">移到回收站</li>
-                      
-                        <li @click="setCanSee">可见性设置</li>
-                      </ul>
-                    </section>
-                    <section v-else class="file-folder-opt">
-                      <ul>
-                        <li @click="downLoad(file.fileId)"><a style="color: #333" :download="file.fileName" >下载文件</a></li>
-                        <li @click="removeClone('移动')">移动文件</li>
-                        <li @click="removeClone('复制')">复制文件</li>
-                        <li @click="showFileEdit=true">修改名称</li>
-                        <li>复制文件链接</li>
-                        <li @click="collectFile">收藏文件</li>
-                        <li @click="rublish=true">移到回收站</li>
-                      </ul>
-                    </section>
-                    <div class="footer">
-                      <div class="footer-left">
-                        <i class="ivu-icon ivu-icon-unlocked"></i>
-                        <div class="footer-privacy-text" @click="changePrivacy(file.fileId,file.filePrivacy)">
-                          <span>隐私模式</span>
-                          <span v-if="file.filePrivacy=='1'">仅参与者可见</span>
-                          <span v-else>所有成员可见</span>
-                        </div>
-                      </div>
-                      <span v-if="file.filePrivacy=='1'" style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已开启</span>
-                      <span v-else style="color:#3da8f5" @click="changePrivacy(file.fileId,file.filePrivacy)">已关闭</span>
-                    </div>
-                  </div>
-
-                </div>
-              </Poptip>
+              <Button icon="ios-arrow-down" size="small" @click="getFileid($event,file)" ref="menuBtn"></Button>
             </div>
           </li>
         </ul>
@@ -319,8 +187,59 @@
       <Modal v-model="showVisibilityModal" :z-index=2000 :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
         <fileCanSee v-if="showVisibilityModal"></fileCanSee>
       </Modal>
+      <Modal v-model="fileMenu" :styles="{left: left,top: top}" width="250" :footer-hide="true" :mask-closable="true" v-if="mFile" class="mf0">
+        <div slot="header" class="file-menu-header">
+             <Icon @click="rublish=false;showFileEdit=false" type="ios-arrow-back" size="18" v-if="rublish==true||showFileEdit==true"/>
+             <span>{{modalTitle}}</span>
+        </div>
+        <div>
+            <div v-show="rublish" class="rublish">
+              <p>您确定要把该文件移到回收站吗？</p>
+              <Button long type="error" @click="putRecyclebin(mFile)">移到回收站</Button>
+            </div>
+            <div v-show="showFileEdit" class="rublish">
+              <div class="rublish-input">
+                <Input v-model.trim="editFileName"/>
+              </div>
+              <Button long type="primary" @click='fileEdit(mFile.fileId)'>确定</Button>
+            </div>
+            <div v-show="!rublish&&!showFileEdit">
+              <section v-if="mFile.catalog" class="file-folder-opt">
+                <ul>
+                  <li @click="removeClone('移动')">移动文件夹</li>
+                  <li @click="removeClone('复制')">复制文件夹</li>
+                  <li @click="rublish=true">移到回收站</li>
+                
+                  <li @click="setCanSee">可见性设置</li>
+                </ul>
+              </section>
+              <section v-else class="file-folder-opt">
+                <ul>
+                  <li @click="downLoad(mFile.fileId)"><a style="color: #333" :download="mFile.fileName">下载文件</a></li>
+                  <li @click="removeClone('移动')">移动文件</li>
+                  <li @click="removeClone('复制')">复制文件</li>
+                  <li @click="showFileEdit=true;modalTitle='修改文件名称'">修改文件名称</li>
+                  <li>复制文件链接</li>
+                  <li @click="collectFile">收藏文件</li>
+                  <li @click="rublish=true;modalTitle='移到回收站'">移到回收站</li>
+                </ul>
+              </section>
+              <div class="footer">
+              <div class="footer-left">
+                <i class="ivu-icon ivu-icon-unlocked"></i>
+                <div class="footer-privacy-text" @click="changePrivacy()">
+                  <span>隐私模式</span>
+                  <span v-if="mFile.filePrivacy=='1'">仅参与者可见</span>
+                  <span v-else>所有成员可见</span>
+                </div>
+              </div>
+              <span v-if="mFile.filePrivacy=='1'" style="color:#3da8f5;margin-right:5px" @click="changePrivacy()">已开启</span>
+              <span v-else style="color:#3da8f5;margin-right:5px" @click="changePrivacy()">已关闭</span>
+            </div>
+            </div>
+        </div>
+      </Modal>
     </div>
-    
   </div>
 
 </template>
@@ -361,6 +280,8 @@ export default {
   },
   data() {
     return {
+      modalTitle:"文件菜单",
+      fileMenu:false,
       menuId:null,
       show: true,
       paixu: '',
@@ -414,7 +335,8 @@ export default {
       ],
       showModelFileDetail: false,
       svfUrl: "",
-      loading1: false
+      loading1: false,
+      mFile:null
     };
   },
   watch: {
@@ -465,23 +387,6 @@ export default {
     this.initFolders(data).then(res => {});
     this.initTag(this.projectId).then(res => {});
   },
-  filters: {
-    formatDate: function(value) {
-      let date = new Date(value);
-      let y = date.getFullYear();
-      let MM = date.getMonth() + 1;
-      MM = MM < 10 ? "0" + MM : MM;
-      let d = date.getDate();
-      d = d < 10 ? "0" + d : d;
-      let h = date.getHours();
-      h = h < 10 ? "0" + h : h;
-      let m = date.getMinutes();
-      m = m < 10 ? "0" + m : m;
-      let s = date.getSeconds();
-      s = s < 10 ? "0" + s : s;
-      return y + "-" + MM + "-" + d;
-    }
-  },
   methods: {
     ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag"]),
     ...mapMutations("file", ["putOneFile"]),
@@ -491,14 +396,13 @@ export default {
       this.rublish = false;
     },
     // 获取当前文件id
-    getFileid(id, name) {
-      
-
+    getFileid(e,file) {
+      this.mFile = file;
+      this.top=e.clientY+"px";
+      this.left = e.clientX-125+"px";
+      this.fileMenu = true;
       this.rublish = false;
       this.showFileEdit = false;
-      
-      this.thisFileId = id;
-      this.editFileName = name;
     },
     closeDetail() {
       this.showModelDetai = false;
@@ -718,14 +622,16 @@ export default {
       }
     },
     // 隐私模式
-    changePrivacy(id, privacy) {
+    changePrivacy() {
       let num = 0;
-      if (privacy == "0") {
+      if (this.mFile.filePrivacy == "0") {
         num = 1;
+        this.mFile.filePrivacy=1;
       } else {
         num = 0;
+        this.mFile.filePrivacy=0;
       }
-      filePrivacy(id, num).then(res => {
+      filePrivacy(this.mFile.fileId, num).then(res => {
         console.log(res);
       });
     },
@@ -848,16 +754,13 @@ export default {
     }
   }
   .icon-box {
+    text-align: center;
     color: #2d8cf0;
-    line-height: 22px;
-    font-size: 22px;
+    line-height: 30px;
+    font-size: 30px;
     i {
       cursor: pointer;
       padding-left: 10px;
-    }
-    i:last-child {
-      font-size: 34px;
-      font-weight: bold;
     }
   }
 }
@@ -1046,11 +949,11 @@ export default {
       top: 0;
       right: 0;
       justify-content: space-between;
-      i {
+      .ivu-btn {
         display: none;
       }
     }
-    &:hover i {
+    &:hover .ivu-btn {
       display: block;
     }
   }
@@ -1058,22 +961,6 @@ export default {
 .ivu-checkbox-large .ivu-checkbox-inner {
   width: 24px;
   height: 24px;
-}
-.footer {
-  .footer-left {
-    display: flex;
-  }
-
-  display: flex;
-  justify-content: space-between;
-  .footer-privacy-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .ivu-icon {
-    margin-right: 10px;
-  }
 }
 
 .file-handler {
@@ -1216,7 +1103,7 @@ export default {
   }
 }
 .rublish {
-  padding-bottom: 15px;
+  padding: 10px;
   .rublish-input {
     margin: 15px 0;
   }
@@ -1261,8 +1148,45 @@ export default {
    color:#2d8cf0; 
    border:2px solid #2d8cf0;
 }
-// .tree-themeicon-custom{
-// }
+.mf0{
+/deep/ .ivu-modal-body {
+    padding: 0;
+  }
+/deep/ .ivu-modal-footer{
+    padding: 0;
+  }
+  /deep/ .ivu-modal{
+    margin: 0;
+  }
+  /deep/ .ivu-modal-mask{
+    display: none;
+  }
+}
+
+.footer {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  .footer-left {
+    display: flex;
+  }
+  display: flex;
+  justify-content: space-between;
+  .footer-privacy-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ivu-icon {
+    margin-right: 10px;
+  }
+}
+.file-menu-header{
+  text-align: center;
+  i{
+      position: absolute;
+      left: 10px;
+  }
+}
 </style>
 
 

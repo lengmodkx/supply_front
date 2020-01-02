@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import store from '@/store'
-import iView,{Notice} from 'iview'
+import iView from 'view-design'
 let url='';
 if(process.env.NODE_ENV=='test'){
   url=process.env.VUE_APP_TEST_URL

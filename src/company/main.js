@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
-import iView from "iview";
-import "iview/dist/styles/iview.css";
+import iView from "view-design";
+import "view-design/dist/styles/iview.css";
 import moment from "moment";
 import router from './router'
 moment.locale("zh-cn");

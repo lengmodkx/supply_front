@@ -72,7 +72,7 @@
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
                     <div class="task-infos">
-                      <span class="label time-label" v-if="a.endTime">{{$moment(a.endTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'M月D日LT'})}} 截止</span>
+                      <span class="label time-label" v-if="a.endTime">{{$moment(a.endTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'Y年M月D日LT'})}} 截止</span>
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
@@ -122,7 +122,7 @@
                   <div class="task-info-wrapper">
                     <div class="task-infos">
 
-                      <span class="label time-label" v-if="a.endTime">{{a.endTime | timeFilter}}截止</span>
+                      <span class="label time-label" v-if="a.endTime">{{$moment(a.endTime).calendar(null,{sameDay: '[今天]LT', nextDay: '[明天]LT', nextWeek: 'dddLT', lastDay: '[昨天]LT', lastWeek: '[上]dddLT', sameElse: 'Y年M月D日LT'})}}截止</span>
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{a.repeat}}</span>
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
@@ -190,6 +190,7 @@
     </div>
     <!-- 点击列表出来的弹框。编辑列表 -->
     <Modal v-model="showModal" class="myModal" :mask-closable="false">
+      
       <my-modal v-if="showModal"></my-modal>
     </Modal>
     <Modal v-model="showAddGroup" :footer-hide="true" title="创建分组" :width="350">
@@ -281,7 +282,7 @@ export default {
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
-    this.init(this.projectId).then(res => {
+    this.init({projectId:this.projectId,groupId:this.taskGroupId}).then(res => {
       this.loading = false;
       this.allTask = this.allTasks;
     });
@@ -309,29 +310,28 @@ export default {
       this.currentEditId = "";
     },
     changeGroup(groupId) {
-      
-
-       getIsGroupPower(groupId).then(res=>{
-          //检测是否进入分组权限
-           if(res.data=='0'){
-           //0是没有权限
-              this.$Message.error("您没有当前权限");
-             return
-          }else{
-                this.taskGroupId = groupId;
-                this.loading = true;
-                changeGroup(groupId, this.projectId).then(res => {
-                  if (res.result == 1) {
-                    this.$router.replace(
-                      `/project/${this.projectId}/tasks/group/${groupId}`
-                    );
-                    this.init(this.projectId).then(res => {
-                      this.loading = false;
-                    });
-                  }
-                });
-          }         
-      })
+      this.taskGroupId = groupId;
+        this.loading = true;
+        changeGroup(groupId, this.projectId).then(res => {
+          if (res.result == 1) {
+            this.$router.replace(
+              `/project/${this.projectId}/tasks/group/${groupId}`
+            );
+            this.init(this.projectId).then(res => {
+              this.loading = false;
+            });
+          }
+        });
+      //  getIsGroupPower(groupId).then(res=>{
+      //     //检测是否进入分组权限
+      //      if(res.data=='0'){
+      //      //0是没有权限
+      //         this.$Message.error("您没有当前权限");
+      //        return
+      //     }else{
+                
+      //     }         
+      // })
     },
     handleSave() {
       this.loading = true;

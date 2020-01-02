@@ -210,7 +210,14 @@ export default {
       startDate(date) {
           this.options2 = {
               disabledDate(date1) {
-                  return date1.valueOf() < new Date(date).getTime() - 86400000;
+                  return date1&&date1.valueOf() <= new Date(date).getTime() - 86400000;
+              }
+          };
+      },
+      endDate(date) {
+          this.options1 = {
+              disabledDate(date1) {
+                  return date1&&date1.valueOf() >= new Date(date).getTime();
               }
           };
       },
@@ -232,13 +239,7 @@ export default {
 
           this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
       },
-      endDate(date) {
-          this.options1 = {
-              disabledDate(date1) {
-                  return date1.valueOf() > new Date(date).getTime() - 86400000;
-              }
-          };
-      },
+      
       choose(flag) {
           this.active = flag;
           if (flag===4){
@@ -270,10 +271,14 @@ export default {
                   projectStatus: this.project.projectStatus
               };
               updateProject(data).then(res => {
-                  console.log(res);
                   this.$Message.destroy();
-                  this.updatePro(this.project);
-                  resolve("成功");
+                  if(res.result==1){
+                    this.$Message.success("保存成功!")
+                    this.updatePro(this.project);
+                  }else{
+                    this.$Message.error("保存失败!")
+                  }
+                  resolve();
               });
           });
       },
@@ -306,7 +311,6 @@ export default {
               this.saveImg();
         }
           this.publishAxios().then(res => {
-              console.log(res);
           });
       },
       okGuidang() {
@@ -318,6 +322,7 @@ export default {
       okHuishou() {
           recycleProject(this.project.projectId).then(res => {
               if (res.result === 1) {
+                this.modal2=false
                   this.$Message.success("成功!")
               } else {
                   this.$Message.error("失败!")

@@ -2,8 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import iView from "iview";
-import "iview/dist/styles/iview.css";
+import iView from "view-design";
+import "view-design/dist/styles/iview.css";
 import FullCalendar from 'vue-full-calendar'
 import "./icons";
 import "./components/public/common"; //挂载common下组件到全局
