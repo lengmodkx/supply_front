@@ -18,8 +18,8 @@
           </span>
         </div>
         <div class="headerTool">
+          <span class="backEdit" v-show="backButton" @click="back"> <Icon type="ios-arrow-back" /></span>
           <div class="toolLeft" v-if="task.parentId === '0'">
-            <span></span>
             <span>{{task.project.projectName}} > </span>
             <span class="proName">{{task.groupName}}</span>
             <span> > </span>
@@ -159,7 +159,7 @@
               <Icon type="ios-link-outline" />关联内容</p>
             <div class="addLink" @click="relationModal=true;">
               <Icon type="ios-add-circle-outline" />添加关联</div>
-            <Modal v-model="relationModal" class="relationModal" id="relationModal">
+            <Modal v-model="relationModal" footer-hide  class="relationModal" id="relationModal">
               <AddRelation :publicId="task.taskId" :fromType="publicType"></AddRelation>
             </Modal>
           </div>
@@ -422,7 +422,8 @@ export default {
       publicType: "任务",
       involveDataList: [],
       showCommon: false,
-      beizhuContent: ""
+      beizhuContent: "",
+      backButton:false,//是否显示返回按钮
     };
   },
   mounted() {
@@ -451,6 +452,12 @@ export default {
     },
     closeTag() {
       this.$refs.tags.closeTag();
+    },
+    //返回
+    back(){
+        this.backButton=false;
+         this.editTask(this.task.parentId);
+          this.$Message.loading("正在加载中...", 0)
     },
     //修改任务名称
     updateTaskName() {
@@ -526,6 +533,7 @@ export default {
       })
     },
     showaa(taskId) {
+      this.backButton=true;
       const msg = this.$Message.loading("正在加载中...", 0);
       setTimeout(msg, 10000);
       this.$store.dispatch("task/editTask", taskId).then(() => {
@@ -697,7 +705,9 @@ export default {
 </script>
 <style scoped lang="less">
 @import "./EditList.less";
-
+.backEdit{
+  cursor: pointer;
+}
 .not-allow * {
   cursor: not-allowed !important;
 }

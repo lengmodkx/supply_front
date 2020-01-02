@@ -96,7 +96,7 @@ export default {
       this.startTime = date;
       this.options2 = {
         disabledDate(date1) {
-          return date1.valueOf() < new Date(date).getTime() - 86400000;
+          return date1.valueOf() < new Date(date).getTime();
         }
       };
     },
