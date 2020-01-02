@@ -15,7 +15,7 @@
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
           <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg">
-          <span class="changeCaptcha">看不清，点击图片换一张</span>
+          <!-- <span class="changeCaptcha">看不清，点击图片换一张</span> -->
         </FormItem>
         <FormItem prop="userName">
           <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
@@ -24,7 +24,7 @@
           <Input type="text" size="large" placeholder="请输入您的职位" v-model="formValidate.job" clearable />
         </FormItem>
         <FormItem >
-          <Checkbox v-model="single">我已经阅读并接受<span class="blue" @click="userDeal=true">《用户协议》</span>及<span  class="blue" @click="privacyDeal=true">《隐私条款》</span></Checkbox>
+          <Checkbox v-model="single"></Checkbox>我已经阅读并接受<span class="blue" @click="userDeal=true">《用户协议》</span>及<span  class="blue" @click="privacyDeal=true">《隐私条款》</span>
         </FormItem>
         <FormItem>
           <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
@@ -33,7 +33,7 @@
       <router-link class="go-login" to="/">去登陆</router-link>
     </div>
 
-      <Modal v-model="userDeal"  :footer-hide="true" >
+      <Modal v-model="userDeal" footer-hide  title="用户协议"  :closable="false" :mask-closable='false'>
         <div class="modelText"  >
           <p>阿拉丁BIM云平台《用户协议》（以下简称“本协议”）是由壹仟零壹艺网络科技（北京）有限公司（以下简称“一千零一艺”）与您（包含注册、登录、使用、浏览阿拉丁BIM云平台产品、服务的个人或组织）之间所订立的协议。您使用阿拉丁BIM云平台的任何行为都将视为对本协议的接受，并同意接受本协议各项条款的约束。</p>
          <p> 您对本协议的接受即自愿接受全部条款的约束，包括接受一千零一艺对任一服务条款随时所做的任何修改。一千零一艺有权对本协议包含的条款随时更新，更新后的协议条款一旦公布即代替原来的协议条款，恕不再另行通知，您可在本网站查阅最新版协议条款。在一千零一艺修改本协议相关条款之后，若您不接受修改后的条款，请停止使用一千零一艺提供的产品和服务，您继续使用一千零一艺提供的产品和服务将被视为您已接受了修改后的协议。</p>
@@ -140,9 +140,10 @@
          <p> 邮编：100041</p>
          <p> 邮件：kf#art1001.com（请将#替换为@）</p>
           <p>客服中心电话：400-064-1001</p>
+           <Button type="primary" @click="userDealSure()">已阅读《用户协议》</Button>
         </div>
       </Modal>
-      <Modal v-model="privacyDeal"  :footer-hide="true" >
+      <Modal v-model="privacyDeal"  :footer-hide="true" title="隐私条款"  :closable="false" :mask-closable='false'>
                 <div class="modelText"  >
                       <p>本政策仅适用于壹仟零壹艺网络科技（北京）有限公司（以下简称“一千零一艺”）的阿拉丁BIM云平台产品服务。</p>
                       <p>最近更新日期：2019年12月24日。</p>
@@ -159,7 +160,7 @@
                       <p>七、本政策如何更新</p>
                       <p>八、适用法律与争议解决</p>
                       <p>九、如何联系我们</p>
-                      <p>本隐私政策与您所使用的阿拉丁BIM云平台服务以及该服务所包括的各种业务功能（以下统称“我们的产品或服务”）息息相关，希望您在使用我们的产品或服务前仔细阅读并确认您已经充分理解本隐私政策所写明的内容，并让您可以按照本隐私政策的指引做出您认为适当的选择。本隐私政策中涉及的相关术语，我们尽量以简明扼要的表述，并提供进一步说明的链接，以便您更好地理解。您使用或在我们更新本隐私政策后（我们会及时提示您更新的情况）继续使用我们的产品或服务，即意味着您同意本隐私政策(含更新版本)内容，并且同意我们按照本隐私政策收集、使用、保存和共享您的相关信息。</p>
+                      <p>本隐私政策与您所使用的阿拉丁BIM云平台服务以及该服务所包括的各种业务功能（以下统称“我们的产品或服务”）息息相关，希望您在使用我们的产品或服务前仔细阅读并确认您已经充分理解本隐私政策所写明的内容，并让您可以按照本隐私政策的指引做出您认为适当的选择。本隐私政策中涉及的相关术语，我们尽量以简明扼要的表述，并提供进一步说明的链接，以便您更好地理解。您使用或在我们更新本隐私政策后（我们会及时提示您更新的情况）继续使用我们的产品或服务，即意味着您同意本隐私政策(含更新版本)内容，并且同意我们按照本隐私政策收集、使用、保存和共享您的相关信息。
                       如对本隐私政策或相关事宜有任何问题，您可随时发送邮件至kf#art1001.com（请将#替换为@）或拨打我们客服中心电话：400-064-1001的方式与我们联系。</p>
                       <p>一、我们如何收集和使用您的个人信息</p>
                       <p>个人信息是指以电子或者其他方式记录的能够单独或者与其他信息结合识别特定自然人身份或者反映特定自然人活动情况的各种信息。 本隐私政策中涉及的个人信息包括：基本信息（包括手机号码）；网络身份标识信息（包括系统账号、密码）；个人常用设备信息（包括设备类型、操作系统版本）。</p>
@@ -277,6 +278,7 @@
                       <p>客服中心电话：400-064-1001</p>
                       <p>地址：北京市石景山区苹果园路28号院中铁创业大厦B座707-708</p>
                       <p>一千零一艺深知个人信息对您的重要性，并会尽全力保护您的个人信息安全可靠。我们致力于维持您对我们的信任，恪守以下原则，保护您的个人信息：权责一致原则、目的明确原则、选择同意原则、最小必要原则、确保安全原则、主体参与原则、公开透明原则等。同时，我们承诺，我们将按业界成熟的安全标准，采取相应的安全保护措施来保护您的个人信息。请在使用我们的产品（或服务）前，仔细阅读并了解本《隐私条款》。</p>
+                      <Button type="primary" @click="privacyDealSure()">已阅读《隐私条款》</Button>
                    </div>
       </Modal>
   </div>
@@ -300,10 +302,12 @@ export default {
       single:false,//勾选我已阅读
       userDeal:false,
       privacyDeal:false,
+      flagPrivacyDeal:false,
+      flaguserDeal:false,
       formValidate: {
         accountName: "",
         password: "",
-        passwordSure,
+        passwordSure:"",
         captcha: "",
         userName: "",
         captchaUrl: "/api/captcha",
@@ -353,8 +357,30 @@ export default {
     ...mapState("app", ["loading"])
   },
   methods: {
-    register: function(name) {    
-      if(!this.single){
+    //请您阅读《隐私条款》
+    privacyDealSure:function(){
+        this.privacyDeal=false;
+        this.flagPrivacyDeal=true;
+        this.$Modal.remove();
+    },
+    //用户协议
+    userDealSure:function(){
+        this.userDeal=false;
+         this.flaguserDeal=true;
+        this.$Modal.remove();
+    },
+    register: function(name) {  
+      if(!this.flaguserDeal ){
+        // 校验是否勾选用户协议
+              this.$Message.error("请您阅读《用户协议》");
+              return
+      }  
+      if(!this.flagPrivacyDeal ){
+        // 校验是否勾选用户协议
+              this.$Message.error("请您阅读《隐私条款》");
+              return
+      }
+      if(!this.single ){
         // 校验是否勾选用户协议
               this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
               return
@@ -386,9 +412,11 @@ export default {
 }
 .modelText{
   text-indent: 20px;
-  padding:20px;
-  height: 600px;
+  height: 70vh;
   overflow-y: auto;
+  button{
+    margin: 10px 164px;
+  }
 }
 .bj-box {
   width: 100vw;
