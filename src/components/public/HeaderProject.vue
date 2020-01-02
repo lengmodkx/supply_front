@@ -48,7 +48,7 @@ export default {
   mounted() {
     menus(this.id).then(res => {
       this.menus = res.data.map((item, index) => {
-        console.log(">>>>>>>", this.path);
+        // console.log(">>>>>>>", this.path);
         switch (item.funcName) {
           case "任务":
             item.prefix = "/tasks/group/" + item.suffix; //this.$route.params.groupId;
