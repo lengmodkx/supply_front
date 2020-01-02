@@ -207,6 +207,7 @@ export default {
             this.percentage = [];
         },
         getFile(event) {
+            var that = this;
             const files = event.target.files
             this.filename = files[0].name          //只有一个文件
             if (this.filename.lastIndexOf('.') <= 0) {
@@ -222,8 +223,27 @@ export default {
             this.image = files[0]
             //到这里后, 选择图片就可以显示出来了
             this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
+            
             if(this.filename){
-                this.message.defaultImage="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/"+this.fileName
+                this.message.defaultImage="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/"+this.fileName 
+                client.multipartUpload(this.fileName, this.image, {
+                    progress: function(p) {
+                    }
+                }).then(function(result){
+                    let data={
+                        userId:localStorage.userId,
+                        image:that.message.defaultImage,
+                    }
+                    //保存
+                    updateUserNews(data).then(res=>{
+                        if(res.result==1){
+                            localStorage.userImg = that.message.defaultImage
+                            this.$Message.info(res.msg);
+                            this.initSrc();
+                        }
+                    });
+                })
+                
             }
         },
         handleSubmit () {
@@ -244,14 +264,6 @@ export default {
         },
         save(){
             var that = this;
-            if(this.pic_hide==true){
-                    client.multipartUpload(this.fileName, this.image, {
-                        progress: function(p) {
-                        }
-                    }).then(function(result){
-                        console.log(result)
-                    })
-            }
             if(this.message.birthday!=null&&this.message.birthday!=""){
                 console.log(this.message.birthday)
                 var dataEE=new Date(this.message.birthday).toJSON();
