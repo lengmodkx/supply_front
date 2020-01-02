@@ -74,7 +74,12 @@
                             <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
                             <img v-else src="@/icons/img/moren.png" alt="">
                         </div>
-                        <p class="bottom-font">{{file.fileName}}</p>
+                        <p class="bottom-font">
+                           <Poptip  trigger="hover" :content=file.fileName  placement="bottom">
+                             {{file.fileName}}
+                           </Poptip>
+                          
+                          </p>
                     </li>
                 </ul>
                 <!--列表模式搜索-->
@@ -100,7 +105,10 @@
                                 <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
                                 <img v-else src="@/icons/img/moren.png" alt="">
                             </div>
-                            <p>{{file.fileName}}</p>
+                            <Poptip  trigger="hover" :content=file.fileName  placement="bottom">
+                               <p>{{file.fileName}}</p>
+                           </Poptip>
+                            
                         </div>
                         <div class="list-file-part">{{file.size}}</div>
                         <div class="list-file-part">平台</div>
@@ -144,7 +152,11 @@
                             <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
                             <img v-else src="@/icons/img/moren.png" alt="">
                         </div>
-                        <p class="bottom-font">{{file.fileName}}</p>
+                        <p class="bottom-font">
+                            <Poptip  trigger="hover"   :content=file.fileName  placement="bottom">
+                             {{file.fileName}}
+                           </Poptip>
+                        </p>
                     </li>
                 </ul>
                 <!--列表模式-->
@@ -176,7 +188,9 @@
                                 <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
                                 <img v-else src="@/icons/img/moren.png" alt="">
                             </div>
-                            <p>{{file.fileName}}</p>
+                             <Poptip  trigger="hover"   :content=file.fileName  placement="bottom">
+                                <p>{{file.fileName}}</p>
+                            </Poptip>
                         </div>
                         <div class="list-file-part">{{file.size}}</div>
                         <div class="list-file-part">平台</div>

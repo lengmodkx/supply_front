@@ -78,10 +78,8 @@
         methods: {
             getDown(type){
                 if(type==1){
-                     
-                        window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe"
-                        
-                        return
+                    window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe"  
+                    return
                 }
                 if(type==2){
                   window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/aldbim2019.msi"
