@@ -359,8 +359,7 @@ const store = {
     actions: {
         init({
             dispatch,
-            commit,
-            state
+            commit
         }, data) {
             return new Promise((resolve, reject) => {
                 enterTask(data).then(res => {
