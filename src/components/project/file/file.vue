@@ -732,6 +732,7 @@ export default {
       changeName(id, this.editFileName).then(res => {
         this.showFileEdit = false;
         this.$Message.info("修改名称成功");
+        this.editFileName=''
       });
     }
   }
