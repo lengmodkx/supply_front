@@ -677,7 +677,8 @@ export default {
     },
     // 移动、复制文件的确定按钮
     removeCloneFile() {
-      if (this.folderId) {
+      
+
         if (this.caozuo === "移动") {
           removeFile(this.folderId, this.thisFileId, this.projectId).then(
             res => {
@@ -693,7 +694,7 @@ export default {
             this.showMove = false;
           });
         }
-      }
+      
     },
     // 获取项目列表
     projectList() {
