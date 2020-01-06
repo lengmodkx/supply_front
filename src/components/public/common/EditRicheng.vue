@@ -28,7 +28,7 @@
                                 <DateTimePicker type="start" :max="schedule.endTime" @confirm="confirm1">
                                     <div class="init" v-if="!schedule.startTime">设置开始时间</div>
                                     <div class="setTime" v-if="schedule.startTime">
-                                        {{$moment(schedule.startTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}
+                                        {{$moment(schedule.startTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'Y年M月D日'})}}
                                     </div>
                                 </DateTimePicker>
                             </div>
@@ -40,7 +40,7 @@
                                 <DateTimePicker type="end" :min="schedule.startTime" @confirm="confirm2">
                                     <div class="init" v-if="!schedule.endTime">设置截止时间</div>
                                     <div class="setTime" v-if="schedule.endTime">
-                                        {{$moment(schedule.endTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'M月D日'})}}
+                                        {{$moment(schedule.endTime).calendar(null,{sameDay: '[今天]', nextDay: '[明天]', nextWeek: 'ddd', lastDay: '[昨天]', lastWeek: '[上]ddd', sameElse: 'Y年M月D日'})}}
                                     </div>
                                 </DateTimePicker>
                             </div>
@@ -406,7 +406,8 @@ export default {
     },
       // 改备注
     addBeizhu () {
-        if(this.beizhuContent==''){
+        console.log(this.$refs.editor.content)
+        if(this.$refs.editor.content==undefined){
                 this.$Message.error('请输入备注内容');
                 return
         }
@@ -417,6 +418,8 @@ export default {
                 this.vxremarks(this.beizhuContent)
                 this.loading = false
                 this.showEditor=false
+            }else{
+                this.$Message.error("系统异常");
             }
         })
     },

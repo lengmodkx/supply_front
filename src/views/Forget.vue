@@ -18,6 +18,9 @@
         <FormItem prop="password">
           <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable class="forget-input" />
         </FormItem>
+         <FormItem prop="passwordMore">
+          <Input type="password" size="large" placeholder="请再次输入密码" v-model="formValidate.passwordMore" clearable class="forget-input" />
+        </FormItem>
         <FormItem>
           <Button type="primary" long size="large" @click="forget('formValidate')">重置密码</Button>
         </FormItem>
@@ -39,13 +42,14 @@ export default {
         code: "",
         password: "",
         captchaUrl:" ",
+        passwordMore:"",
       },
       ruleValidate: {
         accountName: [
           {
-            required: true,
-            message: "请输入手机号或者邮箱",
-            trigger: "blur"
+            required:false,
+            validator:validatePhone,
+             trigger: 'blur' 
           }
         ],
         captcha: [
@@ -63,6 +67,13 @@ export default {
           }
         ],
         password: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        passwordMore: [
           {
             required: true,
             message: "请输入密码",
@@ -86,6 +97,7 @@ export default {
         if (valid) {
           console.log(this.formValidate);
           resetPwd(this.formValidate).then(res => {
+            
             if(res.result==1){
               this.$Message.success("修改成功!");
               this.$router.push("/");
@@ -111,11 +123,23 @@ export default {
       getPhone(this.formValidate.accountName, this.formValidate.captcha).then(
         res => {
           console.log(res);
+          this.$Message.error(res.msg);
         }
       );
     }
   }
 };
+
+ const validatePhone = (rule, value, callback) => {
+                    if (!value) {
+                        return callback(new Error('请输入手机号'));
+                    } else if (!/^1[34578]\d{9}$/.test(value)) {
+                        callback('手机号格式不正确');
+                    } else {
+                        callback();
+                    }   
+       }
+
 </script>
 <style scoped>
 .bj-box {

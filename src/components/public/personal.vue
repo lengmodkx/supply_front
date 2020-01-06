@@ -293,7 +293,6 @@ export default {
             findUserInfo(this.message.userId).then(res=>{
                 //获取信息
                 if(res.result==1){
-                    console.log(res.data)
                     this.loading=false;
                     this.message=res.data;
                 }
