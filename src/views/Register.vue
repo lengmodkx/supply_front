@@ -4,26 +4,26 @@
       <div class="register-title">欢迎注册阿拉丁BIM云平台</div>
       <Form ref="formValidate" @keyup.native.enter="register('formValidate')" :model="formValidate" :rules="rules">
         <FormItem prop="accountName">
-          <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
+          <Input type="text" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
         </FormItem>
         <FormItem prop="password">
-          <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
+          <Input type="password"  placeholder="请输入密码" v-model="formValidate.password" clearable />
         </FormItem>
         <FormItem prop="passwordSure">
-          <Input type="password" size="large" placeholder="请再次输入密码" v-model="formValidate.passwordSure" clearable />
+          <Input type="password" placeholder="请再次输入密码" v-model="formValidate.passwordSure" clearable />
         </FormItem>
         <FormItem prop="captcha">
-          <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
+          <Input type="text" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
           <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg">
           <!-- <span class="changeCaptcha">看不清，点击图片换一张</span> -->
         </FormItem>
         <FormItem prop="userName">
-          <Input type="text" size="large" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
+          <Input type="text" placeholder="请输入您的昵称" v-model="formValidate.userName" clearable />
         </FormItem>
         <FormItem prop="job">
-          <Input type="text" size="large" placeholder="请输入您的职位" v-model="formValidate.job" clearable />
+          <Input type="text" placeholder="请输入您的职位" v-model="formValidate.job" clearable />
         </FormItem>
-        <FormItem >
+        <FormItem>
           <Checkbox v-model="single"></Checkbox>我已经阅读并接受<span class="blue" @click="userDeal=true">《用户协议》</span>及<span  class="blue" @click="privacyDeal=true">《隐私条款》</span>
         </FormItem>
         <FormItem>
@@ -398,7 +398,7 @@ export default {
 
           userRegister(this.formValidate).then(res => {
             if (res.result == 0) {
-              this.$Message.error(res.msg);
+              this.$Message.error("注册失败");
             } else {
               this.$Message.success("注册成功!");
               this.$router.push("/");
@@ -434,7 +434,7 @@ export default {
   background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg") no-repeat center/cover;
 }
 .register-box {
-  width: 340px;
+  width: 362px;
   padding: 20px;
   position: absolute;
   top: 50%;

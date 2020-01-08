@@ -412,6 +412,7 @@
               // 是文件夹
               this.loading=true
               getFile(fileId).then(res => {
+                  this.loading=false
                   if (res.data.length){
                       res.data.forEach(i => {
                           this.$set(i,'ok',false)
@@ -425,7 +426,6 @@
                       }else {
                           this.ziwenjain.slice(0,n+2)
                       }
-                  this.loading=false
                   }
               })
           }else {
