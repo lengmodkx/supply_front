@@ -645,8 +645,8 @@ export default {
       }
     },
     // 移到回收站
-    putRecyclebin() {
-      recycleBin(this.thisFileId, this.projectId).then(res => {
+    putRecyclebin(file) {
+      recycleBin(file.fileId, this.projectId).then(res => {
         if (res.result) {
           this.$Message.success("成功移到回收站");
           this.popHid();

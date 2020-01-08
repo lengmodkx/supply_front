@@ -13,7 +13,7 @@
             <li :class="{checked: nowChecked==='file'}" @click="changeNav('file','文件')">
                 <Icon type="ios-document-outline" />文件
             </li>
-            <li :class="{checked: nowChecked==='fileJ'}" @click="changeNav('fileJ','文件夹')">
+            <li :class="{checked: nowChecked==='file'}" @click="changeNav('file','文件夹')">
                 <Icon type="ios-folder-outline" />文件夹
             </li>
             <li :class="{checked: nowChecked==='group'}" @click="changeNav('group')">
