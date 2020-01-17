@@ -7,46 +7,52 @@
       </span>
     </div>
     <!-- 列表 -->
-      <div class="searchBox">
-
-      
-     <Input v-model.trim="keyword" search enter-button  placeholder="搜索成员" @on-search="FUser(keyword)"/>
-
-      </div>
-
+    <div class="searchBox">
+      <Input v-model.trim="keyword" search enter-button  placeholder="搜索成员" @on-search="FUser(keyword)"/>
+    </div>
     <div class="invite" @click="modal=true">
       <Icon type="md-add-circle"></Icon>邀请成员
     </div>
     
     <div class="userBox">
-        <Collapse v-model="value" accordion>
-              <Panel v-for="(user,index) in users" :key="index" hide-arrow :name="''+index">
-                <div class="member-item clearfix" style="padding-left:0px;">
-                  <div class="avatar">
-                    <img :src="`${user.memberImg}`">
-                  </div>
-                  <div class="memberInfo">
-                    <span class="uname">{{user.memberName}} &nbsp;&nbsp;&nbsp;职位：{{user.job?user.job:'无'}}</span>
-                    <span>{{user.accountName}}</span>
-                  </div>
-                  <Icon type="ios-arrow-down" size="18" />
+        <ul>
+          <li v-for="(user,index) in users" :key="index">
+            <div class="member-item">
+              <Avatar :src="user.memberImg" class="avatar"/>
+              <div class="memberInfo">
+                  <span class="uname">{{user.memberName}} &nbsp;&nbsp;&nbsp;职位：{{user.job?user.job:'无'}}</span>
+                  <span>联系方式：{{user.accountName}}</span>
+              </div>
+             <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible">
+                <a href="javascript:void(0)" v-if="user.memberLabel!=1">
+                    <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <div slot="title" class="title">
+                    <Icon type="ios-arrow-back" size="18" @click.native="visible=false;title='成员菜单'" v-show="visible"/>
+                    <span>{{title}}</span>
                 </div>
-                <div slot="content">
-                  <div class="user-set">
-                    <p>{{user.memberLabel==1?'管理员':'成员'}}</p>
-                    <Icon type="md-checkmark" size="16" />
-                  </div>
-                  <div style="color:red;height:30px;line-height:30px;cursor:pointer;" v-show="user.memberLabel!=1">
-                    <Poptip confirm title="您确认删除项目成员吗？" @on-ok="remove(user.memberId)">
-                      <p>移除成员</p>
-                    </Poptip>
-                  </div>
+                <div slot="content" class="content" v-show="!visible">
+                    <ul>
+                      <li v-for="(role,index) in roles" :key="role.roleId" @click="changeRole(role.roleId)">
+                        <span>{{role.roleName}}</span>
+                        <Icon type="md-checkmark" v-if="role.currentCheck"/>  
+                      </li>
+                    </ul>
+                    <div style="color:red;height:40px;line-height:40px;" @click="visible=true;title='移除成员'">删除成员</div>
                 </div>
-              </Panel>
-            </Collapse>
+                <div slot="content" v-show="visible">
+                  <div style="margin-top:10px;margin-bottom:10px">
+                      <span>确认移除项目成员吗？</span>
+                  </div>
+                  <Button type="error" long @click="remove(user.memberId)">确定</Button>
+                </div>
+              </Poptip>
+            </div>
+          </li>
+        </ul>
     </div>
-   
-
+    
+    
     <Modal v-model="modal"   @on-cancel="cancel" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请新成员</span>
@@ -74,6 +80,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { getUsers, getAssignUsers,addUser,addProjectUser, removeUser } from "../../axios/api2.js";
+import { updateUserRole } from "../../axios/api.js";
 import loading from "./common/Loading.vue";
 export default {
   name: "",
@@ -87,22 +94,26 @@ export default {
       modal: false,
       invitUsers:[],
       loading: false,
-      value: "-1"
+      value: "-1",
+      visible:false,
+      title:"成员菜单",
+      user:'',
+      visible1:false
     };
   },
  
   computed: {
-    ...mapState("member", ["users"])
+    ...mapState("member", ["users","roles"])
   },
   mounted() {
     this.initUser(this.$route.params.id);
   },
   methods: {
-    ...mapActions("member", ["initUser",'filterUser']),
+    ...mapActions("member", ["initUser","filterUser","getRoles"]),
     //关闭弹框
     cancel () {
-              this.keyword2='';
-               this.invitUsers=[]
+      this.keyword2='';
+      this.invitUsers=[]
     },
     searchUser() {
       if (!this.keyword2) {
@@ -177,7 +188,7 @@ export default {
     },
     //移除项目成员
     remove(userId) {
-      this.value = "-1";
+      this.visible = false;
       removeUser(userId).then(res => {
         console.log(userId);
         if (res.result === 1) {
@@ -192,14 +203,27 @@ export default {
     closebox() {
       this.modal1 = false;
       this.$emit("hideBox");
-      
+    },
+    changeRole(roleId){
+      let data={"roleId":roleId,"userId":this.user.memberId,"projectId":this.$route.params.id}
+      updateUserRole(data).then(res=>{
+        if(res.result==1){
+          this.$Message.success('设置成功');
+         this.user.visible = false
+        }else{
+          this.$Message.success('设置失败')   
+        }
+      })
+    },
+    visibleChange(user){
+      this.user = user;
+      let data = {"projectId":this.$route.params.id,"userId":user.memberId}
+      this.getRoles(data)
     }
   }
 };
 </script>
 <style scoped lang="less">
-
-
 .projectMember {
   position: fixed;
   top: 98px;
@@ -285,22 +309,10 @@ export default {
 
 .member-item {
   display: flex;
-  cursor: pointer;
+  // cursor: pointer;
   justify-content: center;
   align-items: center;
-
-  .avatar {
-    width: 46px;
-    img {
-      display: block;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      
-    }
-    margin-left:-15px;
-  }
-
+  height: 100%;
   .memberInfo {
     flex: 1;
     width: 100%;
@@ -308,6 +320,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin-left: 10px;
     span{
       color: #a6a6a6;
       height: 20px;
@@ -329,6 +342,30 @@ export default {
       white-space: nowrap;
     }
   }
+  .title{
+    text-align: center;
+    i{
+      position: absolute;
+      left: 5px;
+    }
+  }
+  .content{
+    ul li{
+      height: 40px;
+      line-height: 40px;
+      position: relative;
+      cursor: pointer;
+      i{
+        position: absolute;
+        right: 0px;
+        top:10px;
+      }
+    }
+    ul li:hover{
+      background: #e5e5e5
+    }
+  }
+  
 }
 
 .active {
@@ -338,18 +375,10 @@ export default {
   width: 320px;
   padding-top: 5px;
   margin: 0px auto;
- .ivu-collapse{
-    
-     margin-bottom: 30px;
-     border: none
- }
-  .ivu-collapse-item{
-     background: #fff;
-    margin-bottom: 10px;
+  ul li{
+    height: 50px;
+    border-bottom: 1px solid #e5e5e5;
   }
-  .ivu-collapse>.ivu-collapse-item {
-    border-top: none;
-    }
 }
 
 

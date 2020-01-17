@@ -1,8 +1,7 @@
 <template>
   <header class="header" id="header">
-     <Icon class="app-icon" type="md-apps" @click="goHome()" />
-    <!-- <Poptip v-model="mainMenu"   >
-     
+    <Poptip>
+     <Icon class="app-icon" type="md-apps" />
       <div slot="content"  >
         <ul class="app-con">
           <router-link tag="li" :to="'/org/'+companyId" class="app-li">
@@ -19,7 +18,7 @@
           </li>
         </ul>
       </div>
-    </Poptip> -->
+    </Poptip>
     <div class="logo">
       <img src="../../assets/images/logo.png" alt="">
       <Icon type="code" @click="openMenu"></Icon>
@@ -47,7 +46,7 @@
         <div class="userInfo" slot="content">
           <!-- <div class="sck" @click="goSucai">素材库</div> -->
           <ul class="org">
-            <!-- <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div> -->
+            <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div>
             <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item);">
               {{item.organizationName}}
               <Icon v-if="item.isSelection" type="md-checkmark" />
@@ -186,7 +185,7 @@ export default {
       }else if(process.env.NODE_ENV=='production'){
         url=process.env.VUE_APP_SOCKET
       }else{
-        url="http://192.168.1.115:8080/webSocketServer"
+        url="http://192.168.1.107:8080/webSocketServer"
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象

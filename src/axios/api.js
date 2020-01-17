@@ -795,6 +795,48 @@ export function changeGroup(groupId, projectId) {
     })
 }
 
+//获取项目下全部角色
+export function getAllRoles(projectId){
+    return $get(`pro_role/${projectId}`)
+}
+
+//获取项目下全部角色--分配角色使用
+export function getMemRoles(projectId,userId){
+    return $get('pro_role/for_member',{"projectId":projectId,"userId":userId})
+}
+//分配项目下用户角色
+export function updateUserRole(data){
+    return $post('/proRoleUser',data)
+}
+
+
+//项目下新增角色
+export function addRole(data){
+    return $post('/pro_role',data)
+}
+//更新项目下角色
+export function updateRole(roleId,roleName,roleDes,roleKey){
+    return $put(`/pro_role/${roleId}`,{"roleName":roleName,"roleDes":roleDes,"roleKey":roleKey})
+}
+
+//删除项目下角色
+export function deleteRole(roleId,projectId){
+    return $delete(`/pro_role/${roleId}`,{"projectId":projectId})
+}
+//设置默认角色
+export function defaultRole(roleKey,projectId){
+    return $put('/pro_role/default',{"roleKey":roleKey,"projectId":projectId})
+}
+//获取项目下所有资源
+export function getAllPower(roleId){
+    return $get(`/pro_res/${roleId}`)
+}
+//更新项目下角色权限
+export function changePower(roleId,ids){
+    return $put(`/pro_res_role/${roleId}/edit_resource`,{"resources":ids})
+}
+
+
 export function $post(url, params) {
     return fetch({
         url: url,

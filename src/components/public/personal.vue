@@ -343,7 +343,7 @@ const validateEmail = (rule, value, callback) => {
 }
 
 </script>
-<style socped lang="less">
+<style scoped lang="less">
 
 .personal-box{
     .ivu-input-icon{

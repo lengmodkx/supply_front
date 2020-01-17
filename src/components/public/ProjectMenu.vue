@@ -14,6 +14,12 @@
         </div>
       </li>
       <li>
+        <div class="munu-set" @click="perset=true">
+          <Icon type="ios-settings-outline" size="20"/>
+          <p>权限设置</p>
+        </div>
+      </li>
+      <li>
         <div class="munu-set" @click="tagSet=true">
           <Icon type="ios-pricetag-outline" size="20"/>
           <p>标签设置</p>
@@ -42,20 +48,25 @@
       <p slot="header" style="text-align:center;font-size: 16px;font-weight: 600">查看回收站</p>
       <recycleBin v-if="lookRecycle"></recycleBin>
     </Modal>
+    <Modal v-model="perset" class-name="vertical-center-modal" width="1200" :footer-hide="true" title="项目权限" class="permset">
+        <permSettings v-if="perset"></permSettings>
+    </Modal>
   </div>
 </template>
 <script>
 import ProjectSettings from "../../views/projectSettings.vue";
 import TagSettings from "./tagsettings.vue";
 import recycleBin from './recycleBin'
+import permSettings from './project-jurisdiction.vue'
 import { mapActions } from "vuex";
 export default {
-  components: { projectsetting: ProjectSettings, tagsettings: TagSettings, recycleBin },
+  components: { projectsetting: ProjectSettings, tagsettings: TagSettings, recycleBin,permSettings },
   data() {
     return {
       projectSet: false,
       tagSet: false,
-      lookRecycle: false
+      lookRecycle: false,
+      perset:false
     };
   },
   methods: {
@@ -125,6 +136,11 @@ export default {
   }
 }
   .nopadding{
+    /deep/ .ivu-modal-body{
+      padding: 0;
+    }
+  }
+.permset{
     /deep/ .ivu-modal-body{
       padding: 0;
     }
