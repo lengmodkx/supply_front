@@ -28,11 +28,14 @@ const store = {
             //     id: 'sss'
             //   }
         ],
+        itemfile:{},
+        createFileId:'',
 
     },
     mutations: {
         initFile(state, data) {
             state.files = data;
+            console.log(state.files)
         },
         searchFile(state, data) {
             state.files = data;
@@ -40,7 +43,13 @@ const store = {
         initTag(state, data) {
             state.tags = data;
         },
-
+        initItem(state, data) {
+            state.itemfile = data;
+            state.itemfile.show=true;
+        },
+        changeCreateFileId(state, data) {
+            state.createFileId = data;
+        },
         // 文件详情 赋值
         putOneFile(state, data) {
             state.file = data
@@ -152,6 +161,7 @@ const store = {
         },
         // 推送 创建文件夹
         createWjj(state, data) {
+            console.log(data)
             state.files = data
         },
         initFolders(state, data) {
@@ -164,10 +174,9 @@ const store = {
     actions: {
         initFile({
             commit,
-            state
         }, data) {
             return new Promise((resolve, reject) => {
-                files(data).then(res => {
+                files(data.fileId).then(res => {
                     if (res.result == 1) {
                         commit("initFile", res.data);
                         resolve()
@@ -175,6 +184,9 @@ const store = {
                 });
             })
 
+        },
+        initItem({commit, }, data) {
+            commit("initItem", data)
         },
         // 推送 上传文件
         upFiles({
@@ -239,6 +251,7 @@ const store = {
                 commit('putOneFile', res)
             })
         },
+
     }
 };
 
