@@ -1,11 +1,12 @@
 import {
-    projectMembers
+    projectMembers,getMemRoles
 } from "../../axios/api.js"
 const store = {
     namespaced: true,
     state: {
         members: [], //项目成员（不包括参与者）
-        users: [] //项目全部成员
+        users: [], //项目全部成员
+        roles:[]
     },
     mutations: {
         init(state, data) {
@@ -17,6 +18,9 @@ const store = {
         //初始化项目成员列表
         initUser(state, data) {
            state.users = data
+        },
+        initRoles(state,data){
+            state.roles = data
         },
         //搜索用户
         filterUser(state,data){            
@@ -40,15 +44,19 @@ const store = {
         initUser({commit}, data) {
             projectMembers(data).then(res => {
                 if (res.result === 1) {
-                    commit('initUser', res.data)
+                    commit('initUser', res.data);
                 }
             })
         },
         //搜索用户
         filterUser({commit},data){
             commit('filterUser',data)
+        },
+        getRoles({commit},data){
+            getMemRoles(data.projectId,data.userId).then(res=>{
+                commit('initRoles', res.data)
+            }) 
         }
-
 
     }
 };

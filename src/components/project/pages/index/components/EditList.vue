@@ -148,7 +148,7 @@
                 <div class="sonInput fl"><Input v-model="son" placeholder="输入子任务内容..." autofocus @keyup.enter.native="submitSontask" /></div>
               </div>
               <div class="btns">
-                <Button type="text" @click="showSontask=true;">取消</Button>
+                <Button type="text" @click="showSontask=true;son=''">取消</Button>
                 <Button type="primary" @click="submitSontask" style="padding:6px 20px;">保存</Button>
               </div>
             </div>

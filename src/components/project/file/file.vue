@@ -22,9 +22,7 @@ export default {
     
   },
   methods: {
-   
- 
-   
+  
   }
 };
 </script>

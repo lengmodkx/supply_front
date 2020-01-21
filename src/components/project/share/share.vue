@@ -324,9 +324,11 @@ export default {
   mounted() {
     
     this.init(this.$route.params.id).then(res => {
-        if (this.shareList.length){
+        if (this.shareList.length>0){
             this.changeShares(this.shareList[0].id).then(res => {
-                this.loading = false;
+              this.open=true
+              this.indexNow=0
+              this.loading = false;
             })
         }else {
             this.loading = false;

@@ -12,7 +12,7 @@
         </FormItem>
         <FormItem prop="code">
           <Input type="text" size="large" placeholder="请输入短信验证码" v-model="formValidate.code" clearable class="captcha-input" />
-          <span v-if="isTimes" class="code" style="background-color: #e5e5e5">{{timeNum}}秒后重新发送</span>
+          <Button type="primary" v-if="isTimes" class="code">{{timeNum}}秒后重新发送</Button>
           <Button type="primary" v-else class="code" @click="getPhoneCode" :disabled="!formValidate.accountName||!formValidate.captcha">获取短信验证码</Button>
         </FormItem>
         <FormItem prop="password">
@@ -97,7 +97,6 @@ export default {
         if (valid) {
           console.log(this.formValidate);
           resetPwd(this.formValidate).then(res => {
-            
             if(res.result==1){
               this.$Message.success("修改成功!");
               this.$router.push("/");
@@ -122,8 +121,11 @@ export default {
       }, 1000);
       getPhone(this.formValidate.accountName, this.formValidate.captcha).then(
         res => {
-          console.log(res);
-          this.$Message.error(res.msg);
+          if(res.result===1){
+            this.$Message.success("获取成功");
+          }else{
+            this.$Message.error("获取失败");
+          }
         }
       );
     }
@@ -131,14 +133,14 @@ export default {
 };
 
  const validatePhone = (rule, value, callback) => {
-                    if (!value) {
-                        return callback(new Error('请输入手机号'));
-                    } else if (!/^1[34578]\d{9}$/.test(value)) {
-                        callback('手机号格式不正确');
-                    } else {
-                        callback();
-                    }   
-       }
+    if (!value) {
+        return callback(new Error('请输入手机号'));
+    } else if (!/^1[345789]\d{9}$/.test(value)) {
+        callback('手机号格式不正确');
+    } else {
+        callback();
+    }   
+}
 
 </script>
 <style scoped>

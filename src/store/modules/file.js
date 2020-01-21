@@ -91,6 +91,7 @@ const store = {
         },
         // 推送 移入回收站
         putRecycle(state, data) {
+            console.log(data);
             state.files.forEach((i, n) => {
                 if (data.includes(i.fileId)) {
                     state.files.splice(n, 1)
