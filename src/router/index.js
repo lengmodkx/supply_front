@@ -13,6 +13,7 @@ import personal from  '../components/public/personal'
 import down from '../components/public/down'
 import sucai from  '../components/public/sucai'
 import Bind from '../views/bindPhone.vue'
+import orgEmpty from '../views/orgEmpty.vue'
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -100,16 +101,15 @@ const router = new Router({
       ]
     },
     {
-      path: "/home",
-      name: "Home",
+      path: "/org/:orgid",
       component: Home,
       meta: {
         title: "阿拉丁BIM5D云平台"
       }
     },
     {
-      path: "/org/:id",
-      component: Home,
+      path: "/organization-is-empty",
+      component: orgEmpty,
       meta: {
         title: "阿拉丁BIM5D云平台"
       }
@@ -174,11 +174,11 @@ const router = new Router({
     },
     {
       path: "/",
-      name: "home",
+      name: "login",
       meta: {
         title: "登录"
       },
-      component: () => import('@/views/Login.vue')
+      component: Login
     },
     {
       path: "/register",

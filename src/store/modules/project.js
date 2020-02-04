@@ -99,7 +99,6 @@ const store = {
         // 初始化企业的项目列表
         orgProjectInit ({commit}, params) {
             getAllProject(params.id).then(res => {
-                console.log('我是项目数据',res)
                 if (res.result === 1) {
                     let data = [];
                     switch (params.type) {

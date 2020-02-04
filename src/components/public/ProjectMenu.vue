@@ -13,12 +13,12 @@
           <p>项目设置</p>
         </div>
       </li>
-      <li>
+      <!-- <li>
         <div class="munu-set" @click="perset=true">
           <Icon type="ios-settings-outline" size="20"/>
           <p>权限设置</p>
         </div>
-      </li>
+      </li> -->
       <li>
         <div class="munu-set" @click="tagSet=true">
           <Icon type="ios-pricetag-outline" size="20"/>

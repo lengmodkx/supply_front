@@ -836,6 +836,11 @@ export function changePower(roleId,ids){
     return $put(`/pro_res_role/${roleId}/edit_resource`,{"resources":ids})
 }
 
+//切换个人/企业项目时候使用
+export function updateState(){
+    return $put('organizations/personal_project/')
+}
+
 
 export function $post(url, params) {
     return fetch({

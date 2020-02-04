@@ -8,7 +8,6 @@ const  store ={
     },
     mutations: {
         initCompany(state, data){
-            console.log(data)
             state.companyList=data
             if (data[0]){
                 state.companyList=data

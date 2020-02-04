@@ -1,10 +1,11 @@
 <template>
   <div class="header-project">
     <div class="fl">
-      <Breadcrumb separator=">">
-        <BreadcrumbItem to="/home">首页</BreadcrumbItem>
+      <!-- <Breadcrumb separator=">">
+        <BreadcrumbItem :to="toto">首页</BreadcrumbItem>
         <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
-      </Breadcrumb>
+      </Breadcrumb> -->
+      <div><a :href="toto">首页</a> <span> > {{projectName}}</span></div>
     </div>
     <!-- :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''" -->
     <div class="menu">
@@ -39,7 +40,8 @@ export default {
       id: this.$route.params.id,
       menus: [],
       projectName: "",
-      companyId: localStorage.companyId
+      companyId: localStorage.companyId,
+      toto: '/org/'+localStorage.companyId
     };
   },
   computed: {
