@@ -102,18 +102,20 @@ export function addRelation(data) {
 }
 // 获取文件夹下的子文件
 export function getChildFiles(fileId) {
-        return fetch({
-        url: '/files',
-        method: "get",
-        params: {fileId: fileId}
+    
+    return fetch({
+        url: `/files/${fileId}`,
+        method: "get"
     });
+
 }
+
+
 // 加载项目下的文件信息
 export function getTSFile(fileId) {
     return fetch({
-        url: '/files',
-        method: "get",
-        params: {fileId: fileId}
+        url: `/files/${fileId}`,
+        method: "get"
     });
 }
 
@@ -212,7 +214,7 @@ export function getSucai(folderId,page,orderType) {
 
 
 
-
+// 获取素材库 搜索
 export function getSucaiSearch(fileName,page) {
     return fetch({
         url: `/files/${fileName}/material_base_search`,
@@ -221,5 +223,14 @@ export function getSucaiSearch(fileName,page) {
             page:page,
             size: 10
         }
+    });
+}
+
+// 获取文件树新
+
+export function getTree(fileId) {
+    return fetch({
+        url: `/files/tree/${fileId}`,
+        method: "get",
     });
 }

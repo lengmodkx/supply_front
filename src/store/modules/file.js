@@ -28,11 +28,24 @@ const store = {
             //     id: 'sss'
             //   }
         ],
-
+        itemfile:{},
+        createFileId:'',
+        //菜单栏
+        crumbs:[
+            {
+                 name: "项目文件夹",
+            },
+          ],
     },
     mutations: {
+         // 回到首页导航条
+         crumbsHome(state, data) {
+            state.crumbs=[data]   
+        },
+        
         initFile(state, data) {
             state.files = data;
+            
         },
         searchFile(state, data) {
             state.files = data;
@@ -40,14 +53,20 @@ const store = {
         initTag(state, data) {
             state.tags = data;
         },
-
+        initItem(state, data) {
+            state.itemfile = data;
+            state.itemfile.show=true;
+        },
+        changeCreateFileId(state, data) {
+            state.createFileId = data;
+        },
         // 文件详情 赋值
         putOneFile(state, data) {
             state.file = data
             state.joinInfoIds = data.data.joinInfo.map(v => {
                 return v.userId
             }).join(",");
-            console.log(state.joinInfoIds)
+            
         },
         // 推送，更改文件名称
         changeFileName(state, data) {
@@ -77,12 +96,12 @@ const store = {
             }
         },
         upFiles(state, data) {
-            console.log(">>>", data);
+            
             state.files = data.data
         },
         // 推送 移入回收站
         putRecycle(state, data) {
-            console.log(data);
+          
             state.files.forEach((i, n) => {
                 if (data.includes(i.fileId)) {
                     state.files.splice(n, 1)
@@ -107,7 +126,7 @@ const store = {
         },
         // 推送 关联
         relevance(state, data) {
-            console.log("----------" + JSON.stringify(data));
+           
             if (data.publicType === '任务') {
                 state.file.data.bindTasks = state.file.data.bindTasks.concat(data.bind)
             } else if (data.publicType === '分享') {
@@ -120,7 +139,7 @@ const store = {
         },
         // 推送 取消关联
         cancelRelevance(state, data) {
-            console.log(data.bindId)
+           
             if (data.publicType === '任务') {
                 state.file.data.bindTasks.forEach((i, n) => {
                     if (i.taskId === data.bindId) {
@@ -153,6 +172,7 @@ const store = {
         },
         // 推送 创建文件夹
         createWjj(state, data) {
+        
             state.files = data
         },
         initFolders(state, data) {
@@ -160,15 +180,15 @@ const store = {
         },
         initBreadcrumb(state, data) {
             state.breadcrumb = data.reverse()
-        }
+        },
+       
     },
     actions: {
         initFile({
             commit,
-            state
         }, data) {
             return new Promise((resolve, reject) => {
-                files(data).then(res => {
+                files(data.fileId).then(res => {
                     if (res.result == 1) {
                         commit("initFile", res.data);
                         resolve()
@@ -176,6 +196,9 @@ const store = {
                 });
             })
 
+        },
+        initItem({commit, }, data) {
+            commit("initItem", data)
         },
         // 推送 上传文件
         upFiles({
@@ -213,7 +236,7 @@ const store = {
                 //tag搜索
                 searchFile(data.tag, data.projectId).then(res => {
                     commit("searchFile", res.data)
-                    console.log(res)
+                   
                 })
             } else {
                 //搜索条
@@ -227,7 +250,7 @@ const store = {
             commit
         }, data) {
             allTags(data).then(res => {
-                console.log(res)
+               
                 commit("initTag", res.data)
             })
         },
@@ -236,10 +259,12 @@ const store = {
             commit
         }, data) {
             getFileDetails(data).then(res => {
-                console.log(res)
                 commit('putOneFile', res)
             })
         },
+        
+
+
     }
 };
 

@@ -574,8 +574,8 @@ export function updateTaskPrivacy(taskId, privacy) {
 }
 
 //所有文件
-export function files(params) {
-    return $get("/files", params);
+export function files(fileId) {
+    return $get(`/files/${fileId}`);
 }
 //项目所有子文件夹
 export function folderChild(projectId) {

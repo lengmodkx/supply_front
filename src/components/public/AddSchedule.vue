@@ -191,7 +191,8 @@ export default {
         repeat: this.repetition_data,
         remind: this.remind_data,
         memberIds: this.memberIds,
-        privacy: this.locked ? "1" : "0"
+        privacy: this.locked ? "1" : "0",
+        isAllday: this.checkbox ? 1:0
       };
       addSchedule(data)
         .then(res => {

@@ -26,7 +26,7 @@
                     <li v-for="(c,i) in collectList" :key="i">
                         <div class="item-header">
                             <div class="create-time"><Time :time="c.createTime" /></div>
-                            <div class="unfavorite">取消收藏</div>
+                            <div class="unfavorite" @click="cancleCollect(c.publicId)">取消收藏</div>
                         </div>
                         <div class="item-title clearfix">
                             <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {collectList} from "@/axios/api"
+import {collectList,cancelCollect} from "@/axios/api"
 import myModal from "@/components/project/pages/index/components/EditList"
 import editRicheng from "@/components/public/common/EditRicheng"
 import fileDetail from "@/components/project/file/fileDetail";
@@ -93,6 +93,11 @@ export default {
           this.activeCollect=i
           this.collectType=name
           this.collectVisible=false
+      },
+      cancleCollect(id){
+          cancelCollect(id).then(res => {
+              this.$Message.message("成功")
+          })
       },
       getCollect(){
           this.loading = true
