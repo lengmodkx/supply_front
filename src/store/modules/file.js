@@ -30,12 +30,22 @@ const store = {
         ],
         itemfile:{},
         createFileId:'',
-
+        //菜单栏
+        crumbs:[
+            {
+                 name: "项目文件夹",
+            },
+          ],
     },
     mutations: {
+         // 回到首页导航条
+         crumbsHome(state, data) {
+            state.crumbs=[data]   
+        },
+        
         initFile(state, data) {
             state.files = data;
-            console.log(state.files)
+            
         },
         searchFile(state, data) {
             state.files = data;
@@ -56,7 +66,7 @@ const store = {
             state.joinInfoIds = data.data.joinInfo.map(v => {
                 return v.userId
             }).join(",");
-            console.log(state.joinInfoIds)
+            
         },
         // 推送，更改文件名称
         changeFileName(state, data) {
@@ -86,12 +96,12 @@ const store = {
             }
         },
         upFiles(state, data) {
-            console.log(">>>", data);
+            
             state.files = data.data
         },
         // 推送 移入回收站
         putRecycle(state, data) {
-            console.log(data);
+          
             state.files.forEach((i, n) => {
                 if (data.includes(i.fileId)) {
                     state.files.splice(n, 1)
@@ -116,7 +126,7 @@ const store = {
         },
         // 推送 关联
         relevance(state, data) {
-            console.log("----------" + JSON.stringify(data));
+           
             if (data.publicType === '任务') {
                 state.file.data.bindTasks = state.file.data.bindTasks.concat(data.bind)
             } else if (data.publicType === '分享') {
@@ -129,7 +139,7 @@ const store = {
         },
         // 推送 取消关联
         cancelRelevance(state, data) {
-            console.log(data.bindId)
+           
             if (data.publicType === '任务') {
                 state.file.data.bindTasks.forEach((i, n) => {
                     if (i.taskId === data.bindId) {
@@ -162,7 +172,7 @@ const store = {
         },
         // 推送 创建文件夹
         createWjj(state, data) {
-            console.log(data)
+        
             state.files = data
         },
         initFolders(state, data) {
@@ -170,7 +180,8 @@ const store = {
         },
         initBreadcrumb(state, data) {
             state.breadcrumb = data.reverse()
-        }
+        },
+       
     },
     actions: {
         initFile({
@@ -225,7 +236,7 @@ const store = {
                 //tag搜索
                 searchFile(data.tag, data.projectId).then(res => {
                     commit("searchFile", res.data)
-                    console.log(res)
+                   
                 })
             } else {
                 //搜索条
@@ -239,7 +250,7 @@ const store = {
             commit
         }, data) {
             allTags(data).then(res => {
-                console.log(res)
+               
                 commit("initTag", res.data)
             })
         },
@@ -248,10 +259,11 @@ const store = {
             commit
         }, data) {
             getFileDetails(data).then(res => {
-                console.log(res)
                 commit('putOneFile', res)
             })
         },
+        
+
 
     }
 };

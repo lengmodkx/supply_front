@@ -28,32 +28,23 @@ export default {
             }
         }
     },
+  
     
     methods:{
            ...mapActions("tree", ["initFolders"]),
               ...mapActions("file", ["initFile", "searchFile", "initTag"]),
         onCreated(obj){
-            console.log(obj)
+           
         },
         onClick(evt, treeId, treeNode){
                 this.folderId = treeNode.id;                  
-                // let params = { fileId: this.folderId };
-                // this.$router.push({
-                //     path: `/project/${this.$route.params.id}/files/${this.folderId}`
-                // })
                 let params = { fileId: this.folderId };
                 this.initFile(params).then(res => {
-                     console.log(this.files)
+                     
                 });
-
-        
         }
-
-        
     },
-    created:function(){
-        
-    }
+   
 }
 </script>
 <style lang="less">

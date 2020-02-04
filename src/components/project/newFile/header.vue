@@ -1,14 +1,14 @@
 <template>
   <div class="file-header">
       <div class="left">
-            <button  class="move"  @click="move"></button>
-            <button  class="back"   ></button>
+            <button  class="move"  @click="forward"></button>
+            <button  class="back"  @click="back"  ></button>
       </div>
       <div class="middle">
            <span><img src="../../../assets/images/03.png" alt=""  @click="home"></span>
               <ul class="crumbs">
-                <li v-for="(item,index) in crumbs" :key='index'>  
-                   <img :src="item.src" alt="" >               
+                <li v-for="(item,index) in crumbs" :key='index' >  
+                   <img v-if='item.icon' :src="item.icon" alt="" >               
                   {{item.name}}
                   <a > </a>
                 </li>
@@ -28,22 +28,39 @@ export default {
   data () {
     return {
       movehover:false,
-      crumbs:[
-        {name:'文件',src:require('../../../assets/images/tree1.png')},
-        {name:'md文件',src:require('../../../assets/images/tree2.png')}
-      ],
+      
       searched: "",
        projectId: this.$route.params.id,
        fileId: this.$route.params.fileId,
     }
   },
+  computed: {
+      ...mapState("tree", ['fileTree',"userTree","tooltree","typetree",'showView',]),
+      
+      
+       ...mapState("file", ["crumbs",]),
+   },
   methods: {
-       ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag"]),
-        move(){
+       ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag","initCrumbs"]),
+       
+       //前进
+        forward(){
             this.movehover=!this.movehover;
         },
+        // 后退
+        back(){
+
+        },
+        //回到首页
+          home(){
+              this.$store.commit("file/crumbsHome", this.fileTree[0]);
+               //请求数据 
+              let params = { fileId: this.fileId };
+              this.initFile(params).then(res => {
+              });
+          },
          // 搜索文件
-          search(value) {
+          search(value) { 
             if (value !== "") {
               var data = { fileName: value, projectId: this.projectId };
                 this.searchFile(data).then(res => {
@@ -56,12 +73,10 @@ export default {
               });
             }
           },
-          //回到首页
-          home(){
-              this.initFile(this.fileId).then(res => {
-              });
-          }
+          
   },
+  
+ 
 }
 
 </script>
@@ -129,8 +144,9 @@ export default {
                   align-items:center ;
                    background: #f2f2f2;
                    cursor: pointer;
+                   padding-left:10px;
                   img{
-                    padding: 10px;
+                    padding: 10px 10px 10px 0;
                   }
                 }
                 a{

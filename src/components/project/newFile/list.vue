@@ -269,14 +269,14 @@ export default {
     },
     file: {
       handler: function(val, oldVal) {
-        console.log("file" + val);
+        
       },
       deep: true
     },
 
     treeData: {
       handler: function(val, oldVal) {
-        console.log(val, oldVal);
+        
       },
       deep: true
     },
@@ -365,7 +365,7 @@ export default {
     },
     // 选择标签
     selectTag(value) {
-      console.log(value)
+     
       let data={
         tag:value,
         projectId: this.projectId
@@ -444,7 +444,7 @@ export default {
     },
 
     showFileChoose(data) {
-      console.log(data);
+     
       if (data === "model") {
         this.showModel = !this.showModel;
       } else {
@@ -482,7 +482,7 @@ export default {
     // 选中要移动到哪
     treeClick(node) {
       this.folderId = node.data.id;
-      console.log(node.data.id);
+      
       let params = { fileId: this.folderId };
       // this.initFile(params).then(res => {
       //   this.loading = false;
@@ -512,20 +512,21 @@ export default {
       if (".svf".includes(file.ext)) {
         // 模型文件
         getFileDetails(id).then(res => {
-          console.log(res.data.fileUrl);
+        
           this.svfUrl = res.data.fileUrl;
           this.showModelFileDetail = true;
         });
 
-        console.log(file);
+        
       } else {
         // 普通文件或者文件夹
         if (catalog == 1) {
+          console.log("普通文件")
           this.loading = true;
           this.fileId = id;
           this.pathData.push({ name: file.fileName, id: file.fileId });
           getChildFiles(id).then(res => {
-            console.log(res);
+            
             this.$store.commit("file/initFile", res.data);
             this.loading = false;
             localStorage.fileParentId = res.parentId;
@@ -535,9 +536,10 @@ export default {
             path: `/project/${this.$route.params.id}/files/${id}`
           });
         } else {
+          
+          console.log("文件夹")
           this.loading = true;
           getFileDetails(id).then(res => {
-            console.log(res);
             this.loading = false;
             this.putOneFile(res);
             this.showModelDetai = true;
@@ -556,7 +558,7 @@ export default {
         this.mFile.filePrivacy=0;
       }
       filePrivacy(this.mFile.fileId, num).then(res => {
-        console.log(res);
+       
       });
     },
     showMore(fileName, fileId, catalog) {

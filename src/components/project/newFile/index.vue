@@ -37,7 +37,6 @@ import fileTools from '@/components/project/newFile/tools.vue'  //工具
 
 import { mapState, mapActions, mapMutations } from "vuex";
 
-
 export default {
   components: {tree,list,fileHeader,fileTools,viewList,},
     data () {
@@ -53,14 +52,16 @@ export default {
       ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb",'createFileId'])
    },
    mounted: function() {
-        console.log(this.fileId)
+     
+       
         // 树
         this.initFolders(this.fileId).then(res => {});
+        console.log(this.fileTree)
         // 文件
            let params = { fileId: this.fileId };
            this.initFile(params).then(res => {
            this.loading = false;
-           console.log(this.files)
+          
            });
    },
     methods: {
@@ -68,8 +69,12 @@ export default {
       ...mapActions("file", ["initFile", "searchFile", "initTag"]),
     },
     created:function(){
-        console.log(this.fileId)
+        
          this.$store.commit("file/changeCreateFileId", this.fileId);    
+       
+    
+         // this.$store.commit("file/crumbsHome", this.fileTree[0]);
+    
     }
 }
 
