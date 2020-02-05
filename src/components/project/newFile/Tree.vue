@@ -19,7 +19,7 @@ export default {
                 data: {
                     simpleData: {
                         enable: true,
-                        pIdKey: "pId"
+                        pIdKey: "pId",
                     }
                 },
                 view: {
