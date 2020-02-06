@@ -801,8 +801,8 @@ export function getAllRoles(projectId){
 }
 
 //获取项目下全部角色--分配角色使用
-export function getMemRoles(projectId,userId){
-    return $get('pro_role/for_member',{"projectId":projectId,"userId":userId})
+export function getMemRoles(orgId,userId){
+    return $get('pro_role/for_member',{"orgId":orgId,"userId":userId})
 }
 //分配项目下用户角色
 export function updateUserRole(data){

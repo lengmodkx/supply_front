@@ -1,27 +1,38 @@
 <template>
     <div>
-        <div class="modal-per-content" v-for="(permission,index) in permissions" :key="index">
+        <div class="modal-per-content" v-for="(permission,index) in pers" :key="index">
             <div class="checke-title">
                 <Checkbox :disabled="disabled" :indeterminate="permission.indeterminate"
                           :value="permission.checkAll"
                           @click.prevent.native="handleCheckAll(permission)">{{permission.group}}</Checkbox>
             </div>
             <CheckboxGroup v-model="permission.checkAllGroup" @on-change="checkAllGroupChange(permission)">
-                <Checkbox :disabled="disabled" class="mb15" v-for="(resource,index) in permission.resources" :label="resource.resourceName" :key="index"></Checkbox>
+                <Checkbox :disabled="disabled" class="mb15" v-for="(resource,index) in permission.resources" :label="resource.id" :key="index" ref="resource">{{resource.resourceName}}</Checkbox>
             </CheckboxGroup>
         </div>
         <div class="footer-btn">
-            <Button type="primary" size="large" @click="savePower">保存</Button>
+            <Button type="primary" @click="savePower" >保存</Button>
         </div>
     </div>
 </template>
 <script>
-    import {changePower} from '../axios/backendManagementApi'
+    import {changePower} from '@/axios/api'
     export default {
-        props: ['permissions', 'role','roleKey'],
+        props: ['permissions', 'role'],
         data() {
             return {
-                disabled: this.roleKey==="administrator"
+                disabled: this.role.roleKey==="administrator"||this.role.roleKey==="admin",
+                pers: this.permissions.map(p=>{
+                    if(p.checkAllGroup.length == p.resources.length){
+                        p.indeterminate = false;
+                        p.checkAll = true;
+                    }else{
+                        p.indeterminate = true;
+                        p.checkAll = false;
+                    }
+                    return p;
+                }),
+                resources:[]
             }
         },
         methods: {
@@ -32,11 +43,19 @@
                     permission.checkAll = !permission.checkAll
                 }
                 permission.indeterminate = false
-
+                
+                console.log(permission.checkAll)
+                
                 if (permission.checkAll) {
-                    permission.checkAllGroup = permission.resources
+                    permission.indeterminate = false;
+                    permission.resources.forEach(p=>{
+                        this.resources.push(p.id);
+                    });
+                    permission.checkAllGroup = this.resources
                 } else {
-                    permission.checkAllGroup = []
+                    permission.indeterminate = false;
+                    permission.checkAllGroup = [],
+                    this.resources=[]
                 }
             },
             checkAllGroupChange(permission) {
@@ -54,23 +73,20 @@
             // 保存 按钮
             savePower () {
                 let resourcesArr=[]
-                this.permissions.forEach(v => {
-                    resourcesArr=resourcesArr.concat(v.checkAllGroup)
+                console.log(this.$refs.resource)
+                this.$refs.resource.forEach(res=>{
+                    if(res.currentValue){
+                        resourcesArr.push(res.label)
+                    }
+                    
                 })
-                let idArr=[]
-                resourcesArr.forEach((i,n) => {
-                    this.permissions.forEach((ii,nn) => {
-                        ii.resources.forEach((iii,nnn) => {
-                            if (iii.resourceName===i){
-                                idArr.push(iii.id)
-                            }
-                        })
-                    })
-                })
-                changePower(this.role,idArr.join(',')).then(res => {
-                    if (res.result){
+                console.log(resourcesArr)
+                changePower(this.role.roleId,resourcesArr.join(',')).then(res => {
+                    if (res.result===1){
                         this.$emit('close')
                         this.$Message.success('设置成功');
+                    }else{
+                        this.$Message.error('设置失败');
                     }
                 })
             }
@@ -78,29 +94,26 @@
     }
 </script>
 <style>
-    .footer-btn{
-        margin: 10px 0;
-        display: flex;
-        padding: 0 20px 20px;
-        flex-direction: row-reverse;
-    }
-    .modal-per-content {
-        display: flex;
-        border-bottom: 1px solid #e9e9e9;
-        margin-top: 15px;
-        padding: 0 16px;
-    }
-    .modal-per-content:nth-last-child(1){
-        border-bottom: 0 none;
-    }
-    .per-checkbox {
-        width: 160px;
-    }
-    .checke-title{
-        flex: none;
-        margin-right: 10px;
-    }
-    .mb15{
-        margin-bottom: 15px;
-    }
+.footer-btn{
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+.modal-per-content {
+    display: flex;
+    border-bottom: 1px solid #e9e9e9;
+    margin-top: 15px;
+    padding: 0 16px;
+}
+.modal-per-content:nth-last-child(1){
+    border-bottom: 0 none;
+}
+
+.checke-title{
+    flex: none;
+    width: 120px;
+}
+.mb15{
+    margin-bottom: 15px;
+}
 </style>

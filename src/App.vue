@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-main v-if="hasHeader"></header-main>
+    <header-main v-if="hasHeader" :companyId="companyId"></header-main>
     <div class="content-main">
       <router-view v-if="isRouterAlive"/>
     </div>
@@ -23,7 +23,8 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      hasHeader: true
+      hasHeader: true,
+      companyId:""
     };
   },
   created() {
@@ -32,6 +33,7 @@ export default {
   watch: {
     $route() {
       this.renderHeader();
+      this.companyId = this.$route.params.orgid;
     }
   },
   methods: {

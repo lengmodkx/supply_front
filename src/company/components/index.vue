@@ -5,10 +5,10 @@
                 <Tooltip :content="isExtend?'点击收起导航':'点击展开导航'" placement="right">
                     <Icon @click="isExtend=!isExtend" class="icon-menu" type="md-menu" />
                 </Tooltip>
-                <img src="https://dn-st.teambition.net/teambition/images/logo1.a6464e9c.jpg" alt="">
-                <span>lijian</span>
+                <img :src="userImg" alt="">
+                <span>{{userName}}</span>
             </div>
-            <img class="header-right" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+userImg" alt="">
+            <!-- <img class="header-right" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+userImg" alt=""> -->
         </header>
         <div class="content">
             <transition name="slide-fade" >
@@ -47,7 +47,8 @@
             return {
                 isExtend: true,
                 path: this.$route.path,
-                userImg:localStorage.userImg
+                userImg:localStorage.userImg,
+                userName:localStorage.userName
             }
         },
         mounted() {

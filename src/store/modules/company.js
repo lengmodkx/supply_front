@@ -9,19 +9,6 @@ const  store ={
     mutations: {
         initCompany(state, data){
             state.companyList=data
-            if (data[0]){
-                state.companyList=data
-                data.map(v => {
-                    if (v.isSelection){
-                        state.companyId=v.organizationId
-                        localStorage.companyId=v.organizationId
-                    }
-                })
-            } else {
-                state.companyList=[]
-                localStorage.companyId=''
-                state.companyId=''
-            }
         },
         setBranchId (state, data) {
             state.branchId=data

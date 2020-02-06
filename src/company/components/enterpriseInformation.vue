@@ -6,9 +6,9 @@
                 <p class="little-title">企业头像</p>
                 <div class="awart-box">
                     <img :src="img" alt="">
-                    <Upload action="//jsonplaceholder.typicode.com/posts/">
+                    <!-- <Upload action="//jsonplaceholder.typicode.com/posts/">
                         <Button type="primary" ghost>上传新头像</Button>
-                    </Upload>
+                    </Upload> -->
                 </div>
                 <p class="little-title">企业名称</p>
                 <Input v-model="orgName" style="width: 420px;margin-bottom: 15px" />
@@ -20,7 +20,7 @@
                     <Option value="0">私有企业（仅企业成员可见）</Option>
                 </Select>
                 <div>
-                    <Button type="primary" style="margin-top: 15px">确定</Button>
+                    <Button type="primary" style="margin-top: 15px" @click="saveOrg">确定</Button>
                 </div>
             </div>
         </div>
@@ -30,8 +30,8 @@
                 <div class="little-title">企业归属</div>
                 <div class="org-vest-con">
                     <div class="org-vest-con-left">
-                        <img src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/avatar/1559095833698.jpg" alt="">
-                        <span>李健</span>
+                        <Icon type="md-contact" size='32'/>
+                        <span>{{contact}}</span>
                     </div>
                     <Button type="primary" ghost>移交</Button>
                 </div>
@@ -46,17 +46,50 @@
 </template>
 
 <script>
-    export default {
-        name: "enterpriseInformation",
-        data () {
-            return {
-                img: 'https://dn-st.teambition.net/teambition/images/logo1.a6464e9c.jpg',
-                orgName: 'aa',
-                orgDes: 'dass',
-                orgPublick: '1'
+import { orgInfo , updateOrg } from '../axios/api'
+export default {
+    name: "enterpriseInformation",
+    data () {
+        return {
+            img: '',
+            orgName: '',
+            orgDes: '',
+            orgPublick: '0',
+            contact:''
+        }
+    },
+    mounted(){
+        this.getOrgInfo()
+    },
+    methods:{
+        getOrgInfo(){
+            orgInfo(localStorage.companyId).then(res=>{
+                if(res.result==1){
+                    this.img = res.data.organizationImage
+                    this.orgName = res.data.organizationName
+                    this.orgDes = res.data.organizationDes
+                    this.orgPublick = res.data.isPublic+""
+                    this.contact = res.data.contact
+                }
+            })
+        },
+        saveOrg(){
+            let params = {
+                orgName:this.orgName,
+                orgDes:this.orgDes,
+                isPublic:this.orgPublick,
+                memberId:localStorage.userId
             }
+            updateOrg(localStorage.companyId,params).then(res=>{
+                if(res.result==1){
+                    this.$Message.success('修改成功');
+                }else{
+                    this.$Message.eror('修改失败');
+                }
+            })
         }
     }
+}
 </script>
 
 <style scoped lang="less">

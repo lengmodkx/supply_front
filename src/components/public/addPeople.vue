@@ -10,12 +10,16 @@
                    
                 </ul>
                 <!--搜索显示的-->
-                <div class="invit-user" v-if="isSearch">
-                    <div class="invit-user-name">
-                        <img :src="`${searchPeople.user.image}`">
-                        <p>{{searchPeople.user.userName}}</p>
-                    </div>
-                    <Button type="primary" :disabled="searchPeople.isExist" @click="adduser(searchPeople.user.userId)">添加</Button>
+                <div v-if="isSearch">
+                    <ul>
+                        <li v-for="(people,index) in searchPeople" :key="index" class="invit-user">
+                            <div class="member-info">
+                                <img :src="`${people.image}`">
+                                <span>{{people.userName}}</span>
+                            </div>
+                            <Button type="primary" @click="adduser(people.userId)">添加</Button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -30,7 +34,7 @@
             return {
                 loading: false,
                 searchWord: '',
-                searchPeople: {},
+                searchPeople: [],
                 isSearch: false,
             }
         },
@@ -63,21 +67,19 @@
             },
             // 搜索 成员
             searchUser(value){
-                if(!(/^1[34578]\d{9}$/.test(value))){
-                    this.$Message.error('手机号格式错误，请重新输入');
-                }else {
-                    this.loading=true
-                    searchMembers(value, localStorage.companyId).then(res => {
-                        this.isSearch=true
-                        this.loading=false
+                this.loading=true
+                searchMembers(value, localStorage.companyId).then(res => {
+                    if(res.result==1){
                         this.searchPeople=res.data
-                    })
-                }
+                    }
+                    this.isSearch=true
+                    this.loading=false
+                })
             },
             searchInput () {
                 if (this.searchWord==''){
                     this.isSearch=false
-                    this.searchPeople={}
+                    this.searchPeople=[]
                 }
             },
         }
@@ -105,7 +107,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 8px;
-    .invit-user-name {
+    .member-info {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -113,7 +115,7 @@
             width: 32px;
             height: 32px;
         }
-        p {
+        span {
             font-size: 14px;
             margin-left: 10px;
         }

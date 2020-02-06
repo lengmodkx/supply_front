@@ -72,7 +72,7 @@
             if (res.result==1){
               this.$emit('closeCreateOrg')
               localStorage.orgId = res.data;
-              this.$router.push('/org/'+res.data)
+              this.$router.replace('/org/'+res.data)
             }
           })
         }

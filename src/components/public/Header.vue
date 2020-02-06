@@ -24,12 +24,12 @@
       <Icon type="code" @click="openMenu"></Icon>
     </div>
     <div class="fr menu">
-      <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="showHeaderTag(1)" v-if="companyId"><span class="text">我的</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="showHeaderTag(2)" v-if="companyId"><span class="text">日历</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="showHeaderTag(6)" v-if="companyId"><span class="text">素材</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="showHeaderTag(4)" v-if="companyId"><span class="text">下载</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="showHeaderTag(1)" ><span class="text">我的</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="showHeaderTag(2)" ><span class="text">日历</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="showHeaderTag(6)" ><span class="text">素材</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="showHeaderTag(4)" ><span class="text">下载</span></a>
       <a @click="showHeaderTag(5)" v-if="companyId"><span class="text">设计</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="showHeaderTag(3)" v-if="companyId">
+      <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="showHeaderTag(3)">
         <span class="text" style="border-right:none;">
           <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
             <Icon type="ios-notifications-outline" size="22" />
@@ -115,6 +115,7 @@ export default {
     down,//下载
     message,//消息
   },
+  props: ['companyId'],
   data() {
     return {
       tagHeader:false,//显示日历
@@ -127,7 +128,6 @@ export default {
       mainMenu: false,
       hoverClass:"",
       showSck: false,
-      companyId: this.$route.params.orgid,
       data: [
         {
           value: "阿拉丁",
@@ -166,6 +166,7 @@ export default {
   mounted() {
     this.initSocket(localStorage.userId);
     this.initCompany();
+    console.log(this.companyId)
   },
   methods: {
     ...mapActions("company", ["initCompany"]),
@@ -270,8 +271,8 @@ export default {
          }
     },
     closeTag(){
-               this.tagHeader=false;
-               this.showtag=''
+      this.tagHeader=false;
+      this.showtag=''
     },
     clickHeaderTag(id) {     
       this.changeHeaderTag(id)

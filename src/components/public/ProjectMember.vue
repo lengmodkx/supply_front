@@ -209,7 +209,7 @@ export default {
       updateUserRole(data).then(res=>{
         if(res.result==1){
           this.$Message.success('设置成功');
-         this.user.visible = false
+          this.user.visible = false
         }else{
           this.$Message.success('设置失败')   
         }
@@ -217,7 +217,7 @@ export default {
     },
     visibleChange(user){
       this.user = user;
-      let data = {"projectId":this.$route.params.id,"userId":user.memberId}
+      let data = {"orgId":localStorage.companyId,"userId":user.memberId}
       this.getRoles(data)
     }
   }
