@@ -29,7 +29,7 @@ export default {
         }
     },
      computed: {
-      ...mapState("tree", ["fileTree","userTree","tooltree","typetree",'showView',]),
+      ...mapState("tree", ["fileTree",'showView']),
      
    },
   
