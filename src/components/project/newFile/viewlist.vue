@@ -502,10 +502,10 @@ export default {
             this.$store.commit("file/changeCreateFileId", file.fileId);   
             
             if (file.catalog == 1) {
-               console.log("文件夹")
+                this.$store.commit("file/crumbsAdd", file);
               this.fileId = file.fileId;
               getChildFiles(file.fileId).then(res => {
-                console.log(res);
+               
                 this.$store.commit("file/initFile", res.data);
                 
               });

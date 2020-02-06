@@ -12,9 +12,9 @@
 
         <ul class="contant">
           <li v-for="(file,index) in files" :key="index">
-            <div class="contant-left" @click="fileDetail(file.catalog,file.fileId, file)">
+            <div class="contant-left" @click="fileDetailClick(file.catalog,file.fileId, file)">
               <div class="contant-titel">
-                <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/wjj.png'>
+                <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/wjj.png' >
                 <img v-else-if="file.catalog==1&&(file.filePrivacy==0||file.filePrivacy==2)" src='../../../assets/images/folder.png'>
                 <img v-else-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder_privacy.png'>
                 <div v-else>
@@ -295,7 +295,7 @@ export default {
     // }
   },
   computed: {
-    ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb"])
+    ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb","crumbs","crumbsCache"])
   },
   mounted: function() {
     if (localStorage.view) {
@@ -314,6 +314,52 @@ export default {
   methods: {
     ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag"]),
     ...mapMutations("file", ["putOneFile"]),
+      // 点击文件、文件夹进入详情
+    fileDetailClick(catalog, id, file) {
+    
+      //获取目录
+      let data = { fileId: id, projectId: this.projectId };
+      this.initFolders(data).then(res => {});
+      if (".svf".includes(file.ext)) {
+        // 模型文件
+        getFileDetails(id).then(res => {
+        
+          this.svfUrl = res.data.fileUrl;
+          this.showModelFileDetail = true;
+        });
+
+        
+      } else {
+        // 普通文件或者文件夹
+        if (catalog == 1) {
+          console.log("普通文件")
+          this.loading = true;
+          this.fileId = id;
+          this.pathData.push({ name: file.fileName, id: file.fileId });
+          getChildFiles(id).then(res => {
+            
+            this.$store.commit("file/initFile", res.data);
+            this.loading = false;
+            localStorage.fileParentId = res.parentId;
+          });
+          localStorage.view = this.view;
+          this.$router.push({
+            path: `/project/${this.$route.params.id}/files/${id}`
+          });
+        } else {
+          
+          
+          
+          console.log("文件夹")
+          this.loading = true;
+          getFileDetails(id).then(res => {
+            this.loading = false;
+            this.putOneFile(res);
+            this.showModelDetai = true;
+          });
+        }
+      }
+    },
     leftShow() {},
     setCanSee() {
       this.showVisibilityModal = true;
@@ -504,49 +550,7 @@ export default {
       this.initFolders(data).then(res => {});
     },
 
-    // 点击文件、文件夹进入详情
-    fileDetail(catalog, id, file) {
-      //获取目录
-      let data = { fileId: id, projectId: this.projectId };
-      this.initFolders(data).then(res => {});
-      if (".svf".includes(file.ext)) {
-        // 模型文件
-        getFileDetails(id).then(res => {
-        
-          this.svfUrl = res.data.fileUrl;
-          this.showModelFileDetail = true;
-        });
-
-        
-      } else {
-        // 普通文件或者文件夹
-        if (catalog == 1) {
-          console.log("普通文件")
-          this.loading = true;
-          this.fileId = id;
-          this.pathData.push({ name: file.fileName, id: file.fileId });
-          getChildFiles(id).then(res => {
-            
-            this.$store.commit("file/initFile", res.data);
-            this.loading = false;
-            localStorage.fileParentId = res.parentId;
-          });
-          localStorage.view = this.view;
-          this.$router.push({
-            path: `/project/${this.$route.params.id}/files/${id}`
-          });
-        } else {
-          
-          console.log("文件夹")
-          this.loading = true;
-          getFileDetails(id).then(res => {
-            this.loading = false;
-            this.putOneFile(res);
-            this.showModelDetai = true;
-          });
-        }
-      }
-    },
+  
     // 隐私模式
     changePrivacy() {
       let num = 0;

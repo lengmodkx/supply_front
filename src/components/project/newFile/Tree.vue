@@ -19,7 +19,7 @@ export default {
                 data: {
                     simpleData: {
                         enable: true,
-                        pIdKey: "pId"
+                        pIdKey: "pId",
                     }
                 },
                 view: {
@@ -28,20 +28,27 @@ export default {
             }
         }
     },
+     computed: {
+      ...mapState("tree", ["fileTree","userTree","tooltree","typetree",'showView',]),
+     
+   },
   
     
     methods:{
-           ...mapActions("tree", ["initFolders"]),
+           ...mapActions("tree", ["initFolders",]),
               ...mapActions("file", ["initFile", "searchFile", "initTag"]),
         onCreated(obj){
            
         },
         onClick(evt, treeId, treeNode){
-                this.folderId = treeNode.id;                  
-                let params = { fileId: this.folderId };
-                this.initFile(params).then(res => {
+
+            
+
+            this.folderId = treeNode.id;                  
+            let params = { fileId: this.folderId };
+            this.initFile(params).then(res => {
                      
-                });
+            });
         }
     },
    

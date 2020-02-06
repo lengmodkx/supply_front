@@ -1,20 +1,20 @@
 <template>
   <div class="file-header">
       <div class="left">
-            <button  class="move"  @click="forward"></button>
-            <button  class="back"  @click="back"  ></button>
+           <button  class="move"  @click="back" ></button>   <!--后退 -->
+            <button  class="back"  @click="forward"  ></button>
       </div>
       <div class="middle">
            <span><img src="../../../assets/images/03.png" alt=""  @click="home"></span>
               <ul class="crumbs">
-                <li v-for="(item,index) in crumbs" :key='index' >  
+                <li v-for="(item,index) in crumbs" :key='index' @click="changeCrumbs(item,index)" >  
                    <img v-if='item.icon' :src="item.icon" alt="" >               
-                  {{item.name}}
+                   {{item.fileName}}
                   <a > </a>
                 </li>
               </ul>
            <!-- <span><img src="../../../assets/images/04.png" alt=""></span> -->
-           <span><img src="../../../assets/images/05.png" alt=""></span>
+          <!-- <span><img src="../../../assets/images/05.png" alt=""></span> -->
       </div>
       <div class="right">
            <Input search enter-button   v-model="searched"  @on-search="search" />
@@ -27,18 +27,17 @@ export default {
   components: {},
   data () {
     return {
-      movehover:false,
-      
+      movehover:false,  
       searched: "",
-       projectId: this.$route.params.id,
-       fileId: this.$route.params.fileId,
+      projectId: this.$route.params.id,
+      fileId: this.$route.params.fileId,
+       
     }
   },
   computed: {
       ...mapState("tree", ['fileTree',"userTree","tooltree","typetree",'showView',]),
-      
-      
-       ...mapState("file", ["crumbs",]),
+    
+       ...mapState("file", ["crumbs","crumbsCache","crumbsIndex"]),
    },
   methods: {
        ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag","initCrumbs"]),
@@ -46,10 +45,20 @@ export default {
        //前进
         forward(){
             this.movehover=!this.movehover;
+
+            if(this.crumbsIndex>=this.crumbsCache.length){
+                console.log('前进终止')
+                return
+              }  
+             this.$store.commit("file/crumbsForward");
         },
         // 后退
         back(){
-
+              if(this.crumbsIndex<0){
+                console.log('后退终止')
+                return
+              }  
+              this.$store.commit("file/crumbsBack");
         },
         //回到首页
           home(){
@@ -59,10 +68,27 @@ export default {
               this.initFile(params).then(res => {
               });
           },
+          //单击导航
+          changeCrumbs(item,index){
+              if(index===0){
+                //如果是第一个走回到首页。因为不存在fileId，字段不同
+                 this.home();
+                 return
+              }
+              var data={
+                   self:item,
+                   index:index
+              }
+              this.$store.commit("file/crumbsClick", data);
+              const params = { fileId: item.fileId };
+              this.initFile(params).then(res => {
+              });
+              
+          },
          // 搜索文件
           search(value) { 
             if (value !== "") {
-              var data = { fileName: value, projectId: this.projectId };
+                var data = { fileName: value, projectId: this.projectId };
                 this.searchFile(data).then(res => {
                   this.loading = false;
                 });
