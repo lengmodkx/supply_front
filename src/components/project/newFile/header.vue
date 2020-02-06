@@ -54,7 +54,7 @@ export default {
         },
         // 后退
         back(){
-              if(this.crumbsIndex=='0'){
+              if(this.crumbsIndex<0){
                 console.log('后退终止')
                 return
               }  

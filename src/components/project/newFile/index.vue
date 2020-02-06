@@ -62,6 +62,7 @@ export default {
            this.initFile(params).then(res => {
                this.loading = false;
                this.$store.commit("file/crumbsHome", this.fileTree[0]);//初始化菜单
+               
            });
    },
     methods: {
