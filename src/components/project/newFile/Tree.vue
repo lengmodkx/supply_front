@@ -41,9 +41,9 @@ export default {
            
         },
         onClick(evt, treeId, treeNode){
+            console.log(treeNode)
 
-            
-
+             this.$store.commit("file/crumbsTree",treeNode);//改变菜单栏
             this.folderId = treeNode.id;                  
             let params = { fileId: this.folderId };
             this.initFile(params).then(res => {
