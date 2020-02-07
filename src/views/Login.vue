@@ -68,7 +68,7 @@ export default {
   },
   mounted() {
     if (localStorage.token){
-      this.$router.replace("/org/"+localStorage.orgId);
+      this.$router.replace("/org/"+localStorage.companyId);
     }
   },
   methods: {
