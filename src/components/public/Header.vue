@@ -214,7 +214,7 @@ export default {
     // 点击企业 改变当前企业
     changeOrg (org) {
       //this.orgProjectInit({'id': org.organizationId,'type':'我创建的项目'})
-      localStorage.orgId = org.organizationId;
+      localStorage.companyId = org.organizationId;
       this.$router.push('/org/'+org.organizationId)
       this.popVisible=false
     },

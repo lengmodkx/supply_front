@@ -291,7 +291,6 @@ export default {
   },
   mounted() {
     this.orgProjectInit({'id': this.companyId,'type':'我创建的项目'})
-    console.log('xxxxxxxxxxxxxxx')
   },
   created:function(){
       //this.showFirstBox();
