@@ -159,8 +159,8 @@ export default {
 
       //添加项目成员
        let params={
-             projectId:this.$route.params.id,
-             memberId:userId
+          projectId:this.$route.params.id,
+          memberId:userId
        }
       
       addUser(params).then(res => {
@@ -192,7 +192,7 @@ export default {
       this.$emit("hideBox");
     },
     changeRole(roleId){
-      let data={"roleId":roleId,"userId":this.user.memberId,"projectId":this.$route.params.id}
+      let data={"roleId":roleId,"userId":this.user.memberId,"projectId":localStorage.companyId}
       updateUserRole(data).then(res=>{
         if(res.result==1){
           this.$Message.success('设置成功');
