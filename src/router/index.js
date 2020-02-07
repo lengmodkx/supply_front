@@ -243,4 +243,17 @@ router.afterEach((to, from) => {
     store.commit('app/changeHeaderTag', -1)
   }
 })
+/*router.afterEach((to,from,next)=>{
+    setTimerout(()=>{
+        (function(){
+            //每次执行前，先移除上次插入的代码
+            document.getElementById('baidu_tj')&& document.getElementById('baidu_tj').remove();
+            var hm = document.createElement('script');
+            hm.src = 'https://hm.baidu.com/hm.js?276f6a55e7e75ef5f5caf3bd46fc4fa0';
+            hm.id = 'baidu_tj';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(hm,s);
+        })()
+    },0)
+})*/
 export default router
