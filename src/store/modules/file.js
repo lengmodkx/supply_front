@@ -36,13 +36,71 @@ const store = {
                  name: "项目文件夹",
             },
           ],
+        crumbsCache:[],
+        crumbsIndex:'',
     },
     mutations: {
          // 回到首页导航条
-         crumbsHome(state, data) {
-            state.crumbs=[data]   
+         crumbsHome(state, data) {          
+            const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));       
+            state.crumbs=[json] 
+            state.crumbsCache.push([json])       
+            state.crumbsIndex=state.crumbsCache.length - 1
+            console.log("队列：",state.crumbsCache)
         },
-        
+        //导航条增加
+        crumbsAdd(state, data) {
+
+            state.crumbs.push(data)    
+            var [...save] = state.crumbs;   
+            state.crumbsCache.push(save)
+            state.crumbsIndex=state.crumbsCache.length - 1
+
+            console.log("队列：",state.crumbsCache)
+        },
+        //单击导航条
+        crumbsClick(state, data) {
+            const satart=data.index+1
+            const end= state.crumbs.length
+            state.crumbs.splice(satart,end)  
+            var [...save] = state.crumbs;   
+            state.crumbsCache.push(save)
+            state.crumbsIndex=state.crumbsCache.length - 1
+        },
+        //后退
+        crumbsBack(state, data) {            
+            state.crumbsIndex -= 1
+            if(state.crumbsIndex < 0){
+                state.crumbsIndex = 0
+                return
+            }
+            console.log("队列：",state.crumbsCache,state.crumbsIndex)             
+            console.log(state.crumbsCache[state.crumbsIndex])
+            state.crumbs=state.crumbsCache[state.crumbsIndex]
+        },
+        //前进
+        crumbsForward(state, data) {
+            state.crumbsIndex += 1
+            if(state.crumbsIndex == state.crumbsCache.length){
+                state.crumbsIndex == state.crumbsCache.length - 1
+                return
+            }
+            console.log("队列：",state.crumbsCache,"位置：",state.crumbsIndex)             
+            state.crumbs=state.crumbsCache[state.crumbsIndex]
+        },
+        //单击树型菜单改
+        crumbsTree(state, data) {
+            const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));
+
+            state.crumbs.push(json)    
+            var [...save] = state.crumbs;   
+            state.crumbsCache.push(save)
+            state.crumbsIndex=state.crumbsCache.length - 1
+
+            console.log("队列：",state.crumbsCache)
+                
+        },
+
         initFile(state, data) {
             state.files = data;
             

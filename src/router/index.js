@@ -13,11 +13,13 @@ import personal from  '../components/public/personal'
 import down from '../components/public/down'
 import sucai from  '../components/public/sucai'
 import Bind from '../views/bindPhone.vue'
+import orgEmpty from '../views/orgEmpty.vue'
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
 //路由懒加载
 const _import = file => () => import("@/components/" + file + ".vue");
+const _importc = file => () => import("../company/components/" + file + ".vue");
 Vue.use(Router);
 
 const router = new Router({
@@ -31,14 +33,13 @@ const router = new Router({
       path: "/sucai/", // 素材裤
       component: sucai,
     },
-    
-
     {
       path: "/personal", // 成员
       component: personal,
     },
     {
       path: "/members", // 成员
+      name: 'members',
       component: members,
     },
     {
@@ -100,16 +101,15 @@ const router = new Router({
       ]
     },
     {
-      path: "/home",
-      name: "Home",
+      path: "/org/:orgid",
       component: Home,
       meta: {
         title: "阿拉丁BIM5D云平台"
       }
     },
     {
-      path: "/org/:id",
-      component: Home,
+      path: "/organization-is-empty",
+      component: orgEmpty,
       meta: {
         title: "阿拉丁BIM5D云平台"
       }
@@ -174,11 +174,11 @@ const router = new Router({
     },
     {
       path: "/",
-      name: "home",
+      name: "login",
       meta: {
         title: "登录"
       },
-      component: () => import('@/views/Login.vue')
+      component: Login
     },
     {
       path: "/register",
@@ -204,6 +204,32 @@ const router = new Router({
       },
       component: Bind
     },
+    {
+      path:'/organization-admin/:orgId',
+      name:'organizationAdmin',
+      component: _importc('index'),
+      meta: {
+        title: "阿拉丁BIM云平台"
+      },
+      children: [
+        {
+            path: '/',
+            redirect: 'information'
+        },
+        {// 企业信息
+            path: 'information',
+            component: _importc('enterpriseInformation')
+        },
+        {// 企业权限
+            path: 'company-jurisdiction',
+            component: _importc('company-jurisdiction')
+        },
+        {// 项目权限
+            path: 'project-jurisdiction',
+            component: _importc('project-jurisdiction')
+        }
+    ]
+    }
   ]
 });
 router.afterEach((to, from) => {
@@ -217,4 +243,17 @@ router.afterEach((to, from) => {
     store.commit('app/changeHeaderTag', -1)
   }
 })
+/*router.afterEach((to,from,next)=>{
+    setTimerout(()=>{
+        (function(){
+            //每次执行前，先移除上次插入的代码
+            document.getElementById('baidu_tj')&& document.getElementById('baidu_tj').remove();
+            var hm = document.createElement('script');
+            hm.src = 'https://hm.baidu.com/hm.js?276f6a55e7e75ef5f5caf3bd46fc4fa0';
+            hm.id = 'baidu_tj';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(hm,s);
+        })()
+    },0)
+})*/
 export default router

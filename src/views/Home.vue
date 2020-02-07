@@ -252,7 +252,7 @@ export default {
       guiDangList: [], //已归档
       delLIst: [], //回收站
       user: sessionStorage.userInfo,
-      companyId: this.$route.params.id?this.$route.params.id:'',
+      companyId: this.$route.params.orgid,
       projectType: "我创建的项目",
       selectView: "卡片视图",
       treeData: [
@@ -290,17 +290,11 @@ export default {
     ...mapState("project", ["projects", "loading", "project"])
   },
   mounted() {
-    // if (this.$route.fullPath.includes('/org')){
-    //   this.orgProjectInit({'id': this.companyId,'type':'我创建的项目'})
-    // } else {
-    //   this.init("我创建的项目");
-    // }
-    this.init("我创建的项目");
-
+    this.orgProjectInit({'id': this.companyId,'type':'我创建的项目'})
+    console.log('xxxxxxxxxxxxxxx')
   },
   created:function(){
       //this.showFirstBox();
-
   },
   methods: {
     ...mapActions("project", ["init", "updateProject", "openSet",'orgProjectInit']),
@@ -309,8 +303,8 @@ export default {
     selectProjectType(value) {
       this.projectType = value;
       this.$store.state.project.loading = true;
-      this.init(value);
-      // this.orgProjectInit({'id': this.companyId,'type':value})
+      //this.init(value);
+      this.orgProjectInit({'id': this.companyId,'type':value})
     },
     path(item) {
       this.setName(item.projectName);
@@ -329,18 +323,19 @@ export default {
         } else {
           this.$Message.success("取消星标成功!");
         }
-        this.init("我创建的项目");
-        // this.orgProjectInit({'id': this.companyId,'type':'我创建的项目'})
+        //this.init("我创建的项目");
+        this.orgProjectInit({'id': this.companyId,'type':'我创建的项目'})
       });
     },
     getNewList(value) {
-      this.init(value);
+      //this.init(value);
+      this.orgProjectInit({'id': this.companyId,'type':value})
       if (this.selectView==='列表视图'){
         getProjectTree('').then(res => {
           this.treeData=res.data
         })
       }
-      // this.orgProjectInit({'id': this.companyId,'type':value})
+      
     },
     //打开项目设置
     setProject(item) {
@@ -351,16 +346,16 @@ export default {
       recoverProject(id).then(res => {
         if (res.result == 1) {
           this.$Message.success("项目已恢复!");
-          this.init(this.projectType);
-          // this.orgProjectInit({'id': this.companyId,'type':this.projectType})
+          //this.init(this.projectType);
+          this.orgProjectInit({'id': this.companyId,'type':this.projectType})
         }
       });
     },
     // 搜索项目
     searchProject(value) {
       if(value==''){
-        this.init(this.projectType);
-        // this.orgProjectInit({'id': this.companyId,'type':this.projectType})
+        //this.init(this.projectType);
+        this.orgProjectInit({'id': this.companyId,'type':this.projectType})
         return
       }
       
@@ -434,14 +429,14 @@ export default {
 };
 
  const validatePhone = (rule, value, callback) => {
-                    if (!value) {
-                        return callback(new Error('请输入手机号'));
-                    } else if (!/^1[34578]\d{9}$/.test(value)) {
-                        callback('手机号格式不正确');
-                    } else {
-                        callback();
-                    }   
-       }
+  if (!value) {
+      return callback(new Error('请输入手机号'));
+  } else if (!/^1[34578]\d{9}$/.test(value)) {
+      callback('手机号格式不正确');
+  } else {
+      callback();
+  }   
+}
 </script>
 <style scoped lang="less">
 

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-main v-if="hasHeader"></header-main>
+    <header-main v-if="hasHeader" :companyId="companyId" :avatar="avatar"></header-main>
     <div class="content-main">
       <router-view v-if="isRouterAlive"/>
     </div>
@@ -23,11 +23,15 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      hasHeader: true
+      hasHeader: true,
+      companyId:"",
+      avatar:""
     };
   },
   created() {
+    
     this.renderHeader();
+    console.log(this.companyId)
   },
   watch: {
     $route() {
@@ -42,8 +46,11 @@ export default {
         this.$route.path !== "/register" &&
         this.$route.path !== "/bind" &&
         this.$route.path.indexOf("/statisticsDetail") < 0 &&
-        this.$route.path !== "/forget";
+        this.$route.path !== "/forget"&&
+        this.$route.path .indexOf("/organization-admin")<0;
       // this.hasHeader = this.$route.path !== '/management'
+      this.companyId = localStorage.companyId;
+      this.avatar = localStorage.userImg
     },
     reload() {
       console.log("xxxxxxx");

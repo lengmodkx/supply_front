@@ -124,19 +124,6 @@ export default {
       }
       this.loading = true;
       let  projectId=this.$route.params.id;
-      // getAssignUsers(projectId, this.keyword2).then(res => {
-      //   this.loading = false;
-      //   if (res.result === 1) {
-      //     console.log(res.data)
-      //     if(res.data){
-      //        this.invitUsers = res.data;
-      //     }else{
-      //      this.$Message.warning('搜索失败');
-      //     }
-        
-      //   }
-      // });
-
       getUsers(this.keyword2).then(res => {
         this.loading = false;
         if (res.result === 1) {
@@ -209,7 +196,7 @@ export default {
       updateUserRole(data).then(res=>{
         if(res.result==1){
           this.$Message.success('设置成功');
-         this.user.visible = false
+          this.user.visible = false
         }else{
           this.$Message.success('设置失败')   
         }
@@ -217,7 +204,7 @@ export default {
     },
     visibleChange(user){
       this.user = user;
-      let data = {"projectId":this.$route.params.id,"userId":user.memberId}
+      let data = {"orgId":localStorage.companyId,"userId":user.memberId}
       this.getRoles(data)
     }
   }

@@ -34,22 +34,23 @@ export default {
       endTime: "",
       options1: {},
       options2: {},
-      parentProject: ''
+      parentProject: '',
+      orgId:this.$route.params.orgid
     };
   },
   watch:{
-          showProject: function(val, oldVal) {      
-            if(!val){
-              this.loading = true;
-              this.proName = "";
-              this.proDes = "";
-              this.startTime = "";
-              this.endTime = "";
-              this.loading = false;
-              this.parentProject='';
-            }
-          },
-          deep: true
+    showProject: function(val, oldVal) {      
+      if(!val){
+        this.loading = true;
+        this.proName = "";
+        this.proDes = "";
+        this.startTime = "";
+        this.endTime = "";
+        this.loading = false;
+        this.parentProject='';
+      }
+    },
+    deep: true
     },
   computed: {
     ...mapState('project', ['allProject'])
@@ -76,18 +77,20 @@ export default {
         projectDes: this.proDes,
         parentId: this.parentProject,
         startTime: new Date(this.startTime).getTime(),
-        endTime: new Date(this.endTime).getTime()
+        endTime: new Date(this.endTime).getTime(),
+        orgId: this.orgId
       };
+      console.log(data)
       createProject(data).then(msg => {
         if (msg.result == 1) {
           this.loading = true;
-          this.$emit("hideModal");
           this.proName = "";
           this.proDes = "";
           this.startTime = "";
           this.endTime = "";
           this.loading = false;
           this.$emit("getNewList", "我创建的项目");
+          this.$emit("hideModal");
         }
         //创建成功后关闭modal this.$emit("hideModal")  再次请求获取项目列表
       });
@@ -117,7 +120,6 @@ export default {
     this.endTime = "";
     this.loading = false;
     this.parentProject='';
-
   }
 };
 </script>

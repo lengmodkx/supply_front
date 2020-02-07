@@ -801,8 +801,8 @@ export function getAllRoles(projectId){
 }
 
 //获取项目下全部角色--分配角色使用
-export function getMemRoles(projectId,userId){
-    return $get('pro_role/for_member',{"projectId":projectId,"userId":userId})
+export function getMemRoles(orgId,userId){
+    return $get('pro_role/for_member',{"orgId":orgId,"userId":userId})
 }
 //分配项目下用户角色
 export function updateUserRole(data){
@@ -834,6 +834,11 @@ export function getAllPower(roleId){
 //更新项目下角色权限
 export function changePower(roleId,ids){
     return $put(`/pro_res_role/${roleId}/edit_resource`,{"resources":ids})
+}
+
+//切换个人/企业项目时候使用
+export function updateState(){
+    return $put('organizations/personal_project/')
 }
 
 

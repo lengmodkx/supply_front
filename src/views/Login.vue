@@ -23,12 +23,7 @@
       <div class="weixin" @click="weChatLogin()"><i class="iconfont iconweixin"></i>微信登录</div>
     </Form>
   </div>
-
 </template>
-
-
-
-
 <script>
 import { userlogin, getEncrypStr, weChatLogin,getWeChatToken } from "@/axios/api";
 import { mapState, mapActions } from "vuex";
@@ -73,7 +68,7 @@ export default {
   },
   mounted() {
     if (localStorage.token){
-      this.$router.push('/home')
+      this.$router.replace("/org/"+localStorage.companyId);
     }
   },
   methods: {
@@ -94,11 +89,13 @@ export default {
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
+              localStorage.companyId = res.data.orgId;
+              console.log(res.data.orgId)
               this.$Message.success("登录成功!");
               if (res.data.orgId){
-                this.$router.push("/org/"+res.data.orgId);
+                this.$router.replace("/org/"+res.data.orgId);
               } else {
-                this.$router.push("/home");
+                this.$router.replace("/organization-is-empty");
               }
             }
           });
@@ -132,13 +129,18 @@ export default {
         getWeChatToken(code).then(res => {
           if(res.result === 1){
             if(!res.bindPhone){
-              localStorage.token = res.accessToken;
-              localStorage.userId = res.userInfo.userId;
-              localStorage.userImg = res.userInfo.image;
-              localStorage.userName = res.userInfo.userName;
-              vm.$router.push('/home')
+              localStorage.token = res.data.accessToken;
+              localStorage.userId = res.data.userId;
+              localStorage.userImg = res.data.image;
+              localStorage.userName = res.data.userName;
+              localStorage.companyId = res.data.orgId;
+              if (res.data.orgId){
+                vm.$router.replace("/org/"+res.data.orgId);
+              } else {
+                vm.$router.replace("/organization-is-empty");
+              }
             }else{
-              vm.$router.push({name:'bind',query: {name:res.userInfo.userName,userId:res.userInfo.userId}})
+              vm.$router.push({name:'bind',query: {name:res.data.userName,userId:res.data.userId}})
             }
           }
         })
@@ -149,33 +151,32 @@ export default {
 </script>
 
 <style scoped lang="less">
-
-    .weChat{
-       width:300px;
-       min-height: 300px;
-    }
-  .weixin{
-    text-align: center;
-    margin: -5px 0;
-    width: 300px;
-    height: 35px;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #2d8cf0;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    &:hover{
-      opacity: 0.8;
-    }
-    i{
-      font-size: 20px;
-      color: #cde6c7;
-      margin-right: 5px;
-    }
+.weChat{
+    width:300px;
+    min-height: 300px;
+}
+.weixin{
+  text-align: center;
+  margin: -5px 0;
+  width: 300px;
+  height: 35px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2d8cf0;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  &:hover{
+    opacity: 0.8;
   }
+  i{
+    font-size: 20px;
+    color: #cde6c7;
+    margin-right: 5px;
+  }
+}
 .login-form-box {
   width: 100vw;
   height: 100vh;

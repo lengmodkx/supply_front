@@ -1,19 +1,19 @@
 <template>
   <header class="header" id="header">
-    <Poptip>
-     <Icon class="app-icon" type="md-apps" />
-      <div slot="content"  >
+    <Poptip placement="bottom-start" v-model="mainMenu">
+     <Icon class="app-icon" type="md-apps" v-if="companyId"/>
+      <div slot="content">
         <ul class="app-con">
           <router-link tag="li" :to="'/org/'+companyId" class="app-li">
-            <img @click="mainMenu=false" src="@/assets/images/home.png" alt="">
+            <Icon type="ios-home" size="32" color="#2d8cf0" @click="mainMenu=false"/>
             <p>主页</p>
           </router-link>
           <li @click="goMembers"  class="app-li">
-            <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_members.png" alt="">
+            <Icon type="md-people" size="32" color="#2d8cf0" @click="mainMenu=false" />
             <p>成员</p>
           </li>
           <li class="app-li" @click="goBackstage">
-            <img @click="mainMenu=false" src="https://dn-st.teambition.net/appstore/images/basic_app_administration.png" alt="">
+            <Icon type="md-settings" size="32" color="#2d8cf0" @click="mainMenu=false"/>
             <p>管理后台</p>
           </li>
         </ul>
@@ -24,13 +24,11 @@
       <Icon type="code" @click="openMenu"></Icon>
     </div>
     <div class="fr menu">
-      <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="showHeaderTag(1)"><span class="text">我的</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="showHeaderTag(2)"><span class="text">日历</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="showHeaderTag(6)"><span class="text">素材</span></a>
-      <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="showHeaderTag(4)"><span class="text">下载</span></a>
-      <a @click="showHeaderTag(5)"><span class="text ">设计</span></a>
-       <!-- <Poptip trigger="hover" class="desing" content="请打开设计系统">
-      </Poptip> -->
+      <a :class="{activeHeaderTag:activeHeaderTag==1}" @click="showHeaderTag(1)" ><span class="text">我的</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==2}" @click="showHeaderTag(2)" ><span class="text">日历</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==5}" @click="showHeaderTag(6)" ><span class="text">素材</span></a>
+      <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="showHeaderTag(4)" ><span class="text">下载</span></a>
+      <a @click="showHeaderTag(5)" v-if="companyId"><span class="text">设计</span></a>
       <a :class="{activeHeaderTag:activeHeaderTag==3}"  @click="showHeaderTag(3)">
         <span class="text" style="border-right:none;">
           <Badge :count="newsCount?newsCount:0" overflow-count="99" type="info" :offset=[10,0]>
@@ -38,22 +36,18 @@
           </Badge>
         </span>
       </a>
-     
-      <!-- <a :class="{activeHeaderTag:activeHeaderTag==4}" @click="clickHeaderTag(4)" class="last-child">消息</a> -->
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
-        
-        <img class="avatar" :src="`${defaultImage}`" alt="">
+        <img class="avatar" :src="avatar" alt="">
         <div class="userInfo" slot="content">
-          <!-- <div class="sck" @click="goSucai">素材库</div> -->
           <ul class="org">
-            <div class="createdOrg" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</div>
+            <li class="addOrgPro" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</li>
             <li class="addOrgPro"  v-for="(item, index) in companyList" :key="index" @click="changeOrg(item);">
               {{item.organizationName}}
               <Icon v-if="item.isSelection" type="md-checkmark" />
             </li>
           </ul>
           <ul class="admin">
-            <li   :class="hoverClass=='person'?'hoverClass':''"  @click="personal();popVisible=false"> 账号设置</li>
+            <li :class="hoverClass=='person'?'hoverClass':''"  @click="personal();popVisible=false">账号设置</li>
             <!-- <li > 账号设置</li> -->
           </ul>
           <ul class="logOut" >
@@ -110,6 +104,7 @@ import CreateOrg from "./common/CreateOrg";
 import { mapState, mapActions, mapMutations } from "vuex";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import { updateState } from "@/axios/api";
 export default {
   name: "header-main",
   components: {
@@ -120,6 +115,7 @@ export default {
     down,//下载
     message,//消息
   },
+  props: ['companyId','avatar'],
   data() {
     return {
       tagHeader:false,//显示日历
@@ -132,8 +128,6 @@ export default {
       mainMenu: false,
       hoverClass:"",
       showSck: false,
-      //src: localStorage.userImg,
-      companyId: localStorage.companyId,
       data: [
         {
           value: "阿拉丁",
@@ -185,7 +179,7 @@ export default {
       }else if(process.env.NODE_ENV=='production'){
         url=process.env.VUE_APP_SOCKET
       }else{
-        url="http://192.168.1.107:8080/webSocketServer"
+        url="http://192.168.1.10:8080/webSocketServer"
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
@@ -219,8 +213,8 @@ export default {
     },
     // 点击企业 改变当前企业
     changeOrg (org) {
-      this.orgProjectInit({'id': org.organizationId,'type':'我创建的项目'})
-      localStorage.companyId=org.organizationId
+      //this.orgProjectInit({'id': org.organizationId,'type':'我创建的项目'})
+      localStorage.orgId = org.organizationId;
       this.$router.push('/org/'+org.organizationId)
       this.popVisible=false
     },
@@ -276,8 +270,8 @@ export default {
          }
     },
     closeTag(){
-               this.tagHeader=false;
-               this.showtag=''
+      this.tagHeader=false;
+      this.showtag=''
     },
     clickHeaderTag(id) {     
       this.changeHeaderTag(id)
@@ -306,43 +300,30 @@ export default {
     },
     // 去管理后台页面
     goBackstage () {
-        if (localStorage.companyId){
-            window.open('/company.html', '_blank')
-        } else {
-            this.$Notice.warning({
-                // title: '没有企业',
-                desc: '请先创建企业'
-            });
-        }
-
+        //window.open('/company.html', '_blank')
+        const { href } = this.$router.resolve({
+          name: "organizationAdmin",
+          params: {orgId:localStorage.companyId}
+        });
+      window.open(href, '_blank');
+      console.log(href)
     },
       // 去成员页面
-      goMembers () {
-          if (localStorage.companyId){
-              this.$router.push('/members')
-          } else {
-              this.$Notice.warning({
-                  desc: '请先创建企业'
-              });
-          }
-
-      },
+    goMembers () {
+      this.$router.push('/members')
+    },
     // 去素材库页面
     goSucai() {
       this.popVisible=false
       this.$router.push('/sucai/'+localStorage.fileId)
     },
-    goHome(){
-         this.$router.push('/home')
-    },
     goout() {
       localStorage.token=''
-      localStorage.companyId=''
       this.$router.push('/')
     }
   },
   computed: {
-    ...mapState("user", ["mineRouter", "users",'defaultImage']),
+    ...mapState("user", ["mineRouter"]),
     ...mapState('app', ['activeHeaderTag']),
     ...mapState("news", ["newsCount"]),
     ...mapState("company", ["companyList"]),
@@ -354,21 +335,18 @@ export default {
 };
 </script>
 <style scoped lang="less">
-   
-    /deep/.ivu-modal-wrap{
-      overflow: hidden;
+  /deep/.ivu-modal-wrap{
+    overflow: hidden;
+  }
+  /deep/.ivu-modal-body{
+    padding:0;
     }
-    /deep/.ivu-modal-body{
-      padding:0;
-      height: 100vh;
-    
+  /deep/ .ivu-modal-content{
+      box-shadow: none
       }
-    /deep/ .ivu-modal-content{
-        box-shadow: none
-        }
-    /deep/.ivu-modal-footer{
-      border-top:none 
-      }
+  /deep/.ivu-modal-footer{
+    border-top:none 
+    }
 .menu .activeHeaderTag {
   color: #2d8cf0;
   background-color: #f5f5f5;

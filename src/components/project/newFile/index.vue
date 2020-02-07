@@ -56,23 +56,22 @@ export default {
        
         // 树
         this.initFolders(this.fileId).then(res => {});
-        console.log(this.fileTree)
+        
         // 文件
            let params = { fileId: this.fileId };
            this.initFile(params).then(res => {
-           this.loading = false;
-          
+               this.loading = false;
+               console.log( this.fileTree)
+               this.$store.commit("file/crumbsHome", this.fileTree[0]);//初始化菜单
+               
            });
    },
     methods: {
       ...mapActions("tree", ["initFolders"]),
       ...mapActions("file", ["initFile", "searchFile", "initTag"]),
     },
-    created:function(){
-        
+    created:function(){   
          this.$store.commit("file/changeCreateFileId", this.fileId);    
-       
-    
          // this.$store.commit("file/crumbsHome", this.fileTree[0]);
     
     }
@@ -133,6 +132,7 @@ export default {
               height: 100vh;
               padding:10px;
               border-right:1px solid #efefef;
+              overflow-y: auto;
               .tree-box{
                 margin-top: 20px;
               }

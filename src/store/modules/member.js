@@ -53,7 +53,7 @@ const store = {
             commit('filterUser',data)
         },
         getRoles({commit},data){
-            getMemRoles(data.projectId,data.userId).then(res=>{
+            getMemRoles(data.orgId,data.userId).then(res=>{
                 commit('initRoles', res.data)
             }) 
         }
