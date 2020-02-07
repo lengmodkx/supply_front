@@ -30,3 +30,13 @@ router.afterEach(function (to) {
   document.documentElement.scrollTop=0
   document.body.scrollTop=0
 })
+
+// 加入百度统计
+router.beforeEach((to, from, next) => {
+    if (to.path) {
+        if (window._hmt) {
+            window._hmt.push(['_trackPageview', '/#' + to.fullPath])
+        }
+    }
+    next()
+})

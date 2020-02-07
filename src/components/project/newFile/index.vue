@@ -61,6 +61,7 @@ export default {
            let params = { fileId: this.fileId };
            this.initFile(params).then(res => {
                this.loading = false;
+               console.log( this.fileTree)
                this.$store.commit("file/crumbsHome", this.fileTree[0]);//初始化菜单
                
            });

@@ -90,6 +90,14 @@ const store = {
         },
         //单击树型菜单改
         crumbsTree(state, data) {
+            const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));
+
+            state.crumbs.push(json)    
+            var [...save] = state.crumbs;   
+            state.crumbsCache.push(save)
+            state.crumbsIndex=state.crumbsCache.length - 1
+
+            console.log("队列：",state.crumbsCache)
                 
         },
 

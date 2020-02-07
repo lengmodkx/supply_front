@@ -165,6 +165,7 @@ export default {
               .crumbs{
                 flex: 1;
                 display: flex;
+                overflow: hidden;
                 li{
                   display: flex;
                   align-items:center ;
