@@ -17,7 +17,7 @@ const store = {
     users:{},
     mineRouter:'/mine/nearThing',
     projectRouter:'/home',
-    defaultImage:localStorage.userImg,
+    defaultImage:localStorage.userImg
   },
   mutations: {
     updateUserInfo(state, data) {

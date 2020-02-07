@@ -166,7 +166,6 @@ export default {
   mounted() {
     this.initSocket(localStorage.userId);
     this.initCompany();
-    console.log(this.companyId)
   },
   methods: {
     ...mapActions("company", ["initCompany"]),
@@ -301,11 +300,17 @@ export default {
     },
     // 去管理后台页面
     goBackstage () {
-        window.open('/company.html', '_blank')
+        //window.open('/company.html', '_blank')
+        const { href } = this.$router.resolve({
+          name: "organizationAdmin",
+          params: {orgId:localStorage.companyId}
+        });
+      window.open(href, '_blank');
+      console.log(href)
     },
       // 去成员页面
     goMembers () {
-        this.$router.push('/members')
+      this.$router.push('/members')
     },
     // 去素材库页面
     goSucai() {

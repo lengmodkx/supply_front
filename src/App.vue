@@ -29,13 +29,13 @@ export default {
     };
   },
   created() {
+    
     this.renderHeader();
+    console.log(this.companyId)
   },
   watch: {
     $route() {
       this.renderHeader();
-      this.companyId = this.$route.params.orgid;
-      this.avatar = localStorage.userImg
     }
   },
   methods: {
@@ -48,6 +48,8 @@ export default {
         this.$route.path.indexOf("/statisticsDetail") < 0 &&
         this.$route.path !== "/forget";
       // this.hasHeader = this.$route.path !== '/management'
+      this.companyId = localStorage.companyId;
+      this.avatar = localStorage.userImg
     },
     reload() {
       console.log("xxxxxxx");

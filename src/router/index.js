@@ -19,6 +19,7 @@ import orgEmpty from '../views/orgEmpty.vue'
 
 //路由懒加载
 const _import = file => () => import("@/components/" + file + ".vue");
+const _importc = file => () => import("../company/components/" + file + ".vue");
 Vue.use(Router);
 
 const router = new Router({
@@ -32,14 +33,13 @@ const router = new Router({
       path: "/sucai/", // 素材裤
       component: sucai,
     },
-    
-
     {
       path: "/personal", // 成员
       component: personal,
     },
     {
       path: "/members", // 成员
+      name: 'members',
       component: members,
     },
     {
@@ -204,6 +204,32 @@ const router = new Router({
       },
       component: Bind
     },
+    {
+      path:'/organization-admin/:orgId',
+      name:'organizationAdmin',
+      component: _importc('index'),
+      meta: {
+        title: "阿拉丁BIM云平台"
+      },
+      children: [
+        {
+            path: '/',
+            redirect: 'information'
+        },
+        {// 企业信息
+            path: 'information',
+            component: _importc('enterpriseInformation')
+        },
+        {// 企业权限
+            path: 'company-jurisdiction',
+            component: _importc('company-jurisdiction')
+        },
+        {// 项目权限
+            path: 'project-jurisdiction',
+            component: _importc('project-jurisdiction')
+        }
+    ]
+    }
   ]
 });
 router.afterEach((to, from) => {
