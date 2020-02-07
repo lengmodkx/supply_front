@@ -42,19 +42,26 @@
 
 </template>
 <script>
-    export default {
-        data: function () {
-            return {
-                isExtend: true,
-                path: this.$route.path,
-                userImg:localStorage.userImg,
-                userName:localStorage.userName
-            }
-        },
-        mounted() {
-            console.log(localStorage.companyId)
+export default {
+    data: function () {
+        return {
+            isExtend: true,
+            userImg:localStorage.userImg,
+            userName:localStorage.userName
+        }
+    },
+    mounted() {
+        console.log('>>>>',this.path)
+    },
+    computed:{
+        path(){
+            var url = this.$route.path;
+            var index = url.lastIndexOf("\/");
+            var str = url.substring(index,url.length);
+            return str;
         }
     }
+}
 </script>
 <style socped lang="less">
     @import "../assets/common";
