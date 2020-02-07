@@ -217,7 +217,7 @@ router.afterEach((to, from) => {
     store.commit('app/changeHeaderTag', -1)
   }
 })
-router.afterEach((to,from,next)=>{
+/*router.afterEach((to,from,next)=>{
     setTimerout(()=>{
         (function(){
             //每次执行前，先移除上次插入的代码
@@ -229,5 +229,5 @@ router.afterEach((to,from,next)=>{
             s.parentNode.insertBefore(hm,s);
         })()
     },0)
-})
+})*/
 export default router
