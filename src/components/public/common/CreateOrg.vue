@@ -71,7 +71,7 @@
             this.btnLoading=false
             if (res.result==1){
               this.$emit('closeCreateOrg')
-              localStorage.orgId = res.data;
+              localStorage.companyId = res.data;
               this.$router.replace('/org/'+res.data)
             }
           })
