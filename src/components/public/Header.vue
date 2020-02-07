@@ -37,7 +37,7 @@
         </span>
       </a>
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
-        <img class="avatar" :src="`${defaultImage}`" alt="">
+        <img class="avatar" :src="avatar" alt="">
         <div class="userInfo" slot="content">
           <ul class="org">
             <li class="addOrgPro" :class="hoverClass=='create'?'hoverClass':''" @click="addOrgModal=true;popVisible=false;hoverClass='create'">创建企业</li>
@@ -115,7 +115,7 @@ export default {
     down,//下载
     message,//消息
   },
-  props: ['companyId'],
+  props: ['companyId','avatar'],
   data() {
     return {
       tagHeader:false,//显示日历
@@ -318,7 +318,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("user", ["mineRouter", "users",'defaultImage']),
+    ...mapState("user", ["mineRouter"]),
     ...mapState('app', ['activeHeaderTag']),
     ...mapState("news", ["newsCount"]),
     ...mapState("company", ["companyList"]),
