@@ -215,6 +215,7 @@ export default {
     ProjectSettings,
     Loading
   },
+  inject: ["reload"],
   data() {
     return {
       dis:true,  //取消显示状态
@@ -423,11 +424,14 @@ export default {
 
       }, 1000);
     }
+  },
+  watch: {
+    $route(to, from) {
+      this.reload();
+    }
   }
-
 };
-
- const validatePhone = (rule, value, callback) => {
+const validatePhone = (rule, value, callback) => {
   if (!value) {
       return callback(new Error('请输入手机号'));
   } else if (!/^1[34578]\d{9}$/.test(value)) {
@@ -436,6 +440,7 @@ export default {
       callback();
   }   
 }
+
 </script>
 <style scoped lang="less">
 
