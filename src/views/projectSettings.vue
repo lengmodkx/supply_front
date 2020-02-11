@@ -236,8 +236,10 @@ export default {
           fileReader.readAsDataURL(files[0])
           this.image = files[0]
           //到这里后, 选择图片就可以显示出来了
-
           this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
+          if(this.filename!=''){
+            this.saveImg();
+          }
       },
       
       choose(flag) {
@@ -307,9 +309,6 @@ export default {
       },
       // 点击保存按钮
       saveSet() {
-        if(this.filename!=''){
-              this.saveImg();
-        }
           this.publishAxios().then(res => {
           });
       },
