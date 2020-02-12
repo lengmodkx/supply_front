@@ -307,9 +307,6 @@ export default {
       },
       // 点击保存按钮
       saveSet() {
-        if(this.filename!=''){
-              this.saveImg();
-        }
           this.publishAxios().then(res => {
           });
       },
