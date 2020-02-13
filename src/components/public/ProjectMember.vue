@@ -160,7 +160,8 @@ export default {
       //添加项目成员
        let params={
           projectId:this.$route.params.id,
-          memberId:userId
+          memberId:userId,
+          orgId:localStorage.companyId
        }
       
       addUser(params).then(res => {
