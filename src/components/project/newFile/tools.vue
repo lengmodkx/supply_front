@@ -78,10 +78,10 @@
                 <div class="view " @click="changeShowView('view')" ><img src="../../../assets/images/view2.png" alt=""></div>
             </div>
             <Modal v-model="showModelFile" title="上传模型文件"  class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-                <model-file  @close="showModelFile=false" :fileId="fileId" ></model-file>
+                <model-file  @close="showModelFile=false" :fileId="itemfile.fileId" ></model-file>
             </Modal> 
             <Modal v-model="showCommonFile" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-              <common-file  @close="showCommonFile=false"    :fileId="fileId" :projectId="projectId"></common-file>
+              <common-file  @close="showCommonFile=false"    :fileId="itemfile.fileId" :projectId="projectId"></common-file>
             </Modal>
             
 
@@ -110,7 +110,7 @@
             <!--复制、移动 模态框-->
             <Modal v-model="showMove" :z-index=11111 class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
               <div slot="header">
-                <span style="font-size:18px">移动文件{{fileName}}至</span>
+                <span style="font-size:18px">111移动文件{{fileName}}至</span>
               </div>
               <div class="move-and-mobile-file">
                 <div class="column-projects flex-static thin-scroll">
@@ -123,7 +123,7 @@
                 </div>
                 <div class="picker-column thin-scroll flex-fill flex-vert">
                   <Loading v-show="loading1"></Loading>
-                  <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row  ref="jstree" children-field-name="child"></v-jstree>
+                  <v-jstree :data="asyncData1" show-checkbox :multiple=false whole-row  ref="jstree" children-field-name="child"></v-jstree>
                 </div>
 
               </div>
@@ -161,6 +161,16 @@ export default {
   components: {commonFile,modelFile, VJstree,},
   data () {
     return {
+      asyncData1:[
+        {
+            "text": "Same but with checkboxes",
+            "children": [
+              {
+                "text": "initially selected",
+                "selected": true
+              },]
+        }
+      ],
       pullList:[
         {name:'上传普通文件',src:require('../../../assets/images/view6.png')},
         {name:'上传模型文件',src:require('../../../assets/images/view6.png')}
@@ -173,6 +183,7 @@ export default {
         {name:'递增',src:require('../../../assets/images/view10.png')},
         {name:'递减'}
       ],
+
        showCommonFile:false,
        showModelFile:false,
        showmodelMove:false,//移动弹窗
@@ -193,7 +204,7 @@ export default {
          loading1: false,
           asyncData: [],
            footerTxt: "跨项目移动时，部分信息不会被保留。",
-    }
+          }
   },
   computed: {
     ...mapState("tree", ["showView","slider"]),
