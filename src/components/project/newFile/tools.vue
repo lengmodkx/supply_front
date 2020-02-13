@@ -110,7 +110,7 @@
             <!--复制、移动 模态框-->
             <Modal v-model="showMove" :z-index=11111 class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
               <div slot="header">
-                <span style="font-size:18px">111移动文件{{fileName}}至</span>
+                <span style="font-size:18px">移动文件{{fileName}}至</span>
               </div>
               <div class="move-and-mobile-file">
                 <div class="column-projects flex-static thin-scroll">
@@ -164,13 +164,69 @@ export default {
       asyncData1:[
         {
             "text": "Same but with checkboxes",
-            "children": [
+            "child": [
               {
                 "text": "initially selected",
                 "selected": true
               },]
+        },
+        
+      ],
+      asyncData2:[
+        
+        {
+            "id": "66fae9757ff940cea6da111d925335f7",
+            "name": null,
+            "text": "测试文件夹2",
+            "open": null,
+            "selected": null,
+            "projectId": "950065c9ef444daea3103bf8eee4ad0f",
+            "children": null,
+            "child": [{
+                "id": "907add74f48b4fd3afa3641e89f180ea",
+                "name": null,
+                "text": "测试子文件夹",
+                "open": null,
+                "selected": null,
+                "projectId": "950065c9ef444daea3103bf8eee4ad0f",
+                "children": null,
+                "child": null,
+                "pid": "66fae9757ff940cea6da111d925335f7"
+            }, {
+                "id": "89e14006d30043fe8a0be462520e1ed1",
+                "name": null,
+                "text": "测试子文件夹",
+                "open": null,
+                "selected": null,
+                "projectId": "950065c9ef444daea3103bf8eee4ad0f",
+                "children": null,
+                "child": null,
+                "pid": "66fae9757ff940cea6da111d925335f7"
+            }],
+            "pid": "e6113e7763554732a150fdfdb69a01cb"
+        }, {
+            "id": "784441f1072a41479b24bc5b5aa651a5",
+            "name": null,
+            "text": "测试文件夹",
+            "open": null,
+            "selected": null,
+            "projectId": "950065c9ef444daea3103bf8eee4ad0f",
+            "children": null,
+            "child": null,
+            "pid": "e6113e7763554732a150fdfdb69a01cb"
+        }, {
+            "id": "f0adef061e4a4216be552de0abac005f",
+            "name": null,
+            "text": "公共模型库",
+            "open": null,
+            "selected": null,
+            "projectId": "950065c9ef444daea3103bf8eee4ad0f",
+            "children": null,
+            "child": null,
+            "pid": "e6113e7763554732a150fdfdb69a01cb"
         }
       ],
+      
       pullList:[
         {name:'上传普通文件',src:require('../../../assets/images/view6.png')},
         {name:'上传模型文件',src:require('../../../assets/images/view6.png')}
