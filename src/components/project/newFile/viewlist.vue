@@ -375,10 +375,10 @@ export default {
     },
     //文件下载
     downLoad(fileId) {
-      window.location.href =
-        process.env.NODE_ENV == "development"
-          ? "/api/files/" + fileId + "/download"
-          : process.env.VUE_APP_URL + "/files/" + fileId + "/download";
+      window.location.href =  'http://www.test.art1001.com' + "/files/" + fileId + "/download"
+        // process.env.NODE_ENV == "test"
+        //   ? "/api/files/" + fileId + "/download"
+        //   : process.env.VUE_APP_URL + "/files/" + fileId + "/download";
     },
 
     // menuShow(catalog, fileId, e) {
