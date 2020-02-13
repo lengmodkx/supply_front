@@ -61,7 +61,7 @@
                 </Poptip>
 
                 <!-- 排序 -->
-                <Poptip placement="bottom" >
+                <!-- <Poptip placement="bottom" >
                   <div class="view" ><img src="../../../assets/images/view1.png" alt=""></div>
                   <div class="view-pop" slot="content">
                           <ul>
@@ -71,7 +71,7 @@
                             </li>
                           </ul>
                   </div>
-                </Poptip>
+                </Poptip> -->
                 <!-- 列表 -->
                 <div class="view"  @click="changeShowView('list')"><img src="../../../assets/images/view3.png" alt=""></div>
                 <!-- 缩略图 -->
