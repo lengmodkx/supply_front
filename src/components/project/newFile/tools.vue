@@ -173,7 +173,6 @@ export default {
         
       ],
       asyncData2:[
-        
         {
             "id": "66fae9757ff940cea6da111d925335f7",
             "name": null,
