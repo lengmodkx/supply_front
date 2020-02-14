@@ -15,7 +15,8 @@ export default {
             ztreeObj: null,
             setting:{
                view:{
-                   showIcon: true
+                   showIcon: true,
+                   selectedMulti: false
                },
                check: {
                     enable: false
@@ -62,8 +63,15 @@ export default {
             this.initFile(params).then(res => {
                      
             });
+        },
+        asyncRefresh(){
+            var nodes = this.ztreeObj.getSelectedNodes();
+            console.log(nodes)
+            if (nodes.length>0) {
+                this.ztreeObj.reAsyncChildNodes(nodes[0], "refresh",true);
+            }
         }
-    }
+    },
 }
 </script>
 <style lang="less">
