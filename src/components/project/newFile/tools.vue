@@ -188,13 +188,14 @@ export default {
        modalTitle:"文件菜单",
        showFileEdit: false,
        editFileName: "",
-         showMove: false,
-          fileName: "",
+       showMove: false,
+       fileName: "",
        projects: [],
-         loading1: false,
-          asyncData: [],
-           footerTxt: "跨项目移动时，部分信息不会被保留。",
-          }
+       loading1: false,
+       asyncData: [],
+       footerTxt: "跨项目移动时，部分信息不会被保留。",
+       caozuo:''
+      }
   },
   computed: {
     ...mapState("tree", ["showView","slider"]),
