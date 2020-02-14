@@ -78,7 +78,7 @@ export function cloneFile(folderId, fileIds) {
         method: "post",
         data: {
             folderId: folderId,
-            fileIds: fileIds
+            fileId: fileIds
         }
     });
 }

@@ -74,6 +74,7 @@ export default {
       }
     },
     created:function(){   
+      
          this.$store.commit("file/changeCreateFileId", this.fileId);    
          // this.$store.commit("file/crumbsHome", this.fileTree[0]);
     

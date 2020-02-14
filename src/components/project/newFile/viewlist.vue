@@ -73,10 +73,7 @@
           </div>
         </div>
       </Modal>
-      <!--文件详情-->
-      <!-- <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
-        <fileDetail @close="closeDetail" v-if="showModelDetai"></fileDetail>
-      </Modal> -->
+     
       <!--模型文件详情-->
       <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
         <!-- <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail> -->
@@ -173,6 +170,7 @@ import {
   collect
 } from "../../../axios/api.js";
 import VJstree from "vue-jstree";
+var timer = null; 
 export default {
   inject: ["reload"],
   components: {
@@ -246,6 +244,7 @@ export default {
       loading1: false,
       mFile:null,
       curFile:{},
+      
     };
   },
   watch: {
@@ -486,45 +485,59 @@ export default {
       let data = { fileId: id, projectId: this.projectId };
       this.initFolders(data).then(res => {});
     },
-    dfileDetail(file,index){
-           //获取目录
-          if (".svf".includes(file.ext)) {
-            // 模型文件
-              console.log("模型文件")
-            getFileDetails(file.fileId).then(res => {
-              console.log(res.data.fileUrl);
-              this.svfUrl = res.data.fileUrl;
-              this.showModelFileDetail = true;
-            });
-
-          } else if(file.catalog===1){
-            // 文件夹
-            this.$store.commit("file/changeCreateFileId", file.fileId);   
-            
-            if (file.catalog == 1) {
-                this.$store.commit("file/crumbsAdd", file);
-              this.fileId = file.fileId;
-              getChildFiles(file.fileId).then(res => {
-               
-                this.$store.commit("file/initFile", res.data);
-                
-              });
-             
-
-
-            } else {
-              //普通文件
-               console.log("普通文件")
-               this.showModelDetai=true;
-               this.curFile=file;
-            }
-          }
+    dfileDetail(file,index){   
+        //双击只对文件夹操作
+            clearTimeout(timer)
+            console.log("shuang")      
+                console.log(file.catalog)
+                if (".svf".includes(file.ext)) {
+                    // 模型文件
+                    console.log("模型文件")
+                } else if(file.catalog===1){
+                  // 文件夹
+                  this.$store.commit("file/changeCreateFileId", file.fileId);   //重点改变fileId            
+                  if (file.catalog == 1) {
+                      this.$store.commit("file/crumbsAdd", file);
+                    this.fileId = file.fileId;
+                    getChildFiles(file.fileId).then(res => {                    
+                      this.$store.commit("file/initFile", res.data);                     
+                    });
+                  } else {
+                    //普通文件
+                    console.log("普通文件")
+                  }
+                }
     },
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file,index) {
-      this.isactive = index//选中
-      this.initItem(file)
-      this.thisFileId = id;
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+          console.log("dan")
+          this.isactive = index//选中
+          this.initItem(file)
+          this.thisFileId = id;
+
+          if (".svf".includes(file.ext)) {
+             console.log("模型文件") 
+              getFileDetails(file.fileId).then(res => {
+                  console.log(res.data.fileUrl);
+                  this.svfUrl = res.data.fileUrl;
+                  this.showModelFileDetail = true;
+              });
+          } else {          
+             if (catalog == 1) {
+                //文件夹  单击文件夹不做操作 
+             }
+             else {
+               //文件              
+                this.showModelDetai=true;
+                this.curFile=file;
+               console.log("文件",catalog);
+
+             } 
+          }
+      }, 300); 
+
      
       //获取目录
       // let data = { fileId: id, projectId: this.projectId };

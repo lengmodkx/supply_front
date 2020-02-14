@@ -78,10 +78,10 @@
                 <div class="view " @click="changeShowView('view')" ><img src="../../../assets/images/view2.png" alt=""></div>
             </div>
             <Modal v-model="showModelFile" title="上传模型文件"  class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-                <model-file  @close="showModelFile=false" :fileId="itemfile.fileId" ></model-file>
+                <model-file  @close="showModelFile=false" :fileId="createFileId" ></model-file>
             </Modal> 
             <Modal v-model="showCommonFile" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-              <common-file  @close="showCommonFile=false"    :fileId="itemfile.fileId" :projectId="projectId"></common-file>
+              <common-file  @close="showCommonFile=false"    :fileId="createFileId" :projectId="projectId"></common-file>
             </Modal>
             
 
@@ -110,7 +110,7 @@
             <!--复制、移动 模态框-->
             <Modal v-model="showMove" :z-index=11111 class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
               <div slot="header">
-                <span style="font-size:18px">移动文件{{fileName}}至</span>
+                <span style="font-size:18px">{{caozuo}}文件{{fileName}}至</span>
               </div>
               <div class="move-and-mobile-file">
                 <div class="column-projects flex-static thin-scroll">
