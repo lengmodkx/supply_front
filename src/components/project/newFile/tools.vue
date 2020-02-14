@@ -242,9 +242,9 @@ export default {
                 });
                 this.showAddFolder = false;
                 this.folderName = "";
+                this.$emit('createFolder')
               }
             });
-
       },
       // 下载
        downLoad(fileId) {
@@ -300,7 +300,8 @@ export default {
       putRecyclebin(fileId) {
         console.log(fileId)
         recycleBin(fileId, this.projectId).then(res => {
-          if (res.result) {
+          if (res.result==1) {
+            this.$emit('createFolder')
             this.$Message.success("成功移到回收站");
             this.popHid();
           }
@@ -312,9 +313,12 @@ export default {
           this.$Message.info("请输入名称");
         }
         changeName(id, this.editFileName).then(res => {
-          this.showFileEdit = false;
-          this.$Message.info("修改名称成功");
-          this.editFileName=''
+          if(res.result==1){
+            this.$emit('createFolder')
+            this.showFileEdit = false;
+            this.$Message.info("修改名称成功");
+            this.editFileName=''
+          }
         });
       },
       // 移动、赋值文件框打开关闭

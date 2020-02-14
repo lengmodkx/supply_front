@@ -2,7 +2,7 @@
   <div class="file">
     <div class="file-left">
           <!-- 树 -->
-         <tree :data="fileTree" ></tree>
+         <tree :data="fileTree" ref="tree"></tree>
          <!-- <div class="tree-box" >
               <tree :data=userTree ></tree>
           </div>
@@ -17,7 +17,7 @@
           <!-- 头 -->
           <file-header></file-header>  
           <!--工具 -->  
-          <file-tools> </file-tools>           
+          <file-tools @createFolder="createFolder"> </file-tools>           
           <!-- 列表内容 -->
           <list   v-show="showView=='list'"></list>
           <!-- 缩略图内容 -->
@@ -68,6 +68,10 @@ export default {
     methods: {
       ...mapActions("tree", ["initFolders"]),
       ...mapActions("file", ["initFile", "searchFile", "initTag"]),
+      createFolder(){
+        this.$refs.tree.asyncRefresh()
+        console.log('xxxxxxxxx')
+      }
     },
     created:function(){   
          this.$store.commit("file/changeCreateFileId", this.fileId);    

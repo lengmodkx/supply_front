@@ -1,14 +1,7 @@
 
 import {findUserInfo} from '@/axios/api';
 import {
-  getTSFile,
-  filePrivacy,
-  getFolders,
-  getFileTree,
-  searchFile,
-  getFileByTag,
-  getFileDetails,
-  getTree,
+  getTree
 } from '../../axios/fileApi'
 
 const store = {
@@ -26,9 +19,8 @@ const store = {
       //   { id:23, pId:2, name:"leaf node 03", icon:"https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/wx_app_icon/2c4d11307f486c71aa6212926ea85a3.png"},
       // ]
       showView:'view',
-      slider:'',
+      slider:''
   },
-
   mutations: {
        // 改变列表状态
       changeShowView(state, data){
@@ -41,7 +33,7 @@ const store = {
       //树
       initFolders(state, data) {
         state.fileTree=data
-      },   
+      }
   },
   actions: {
       // 改变列表状态
@@ -59,8 +51,7 @@ const store = {
         getTree(data).then(res => {
             commit("initFolders", res.data)
         })
-     },
-     
+     }
   }
 }
 

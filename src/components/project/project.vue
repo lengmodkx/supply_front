@@ -226,7 +226,6 @@ export default {
               // 创建文件夹
               case "C1":
                 this.$store.commit("file/createWjj", result.object);
-                this.$store.dispatch("tree/initFolders", "46bdaf13fe6f405b8ab6ebb46dbc40cc");
                 break;
               // 上传文件
               case "C2":
