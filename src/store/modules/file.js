@@ -229,7 +229,6 @@ const store = {
         },
         // 推送 创建文件夹
         createWjj(state, data) {
-        
             state.files = data
         },
         initFolders(state, data) {
