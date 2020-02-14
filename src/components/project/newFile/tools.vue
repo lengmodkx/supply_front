@@ -290,7 +290,7 @@ export default {
     // 选中要移动到哪
     treeClick(node) {
          this.folderId = node.data.id;
-         this.thisFileId= node.data.id;
+         this.thisFileId= this.itemfile.fileId;
       //   console.log(node.data.id);
       //   let params = { fileId: this.folderId };
       //  let data = { fileId: this.folderId, projectId: this.projectId };
