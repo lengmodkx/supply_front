@@ -123,7 +123,7 @@
                 </div>
                 <div class="picker-column thin-scroll flex-fill flex-vert">
                   <Loading v-show="loading1"></Loading>
-                  <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row  ref="jstree" children-field-name="children"></v-jstree>
+                  <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row  ref="jstree" text-field-name="name"  children-field-name="children"></v-jstree>
                 </div>
 
               </div>
@@ -321,7 +321,7 @@ export default {
       //点击 移动、复制文件
       removeClone(caozuo) {
         this.caozuo = caozuo;
-        this.showMove = false;
+        this.showMove = true;
         this.footerTxt = "跨项目移动时，部分信息不会被保留。";
         this.asyncData = [this.$refs.jstree.initializeLoading()];
         folderChild(this.projectId).then(res => {
