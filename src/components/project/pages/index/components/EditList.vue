@@ -472,7 +472,7 @@ export default {
     },
     getFileDetail(fileId) {
       getFileDetails(fileId).then(res => {
-        this.$store.commit("file/putOneFile", res);
+          // this.$store.commit("file/putOneFile", res);
         this.showFileDetail = true;
       });
     },
