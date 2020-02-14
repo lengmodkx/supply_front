@@ -2,9 +2,8 @@
   <div class="file">
     <div class="file-left">
           <!-- 树 -->
-         <tree :data=fileTree ></tree>
-
-         <div class="tree-box" >
+         <tree :data="fileTree" ></tree>
+         <!-- <div class="tree-box" >
               <tree :data=userTree ></tree>
           </div>
           <div class="tree-box" >
@@ -12,7 +11,7 @@
           </div>
           <div class="tree-box" >
               <tree :data=typetree ></tree>
-          </div>
+          </div> -->
     </div>
     <div class="file-right">
           <!-- 头 -->

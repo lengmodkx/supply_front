@@ -51,7 +51,7 @@ export default {
         ...mapActions("tree", ["initFolders",]),
         ...mapActions("file", ["initFile", "searchFile", "initTag"]),
         onCreated(ztreeObj){
-        this.ztreeObj = ztreeObj
+            this.ztreeObj = ztreeObj
         },
         onClick(evt, treeId, treeNode){
             console.log(treeNode)
