@@ -1,5 +1,5 @@
 <template>
-    <tree :nodes="data" @onCreated="onCreated"  :setting="setting"  @onClick="onClick"   ref='ztreeDom'/>
+    <tree :nodes="data" @onCreated="onCreated"  :setting="setting"  @onClick="onClick" ref='ztreeDom'/>
     
 </template>
 <script>
@@ -12,46 +12,57 @@ export default {
     props: ["data"],
     data(){
         return {
-            setting: {
-                check: {
+            ztreeObj: null,
+            setting:{
+               view:{
+                   showIcon: true
+               },
+               check: {
                     enable: false
                 },
-                data: {
-                    simpleData: {
+                data:{
+                    simpleData:{
                         enable: true,
+                        idKey: "id",
                         pIdKey: "pId",
+                        rootPId: 0
                     }
                 },
-                view: {
-                    showIcon: true,
+                async:{//异步设置
+                    enable: true,
+                    type:"get",
+                    url: "http://192.168.1.10:8080/files/treenode",
+                    autoParam: ["id"],
+                    dataType: "text",
+                    headers:{'x-auth-token':localStorage.token},
+                    //异步返回结果集处理(必须返回json数据)
+                    dataFilter: function(treeId, parentNode, res){
+                        console.log(res)
+                        return res.data;
+                    }
                 }
-            }
+            },
         }
     },
-     computed: {
+    computed: {
       ...mapState("tree", ["fileTree",'showView']),
-     
    },
-  
-    
     methods:{
-           ...mapActions("tree", ["initFolders",]),
-              ...mapActions("file", ["initFile", "searchFile", "initTag"]),
-        onCreated(obj){
-           
+        ...mapActions("tree", ["initFolders",]),
+        ...mapActions("file", ["initFile", "searchFile", "initTag"]),
+        onCreated(ztreeObj){
+        this.ztreeObj = ztreeObj
         },
         onClick(evt, treeId, treeNode){
             console.log(treeNode)
-
-             this.$store.commit("file/crumbsTree",treeNode);//改变菜单栏
+            this.$store.commit("file/crumbsTree",treeNode);//改变菜单栏
             this.folderId = treeNode.id;                  
             let params = { fileId: this.folderId };
             this.initFile(params).then(res => {
                      
             });
         }
-    },
-   
+    }
 }
 </script>
 <style lang="less">
