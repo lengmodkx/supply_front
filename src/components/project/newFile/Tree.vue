@@ -48,13 +48,14 @@ export default {
       ...mapState("tree", ["fileTree",'showView']),
    },
     methods:{
-        ...mapActions("tree", ["initFolders",]),
+        ...mapActions("tree", ["initFolders"]),
         ...mapActions("file", ["initFile", "searchFile", "initTag"]),
         onCreated(ztreeObj){
             this.ztreeObj = ztreeObj
         },
         onClick(evt, treeId, treeNode){
             console.log(treeNode)
+            this.$store.commit("file/changeCreateFileId", treeNode.id);   
             this.$store.commit("file/crumbsTree",treeNode);//改变菜单栏
             this.folderId = treeNode.id;                  
             let params = { fileId: this.folderId };

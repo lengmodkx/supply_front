@@ -497,7 +497,7 @@ export default {
               this.showModelFileDetail = true;
             });
 
-          } else {
+          } else if(file.catalog===1){
             // 文件夹
             this.$store.commit("file/changeCreateFileId", file.fileId);   
             
