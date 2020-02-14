@@ -32,7 +32,7 @@ export default {
                 async:{//异步设置
                     enable: true,
                     type:"get",
-                    url: "http://192.168.1.10:8080/files/treenode",
+                    url: "http://www.test.art1001.com/api/files/treenode",
                     autoParam: ["id"],
                     dataType: "text",
                     headers:{'x-auth-token':localStorage.token},
