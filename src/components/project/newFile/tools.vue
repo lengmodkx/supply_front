@@ -123,7 +123,7 @@
                 </div>
                 <div class="picker-column thin-scroll flex-fill flex-vert">
                   <Loading v-show="loading1"></Loading>
-                  <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row  ref="jstree" text-field-name="name"  children-field-name="children"></v-jstree>
+                  <v-jstree :data="asyncData" show-checkbox @item-click="treeClick" :multiple=false whole-row  ref="jstree" text-field-name="text"  children-field-name="children"></v-jstree>
                 </div>
 
               </div>
@@ -161,71 +161,6 @@ export default {
   components: {commonFile,modelFile, VJstree,},
   data () {
     return {
-      asyncData1:[
-        {
-            "text": "Same but with checkboxes",
-            "child": [
-              {
-                "text": "initially selected",
-                "selected": true
-              },]
-        },
-        
-      ],
-      asyncData2:[
-        {
-            "id": "66fae9757ff940cea6da111d925335f7",
-            "name": null,
-            "text": "测试文件夹2",
-            "open": null,
-            "selected": null,
-            "projectId": "950065c9ef444daea3103bf8eee4ad0f",
-            "children": null,
-            "child": [{
-                "id": "907add74f48b4fd3afa3641e89f180ea",
-                "name": null,
-                "text": "测试子文件夹",
-                "open": null,
-                "selected": null,
-                "projectId": "950065c9ef444daea3103bf8eee4ad0f",
-                "children": null,
-                "child": null,
-                "pid": "66fae9757ff940cea6da111d925335f7"
-            }, {
-                "id": "89e14006d30043fe8a0be462520e1ed1",
-                "name": null,
-                "text": "测试子文件夹",
-                "open": null,
-                "selected": null,
-                "projectId": "950065c9ef444daea3103bf8eee4ad0f",
-                "children": null,
-                "child": null,
-                "pid": "66fae9757ff940cea6da111d925335f7"
-            }],
-            "pid": "e6113e7763554732a150fdfdb69a01cb"
-        }, {
-            "id": "784441f1072a41479b24bc5b5aa651a5",
-            "name": null,
-            "text": "测试文件夹",
-            "open": null,
-            "selected": null,
-            "projectId": "950065c9ef444daea3103bf8eee4ad0f",
-            "children": null,
-            "child": null,
-            "pid": "e6113e7763554732a150fdfdb69a01cb"
-        }, {
-            "id": "f0adef061e4a4216be552de0abac005f",
-            "name": null,
-            "text": "公共模型库",
-            "open": null,
-            "selected": null,
-            "projectId": "950065c9ef444daea3103bf8eee4ad0f",
-            "children": null,
-            "child": null,
-            "pid": "e6113e7763554732a150fdfdb69a01cb"
-        }
-      ],
-      
       pullList:[
         {name:'上传普通文件',src:require('../../../assets/images/view6.png')},
         {name:'上传模型文件',src:require('../../../assets/images/view6.png')}
@@ -238,7 +173,7 @@ export default {
         {name:'递增',src:require('../../../assets/images/view10.png')},
         {name:'递减'}
       ],
-
+       thisFileId:"",
        showCommonFile:false,
        showModelFile:false,
        showmodelMove:false,//移动弹窗
@@ -332,7 +267,9 @@ export default {
       },
       // 移动、复制文件的确定按钮
       removeCloneFile() {
+
           if (this.caozuo === "移动") {
+            console.log(this.folderId, this.thisFileId, this.projectId)
             removeFile(this.folderId, this.thisFileId, this.projectId).then(
               res => {
                 if (res.result) {
@@ -349,6 +286,16 @@ export default {
           }
         
       },
+        // 选中要移动到哪
+    // 选中要移动到哪
+    treeClick(node) {
+         this.folderId = node.data.id;
+         this.thisFileId= node.data.id;
+      //   console.log(node.data.id);
+      //   let params = { fileId: this.folderId };
+      //  let data = { fileId: this.folderId, projectId: this.projectId };
+      //  this.initFolders(data).then(res => {});
+    },
       // 移到回收站
       putRecyclebin(fileId) {
         console.log(fileId)
