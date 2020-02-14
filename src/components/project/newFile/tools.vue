@@ -275,6 +275,9 @@ export default {
                 if (res.result) {
                   this.$Message.success("移动成功");
                   this.showMove = false;
+                  let params = { fileId: this.itemfile.fileId };
+                      this.initFile(params).then(res => {                    
+                  });
                 }
               }
             );
@@ -282,6 +285,9 @@ export default {
             cloneFile(this.folderId, this.thisFileId).then(res => {
               this.$Message.success("复制成功");
               this.showMove = false;
+               let params = { fileId: this.itemfile.fileId };
+                      this.initFile(params).then(res => {                    
+               });
             });
           }
         
@@ -304,6 +310,7 @@ export default {
             this.$emit('createFolder')
             this.$Message.success("成功移到回收站");
             this.popHid();
+            
           }
         });
       },
