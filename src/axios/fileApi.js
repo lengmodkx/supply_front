@@ -66,7 +66,7 @@ export function removeFile(folderId, fileIds, toProjectId) {
         url: `/files/${folderId}/m_move`,
         method: "put",
         params: {
-            fileIds: fileIds,
+            fileId: fileIds,
             toProjectId: toProjectId
         }
     });
