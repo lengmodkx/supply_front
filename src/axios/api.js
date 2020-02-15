@@ -288,7 +288,7 @@ export function updatePriority(taskId, priority) {
 
 // 任务移入回收站
 export function taskToRecycle(taskId) {
-    debugger
+    
     return $put(`/tasks/${taskId}/recyclebin`);
 }
 

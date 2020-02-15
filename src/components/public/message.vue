@@ -147,7 +147,7 @@
                         }
                         if(publicType === '任务'){
                             this.$store.dispatch('task/editTask', publicId).then(() => {
-                              //  debugger
+                              
                                 this.loading=false
                                 this.task = res.data
                                 this.isShow = true

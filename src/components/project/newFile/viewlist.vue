@@ -1,7 +1,7 @@
 <template>
 <div class="file-contant">
     <ul class="file-list"    v-if="files.length">
-        <li v-for="(file,index) in files"   :class = "isactive == index ? 'li-hover' : '' " v-bind:style="{ width: slider * 4 + 'px',}" style='min-width: 34px' :key="index"   @dblclick="dfileDetail(file,index)"   @click="fileDetail(file.catalog,file.fileId, file,index)" >
+        <li v-for="(file,index) in files"   :class = "isactive == index ? 'li-hover' : '' " v-bind:style="{ width: slider * 4 + 'px',}" style='min-width: 34px' :key="index"   @dblclick="dfileDetail(file,index,file.catalog)"   @click="fileDetail(file.catalog,file.fileId, file,index)" >
         <div class="img-box">
             <i class="file-content-chose"  v-show="index==isactive"></i>          
             <img v-if="file.catalog==1&&file.filePrivacy===0" src='../../../assets/images/wjj.png' >
@@ -485,28 +485,35 @@ export default {
       let data = { fileId: id, projectId: this.projectId };
       this.initFolders(data).then(res => {});
     },
-    dfileDetail(file,index){   
+    dfileDetail(file,index,catalog){   
         //双击只对文件夹操作
-            clearTimeout(timer)
-            console.log("shuang")      
-                console.log(file.catalog)
-                if (".svf".includes(file.ext)) {
-                    // 模型文件
-                    console.log("模型文件")
-                } else if(file.catalog===1){
-                  // 文件夹
-                  this.$store.commit("file/changeCreateFileId", file.fileId);   //重点改变fileId            
-                  if (file.catalog == 1) {
-                      this.$store.commit("file/crumbsAdd", file);
-                    this.fileId = file.fileId;
-                    getChildFiles(file.fileId).then(res => {                    
-                      this.$store.commit("file/initFile", res.data);                     
-                    });
-                  } else {
-                    //普通文件
-                    console.log("普通文件")
-                  }
-                }
+      clearTimeout(timer)  
+      if (".svf".includes(file.ext)) {
+             getFileDetails(file.fileId).then(res => {
+                        console.log(res.data.fileUrl);
+                        this.svfUrl = res.data.fileUrl;
+                        this.showModelFileDetail = true;
+             });
+            console.log("模型文件")
+      } else {          
+          if (catalog == 1) {
+            //文件夹 
+              this.$store.commit("file/changeCreateFileId", file.fileId);   //重点改变fileId  
+              this.$store.commit("file/crumbsAdd", file);
+              this.fileId = file.fileId;
+              getChildFiles(file.fileId).then(res => {                    
+                  this.$store.commit("file/initFile", res.data);   
+                   
+                  localStorage.fileParentId =  this.fileId;                 
+              });
+          }
+          else {
+            //文件        
+             this.showModelDetai=true;
+            this.curFile=file;      
+            console.log("文件",catalog);
+          } 
+      }
     },
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file,index) {
@@ -516,67 +523,18 @@ export default {
           this.isactive = index//选中
           this.initItem(file)
           this.thisFileId = id;
-
           if (".svf".includes(file.ext)) {
              console.log("模型文件") 
-              getFileDetails(file.fileId).then(res => {
-                  console.log(res.data.fileUrl);
-                  this.svfUrl = res.data.fileUrl;
-                  this.showModelFileDetail = true;
-              });
           } else {          
              if (catalog == 1) {
-                //文件夹  单击文件夹不做操作 
+                //文件夹 
              }
              else {
                //文件              
-                this.showModelDetai=true;
-                this.curFile=file;
-               console.log("文件",catalog);
-
+                console.log("文件",catalog);
              } 
           }
-      }, 300); 
-
-     
-      //获取目录
-      // let data = { fileId: id, projectId: this.projectId };
-      // this.initFolders(data).then(res => {});
-      // if (".svf".includes(file.ext)) {
-      //   // 模型文件
-      //   getFileDetails(id).then(res => {
-      //     console.log(res.data.fileUrl);
-      //     this.svfUrl = res.data.fileUrl;
-      //     this.showModelFileDetail = true;
-      //   });
-
-      //   console.log(file);
-      // } else {
-      //   // 普通文件或者文件夹
-      //   if (catalog == 1) {
-      //     this.loading = true;
-      //     this.fileId = id;
-      //     this.pathData.push({ name: file.fileName, id: file.fileId });
-      //     getChildFiles(id).then(res => {
-      //       console.log(res);
-      //       this.$store.commit("file/initFile", res.data);
-      //       this.loading = false;
-      //       localStorage.fileParentId = res.parentId;
-      //     });
-      //     localStorage.view = this.view;
-      //     this.$router.push({
-      //       path: `/project/${this.$route.params.id}/files/${id}`
-      //     });
-      //   } else {
-      //     this.loading = true;
-      //     getFileDetails(id).then(res => {
-      //       console.log(res);
-      //       this.loading = false;
-      //       this.putOneFile(res);
-      //       this.showModelDetai = true;
-      //     });
-      //   }
-      // }
+      }, 300);  
     },
     // 隐私模式
     changePrivacy() {
@@ -604,7 +562,7 @@ export default {
     // 移到回收站
     putRecyclebin() {
       console.log(this.thisFileId, this.projectId)
-      debugger
+      
       recycleBin(this.thisFileId, this.projectId).then(res => {
         if (res.result) {
           this.$Message.success("成功移到回收站");
