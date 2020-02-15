@@ -203,6 +203,7 @@ export default {
    },
   methods: {
       ...mapActions("tree", ["changeShowView","changeSlider"]),
+       ...mapActions("file", ["initFile", "searchFile", "initTag"]),
       // 打开弹窗
       upload(item){
         this.visibleTip=false;
@@ -276,9 +277,7 @@ export default {
                 if (res.result) {
                   this.$Message.success("移动成功");
                   this.showMove = false;
-                  let params = { fileId: this.itemfile.fileId };
-                      this.initFile(params).then(res => {                    
-                  });
+                  
                 }
               }
             );
@@ -286,9 +285,7 @@ export default {
             cloneFile(this.folderId, this.thisFileId).then(res => {
               this.$Message.success("复制成功");
               this.showMove = false;
-               let params = { fileId: this.itemfile.fileId };
-                      this.initFile(params).then(res => {                    
-               });
+              
             });
           }
         
