@@ -21,7 +21,7 @@
                 <div class="w30">创建时间</div>
                 <div class="w30">更新时间</div>
             </div>
-            <RadioGroup v-model="role" style="width: 100%" @on-change="cahngeRole">
+            <RadioGroup v-model="roleId" style="width: 100%" @on-change="changeRole">
                 <div class="role-li" v-for="(item, index) in roleList" :key="index">
                     <div class="radio-wrap">
                         <Radio :label="item.roleId">
@@ -54,7 +54,7 @@
             </div>
         </Modal>
         <Modal v-model="permissionAssign" title="企业权限分配" width="850px" class="padd0" footer-hide>
-            <project-permission :flag="true" :permissions="permissions" :roleKey="nowRole.roleKey" :role="role" v-if="permissionAssign" ref="permission" @close="permissionAssign=false"></project-permission>
+            <project-permission :flag="true" :permissions="permissions"  :role="nowRole" v-if="permissionAssign" ref="permission" @close="permissionAssign=false"></project-permission>
         </Modal>
     </div>
 </template>
@@ -85,7 +85,7 @@
                 tableRow: [],
                 total: 10,
                 roleList: [],
-                role: '',
+                roleId: '',
                 nowRole: {},
                 permissions: []
             }
@@ -104,22 +104,21 @@
                 })
             },
             // 点击单选按钮
-            cahngeRole (data) {
+            changeRole (data) {
                 this.roleList.forEach(v => {
                     if (v.roleId===data) {
                         this.nowRole=v
                     }
                 })
-                this.role = this.nowRole
             },
             // 分配权限
             givePower () {
-                if (this.role == '') {
+                if (this.nowRole == null) {
                     this.$Notice.warning({
                         title: '请选择一个角色进行分配'
                     })
                 }else {
-                    getAllPower(this.role).then(res => {
+                    getAllPower(this.nowRole.roleId).then(res => {
                         console.log(res)
                         this.permissions=res.data
                         this.permissionAssign=true
@@ -188,7 +187,7 @@
             },
             // 编辑角色
             editRole() {
-                if (this.role == '') {
+                if (this.nowRole == null) {
                     this.$Notice.warning({
                         title: '请选择一个角色进行编辑'
                     })
@@ -202,7 +201,7 @@
             },
             // 移除角色
             romoveRole() {
-                if (this.role == '') {
+                if (this.nowRole == null) {
                     this.$Notice.warning({
                         title: '请选择角色进行删除'
                     })
