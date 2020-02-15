@@ -32,7 +32,7 @@ export default {
                 async:{//异步设置
                     enable: true,
                     type:"get",
-                    url: "http://192.168.1.10:8080/files/treenode",
+                    url: "http://test.art1001.com/api/files/treenode",
                     autoParam: ["id"],
                     dataType: "text",
                     headers:{'x-auth-token':localStorage.token},
@@ -52,17 +52,32 @@ export default {
         ...mapActions("tree", ["initFolders"]),
         ...mapActions("file", ["initFile", "searchFile", "initTag"]),
         onCreated(ztreeObj){
-            this.ztreeObj = ztreeObj
+            this.ztreeObj = ztreeObj;
+            var nodes = ztreeObj.getNodes();
+            if (nodes.length>0) {
+                ztreeObj.selectNode(nodes[0]);
+                this.$store.commit("file/crumbsHome", nodes[0]);//初始化菜单
+            }
         },
         onClick(evt, treeId, treeNode){
-            console.log(treeNode)
-            this.$store.commit("file/changeCreateFileId", treeNode.id);   
-            this.$store.commit("file/crumbsTree",treeNode);//改变菜单栏
+            this.$store.commit("file/changeCreateFileId", treeNode.id);  
+            // if(treeNode.level==0){
+            //     this.$store.commit("file/crumbsTree",treeNode);//根节点只做切换----菜单栏
+            // }else{
+            //     this.$store.commit("file/crumbsTreeAdd",treeNode);
+            // }
+            
             this.folderId = treeNode.id;                  
             let params = { fileId: this.folderId };
-            this.initFile(params).then(res => {
-                     
-            });
+            this.initFile(params);
+
+            
+            var allNode = []; 
+            allNode.push(treeNode);//获取当前选中节点  
+            var node = treeNode.getParentNode();  
+            this.getParentNodes(node,allNode); 
+            //console.log(allNode.reverse()) 
+            this.$store.commit("file/crumbsTree", allNode.reverse());//初始化菜单
         },
         asyncRefresh(){
             var nodes = this.ztreeObj.getSelectedNodes();
@@ -70,6 +85,14 @@ export default {
             if (nodes.length>0) {
                 this.ztreeObj.reAsyncChildNodes(nodes[0], "refresh",true);
             }
+        },
+        getParentNodes(node,allNode){
+            if(node!=null){
+                allNode.push(node);  
+                var curNode = node.getParentNode();  
+                this.getParentNodes(curNode,allNode);  
+            } 
+               
         }
     },
 }

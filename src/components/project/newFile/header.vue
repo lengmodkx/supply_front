@@ -8,7 +8,7 @@
            <span><img src="../../../assets/images/03.png" alt=""  @click="home"></span>
               <ul class="crumbs">
                 <li v-for="(item,index) in crumbs" :key='index' @click="changeCrumbs(item,index)" >  
-                   <img v-if='item.icon' :src="item.icon" alt="" >               
+                   <!-- <img v-if='item.icon' :src="item.icon" alt="" > -->
                    {{item.fileName}}
                   <a > </a>
                 </li>

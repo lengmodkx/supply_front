@@ -1,5 +1,3 @@
-
-import {findUserInfo} from '@/axios/api';
 import {
   getTree
 } from '../../axios/fileApi'
@@ -32,6 +30,7 @@ const store = {
       },
       //树
       initFolders(state, data) {
+        console.log(data)
         state.fileTree=data
       }
   },

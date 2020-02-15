@@ -51,19 +51,16 @@ export default {
       ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb",'createFileId'])
    },
    mounted: function() {
-     
-       
-        // 树
-        this.initFolders(this.fileId).then(res => {});
-        
-        // 文件
-           let params = { fileId: this.fileId };
-           this.initFile(params).then(res => {
-               this.loading = false;
-               console.log( this.fileTree)
-               this.$store.commit("file/crumbsHome", this.fileTree[0]);//初始化菜单
-               
-           });
+      // 树
+      this.initFolders(this.fileId).then(res => {});
+      // 文件
+      // let params = { fileId: this.fileId };
+      // this.initFile(params).then(res => {
+      //     this.loading = false;
+      //     console.log( this.fileTree)
+      //     this.$store.commit("file/crumbsHome", this.fileTree[0]);//初始化菜单
+      // });
+      
    },
     methods: {
       ...mapActions("tree", ["initFolders"]),

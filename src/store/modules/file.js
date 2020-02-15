@@ -31,18 +31,14 @@ const store = {
         itemfile:{},
         createFileId:'',
         //菜单栏
-        crumbs:[
-            {
-                 name: "项目文件夹",
-            },
-          ],
+        crumbs:[],
         crumbsCache:[],
         crumbsIndex:'',
     },
     mutations: {
          // 回到首页导航条
-         crumbsHome(state, data) {          
-            const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));       
+         crumbsHome(state, data) {       
+            const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));  
             state.crumbs=[json] 
             state.crumbsCache.push([json])       
             state.crumbsIndex=state.crumbsCache.length - 1
@@ -50,7 +46,6 @@ const store = {
         },
         //导航条增加
         crumbsAdd(state, data) {
-
             state.crumbs.push(data)    
             var [...save] = state.crumbs;   
             state.crumbsCache.push(save)
@@ -91,15 +86,11 @@ const store = {
         //单击树型菜单改
         crumbsTree(state, data) {
             const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));
-
-
-            state.crumbs= [json] 
+            state.crumbs= json 
             var [...save] = state.crumbs;   
             state.crumbsCache.push(save)
             state.crumbsIndex=state.crumbsCache.length - 1
-                
         },
-
         initFile(state, data) {
             state.files = data;
             
@@ -280,9 +271,9 @@ const store = {
                     commit("initBreadcrumb", res.data2)
                 }
             })
-            getFileTree(data.projectId).then(res => {
-                commit("initFolders", res.data)
-            })
+            // getFileTree(data.projectId).then(res => {
+            //     commit("initFolders", res.data)
+            // })
         },
         //搜索文件
         searchFile({
