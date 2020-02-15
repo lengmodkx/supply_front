@@ -71,7 +71,7 @@ export default {
           //单击导航
           changeCrumbs(item,index){
               if(index===0){
-                //如果是第一个走回到首页。因为不存在fileId，字段不同
+                //如果是第一个走回到首页。属于根目录
                  this.home();
                  return
               }
