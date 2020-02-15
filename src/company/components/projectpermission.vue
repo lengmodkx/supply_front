@@ -82,7 +82,7 @@
                 })
                 console.log(resourcesArr)
 
-                if(flag){
+                if(this.flag){
                     changeOrgPower(this.role.roleId,resourcesArr.join(',')).then(res => {
                         if (res.result===1){
                             this.$emit('close')
