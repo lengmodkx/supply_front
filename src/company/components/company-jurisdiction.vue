@@ -110,7 +110,7 @@
                         this.nowRole=v
                     }
                 })
-                console.log(this.nowRole)
+                this.role = this.nowRole
             },
             // 分配权限
             givePower () {
