@@ -54,7 +54,7 @@
             </div>
         </Modal>
         <Modal v-model="permissionAssign" title="企业权限分配" width="850px" class="padd0" footer-hide>
-            <project-permission :permissions="permissions" :roleKey="nowRole.roleKey" :role="role" v-if="permissionAssign" ref="permission" @close="permissionAssign=false"></project-permission>
+            <project-permission :flag="true" :permissions="permissions" :roleKey="nowRole.roleKey" :role="role" v-if="permissionAssign" ref="permission" @close="permissionAssign=false"></project-permission>
         </Modal>
     </div>
 </template>
