@@ -2,7 +2,9 @@ import {
     getProjectList,
     getProject
 } from "../../axios/api.js";
-import {getAllProject} from '../../axios/companyApi'
+import {
+    getAllProject
+} from '../../axios/companyApi'
 const store = {
     namespaced: true,
     state: {
@@ -29,24 +31,22 @@ const store = {
         },
         // 局部更新项目
         updatePro(state, data) {
-            state.projects.forEach((i, n) => {
-                if (i.projectId == data.projectId) {
-                    state.projects[n] = data
-                }
-            })
-
+            let tmp = state.projects.find((i) => i.projectId === data.projectId)
+            Object.assign(tmp, data)
         },
         // 获取全部项目
-        projectTotle (state, data) {
-            state.allProject=data
+        projectTotle(state, data) {
+            state.allProject = data
         }
     },
     actions: {
-        init({commit}, params) {
+        init({
+            commit
+        }, params) {
             getProjectList().then(res => {
                 if (res.result === 1) {
                     let data = [];
-                    commit('projectTotle',res.data)
+                    commit('projectTotle', res.data)
                     switch (params) {
                         case "我创建的项目":
                             data = res.data.filter(v => {
@@ -89,7 +89,9 @@ const store = {
         }, data) {
             commit('updateProject', data)
         },
-        openSet({commit}, data) {
+        openSet({
+            commit
+        }, data) {
             getProject(data).then(res => {
                 if (res.result === 1) {
                     commit('openSet', res.data)
@@ -97,7 +99,9 @@ const store = {
             })
         },
         // 初始化企业的项目列表
-        orgProjectInit ({commit}, params) {
+        orgProjectInit({
+            commit
+        }, params) {
             getAllProject(params.id).then(res => {
                 if (res.result === 1) {
                     let data = [];

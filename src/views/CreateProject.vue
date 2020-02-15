@@ -3,17 +3,53 @@
     <div class="title">创建项目</div>
     <div class="pic"></div>
     <p class="myindex">为不同的事物建立各自的项目</p>
-    <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）" />
-    <Input type="textarea" :rows="2" class="inputbox" v-model="proDes" :maxlength="50" placeholder="项目简介（选填）" />
+    <Input
+      class="inputbox"
+      v-model.trim="proName"
+      :maxlength="20"
+      placeholder="项目名称（必填）"
+    />
+    <Input
+      type="textarea"
+      :rows="2"
+      class="inputbox"
+      v-model="proDes"
+      :maxlength="50"
+      placeholder="项目简介（选填）"
+    />
     <Select v-model="parentProject" filterable placeholder="选择父项目">
-      <Option v-for="item in allProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
+      <Option
+        v-for="item in allProject"
+        :value="item.projectId"
+        :key="item.projectId"
+        >{{ item.projectName }}</Option
+      >
     </Select>
     <div class="create-project-time">
-      <DatePicker placeholder="开始时间" :value="startTime" type="datetime" @on-change="startDate" :options="options1"></DatePicker>
-      <DatePicker placeholder="结束时间" :value="endTime" type="datetime" @on-change="endDate" :options="options2"></DatePicker>
+      <DatePicker
+        placeholder="开始时间"
+        :value="startTime"
+        type="datetime"
+        @on-change="startDate"
+        :options="options1"
+      ></DatePicker>
+      <DatePicker
+        placeholder="结束时间"
+        :value="endTime"
+        type="datetime"
+        @on-change="endDate"
+        :options="options2"
+      ></DatePicker>
     </div>
 
-    <Button class="submitBtn" type="primary" size="large" :loading="loading" :disabled="proName==''||startTime==''||endTime==''" @click="create">
+    <Button
+      class="submitBtn"
+      type="primary"
+      size="large"
+      :loading="loading"
+      :disabled="proName == '' || startTime == '' || endTime == ''"
+      @click="create"
+    >
       <span v-if="!loading">完成并创建</span>
       <span v-else>正在创建...</span>
     </Button>
@@ -21,7 +57,7 @@
 </template>
 <script>
 import { createProject } from "@/axios/api";
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   props: ["showProject"],
   data() {
@@ -34,28 +70,30 @@ export default {
       endTime: "",
       options1: {},
       options2: {},
-      parentProject: '',
-      orgId:this.$route.params.orgid
+      parentProject: "",
+      orgId: this.$route.params.orgid
     };
   },
-  watch:{
-    showProject: function(val, oldVal) {      
-      if(!val){
+  watch: {
+    showProject: function(val, oldVal) {
+      if (!val) {
         this.loading = true;
         this.proName = "";
         this.proDes = "";
         this.startTime = "";
         this.endTime = "";
         this.loading = false;
-        this.parentProject='';
+        this.parentProject = "";
+        this.options1 = {};
+        this.options2 = {};
       }
     },
     deep: true
-    },
-  computed: {
-    ...mapState('project', ['allProject'])
   },
-  
+  computed: {
+    ...mapState("project", ["allProject"])
+  },
+
   methods: {
     create() {
       if (!this.startTime) {
@@ -80,7 +118,7 @@ export default {
         endTime: new Date(this.endTime).getTime(),
         orgId: this.orgId
       };
-      console.log(data)
+      console.log(data);
       createProject(data).then(msg => {
         if (msg.result == 1) {
           this.loading = true;
@@ -88,6 +126,8 @@ export default {
           this.proDes = "";
           this.startTime = "";
           this.endTime = "";
+          this.options1 = {};
+          this.options2 = {};
           this.loading = false;
           this.$emit("getNewList", "我创建的项目");
           this.$emit("hideModal");
@@ -112,14 +152,14 @@ export default {
       };
     }
   },
-  destoryed:function(){
+  destoryed: function() {
     this.loading = true;
     this.proName = "";
     this.proDes = "";
     this.startTime = "";
     this.endTime = "";
     this.loading = false;
-    this.parentProject='';
+    this.parentProject = "";
   }
 };
 </script>
@@ -170,10 +210,8 @@ export default {
   justify-content: space-between;
   width: 320px;
   margin: 15px auto;
- 
 }
-.create-project-time  .ivu-date-picker{
-  width:150px !important;
+.create-project-time .ivu-date-picker {
+  width: 150px !important;
 }
 </style>
-
