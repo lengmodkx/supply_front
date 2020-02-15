@@ -502,7 +502,9 @@ export default {
               this.$store.commit("file/crumbsAdd", file);
               this.fileId = file.fileId;
               getChildFiles(file.fileId).then(res => {                    
-                  this.$store.commit("file/initFile", res.data);                     
+                  this.$store.commit("file/initFile", res.data);   
+                   
+                  localStorage.fileParentId =  this.fileId;                 
               });
           }
           else {
@@ -560,7 +562,7 @@ export default {
     // 移到回收站
     putRecyclebin() {
       console.log(this.thisFileId, this.projectId)
-      debugger
+      
       recycleBin(this.thisFileId, this.projectId).then(res => {
         if (res.result) {
           this.$Message.success("成功移到回收站");

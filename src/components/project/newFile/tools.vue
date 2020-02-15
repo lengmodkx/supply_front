@@ -92,13 +92,13 @@
                 <Button type="info" long @click="handleSave">确定</Button>
               </div>
             </Modal>
-            <Modal v-model="rublish" :width="350" :footer-hide="true" class-name="vertical-center-modal">
+            <Modal v-model="rublish" :width="350" :footer-hide="true" >
                 <div class="rublish">
                         <p>您确定要把该文件移到回收站吗？</p>
                         <Button long type="error" @click="putRecyclebin(itemfile.fileId)">移到回收站</Button>
                 </div>
             </Modal>
-            <Modal v-model="showFileEdit" :width="350" :footer-hide="true" class-name="vertical-center-modal">
+            <Modal v-model="showFileEdit" :width="350" :footer-hide="true" >
                       <div  class="rublish">
                         <div class="rublish-input">
                           <Input v-model.trim="editFileName"/>
@@ -312,6 +312,12 @@ export default {
           }
         });
       },
+      popHid() {
+          setTimeout(() => {
+            this.rublish = false;
+            this.showFileEdit = false;
+          }, 300);
+       },
        //文件修改名
       fileEdit(id) {
         if (this.editFileName == "") {

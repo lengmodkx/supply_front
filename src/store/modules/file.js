@@ -138,7 +138,7 @@ const store = {
         },
         // 推送 复制文件
         copyFile(state, data) {
-
+            
             if (data[0].parentId === localStorage.fileParentId) {
                 state.files.unshift(data[0])
             }
