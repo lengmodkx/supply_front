@@ -16,9 +16,9 @@
     </div>
 </template>
 <script>
-    import {changePower} from '@/axios/api'
+    import {changePower,changeOrgPower} from '@/axios/api'
     export default {
-        props: ['permissions', 'role'],
+        props: ['flag','permissions', 'role'],
         data() {
             return {
                 disabled: this.role.roleKey==="administrator"||this.role.roleKey==="admin",
@@ -81,14 +81,26 @@
                     
                 })
                 console.log(resourcesArr)
-                changePower(this.role.roleId,resourcesArr.join(',')).then(res => {
-                    if (res.result===1){
-                        this.$emit('close')
-                        this.$Message.success('设置成功');
-                    }else{
-                        this.$Message.error('设置失败');
-                    }
-                })
+
+                if(this.flag){
+                    changeOrgPower(this.role.roleId,resourcesArr.join(',')).then(res => {
+                        if (res.result===1){
+                            this.$emit('close')
+                            this.$Message.success('设置成功');
+                        }else{
+                            this.$Message.error('设置失败');
+                        }
+                    })     
+                }else{
+                    changePower(this.role.roleId,resourcesArr.join(',')).then(res => {
+                        if (res.result===1){
+                            this.$emit('close')
+                            this.$Message.success('设置成功');
+                        }else{
+                            this.$Message.error('设置失败');
+                        }
+                    })
+                }
             }
         }
     }

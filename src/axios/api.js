@@ -835,6 +835,10 @@ export function getAllPower(roleId){
 export function changePower(roleId,ids){
     return $put(`/pro_res_role/${roleId}/edit_resource`,{"resources":ids})
 }
+//更新企业下角色权限
+export function changeOrgPower(roleId,ids){
+    return $put(`/resource_role/${roleId}/edit_resource`,{"resources":ids})
+}
 
 //切换个人/企业项目时候使用
 export function updateState(){
