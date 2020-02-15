@@ -72,6 +72,12 @@ const store = {
             console.log("队列：",state.crumbsCache,state.crumbsIndex)             
             console.log(state.crumbsCache[state.crumbsIndex])
             state.crumbs=state.crumbsCache[state.crumbsIndex]
+            console.log(state.crumbs)
+            //取最后一个值 用ID刷新面--start
+            const curId=state.crumbs[state.crumbs.length-1] 
+            state.createFileId=curId.id
+            console.log(state.createFileId)
+             //取最后一个值 用ID刷新面--end
         },
         //前进
         crumbsForward(state, data) {
@@ -82,6 +88,13 @@ const store = {
             }
             console.log("队列：",state.crumbsCache,"位置：",state.crumbsIndex)             
             state.crumbs=state.crumbsCache[state.crumbsIndex]
+
+            //取最后一个值 用ID刷新面--start
+            const curId=state.crumbs[state.crumbs.length-1] 
+            state.createFileId=curId.id
+            console.log(state.createFileId)
+             //取最后一个值 用ID刷新面--end
+
         },
         //单击树型菜单改
         crumbsTree(state, data) {
@@ -90,6 +103,7 @@ const store = {
             var [...save] = state.crumbs;   
             state.crumbsCache.push(save)
             state.crumbsIndex=state.crumbsCache.length - 1
+
         },
         initFile(state, data) {
             state.files = data;

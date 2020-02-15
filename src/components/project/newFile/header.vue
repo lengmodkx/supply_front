@@ -37,7 +37,7 @@ export default {
   computed: {
       ...mapState("tree", ['fileTree',"userTree","tooltree","typetree",'showView',]),
     
-       ...mapState("file", ["crumbs","crumbsCache","crumbsIndex"]),
+       ...mapState("file", ["crumbs","crumbsCache","crumbsIndex",'createFileId']),
    },
   methods: {
        ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag","initCrumbs"]),
@@ -51,6 +51,10 @@ export default {
                 return
               }  
              this.$store.commit("file/crumbsForward");
+             //刷新页面
+             let params = { fileId: this.createFileId };
+                    this.initFile(params).then(res => {
+               });
         },
         // 后退
         back(){
@@ -59,6 +63,11 @@ export default {
                 return
               }  
               this.$store.commit("file/crumbsBack");
+              //刷新页面
+              let params = { fileId: this.createFileId };
+                    this.initFile(params).then(res => {
+               });
+
         },
         //回到首页
           home(){

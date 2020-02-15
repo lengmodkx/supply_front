@@ -17,9 +17,10 @@
               <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png"  >
               <img v-else src="@/icons/img/moren.png" style="height:84px;width:75px">
             </div>
-          <div  v-show="index==isactive"  @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
+            <!--列表按钮 -->
+          <!-- <div  v-show="index==isactive"  @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
               <Button icon="ios-arrow-down" size="small" @click="getFileid($event,file)" ref="menuBtn"></Button>
-          </div>
+          </div> -->
         </div>  
         <span v-if="file.catalog==1">{{file.fileName}}</span>
          <span v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</span>
