@@ -209,7 +209,7 @@
             },
             handleClose(event, id) {
                 removeInfoTag(id, this.publicId, this.publicType).then(res => {
-                    debugger
+                    
                     if (res.result === 1) {
                         this.$Message.success(res.msg);
                     }

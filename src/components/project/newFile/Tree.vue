@@ -38,7 +38,7 @@ export default {
           //异步设置
           enable: true,
           type: "get",
-          url: "http://test.art1001.com/api/files/treenode",
+          url: "http://2v1621n353.51mypc.cn/files/treenode",
           autoParam: ["id"],
           dataType: "text",
           headers: { "x-auth-token": localStorage.token },
