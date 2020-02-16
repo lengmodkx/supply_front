@@ -77,13 +77,13 @@ export function getPhone(accountName, captcha) {
 }
 //通过手机获取验证码
 
-export function getPhoneCode(phone,userId) {
+export function getPhoneCode(phone, userId) {
     return fetch({
         url: '/message/code',
         method: "post",
         params: {
             'phone': phone,
-            'userId':userId
+            'userId': userId
         }
     });
 }
@@ -140,7 +140,9 @@ export function getProjectTree(projectId) {
     return fetch({
         url: '/projects/tree',
         method: "get", // 请求方法
-        params: {projectId:projectId}
+        params: {
+            projectId: projectId
+        }
     });
 }
 //获取单个项目
@@ -288,7 +290,7 @@ export function updatePriority(taskId, priority) {
 
 // 任务移入回收站
 export function taskToRecycle(taskId) {
-    
+
     return $put(`/tasks/${taskId}/recyclebin`);
 }
 
@@ -759,23 +761,32 @@ export function collectList(type) {
 }
 
 export function weChatLogin(url) {
-    return $get(`/wechatcode`, {redirectUri:url})
+    return $get(`/wechatcode`, {
+        redirectUri: url
+    })
 }
 
 export function getWeChatToken(code) {
     return fetch({
         url: `/wechattoken`,
         method: "get", // 请求方法
-        params:{code:code}
+        params: {
+            code: code
+        }
     });
 }
 
-export function bindWx(code,userId) {
-    return $post(`/bind/wechat`, {code:code,userId:userId})
+export function bindWx(code, userId) {
+    return $post(`/bind/wechat`, {
+        code: code,
+        userId: userId
+    })
 }
 
 export function notBindWx(userId) {
-    return $post(`/notbind/wechat`, {userId:userId})
+    return $post(`/notbind/wechat`, {
+        userId: userId
+    })
 }
 
 export function group(projectId) {
@@ -796,54 +807,80 @@ export function changeGroup(groupId, projectId) {
 }
 
 //获取项目下全部角色
-export function getAllRoles(projectId){
+export function getAllRoles(projectId) {
     return $get(`pro_role/${projectId}`)
 }
 
 //获取项目下全部角色--分配角色使用
-export function getMemRoles(orgId,userId){
-    return $get('pro_role/for_member',{"orgId":orgId,"userId":userId})
+export function getMemRoles(orgId, userId) {
+    return $get('pro_role/for_member', {
+        "orgId": orgId,
+        "userId": userId
+    })
 }
 //分配项目下用户角色
-export function updateUserRole(data){
-    return $post('/proRoleUser',data)
+export function updateUserRole(data) {
+    return $post('/proRoleUser', data)
 }
 
 
 //项目下新增角色
-export function addRole(data){
-    return $post('/pro_role',data)
+export function addRole(data) {
+    return $post('/pro_role', data)
 }
 //更新项目下角色
-export function updateRole(roleId,roleName,roleDes,roleKey){
-    return $put(`/pro_role/${roleId}`,{"roleName":roleName,"roleDes":roleDes,"roleKey":roleKey})
+export function updateRole(roleId, roleName, roleDes, roleKey) {
+    return $put(`/pro_role/${roleId}`, {
+        "roleName": roleName,
+        "roleDes": roleDes,
+        "roleKey": roleKey
+    })
 }
 
 //删除项目下角色
-export function deleteRole(roleId,projectId){
-    return $delete(`/pro_role/${roleId}`,{"projectId":projectId})
+export function deleteRole(roleId, projectId) {
+    return $delete(`/pro_role/${roleId}`, {
+        "projectId": projectId
+    })
 }
 //设置默认角色
-export function defaultRole(roleKey,projectId){
-    return $put('/pro_role/default',{"roleKey":roleKey,"projectId":projectId})
+export function defaultRole(roleKey, projectId) {
+    return $put('/pro_role/default', {
+        "roleKey": roleKey,
+        "projectId": projectId
+    })
 }
 //获取项目下所有资源
-export function getAllPower(roleId){
+export function getAllPower(roleId) {
     return $get(`/pro_res/${roleId}`)
 }
 //更新项目下角色权限
-export function changePower(roleId,ids){
-    return $put(`/pro_res_role/${roleId}/edit_resource`,{"resources":ids})
+export function changePower(roleId, ids) {
+    return $put(`/pro_res_role/${roleId}/edit_resource`, {
+        "resources": ids
+    })
 }
 //更新企业下角色权限
-export function changeOrgPower(roleId,ids){
-    return $put(`/resource_role/${roleId}/edit_resource`,{"resources":ids})
+export function changeOrgPower(roleId, ids) {
+    return $put(`/resource_role/${roleId}/edit_resource`, {
+        "resources": ids
+    })
 }
 
 //切换个人/企业项目时候使用
-export function updateState(){
-    return $put('organizations/personal_project/')
+export function userOrgRoles(userId, orgId) {
+    return $get('/roles', {
+        "userId": userId,
+        "orgId": orgId
+    })
 }
+export function updateOrgUserRole(roleId, userId, orgId) {
+    return $put(`/roles/${roleId}/update`, {
+        "userId": userId,
+        "orgId": orgId
+    })
+}
+
 
 
 export function $post(url, params) {
@@ -922,18 +959,18 @@ function $delete(url, params) {
 }
 
 /*
-* 添加标签并绑定
-* */
+ * 添加标签并绑定
+ * */
 export function addTagBindFile(params) {
     return $post(`/files/addTagBindFile`, params)
-  /*  fetch({
-        url: `/files/addTagBindFile`,
-        method: "post", // 请求方法
-        params: {
-            "fileId": fileId,
-            "tagId": tagId
-        }
-    });*/
+    /*  fetch({
+          url: `/files/addTagBindFile`,
+          method: "post", // 请求方法
+          params: {
+              "fileId": fileId,
+              "tagId": tagId
+          }
+      });*/
 }
 
 /*
@@ -956,10 +993,10 @@ export function findUserInfo(userId) {
  */
 export function updateUserNews(param) {
     return fetch({
-          url: `/updateUserInfo`,
-          method: "post", // 请求方法
-          params: param
-      });
+        url: `/updateUserInfo`,
+        method: "post", // 请求方法
+        params: param
+    });
 }
 
 /*
@@ -977,7 +1014,7 @@ export function getIsGroupPower(groupId) {
 }
 
 //项目视图修改信息
-export function changePassword(oldPassword,newPassword) {
+export function changePassword(oldPassword, newPassword) {
     return fetch({
         url: `/change_password`,
         method: 'post', // 请求方法
