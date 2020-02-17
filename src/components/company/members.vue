@@ -641,7 +641,7 @@ export default {
       });
     },
     changeRole(roleId) {
-        updateOrgUserRole(roleId,this.user.memberId,localStorage.companyId).then(res=>{
+        updateOrgUserRole(roleId,this.user.userId,localStorage.companyId).then(res=>{
           if(res.result==1){
             this.$Message.success('设置成功');
             this.user.visible = false
