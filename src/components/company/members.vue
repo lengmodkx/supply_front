@@ -154,7 +154,7 @@
                     <div style="margin-top:10px;margin-bottom:10px">
                       <span>确认移除项目成员吗？</span>
                     </div>
-                    <Button type="error" long @click="remove(user.userId)">确定</Button>
+                    <Button type="error" long @click="remove(item.userEntity.userId)">确定</Button>
                   </div>
                 </Poptip>
               </li>
@@ -298,7 +298,7 @@
 <script>
 import addPeople from "@/components/public/addPeople";
 import branch from "./branch";
-import { userOrgRoles,updateOrgUserRole } from "../../axios/api.js";
+import { userOrgRoles, updateOrgUserRole } from "../../axios/api.js";
 import { initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNames, deleteBranch, addGroup, getGroups, getGroupPeople, addGroupPeople, changeGroupsname, deleteGroup } from "@/axios/companyApi";
 export default {
   name: "members",
@@ -343,7 +343,8 @@ export default {
       visible: false,
       title: "成员菜单",
       roles: [],
-      user: {}
+      user: {},
+      flag: 0
     };
   },
   mounted() {
@@ -395,35 +396,30 @@ export default {
     },
     // 添加成员 回调
     addPeople(data) {
-      if (this.nowType === "成员") {
-        let people = {
-          userName: data.userEntity.userName,
-          image: data.userEntity.image,
-          organizationLable: data.organizationLable
-        };
-        this.peopleList.push(people);
-      } else if (this.nowType === "部门") {
-        this.peopleList.push(data);
-      }
+      initOrgMember(localStorage.companyId, this.flag).then(res => {
+        this.loading = false;
+        if (res.result === 1) {
+          this.peopleList = res.data;
+        }
+      });
     },
     // 点击左侧 成员类型
     changeMemberType(item) {
       this.nowType = "成员";
       this.memberType = item;
       this.loading = true;
-      let flag = 0;
       switch (item) {
         case "未分配部门的成员":
-          flag = 1;
+          this.flag = 1;
           break;
         case "停用的成员":
-          flag = 2;
+          this.flag = 2;
           break;
         case "新加入的成员":
-          flag = 3;
+          this.flag = 3;
           break;
       }
-      initOrgMember(localStorage.companyId, flag).then(res => {
+      initOrgMember(localStorage.companyId, this.flag).then(res => {
         this.loading = false;
         if (res.result === 1) {
           this.peopleList = res.data;
@@ -641,14 +637,32 @@ export default {
       });
     },
     changeRole(roleId) {
-        updateOrgUserRole(roleId,this.user.userId,localStorage.companyId).then(res=>{
-          if(res.result==1){
-            this.$Message.success('设置成功');
-            this.user.visible = false
-          }else{
-            this.$Message.success('设置失败')
-          }
-        })
+      updateOrgUserRole(roleId, this.user.userId, localStorage.companyId).then(res => {
+        if (res.result == 1) {
+          this.$Message.success("设置成功");
+          this.user.visible = false;
+        } else {
+          this.$Message.success("设置失败");
+        }
+      });
+    },
+    //移除项目成员
+    remove(userId) {
+      this.visible = false;
+      // removeUser(userId).then(res => {
+      //   if (res.result === 1) {
+      //     initOrgMember(localStorage.companyId, this.flag).then(res => {
+      //     this.loading = false;
+      //     if (res.result === 1) {
+      //       this.peopleList = res.data;
+      //     }
+      //   });
+      //   } else {
+      //     this.$Notice.warning({
+      //       title: "移除失败"
+      //     });
+      //   }
+      // });
     }
   }
 };
