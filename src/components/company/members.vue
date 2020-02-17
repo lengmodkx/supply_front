@@ -298,7 +298,7 @@
 <script>
 import addPeople from "@/components/public/addPeople";
 import branch from "./branch";
-import { userOrgRoles, updateOrgUserRole } from "../../axios/api.js";
+import { userOrgRoles, updateOrgUserRole, removeOrgUser } from "../../axios/api.js";
 import { initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNames, deleteBranch, addGroup, getGroups, getGroupPeople, addGroupPeople, changeGroupsname, deleteGroup } from "@/axios/companyApi";
 export default {
   name: "members",
@@ -649,20 +649,20 @@ export default {
     //移除项目成员
     remove(userId) {
       this.visible = false;
-      // removeUser(userId).then(res => {
-      //   if (res.result === 1) {
-      //     initOrgMember(localStorage.companyId, this.flag).then(res => {
-      //     this.loading = false;
-      //     if (res.result === 1) {
-      //       this.peopleList = res.data;
-      //     }
-      //   });
-      //   } else {
-      //     this.$Notice.warning({
-      //       title: "移除失败"
-      //     });
-      //   }
-      // });
+      removeOrgUser(userId, localStorage.companyId).then(res => {
+        if (res.result === 1) {
+          initOrgMember(localStorage.companyId, this.flag).then(res => {
+            this.loading = false;
+            if (res.result === 1) {
+              this.peopleList = res.data;
+            }
+          });
+        } else {
+          this.$Notice.warning({
+            title: "移除失败"
+          });
+        }
+      });
     }
   }
 };

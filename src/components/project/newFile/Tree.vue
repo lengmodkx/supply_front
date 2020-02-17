@@ -32,7 +32,7 @@ export default {
           //异步设置
           enable: true,
           type: "get",
-          url: "http://test.art1001.com/api/files/treenode",
+          url: process.env.VUE_APP_TREE_URL,
           autoParam: ["id"],
           dataType: "text",
           headers: { "x-auth-token": localStorage.token },
@@ -45,6 +45,7 @@ export default {
       }
     };
   },
+
   computed: {
     ...mapState("tree", ["fileTree", "showView"])
   },

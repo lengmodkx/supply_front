@@ -106,6 +106,13 @@ const store = {
                 if (res.result === 1) {
                     let data = [];
                     switch (params.type) {
+                        case "全部项目":
+                            data = res.data.filter(v => {
+                                return (
+                                    v.projectDel == 0 && v.projectStatus == 0
+                                );
+                            });
+                            break;
                         case "我创建的项目":
                             data = res.data.filter(v => {
                                 return (

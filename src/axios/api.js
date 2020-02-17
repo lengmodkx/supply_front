@@ -881,7 +881,12 @@ export function updateOrgUserRole(roleId, userId, orgId) {
     })
 }
 
-
+export function removeOrgUser(userId, orgId) {
+    return $delete('/organization/members', {
+        "orgId": orgId,
+        "userId": userId
+    })
+}
 
 export function $post(url, params) {
     return fetch({

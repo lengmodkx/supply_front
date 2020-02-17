@@ -2,7 +2,13 @@
   <div id="app">
     <header-main v-if="hasHeader" :companyId="companyId" :avatar="avatar"></header-main>
     <div class="content-main">
-      <router-view v-if="isRouterAlive"/>
+      <!-- <router-view v-if="isRouterAlive"/> -->
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive">
+          <!-- 这里是会被缓存的视图组件，比如 Home！ -->
+        </router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
   </div>
 </template>
@@ -24,14 +30,13 @@ export default {
     return {
       isRouterAlive: true,
       hasHeader: true,
-      companyId:"",
-      avatar:""
+      companyId: "",
+      avatar: ""
     };
   },
   created() {
-    
     this.renderHeader();
-    console.log(this.companyId)
+    console.log(this.companyId);
   },
   watch: {
     $route() {
@@ -46,11 +51,11 @@ export default {
         this.$route.path !== "/register" &&
         this.$route.path !== "/bind" &&
         this.$route.path.indexOf("/statisticsDetail") < 0 &&
-        this.$route.path !== "/forget"&&
-        this.$route.path .indexOf("/organization-admin")<0;
+        this.$route.path !== "/forget" &&
+        this.$route.path.indexOf("/organization-admin") < 0;
       // this.hasHeader = this.$route.path !== '/management'
       this.companyId = localStorage.companyId;
-      this.avatar = localStorage.userImg
+      this.avatar = localStorage.userImg;
     },
     reload() {
       console.log("xxxxxxx");
@@ -71,8 +76,10 @@ export default {
   user-select: none;
   outline: none;
 }
-.ivu-tag .ivu-icon-ios-close,ivu-tag-text,.ivu-icon-ios-close-empty{
-  color:#fff !important;
+.ivu-tag .ivu-icon-ios-close,
+ivu-tag-text,
+.ivu-icon-ios-close-empty {
+  color: #fff !important;
 }
 .ivu-checkbox-large .ivu-checkbox-inner {
   transform: scale(1.5);
@@ -101,9 +108,9 @@ export default {
     /deep/.ivu-tag-text {
       color: #fff;
     }
-     /deep/.ivu-tag .ivu-icon-ios-close{
-        color:#fff !important;
-      }
+    /deep/.ivu-tag .ivu-icon-ios-close {
+      color: #fff !important;
+    }
     /deep/.ivu-icon-ios-close-empty {
       color: #fff !important;
     }
