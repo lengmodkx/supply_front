@@ -71,6 +71,8 @@
                 searchMembers(value, localStorage.companyId).then(res => {
                     if(res.result==1){
                         this.searchPeople=res.data
+                    }else{
+                          this.$Message.error('搜索失败');
                     }
                     this.isSearch=true
                     this.loading=false
