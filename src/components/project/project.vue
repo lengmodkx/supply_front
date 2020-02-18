@@ -2,11 +2,11 @@
   <div class="project-main">
     <header-project @showBox="showBox" :show="show" :data="activeHeaderTag"></header-project>
     <!-- 项目成员 -->
-    <ProjectMember v-transfer :class="{active:show==1,animate}" @hideBox="hideBox"></ProjectMember>
+    <ProjectMember v-transfer :class="{ active: show == 1, animate }" @hideBox="hideBox"></ProjectMember>
     <!-- 项目菜单 -->
-    <ProjectMenu v-transfer :class="{activeMenu:show==2,animate}" @hideMenuBox="hideBox"></ProjectMenu>
-    <ProjectView v-transfer :class="{activeMenu:show==3,animate}" @hideMenuBox="hideBox"></ProjectView>
-    <div class="router-view-box" :class="{zhanWei:show==1||show==2||show==3}">
+    <ProjectMenu v-transfer :class="{ activeMenu: show == 2, animate }" @hideMenuBox="hideBox"></ProjectMenu>
+    <ProjectView v-transfer :class="{ activeMenu: show == 3, animate }" @hideMenuBox="hideBox"></ProjectView>
+    <div class="router-view-box" :class="{ zhanWei: show == 1 || show == 2 || show == 3 }">
       <router-view />
     </div>
   </div>
@@ -70,13 +70,13 @@ export default {
     // }
     initSocket(id) {
       // 建立连接对象
-      var url='';
-      if(process.env.NODE_ENV=='test'){
-        url=process.env.VUE_APP_TEST_SOCKET
-      }else if(process.env.NODE_ENV=='production'){
-        url=process.env.VUE_APP_SOCKET
-      }else{
-        url="http://2v1621n353.51mypc.cn/webSocketServer"
+      var url = "";
+      if (process.env.NODE_ENV == "test") {
+        url = process.env.VUE_APP_TEST_SOCKET;
+      } else if (process.env.NODE_ENV == "production") {
+        url = process.env.VUE_APP_SOCKET;
+      } else {
+        url = process.env.VUE_APP_SOCKET;
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
@@ -149,43 +149,25 @@ export default {
               // 关联
               case "A28":
                 if (result.object.fromType === "任务") {
-                  this.$store.dispatch(
-                    "task/changeTask",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("task/changeTask", result.object.publicId);
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/relevance", result.object);
                 } else if (result.object.fromType === "分享") {
-                  this.$store.dispatch(
-                    "share/changeShares",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("share/changeShares", result.object.publicId);
                 } else if (result.object.fromType === "日程") {
-                  this.$store.dispatch(
-                    "schedule/getScheduleById",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
               // 取消关联
               case "A29":
                 if (result.object.fromType === "任务") {
-                  this.$store.dispatch(
-                    "task/changeTask",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("task/changeTask", result.object.publicId);
                 } else if (result.object.fromType === "文件") {
                   this.$store.commit("file/cancelRelevance", result.object);
                 } else if (result.object.fromType === "分享") {
-                  this.$store.dispatch(
-                    "share/changeShares",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("share/changeShares", result.object.publicId);
                 } else if (result.object.fromType === "日程") {
-                  this.$store.dispatch(
-                    "schedule/getScheduleById",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
               case "A30":
@@ -196,7 +178,7 @@ export default {
                 this.$store.dispatch("share/init", result.object);
                 break;
               // 编辑分享
-              case "B2":   
+              case "B2":
                 this.$store.dispatch("share/init", result.object.projectId);
                 this.$store.dispatch("share/changeShares", result.object.id);
                 break;
@@ -212,7 +194,7 @@ export default {
               // 分享移到回收站
               case "B6":
                 this.$store.dispatch("share/init", result.object);
-               // this.$store.dispatch("share/deleteSahre", result.object);
+                // this.$store.dispatch("share/deleteSahre", result.object);
                 break;
               // 添加参与者
               case "B10":
@@ -266,7 +248,7 @@ export default {
                   fileId: result.object.parentId
                 });
                 this.$store.dispatch("file/putOneFile", result.object.fileId);
-              break;
+                break;
               case "C7":
                 this.$store.dispatch("file/initFile", {
                   fileId: result.object.parentId
@@ -317,64 +299,49 @@ export default {
                 break;
               // 添加标签
               case "D14":
-                    this.$store.dispatch("schedule/init", {
-                    projectId: result.object
-                    });
-               break;
+                this.$store.dispatch("schedule/init", {
+                  projectId: result.object
+                });
+                break;
               case "E1":
                 if (result.object.publicType === "任务") {
-                  this.$store.dispatch(
-                    "task/changeTask",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("task/changeTask", result.object.publicId);
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/bindingTag", {
                     tag: result.object.tag,
                     fileId: result.object.publicId
                   });
                 } else if (result.object.publicType === "分享") {
-                  this.$store.dispatch(
-                    "share/changeShares",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("share/changeShares", result.object.publicId);
                 } else if (result.object.publicType === "日程") {
-                   this.$store.dispatch("schedule/getScheduleById",result.object.publicId);
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
               // 移除标签
               case "E2":
                 if (result.object.publicType === "任务") {
-                  this.$store.dispatch(
-                    "task/changeTask",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("task/changeTask", result.object.publicId);
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/removeTag", {
                     tagId: result.object.tagId,
                     fileId: result.object.publicId
                   });
                 } else if (result.object.publicType === "分享") {
-                  this.$store.dispatch(
-                    "share/changeShares",
-                    result.object.publicId
-                  );
+                  this.$store.dispatch("share/changeShares", result.object.publicId);
                 } else if (result.object.publicType === "日程") {
-                   this.$store.dispatch("schedule/getScheduleById",result.object.publicId);
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
-                // 添加新标签并绑定
-                case "E3":
-                    if (result.object.publicType === "任务") {
-                        this.$store.dispatch(
-                            "task/changeTask",
-                            result.object.publicId
-                        );
-                    } else if (result.object.publicType === "文件") {
-                        this.$store.dispatch("file/putOneFile", result.object.publicId);
-                    }else if (result.object.publicType === "日程") {
-                        this.$store.dispatch("schedule/getScheduleById",result.object.publicId);
-                    }
-                    break;
+              // 添加新标签并绑定
+              case "E3":
+                if (result.object.publicType === "任务") {
+                  this.$store.dispatch("task/changeTask", result.object.publicId);
+                } else if (result.object.publicType === "文件") {
+                  this.$store.dispatch("file/putOneFile", result.object.publicId);
+                } else if (result.object.publicType === "日程") {
+                  this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
+                }
+                break;
               // 发消息
               case "F1":
                 if (result.object.type === "任务") {

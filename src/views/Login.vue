@@ -12,7 +12,8 @@
         <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable />
       </FormItem>
       <FormItem>
-        <span class="no-register">还没有注册？
+        <span class="no-register"
+          >还没有注册？
           <router-link to="/register">立即注册</router-link>
         </span>
         <router-link to="/forget" class="forget-pwd">忘记密码</router-link>
@@ -25,17 +26,16 @@
   </div>
 </template>
 <script>
-import { userlogin, getEncrypStr, weChatLogin,getWeChatToken } from "@/axios/api";
+import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "@/axios/api";
 import { mapState, mapActions } from "vuex";
 import { Encrypt } from "@/utils/cryptoUtils";
-import wxlogin from 'vue-wxlogin';
-
+import wxlogin from "vue-wxlogin";
 
 export default {
-  components: {wxlogin},
+  components: { wxlogin },
   data() {
     const validatePhone = (rule, value, callback) => {
-      if (!(/^1[3456789]\d{9}$/.test(value)) && value !== 'admin') {
+      if (!/^1[3456789]\d{9}$/.test(value) && value !== "admin") {
         return callback(new Error("请输入正确的手机号码"));
       } else {
         callback();
@@ -47,7 +47,7 @@ export default {
         accountName: "",
         password: ""
       },
-      code:"",
+      code: "",
       userInfo: null,
       ruleValidate: {
         accountName: [{ validator: validatePhone, trigger: "blur" }],
@@ -67,8 +67,8 @@ export default {
     ...mapState("app", ["loading"])
   },
   mounted() {
-    if (localStorage.token){
-      this.$router.replace("/org/"+localStorage.companyId);
+    if (localStorage.token) {
+      this.$router.replace("/org/" + localStorage.companyId);
     }
   },
   methods: {
@@ -83,17 +83,17 @@ export default {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
-              console.log(res.data)
+              console.log(res.data);
               this.updateUserId(res.data); //存储、更新用户信息
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
-              console.log(res.data.orgId)
+              console.log(res.data.orgId);
               this.$Message.success("登录成功!");
-              if (res.data.orgId){
-                this.$router.replace("/org/"+res.data.orgId);
+              if (res.data.orgId) {
+                this.$router.replace("/org/" + res.data.orgId);
               } else {
                 this.$router.replace("/organization-is-empty");
               }
@@ -104,58 +104,58 @@ export default {
         }
       });
     },
-    weChatLogin(){
+    weChatLogin() {
       weChatLogin("https://www.aldbim.com").then(res => {
-        if(res.result === 1){
-          window.location.href=res.data
+        if (res.result === 1) {
+          window.location.href = res.data;
         }
-      })
+      });
     }
   },
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     var url = location.search; //获取url中"?"符后的字串
     var theRequest = new Object();
     if (url.indexOf("?") != -1) {
       var str = url.substr(1);
       var strs = str.split("&");
-      for(var i = 0; i < strs.length; i ++) {
-        theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
       }
     }
-    var code = theRequest.code
-    console.log(code)
+    var code = theRequest.code;
+    console.log(code);
     next(vm => {
-      if(code){
+      if (code) {
         getWeChatToken(code).then(res => {
-          if(res.result === 1){
-            if(!res.bindPhone){
+          if (res.result === 1) {
+            if (!res.bindPhone) {
               localStorage.token = res.data.accessToken;
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
               localStorage.companyId = res.data.orgId;
-              if (res.data.orgId){
-                vm.$router.replace("/org/"+res.data.orgId);
+              if (res.data.orgId) {
+                vm.$router.replace("/org/" + res.data.orgId);
               } else {
                 vm.$router.replace("/organization-is-empty");
               }
-            }else{
-              vm.$router.push({name:'bind',query: {name:res.data.userName,userId:res.data.userId}})
+            } else {
+              vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             }
           }
-        })
+        });
       }
-    })
-  },
+    });
+  }
 };
 </script>
 
 <style scoped lang="less">
-.weChat{
-    width:300px;
-    min-height: 300px;
+.weChat {
+  width: 300px;
+  min-height: 300px;
 }
-.weixin{
+.weixin {
   text-align: center;
   margin: -5px 0;
   width: 300px;
@@ -168,10 +168,10 @@ export default {
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  &:hover{
+  &:hover {
     opacity: 0.8;
   }
-  i{
+  i {
     font-size: 20px;
     color: #cde6c7;
     margin-right: 5px;
@@ -180,7 +180,7 @@ export default {
 .login-form-box {
   width: 100vw;
   height: 100vh;
-  background: url("../assets/images/login-bg2.jpg") no-repeat center/cover;
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg2.jpg") no-repeat center/cover;
   position: relative;
 }
 
@@ -193,8 +193,7 @@ export default {
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-  opacity: 0.6
-;
+  opacity: 0.6;
 }
 .login-title {
   font-size: 20px;

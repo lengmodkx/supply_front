@@ -1,11 +1,5 @@
 <template>
-  <tree
-    :nodes="data"
-    @onCreated="onCreated"
-    :setting="setting"
-    @onClick="onClick"
-    ref="ztreeDom"
-  />
+  <tree :nodes="data" @onCreated="onCreated" :setting="setting" @onClick="onClick" ref="ztreeDom" />
 </template>
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
@@ -38,7 +32,7 @@ export default {
           //异步设置
           enable: true,
           type: "get",
-          url: "http://2v1621n353.51mypc.cn/files/treenode",
+          url: process.env.VUE_APP_TREE_URL,
           autoParam: ["id"],
           dataType: "text",
           headers: { "x-auth-token": localStorage.token },
@@ -51,6 +45,7 @@ export default {
       }
     };
   },
+
   computed: {
     ...mapState("tree", ["fileTree", "showView"])
   },
