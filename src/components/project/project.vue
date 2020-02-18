@@ -76,7 +76,7 @@ export default {
       }else if(process.env.NODE_ENV=='production'){
         url=process.env.VUE_APP_SOCKET
       }else{
-        url="http://192.168.1.10:8080/webSocketServer"
+        url="http://2v1621n353.51mypc.cn/webSocketServer"
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
@@ -237,6 +237,7 @@ export default {
                 break;
               // 复制文件
               case "C10":
+                
                 this.$store.commit("file/copyFile", result.object);
                 break;
               // 移动文件
