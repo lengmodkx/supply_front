@@ -11,7 +11,7 @@
                 </ul>
                 <!--搜索显示的-->
                 <div v-if="isSearch">
-                    <ul v-if='searchPeople'>
+                    <ul >
                         <li v-for="(people,index) in searchPeople" :key="index" class="invit-user">
                             <div class="member-info">
                                 <img :src="`${people.image}`">

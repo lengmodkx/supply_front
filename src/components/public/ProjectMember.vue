@@ -13,7 +13,7 @@
     <div class="invite" @click="modal = true"><Icon type="md-add-circle"></Icon>邀请成员</div>
 
     <div class="userBox">
-      <ul v-if="users">
+      <ul>
         <li  v-for="(user, index) in users" :key="index">
           <div class="member-item">
             <Avatar :src="user.memberImg" class="avatar" />
