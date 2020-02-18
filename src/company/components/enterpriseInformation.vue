@@ -74,30 +74,30 @@ export default {
             showTransfer:false,
             transfer:'',
             transferList: [
-                    {
-                        value: 'New York',
-                        label: 'New York'
-                    },
-                    {
-                        value: 'London',
-                        label: 'London'
-                    },
-                    {
-                        value: 'Sydney',
-                        label: 'Sydney'
-                    },
-                    {
-                        value: 'Ottawa',
-                        label: 'Ottawa'
-                    },
-                    {
-                        value: 'Paris',
-                        label: 'Paris'
-                    },
-                    {
-                        value: 'Canberra',
-                        label: 'Canberra'
-                    }
+                    // {
+                    //     value: 'New York',
+                    //     label: 'New York'
+                    // },
+                    // {
+                    //     value: 'London',
+                    //     label: 'London'
+                    // },
+                    // {
+                    //     value: 'Sydney',
+                    //     label: 'Sydney'
+                    // },
+                    // {
+                    //     value: 'Ottawa',
+                    //     label: 'Ottawa'
+                    // },
+                    // {
+                    //     value: 'Paris',
+                    //     label: 'Paris'
+                    // },
+                    // {
+                    //     value: 'Canberra',
+                    //     label: 'Canberra'
+                    // }
                 ],
         }
     },
@@ -119,6 +119,10 @@ export default {
         //移交
         surTransfer(){
 
+        },
+        //获取移交成员
+        getTransfer(){
+                console.log('获取移交成员')
         },
         //删除企业
         sureDel(){
@@ -148,7 +152,10 @@ export default {
                 }
             })
         }
-    }
+    },
+    created() {
+        this.getTransfer();
+    },
 }
 </script>
 
