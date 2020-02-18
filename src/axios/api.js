@@ -2,6 +2,13 @@ import fetch from "./fetch"; // 引用fetch.js
 import api from "./url"; // 引用url.js
 
 // 所有发请求的方法：
+export function enterProject(projectId) {
+    return $post('/projects/index', {
+        "projectId": projectId
+    });
+}
+
+
 // 收藏
 export function collect(data) {
     return fetch({
@@ -812,10 +819,12 @@ export function getAllRoles(projectId) {
 }
 
 //获取项目下全部角色--分配角色使用
-export function getMemRoles(orgId, userId) {
+export function getMemRoles(data) {
     return $get('pro_role/for_member', {
-        "orgId": orgId,
-        "userId": userId
+        "userId": data.userId,
+        "orgId": data.orgId,
+        "projectId": data.projectId
+
     })
 }
 //分配项目下用户角色
@@ -887,6 +896,13 @@ export function removeOrgUser(userId, orgId) {
         "userId": userId
     })
 }
+
+export function checkPermission(orgId) {
+    return $get('/organization/members/check/member_visible', {
+        "orgId": orgId
+    })
+}
+
 
 export function $post(url, params) {
     return fetch({

@@ -8,52 +8,65 @@
     </div>
     <!-- 列表 -->
     <div class="searchBox">
-      <Input v-model.trim="keyword" search enter-button  placeholder="搜索成员" @on-search="FUser(keyword)"/>
+      <Input v-model.trim="keyword" search enter-button placeholder="搜索成员" @on-search="FUser(keyword)" />
     </div>
-    <div class="invite" @click="modal=true">
-      <Icon type="md-add-circle"></Icon>邀请成员
-    </div>
-    
+    <div class="invite" @click="modal = true"><Icon type="md-add-circle"></Icon>邀请成员</div>
+
     <div class="userBox">
-        <ul>
-          <li v-for="(user,index) in users" :key="index">
-            <div class="member-item">
-              <Avatar :src="user.memberImg" class="avatar"/>
-              <div class="memberInfo">
-                  <span class="uname">{{user.memberName}} &nbsp;&nbsp;&nbsp;职位：{{user.job?user.job:'无'}}</span>
-                  <span>联系方式：{{user.accountName}}</span>
-              </div>
-             <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible">
-                <a href="javascript:void(0)" v-if="user.memberLabel!=1">
-                    <Icon type="ios-arrow-down"></Icon>
-                </a>
-                <div slot="title" class="title">
-                    <Icon type="ios-arrow-back" size="18" @click.native="visible=false;title='成员菜单'" v-show="visible"/>
-                    <span>{{title}}</span>
-                </div>
-                <div slot="content" class="content" v-show="!visible">
-                    <ul>
-                      <li v-for="(role,index) in roles" :key="role.roleId" @click="changeRole(role.roleId)">
-                        <span>{{role.roleName}}</span>
-                        <Icon type="md-checkmark" v-if="role.currentCheck"/>  
-                      </li>
-                    </ul>
-                    <div style="color:red;height:40px;line-height:40px;" @click="visible=true;title='移除成员'">删除成员</div>
-                </div>
-                <div slot="content" v-show="visible">
-                  <div style="margin-top:10px;margin-bottom:10px">
-                      <span>确认移除项目成员吗？</span>
-                  </div>
-                  <Button type="error" long @click="remove(user.memberId)">确定</Button>
-                </div>
-              </Poptip>
+      <ul>
+        <li v-for="(user, index) in users" :key="index">
+          <div class="member-item">
+            <Avatar :src="user.memberImg" class="avatar" />
+            <div class="memberInfo">
+              <span class="uname">{{ user.memberName }} &nbsp;&nbsp;&nbsp;职位：{{ user.job ? user.job : "无" }}</span>
+              <span>联系方式：{{ user.accountName }}</span>
             </div>
-          </li>
-        </ul>
+            <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible">
+              <a href="javascript:void(0)" v-if="user.memberLabel != 1">
+                <Icon type="ios-arrow-down"></Icon>
+              </a>
+              <div slot="title" class="title">
+                <Icon
+                  type="ios-arrow-back"
+                  size="18"
+                  @click.native="
+                    visible = false;
+                    title = '成员菜单';
+                  "
+                  v-show="visible"
+                />
+                <span>{{ title }}</span>
+              </div>
+              <div slot="content" class="content" v-show="!visible">
+                <ul>
+                  <li v-for="(role, index) in roles" :key="role.roleId" @click="changeRole(role.roleId)">
+                    <span>{{ role.roleName }}</span>
+                    <Icon type="md-checkmark" v-if="role.currentCheck" />
+                  </li>
+                </ul>
+                <div
+                  style="color:red;height:40px;line-height:40px;"
+                  @click="
+                    visible = true;
+                    title = '移除成员';
+                  "
+                >
+                  删除成员
+                </div>
+              </div>
+              <div slot="content" v-show="visible">
+                <div style="margin-top:10px;margin-bottom:10px">
+                  <span>确认移除项目成员吗？</span>
+                </div>
+                <Button type="error" long @click="remove(user.memberId)">确定</Button>
+              </div>
+            </Poptip>
+          </div>
+        </li>
+      </ul>
     </div>
-    
-    
-    <Modal v-model="modal"   @on-cancel="cancel" width="360" footer-hide>
+
+    <Modal v-model="modal" @on-cancel="cancel" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请新成员</span>
       </p>
@@ -64,10 +77,10 @@
         <loading v-if="loading"></loading>
         <div style="height:330px;padding-top:10px;overflow:auto;margin-top:10px;">
           <ul>
-            <li v-for="(user,index) in invitUsers" :key="index" class="invit-user">
+            <li v-for="(user, index) in invitUsers" :key="index" class="invit-user">
               <div class="invit-user-name">
-                <img :src="`${user.image}`">
-                <p>{{user.userName}}</p>
+                <img :src="`${user.image}`" />
+                <p>{{ user.userName }}</p>
               </div>
               <Button type="primary" @click="adduser(user.userId)">添加</Button>
             </li>
@@ -79,7 +92,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, getAssignUsers,addUser,addProjectUser, removeUser } from "../../axios/api2.js";
+import { getUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 import loading from "./common/Loading.vue";
 export default {
@@ -92,28 +105,28 @@ export default {
       keyword: "",
       keyword2: "",
       modal: false,
-      invitUsers:[],
+      invitUsers: [],
       loading: false,
       value: "-1",
-      visible:false,
-      title:"成员菜单",
-      user:'',
-      visible1:false
+      visible: false,
+      title: "成员菜单",
+      user: "",
+      visible1: false
     };
   },
- 
+
   computed: {
-    ...mapState("member", ["users","roles"])
+    ...mapState("member", ["users", "roles"])
   },
   mounted() {
     this.initUser(this.$route.params.id);
   },
   methods: {
-    ...mapActions("member", ["initUser","filterUser","getRoles"]),
+    ...mapActions("member", ["initUser", "filterUser", "getRoles"]),
     //关闭弹框
-    cancel () {
-      this.keyword2='';
-      this.invitUsers=[]
+    cancel() {
+      this.keyword2 = "";
+      this.invitUsers = [];
     },
     searchUser() {
       if (!this.keyword2) {
@@ -123,7 +136,7 @@ export default {
         return false;
       }
       this.loading = true;
-      let  projectId=this.$route.params.id;
+      let projectId = this.$route.params.id;
       getUsers(this.keyword2).then(res => {
         this.loading = false;
         if (res.result === 1) {
@@ -133,17 +146,15 @@ export default {
     },
     //筛选用户
     FUser(keyword) {
-      
-      if(keyword!=''){
-          this.filterUser(keyword)
-      }else{
+      if (keyword != "") {
+        this.filterUser(keyword);
+      } else {
         this.initUser(this.$route.params.id);
       }
-       
     },
     adduser(userId) {
       // let groupId = this.$route.params.groupId
-     
+
       // //添加分组成员
 
       // addProjectUser(groupId,userId).then(res => {
@@ -158,12 +169,12 @@ export default {
       // });
 
       //添加项目成员
-       let params={
-          projectId:this.$route.params.id,
-          memberId:userId,
-          orgId:localStorage.companyId
-       }
-      
+      let params = {
+        projectId: this.$route.params.id,
+        memberId: userId,
+        orgId: localStorage.companyId
+      };
+
       addUser(params).then(res => {
         if (res.result === 1) {
           this.initUser(this.$route.params.id);
@@ -192,21 +203,21 @@ export default {
       this.modal1 = false;
       this.$emit("hideBox");
     },
-    changeRole(roleId){
-      let data={"roleId":roleId,"userId":this.user.memberId,"projectId":localStorage.companyId}
-      updateUserRole(data).then(res=>{
-        if(res.result==1){
-          this.$Message.success('设置成功');
-          this.user.visible = false
-        }else{
-          this.$Message.success('设置失败')   
+    changeRole(roleId) {
+      let data = { roleId: roleId, userId: this.user.memberId, projectId: this.$route.params.id };
+      updateUserRole(data).then(res => {
+        if (res.result == 1) {
+          this.$Message.success("设置成功");
+          this.user.visible = false;
+        } else {
+          this.$Message.success("设置失败");
         }
-      })
+      });
     },
-    visibleChange(user){
+    visibleChange(user) {
       this.user = user;
-      let data = {"orgId":localStorage.companyId,"userId":user.memberId}
-      this.getRoles(data)
+      let data = { userId: user.memberId, orgId: localStorage.companyId, projectId: this.$route.params.id };
+      this.getRoles(data);
     }
   }
 };
@@ -223,10 +234,10 @@ export default {
   transition: 0;
   box-shadow: -3px 0 3px rgba(0, 0, 0, 0.1);
 
-  .searchBox{
-  width: 320px;
-  margin:10px auto;
-}
+  .searchBox {
+    width: 320px;
+    margin: 10px auto;
+  }
 
   &.animate {
     transition: 0.1s;
@@ -309,7 +320,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     margin-left: 10px;
-    span{
+    span {
       color: #a6a6a6;
       height: 20px;
       line-height: 20px;
@@ -330,46 +341,43 @@ export default {
       white-space: nowrap;
     }
   }
-  .title{
+  .title {
     text-align: center;
-    i{
+    i {
       position: absolute;
       left: 5px;
     }
   }
-  .content{
-    ul li{
+  .content {
+    ul li {
       height: 40px;
       line-height: 40px;
       position: relative;
       cursor: pointer;
-      i{
+      i {
         position: absolute;
         right: 0px;
-        top:10px;
+        top: 10px;
       }
     }
-    ul li:hover{
-      background: #e5e5e5
+    ul li:hover {
+      background: #e5e5e5;
     }
   }
-  
 }
 
 .active {
   right: 0px;
 }
-.userBox{
+.userBox {
   width: 320px;
   padding-top: 5px;
   margin: 0px auto;
-  ul li{
+  ul li {
     height: 50px;
     border-bottom: 1px solid #e5e5e5;
   }
 }
-
-
 
 .invit-user {
   display: flex;

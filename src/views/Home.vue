@@ -195,7 +195,7 @@ import CreateProject from "./CreateProject.vue";
 import ProjectSettings from "./projectSettings.vue";
 import Loading from "../components/public/common/Loading.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
-import { getPhoneCode, bindPhone, showBindPhone } from "@/axios/api";
+import { getPhoneCode, bindPhone, showBindPhone, enterProject } from "@/axios/api";
 import { setStarProject, guidangProject, recycleProject, recoverProject, delProject, searchProjects, getProjectTree } from "@/axios/api";
 export default {
   name: "index",
@@ -204,7 +204,7 @@ export default {
     ProjectSettings,
     Loading
   },
-  //inject: ["reload"],
+  inject: ["reload"],
   data() {
     return {
       dis: true, //取消显示状态
@@ -245,13 +245,7 @@ export default {
       companyId: this.$route.params.orgid,
       projectType: "全部项目",
       selectView: "卡片视图",
-      treeData: [
-        {
-          title: "parent",
-          loading: false,
-          children: []
-        }
-      ],
+      treeData: [],
       projectList: [
         {
           value: "全部项目",
@@ -284,6 +278,7 @@ export default {
     ...mapState("project", ["projects", "loading", "project"])
   },
   mounted() {
+    this.$store.state.project.loading = true;
     this.orgProjectInit({ id: this.companyId, type: "全部项目" });
   },
   methods: {
@@ -297,6 +292,7 @@ export default {
       this.orgProjectInit({ id: this.companyId, type: value });
     },
     path(item) {
+      enterProject(item.projectId);
       this.setName(item.projectName);
       localStorage.projectName = item.projectName;
       this.$router.push(`/project/${item.projectId}/tasks/group/${item.groupId}`);
@@ -326,8 +322,9 @@ export default {
     },
     //打开项目设置
     setProject(item) {
-      this.projectSet = true;
-      this.openSet(item.projectId);
+      this.openSet(item.projectId).then(res => {
+        this.projectSet = true;
+      });
     },
     recover(id) {
       recoverProject(id).then(res => {
@@ -409,12 +406,12 @@ export default {
         ];
       }, 1000);
     }
+  },
+  watch: {
+    $route(to, from) {
+      //this.reload();
+    }
   }
-  // watch: {
-  //   $route(to, from) {
-  //     //this.reload();
-  //   }
-  // }
 };
 const validatePhone = (rule, value, callback) => {
   if (!value) {

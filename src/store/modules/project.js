@@ -92,11 +92,15 @@ const store = {
         openSet({
             commit
         }, data) {
-            getProject(data).then(res => {
-                if (res.result === 1) {
-                    commit('openSet', res.data)
-                }
+            return new Promise((resolve, reject) => {
+                getProject(data).then(res => {
+                    if (res.result === 1) {
+                        commit('openSet', res.data)
+                        resolve()
+                    }
+                });
             })
+
         },
         // 初始化企业的项目列表
         orgProjectInit({
