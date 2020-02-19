@@ -11,7 +11,7 @@
                 </ul>
                 <!--搜索显示的-->
                 <div v-if="isSearch">
-                    <ul>
+                    <ul >
                         <li v-for="(people,index) in searchPeople" :key="index" class="invit-user">
                             <div class="member-info">
                                 <img :src="`${people.image}`">
@@ -71,6 +71,8 @@
                 searchMembers(value, localStorage.companyId).then(res => {
                     if(res.result==1){
                         this.searchPeople=res.data
+                    }else{
+                          this.$Message.error('搜索失败');
                     }
                     this.isSearch=true
                     this.loading=false

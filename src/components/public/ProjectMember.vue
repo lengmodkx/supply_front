@@ -14,7 +14,7 @@
 
     <div class="userBox">
       <ul>
-        <li v-for="(user, index) in users" :key="index">
+        <li  v-for="(user, index) in users" :key="index">
           <div class="member-item">
             <Avatar :src="user.memberImg" class="avatar" />
             <div class="memberInfo">

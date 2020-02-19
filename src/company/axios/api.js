@@ -45,8 +45,17 @@ export function orgInfo(orgId){
 
 //更新企业信息
 export function updateOrg(orgId,data){
-    return $put(`/organizations/${ogId}`,data)
+    return $put(`/organizations/${orgId}`,data)
 }
+
+//删除企业信息
+export function delOrg(orgId,data){
+    return $delete(`/organizations/${orgId}`,data)
+}
+//获取移交
+
+//移交
+
 export function $post(url, params) {
     return fetch({
         url: url,

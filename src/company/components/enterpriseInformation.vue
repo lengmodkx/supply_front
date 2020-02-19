@@ -33,29 +33,72 @@
                         <Icon type="md-contact" size='32'/>
                         <span>{{contact}}</span>
                     </div>
-                    <Button type="primary" ghost>移交</Button>
+                    <Button type="primary" ghost @click="showTransfer=true">移交</Button>
                 </div>
             </div>
             <div class="delete-org">
                 <div class="little-title">删除企业</div>
                 <p>一旦你删除了企业，企业内所有项目、部门、成员，项目中所有内容等都将会被永久删除。这是一个不可恢复的操作，请谨慎对待！</p>
-                <Button type="error" >删除企业</Button>
+                <Button type="error" @click="showDel=true" >删除企业</Button>
             </div>
         </div>
+         <Modal v-model="showTransfer" class="transfer" title="移交企业"  :width="500" transfer footer-hide>
+               <span>选择一个企业成员作为新的企业拥有者，移交后你的角色将变为成员</span>
+               <Select v-model="transfer"  clearable style="width:470px;margin-bottom:20px">
+                         <Option v-for="item in transferList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <Button type="error" long @click="surTransfer">确认移交</Button>
+         </Modal>
+         <Modal v-model="showDel" class="transfer" title="删除企业"  :width="500" transfer footer-hide>
+               <span>一旦你删除了企业，企业内所有项目、部门、成员，项目中所有内容等都将会被永久删除。这是一个不可恢复的操作，请谨慎对待！</span>
+               <Button type="error" long  @click="sureDel">确认删除</Button>
+         </Modal> 
     </div>
 </template>
 
 <script>
-import { orgInfo , updateOrg } from '../axios/api'
+import { orgInfo , updateOrg, delOrg} from '../axios/api'
 export default {
     name: "enterpriseInformation",
     data () {
         return {
+            orgId: localStorage.companyId,
             img: '',
             orgName: '',
             orgDes: '',
             orgPublick: '0',
-            contact:''
+            contact:'',
+            //删除
+            showDel:false,
+            //移交
+            showTransfer:false,
+            transfer:'',
+            transferList: [
+                    // {
+                    //     value: 'New York',
+                    //     label: 'New York'
+                    // },
+                    // {
+                    //     value: 'London',
+                    //     label: 'London'
+                    // },
+                    // {
+                    //     value: 'Sydney',
+                    //     label: 'Sydney'
+                    // },
+                    // {
+                    //     value: 'Ottawa',
+                    //     label: 'Ottawa'
+                    // },
+                    // {
+                    //     value: 'Paris',
+                    //     label: 'Paris'
+                    // },
+                    // {
+                    //     value: 'Canberra',
+                    //     label: 'Canberra'
+                    // }
+                ],
         }
     },
     mounted(){
@@ -73,6 +116,27 @@ export default {
                 }
             })
         },
+        //移交
+        surTransfer(){
+
+        },
+        //获取移交成员
+        getTransfer(){
+                console.log('获取移交成员')
+        },
+        //删除企业
+        sureDel(){
+             this.showDel=false;
+             delOrg(localStorage.companyId).then(res=>{
+                if(res.result==1){
+                    this.$Message.success('删除企业成功');
+                }else{
+                    this.$Message.eror('删除企业失败');
+                }
+            })
+
+        },
+
         saveOrg(){
             let params = {
                 orgName:this.orgName,
@@ -88,7 +152,10 @@ export default {
                 }
             })
         }
-    }
+    },
+    created() {
+        this.getTransfer();
+    },
 }
 </script>
 
@@ -96,7 +163,15 @@ export default {
 .wrap-div{
     width: 100%;
     padding-bottom: 20px;
+   
 }
+ .transfer{
+        span{
+            margin-bottom: 20px;
+            display: block;
+        }
+       
+    }
 .base-info-box{
     width: 100%;
     background-color: white;
