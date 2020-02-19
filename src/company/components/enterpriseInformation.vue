@@ -45,7 +45,7 @@
          <Modal v-model="showTransfer" class="transfer" title="移交企业"  :width="500" transfer footer-hide>
                <span>选择一个企业成员作为新的企业拥有者，移交后你的角色将变为成员</span>
                <Select v-model="transferId"  clearable style="width:470px;margin-bottom:20px">
-                         <Option v-for="item in transferList" :value="item.userid" :key="item.userid">{{item.userName }}</Option>
+                         <Option v-for="item in transferList" :value="item.userId" :key="item.userId">{{item.userName }}</Option>
               </Select>
               <Button type="error" long @click="surTransfer">确认移交</Button>
          </Modal>
