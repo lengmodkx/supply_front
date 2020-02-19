@@ -119,7 +119,7 @@ import CreateOrg from "./common/CreateOrg";
 import { mapState, mapActions, mapMutations } from "vuex";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import { updateState,checkPermission } from "@/axios/api";
+import { updateState, checkPermission, changeOrganization } from "../../axios/api.js";
 export default {
   name: "header-main",
   components: {
@@ -227,10 +227,13 @@ export default {
     },
     // 点击企业 改变当前企业
     changeOrg(org) {
-      //this.orgProjectInit({'id': org.organizationId,'type':'我创建的项目'})
-      localStorage.companyId = org.organizationId;
-      this.$router.push("/org/" + org.organizationId);
       this.popVisible = false;
+      localStorage.companyId = org.organizationId;
+      changeOrganization(org.organizationId).then(res => {
+        if (res.result == 1) {
+          this.$router.push("/org/" + org.organizationId);
+        }
+      });
     },
     mouseOut() {
       if (this.time) return;
@@ -312,28 +315,27 @@ export default {
     },
     // 去管理后台页面
     goBackstage() {
-     checkPermission(localStorage.companyId).then(res=>{
-        if(res.result==1&&res.data==true){
+      checkPermission(localStorage.companyId).then(res => {
+        if (res.result == 1 && res.data == true) {
           const { href } = this.$router.resolve({
             name: "organizationAdmin",
             params: { orgId: localStorage.companyId }
           });
           window.open(href, "_blank");
-        }else{
-          this.$Message.error("没有权限")
+        } else {
+          this.$Message.error("没有权限");
         }
-      })
+      });
     },
     // 去成员页面
     goMembers() {
-      checkPermission(localStorage.companyId).then(res=>{
-        if(res.result==1&&res.data==true){
+      checkPermission(localStorage.companyId).then(res => {
+        if (res.result == 1 && res.data == true) {
           this.$router.push("/members");
-        }else{
-          this.$Message.error("没有权限")
+        } else {
+          this.$Message.error("没有权限");
         }
-      })
-      
+      });
     },
     // 去素材库页面
     goSucai() {

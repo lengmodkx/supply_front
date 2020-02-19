@@ -347,39 +347,39 @@ router.afterEach((to, from) => {
     store.commit('app/changeHeaderTag', -1)
   }
 })
-router.beforeEach((to, from, next) => {
-  //进入登录页面的时候清除 token
-  if (to.path === '/') {
-    localStorage.removeItem("token", '');
-    localStorage.removeItem("userId", '');
-    localStorage.removeItem("projectName", '');
-    localStorage.removeItem("companyId", '');
-    localStorage.removeItem("userName", '');
-    localStorage.removeItem("userImg", '');
-  }
-  var token = localStorage.getItem('token'); //获取本地存储的token
-  if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
-    if (token !== "" && token !== null) { // 通过vuex state获取当前的token是否存在
-      //判断是否需要缓存
-      if (to.name === 'organization') {
-        to.meta.keepAlive = false; // 让 列表页 缓存，即不刷新
-        next();
-      } else {
-        to.meta.keepAlive = false; // 让 列表页 即不缓存，刷新
-        next();
-      }
-    } else {
-      next({
-        path: '/',
-        query: {
-          redirect: from.fullPath
-        } // 将跳转的路由path作为参数，登录成功后跳转到该路由
-      })
-    }
+// router.beforeEach((to, from, next) => {
+//   //进入登录页面的时候清除 token
+//   if (to.path === '/') {
+//     localStorage.removeItem("token", '');
+//     localStorage.removeItem("userId", '');
+//     localStorage.removeItem("projectName", '');
+//     localStorage.removeItem("companyId", '');
+//     localStorage.removeItem("userName", '');
+//     localStorage.removeItem("userImg", '');
+//   }
+//   var token = localStorage.getItem('token'); //获取本地存储的token
+//   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
+//     if (token !== "" && token !== null) { // 通过vuex state获取当前的token是否存在
+//       //判断是否需要缓存
+//       if (to.name === 'organization') {
+//         to.meta.keepAlive = false; // 让 列表页 缓存，即不刷新
+//         next();
+//       } else {
+//         to.meta.keepAlive = false; // 让 列表页 即不缓存，刷新
+//         next();
+//       }
+//     } else {
+//       next({
+//         path: '/',
+//         query: {
+//           redirect: from.fullPath
+//         } // 将跳转的路由path作为参数，登录成功后跳转到该路由
+//       })
+//     }
 
-  } else {
-    next();
-  }
-})
+//   } else {
+//     next();
+//   }
+// })
 
 export default router

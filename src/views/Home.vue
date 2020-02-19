@@ -195,7 +195,7 @@ import CreateProject from "./CreateProject.vue";
 import ProjectSettings from "./projectSettings.vue";
 import Loading from "../components/public/common/Loading.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
-import { getPhoneCode, bindPhone, showBindPhone, enterProject } from "@/axios/api";
+import { getPhoneCode, bindPhone, showBindPhone } from "@/axios/api";
 import { setStarProject, guidangProject, recycleProject, recoverProject, delProject, searchProjects, getProjectTree } from "@/axios/api";
 export default {
   name: "index",
@@ -292,7 +292,6 @@ export default {
       this.orgProjectInit({ id: this.companyId, type: value });
     },
     path(item) {
-      enterProject(item.projectId);
       this.setName(item.projectName);
       localStorage.projectName = item.projectName;
       this.$router.push(`/project/${item.projectId}/tasks/group/${item.groupId}`);

@@ -1,14 +1,8 @@
 import fetch from "./fetch"; // 引用fetch.js
 import api from "./url"; // 引用url.js
-
-// 所有发请求的方法：
-export function enterProject(projectId) {
-    return $post('/projects/index', {
-        "projectId": projectId
-    });
+export function changeOrganization(orgId) {
+    return $post(`/organization/members/${orgId}`)
 }
-
-
 // 收藏
 export function collect(data) {
     return fetch({
