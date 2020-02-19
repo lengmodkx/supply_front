@@ -14,7 +14,7 @@
 
     <div class="userBox">
       <ul>
-        <li  v-for="(user, index) in users" :key="index">
+        <li v-for="(user, index) in users" :key="index">
           <div class="member-item">
             <Avatar :src="user.memberImg" class="avatar" />
             <div class="memberInfo">
@@ -22,7 +22,7 @@
               <span>联系方式：{{ user.accountName }}</span>
             </div>
             <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible">
-              <a href="javascript:void(0)" v-if="user.memberLabel == 1">
+              <a href="javascript:void(0)" v-if="user.memberLabel == 0">
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <div slot="title" class="title">
