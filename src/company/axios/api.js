@@ -53,8 +53,15 @@ export function delOrg(orgId,data){
     return $delete(`/organizations/${orgId}`,data)
 }
 //获取移交
+export function getAllTransfer(orgId){
+    return $get('/organization/members/getMembers/{orgId}')
+}
+
 
 //移交
+export function postTransfer(orgId,ownerId,userid){
+    return $post('/organization/members/transferOwner',{"orgId":orgId,"ownerId":ownerId,"userid":userid})
+}
 
 export function $post(url, params) {
     return fetch({

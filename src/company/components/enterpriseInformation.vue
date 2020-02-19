@@ -33,7 +33,7 @@
                         <Icon type="md-contact" size='32'/>
                         <span>{{contact}}</span>
                     </div>
-                    <Button type="primary" ghost @click="showTransfer=true">移交</Button>
+                    <Button type="primary" ghost @click="getTransfer()">移交</Button>
                 </div>
             </div>
             <div class="delete-org">
@@ -44,8 +44,8 @@
         </div>
          <Modal v-model="showTransfer" class="transfer" title="移交企业"  :width="500" transfer footer-hide>
                <span>选择一个企业成员作为新的企业拥有者，移交后你的角色将变为成员</span>
-               <Select v-model="transfer"  clearable style="width:470px;margin-bottom:20px">
-                         <Option v-for="item in transferList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+               <Select v-model="transferId"  clearable style="width:470px;margin-bottom:20px">
+                         <Option v-for="item in transferList" :value="item.userid" :key="item.userid">{{item.userName }}</Option>
               </Select>
               <Button type="error" long @click="surTransfer">确认移交</Button>
          </Modal>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { orgInfo , updateOrg, delOrg} from '../axios/api'
+import { orgInfo , updateOrg, delOrg,getAllTransfer,postTransfer} from '../axios/api'
 export default {
     name: "enterpriseInformation",
     data () {
@@ -68,11 +68,12 @@ export default {
             orgDes: '',
             orgPublick: '0',
             contact:'',
+            ownerId:'',//拥有者id
             //删除
             showDel:false,
             //移交
             showTransfer:false,
-            transfer:'',
+            transferId:'',
             transferList: [
                     // {
                     //     value: 'New York',
@@ -113,16 +114,33 @@ export default {
                     this.orgDes = res.data.organizationDes
                     this.orgPublick = res.data.isPublic+""
                     this.contact = res.data.contact
+                    this.ownerId=res.data.organizationMember
                 }
             })
         },
         //移交
         surTransfer(){
-
+                postTransfer(localStorage.companyId,this.ownerId,this.transferId).then(res=>{
+                        if(res.result==1){
+                            this.$Message.success('移交成功');
+                        }else{
+                            this.$Message.error('移交失败');
+                            console.log(res.msg)
+                        }
+               })
         },
         //获取移交成员
         getTransfer(){
-                console.log('获取移交成员')
+            this.showTransfer=true
+                getAllTransfer(localStorage.companyId).then(res=>{
+                        if(res.result==1){
+                        
+                            this.transferList=res.data
+                        }else{
+                            this.$Message.error(res.msg);
+                            console.log(res.msg)
+                        }
+               })
         },
         //删除企业
         sureDel(){
@@ -131,7 +149,7 @@ export default {
                 if(res.result==1){
                     this.$Message.success('删除企业成功');
                 }else{
-                    this.$Message.eror('删除企业失败');
+                    this.$Message.error('删除企业失败');
                 }
             })
 
@@ -154,7 +172,7 @@ export default {
         }
     },
     created() {
-        this.getTransfer();
+        
     },
 }
 </script>
