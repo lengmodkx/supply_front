@@ -63,7 +63,7 @@
             <draggable :list="i.taskList" :options="{ group: 'uncheckedTask', forceFallback: true, delay: 0.5, dragClass: 'dragClass', fallbackClass: 'fallbackClass' }" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="teskCheck"  @click.stop  @click="changeStatus($event, k, b,a.taskId) "   >  </div>
+                  <div class="teskCheck"  @click.stop  @click="changeStatus(!a.taskStatus, k, b,a.taskId) "   >  </div>
                   <div class="check">
                     <div @click.stop class="checkbox-wrap">
                       <Checkbox size="small" v-model="a.taskStatus" ></Checkbox>
@@ -116,7 +116,7 @@
             <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 0.5 }" class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                   <div class="teskCheck"  @click.stop  @click="changeStatus($event, k, b,a.taskId) "   >  </div>
+                   <div class="teskCheck"  @click.stop  @click="changeStatus(!a.taskStatus, k, b,a.taskId) "   >  </div>
                   <div class="check">
                     <div class="checkbox-wrap" @click.stop >
                       <Checkbox size="small" v-model="a.taskStatus" ></Checkbox>
@@ -350,6 +350,7 @@ export default {
 
     //打开任务详情
     initTask(taskId) {
+
       this.showModal = true;
       this.setTaskId(taskId);
     },
@@ -447,6 +448,8 @@ export default {
         //取消完成任务 请求
         cancelcompleteTask(taskId).then(res => {
           // console.log(res,"取消完成任务")
+          this.init(this.projectId).then(res => {
+            });
           
         });
       }
