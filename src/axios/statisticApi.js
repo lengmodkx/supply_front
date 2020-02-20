@@ -5,10 +5,7 @@ import api from "./url";
  * 饼图数据
  **/
 export function getPieDate(projectId) {
-    return fetch({
-        url: `${api.statistics}/getPieChart/${projectId}`,
-        method: "get"
-    });
+    return $get(`${api.statistics}/getPieChart/${projectId}`)
 }
 
 /**
@@ -16,12 +13,9 @@ export function getPieDate(projectId) {
  * @param projectId
  */
 export function getPieSource(projectId, data) {
-
-    return fetch({
-        url: `${api.statistics}/getPieSource/${projectId}`,
-        method: "get",
-        params: data
-    });
+    return $get(`${api.statistics}/getPieSource/${projectId}`, {
+        "data": data
+    })
 }
 
 /**
@@ -29,11 +23,9 @@ export function getPieSource(projectId, data) {
  * @param projectId
  */
 export function getHistogramSource(projectId, data) {
-    return fetch({
-        url: `${api.statistics}/getHistogramSource/${projectId}`,
-        method: "get",
-        params: data
-    });
+    return $get(`${api.statistics}/getHistogramSource/${projectId}`, {
+        "data": data
+    })
 }
 
 
@@ -42,11 +34,9 @@ export function getHistogramSource(projectId, data) {
  * @param projectId
  */
 export function getBurnoutSource(projectId, data) {
-    return fetch({
-        url: `${api.statistics}/getBurnoutSource/${projectId}`,
-        method: "get",
-        params: data
-    });
+    return $get(`${api.statistics}/getBurnoutSource/${projectId}`, {
+        "data": data
+    })
 }
 
 
@@ -57,11 +47,9 @@ export function getBurnoutSource(projectId, data) {
  * @param projectId
  */
 export function getAddSource(projectId, data) {
-    return fetch({
-        url: `${api.statistics}/getAddSource/${projectId}`,
-        method: "get",
-        params: data
-    });
+    return $get(`${api.statistics}/getAddSource/${projectId}`, {
+        "data": data
+    })
 }
 
 /**
@@ -69,13 +57,9 @@ export function getAddSource(projectId, data) {
  * @param projectId
  */
 export function getCountData(projectId, data) {
-    return fetch({
-        url: `${api.statistics}/getCountData/${projectId}`,
-        method: "get",
-        params: data
+    return $get(`${api.statistics}/getCountData/${projectId}`, {
+        "data": data
     })
-
-
 }
 /**
  * 获取统计数据概览
@@ -84,8 +68,15 @@ export function getCountData(projectId, data) {
  * @param data
  */
 export function getCountTable(projectId, divName, data) {
-    return fetch({
-        url: `${api.statistics}/getCountTable/${projectId}/${divName}/${data}`,
-        method: "get"
+    return $get(`${api.statistics}/getCountTable/${projectId}/${divName}`, {
+        "data": data
     })
+}
+
+function $get(url, params) {
+    return fetch({
+        url: url,
+        method: "get", // 请求方法
+        params: params
+    });
 }
