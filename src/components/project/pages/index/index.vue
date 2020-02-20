@@ -63,9 +63,10 @@
             <draggable :list="i.taskList" :options="{ group: 'uncheckedTask', forceFallback: true, delay: 0.5, dragClass: 'dragClass', fallbackClass: 'fallbackClass' }" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
+                  <div class="teskCheck"  @click.stop  @click="changeStatus(!a.taskStatus, k, b,a.taskId) "   >  </div>
                   <div class="check">
                     <div @click.stop class="checkbox-wrap">
-                      <Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event, k, b, a.taskId)"></Checkbox>
+                      <Checkbox size="small" v-model="a.taskStatus" ></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
@@ -83,10 +84,11 @@
                       <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-if="a.completeCount != 0">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList.length">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:18px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                        <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
+                      
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
@@ -115,9 +117,10 @@
             <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 0.5 }" class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
+                   <div class="teskCheck"  @click.stop  @click="changeStatus(!a.taskStatus, k, b,a.taskId) "   >  </div>
                   <div class="check">
-                    <div class="checkbox-wrap" @click.stop>
-                      <Checkbox size="small" v-model="a.taskStatus" @on-change="changeStatus($event, k, b, a.taskId)"></Checkbox>
+                    <div class="checkbox-wrap" @click.stop >
+                      <Checkbox size="small" v-model="a.taskStatus" ></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
@@ -135,10 +138,11 @@
                       <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-if="a.completeCount != 0">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList.length">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:18px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                        <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
+                     
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
@@ -280,6 +284,7 @@ export default {
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
     this.init(this.projectId).then(res => {
+      
       this.loading = false;
       this.allTask = this.allTasks;
     });
@@ -347,6 +352,7 @@ export default {
 
     //打开任务详情
     initTask(taskId) {
+
       this.showModal = true;
       this.setTaskId(taskId);
     },
@@ -405,6 +411,9 @@ export default {
       });
     },
     changeStatus(flag, i, j, taskId) {
+        
+        
+
       //i是外层循环的索引，j是嵌套循环的索引
       if (flag) {
         //第一种方法 先处理好了再发请求
@@ -421,12 +430,29 @@ export default {
 
         //完成任务  请求
         completeTask(taskId).then(res => {
+          this.init(this.projectId).then(res => {
+          });
           // console.log(res,"完成任务了")
+          if(res.result==0){
+            this.$Message.error(res.msg);
+            this.init(this.projectId).then(res => {
+            });
+          }
+          if(res.result==203){
+            this.$Message.error('没有权限');
+            this.init(this.projectId).then(res => {
+            });
+          }
+          
+
         });
       } else {
         //取消完成任务 请求
         cancelcompleteTask(taskId).then(res => {
           // console.log(res,"取消完成任务")
+          this.init(this.projectId).then(res => {
+            });
+          
         });
       }
 
