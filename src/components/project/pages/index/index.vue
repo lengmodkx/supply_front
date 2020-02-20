@@ -86,7 +86,11 @@
                       </span>
                       <span class="label" style="margin-bottom: 3px" v-if="a.completeCount != 0">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:18px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                        <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                      </span>
+                      <span class="label" style="margin-bottom: 3px" v-else>
+                        <Icon type="ios-list" size="22" />
+                        <span class="sonTask" style="line-height:10px;padding-left:5px;">0/{{ a.taskList.length }}</span>
                       </span>
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
@@ -139,7 +143,11 @@
                       </span>
                       <span class="label" style="margin-bottom: 3px" v-if="a.completeCount != 0">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:18px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                        <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                      </span>
+                      <span class="label" style="margin-bottom: 3px" v-else>
+                        <Icon type="ios-list" size="22" />
+                        <span class="sonTask" style="line-height:10px;padding-left:5px;">0/{{ a.taskList.length }}</span>
                       </span>
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
