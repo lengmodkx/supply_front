@@ -37,6 +37,13 @@
                    <Radio label="未完成"></Radio>
                </RadioGroup>
             </div>
+            <div v-show="show_finish1">
+                <p>按任务完成情况（默认'已完成'）</p>
+                <RadioGroup v-model="finish" vertical @on-change="Task_Finish">
+                    <Radio label="已完成"></Radio>
+                    <Radio label="未完成"></Radio>
+                </RadioGroup>
+            </div>
             <div v-show="time_scope">
                 <p>时间范围</p>
                 <Select v-model="scope" style="width:200px" placeholder="过去7天" @on-change="Task_day">
@@ -81,6 +88,7 @@
                 nowChecked: 1,
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
                 finished: '全部',
+                finish:'已完成',
                 people: 0,
                 executor: 0,
                 scope:7,
@@ -149,10 +157,13 @@
                         })
                         break;
                     case 2:
-                            this.show_finish = true,
-                            this.time_scope = false,
+                            this.show_finish1 = true,
+                            this.time_scope = false
                             //this.hide_div=true;
-                        getHistogramSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
+                            if(this.StatisticsDTO.taskCase == ""){
+                                this.StatisticsDTO.taskCase = "已完成"
+                            }
+                            getHistogramSource(this.id,JSON.stringify(this.StatisticsDTO)).then(res=>{
                             this.columns1   =  res.titleList;
                             this.data1=res.hisResultlist;
                             this.executorData = res.executor
