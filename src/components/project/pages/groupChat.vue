@@ -2,37 +2,37 @@
   <div class="group-chat">
     <div class="group-chat-main">
       <div class="group-chat-view">
-        <div class="title">{{projectName}}
+        <div class="title">
+          {{ projectName }}
           <Icon type="more" class="fr"></Icon>
         </div>
-        <div class="chat-text" ref="scrollbox">
-
+        <div class="chat-text" ref="scrollbox" id="data-list-content">
           <!--有消息-->
           <div style="height: 100%">
-            <div v-if="chatData.length" ref="heightbox">
+            <div v-if="chatData != null && chatData.length > 0">
               <div v-for="(item, index) in chatData" :key="index">
-                <div class="me-msg" v-if="item.isOwn && item.chatDel==0">
+                <div class="me-msg" v-if="item.isOwn && item.chatDel == 0">
                   <div class="me">
                     <div class="content" v-html="item.content"></div>
                   </div>
                   <div class="file-box" v-if="item.fileList.length">
-                    <div class="one-file" v-for="(f,i) in item.fileList" :key="i">
-                      <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="">
-                      <img v-else src="@/icons/img/moren.png" alt="">
-                      <p>{{f.fileName}}</p>
-                      <span>{{f.size}}</span>
+                    <div class="one-file" v-for="(f, i) in item.fileList" :key="i">
+                      <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="" />
+                      <img v-else src="@/icons/img/moren.png" alt="" />
+                      <p>{{ f.fileName }}</p>
+                      <span>{{ f.size }}</span>
                     </div>
                   </div>
                   <div class="time me-time">
                     <Time :time="item.createTime" />
                     <span v-if="item.fileList.length" @click="downLoad(item.chatId)">下载附件</span>
-                    <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime()-item.createTime<1000*60*2">撤回</span>
+                    <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime() - item.createTime < 1000 * 60 * 2">撤回</span>
                   </div>
                 </div>
-                <div v-else-if="item.chatDel==1" class="chehui">“{{item.user.userName}}”撤回了一条消息</div>
+                <div v-else-if="item.chatDel == 1" class="chehui">“{{ item.user.userName }}”撤回了一条消息</div>
                 <div v-else>
                   <div class="other">
-                    <img :src="item.user.image" alt="">
+                    <img :src="item.user.image" alt="" />
                     <div class="content" v-html="item.content"></div>
                   </div>
                   <div class="time">
@@ -44,7 +44,7 @@
             </div>
             <!--无消息-->
             <div class="no-msg" v-else>
-              <img src="@/icons/img/no-msg.png" alt="">
+              <img src="@/icons/img/no-msg.png" alt="" />
               <p>还没有项目群聊消息</p>
               <span>项目中的成员都可以在这里参与群聊</span>
             </div>
@@ -54,12 +54,11 @@
         <div class="talk">
           <div class="talkinner">
             <div class="talkUp">
-              <div id="input" style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true" @keyup.enter="sendChat">
-              </div>
+              <div id="input" style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true" @keyup.enter="sendChat"></div>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="上传附件" class="fl">
-                <Icon @click="showCommon=true" class="up-file" type="md-attach" />
+                <Icon @click="showCommon = true" class="up-file" type="md-attach" />
               </Tooltip>
               <!-- 表情包组件 -->
               <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
@@ -72,7 +71,7 @@
       </div>
     </div>
     <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-      <up-file @close="showCommon=false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
+      <up-file @close="showCommon = false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
     </Modal>
   </div>
 </template>
@@ -90,7 +89,8 @@ export default {
     return {
       files: [],
       talkvalue: "",
-      showCommon: false
+      showCommon: false,
+      projectName: localStorage.projectName
     };
   },
   mounted() {
@@ -99,39 +99,31 @@ export default {
   watch: {
     chatData() {
       this.$nextTick(() => {
-        if (this.$refs.heightbox) {
-          this.$refs.scrollbox.scrollTop =
-            this.$refs.heightbox.clientHeight + 100;
-        }
+        var div = document.getElementById("data-list-content");
+        div.scrollTop = div.scrollHeight + 1;
       });
     }
   },
   computed: {
-    ...mapState("chat", ["chatData", "images"]),
-    ...mapState("project", ["projectName"])
+    ...mapState("chat", ["chatData", "images"])
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
     // 获取消息
     getChat() {
-      this.initChat(this.$route.params.id).then(res => {
-        // this.$refs.scrollbox.scrollTop=this.$refs.heightbox.clientHeight+100
-      });
+      this.initChat(this.$route.params.id);
     },
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
       if (con) {
-        sendChat(this.$route.params.id, con, JSON.stringify(this.files)).then(
-          res => {
-            this.$refs.textarea.innerHTML = "";
-            this.$nextTick(() => {
-              this.$refs.scrollbox.scrollTop =
-                this.$refs.heightbox.clientHeight + 100;
-              console.log(this.$refs.scrollbox.scrollTop);
-            });
-          }
-        );
+        sendChat(this.$route.params.id, con, JSON.stringify(this.files)).then(res => {
+          this.$refs.textarea.innerHTML = "";
+          this.$nextTick(() => {
+            var div = document.getElementById("data-list-content");
+            div.scrollTop = div.scrollHeight + 1;
+          });
+        });
       }
     },
     getFiles(files) {
@@ -140,10 +132,7 @@ export default {
     },
     //下载附件
     downLoad(id) {
-      var url =
-        process.env.NODE_ENV === "development"
-          ? process.env.VUE_APP_URL
-          : process.env.VUE_APP_URL;
+      var url = process.env.NODE_ENV === "development" ? process.env.VUE_APP_URL : process.env.VUE_APP_URL;
       window.location.href = url + "/groupchat/" + id;
     },
     chooseEmoji(name) {
@@ -152,9 +141,7 @@ export default {
     },
     // 撤回消息
     chehui(chatId) {
-      recall(chatId, this.$route.params.id).then(res => {
-        console.log(res);
-      });
+      recall(chatId, this.$route.params.id);
     }
   }
 };

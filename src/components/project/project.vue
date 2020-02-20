@@ -219,7 +219,6 @@ export default {
                 break;
               // 复制文件
               case "C10":
-                
                 this.$store.commit("file/copyFile", result.object);
                 break;
               // 移动文件
