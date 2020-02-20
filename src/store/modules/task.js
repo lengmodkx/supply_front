@@ -354,7 +354,12 @@ const store = {
             if (state.task && state.task.taskId === data.publicId) {
                 state.task.logs.push(data)
             }
-        }
+        },
+        //权限判断
+        judge(state, data) {
+            
+        },
+
     },
     actions: {
         init({
