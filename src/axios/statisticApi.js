@@ -4,9 +4,9 @@ import api from "./url";
 /**
  * 饼图数据
  **/
-export function getPieDate(projectId){
+export function getPieDate(projectId) {
     return fetch({
-        url:`${api.statistics}/getPieChart/${projectId}`,
+        url: `${api.statistics}/getPieChart/${projectId}`,
         method: "get"
     });
 }
@@ -15,11 +15,12 @@ export function getPieDate(projectId){
  * 饼图详细数据集
  * @param projectId
  */
-    export function getPieSource(projectId,data) {
+export function getPieSource(projectId, data) {
 
     return fetch({
-        url: `${api.statistics}/getPieSource/${projectId}/${data}`,
+        url: `${api.statistics}/getPieSource/${projectId}`,
         method: "get",
+        params: data
     });
 }
 
@@ -27,10 +28,11 @@ export function getPieDate(projectId){
  * 柱状图详细数据集
  * @param projectId
  */
-export function getHistogramSource(projectId,data) {
+export function getHistogramSource(projectId, data) {
     return fetch({
-        url: `${api.statistics}/getHistogramSource/${projectId}/${data}`,
-        method: "get"
+        url: `${api.statistics}/getHistogramSource/${projectId}`,
+        method: "get",
+        params: data
     });
 }
 
@@ -39,10 +41,11 @@ export function getHistogramSource(projectId,data) {
  * 任务燃尽图详细数据集
  * @param projectId
  */
-export function getBurnoutSource(projectId,data) {
+export function getBurnoutSource(projectId, data) {
     return fetch({
-        url: `${api.statistics}/getBurnoutSource/${projectId}/${data}`,
-        method: "get"
+        url: `${api.statistics}/getBurnoutSource/${projectId}`,
+        method: "get",
+        params: data
     });
 }
 
@@ -53,10 +56,11 @@ export function getBurnoutSource(projectId,data) {
  * 累计图详细数据集
  * @param projectId
  */
-export function getAddSource(projectId,data) {
+export function getAddSource(projectId, data) {
     return fetch({
-        url: `${api.statistics}/getAddSource/${projectId}/${data}`,
-        method: "get"
+        url: `${api.statistics}/getAddSource/${projectId}`,
+        method: "get",
+        params: data
     });
 }
 
@@ -64,20 +68,22 @@ export function getAddSource(projectId,data) {
  * 获取统计数据概览
  * @param projectId
  */
-export function getCountData(projectId,data) {
+export function getCountData(projectId, data) {
     return fetch({
-        url: `${api.statistics}/getCountData/${projectId}/${data}`,
-        method: "get"
+        url: `${api.statistics}/getCountData/${projectId}`,
+        method: "get",
+        params: data
     })
 
 
-}/**
+}
+/**
  * 获取统计数据概览
  * @param projectId
  * @param divName
  * @param data
  */
-export function getCountTable(projectId,divName,data) {
+export function getCountTable(projectId, divName, data) {
     return fetch({
         url: `${api.statistics}/getCountTable/${projectId}/${divName}/${data}`,
         method: "get"
