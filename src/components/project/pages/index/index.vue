@@ -84,14 +84,11 @@
                       <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-if="a.completeCount != 0">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList.length">
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-else>
-                        <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:10px;padding-left:5px;">0/{{ a.taskList.length }}</span>
-                      </span>
+                      
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
@@ -141,14 +138,11 @@
                       <span class="label" v-if="a.remarks" style="margin-top:-5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-if="a.completeCount != 0">
+                      <span class="label" style="margin-bottom: 3px" v-if="a.taskList.length">
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
-                      <span class="label" style="margin-bottom: 3px" v-else>
-                        <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:10px;padding-left:5px;">0/{{ a.taskList.length }}</span>
-                      </span>
+                     
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
