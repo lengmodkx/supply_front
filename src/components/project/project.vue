@@ -33,14 +33,13 @@ export default {
       activeHeaderTag: -1
     };
   },
-  mounted() {
+  created() {
     this.initSocket(this.$route.params.id);
   },
-  beforeRouteLeave(to, from, next) {
+  destroyed() {
     this.stompClient.disconnect(function() {
       console.log("断开socket连接");
     });
-    next();
   },
   methods: {
     showBox(i) {
@@ -102,23 +101,11 @@ export default {
                 this.$store.dispatch("task/updateStatus", result.object);
                 break;
               case "A5":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A6":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A7":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A8":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A9":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A11":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A12":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
@@ -219,7 +206,6 @@ export default {
                 break;
               // 复制文件
               case "C10":
-                
                 this.$store.commit("file/copyFile", result.object);
                 break;
               // 移动文件

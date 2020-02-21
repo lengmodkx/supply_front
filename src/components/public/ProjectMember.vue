@@ -22,7 +22,7 @@
               <span>联系方式：{{ user.accountName }}</span>
             </div>
             <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible">
-              <a href="javascript:void(0)" v-if="user.memberLabel == 0">
+              <a href="javascript:void(0)" v-if="user.memberLabel != 0 || user.roleKey == 'member'">
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <div slot="title" class="title">

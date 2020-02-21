@@ -659,7 +659,6 @@ export function deleteNews(id) {
 
 // 群聊发送消息
 export function sendChat(projectId, content, files) {
-    console.log(">>>3", files);
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法

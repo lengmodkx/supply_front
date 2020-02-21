@@ -5,25 +5,23 @@
         <BreadcrumbItem :to="toto">首页</BreadcrumbItem>
         <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
       </Breadcrumb> -->
-      <div><a :href="toto">首页</a> <span> > {{projectName}}</span></div>
+      <div>
+        <a :href="toto">首页</a> <span> > {{ projectName }}</span>
+      </div>
     </div>
     <!-- :class="RegExp(`${menu.pre}`).test(path) ? 'active' : ''" -->
     <div class="menu">
-      <router-link v-for="(menu, index) in menus" :key="index" :to="`/project/${id}${menu.prefix}`" :class="{'is-active':$route.meta.active === menu.pre}">{{menu.funcName}}</router-link>
+      <router-link v-for="(menu, index) in menus" :key="index" :to="`/project/${id}${menu.prefix}`" :class="{ 'is-active': $route.meta.active === menu.pre }">{{ menu.funcName }}</router-link>
     </div>
 
     <div class="fr">
-      <a :class="{activeHeaderTag:show==1}" @click="$emit('showBox',1);">
+      <a :class="{ activeHeaderTag: show == 1 }" @click="$emit('showBox', 1)">
         <Icon type="md-people" size="20" />
-        {{users.length}}
+        {{ users.length }}
       </a>
 
-      <a :class="{activeHeaderTag:show==3}" @click="$emit('showBox',3);">
-        <Icon type="eye"></Icon>视图
-      </a>
-      <a :class="{activeHeaderTag:show==2}" @click="$emit('showBox',2);" class="last">
-        <Icon type="navicon"></Icon>菜单
-      </a>
+      <a :class="{ activeHeaderTag: show == 3 }" @click="$emit('showBox', 3)"> <Icon type="eye"></Icon>视图 </a>
+      <a :class="{ activeHeaderTag: show == 2 }" @click="$emit('showBox', 2)" class="last"> <Icon type="navicon"></Icon>菜单 </a>
     </div>
   </div>
 </template>
@@ -41,7 +39,7 @@ export default {
       menus: [],
       projectName: "",
       companyId: localStorage.companyId,
-      toto: '/org/'+localStorage.companyId
+      toto: "/org/" + localStorage.companyId
     };
   },
   computed: {

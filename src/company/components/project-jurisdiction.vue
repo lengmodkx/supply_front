@@ -16,12 +16,8 @@
             <Button type="primary" size="small" style="margin-right: 10px" @click="editRole(index)" v-if="!row.isSystemInit">编辑</Button>
             <Button type="error" size="small" style="margin-right: 10px" v-if="!row.isSystemInit" @click="romoveRole(index)">删除</Button>
             <Button type="success" size="small" v-if="row.isDefault" disabled style="margin-right: 10px">默认权限</Button>
-            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)"
-              >设为默认权限</Button
-            >
-            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && row.roleKey == 'member'" @click="setDefault(index)"
-              >设为默认权限</Button
-            >
+            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)">设为默认权限</Button>
+            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && row.roleKey == 'member'" @click="setDefault(index)">设为默认权限</Button>
             <Button type="success" size="small" @click="givePower(index)">分配权限</Button>
           </template>
         </Table>
@@ -45,14 +41,7 @@
         </div>
       </Modal>
       <Modal v-model="permissionAssign" title="权限分配" width="1200px" class="padd0" fullscreen footer-hide :z-index="1001">
-        <project-permission
-          :flag="false"
-          :permissions="permissions"
-          :role="nowRole"
-          v-if="permissionAssign"
-          ref="permission"
-          @close="permissionAssign = false"
-        ></project-permission>
+        <project-permission :flag="false" :permissions="permissions" :role="nowRole" v-if="permissionAssign" ref="permission" @close="permissionAssign = false"></project-permission>
       </Modal>
     </div>
   </div>
@@ -174,7 +163,7 @@ export default {
             this.$Message.success("修改成功");
             this.getAllRole();
           } else {
-            this.$Message.error("修改失败");
+            this.$Message.error(res.msg);
           }
         });
       } else {
@@ -191,7 +180,7 @@ export default {
             this.$Message.success("添加成功");
             this.getAllRole();
           } else {
-            this.$Message.error("添加失败");
+            this.$Message.error(res.msg);
           }
         });
       }
@@ -213,7 +202,7 @@ export default {
           this.$Message.success("删除成功");
           this.getAllRole();
         } else {
-          this.$Message.error("删除失败");
+          this.$Message.error(res.msg);
         }
       });
     },
