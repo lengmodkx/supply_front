@@ -99,6 +99,7 @@ export default {
     // 获取企业角色
     getAllRole() {
       getRole(localStorage.companyId).then(res => {
+        
         if (res.result) {
           this.roleList = res.data.records;
           console.log(this.roleList);
@@ -214,10 +215,13 @@ export default {
       } else {
         deleteRole(this.nowRole.roleId, localStorage.companyId).then(res => {
           if (res.result == 1) {
-            this.nowRole = null;
-            this.role = "";
-            this.$Message.success("删除成功");
             this.getAllRole();
+            this.nowRole = {};
+            // this.role = "";
+            this.$Message.success("删除成功");
+            
+         
+            
           } else {
             this.$Message.error(res.msg);
           }
