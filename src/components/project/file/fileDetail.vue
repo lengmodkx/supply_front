@@ -8,25 +8,25 @@
 
       <div class="f-header-right">
         <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
-          <p class="padd8">
-            <Icon type="ios-cloud-upload-outline" />更新版本</p>
+          <p class="padd8"><Icon type="ios-cloud-upload-outline" />更新版本</p>
           <DropdownMenu slot="list">
-            <DropdownItem name="model" v-if="file.data.isModel=='1'">上传模型文件</DropdownItem>
-            <DropdownItem name="commonfile" v-else-if="file.data.isModel=='0'">上传普通文件</DropdownItem>
+            <DropdownItem name="model" v-if="file.data.isModel == '1'">上传模型文件</DropdownItem>
+            <DropdownItem name="commonfile" v-else-if="file.data.isModel == '0'">上传普通文件</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <p class="padd8">
           <Icon type="ios-cloud-download-outline" />
-          <a style="color: gray" :download="file.data.fileName" @click="downLoad(file.data.fileId)" ref="xiazai">下载</a></p>
+          <a style="color: gray" :download="file.data.fileName" @click="downLoad(file.data.fileId)" ref="xiazai">下载</a>
+        </p>
         <!--<p><Icon type="ios-link-outline" />复制文件链接</p>-->
         <Poptip class="menu-file" v-model="menuShow" @on-popper-hide="popHid">
           <Icon type="ios-more" class="mr0" />
           <div slot="content">
             <div v-show="rublish" class="rublish">
               <div class="rublish-header">
-                <Icon @click="rublish=false" type="ios-arrow-back" />
+                <Icon @click="rublish = false" type="ios-arrow-back" />
                 移到回收站
-                <Icon @click="menuShow=false" type="ios-close" />
+                <Icon @click="menuShow = false" type="ios-close" />
               </div>
               <p>您确定要把该文件移到回收站吗？</p>
               <Button long type="error" @click="putRecyclebin">移到回收站</Button>
@@ -40,7 +40,7 @@
                   <li @click="showModels('移动')">移动文件</li>
                   <li @click="showModels('复制')">复制文件</li>
                   <li @click="collectFile">收藏文件</li>
-                  <li @click="rublish=true">移到回收站</li>
+                  <li @click="rublish = true">移到回收站</li>
                 </ul>
               </section>
               <div class="footer">
@@ -48,97 +48,90 @@
                   <i class="ivu-icon ivu-icon-unlocked"></i>
                   <div class="footer-privacy-text" @click="changePrivacy">
                     <span>隐私模式</span>
-                    <span v-if="privacyStatus=='已开启'">仅参与者可见</span>
+                    <span v-if="privacyStatus == '已开启'">仅参与者可见</span>
                     <span v-else>所有成员可见</span>
                   </div>
                 </div>
-                <span style="color:#3da8f5" @click="changePrivacy">{{privacyStatus}}</span>
+                <span style="color:#3da8f5" @click="changePrivacy">{{ privacyStatus }}</span>
               </div>
             </div>
-
           </div>
         </Poptip>
-
       </div>
     </header>
     <div class="f-content">
       <div class="f-content-left">
-        <div class="img-look-box" v-if="file.data.ext.includes('jpg') ||
-                            file.data.ext.includes('jpeg') ||
-                            file.data.ext.includes('gif') ||
-                            file.data.ext.includes('bmp') ||
-                           file.data.ext.includes('png')">
+        <div class="img-look-box" v-if="file.data.ext.includes('jpg') || file.data.ext.includes('jpeg') || file.data.ext.includes('gif') || file.data.ext.includes('bmp') || file.data.ext.includes('png')">
           <div class="big-small-box">
             <Tooltip content="放大">
               <Icon @click="changeImgSize(1)" type="ios-add-circle-outline" />
             </Tooltip>
-            <span>{{Math.floor(imgSize*100)}}%</span>
+            <span>{{ Math.floor(imgSize * 100) }}%</span>
             <Tooltip content="缩小">
               <Icon @click="changeImgSize(0)" type="ios-remove-circle-outline" />
             </Tooltip>
-
           </div>
-          <img :style="{transform:'scale('+imgSize+')'}" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" alt="">
+          <img :style="{ transform: 'scale(' + imgSize + ')' }" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.data.fileUrl" alt="" />
         </div>
 
-        <iframe v-else-if="file.data.ext.includes('doc') ||
-                              file.data.ext.includes('docx') ||
-                              file.data.ext.includes('docm') ||
-                              file.data.ext.includes('dotx') ||
-                              file.data.ext.includes('dotm') ||
-                              file.data.ext.includes('xls') ||
-                              file.data.ext.includes('xlsm') ||
-                              file.data.ext.includes('xltx') ||
-                              file.data.ext.includes('xltm') ||
-                              file.data.ext.includes('xlsb') ||
-                              file.data.ext.includes('xlam') ||
-                              file.data.ext.includes('xlsx') ||
-                              file.data.ext.includes('pptx') ||
-                              file.data.ext.includes('pptm') ||
-                              file.data.ext.includes('ppsx') ||
-                              file.data.ext.includes('potx')" :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" width='100%' height='100%' frameborder='1'>
+        <iframe
+          v-else-if="
+            file.data.ext.includes('doc') ||
+              file.data.ext.includes('docx') ||
+              file.data.ext.includes('docm') ||
+              file.data.ext.includes('dotx') ||
+              file.data.ext.includes('dotm') ||
+              file.data.ext.includes('xls') ||
+              file.data.ext.includes('xlsm') ||
+              file.data.ext.includes('xltx') ||
+              file.data.ext.includes('xltm') ||
+              file.data.ext.includes('xlsb') ||
+              file.data.ext.includes('xlam') ||
+              file.data.ext.includes('xlsx') ||
+              file.data.ext.includes('pptx') ||
+              file.data.ext.includes('pptm') ||
+              file.data.ext.includes('ppsx') ||
+              file.data.ext.includes('potx')
+          "
+          :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.data.fileUrl"
+          width="100%"
+          height="100%"
+          frameborder="1"
+        >
         </iframe>
 
-        <iframe v-else-if="file.data.ext.includes('txt')" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.data.fileUrl" width='100%' height='100%' frameborder='1'>
-        </iframe>
+        <iframe v-else-if="file.data.ext.includes('txt')" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.data.fileUrl" width="100%" height="100%" frameborder="1"> </iframe>
         <div v-else class="cant-read-file">
-          <span>{{file.data.fileName}}</span>
-          <Button long size="large" type="primary">
-            <a style="color: white" :download="file.data.fileName" :href="'https://www.aldbim.com/api/files/'+file.data.fileId +'/download'" ref="xiazai">下载文件（{{file.data.size}}）</a>
+          <span>{{ file.data.fileName }}</span>
+          <Button long size="large" type="primary" @click="download(file.data.fileId)">
+            <a style="color: white" :download="file.data.fileName" ref="xiazai">下载文件（{{ file.data.size }}）</a>
           </Button>
         </div>
       </div>
       <div class="f-content-right">
         <div class="padd16">
           <div class="bbxx">
-            <div>
-              <Icon type="ios-folder-open-outline" size="18" />版本信息
-            </div>
+            <div><Icon type="ios-folder-open-outline" size="18" />版本信息</div>
             <div class="sp-bw">
               <p>
                 <Icon type="ios-information-circle-outline" size="18" />
-                <span>{{file.version.length?file.version[file.version.length-1].info:''}}</span>
+                <span>{{ file.version.length ? file.version[file.version.length - 1].info : "" }}</span>
               </p>
-              <p>{{file.data.size}}</p>
+              <p>{{ file.data.size }}</p>
             </div>
           </div>
           <!--标签-->
           <div class="tags">
-            <span class="name">
-              <Icon type="ios-pricetags-outline"></Icon>标签
-            </span>
+            <span class="name"> <Icon type="ios-pricetags-outline"></Icon>标签 </span>
             <!-- 取到data.tag了再添加孙子辈组件 -->
 
-             <!-- :fileTask='"fileTask"' -->
-            <Tags ref="tags"  :taglist="file.data.tagList" :publicId="file.data.fileId" :publicType="publicType" :projectId="file.data.projectId"></Tags>
-           
+            <!-- :fileTask='"fileTask"' -->
+            <Tags ref="tags" :taglist="file.data.tagList" :publicId="file.data.fileId" :publicType="publicType" :projectId="file.data.projectId"></Tags>
           </div>
           <!--关联-->
           <div class="relevance">
-            <p class="name">
-              <Icon type="ios-link-outline" />关联内容</p>
-            <div class="addLink" @click="relationModal=true;">
-              <Icon type="ios-add-circle-outline" />添加关联</div>
+            <p class="name"><Icon type="ios-link-outline" />关联内容</p>
+            <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
             <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
               <AddRelation v-if="relationModal" @binkCallback="binkCallback" :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
             </Modal>
@@ -147,17 +140,21 @@
           <div class="has-relevance">
             <ul v-if="file.data.bindTasks.length">
               <div class="what-title">关联的任务</div>
-              <li class="gl-task-list" v-for="(b,i) in file.data.bindTasks" :key="i">
+              <li class="gl-task-list" v-for="(b, i) in file.data.bindTasks" :key="i">
                 <div class="gl-task-list-con">
                   <Icon type="md-checkbox-outline" size="22" />
                   <!--<Icon type="ios-list-box-outline" size="22" />-->
                   <!--<Icon type="ios-calendar-outline" size="22" />-->
                   <!--<Icon type="ios-document-outline" size="22" />-->
-                  <img v-if="b.userImage" :src="b.userImage" alt="执行者">
-                  <img v-else src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg==">
+                  <img v-if="b.userImage" :src="b.userImage" alt="执行者" />
+                  <img
+                    v-else
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg=="
+                  />
                   <div class="gl-con">
                     <div class="gl-con-top">
-                      <span>{{b.taskName}}</span><span>{{b.projectName}}</span>
+                      <span>{{ b.taskName }}</span
+                      ><span>{{ b.projectName }}</span>
                     </div>
                     <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
                   </div>
@@ -165,25 +162,22 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
-                      <Icon type="ios-link" size="20" /><span>复制链接</span>
-                    </div>
-                    <div class="glpop-list" @click="cancle(b.taskId)">
-                      <Icon type="md-link" size="20" /><span>取消关联</span>
-                    </div>
+                    <div class="glpop-list"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <div class="glpop-list" @click="cancle(b.taskId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
               </li>
             </ul>
             <ul v-if="file.data.bindFiles.length">
               <div class="what-title">关联的文件</div>
-              <li class="gl-task-list" v-for="(b,i) in file.data.bindFiles" :key="i">
+              <li class="gl-task-list" v-for="(b, i) in file.data.bindFiles" :key="i">
                 <div class="gl-task-list-con">
                   <!--<Icon type="md-checkbox-outline" size="22" />-->
                   <Icon type="ios-document-outline" size="22" />
                   <div class="gl-con">
                     <div class="gl-con-top">
-                      <span>{{b.fileName}}</span><span>{{b.projectName}}</span>
+                      <span>{{ b.fileName }}</span
+                      ><span>{{ b.projectName }}</span>
                     </div>
                     <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
                   </div>
@@ -191,25 +185,22 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
-                      <Icon type="ios-link" size="20" /><span>复制链接</span>
-                    </div>
-                    <div class="glpop-list" @click="cancle(b.fileId)">
-                      <Icon type="md-link" size="20" /><span>取消关联</span>
-                    </div>
+                    <div class="glpop-list"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <div class="glpop-list" @click="cancle(b.fileId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
               </li>
             </ul>
             <ul v-if="file.data.bindSchedules.length">
               <div class="what-title">关联的日程</div>
-              <li class="gl-task-list" v-for="(b,i) in file.data.bindSchedules" :key="i">
+              <li class="gl-task-list" v-for="(b, i) in file.data.bindSchedules" :key="i">
                 <div class="gl-task-list-con">
                   <!--<Icon type="md-checkbox-outline" size="22" />-->
                   <Icon type="ios-calendar-outline" size="22" />
                   <div class="gl-con">
                     <div class="gl-con-top">
-                      <span>{{b.scheduleName}}</span><span>{{b.projectName}}</span>
+                      <span>{{ b.scheduleName }}</span
+                      ><span>{{ b.projectName }}</span>
                     </div>
                     <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
                   </div>
@@ -217,24 +208,21 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
-                      <Icon type="ios-link" size="20" /><span>复制链接</span>
-                    </div>
-                    <div class="glpop-list" @click="cancle(b.scheduleId)">
-                      <Icon type="md-link" size="20" /><span>取消关联</span>
-                    </div>
+                    <div class="glpop-list"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <div class="glpop-list" @click="cancle(b.scheduleId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
               </li>
             </ul>
             <ul v-if="file.data.bindShares.length">
               <div class="what-title">关联的分享</div>
-              <li class="gl-task-list" v-for="(b,i) in file.data.bindShares" :key="i">
+              <li class="gl-task-list" v-for="(b, i) in file.data.bindShares" :key="i">
                 <div class="gl-task-list-con">
                   <Icon type="ios-open-outline" size="22" />
                   <div class="gl-con">
                     <div class="gl-con-top">
-                      <span>{{b.shareName}}</span><span>{{b.projectName}}</span>
+                      <span>{{ b.shareName }}</span
+                      ><span>{{ b.projectName }}</span>
                     </div>
                     <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
                   </div>
@@ -242,12 +230,8 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list">
-                      <Icon type="ios-link" size="20" /><span>复制链接</span>
-                    </div>
-                    <div class="glpop-list" @click="cancle(b.shareId)">
-                      <Icon type="md-link" size="20" /><span>取消关联</span>
-                    </div>
+                    <div class="glpop-list"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <div class="glpop-list" @click="cancle(b.shareId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
               </li>
@@ -257,21 +241,20 @@
           <!-- 设置参与者 -->
           <div class="participator">
             <h5>
-              参与者 · {{file.data.joinInfo?file.data.joinInfo.length:0}}
+              参与者 · {{ file.data.joinInfo ? file.data.joinInfo.length : 0 }}
               <Tooltip content="参与者将会收到评论和任务更新通知" placement="right" transfer>
                 <Icon type="ios-help"></Icon>
               </Tooltip>
             </h5>
             <div class="involve-list clearfix">
-              <div class="member-avatar fl" v-for="(item,index) in file.data.joinInfo" :key="index">
+              <div class="member-avatar fl" v-for="(item, index) in file.data.joinInfo" :key="index">
                 <Tooltip :content="item.userName" placement="top" transfer>
                   <div class="ava">
                     <!-- 删除需要加在关闭按钮上 -->
-                    <img v-if="item.image" :src="item.image" alt="">
+                    <img v-if="item.image" :src="item.image" alt="" />
                     <span class="close" @click="deleteInvolve(item.userId)">×</span>
                   </div>
                 </Tooltip>
-
               </div>
               <div class="addButton fl">
                 <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="file.data.projectId" @save="saveInvolveMember"></InvolveMember>
@@ -286,12 +269,11 @@
         <div class="talk">
           <div class="talkinner">
             <div class="talkUp">
-              <div id="input" style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true" @keyup.enter="sendChat">
-              </div>
+              <div id="input" style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true" @keyup.enter="sendChat"></div>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="上传附件" class="fl">
-                <Icon @click="showCommon=true" class="up-file" type="md-attach" />
+                <Icon @click="showCommon = true" class="up-file" type="md-attach" />
               </Tooltip>
               <!-- 表情包组件 -->
               <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
@@ -306,24 +288,24 @@
     <!--移动、复制文件-->
     <Modal v-model="showMove" width="800" @on-visible-change="changeVisible" class-name="vertical-center-modal2">
       <div slot="header">
-        <span style="font-size:18px">{{caozuo}}文件{{file.data.fileName}}至</span>
+        <span style="font-size:18px">{{ caozuo }}文件{{ file.data.fileName }}至</span>
       </div>
       <div class="move-and-mobile-file">
         <div class="column-projects flex-static thin-scroll">
           <div class="project-title">项目</div>
           <ul>
-            <li v-for="(project, index) in projects" :key="index" :class="{ selected:project.projectId==projectId,unselected:project.projectId!=projectId }" @click="changeProject(project.projectId)">
-              <span>{{project.projectName}}</span>
+            <li v-for="(project, index) in projects" :key="index" :class="{ selected: project.projectId == projectId, unselected: project.projectId != projectId }" @click="changeProject(project.projectId)">
+              <span>{{ project.projectName }}</span>
             </li>
           </ul>
         </div>
         <div class="picker-column thin-scroll flex-fill flex-vert">
           <Loading v-show="loading"></Loading>
-          <v-jstree :data="asyncData" show-checkbox :multiple=false whole-row @item-click="itemClick" ref="jstree" children-field-name="child"></v-jstree>
+          <v-jstree :data="asyncData" show-checkbox :multiple="false" whole-row @item-click="itemClick" ref="jstree" children-field-name="child"></v-jstree>
         </div>
       </div>
       <div slot="footer" class="move-footer">
-        <span>{{footerTxt}}</span>
+        <span>{{ footerTxt }}</span>
         <div class="move-footer-btn">
           <Button type="default" size="large" @click="cancelRemoveClone">取消</Button>
           <Button type="primary" size="large" @click="removeCloneFile">确定</Button>
@@ -332,11 +314,11 @@
     </Modal>
     <!--上传模型文件-->
     <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-      <model ref="model" @close="showModel=false" :fileId="file.data.fileId" :fileDetail="'true'"></model>
+      <model ref="model" @close="showModel = false" :fileId="file.data.fileId" :fileDetail="'true'"></model>
     </Modal>
     <!--上传普通文件-->
     <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-      <common-file @close="showCommon=false" :fileId="file.data.fileId" :projectId="projectId" :fileDetail="'true'"></common-file>
+      <common-file @close="showCommon = false" :fileId="file.data.fileId" :projectId="projectId" :fileDetail="'true'"></common-file>
     </Modal>
   </div>
 </template>
@@ -351,22 +333,8 @@ import Emoji from "@/components/public/common/emoji/Emoji";
 import model from "./model.vue";
 import commonFile from "./commonfile.vue";
 import { mapState } from "vuex";
-import {
-  changeName,
-  downloadFile,
-  jionPeople,
-  removeFile,
-  cloneFile,
-  recycleBin,
-  filePrivacy,
-} from "@/axios/fileApi";
-import {
-  folderChild,
-  getProjectList,
-  collect,
-  cancle,
-  sendMsg
-} from "@/axios/api";
+import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy } from "@/axios/fileApi";
+import { folderChild, getProjectList, collect, cancle, sendMsg } from "@/axios/api";
 import VJstree from "vue-jstree";
 export default {
   props: ["fid"],
@@ -427,11 +395,15 @@ export default {
     },
     //文件下载
     downLoad(fileId) {
-      
-      window.location.href =
-        process.env.NODE_ENV == "development"
-          ? "/api/files/" + fileId + "/download"
-          : process.env.VUE_APP_URL +"/files/" + fileId + "/download";
+      var url = "";
+      if (process.env.NODE_ENV == "test") {
+        url = process.env.VUE_APP_TEST_URL;
+      } else if (process.env.NODE_ENV == "production") {
+        url = process.env.VUE_APP_URL;
+      } else {
+        url = "/api";
+      }
+      window.location.href = url + "/files/" + fileId + "/download";
     },
     popHid() {
       setTimeout(() => {
@@ -459,13 +431,11 @@ export default {
     },
     // 取消关联
     cancle(id) {
-      cancle(id, this.projectId, this.publicType, this.file.data.fileId).then(
-        res => {
-          if (res.result === 1) {
-            this.$Message.success("已取消");
-          }
+      cancle(id, this.projectId, this.publicType, this.file.data.fileId).then(res => {
+        if (res.result === 1) {
+          this.$Message.success("已取消");
         }
-      );
+      });
     },
     // 放大缩小图片
     changeImgSize(n) {
@@ -477,7 +447,7 @@ export default {
         console.log(this.imgSize);
       }
     },
-   
+
     // 添加参与者
     saveInvolveMember(detailList) {
       jionPeople(this.file.data.fileId, detailList).then(res => {
@@ -528,15 +498,14 @@ export default {
     // 更改隐私模式
     changePrivacy() {
       let num = 0;
-      if (this.privacyStatus=="已关闭") {
+      if (this.privacyStatus == "已关闭") {
         num = 1;
-        this.privacyStatus="已开启"
+        this.privacyStatus = "已开启";
       } else {
         num = 0;
-        this.privacyStatus="已关闭"
+        this.privacyStatus = "已关闭";
       }
-      filePrivacy(this.file.data.fileId, num).then(res => {
-      });
+      filePrivacy(this.file.data.fileId, num).then(res => {});
     },
     // 移动、赋值文件框打开关闭
     changeVisible(bool) {
@@ -552,14 +521,12 @@ export default {
     removeCloneFile() {
       if (this.folderId) {
         if (this.caozuo === "移动") {
-          removeFile(this.folderId, this.file.data.fileId, this.projectId).then(
-            res => {
-              if (res.result) {
-                this.$Message.success("移动成功");
-                this.showMove = false;
-              }
+          removeFile(this.folderId, this.file.data.fileId, this.projectId).then(res => {
+            if (res.result) {
+              this.$Message.success("移动成功");
+              this.showMove = false;
             }
-          );
+          });
         } else if (this.caozuo === "复制") {
           cloneFile(this.folderId, this.file.data.fileId).then(res => {
             this.$Message.success("复制成功");
