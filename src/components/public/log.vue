@@ -1,6 +1,6 @@
 <template>
   <div class="log-wrap">
-      <div style="height: 50px;line-height: 50px;width: 100%;font-size: 16px">所有动态11</div>
+      <div style="height: 50px;line-height: 50px;width: 100%;font-size: 16px">所有动态</div>
       <div class="more-msg" v-if="unReadMsg" >
           <span v-if="!restData.length" @click="loadMore">查看剩余{{unReadMsg}}条消息...</span><span v-else @click="shouqi" style="color: #3da8f5">收起</span>
       </div>
@@ -35,6 +35,7 @@
           loadMore(){
               restMsg(this.publicId, this.unReadMsg).then(res => {
                   if (res.result){
+                      
                       this.restData=res.data
                   }
               })

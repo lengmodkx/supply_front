@@ -27,8 +27,18 @@
                   <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
                   <img v-else src="@/icons/img/moren.png" alt="">
                 </div>
-                <span v-if="file.catalog==1 ">{{file.fileName}}</span>
-                <span v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</span>
+                <span v-if="file.catalog==1 ">
+                   <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+                     {{file.fileName}}
+                    </Poptip>
+               </span>
+                <span v-if="file.catalog==0">
+                 <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+                  {{file.fileName.substr(0,10)+file.ext}}
+                    </Poptip>
+
+                  
+               </span>
 
               </div>
               <div class="contant-erery">

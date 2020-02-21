@@ -170,13 +170,26 @@ export function searchProjects(projectName, condition) {
     });
 }
 //获取项目列表
-export function getProjectList() {
+// export function getProjectList() {
+//     return fetch({
+//         url: api.projects,
+//         method: "get", // 请求方法
+//         params: {}
+//     });
+// }
+
+//获取关联任务 2020-2-19
+
+export function getProjectList(orgId) {
     return fetch({
-        url: api.projects,
+        url: '/projects/org/projects',
         method: "get", // 请求方法
-        params: {}
+        params: {
+            orgId: orgId
+        }
     });
 }
+
 
 //获取项目列表
 export function getStarProjectList() {
