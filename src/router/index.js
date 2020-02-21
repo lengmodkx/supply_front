@@ -69,7 +69,8 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             keepAlive: false,
-            title: "阿拉丁BIM5D云平台"
+            title: "阿拉丁BIM5D云平台",
+            active: '/tasks'
           }
         },
         {
@@ -79,7 +80,8 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             title: "阿拉丁BIM5D云平台",
-            keepAlive: false
+            keepAlive: false,
+            active: '/shares'
           }
         },
         {
@@ -99,7 +101,8 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             title: "阿拉丁BIM5D云平台",
-            keepAlive: false
+            keepAlive: false,
+            active: "/schedules"
           }
         },
         {
@@ -109,7 +112,8 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             title: "阿拉丁BIM5D云平台",
-            keepAlive: false
+            keepAlive: false,
+            active: "/groupChat"
           }
         },
         {
@@ -119,7 +123,8 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             title: "阿拉丁BIM5D云平台",
-            keepAlive: false
+            keepAlive: false,
+            active: '/files'
           }
         },
         {
@@ -129,7 +134,8 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             title: "阿拉丁BIM5D云平台",
-            keepAlive: false
+            keepAlive: false,
+            active: '/statistics'
           }
         }
       ]
