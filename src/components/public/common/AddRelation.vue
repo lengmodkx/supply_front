@@ -280,7 +280,8 @@
             'fromType':this.fromType,
             'bindId':'',
             'publicType':''
-        }
+        },
+        orgId: localStorage.companyId,
 
       }
       
@@ -493,7 +494,7 @@
                         return  item.projectName.includes(value)
                 })
         }else{
-            getProjectList().then(res => {
+            getProjectList(this.orgId).then(res => {
                 this.projectData=res.data
               })
         }
@@ -503,10 +504,13 @@
     mounted () {
       // document.getElementById('relationModal').children[1].style.zIndex = '1010';
       // document.getElementById('relationModal').children[0].style.zIndex = '1010';
-        getProjectList().then(res => {
+        getProjectList(this.orgId).then(res => {
+            
            this.projectData=res.data
             console.log(res.data)
+            console.log("企业id:"+this.orgId)
         })
+        
     }
   }
 </script>
