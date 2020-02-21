@@ -1,6 +1,6 @@
 <template>
 <div class="file-contant">
-    <ul class="file-list"    v-if="files.length">
+    <ul class="file-list"  v-if="files.length" >
         <li v-for="(file,index) in files"   :class = "isactive == index ? 'li-hover' : '' " v-bind:style="{ width: slider * 4 + 'px',}" style='min-width: 34px' :key="index"   @dblclick="dfileDetail(file,index,file.catalog)"   @click="fileDetail(file.catalog,file.fileId, file,index)" >
         <div class="img-box">
             <i class="file-content-chose"  v-show="index==isactive"></i>          
@@ -22,8 +22,16 @@
               <Button icon="ios-arrow-down" size="small" @click="getFileid($event,file)" ref="menuBtn"></Button>
           </div> -->
         </div>  
-        <span v-if="file.catalog==1">{{file.fileName}}</span>
-         <span v-if="file.catalog==0">{{file.fileName.substr(0,10)+file.ext}}</span>
+        <span v-if="file.catalog==1">
+            <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+              {{file.fileName}}
+           </Poptip>
+          </span>
+         <span v-if="file.catalog==0">
+            <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+              {{file.fileName.substr(0,5)+file.ext}}
+            </Poptip>
+        </span>
         </li>
         
     </ul>
@@ -722,7 +730,7 @@ export default {
                         height: auto;
                         max-height: 60px;
                         margin: 10px auto;
-                        overflow: hidden;
+                        
                         white-space: nowrap;
                         text-overflow: ellipsis;
                         line-height: 20px;
