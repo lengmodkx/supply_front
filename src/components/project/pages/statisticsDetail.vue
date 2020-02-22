@@ -65,7 +65,7 @@
                 <Radio label="是"></Radio>
                 <Radio label="否"></Radio>
             </RadioGroup>
-            <p>是否是回收站任务</p>
+            <p>是否仅回收站任务</p>
             <RadioGroup v-model="recycle_task" class="redio_box" vertical @on-change="Task_recycle">
                 <Radio label="是"></Radio>
                 <Radio label="否"></Radio>
