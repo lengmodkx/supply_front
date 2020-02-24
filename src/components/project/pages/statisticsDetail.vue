@@ -38,7 +38,7 @@
                </RadioGroup>
             </div>
             <div v-show="show_finish1">
-                <p>按任务完成情况（默认'已完成'）</p>
+                <p>按任务完成情况（默认已完成）</p>
                 <RadioGroup v-model="finish" vertical @on-change="Task_Finish">
                     <Radio label="已完成"></Radio>
                     <Radio label="未完成"></Radio>
@@ -60,6 +60,17 @@
             <Select v-model="people" style="width:200px" placeholder="所有任务分组" @on-change="Task_rw">
                 <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
+            <p>是否仅子任务</p>
+            <RadioGroup v-model="child_task" class="redio_box" vertical @on-change="Task_child">
+                <Radio label="是"></Radio>
+                <Radio label="否"></Radio>
+            </RadioGroup>
+            <p>是否仅回收站任务</p>
+            <RadioGroup v-model="recycle_task" class="redio_box" vertical @on-change="Task_recycle">
+                <Radio label="是"></Radio>
+                <Radio label="否"></Radio>
+            </RadioGroup>
+            <div long @click="defaultButton()" class="default">恢复默认</div>
             <div style="margin-top: 20px">
                 <Button type="info" long @click="filterData">确定</Button>
             </div>
@@ -81,6 +92,7 @@
         data: function () {
             return {
                 show_finish:'',
+                show_finish1:'',
                 time_scope:'',
                 title: '',
                 type: '',
@@ -89,6 +101,8 @@
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
                 finished: '全部',
                 finish:'已完成',
+                child_task:'',
+                recycle_task:'否',
                 people: 0,
                 executor: 0,
                 scope:7,
@@ -101,7 +115,9 @@
                     taskMember:'',
                     taskGroup:'',
                     taskCase:'',
-                    taskDay:''
+                    taskDay:'',
+                    taskChild:'',
+                    taskRecycle:''
                 }
             }
         },
@@ -137,6 +153,18 @@
             },
             Task_rw(data){
                 this.StatisticsDTO.taskGroup = data
+            },
+            Task_child(data){
+                this.StatisticsDTO.taskChild = data
+            },
+            Task_child(data){
+                this.StatisticsDTO.taskChild = data
+            },
+            Task_recycle(data){
+                this.StatisticsDTO.taskRecycle = data
+            },
+            defaultButton(){
+
             },
             filterData(){
                 this.allMethods(this.type)
@@ -394,6 +422,9 @@
     .checked{
         border: 1px solid #e5e5e5;
     }
+    .redio_box{
+        columns:2,
+    }
     .type3-chart{
         width: 532px;
         height: 224px;
@@ -415,7 +446,6 @@
                 padding: 4px 0;
                 font-size: 28px;
             }
-
         }
     }
 .box{
@@ -486,6 +516,22 @@
         padding: 10px 0;
         font-size: 14px;
         color: gray;
+    }
+    .default{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        color: gray;
+        cursor: pointer;
+        line-height: 24px;
+        padding: 10px 0;
+
+    &:hover{
+         color: #3da8f5;
+     }
     }
 }
 </style>

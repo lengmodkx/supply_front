@@ -41,9 +41,11 @@
     import HighchartsDrilldown from 'highcharts/modules/drilldown';
     import Highcharts3D from 'highcharts/highcharts-3d';
     import Highmaps from 'highcharts/modules/map';
+    import HighchartsNoData from 'highcharts/modules/no-data-to-display'
     import  { getPieDate }  from "../../../axios/statisticApi.js";
     // import exportCSV from '@/libs/export-csv.js'
     HighchartsMore(Highcharts)
+    HighchartsNoData(Highcharts)
     HighchartsDrilldown(Highcharts);
     Highcharts3D(Highcharts);
     Highmaps(Highcharts);
@@ -115,7 +117,28 @@
                                 name: '任务数',
                                 colorByPoint: true,
                                 data: data
-                            }]
+                            }],
+                            lang: {
+                                noData: "Nichts zu anzeigen" //真正显示的文本
+                            },
+                            noData: {
+                                // Custom positioning/aligning options
+                                position: {    //相对于绘图区定位无数据标签的位置。 默认值：[object Object].
+                                    align: 'right',
+                                    verticalAlign: 'bottom'
+                                },
+                                // Custom svg attributes
+                                attr: {     //无数据标签中额外的SVG属性
+                                    'stroke-width': 1,
+                                    stroke: '#cccccc'
+                                },
+                                // Custom css
+                                style: {    //对无数据标签的CSS样式。 默认值：[object Object].
+                                    fontWeight: 'bold',
+                                    fontSize: '15px',
+                                    color: '#202030'
+                                }
+                            }
                         });
                 },
                 initChart2(data2,data3) {
