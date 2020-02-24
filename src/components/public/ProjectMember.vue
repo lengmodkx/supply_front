@@ -214,6 +214,7 @@ export default {
       let data = { roleId: roleId, userId: this.user.memberId, projectId: this.$route.params.id };
       updateUserRole(data).then(res => {
         if (res.result == 1) {
+          this.initUser(this.$route.params.id);
           this.$Message.success("设置成功");
           this.user.visible = false;
         } else {
