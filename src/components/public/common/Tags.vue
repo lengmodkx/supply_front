@@ -267,7 +267,9 @@ export default {
             //将tags赋值给totalTag   totalTag为tags的复制版
             this.totalTag = JSON.parse(JSON.stringify(this.tags))
           })
-        }
+        } else{
+            this.$Message.error(res.msg)
+         } 
       })
     },
     deleteTag (tagid) {

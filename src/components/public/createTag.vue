@@ -81,12 +81,14 @@
                         bgColor: this.checkedColor
                     };
                     addnewTag(params).then(res => {
-                        if (res.result){
+                        if (res.result==1){
                             this.loading = false;
                             this.addNewTag(res.data)
                             this.$emit('closeTag')
                             this.$Message.success('创建成功');
-                        }
+                        } else{
+                            this.$Message.error(res.msg)
+                       } 
                     })
 
                 }
