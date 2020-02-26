@@ -16,7 +16,7 @@
             <Button type="primary" size="small" style="margin-right: 10px" @click="editRole(index)" v-if="!row.isSystemInit">编辑</Button>
             <Button type="error" size="small" style="margin-right: 10px" v-if="!row.isSystemInit" @click="romoveRole(index)">删除</Button>
             <Button type="success" size="small" v-if="row.isDefault" disabled style="margin-right: 10px">默认权限</Button>
-            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)">设为默认权限33</Button>
+            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)">设为默认权限</Button>
             <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && row.roleKey == 'member'" @click="setDefault(index)">设为默认权限</Button>
             <Button type="success" size="small" @click="givePower(index)">分配权限</Button>
           </template>
