@@ -16,7 +16,7 @@
             <Button type="primary" size="small" style="margin-right: 10px" @click="editRole(index)" v-if="!row.isSystemInit">编辑</Button>
             <Button type="error" size="small" style="margin-right: 10px" v-if="!row.isSystemInit" @click="romoveRole(index)">删除</Button>
             <Button type="success" size="small" v-if="row.isDefault" disabled style="margin-right: 10px">默认权限</Button>
-            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)">设为默认权限</Button>
+            <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)">设为默认权限33</Button>
             <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && row.roleKey == 'member'" @click="setDefault(index)">设为默认权限</Button>
             <Button type="success" size="small" @click="givePower(index)">分配权限</Button>
           </template>
@@ -48,7 +48,7 @@
 </template>
 <script>
 import projectPermission from "./projectpermission.vue";
-import { getAllRoles, getAllPower, addRole, deleteRole, updateRole } from "../axios/api";
+import { getAllRoles, getAllPower, addRole, deleteRole, updateRole,defaultRole } from "../axios/api";
 export default {
   components: {
     projectPermission
@@ -207,11 +207,11 @@ export default {
       });
     },
     setDefault(index) {
-      var nowRole = this.roleList[index];
+       var nowRole = this.roleList[index];
       defaultRole(nowRole.roleKey, this.orgId).then(res => {
         if (res.result == 1) {
           this.$Message.success("设置成功");
-          this.getAllRole();
+           this.getAllRole();
         } else {
           this.$Message.error("设置失败");
         }
