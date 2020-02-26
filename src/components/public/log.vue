@@ -6,13 +6,19 @@
       </div>
       <div class="log-list" v-for="(item, index) in logs" :key="index">
           <img :src="item.memberImg" alt="">
-          <div class="things" v-html="item.content"></div>
+          <div class="things">
+              <span>{{item.memberName}}</span>
+              <span v-html="item.content"></span> 
+          </div>
           <p class="time">{{item.createTime | timeFilter3}}</p>
       </div>
       <div v-show="restData.length">
           <div class="log-list" v-for="(item, index) in restData" :key="index">
               <img :src="item.memberImg" alt="">
-              <div class="things" v-html="item.content"></div>
+              <div class="things">
+                  <span>{{item.memberName}}</span>
+                  <span v-html="item.content"></span> 
+              </div>
               <p class="time">{{item.createTime | timeFilter3}}</p>
           </div>
       </div>
@@ -43,6 +49,9 @@
           shouqi(){
               this.restData=[]
           }
+      },
+      created(){
+          console.log(this.logs)
       }
   }
 </script>
@@ -67,7 +76,8 @@
             font-size: 12px;
             color: #a6a6a6;
             display: flex;
-            align-items: center;
+             flex-direction:column;
+            align-items: left;
             /deep/ img{
                 width: 20px;
             }
