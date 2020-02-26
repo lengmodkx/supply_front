@@ -187,7 +187,7 @@
             },
             setDefault(index){
                 var nowRole = this.roleList[index]
-                defaultRole(nowRole.roleKey,this.$route.params.id).then(res => {
+                defaultRole(nowRole.roleKey,localStorage.companyId).then(res => {
                     if (res.result==1){
                         this.$Message.success('设置成功');
                         this.getAllRole();
