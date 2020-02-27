@@ -92,7 +92,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
+import { getUsers,getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 import loading from "./common/Loading.vue";
 export default {
@@ -139,12 +139,19 @@ export default {
       }
       this.loading = true;
       let projectId = this.$route.params.id;
-      getUsers(this.keyword2).then(res => {
+      getOrgIdUsers(this.keyword2,localStorage.companyId).then(res => {
         this.loading = false;
         if (res.result === 1) {
           this.invitUsers = res.data;
         }
       });
+      
+      // getUsers(this.keyword2).then(res => {
+      //   this.loading = false;
+      //   if (res.result === 1) {
+      //     this.invitUsers = res.data;
+      //   }
+      // });
     },
     //筛选用户
     FUser(keyword) {
@@ -209,6 +216,7 @@ export default {
       let data = { roleId: roleId, userId: this.user.memberId, projectId: this.$route.params.id };
       updateUserRole(data).then(res => {
         if (res.result == 1) {
+          this.initUser(this.$route.params.id);
           this.$Message.success("设置成功");
           this.user.visible = false;
         } else {

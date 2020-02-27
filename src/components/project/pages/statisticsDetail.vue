@@ -38,7 +38,7 @@
                </RadioGroup>
             </div>
             <div v-show="show_finish1">
-                <p>按任务完成情况（默认'已完成'）</p>
+                <p>按任务完成情况（默认已完成）</p>
                 <RadioGroup v-model="finish" vertical @on-change="Task_Finish">
                     <Radio label="已完成"></Radio>
                     <Radio label="未完成"></Radio>
@@ -60,6 +60,44 @@
             <Select v-model="people" style="width:200px" placeholder="所有任务分组" @on-change="Task_rw">
                 <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
+            <p>是否仅子任务</p>
+            <RadioGroup v-model="child_task" class="redio_box" vertical @on-change="Task_child">
+                <Radio label="是"></Radio>
+                <Radio label="否"></Radio>
+            </RadioGroup>
+            <p>是否仅回收站任务</p>
+            <RadioGroup v-model="recycle_task" class="redio_box" vertical @on-change="Task_recycle">
+                <Radio label="是"></Radio>
+                <Radio label="否"></Radio>
+            </RadioGroup>
+            <p>优先级</p>
+            <RadioGroup v-model="priority_task" class="redio_box" vertical @on-change="Task_priority">
+                <Radio label="普通"></Radio>
+                <Radio label="紧急"></Radio>
+                <Radio label="非常紧急"></Radio>
+            </RadioGroup>
+            <p>创建者</p>
+            <Select v-model="creator" style="width:200px" placeholder="全部" @on-change="Task_Creator">
+                <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <div class="create-project-time">
+                <p>完成时间</p>
+                <DatePicker
+                        placeholder="开始时间"
+                        :value="startTime"
+                        type="datetime"
+                        @on-change="startDate"
+                        :options="options1"
+                ></DatePicker>
+                <DatePicker
+                        placeholder="结束时间"
+                        :value="endTime"
+                        type="datetime"
+                        @on-change="endDate"
+                        :options="options2"
+                ></DatePicker>
+            </div>
+            <div long @click="defaultButton()" class="default">恢复默认</div>
             <div style="margin-top: 20px">
                 <Button type="info" long @click="filterData">确定</Button>
             </div>
@@ -81,6 +119,7 @@
         data: function () {
             return {
                 show_finish:'',
+                show_finish1:'',
                 time_scope:'',
                 title: '',
                 type: '',
@@ -89,19 +128,32 @@
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
                 finished: '全部',
                 finish:'已完成',
+                child_task:'',
+                recycle_task:'否',
+                priority_task:'',
                 people: 0,
                 executor: 0,
+                creator:0,
                 scope:7,
                 countData:[],
                 executorData: [],
                 peopleList:[],
                 columns1:[],
                 data1: [],
+                startTime :"",
+                endTime  :'',
+                options1: {},
+                options2: {},
                 StatisticsDTO:{
                     taskMember:'',
                     taskGroup:'',
                     taskCase:'',
-                    taskDay:''
+                    taskDay:'',
+                    taskChild:'',
+                    taskRecycle:'',
+                    priorityLevel:'',
+                    finishTime_s:'',
+                    finishTime_e:''
                 }
             }
         },
@@ -137,6 +189,39 @@
             },
             Task_rw(data){
                 this.StatisticsDTO.taskGroup = data
+            },
+            Task_child(data){
+                this.StatisticsDTO.taskChild = data
+            },
+            Task_recycle(data){
+                this.StatisticsDTO.taskRecycle = data
+            },
+            Task_priority(data){
+               this.StatisticsDTO.priorityLevel = data
+            },
+            Task_Creator(data){
+                this.StatisticsDTO.taskCreator = data
+            },
+            startDate(date) {
+                this.startTime = date;
+                this.StatisticsDTO.finishTime_s=this.startTime;
+                this.options2 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() < new Date(date).getTime();
+                    }
+                };
+            },
+            endDate(date) {
+                this.endTime = date;
+                this.StatisticsDTO.finishTime_e=this.endTime;
+                this.options1 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() > new Date(date).getTime() - 86400000;
+                    }
+                };
+            },
+            defaultButton(){
+
             },
             filterData(){
                 this.allMethods(this.type)
@@ -394,6 +479,9 @@
     .checked{
         border: 1px solid #e5e5e5;
     }
+    .redio_box{
+        columns:2,
+    }
     .type3-chart{
         width: 532px;
         height: 224px;
@@ -415,7 +503,6 @@
                 padding: 4px 0;
                 font-size: 28px;
             }
-
         }
     }
 .box{
@@ -486,6 +573,22 @@
         padding: 10px 0;
         font-size: 14px;
         color: gray;
+    }
+    .default{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        color: gray;
+        cursor: pointer;
+        line-height: 24px;
+        padding: 10px 0;
+
+    &:hover{
+         color: #3da8f5;
+     }
     }
 }
 </style>

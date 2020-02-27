@@ -319,7 +319,7 @@ export default {
            if(res.result === 1){
             this.$Message.success("新标签绑定成功!")
           } else{
-            this.$Message.error("绑定标签失败")
+            this.$Message.error(res.msg)
           }          
         });
       }

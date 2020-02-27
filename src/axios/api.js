@@ -869,7 +869,7 @@ export function deleteRole(roleId, projectId) {
 export function defaultRole(roleKey, projectId) {
     return $put('/pro_role/default', {
         "roleKey": roleKey,
-        "projectId": projectId
+        "orgId:": orgId
     })
 }
 //获取项目下所有资源

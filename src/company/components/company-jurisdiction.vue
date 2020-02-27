@@ -6,7 +6,7 @@
     <div class="pcc-operate">
       <Button type="primary" icon="md-add" @click="addRole">新增</Button>
       <Button type="warning" icon="ios-create-outline" @click="editRole" :disabled="nowRole.isSystemInit">编辑</Button>
-      <Button type="error" icon="ios-trash-outline" @click="romoveRole" :disabled="nowRole.isSystemInit">删除</Button>
+      <Button type="error" icon="ios-trash-outline" @click="showRomoveRole=true" :disabled="nowRole.isSystemInit">删除</Button>
       <Button type="success" icon="ios-filing-outline" @click="givePower">分配权限</Button>
       <!--<Button type="info" icon="ios-man-outline" >设为企业默认角色</Button>-->
       <!--<Button type="success" icon="ios-plus-outline" @click="resourceAdd">添加资源</Button>-->
@@ -55,6 +55,12 @@
     <Modal v-model="permissionAssign" title="企业权限分配" width="850px" class="padd0" footer-hide>
       <project-permission :flag="true" :permissions="permissions" :role="nowRole" v-if="permissionAssign" ref="permission" @close="permissionAssign = false"></project-permission>
     </Modal>
+    <!-- 删除 -->
+      <Modal v-model="showRomoveRole" :width="350" :footer-hide="true" >             
+                    <div class="rublish">您确定要执行删除吗</div>
+                    <Button long type="error" @click="romoveRole()">确定</Button>
+            
+      </Modal>
   </div>
 </template>
 <script>
@@ -66,6 +72,7 @@ export default {
   },
   data() {
     return {
+      showRomoveRole:false,
       resourceType: "",
       resourceId: 0,
       resourceName: "",
@@ -219,7 +226,7 @@ export default {
             this.nowRole = {};
             // this.role = "";
             this.$Message.success("删除成功");
-            
+            this.showRomoveRole=false;
          
             
           } else {
@@ -234,10 +241,15 @@ export default {
 </script>
 
 <style lang="less">
+.rublish{  
+       margin:10px auto;
+  }
 .project-permission-content {
+
   height: calc(100vh - 88px);
   background: #fff;
   border-radius: 4px;
+  
   .pcc-operate {
     margin: 20px 20px;
     button {

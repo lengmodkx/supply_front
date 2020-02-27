@@ -14,7 +14,8 @@
           </template>
           <template slot-scope="{ row, index }" slot="action">
             <Button type="primary" size="small" style="margin-right: 10px" @click="editRole(index)" v-if="!row.isSystemInit">编辑</Button>
-            <Button type="error" size="small" style="margin-right: 10px" v-if="!row.isSystemInit" @click="romoveRole(index)">删除</Button>
+            <Button type="error" size="small" style="margin-right: 10px" v-if="!row.isSystemInit" @click="openRemove(index)">删除</Button>
+           
             <Button type="success" size="small" v-if="row.isDefault" disabled style="margin-right: 10px">默认权限</Button>
             <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && !row.isSystemInit" @click="setDefault(index)">设为默认权限</Button>
             <Button type="success" size="small" style="margin-right: 10px" v-if="!row.isDefault && row.roleKey == 'member'" @click="setDefault(index)">设为默认权限</Button>
@@ -22,6 +23,7 @@
           </template>
         </Table>
       </div>
+     
 
       <Modal v-model="roleAdd" :title="modelTitle" transfer footer-hide :z-index="1001">
         <div class="add-role">
@@ -38,23 +40,32 @@
             <Button type="primary" @click="commitRole" class="op-btn">确定</Button>
             <Button type="default" @click="roleAdd = false" class="op-btn">取消</Button>
           </div>
-        </div>
+        </div>e
       </Modal>
       <Modal v-model="permissionAssign" title="权限分配" width="1200px" class="padd0" fullscreen footer-hide :z-index="1001">
         <project-permission :flag="false" :permissions="permissions" :role="nowRole" v-if="permissionAssign" ref="permission" @close="permissionAssign = false"></project-permission>
       </Modal>
+      <!-- 删除 -->
+      <Modal v-model="showRomoveRole" :width="350" :footer-hide="true" >             
+                    <div class="rublish">您确定要执行删除吗</div>
+                    <Button long type="error" @click="romoveRole()">确定</Button>
+            
+      </Modal>
+
     </div>
   </div>
 </template>
 <script>
 import projectPermission from "./projectpermission.vue";
-import { getAllRoles, getAllPower, addRole, deleteRole, updateRole } from "../axios/api";
+import { getAllRoles, getAllPower, addRole, deleteRole, updateRole,defaultRole } from "../axios/api";
 export default {
   components: {
     projectPermission
   },
   data() {
     return {
+      flagIndex:"",
+      showRomoveRole:false,
       orgId: localStorage.companyId,
       resources: [],
       types: [
@@ -194,24 +205,32 @@ export default {
       this.roleKey = this.nowRole.roleKey;
       this.roleDes = this.nowRole.roleDes;
     },
+    openRemove(index){
+      console.log(index)
+     this.flagIndex=index;
+      this.showRomoveRole=true;
+      console.log(this.flagIndex)
+
+    },
     // 移除角色
-    romoveRole(index) {
-      var nowRole = this.roleList[index];
+    romoveRole() {
+      var nowRole = this.roleList[this.flagIndex];
       deleteRole(nowRole.roleId, this.orgId).then(res => {
         if (res.result == 1) {
           this.$Message.success("删除成功");
           this.getAllRole();
+           this.showRomoveRole=false
         } else {
           this.$Message.error(res.msg);
         }
       });
     },
     setDefault(index) {
-      var nowRole = this.roleList[index];
+       var nowRole = this.roleList[index];
       defaultRole(nowRole.roleKey, this.orgId).then(res => {
         if (res.result == 1) {
           this.$Message.success("设置成功");
-          this.getAllRole();
+           this.getAllRole();
         } else {
           this.$Message.error("设置失败");
         }
@@ -270,6 +289,10 @@ export default {
     margin-top: 6px;
   }
 }
+ .rublish{  
+       margin:10px auto;
+  }
+
 .add-resource {
   padding: 20px 20px;
   height: 380px;

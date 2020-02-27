@@ -86,6 +86,19 @@ export function checkFolder(fileId) {
 export function getUsers(keyword) {
     return $get(`/members/${keyword}`, null)
 }
+//通过关键字查询用户 获取企业中的用户列表 20200224
+
+export function getOrgIdUsers(keyword,orgId) {
+    return fetch({
+        url: `/organization/members/keyword/`,
+        method: 'get', // 请求方法
+        params: {
+            'orgId': orgId,
+            'keyword': keyword,
+        }
+    })
+}
+
 //获取指定项目中的某个成员信息
 
 export function getAssignUsers(projectId,keyword) {
