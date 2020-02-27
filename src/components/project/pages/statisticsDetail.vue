@@ -70,6 +70,33 @@
                 <Radio label="是"></Radio>
                 <Radio label="否"></Radio>
             </RadioGroup>
+            <p>优先级</p>
+            <RadioGroup v-model="priority_task" class="redio_box" vertical @on-change="Task_priority">
+                <Radio label="普通"></Radio>
+                <Radio label="紧急"></Radio>
+                <Radio label="非常紧急"></Radio>
+            </RadioGroup>
+            <p>创建者</p>
+            <Select v-model="creator" style="width:200px" placeholder="全部" @on-change="Task_Creator">
+                <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <div class="create-project-time">
+                <p>完成时间</p>
+                <DatePicker
+                        placeholder="开始时间"
+                        :value="startTime"
+                        type="datetime"
+                        @on-change="startDate"
+                        :options="options1"
+                ></DatePicker>
+                <DatePicker
+                        placeholder="结束时间"
+                        :value="endTime"
+                        type="datetime"
+                        @on-change="endDate"
+                        :options="options2"
+                ></DatePicker>
+            </div>
             <div long @click="defaultButton()" class="default">恢复默认</div>
             <div style="margin-top: 20px">
                 <Button type="info" long @click="filterData">确定</Button>
@@ -103,21 +130,30 @@
                 finish:'已完成',
                 child_task:'',
                 recycle_task:'否',
+                priority_task:'',
                 people: 0,
                 executor: 0,
+                creator:0,
                 scope:7,
                 countData:[],
                 executorData: [],
                 peopleList:[],
                 columns1:[],
                 data1: [],
+                startTime :"",
+                endTime  :'',
+                options1: {},
+                options2: {},
                 StatisticsDTO:{
                     taskMember:'',
                     taskGroup:'',
                     taskCase:'',
                     taskDay:'',
                     taskChild:'',
-                    taskRecycle:''
+                    taskRecycle:'',
+                    priorityLevel:'',
+                    finishTime_s:'',
+                    finishTime_e:''
                 }
             }
         },
@@ -157,11 +193,32 @@
             Task_child(data){
                 this.StatisticsDTO.taskChild = data
             },
-            Task_child(data){
-                this.StatisticsDTO.taskChild = data
-            },
             Task_recycle(data){
                 this.StatisticsDTO.taskRecycle = data
+            },
+            Task_priority(data){
+               this.StatisticsDTO.priorityLevel = data
+            },
+            Task_Creator(data){
+                this.StatisticsDTO.taskCreator = data
+            },
+            startDate(date) {
+                this.startTime = date;
+                this.StatisticsDTO.finishTime_s=this.startTime;
+                this.options2 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() < new Date(date).getTime();
+                    }
+                };
+            },
+            endDate(date) {
+                this.endTime = date;
+                this.StatisticsDTO.finishTime_e=this.endTime;
+                this.options1 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() > new Date(date).getTime() - 86400000;
+                    }
+                };
             },
             defaultButton(){
 
