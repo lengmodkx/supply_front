@@ -1,5 +1,12 @@
 import fetch from "./fetch"; // 引用fetch.js
 import api from "./url"; // 引用url.js
+
+export function getOssSign() {
+    return $get('/oss/sign', {
+        "dir": "upload/file/test/"
+    });
+}
+
 export function changeOrganization(orgId) {
     return $post(`/organization/members/${orgId}`)
 }
@@ -351,8 +358,8 @@ export function addTagAndBind(params) {
     return $post(`/tags/add_and_bind`, params)
 }
 //删除标签
-export function delTag(tagId) {
-    return $delete(`/tags/${tagId}`, null);
+export function delTag(tagId, params) {
+    return $delete(`/tags/${tagId}`, params);
 }
 // 标签移动到回收站
 export function receclyTag(tagId) {

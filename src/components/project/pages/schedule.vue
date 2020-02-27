@@ -1,29 +1,27 @@
 <template>
   <div class="schedule">
     <div class="main">
-      <div class="handler" @click="addSchedule=true">
-        <a class="link-add">
-          <Icon type="plus-circled"></Icon> 添加日程
-        </a>
+      <div class="handler" @click="addSchedule = true">
+        <a class="link-add"> <Icon type="md-add-circle" size="20" /> 添加日程 </a>
       </div>
-      <div class="loading" v-if='loading'>
+      <div class="loading" v-if="loading">
         <Spin size="large" fix></Spin>
       </div>
       <loading v-if="load"></loading>
       <div class="handler" v-for="(i, k) in schedules" :key="k">
-        <div class="title">{{new Date(i.startTime).Format('MM月dd日')}}</div>
+        <div class="title">{{ new Date(i.startTime).Format("MM月dd日") }}</div>
         <div class="item" @click="showEditRC(i)">
           <div class="leftTime">
-            <p>{{new Date(i.startTime).Format('yyyy-MM-dd')}}</p>
+            <p>{{ new Date(i.startTime).Format("yyyy-MM-dd") }}</p>
             <p>-</p>
-            <p>{{new Date(i.endTime).Format('yyyy-MM-dd')}}</p>
+            <p>{{ new Date(i.endTime).Format("yyyy-MM-dd") }}</p>
           </div>
           <div class="offside">
-            <p class="headline">{{i.scheduleName}}</p>
+            <p class="headline">{{ i.scheduleName }}</p>
             <div class="participant" v-if="i.joinInfo">
-              <p class="cyu">参与者 · {{i.joinInfo.length}}</p>
+              <p class="cyu">参与者 · {{ i.joinInfo.length }}</p>
               <p class="user">
-                <img :src="m.defaultImage" v-for="(m,n) in i.joinInfo" :key="n" alt="">
+                <img :src="m.defaultImage" v-for="(m, n) in i.joinInfo" :key="n" alt="" />
                 <Icon type="plus-circled"></Icon>
               </p>
             </div>
@@ -34,19 +32,18 @@
         </div>
       </div>
       <div class="handler calendar">
-        <!-- <p class="center">
-          <Icon type="calendar"></Icon>
-        </p> -->
+        <p class="center">
+          <Icon type="md-calendar" size="40" />
+        </p>
         添加新日程，安排会议或其他活动，添加参与者即可通知其他成员参加。
       </div>
     </div>
-    <AddSchedule @input="addSchedule=false" v-model="addSchedule" :id="parameter.projectId" :projectTypes="richengData">
-      <span slot="projectName">{{projectName?projectName:'添加日程'}}</span>
+    <AddSchedule @input="addSchedule = false" v-model="addSchedule" :id="parameter.projectId" :projectTypes="richengData">
+      <span slot="projectName">{{ projectName ? projectName : "添加日程" }}</span>
     </AddSchedule>
-    <Modal class-name="vertical-center-modal" v-model="editrc" :footer-hide='true' transfer>
+    <Modal class-name="vertical-center-modal" v-model="editrc" :footer-hide="true" transfer>
       <editRicheng @close="closeModal"></editRicheng>
     </Modal>
-
   </div>
 </template>
 

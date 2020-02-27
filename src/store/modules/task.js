@@ -357,7 +357,7 @@ const store = {
         },
         //权限判断
         judge(state, data) {
-            
+
         },
 
     },
@@ -369,6 +369,7 @@ const store = {
             return new Promise((resolve, reject) => {
                 enterTask(data).then(res => {
                     if (res.result === 1) {
+                        localStorage.setItem(res.userId, res.roleKey);
                         dispatch('initGroup', data)
                         commit('initTask', res.menus)
                         resolve()

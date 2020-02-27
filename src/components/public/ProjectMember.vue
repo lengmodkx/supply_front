@@ -21,8 +21,8 @@
               <span class="uname">{{ user.memberName }} &nbsp;&nbsp;&nbsp;职位：{{ user.job ? user.job : "无" }}</span>
               <span>联系方式：{{ user.accountName }}</span>
             </div>
-            <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible">
-              <a href="javascript:void(0)" v-if="user.memberLabel != 0 || user.roleKey == 'member'">
+            <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible" v-if="roleKey == 'administrator'">
+              <a href="javascript:void(0)" v-if="user.memberLabel == 0">
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <div slot="title" class="title">
@@ -111,7 +111,8 @@ export default {
       visible: false,
       title: "成员菜单",
       user: "",
-      visible1: false
+      visible1: false,
+      roleKey: localStorage.getItem(localStorage.userId)
     };
   },
 
@@ -120,6 +121,7 @@ export default {
   },
   mounted() {
     this.initUser(this.$route.params.id);
+    console.log(this.roleKey);
   },
   methods: {
     ...mapActions("member", ["initUser", "filterUser", "getRoles"]),

@@ -444,10 +444,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-/deep/.ivu-tag-text{
-  color: #fff !important;
-}
-
 .ivu-modal-wrap {
   background-color: #fff;
 }
