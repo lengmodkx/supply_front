@@ -4,35 +4,43 @@
   height: 0;
   clear: both;
 }
-#editCon input{
+
+#editCon input {
   width: 506px;
   height: 24px;
   border: 0px none;
   outline-style: none;
-  &:hover{
+
+  &:hover {
     background-color: #EFEEEC;
   }
 }
-.taskwarn{
-  /deep/.ivu-modal{
-    width:600px!important;
+
+.taskwarn {
+  /deep/.ivu-modal {
+    width: 600px !important;
   }
 }
+
 .headerTool {
   overflow: hidden;
   padding-left: 15px;
+
   .toolLeft {
     float: left;
     font-size: 14px;
     line-height: 24px;
     padding: 0 5px;
+
     .right {
       float: right;
       vertical-align: center;
       width: 20px;
     }
+
     .proName {
       cursor: pointer;
+
       &:hover {
         color: #2d8cf0;
       }
@@ -45,36 +53,42 @@
   overflow: hidden;
   padding: 18px 16px;
   display: flex;
+
   .checkbox {
     margin-top: 2px;
     margin-left: 2px;
   }
+
   .content {
     flex: 1;
     font-size: 16px;
     word-break: break-word;
+
     .ivu-tooltip-rel {
       width: 100% !important;
     }
+
     div:focus {
       outline: none;
       background: #eee;
     }
+
     &:hover {
       background: #eee;
     }
   }
 }
-.task_info.done{
+
+.task_info.done {
   /deep/.ivu-checkbox-wrapper {
-    .ivu-checkbox-checked{
+    .ivu-checkbox-checked {
       .ivu-checkbox-inner {
         background-color: #a6a6a6;
         border-color: #a6a6a6;
       }
     }
-  } 
-} 
+  }
+}
 
 .task_attr {
   line-height: 35px;
@@ -82,55 +96,65 @@
   color: gray;
   padding: 0 16px 15px 16px;
   border-bottom: 1px solid #eee;
+
   .executor {
     .conText {
       cursor: pointer;
+
       &:hover {
         color: #2d8cf0;
       }
-      img{
+
+      img {
         width: 24px;
         height: 24px;
         border-radius: 50%;
         vertical-align: middle;
       }
     }
+
     svg {
       width: 28px;
       height: 26px;
       vertical-align: middle;
     }
   }
+
   .timer {
     display: flex;
     align-items: center;
-    .init{
-      &:hover{
-        color:#2d8cf0;
+
+    .init {
+      &:hover {
+        color: #2d8cf0;
       }
     }
-    .setTime{
-      padding:2px 8px;
-      position:relative;
+
+    .setTime {
+      padding: 2px 8px;
+      position: relative;
       cursor: pointer;
-      &:hover{
+
+      &:hover {
         border-radius: 20px;
         background-color: #eee;
-        color:#2d8cf0;
-        span{
+        color: #2d8cf0;
+
+        span {
           display: block;
         }
       }
-      span{
+
+      span {
         position: absolute;
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        color:#fff;
+        color: #fff;
         line-height: 16px;
-        font-size:20px;
-        top:-5px;
-        right:0;
+        font-size: 20px;
+        top: -5px;
+        right: 0;
         background-color: gray;
         text-align: center;
         display: none;
@@ -138,20 +162,25 @@
     }
 
   }
+
   .repeat {
     cursor: pointer;
     margin: 0 30px;
+
     &:hover {
       color: #2d8cf0;
     }
   }
+
   .alarm {
     cursor: pointer;
+
     &:hover {
       color: #2d8cf0;
     }
   }
 }
+
 .remark {
   overflow: hidden;
   // line-height: 40px;
@@ -159,12 +188,14 @@
   margin-top: 10px;
   padding: 0 16px;
   display: flex;
-  .name{
+
+  .name {
     line-height: 24px;
     flex: none;
     align-items: flex-start;
   }
-  .editor-wrap{
+
+  .editor-wrap {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -175,16 +206,19 @@
   .editor {
     font-size: 14px;
     float: left;
-    line-height:22px;
+    line-height: 22px;
     width: calc(100% - 90px);
+
     &:hover {
       background: #eee;
     }
-   
+
   }
+
   .waitAdd {
     float: left;
     flex: 1;
+
     &:hover {
       color: #2d8cf0;
       background: #eee;
@@ -192,39 +226,45 @@
     }
   }
 }
- .name {
-    float: left;
-    width: 70px;
-    min-width: 70px;
-    color: #a6a6a6;
-    margin-right: 20px;
-   display: flex;
-   align-items: center;
-    i {
-      font-size: 20px;
-      margin-right: 8px;
-      // vertical-align: text-top;
-    }
+
+.name {
+  float: left;
+  width: 70px;
+  min-width: 70px;
+  color: #a6a6a6;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+
+  i {
+    font-size: 20px;
+    margin-right: 8px;
+    // vertical-align: text-top;
   }
+}
+
 .editBox {
   width: 420px;
-  margin-left: 20px;
-  
+
 }
+
 .priority,
 .tags {
   position: relative;
   line-height: 40px;
   padding: 0 16px 10px 16px;
 }
+
 .priority {
   .urgentButton {
     float: left;
     width: calc(100% - 90px);
   }
 }
+
 .tags {
   border-bottom: 1px solid #eee;
+
   .tagList {
     width: calc(100% - 90px);
     float: left;
@@ -232,311 +272,378 @@
     line-height: 40px;
   }
 }
-.childTask{
+
+.childTask {
   line-height: 40px;
-    margin-bottom: 15px;
-    margin-top: 5px;
-    padding: 0 16px 18px 16px;
-    border-bottom:1px solid #eee;
-    .addChildTask{
-      color:#2d8cf0;
-      cursor: pointer;
-      font-size:14px;
-      i{
-        font-size:16px;
-        margin-right:10px;
-      }
-      
+  margin-bottom: 15px;
+  margin-top: 5px;
+  padding: 0 16px 18px 16px;
+  border-bottom: 1px solid #eee;
 
+  .addChildTask {
+    color: #2d8cf0;
+    cursor: pointer;
+    font-size: 14px;
+
+    i {
+      font-size: 16px;
+      margin-right: 10px;
     }
-    .sonBox{
-      /deep/.ivu-tooltip-rel{
-        vertical-align: middle;
-      }
-      /deep/.ivu-tooltip-inner{
-        white-space: nowrap;
-      }
-      .newSon{
-        display:flex;
-        .addicon{
-          flex:0 0 auto;
-        }
-        .sonInput{
-          flex:1 1;
-        }
-        .sonDate,.sonManager{
-          flex:0 0 auto;
-        }
-        .sonDate{
-          margin:0 10px;
-        }
-        .sonManager{
-          margin-right:28px;
-          .ava{
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            img{
-              display: block;
-              border-radius: 50%;
-              width: 24px;
-              height: 24px;
-            }
-          }
-        }
-      }
-      
-      
-      /deep/.ivu-checkbox-wrapper{
-        margin-right:0px;
-      }
-      /deep/.ivu-poptip-rel{
-        .icon{
-          vertical-align: middle;
-        }
-      }
 
 
+  }
 
-      .btns{
-        text-align: right;
-        button{
-          margin:10px 8px;
-        }
-      }
-      .addicon{
-          color:#a6a6a6;
-          font-size:16px;
-          margin-right:15px;
-          
-      }
-      .sonInput{
-        /deep/.ivu-input{
-          &:hover{
-           border: 1px solid #dddee1;
-          }
-          &:focus{
-            border: 1px solid #dddee1;
-            box-shadow: 0 0 0 0;
-          }
-        }
-      }
-      .sonDate{
-        color:#a6a6a6;
-        font-size:12px;
-          margin:0 15px;
-          cursor: pointer;
-       
-      }
-      .sonManager{
-        cursor: pointer;
-        .svg-people{
-          vertical-align: middle;
-        }
-
-      }
-    }
-}
-.sontask_list{
-   /deep/.ivu-checkbox-wrapper{
-        margin-right:0px;
-      }
-    /deep/.ivu-tooltip-rel{
+  .sonBox {
+    /deep/.ivu-tooltip-rel {
       vertical-align: middle;
     }
-    /deep/.ivu-tooltip-inner{
+
+    /deep/.ivu-tooltip-inner {
       white-space: nowrap;
     }
-      .btns{
-        text-align: right;
-        button{
-          margin:10px 8px;
-        }
+
+    .newSon {
+      display: flex;
+
+      .addicon {
+        flex: 0 0 auto;
       }
-      .addicon{
-          color:#a6a6a6;
-          font-size:16px;
-          margin-right:15px;
-          line-height:20px;
-          margin-top:8px;
-          flex:0 0 auto;
+
+      .sonInput {
+        flex: 1 1;
       }
-      .sonInput{
-        flex:1 1;
-        /deep/.ivu-tooltip{
-          width:100%;
-        }
-        /deep/.ivu-tooltip-rel{
-          width:100%;
-        }
-        .sonCon{
-          width:100%;
-        }
+
+      .sonDate,
+      .sonManager {
+        flex: 0 0 auto;
       }
-      .sonDate{
-        color:#a6a6a6;
-          font-size:12px;
-          margin:0 10px;
-          cursor: pointer;
-          flex:0 0 auto;
-          /deep/.ivu-poptip-rel{
-            .icon{
-              vertical-align: middle;
-            }
-          }
+
+      .sonDate {
+        margin: 0 10px;
       }
-       .sonManager{
-        cursor: pointer;
-        .svg-people{
-          vertical-align: middle;
-        }
-        .ava{
+
+      .sonManager {
+        margin-right: 28px;
+
+        .ava {
           width: 24px;
           height: 24px;
           border-radius: 50%;
-          img{
+
+          img {
             display: block;
             border-radius: 50%;
             width: 24px;
             height: 24px;
           }
         }
-
       }
-      .enterDetail{
-        cursor: pointer;
-        font-size:20px;
-        margin:3px 10px;
-        color:#a6a6a6;
-        &:hover{
-          color:#2d8cf0;
+    }
+
+
+    /deep/.ivu-checkbox-wrapper {
+      margin-right: 0px;
+    }
+
+    /deep/.ivu-poptip-rel {
+      .icon {
+        vertical-align: middle;
+      }
+    }
+
+
+
+    .btns {
+      text-align: right;
+
+      button {
+        margin: 10px 8px;
+      }
+    }
+
+    .addicon {
+      color: #a6a6a6;
+      font-size: 16px;
+      margin-right: 15px;
+
+    }
+
+    .sonInput {
+      /deep/.ivu-input {
+        &:hover {
+          border: 1px solid #dddee1;
+        }
+
+        &:focus {
+          border: 1px solid #dddee1;
+          box-shadow: 0 0 0 0;
         }
       }
-  .sonCon{
-    cursor: pointer;
-    &:hover{
-       background-color: #eee;
+    }
+
+    .sonDate {
+      color: #a6a6a6;
+      font-size: 12px;
+      margin: 0 15px;
+      cursor: pointer;
+
+    }
+
+    .sonManager {
+      cursor: pointer;
+
+      .svg-people {
+        vertical-align: middle;
+      }
+
     }
   }
-  /deep/.ivu-input{
-    font-size:14px;
+}
+
+.sontask_list {
+  /deep/.ivu-checkbox-wrapper {
+    margin-right: 0px;
+  }
+
+  /deep/.ivu-tooltip-rel {
+    vertical-align: middle;
+  }
+
+  /deep/.ivu-tooltip-inner {
+    white-space: nowrap;
+  }
+
+  .btns {
+    text-align: right;
+
+    button {
+      margin: 10px 8px;
+    }
+  }
+
+  .addicon {
+    color: #a6a6a6;
+    font-size: 16px;
+    margin-right: 15px;
+    line-height: 20px;
+    margin-top: 8px;
+    flex: 0 0 auto;
+  }
+
+  .sonInput {
+    flex: 1 1;
+
+    /deep/.ivu-tooltip {
+      width: 100%;
+    }
+
+    /deep/.ivu-tooltip-rel {
+      width: 100%;
+    }
+
+    .sonCon {
+      width: 100%;
+    }
+  }
+
+  .sonDate {
+    color: #a6a6a6;
+    font-size: 12px;
+    margin: 0 10px;
+    cursor: pointer;
+    flex: 0 0 auto;
+
+    /deep/.ivu-poptip-rel {
+      .icon {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .sonManager {
+    cursor: pointer;
+
+    .svg-people {
+      vertical-align: middle;
+    }
+
+    .ava {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+
+      img {
+        display: block;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+  }
+
+  .enterDetail {
+    cursor: pointer;
+    font-size: 20px;
+    margin: 3px 10px;
+    color: #a6a6a6;
+
+    &:hover {
+      color: #2d8cf0;
+    }
+  }
+
+  .sonCon {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+
+  /deep/.ivu-input {
+    font-size: 14px;
   }
 }
+
 .Conbox {
   height: calc(100% - 24px - 112px);
   overflow-x: hidden;
   overflow-y: auto;
 }
-.relevance{
-  padding:0 16px;
-  .name{
-    width:90px;
+
+.relevance {
+  padding: 0 16px;
+
+  .name {
+    width: 90px;
   }
-  .addLink{
+
+  .addLink {
     color: #2d8cf0;
     cursor: pointer;
     font-size: 14px;
-    margin-top:15px;
-    i{
+    margin-top: 15px;
+
+    i {
       font-size: 16px;
       margin-right: 10px;
     }
   }
 }
-.accessory{
-  padding:10px 16px;
-  margin-top:15px;
-  border-top:1px solid #eee;
-  .name{
-    i{
-      font-size:20px;
-     
-      }
+
+.accessory {
+  padding: 10px 16px;
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+
+  .name {
+    i {
+      font-size: 20px;
+
     }
-  .addfile{
+  }
+
+  .addfile {
     color: #2d8cf0;
     cursor: pointer;
     font-size: 14px;
     margin-top: 15px;
-    i{
+
+    i {
       font-size: 16px;
-    margin-right: 10px;
+      margin-right: 10px;
     }
   }
 }
-.participator{
-  padding:10px 16px;
+
+.participator {
+  padding: 10px 16px;
   background-color: #f6f6f6;
-  border-bottom:1px solid #eee;
+  border-bottom: 1px solid #eee;
+
   h5 {
-      font-size: 14px;
-      color:gray;
-    }
-     .involve-list {
-      margin-top: 12px;
-       .member-avatar{
-         .ava{
-            margin-right: 5px;
-            cursor: pointer;
-            border:2px solid transparent;
-           img {
-            display: block;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-          }
-          .close{
-            display: none;
-          }
-         }
-       }
-      .member-avatar:not(:nth-child(1)) {
-        .ava {
-          margin-right: 5px;
-          cursor: pointer;
-          border:2px solid transparent;
-           border-radius: 50%;
-          &:hover{
-            border:2px solid #a6a6a6;
-            .close{
-              display: block;
-            }
-          }
-          img {
-            display: block;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-          }
-          .close{
-            position: absolute;
-            font-size: 14px;
-            top: -3px;
-            right: 1px;
-            width: 12px;
-            height: 12px;
-            line-height: 12px;
-            border-radius: 50%;
-            color: #fff;
-            text-align: center;
-            background-color: #a6a6a6;
-            display: none;
-            &:hover{
-              background-color: #3da8f5;
-              
-            }
-          }
+    font-size: 14px;
+    color: gray;
+  }
+
+  .involve-list {
+    margin-top: 12px;
+
+    .member-avatar {
+      .ava {
+        margin-right: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+
+        img {
+          display: block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+        }
+
+        .close {
+          display: none;
         }
       }
     }
 
+    .member-avatar:not(:nth-child(1)) {
+      .ava {
+        margin-right: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 50%;
+
+        &:hover {
+          border: 2px solid #a6a6a6;
+
+          .close {
+            display: block;
+          }
+        }
+
+        img {
+          display: block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+        }
+
+        .close {
+          position: absolute;
+          font-size: 14px;
+          top: -3px;
+          right: 1px;
+          width: 12px;
+          height: 12px;
+          line-height: 12px;
+          border-radius: 50%;
+          color: #fff;
+          text-align: center;
+          background-color: #a6a6a6;
+          display: none;
+
+          &:hover {
+            background-color: #3da8f5;
+
+          }
+        }
+      }
+    }
+  }
+
 }
+
 footer {
   background: #e5e5e5;
 }
+
 .talk {
   position: relative;
   border: 1px solid #e5e5e5;
+
   .talkinner {
     position: relative;
     min-height: 40px;
@@ -544,18 +651,21 @@ footer {
     background-color: #fff;
     border: 1px solid #d9d9d9;
     border-radius: 3px;
+
     .talkUp {
       position: relative;
       z-index: 1;
       max-height: 290px;
       background-color: #fff;
       border-bottom: 1px solid #e8e8e8;
+
       #input {
         input:hover {
           border-color: #dddee1;
         }
       }
     }
+
     .talkDown {
       line-height: 40px;
       height: 40px;
@@ -567,57 +677,65 @@ footer {
   }
 }
 
-.executor{
-  position:relative;
-  &:hover{
+.executor {
+  position: relative;
+
+  &:hover {
     border-radius: 20px;
     background-color: #eee;
     color: #2d8cf0;
-    .close{
+
+    .close {
       display: block;
     }
   }
-  .close{
+
+  .close {
     position: absolute;
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    color:#fff;
+    color: #fff;
     line-height: 16px;
-    font-size:20px;
-    top:-5px;
-    right:-4px;
+    font-size: 20px;
+    top: -5px;
+    right: -4px;
     background-color: gray;
     text-align: center;
     display: none;
-    cursor:pointer;
+    cursor: pointer;
   }
 }
 
 #warnModal {
   z-index: 9999999 !important;
 }
-.has-relevance{
+
+.has-relevance {
   width: 100%;
   padding: 0 16px;
-  ul{
+
+  ul {
     width: 100%;
     padding: 0 16px;
     border: 1px solid #e5e5e5;
     margin-top: 10px;
     border-radius: 4px;
-    .what-title{
+
+    .what-title {
       height: 44px;
       width: 100%;
       line-height: 44px;
       font-size: 14px;
       color: gray;
     }
-    .gl-task-list{
+
+    .gl-task-list {
       width: 100%;
       display: flex;
       padding-bottom: 16px;
-      .gl-task-list-con{
+
+      .gl-task-list-con {
         width: 100%;
         height: 40px;
         padding: 8px 0;
@@ -625,36 +743,43 @@ footer {
         color: #a6a6a6;
         cursor: pointer;
         padding-right: 5px;
-        &:hover{
+
+        &:hover {
           background-color: #f5f5f5;
         }
-        i{
+
+        i {
           margin-right: 10px;
           color: gray;
           line-height: 24px;
           flex: none;
         }
-        img{
+
+        img {
           width: 24px;
           height: 24px;
           margin-right: 12px;
           flex: none;
         }
-        .gl-con{
+
+        .gl-con {
           width: 100%;
-          .gl-con-top{
+
+          .gl-con-top {
             height: 24px;
             display: flex;
             align-items: center;
             width: 100%;
             justify-content: space-between;
           }
-          .gl-con-bottom{
+
+          .gl-con-bottom {
             line-height: 20px;
           }
         }
       }
-      .glpop{
+
+      .glpop {
         color: gray;
         cursor: pointer;
         margin-left: 10px;
@@ -663,10 +788,12 @@ footer {
         line-height: 22px;
         padding-top: 8px;
       }
-      /deep/ .ivu-poptip-body{
+
+      /deep/ .ivu-poptip-body {
         padding: 10px 0;
       }
-      .glpop-list{
+
+      .glpop-list {
         width: 200px;
         height: 40px;
         display: flex;
@@ -674,10 +801,12 @@ footer {
         padding: 0 16px;
         cursor: pointer;
         color: gray;
-        &:hover{
+
+        &:hover {
           background-color: #f5f5f5;
         }
-        span{
+
+        span {
           font-size: 14px;
           margin-left: 15px;
         }
@@ -685,20 +814,25 @@ footer {
     }
   }
 }
-.file-lsit:nth-of-type(4n){
+
+.file-lsit:nth-of-type(4n) {
   margin-right: 0 !important;
 }
-.addfile{
+
+.addfile {
   display: flex;
   flex-wrap: wrap;
-  .file-lsit{
+
+  .file-lsit {
     margin-right: 15px;
-    &:hover{
-      .zhezhao{
+
+    &:hover {
+      .zhezhao {
         display: flex;
       }
     }
-    .file-img{
+
+    .file-img {
       width: 117px;
       height: 117px;
       border: 1px solid #dcdee2;
@@ -706,28 +840,32 @@ footer {
       display: flex;
       justify-content: center;
       align-items: center;
-      img{
+
+      img {
         max-width: 95%;
       }
     }
-    .zhezhao{
+
+    .zhezhao {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      background-color: rgba(0,0,0,.3);
+      background-color: rgba(0, 0, 0, .3);
       display: none;
       align-items: center;
       justify-content: space-around;
       padding: 0 20px;
-      i{
+
+      i {
         font-size: 24px;
         color: white;
         cursor: pointer;
       }
     }
-    .file-name{
+
+    .file-name {
       width: 117px;
       height: 30px;
       margin-top: 8px;
@@ -739,7 +877,8 @@ footer {
     }
   }
 }
-.task-detail{
+
+.task-detail {
   display: flex;
   flex-direction: column;
 }

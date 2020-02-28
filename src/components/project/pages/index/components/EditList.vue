@@ -3,7 +3,7 @@
     <div v-if="task == null" style="width: 100%;height: 100%;display:flex;justify-content: center;align-items: center">
       <Loading></Loading>
     </div>
-    <div class="task-detail" style="height:100%;position: relative" v-if="task != null" @click="closeTag">
+    <div class="task-detail" style="height:100%;position: relative" v-if="task != null">
       <!--固定顶部-->
       <div slot="header" style="height:24px;">
         <div class="toolRight">
@@ -357,7 +357,7 @@ export default {
     myModel,
     publick,
     log,
-    commonFile,
+    commonFile: resolve => require(["../../../file/commonfile.vue"], resolve),
     Loading,
     rcModal
   },
@@ -413,9 +413,6 @@ export default {
     ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
     scrollToBottom() {
       this.$refs.scrollbox.scrollTop = this.$refs.heightbox.clientHeight;
-    },
-    closeTag() {
-      this.$refs.tags.closeTag();
     },
     //返回
     back() {

@@ -75,11 +75,6 @@ export default {
   user-select: none;
   outline: none;
 }
-.ivu-tag .ivu-icon-ios-close,
-ivu-tag-text,
-.ivu-icon-ios-close-empty {
-  color: #fff !important;
-}
 .ivu-checkbox-large .ivu-checkbox-inner {
   transform: scale(1.5);
 }
@@ -104,15 +99,6 @@ ivu-tag-text,
   }
   .list {
     white-space: normal;
-    /deep/.ivu-tag-text {
-      color: #fff;
-    }
-    /deep/.ivu-tag .ivu-icon-ios-close {
-      color: #fff !important;
-    }
-    /deep/.ivu-icon-ios-close-empty {
-      color: #fff !important;
-    }
   }
 }
 .myRcModal {
