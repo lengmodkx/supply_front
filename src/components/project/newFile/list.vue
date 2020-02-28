@@ -13,33 +13,36 @@
         <ul class="contant">
           <li v-for="(file,index) in files" :key="index">
             <div class="contant-left" @click="fileDetailClick(file.catalog,file.fileId, file)">
-               <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
-              <div class="contant-titel">
-                <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/wjj.png' >
-                <img v-else-if="file.catalog==1&&(file.filePrivacy==0||file.filePrivacy==2)" src='../../../assets/images/folder.png'>
-                <img v-else-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder_privacy.png'>
-                <div v-else>
-                  <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-                  <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
-                  <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
-                  <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
-                  <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
-                  <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
-                  <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
-                  <img v-else src="@/icons/img/moren.png" alt="">
-                </div>
+              
+                  <div class="contant-titel">
+                     <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+                    <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/wjj.png' >
+                    <img v-else-if="file.catalog==1&&(file.filePrivacy==0||file.filePrivacy==2)" src='../../../assets/images/folder.png'>
+                    <img v-else-if="file.catalog==1&&file.filePrivacy==1" src='../../../assets/images/folder_privacy.png'>
+                    <div v-else>
+                      <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
+                      <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="">
+                      <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="">
+                      <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="">
+                      <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="">
+                      <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="">
+                      <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="">
+                      <img v-else src="@/icons/img/moren.png" alt="">
+                     
+                    </div>
+                  </Poptip>
                 <span v-if="file.catalog==1 ">
-                    
-                        {{file.fileName}}
-                    
+                    <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+                         {{file.fileName}}
+                    </Poptip>
                </span>
                 <span v-if="file.catalog==0">
-                    
+                     <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
                          {{file.fileName.substr(0,10)+file.ext}}
-                   
+                    </Poptip>
                </span>
+
               </div>
-              </Poptip>
               <div class="contant-erery">
                 {{file.size||"无"}}
               </div>
