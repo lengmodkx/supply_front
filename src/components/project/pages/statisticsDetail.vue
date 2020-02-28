@@ -80,7 +80,7 @@
             <Select v-model="creator" style="width:200px" placeholder="全部" @on-change="Task_Creator">
                 <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
-            <div class="create-project-time">
+            <div class="finishi-time">
                 <p>完成时间</p>
                 <DatePicker
                         placeholder="开始时间"
@@ -94,6 +94,23 @@
                         :value="endTime"
                         type="datetime"
                         @on-change="endDate"
+                        :options="options2"
+                ></DatePicker>
+            </div>
+            <div class="create-time">
+                <p>创建时间</p>
+                <DatePicker
+                        placeholder="开始时间"
+                        :value="startTime_create"
+                        type="datetime"
+                        @on-change="startDate_create"
+                        :options="options1"
+                ></DatePicker>
+                <DatePicker
+                        placeholder="结束时间"
+                        :value="endTime_create"
+                        type="datetime"
+                        @on-change="endDate_create"
                         :options="options2"
                 ></DatePicker>
             </div>
@@ -141,7 +158,9 @@
                 columns1:[],
                 data1: [],
                 startTime :"",
-                endTime  :'',
+                endTime  :  '',
+                startTime_create:"",
+                endTime_create:  '',
                 options1: {},
                 options2: {},
                 StatisticsDTO:{
@@ -153,7 +172,10 @@
                     taskRecycle:'',
                     priorityLevel:'',
                     finishTime_s:'',
-                    finishTime_e:''
+                    finishTime_e:'',
+                    createTime_s:'',
+                    createTime_e:''
+
                 }
             }
         },
@@ -204,7 +226,7 @@
             },
             startDate(date) {
                 this.startTime = date;
-                this.StatisticsDTO.finishTime_s=this.startTime;
+                this.StatisticsDTO.finishTime_s=new Date(this.startTime).getTime()/1000;
                 this.options2 = {
                     disabledDate(date1) {
                         return date1.valueOf() < new Date(date).getTime();
@@ -213,7 +235,25 @@
             },
             endDate(date) {
                 this.endTime = date;
-                this.StatisticsDTO.finishTime_e=this.endTime;
+                this.StatisticsDTO.finishTime_e=new Date(this.endTime).getTime()/1000;
+                this.options1 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() > new Date(date).getTime() - 86400000;
+                    }
+                };
+            },
+            startDate_create(date) {
+                this.startTime_create = date;
+                this.StatisticsDTO.createTime_s=new Date(this.startTime_create).getTime()/1000;
+                this.options2 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() < new Date(date).getTime();
+                    }
+                };
+            },
+            endDate_create(date) {
+                this.endTime_create = date;
+                this.StatisticsDTO.createTime_e=new Date(this.endTime_create).getTime()/1000;
                 this.options1 = {
                     disabledDate(date1) {
                         return date1.valueOf() > new Date(date).getTime() - 86400000;
