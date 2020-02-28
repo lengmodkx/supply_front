@@ -40,7 +40,7 @@
                             <img src="../../../assets/images/view13.png" alt="">
                             <span>复制</span>
                           </div>
-                          <div class="pull clear-border"  @click="showFileEdit=true;modalTitle='修改文件名称'">
+                          <div class="pull clear-border"  @click="showName()">
                             <img src="../../../assets/images/view7.png" alt="">
                             <span>重命名</span>
                           </div>
@@ -204,6 +204,12 @@ export default {
   methods: {
       ...mapActions("tree", ["changeShowView","changeSlider"]),
        ...mapActions("file", ["initFile", "searchFile", "initTag"]),
+      showName(){
+        this.showFileEdit=true;
+        this.modalTitle='修改文件名称';
+        this.editFileName=this.itemfile.fileName;
+
+      },
       // 打开弹窗
       upload(item){
         this.visibleTip=false;
@@ -320,6 +326,7 @@ export default {
        },
        //文件修改名
       fileEdit(id) {
+      
         if (this.editFileName == "") {
           this.$Message.info("请输入名称");
         }

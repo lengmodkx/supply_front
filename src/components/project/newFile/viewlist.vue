@@ -2,36 +2,41 @@
 <div class="file-contant">
     <ul class="file-list"  v-if="files.length" >
         <li v-for="(file,index) in files"   :class = "isactive == index ? 'li-hover' : '' " v-bind:style="{ width: slider * 4 + 'px',}" style='min-width: 34px' :key="index"   @dblclick="dfileDetail(file,index,file.catalog)"   @click="fileDetail(file.catalog,file.fileId, file,index)" >
+        <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
         <div class="img-box">
-            <i class="file-content-chose"  v-show="index==isactive"></i>          
-            <img v-if="file.catalog==1&&file.filePrivacy===0" src='../../../assets/images/wjj.png' >
-            <img v-else-if="file.catalog==1&&(file.filePrivacy===0||file.filePrivacy==2)" src='../../../assets/images/wjj.png' >
-            <img v-else-if="file.catalog==1&&file.filePrivacy===1" src='../../../assets/images/folder_privacy.png'  >
-            <div v-else  class="fileThumbnail-box">
-              <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-              <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png"  >
-              <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png"  >
-              <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png"  >
-              <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png"  >
-              <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png"  >
-              <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png"  >
-              <img v-else src="@/icons/img/moren.png" style="height:84px;width:75px">
-            </div>
+            <i class="file-content-chose"  v-show="index==isactive"></i>      
+           
+                    <img v-if="file.catalog==1&&file.filePrivacy===0" src='../../../assets/images/wjj.png' >
+                    <img v-else-if="file.catalog==1&&(file.filePrivacy===0||file.filePrivacy==2)" src='../../../assets/images/wjj.png' >
+                    <img v-else-if="file.catalog==1&&file.filePrivacy===1" src='../../../assets/images/folder_privacy.png'  >
+                    <div v-else  class="fileThumbnail-box">
+                      <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
+                      <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png"  >
+                      <img v-else-if="'.doc'.includes(file.ext)||'.docx'.includes(file.ext)" src="@/icons/img/word.png"  >
+                      <img v-else-if="'.xls'.includes(file.ext)||'.xlsx'.includes(file.ext)" src="@/icons/img/excel.png"  >
+                      <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png"  >
+                      <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png"  >
+                      <img v-else-if="'.zip'.includes(file.ext)||'.rar'.includes(file.ext)" src="@/icons/img/zip.png"  >
+                      <img v-else src="@/icons/img/moren.png" style="height:84px;width:75px">
+                    </div>
+            
             <!--列表按钮 -->
           <!-- <div  v-show="index==isactive"  @click.stop class="file-content-opt" v-if="file.filePrivacy!=2">
               <Button icon="ios-arrow-down" size="small" @click="getFileid($event,file)" ref="menuBtn"></Button>
           </div> -->
         </div>  
+        
         <span v-if="file.catalog==1">
-            <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+            
               {{file.fileName}}
-           </Poptip>
+         
           </span>
          <span v-if="file.catalog==0">
-            <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
+            
               {{file.fileName.substr(0,5)+file.ext}}
-            </Poptip>
+           
         </span>
+         </Poptip>
         </li>
         
     </ul>

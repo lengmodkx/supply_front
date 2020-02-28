@@ -13,6 +13,7 @@
         <ul class="contant">
           <li v-for="(file,index) in files" :key="index">
             <div class="contant-left" @click="fileDetailClick(file.catalog,file.fileId, file)">
+               <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
               <div class="contant-titel">
                 <img v-if="file.catalog==1&&file.filePrivacy==0" src='../../../assets/images/wjj.png' >
                 <img v-else-if="file.catalog==1&&(file.filePrivacy==0||file.filePrivacy==2)" src='../../../assets/images/folder.png'>
@@ -28,19 +29,17 @@
                   <img v-else src="@/icons/img/moren.png" alt="">
                 </div>
                 <span v-if="file.catalog==1 ">
-                   <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
-                     {{file.fileName}}
-                    </Poptip>
+                    
+                        {{file.fileName}}
+                    
                </span>
                 <span v-if="file.catalog==0">
-                 <Poptip  :content="file.fileName" trigger="hover" placement="bottom-start">
-                  {{file.fileName.substr(0,10)+file.ext}}
-                    </Poptip>
-
-                  
+                    
+                         {{file.fileName.substr(0,10)+file.ext}}
+                   
                </span>
-
               </div>
+              </Poptip>
               <div class="contant-erery">
                 {{file.size||"无"}}
               </div>
