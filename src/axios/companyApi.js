@@ -150,3 +150,12 @@ export function deleteGroup(groupId) {
         method: "delete",
     });
 }
+
+
+export function getDepartmentTree(orgId, departmentId) {
+    return fetch({
+        url: `/partments/tree`,
+        method: "post",
+        data:{orgId:orgId, departmentId:departmentId}
+    });
+}

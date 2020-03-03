@@ -14,6 +14,7 @@
                 </div>
                 <h3 style="margin-top: 15px;color:#000">部门</h3>
                 <div class="branch-head">
+
                   <Poptip v-model="branch" transfer>
                     <div class="branch"><Icon @click="branch = false" type="md-add-circle" />创建部门</div>
                     <div slot="content">
@@ -27,7 +28,7 @@
                   </Poptip>
                   <!--<div class="bsort"><Icon type="md-swap" />部门排序</div>-->
                 </div>
-                <branch @getBranchMember="getBranchMember" :branchData="branchData"></branch>
+                <tree :data="departmentTree" ref="tree"></tree>
               </div>
             </TabPane>
             <TabPane label="企业群组" name="企业群组">
@@ -298,10 +299,13 @@
 <script>
 import addPeople from "@/components/public/addPeople";
 import branch from "./branch";
+import { mapState, mapActions, mapMutations } from "vuex";
+import tree from '@/components/company/Tree.vue'
 import { userOrgRoles, updateOrgUserRole, removeOrgUser } from "../../axios/api.js";
 import { initOrgMember, createBranchs, getBranch, getBranchpeople, changeBranchNames, deleteBranch, addGroup, getGroups, getGroupPeople, addGroupPeople, changeGroupsname, deleteGroup } from "@/axios/companyApi";
 export default {
   name: "members",
+  computed:{...mapState("company", ["departmentTree"])},
   data() {
     return {
       branch: false,
@@ -351,8 +355,9 @@ export default {
     this.initMember();
     this.initBranch();
   },
-  components: { addPeople, branch },
+  components: { tree,addPeople, branch },
   methods: {
+      ...mapActions("company", ["getDepartmentTree"]),
     // tab切换
     clickTabs(value) {
       console.log(value);
@@ -628,7 +633,6 @@ export default {
       });
     },
     visibleChange(user) {
-      console.log("xxxxxxxxxxxxxxxxxx");
       this.user = user;
       userOrgRoles(user.userId, localStorage.companyId).then(res => {
         if (res.result == 1) {
@@ -664,7 +668,11 @@ export default {
         }
       });
     }
-  }
+  },
+    created(){
+        this.getDepartmentTree({orgId:localStorage.companyId,departmentId:""})
+    }
+
 };
 </script>
 

@@ -205,7 +205,7 @@ export function getSucai(folderId,page,orderType) {
         url: `/files/${folderId}/material`,
         method: "get",
         params: {
-            pageNumber:page,
+            current:page,
             size: 10,
             downloadCount:orderType
         }

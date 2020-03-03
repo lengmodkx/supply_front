@@ -141,7 +141,7 @@ const store = {
         },
         // 推送， 移动文件
         removeFile(state, data) {
-            state.files.forEach((v, n) => {
+            state.files.forEach((v, n) => {changeCreateFileId
                 if (v.fileId == data[0].fileId) {
                     state.files.splice(n, 1)
                 }
