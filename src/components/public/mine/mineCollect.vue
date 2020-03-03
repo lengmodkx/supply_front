@@ -30,8 +30,9 @@
                         </div>
                         <div class="item-title clearfix">
                             <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>
-                            <span class="img"><img v-if="c.collectType !== '日程'" :src="c.item.userImage" /></span>
-                            <span class="title">{{c.item.taskName}}{{c.item.fileName}}{{c.item.title}}{{c.item.scheduleName}}</span>
+                            <span class="img" v-if='c.item.userImage' ><img v-if="c.collectType !== '日程'" :src="c.item.userImage" /></span>
+                            <span class="img" v-else><img src="../../../assets/images/headUser.png" alt=""></span>
+                            <span class="title">{{c.item.taskName}}{{c.item.shareName}}{{c.item.fileName}}{{c.item.title}}{{c.item.scheduleName}}</span>
                             <!--<span class="update fr">已更新</span>-->
                         </div>
                     </li>

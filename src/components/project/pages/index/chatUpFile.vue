@@ -71,6 +71,7 @@ export default {
       this.showProgress = false;
       this.uploadList = [];
       this.percentage = [];
+      
     },
 
     handleBeforeUpload(file) {
@@ -106,8 +107,8 @@ export default {
             that.files.push(myfile);
             if (that.uploadList.length == that.files.length) {
               console.log(that.files)
-              that.$emit("saveFileInfo",that.files)
-              that.files=[]
+              that.$emit("saveFileInfo",that.files);
+              that.resetFile();
             }
           })
           .catch(function(err) {
