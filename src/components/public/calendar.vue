@@ -247,7 +247,7 @@ export default {
       this.stompClient.connect(
         {},
         frame => {
-          this.stompClient.subscribe(`/topic/${id}`, msg => {
+          this.stompClient.subscribe(`/topi1c/${id}`, msg => {
             var result = JSON.parse(msg.body);
             console.log(result.type);
             switch (result.type) {
@@ -358,7 +358,7 @@ export default {
                 this.$store.dispatch("share/init", result.object);
                 break;
               // 编辑分享
-              case "B2":   
+              case "B2":
                 this.$store.dispatch("share/init", result.object.projectId);
                 this.$store.dispatch("share/changeShares", result.object.id);
                 break;

@@ -285,9 +285,13 @@ export default {
                 break;
               // 添加标签
               case "D14":
-                this.$store.dispatch("schedule/init", {
-                  projectId: result.object
-                });
+                // this.$store.dispatch("schedule/init", {
+                //   projectId: result.object
+                // });
+                  console.log(result)
+                  this.$store.dispatch("file/initFile", {
+                      fileId: result.object
+                  });
                 break;
               case "E1":
                 if (result.object.publicType === "任务") {

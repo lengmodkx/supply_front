@@ -3,7 +3,9 @@
 </template>
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
+import {getDepartmentTree } from "@/axios/companyApi";
 import tree from "vue-giant-tree";
+
 export default {
   components: {
     tree
@@ -15,7 +17,7 @@ export default {
       setting: {
         view: {
           showIcon: true,
-          selectedMulti: false
+          selectedMulti: false,
         },
         check: {
           enable: false
@@ -24,24 +26,31 @@ export default {
           simpleData: {
             enable: true,
             idKey: "id",
-            pIdKey: "pId",
-            rootPId: 0
+          }
+        },
+        edit:{
+          enable:true,
+          editNameSelectAll:true,
+          removeTitle: "删除部门",
+          drag:{
+              isCopy:false
           }
         },
         async: {
-          //异步设置
-          enable: true,
-          type: "get",
-          url: process.env.VUE_APP_TREE_URL,
-          autoParam: ["id"],
-          dataType: "text",
-          headers: { "x-auth-token": localStorage.token },
-          //异步返回结果集处理(必须返回json数据)
-          dataFilter: function(treeId, parentNode, res) {
-            console.log(res);
-            return res.data;
-          }
-        }
+              //异步设置
+              enable: true,
+              type: "post",
+              url: 'http://localhost:8080/partments/tree',
+              autoParam: ["id=departmentId"],
+              dataType: "JSON",
+              headers: { "x-auth-token": localStorage.token },
+              //异步返回结果集处理(必须返回json数据)
+              dataFilter: function(treeId, parentNode, res) {
+                  console.log(res);
+                  return res.data;
+              }
+          },
+
       }
     };
   },
@@ -61,22 +70,12 @@ export default {
       }
     },
     onClick(evt, treeId, treeNode) {
-        this.$store.commit("file/changeCreateFileId", treeNode.id);
-      // if(treeNode.level==0){
-      //     this.$store.commit("file/crumbsTree",treeNode);//根节点只做切换----菜单栏
-      // }else{
-      //     this.$store.commit("file/crumbsTreeAdd",treeNode);
-      // }
+        console.log(treeId, treeNode);
+        getDepartmentTree("",treeId).then(res => {
+            this.treeData = res.data
+        })
 
-      this.folderId = treeNode.id;
-      let params = { fileId: this.folderId };
-      this.initFile(params);
 
-      var allNode = [];
-      allNode.push(treeNode); //获取当前选中节点
-      var node = treeNode.getParentNode();
-      this.getParentNodes(node, allNode);
-      this.$store.commit("file/crumbsTree", allNode.reverse()); //初始化菜单
     },
     asyncRefresh() {
       var nodes = this.ztreeObj.getSelectedNodes();
@@ -95,4 +94,5 @@ export default {
   }
 };
 </script>
-<style lang="less"></style>
+<style scoped >
+</style>
