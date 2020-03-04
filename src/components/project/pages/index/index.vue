@@ -203,7 +203,7 @@
       <timeView></timeView>
     </div>
     <!-- 点击列表出来的弹框。编辑列表 -->
-    <Modal v-model="showModal" class="myModal" :closable="false" fullscreen :mask-closable="false" footer-hide>
+    <Modal v-model="showModal" class="myModal" :mask-closable="false" footer-hide>
       <my-modal v-if="showModal" @close="showModal = false" :taskId="taskId"></my-modal>
     </Modal>
     <Modal v-model="showAddGroup" :footer-hide="true" title="创建分组" :width="350">
