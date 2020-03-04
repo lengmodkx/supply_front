@@ -5,103 +5,127 @@
             <Icon @click="close" type="md-close" size="22"/>
         </header>
         <div class="contents">
-            <div class="w900">
-                <div class="tu" >
-                    <div v-if="type==1" id="chart6"></div>
-                    <div v-if="type==2" id="chart7"></div>
-                    <div v-if="type==3" id="chart8">
-                        <div class="type3-chart">
-                            <div class="chart3-list" v-for="(item,index) in countData" :class="{checked:nowChecked==index}" :key="index" @click="checkOne(item, index)">
-                                <p>{{item.value}}</p>
-                                <div class="num">{{item.label}}</div>
-                                <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="item.percent" hide-info :stroke-width=5 />
+                <!-- left -->
+                <div class="w900">
+                    <div class="tu" >
+                        <div v-if="type==1" id="chart6"></div>
+                        <div v-if="type==2" id="chart7"></div>
+                        <div v-if="type==3" id="chart8">
+                            <div class="type3-chart">
+                                <div class="chart3-list" v-for="(item,index) in countData" :class="{checked:nowChecked==index}" :key="index" @click="checkOne(item, index)">
+                                    <p>{{item.value}}</p>
+                                    <div class="num">{{item.label}}</div>
+                                    <Progress :stroke-color="color[Math.floor(Math.random()*5.1)]" :percent="item.percent" hide-info :stroke-width=5 />
+                                </div>
                             </div>
                         </div>
+                        <div v-if="type==4" id="chart9"></div>
+                        <div v-if="type==5" id="chart10"></div>
                     </div>
-                    <div v-if="type==4" id="chart9"></div>
-                    <div v-if="type==5" id="chart10"></div>
+                    <div class="biao">
+                        <h2>详情表</h2>
+                        <Table   border :columns="columns1" :data="data1"></Table>
+                    </div>
                 </div>
-                <div class="biao">
-                    <h2>详情表</h2>
-                    <Table   border :columns="columns1" :data="data1"></Table>
+
+                <!-- right -->
+                <!--按条件查询-->
+                <div class="filter-box">
+                    <div v-show="show_finish">
+                        <p>按任务完成情况</p>
+                        <RadioGroup v-model="finished" vertical @on-change="Task_Finish">
+                        <Radio label="全部"></Radio>
+                        <Radio label="已完成"></Radio>
+                        <Radio label="未完成"></Radio>
+                    </RadioGroup>
+                    </div>
+                    <div v-show="show_finish1">
+                        <p>按任务完成情况（默认已完成）</p>
+                        <RadioGroup v-model="finish" vertical @on-change="Task_Finish">
+                            <Radio label="已完成"></Radio>
+                            <Radio label="未完成"></Radio>
+                        </RadioGroup>
+                    </div>
+                    <div v-show="time_scope">
+                        <p>时间范围</p>
+                        <Select v-model="scope" style="width:200px" placeholder="过去7天" @on-change="Task_day">
+                            <Option v-for="" :value="7" :key="">过去7天</Option>
+                            <Option v-for="" :value="30" :key="">过去一个月</Option>
+                            <Option v-for="" :value="90" :key="">过去三个月</Option>
+                        </Select>
+                    </div>
+                    <p>执行者</p>
+                    <Select v-model="executor" style="width:200px" placeholder="全部" @on-change="Task_zxz">
+                        <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <p>任务分组</p>
+                    <Select v-model="people" style="width:200px" placeholder="所有任务分组" @on-change="Task_rw">
+                        <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <p>是否仅子任务</p>
+                    <RadioGroup v-model="child_task" class="redio_box" vertical @on-change="Task_child">
+                        <Radio label="是"></Radio>
+                        <Radio label="否"></Radio>
+                    </RadioGroup>
+                    <p>是否仅回收站任务</p>
+                    <RadioGroup v-model="recycle_task" class="redio_box" vertical @on-change="Task_recycle">
+                        <Radio label="是"></Radio>
+                        <Radio label="否"></Radio>
+                    </RadioGroup>
+                    <p>优先级</p>
+                    <RadioGroup v-model="priority_task" class="redio_box" vertical @on-change="Task_priority">
+                        <Radio label="普通"></Radio>
+                        <Radio label="紧急"></Radio>
+                        <Radio label="非常紧急"></Radio>
+                    </RadioGroup>
+                    <p>创建者</p>
+                    <Select v-model="creator" style="width:200px" placeholder="全部" @on-change="Task_Creator">
+                        <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <div class="finishi-time">
+                        <p>完成时间</p>
+                        <DatePicker
+                                placeholder="开始时间"
+                                :value="startTime"
+                                type="datetime"
+                                @on-change="startDate"
+                                :options="options1"
+                        ></DatePicker>
+                         <p></p>
+                        <DatePicker 
+                                placeholder="结束时间"
+                                :value="endTime"
+                                type="datetime"
+                                @on-change="endDate"
+                                :options="options2"
+                        ></DatePicker>
+                    </div>
+                    <div class="create-time">
+                        <p>创建时间</p>
+                        <DatePicker
+                                placeholder="开始时间"
+                                :value="startTime_create"
+                                type="datetime"
+                                @on-change="startDate_create"
+                                :options="options1"
+                        ></DatePicker>
+                        <p></p>
+                        <DatePicker
+                                placeholder="结束时间"
+                                :value="endTime_create"
+                                type="datetime"
+                                @on-change="endDate_create"
+                                :options="options2"
+                        ></DatePicker>
+                    </div>
+                    <div long @click="defaultButton()" class="default">恢复默认</div>
+                    <div style="margin-top: 20px">
+                        <Button type="info" long @click="filterData">确定</Button>
+                    </div>
                 </div>
-            </div>
+
         </div>
-        <!--按条件查询-->
-        <div class="filter-box">
-            <div v-show="show_finish">
-                <p>按任务完成情况</p>
-                <RadioGroup v-model="finished" vertical @on-change="Task_Finish">
-                   <Radio label="全部"></Radio>
-                   <Radio label="已完成"></Radio>
-                   <Radio label="未完成"></Radio>
-               </RadioGroup>
-            </div>
-            <div v-show="show_finish1">
-                <p>按任务完成情况（默认已完成）</p>
-                <RadioGroup v-model="finish" vertical @on-change="Task_Finish">
-                    <Radio label="已完成"></Radio>
-                    <Radio label="未完成"></Radio>
-                </RadioGroup>
-            </div>
-            <div v-show="time_scope">
-                <p>时间范围</p>
-                <Select v-model="scope" style="width:200px" placeholder="过去7天" @on-change="Task_day">
-                    <Option v-for="" :value="7" :key="">过去7天</Option>
-                    <Option v-for="" :value="30" :key="">过去一个月</Option>
-                    <Option v-for="" :value="90" :key="">过去三个月</Option>
-                </Select>
-            </div>
-            <p>执行者</p>
-            <Select v-model="executor" style="width:200px" placeholder="全部" @on-change="Task_zxz">
-                <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            <p>任务分组</p>
-            <Select v-model="people" style="width:200px" placeholder="所有任务分组" @on-change="Task_rw">
-                <Option v-for="item in peopleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            <p>是否仅子任务</p>
-            <RadioGroup v-model="child_task" class="redio_box" vertical @on-change="Task_child">
-                <Radio label="是"></Radio>
-                <Radio label="否"></Radio>
-            </RadioGroup>
-            <p>是否仅回收站任务</p>
-            <RadioGroup v-model="recycle_task" class="redio_box" vertical @on-change="Task_recycle">
-                <Radio label="是"></Radio>
-                <Radio label="否"></Radio>
-            </RadioGroup>
-            <p>优先级</p>
-            <RadioGroup v-model="priority_task" class="redio_box" vertical @on-change="Task_priority">
-                <Radio label="普通"></Radio>
-                <Radio label="紧急"></Radio>
-                <Radio label="非常紧急"></Radio>
-            </RadioGroup>
-            <p>创建者</p>
-            <Select v-model="creator" style="width:200px" placeholder="全部" @on-change="Task_Creator">
-                <Option v-for="item in executorData" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            <div class="create-project-time">
-                <p>完成时间</p>
-                <DatePicker
-                        placeholder="开始时间"
-                        :value="startTime"
-                        type="datetime"
-                        @on-change="startDate"
-                        :options="options1"
-                ></DatePicker>
-                <DatePicker
-                        placeholder="结束时间"
-                        :value="endTime"
-                        type="datetime"
-                        @on-change="endDate"
-                        :options="options2"
-                ></DatePicker>
-            </div>
-            <div long @click="defaultButton()" class="default">恢复默认</div>
-            <div style="margin-top: 20px">
-                <Button type="info" long @click="filterData">确定</Button>
-            </div>
-        </div>
+        
     </div>
 </template>
 <script>
@@ -141,7 +165,9 @@
                 columns1:[],
                 data1: [],
                 startTime :"",
-                endTime  :'',
+                endTime  :  '',
+                startTime_create:"",
+                endTime_create:  '',
                 options1: {},
                 options2: {},
                 StatisticsDTO:{
@@ -153,7 +179,10 @@
                     taskRecycle:'',
                     priorityLevel:'',
                     finishTime_s:'',
-                    finishTime_e:''
+                    finishTime_e:'',
+                    createTime_s:'',
+                    createTime_e:''
+
                 }
             }
         },
@@ -204,7 +233,7 @@
             },
             startDate(date) {
                 this.startTime = date;
-                this.StatisticsDTO.finishTime_s=this.startTime;
+                this.StatisticsDTO.finishTime_s=new Date(this.startTime).getTime()/1000;
                 this.options2 = {
                     disabledDate(date1) {
                         return date1.valueOf() < new Date(date).getTime();
@@ -213,7 +242,25 @@
             },
             endDate(date) {
                 this.endTime = date;
-                this.StatisticsDTO.finishTime_e=this.endTime;
+                this.StatisticsDTO.finishTime_e=new Date(this.endTime).getTime()/1000;
+                this.options1 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() > new Date(date).getTime() - 86400000;
+                    }
+                };
+            },
+            startDate_create(date) {
+                this.startTime_create = date;
+                this.StatisticsDTO.createTime_s=new Date(this.startTime_create).getTime()/1000;
+                this.options2 = {
+                    disabledDate(date1) {
+                        return date1.valueOf() < new Date(date).getTime();
+                    }
+                };
+            },
+            endDate_create(date) {
+                this.endTime_create = date;
+                this.StatisticsDTO.createTime_e=new Date(this.endTime_create).getTime()/1000;
                 this.options1 = {
                     disabledDate(date1) {
                         return date1.valueOf() > new Date(date).getTime() - 86400000;
@@ -534,61 +581,68 @@
 .contents{
     width: 1250px;
     margin: 0 auto;
-}
-.w900{
-    width: 900px;
-    padding-bottom: 20px;
-    .tu{
-        width: 100%;
-        height: 400px;
-        background-color: white;
-        border: 1px solid #e5e5e5;
-    }
-    .biao{
-        width: 100%;
-        margin-top: 20px;
-        background-color: white;
-        border:1px solid #e5e5e5;
-        h2{
-            width: 100%;
-            height: 48px;
-            font-size: 14px;
-            text-align: center;
-            line-height: 48px;
-        }
-    }
-}
-.filter-box{
-    width: 320px;
-    height: calc(100vh - 100px) ;
-    background-color: white;
-    border-radius: 5px;
-    border:1px solid #e5e5e5;
-    position: fixed;
-    top: 76px;
-    right: calc((100vw - 1250px)/2) ;
-    padding: 16px;
-    p{
-        line-height: 24px;
-        padding: 10px 0;
-        font-size: 14px;
-        color: gray;
-    }
-    .default{
-        width: 100%;
-        height: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        color: gray;
-        cursor: pointer;
-        line-height: 24px;
-        padding: 10px 0;
+    display: flex;
 
-    &:hover{
-         color: #3da8f5;
-     }
-    }
+                .w900{
+                width: 900px;
+                padding-bottom: 20px;
+                .tu{
+                    width: 100%;
+                    height: 400px;
+                    background-color: white;
+                    border: 1px solid #e5e5e5;
+                }
+                .biao{
+                    width: 100%;
+                    margin-top: 20px;
+                    background-color: white;
+                    border:1px solid #e5e5e5;
+                    h2{
+                        width: 100%;
+                        height: 48px;
+                        font-size: 14px;
+                        text-align: center;
+                        line-height: 48px;
+                    }
+                }
+            }
+            .filter-box{
+                width: 320px;
+                margin-left: 15px;
+                padding:15px;
+                margin-bottom: 20px;
+             //   height: calc(100vh - 100px) ;
+                background-color: white;
+                border-radius: 5px;
+               // border:1px solid #e5e5e5;
+                //position: fixed;
+               // top: 76px;
+                //right: calc((100vw - 1250px)/2) ;
+                
+                p{
+                    line-height: 24px;
+                    padding: 10px 0;
+                    font-size: 14px;
+                    color: gray;
+                }
+                .default{
+                    width: 100%;
+                    height: 50px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 14px;
+                    color: gray;
+                    cursor: pointer;
+                    line-height: 24px;
+                    padding: 10px 0;
+
+                &:hover{
+                    color: #3da8f5;
+                }
+                
+                }
+            }
 }
+
 </style>

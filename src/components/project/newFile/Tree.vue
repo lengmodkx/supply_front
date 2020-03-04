@@ -64,7 +64,7 @@ export default {
       console.log(process.env.VUE_APP_TREE_URL);
     },
     onClick(evt, treeId, treeNode) {
-      this.$store.commit("file/changeCreateFileId", treeNode.id);
+        this.$store.commit("file/changeCreateFileId", treeNode.id);
       // if(treeNode.level==0){
       //     this.$store.commit("file/crumbsTree",treeNode);//根节点只做切换----菜单栏
       // }else{

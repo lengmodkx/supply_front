@@ -122,7 +122,9 @@ export default {
           this.$nextTick(() => {
             var div = document.getElementById("data-list-content");
             div.scrollTop = div.scrollHeight + 1;
+            this.files=[];
           });
+
         });
       }
     },
