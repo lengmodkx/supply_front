@@ -4,8 +4,8 @@
       <div :class="{ checked: branchId == item.partmentId }" class="yiji-bumen" @click="sendPeople(item, n)">
         {{ item.partmentName }}
         <div v-if="item.isExistSubPartment">
-          <Icon @click.stop="showSon(item, n)" v-if="item.isdown" type="ios-arrow-dropdown" size="20" />
-          <Icon v-else @click.stop="closeSon(item, n)" type="ios-arrow-dropup" size="20" />
+          <Icon @click.stop="showSon(item, n)" v-if="item.isdown" type="ios-arrow-dropdown-circle" size="20" />
+          <Icon v-else @click.stop="closeSon(item, n)" type="ios-arrow-dropup-circle" size="20" />
         </div>
       </div>
       <div style="width: 100%" v-if="item.isExistSubPartment">

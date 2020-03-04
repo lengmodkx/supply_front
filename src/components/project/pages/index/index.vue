@@ -63,10 +63,10 @@
             <draggable :list="i.taskList" :options="{ group: 'uncheckedTask', forceFallback: true, delay: 0.5, dragClass: 'dragClass', fallbackClass: 'fallbackClass' }" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="teskCheck"  @click.stop  @click="changeStatus(!a.taskStatus, k, b,a.taskId) "   >  </div>
+                  <div class="teskCheck" @click.stop @click="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
                   <div class="check">
                     <div @click.stop class="checkbox-wrap">
-                      <Checkbox size="small" v-model="a.taskStatus" ></Checkbox>
+                      <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
@@ -88,7 +88,7 @@
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
-                      
+
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
@@ -117,10 +117,10 @@
             <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 0.5 }" class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                   <div class="teskCheck"  @click.stop  @click="changeStatus(!a.taskStatus, k, b,a.taskId) "   >  </div>
+                  <div class="teskCheck" @click.stop @click="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
                   <div class="check">
-                    <div class="checkbox-wrap" @click.stop >
-                      <Checkbox size="small" v-model="a.taskStatus" ></Checkbox>
+                    <div class="checkbox-wrap" @click.stop>
+                      <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
@@ -142,7 +142,7 @@
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
-                     
+
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
@@ -203,8 +203,8 @@
       <timeView></timeView>
     </div>
     <!-- 点击列表出来的弹框。编辑列表 -->
-    <Modal v-model="showModal" class="myModal" :mask-closable="false">
-      <my-modal v-if="showModal"></my-modal>
+    <Modal v-model="showModal" class="myModal" :closable="false" fullscreen :mask-closable="false" footer-hide>
+      <my-modal v-if="showModal" @close="showModal = false" :taskId="taskId"></my-modal>
     </Modal>
     <Modal v-model="showAddGroup" :footer-hide="true" title="创建分组" :width="350">
       <Input v-model="groupName" placeholder="请输入分组名称" class="group-name-input" ref="input" />
@@ -224,7 +224,7 @@ import draggable from "vuedraggable";
 import FilterBox from "./components/FilterBox";
 import SortBox from "./components/SortBox";
 import TaskMenu from "./components/TaskMenu";
-import myModal from "./components/EditList";
+import myModal from "./components/EditList.vue";
 import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
 import listView from "./listView";
@@ -278,13 +278,13 @@ export default {
       groupName: "",
       loading: true,
       allTask: [],
-      showGroupPower: ""
+      showGroupPower: "",
+      taskId: ""
     };
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
     this.init(this.projectId).then(res => {
-      
       this.loading = false;
       this.allTask = this.allTasks;
     });
@@ -306,7 +306,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("task", ["init", "initEditTask"]),
+    ...mapActions("task", ["init", "editTask"]),
     ...mapMutations("task", ["changeTask", "setTaskId"]),
     hideAddTask() {
       this.currentEditId = "";
@@ -352,9 +352,9 @@ export default {
 
     //打开任务详情
     initTask(taskId) {
-
-      this.showModal = true;
+      this.taskId = taskId;
       this.setTaskId(taskId);
+      this.showModal = true;
     },
 
     addCurTask(groupId, id, taskList, index) {
@@ -411,9 +411,6 @@ export default {
       });
     },
     changeStatus(flag, i, j, taskId) {
-        
-        
-
       //i是外层循环的索引，j是嵌套循环的索引
       if (flag) {
         //第一种方法 先处理好了再发请求
@@ -430,29 +427,22 @@ export default {
 
         //完成任务  请求
         completeTask(taskId).then(res => {
-          this.init(this.projectId).then(res => {
-          });
+          this.init(this.projectId).then(res => {});
           // console.log(res,"完成任务了")
-          if(res.result==0){
+          if (res.result == 0) {
             this.$Message.error(res.msg);
-            this.init(this.projectId).then(res => {
-            });
+            this.init(this.projectId).then(res => {});
           }
-          if(res.result==203){
-            this.$Message.error('没有权限');
-            this.init(this.projectId).then(res => {
-            });
+          if (res.result == 203) {
+            this.$Message.error("没有权限");
+            this.init(this.projectId).then(res => {});
           }
-          
-
         });
       } else {
         //取消完成任务 请求
         cancelcompleteTask(taskId).then(res => {
           // console.log(res,"取消完成任务")
-          this.init(this.projectId).then(res => {
-            });
-          
+          this.init(this.projectId).then(res => {});
         });
       }
 

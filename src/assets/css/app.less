@@ -1,15 +1,19 @@
 body {
   background-color: rgb(244, 244, 244); // font-family: 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
 }
-body{
-  .pop{
+
+body {
+  .pop {
     z-index: 999999 !important;
-    /deep/ .ivu-poptip-body{
+
+    /deep/ .ivu-poptip-body {
       padding: 0;
     }
   }
 }
+
 .content-main {
+
   // padding-top: 48px;
   .container {
     width: 1180px;
@@ -94,14 +98,22 @@ li {
 }
 
 .myModal {
-  .ivu-modal {
-    width: 600px !important;
-    top: 8vh;
-  }
+  .ivu-modal-fullscreen {
+    width: 94% !important;
+    top: 50px;
+    bottom: 0;
+    left: 3%;
+    position: fixed;
+    border-radius: 5px;
 
-  .ivu-modal-body {
-    height: 84vh !important;
-    padding: 16px !important;
+    .ivu-modal-content {
+      border-radius: 4px;
+    }
+
+    .ivu-modal-body {
+      padding: 0px;
+      overflow: hidden;
+    }
   }
 
   ::-webkit-scrollbar {
@@ -112,10 +124,6 @@ li {
 
   ::-webkit-scrollbar-thumb {
     background-color: #cecece;
-  }
-
-  .ivu-modal-footer {
-    display: none;
   }
 }
 
@@ -231,6 +239,7 @@ li {
     background-color: #cecece;
   }
 }
+
 .vertical-center-modal2 {
   display: flex;
   align-items: center;
@@ -263,6 +272,7 @@ li {
     background-color: #cecece;
   }
 }
+
 .typeTaskModal,
 .mine {
   .placeholder {

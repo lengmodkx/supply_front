@@ -39,7 +39,9 @@ export default {
           //异步返回结果集处理(必须返回json数据)
           dataFilter: function(treeId, parentNode, res) {
             console.log(res);
-            return res.data;
+            if (res.result == 1) {
+              return res.data;
+            }
           }
         }
       }
@@ -59,6 +61,7 @@ export default {
         ztreeObj.selectNode(nodes[0]);
         this.$store.commit("file/crumbsHome", nodes[0]); //初始化菜单
       }
+      console.log(process.env.VUE_APP_TREE_URL);
     },
     onClick(evt, treeId, treeNode) {
       this.$store.commit("file/changeCreateFileId", treeNode.id);
@@ -78,12 +81,14 @@ export default {
       this.getParentNodes(node, allNode);
       this.$store.commit("file/crumbsTree", allNode.reverse()); //初始化菜单
     },
-    asyncRefresh() {
-      var nodes = this.ztreeObj.getSelectedNodes();
-      console.log(nodes);
-      if (nodes.length > 0) {
-        this.ztreeObj.reAsyncChildNodes(nodes[0], "refresh", true);
-      }
+    asyncRefresh(fileId) {
+      var node = this.ztreeObj.getNodeByParam("id", fileId);
+      node.isParent = true;
+      this.ztreeObj.reAsyncChildNodes(node, "refresh", true);
+    },
+    removeNode(fileId) {
+      var node = this.ztreeObj.getNodeByParam("id", fileId);
+      this.ztreeObj.removeNode(node, false);
     },
     getParentNodes(node, allNode) {
       if (node != null) {

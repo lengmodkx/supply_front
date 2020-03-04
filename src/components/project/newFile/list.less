@@ -1,37 +1,39 @@
-
-.file{
+.file {
   display: flex;
   flex-flow: row nowrap;
 }
 
-.file-side-show{
-  width:298px;
-  background: #ffffff;;
-  padding-top:50px;
+.file-side-show {
+  width: 298px;
+  background: #ffffff;
+  ;
+  padding-top: 50px;
   height: calc(100vh - 48px);
   transition: 0.3s;
 }
 
 
-.file-side{
-   width:0px;
-   background: #ffffff;;
-   padding-top:50px;
-   height: calc(100vh - 48px);
-   transition: 0.3s;
+.file-side {
+  width: 0px;
+  background: #ffffff;
+  ;
+  padding-top: 50px;
+  height: calc(100vh - 48px);
+  transition: 0.3s;
 
 }
 
-.file-button{
-  width:15px;
-  border-left: 2px #e5e5e5  solid;
-  padding-top:50px;
+.file-button {
+  width: 15px;
+  border-left: 2px #e5e5e5 solid;
+  padding-top: 50px;
   height: calc(100vh - 48px);
 }
-.file-button:hover{
-  width:15px;
-  border-left: 2px #3da8f5  solid;
-  padding-top:50px;
+
+.file-button:hover {
+  width: 15px;
+  border-left: 2px #3da8f5 solid;
+  padding-top: 50px;
   height: calc(100vh - 48px);
 }
 
@@ -153,91 +155,99 @@
   }
 }
 
-
-
-
-.file-list{
+.file-list {
   width: 100%;
-  height: calc(100vh - 250px);
-  .titel ,.contant li{
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+
+  .titel,
+  .contant li {
     height: 56px;
     line-height: 56px;
   }
+
   .titel {
     display: flex;
-  
-    flex-flow:row nowrap;
+
+    flex-flow: row nowrap;
     color: gray;
     font-size: 16px;
-    border-bottom: 1px solid #e5e5e5;  
+    border-bottom: 1px solid #e5e5e5;
     overflow: hidden;
-   
-    span{
+
+    span {
       width: 150px;
       text-align: center;
       display: block;
     }
-    span:first-child{
+
+    span:first-child {
       text-align: left;
       padding: 0px 50px;
-      flex:1;
+      flex: 1;
     }
 
   }
-  .contant{
+
+  .contant {
     font-size: 14px;
-    color:gray;
-    li{
+    color: gray;
+
+    li {
       display: flex;
-      flex-flow:row nowrap;
-      border-bottom: 1px solid #e5e5e5 !important;  
+      flex-flow: row nowrap;
+      border-bottom: 1px solid #e5e5e5 !important;
       cursor: pointer;
       position: relative;
-     }
-     li:hover{
-       background: #f5f5f5
-     }
-    
-    .contant-left{
-      display: flex;
-       flex:1;
-       .contant-titel{   
-        display: flex;
-        flex:1;
-      
-         padding:0px 50px;
-         img{
-           width:32px;
-           height: 37px;
-           padding:15px 10px 0 0;
-         }
-       }
-       .contant-erery{
-         width: 150px;
-         text-align: center;
-       }
-      
-    }
-  
-    .file-edit{
-      width: 200px;
-      position: absolute;
-      top:0;
-      left: 82px;
-      
     }
 
-    .contant-right{
+    li:hover {
+      background: #f5f5f5
+    }
+
+    .contant-left {
+      display: flex;
+      flex: 1;
+
+      .contant-titel {
+        display: flex;
+        flex: 1;
+
+        padding: 0px 50px;
+
+        img {
+          width: 32px;
+          height: 37px;
+          padding: 15px 10px 0 0;
+        }
+      }
+
+      .contant-erery {
+        width: 150px;
+        text-align: center;
+      }
+
+    }
+
+    .file-edit {
+      width: 200px;
+      position: absolute;
+      top: 0;
+      left: 82px;
+
+    }
+
+    .contant-right {
       font-size: 22px;
       line-height: 56px;
-      width:150px;
+      width: 150px;
       font-size: 18px;
       display: flex;
-      i{
+
+      i {
         padding: 18px 30px 0 20px;
       }
     }
   }
-  
-}
 
+}
