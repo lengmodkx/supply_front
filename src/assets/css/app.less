@@ -13,14 +13,12 @@ body {
 }
 
 .content-main {
-
   // padding-top: 48px;
   .container {
     width: 1180px;
     margin: 0 auto;
   }
 }
-
 
 .fl {
   float: left !important;
@@ -116,6 +114,16 @@ li {
   //   }
   // }
 
+  .ivu-modal {
+    width: 600px !important;
+    top: 8vh;
+  }
+
+  .ivu-modal-body {
+    height: 84vh !important;
+    padding: 16px !important;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 8px;
@@ -124,6 +132,10 @@ li {
 
   ::-webkit-scrollbar-thumb {
     background-color: #cecece;
+  }
+
+  .ivu-modal-footer {
+    display: none;
   }
 }
 
@@ -148,7 +160,7 @@ li {
 .setPro-modal {
   .ivu-modal {
     width: 700px !important;
-    top: calc((100vh - 545px)/2);
+    top: calc((100vh - 545px) / 2);
   }
 
   .ivu-modal-footer {
@@ -389,7 +401,7 @@ li {
     left: 0;
     top: 0;
     height: 100%;
-    content: '';
+    content: "";
     width: 0;
     background-color: #2d8cf0;
     transition: all 0.3s;
