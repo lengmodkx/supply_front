@@ -51,7 +51,7 @@
 
             <div class="timer fl">
               <Icon type="ios-calendar-outline" size="18" style="margin-right:5px;"></Icon>
-              <DateTimePicker type="start"   @on-change="startDate"  :options="options1" @clear="clearTime('开始')" :max="task.endTime" @confirm="confirm1">
+              <DateTimePicker type="start" @on-change="startDate" :options="options1" @clear="clearTime('开始')" :max="task.endTime" @confirm="confirm1">
                 <div class="init" v-if="!task.startTime">开始时间</div>
                 <div class="setTime" v-if="task.startTime">
                   {{ $moment(task.startTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
@@ -59,7 +59,7 @@
                 </div>
               </DateTimePicker>
               <span>&nbsp;-&nbsp;</span>
-              <DateTimePicker @on-change="endDate"  :options="options2" @clear="clearTime('截止')" type="end" :min="task.startTime" @confirm="confirm2">
+              <DateTimePicker @on-change="endDate" :options="options2" @clear="clearTime('截止')" type="end" :min="task.startTime" @confirm="confirm2">
                 <div class="init" v-if="!task.endTime">截止时间</div>
                 <div class="setTime" v-if="task.endTime">
                   {{ $moment(task.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
@@ -357,13 +357,13 @@ export default {
     myModel,
     publick,
     log,
-    commonFile: resolve => require(["../../../file/commonfile.vue"], resolve),
+    commonFile: resolve => require(["./commonfile.vue"], resolve),
     Loading,
-    rcModal,
+    rcModal
   },
   data() {
     return {
-       options1: {},
+      options1: {},
       options2: {},
       glPop: false,
       zan: false,
@@ -422,7 +422,7 @@ export default {
         }
       };
     },
-   endDate(date) {
+    endDate(date) {
       this.endTime = date;
       this.options1 = {
         disabledDate(date1) {

@@ -14,7 +14,7 @@
         <li v-for="(file, index) in files" :key="index">
           <div class="contant-left" @click="fileDetailClick(file.catalog, file.fileId, file)">
             <div class="contant-titel">
-              <img v-if="file.catalog == 1 && file.filePrivacy == 0" src="../../../assets/images/wjj.png" />
+              <img v-if="file.catalog == 1 && file.filePrivacy == 0" src="../../../assets/images/folder.png" />
               <img v-else-if="file.catalog == 1 && (file.filePrivacy == 0 || file.filePrivacy == 2)" src="../../../assets/images/folder.png" />
               <img v-else-if="file.catalog == 1 && file.filePrivacy == 1" src="../../../assets/images/folder_privacy.png" />
               <div v-else>
