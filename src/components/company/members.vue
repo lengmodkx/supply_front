@@ -29,6 +29,7 @@
                   <!--<div class="bsort"><Icon type="md-swap" />部门排序</div>-->
                 </div>
                 <tree :data="departmentTree" ref="tree"></tree>
+                <branch @getBranchMember="getBranchMember" :branchData="branchData"></branch>
               </div>
             </TabPane>
             <TabPane label="企业群组" name="企业群组">
@@ -439,9 +440,8 @@ export default {
           partmentName: this.sonBranchName,
           parentId: this.nowBranch.id
         };
-        console.log();
         createBranchs(localStorage.companyId, data).then(res => {
-          console.log(res);
+          this.$refs.tree.asyncRefresh()
           this.isCreateBranch = false;
           this.sonBranch = false;
         });

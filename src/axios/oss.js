@@ -39,7 +39,7 @@ function set_file_name(filename) {
     return ''
 }
 
-export function oss(filename) {
+export function oss(filename, level, parentId, projectId) {
     //调用后端服务器接口获取签名信息，利用axios返回promise，可以链式调用
     return new Promise(resolve => {
         getOssSign().then(res => {
@@ -63,6 +63,11 @@ export function oss(filename) {
                     'success_action_status': '200', //让服务端返回200,不然，默认会返回204
                     'callback': callbackbody,
                     'signature': signature,
+                    'x:user_id': localStorage.userId,
+                    'x:name': filename,
+                    'x:project_id': projectId,
+                    'x:parent_id': parentId,
+                    'x:level': level
                 });
             }
         });

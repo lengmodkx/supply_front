@@ -44,9 +44,11 @@ module.exports = {
         // proxy: 'http://localhost:4000'// 配置跨域处理,只有一个代理
         proxy: {
             "/api": {
+
                 target: "http://2v1621n353.51mypc.cn",
                 //target: "http://test.art1001.com/api/",
                 
+
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {

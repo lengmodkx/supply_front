@@ -1,27 +1,18 @@
 <template>
   <div class="common-file-content">
-    <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/" v-show="showupload" class="file-progress">
-      <Button icon="ios-cloud-upload-outline" type="primary">请选择非模型文件,最多7个文件</Button>
-    </Upload>
-    <div v-if="showProgress" class="file-progress">
-      <div class="m-progress" v-for="(file,index) in uploadList" :key="index">
-        <div class="file-show">
-          <span>{{file.name}}</span>
-          <Progress :percent="percentage[index]" ref="progress" />
-        </div>
-        <!--<Button type="default" @click="removeFile(file)">移除</Button>-->
+    <Upload type="drag" ref="upload" :before-upload="beforeUpload" multiple :action="uploadHost" :data="uploadData">
+      <div style="padding: 20px 0">
+        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+        <p>点击或者拖拽文件进行上传</p>
       </div>
-    </div>
-    <div class="model-op">
-      <Button type="default" @click="resetFile" class="op-btn">重选</Button>
-      <Button type="primary" @click="uploadFile" class="op-btn" :loading="loading">上传</Button>
-    </div>
+    </Upload>
   </div>
 </template>
 <script>
 import { uploadCommonFile } from "../../../axios/api2.js";
-import {updateFileVersion} from "@/axios/fileApi";
-
+import { updateFileVersion } from "@/axios/fileApi";
+import { oss } from "../../../axios/oss.js";
+import { mapState } from "vuex";
 import OSS from "ali-oss";
 let client = new OSS({
   region: "oss-cn-beijing",
@@ -30,7 +21,7 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 export default {
-  props: ["fileId", "projectId",'fileDetail'],
+  props: ["fileId", "projectId", "fileDetail"],
   data() {
     return {
       showupload: true,
@@ -39,64 +30,34 @@ export default {
       uploadList: [],
       percentage: [],
       files: [],
-      loading: false
+      loading: false,
+      uploadData: {},
+      uploadHost: ""
     };
   },
+  computed: {
+    ...mapState("file", ["crumbs", "createFileId"])
+  },
+  mounted() {
+    console.log(this.crumbs);
+    console.log(this.createFileId);
+  },
   methods: {
-    random_string(len) {
-      len = len || 32;
-      var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-      var maxPos = chars.length;
-      var pwd = "";
-      for (var i = 0; i < len; i++) {
-        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-      }
-      return pwd;
+    beforeUpload(file) {
+      return oss(file.name, this.crumbs.length, this.createFileId, this.projectId).then(res => {
+        this.uploadHost = res.host;
+        this.uploadData = res;
+        console.log(res);
+      });
     },
-    get_suffix(filename) {
-      var pos = filename.lastIndexOf(".");
-      var suffix = "";
-      if (pos !== -1) {
-        suffix = filename.substring(pos);
-      }
-      return suffix;
-    },
-    removeFile(file) {
-      this.uploadList.splice(this.uploadList.indexOf(file), 1);
-      this.percentage.splice(this.uploadList.indexOf(file), 1);
-      if (this.uploadList.length == 0) {
-        this.showupload = true;
-        this.showProgress = false;
-      }
-    },
-    resetFile() {
-      this.showupload = true;
-      this.showProgress = false;
-      this.uploadList = [];
-      this.percentage = [];
+    clearFiles() {
       this.$refs.upload.clearFiles();
-    },
-
-    handleBeforeUpload(file) {
-      var that = this;
-      this.showupload = false;
-      this.showProgress = true;
-      this.percentage.push(0);
-      this.uploadList.push(file);
-      if (this.uploadList.length > 7) {
-        this.$Notice.warning({
-          title: "最多同时只能上传7个文件"
-        });
-        this.uploadList.splice(6, this.uploadList.length - 1);
-      }
-      return false;
     },
     uploadFile() {
       this.loading = true;
       var that = this;
       this.uploadList.forEach((file, index) => {
-        var fileName =
-          this.dirName + this.random_string(10) + this.get_suffix(file.name);
+        var fileName = this.dirName + this.random_string(10) + this.get_suffix(file.name);
         client
           .multipartUpload(fileName, file, {
             progress: function(p) {
@@ -126,23 +87,23 @@ export default {
         files: JSON.stringify(this.files)
       };
 
-       let param = {
+      let param = {
         files: JSON.stringify(this.files)
       };
-      console.log(this.fileDetail)
-      if(this.fileDetail){
-          updateFileVersion(this.fileId,param).then(res=>{
-            if (res.result === 1) {
-              this.resetFile();
-              this.loading = false;
-              this.files = [];
-              this.$Notice.success({
-                title: "上传成功"
-              });
-              this.$emit("close");
-            }
-          })
-          return
+      console.log(this.fileDetail);
+      if (this.fileDetail) {
+        updateFileVersion(this.fileId, param).then(res => {
+          if (res.result === 1) {
+            this.resetFile();
+            this.loading = false;
+            this.files = [];
+            this.$Notice.success({
+              title: "上传成功"
+            });
+            this.$emit("close");
+          }
+        });
+        return;
       }
       uploadCommonFile(this.fileId, params).then(res => {
         if (res.result === 1) {
@@ -163,6 +124,11 @@ export default {
 .common-file-content {
   width: 100%;
   height: 400px;
+  overflow-y: auto;
+  .file-clear {
+    margin-bottom: 10px;
+    text-align: right;
+  }
   .model-op {
     margin-left: -16px;
     position: absolute;
@@ -177,28 +143,6 @@ export default {
       margin-right: 10px;
     }
   }
-}
-
-.demo-upload-list-cover {
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-.demo-upload-list:hover .demo-upload-list-cover {
-  display: block;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.demo-upload-list-cover i {
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  margin: 0 2px;
 }
 
 .common-file-upload {

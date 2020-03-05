@@ -29,7 +29,7 @@ const store = {
       state.slider = data
     },
     //树
-    initFolders(state, data) {
+    initTree(state, data) {
       state.fileTree = data
     }
   },
@@ -48,12 +48,12 @@ const store = {
       commit('changeSlider', value)
     },
     //获取树
-    initFolders({
+    initTree({
       commit
     }, data) {
       // 初始化树
       getTree(data).then(res => {
-        commit("initFolders", res.data)
+        commit("initTree", res.data)
       })
     }
   }
