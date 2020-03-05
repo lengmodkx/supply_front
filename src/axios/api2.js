@@ -88,7 +88,7 @@ export function getUsers(keyword) {
 }
 //通过关键字查询用户 获取企业中的用户列表 20200224
 
-export function getOrgIdUsers(keyword,orgId) {
+export function getOrgIdUsers(keyword, orgId) {
     return fetch({
         url: `/organization/members/keyword/`,
         method: 'get', // 请求方法
@@ -101,7 +101,7 @@ export function getOrgIdUsers(keyword,orgId) {
 
 //获取指定项目中的某个成员信息
 
-export function getAssignUsers(projectId,keyword) {
+export function getAssignUsers(projectId, keyword) {
     return $get(`/members/project/${projectId}`, {
         'keyWord': keyword
     })
@@ -113,13 +113,17 @@ export function addUser(params) {
     return $post('/members', params)
 }
 //添加分组成员
-export function addProjectUser(groupId,userId) {
-    return $post(`/group_user/addition_group_user/${groupId}`, {userId:userId})
+export function addProjectUser(groupId, userId) {
+    return $post(`/group_user/addition_group_user/${groupId}`, {
+        userId: userId
+    })
 }
 
 //移除项目成员
-export function removeUser(userId) {
-    return $delete(`/members/${userId}`, null)
+export function removeUser(projectId, userId) {
+    return $delete(`/members/${userId}`, {
+        "projectId": projectId
+    })
 }
 
 export function projectTag(projectId) {
@@ -170,14 +174,14 @@ export function initGantt(projectId) {
 
 
 //项目视图修改信息
-export function updateProjectInfo(projectId,projectName,startTime,endTime) {
+export function updateProjectInfo(projectId, projectName, startTime, endTime) {
     return fetch({
-            url: `/projects/${projectId}/updateProInfo`,
+        url: `/projects/${projectId}/updateProInfo`,
         method: 'post', // 请求方法
         params: {
             'projectName': projectName,
             'startTime': startTime,
-            'endTime':endTime
+            'endTime': endTime
         }
     })
 }
