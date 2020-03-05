@@ -14,6 +14,8 @@ import down from '../components/public/down'
 import sucai from '../components/public/sucai'
 import Bind from '../views/bindPhone.vue'
 import orgEmpty from '../views/orgEmpty.vue'
+import delOrg from '../views/delOrg.vue'
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -31,6 +33,8 @@ const router = new Router({
         keepAlive: false
       }
     },
+   
+
     {
       path: "/sucai/", // 素材裤
       component: sucai,
@@ -269,6 +273,7 @@ const router = new Router({
       },
       component: Login
     },
+
     {
       path: "/register",
       name: "register",
@@ -294,6 +299,13 @@ const router = new Router({
         keepAlive: false
       },
       component: Bind
+    },
+    {
+      path: "/delOrg/", // 删除企业权限
+      component: delOrg,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/organization-admin/:orgId',

@@ -145,9 +145,11 @@ export default {
         //删除企业
         sureDel(){
              this.showDel=false;
+             
              delOrg(localStorage.companyId).then(res=>{
                 if(res.result==1){
                     this.$Message.success('删除企业成功');
+                     this.$router.push("/delOrg");
                 }else{
                     this.$Message.error('删除企业失败');
                 }

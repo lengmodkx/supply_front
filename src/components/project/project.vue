@@ -29,12 +29,13 @@ export default {
   data() {
     return {
       show: -1,
+      timer:'',
       animate: true,
       activeHeaderTag: -1
     };
   },
   created() {
-    this.initSocket(this.$route.params.id);
+    this.reconnection(this.$route.params.id)
   },
   destroyed() {
     this.stompClient.disconnect(function() {
@@ -67,6 +68,19 @@ export default {
     //   this.show = false
     //   this.place = this.showMenu
     // }
+    reconnection(){
+        this.initSocket(this.$route.params.id);
+        let self = this;
+        // 断开重连机制,尝试发送消息,捕获异常发生时重连
+        this.timer = setInterval(() => {
+            try {
+                self.stompClient.send("test");
+            } catch (err) {
+                console.log("断线了: " + err);
+                self.initSocket(this.$route.params.id);
+            }
+        }, 1000*10);
+    },
     initSocket(id) {
       // 建立连接对象
       var url = "";

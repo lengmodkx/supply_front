@@ -628,7 +628,7 @@ export default {
     changeVisible(bool) {
       if (bool) {
         this.projectId = this.$route.params.id;
-        this.projectList();
+          this.projectList();
       } else {
         this.projects = [];
         this.items = [];
