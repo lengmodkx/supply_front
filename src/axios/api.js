@@ -260,6 +260,73 @@ export function delProject(projectId) {
         params: {}
     });
 }
+
+// 任务彻底删除
+
+export function delRWProject(taskId) {
+    return fetch({
+        url: `tasks/${taskId}`,
+        method: "delete", // 请求方法
+        params: {}
+    });
+}
+
+// 分享删除
+
+export function delFXProject(shareId) {
+    return fetch({
+        url: `shares/${shareId}`,
+        method: "delete", // 请求方法
+        params: {}
+    });
+}
+
+
+// 日程删除
+
+
+export function delRCProject(id) {
+    return fetch({
+        url: `schedules/${id}`,
+        method: "delete", // 请求方法
+        params: {}
+    });
+}
+
+//文件删除文件夹删除
+
+
+export function delWJProject(id,projectId) {
+    return fetch({
+        url: `files/${id}`,
+        method: "delete", // 请求方法
+        params: {projectId:projectId}
+    });
+}
+
+
+// 分组删除
+
+export function delFZProject(id) {
+    return fetch({
+        url: `relations/${groupId}/group`,
+        method: "delete", // 请求方法
+        params: {}
+    });
+}
+
+// 标签删除
+
+export function delBQProject(tagId) {
+    return fetch({
+        url: `tags/${tagId}`,
+        method: "delete", // 请求方法
+        params: {}
+    });
+}
+
+
+
 //点击项目进入任务主页
 export function enterTask(projectId) {
     return fetch({

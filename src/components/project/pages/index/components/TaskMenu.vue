@@ -449,7 +449,7 @@ export default {
     popHide() {
       setTimeout(_ => {
         this.reset();
-      }, 300);
+      }, 100);
     },
     //删除菜单下所有任务
     removeAllTask() {
