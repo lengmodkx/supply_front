@@ -81,7 +81,7 @@
 
                         <div  @click.stop="recoverIt(info.id)" ><Icon type="md-refresh"/>恢复内容</div>
                     </Poptip>
-                    <div v-if="nowChecked!=='file'"><Icon type="ios-trash-outline" @click="deleteForever(info.id)" />彻底删除</div>
+                    <div v-if="nowChecked!=='file'" @click="deleteForever(info.id)" ><Icon type="ios-trash-outline" />彻底删除</div>
                        
                 </div>
             </div>
@@ -93,7 +93,7 @@
     </div>
 </template>
 <script>
-    import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
+    import {collectTask,updateTaskPrivacy,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask,delProject,delRWProject,delFXProject,delRCProject,delWJProject,delFZProject,delBQProject} from "@/axios/api";
     import {recycle} from "@/axios/recycleBinApi";
     import {getRecycle} from '@/axios/setAndTag'
     export default {
@@ -139,9 +139,106 @@
 
                 }
             },
-            // 永久删除
+            // 彻底删除
             deleteForever (id) {
-                alert(id)
+                // 后端 在删除这给了7接口。所以要判断一下
+                if(this.nowChecked === 'task'){
+                    console.log("任务")
+                        delRWProject(id).then(res => {
+                            if(res.result === 1){
+                                this.$Message.success("彻底删除成功")
+                                this.dataList.forEach((i, n) => {
+                                   if (i.id === id) {
+                                     this.dataList.splice(n, 1);
+                                    }
+                                });
+                            }else{
+                                  this.$Message.error(res.msg)
+                            }
+                        })
+                }
+                if(this.nowChecked === 'share'){
+                    console.log("分享")
+                        delFXProject(id).then(res => {
+                            if(res.result === 1){
+                                this.$Message.success("彻底删除成功")
+                                console.log(this.dataList)
+                                this.dataList.forEach((i, n) => {
+                                   if (i.id === id) {
+                                     this.dataList.splice(n, 1);
+                                    }
+                                });
+                                  console.log(this.dataList)
+                                
+                            }
+                        })
+                }
+                if(this.nowChecked === 'schedule'){
+                    console.log("日程")
+                    delRCProject(id).then(res => {
+                            if(res.result === 1){
+                                this.$Message.success("彻底删除成功")
+                                this.dataList.forEach((i, n) => {
+                                   if (i.id === id) {
+                                     this.dataList.splice(n, 1);
+                                    }
+                                });
+                            }else{
+                                  this.$Message.error(res.msg)
+                            }
+                        })
+                    
+                }
+                if(this.nowChecked === 'file'){
+                     console.log("文件")
+                      delWJProject(id,this.projectId).then(res => {
+                            if(res.result === 1){
+                                this.$Message.success("彻底删除成功")
+                                this.dataList.forEach((i, n) => {
+                                   if (i.id === id) {
+                                     this.dataList.splice(n, 1);
+                                    }
+                                });
+                            }else{
+                                  this.$Message.error(res.msg)
+                            }
+                        })
+                }
+                if(this.nowChecked === 'group'){
+
+                     console.log("分组")
+                      delFZProject(id).then(res => {
+                            if(res.result === 1){
+                                this.$Message.success("彻底删除成功")
+                                this.dataList.forEach((i, n) => {
+                                   if (i.id === id) {
+                                     this.dataList.splice(n, 1);
+                                    }
+                                });
+                            }else{
+                                  this.$Message.error(res.msg)
+                            }
+                        })
+                    
+                }
+                if(this.nowChecked === 'tag'){
+                     console.log("标签")
+                      delBQProject(id).then(res => {
+                            if(res.result === 1){
+                                this.$Message.success("彻底删除成功")
+                                this.dataList.forEach((i, n) => {
+                                   if (i.id === id) {
+                                     this.dataList.splice(n, 1);
+                                    }
+                                });
+                            }else{
+                                  this.$Message.error(res.msg)
+                            }
+                        })
+                    
+                }
+                
+
             },
             recycleTask(publicId){
                 if(this.nowChecked === 'task'){
