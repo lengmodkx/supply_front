@@ -44,7 +44,7 @@
         <iframe v-else-if="file.ext.includes('txt')" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl" width="100%" height="100%" frameborder="1"> </iframe>
         <div v-else class="cant-read-file">
           <span>{{ file.fileName }}</span>
-          <Button long size="large" type="primary" @click="download(file.fileId)">
+          <Button long size="large" type="primary" @click="downLoad(file.fileId)">
             <a style="color: white" :download="file.fileName" ref="xiazai">下载文件（{{ file.size }}）</a>
           </Button>
         </div>
