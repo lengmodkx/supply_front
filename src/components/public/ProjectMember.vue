@@ -92,7 +92,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers,getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
+import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 import loading from "./common/Loading.vue";
 export default {
@@ -139,13 +139,13 @@ export default {
       }
       this.loading = true;
       let projectId = this.$route.params.id;
-      getOrgIdUsers(this.keyword2,localStorage.companyId).then(res => {
+      getOrgIdUsers(this.keyword2, localStorage.companyId).then(res => {
         this.loading = false;
         if (res.result === 1) {
           this.invitUsers = res.data;
         }
       });
-      
+
       // getUsers(this.keyword2).then(res => {
       //   this.loading = false;
       //   if (res.result === 1) {
@@ -197,7 +197,7 @@ export default {
     //移除项目成员
     remove(userId) {
       this.visible = false;
-      removeUser(userId).then(res => {
+      removeUser(this.$route.params.id, userId).then(res => {
         console.log(userId);
         if (res.result === 1) {
           this.initUser(this.$route.params.id);
