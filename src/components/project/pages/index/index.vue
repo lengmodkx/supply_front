@@ -53,7 +53,13 @@
       @end="dragBox"
     >
       <div class="column" :key="k" v-for="(i, k) in allTask">
-        <div style="max-height: 100%;position:relative;" :data-index="k">
+        <div style="max-height: 85vh;position:relative;" :data-index="k">
+           <div class="add-Box">
+                 <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
+                    <Icon type="android-add-circle"></Icon>
+                    <Button type="info" long icon="md-add"></Button>
+                  </span>
+          </div>
           <div class="title handle">
             {{ i.relationName }} · {{ i.taskList ? i.taskList.length : "0" }}
             <!-- 点击三角形出来的任务列表菜单组件 -->
@@ -69,7 +75,9 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                    <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
+                     <Tooltip :content="a.executorName"  placement="top">
+                        <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
+                     </Tooltip>
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -123,7 +131,9 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
+                     <Tooltip :content="a.executorName"  placement="top">
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
+                     </Tooltip>
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -164,11 +174,14 @@
                 </div>
               </div>
             </draggable>
+            <div class="add"></div>
 
-            <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
+            <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
               <Icon type="android-add-circle"></Icon>
               <Button type="info" long icon="md-add"></Button>
-            </span>
+            </span> -->
+
+           
           </div>
         </div>
       </div>
@@ -495,6 +508,16 @@ export default {
 
 <style lang="less">
 @import "./index";
+.add-Box{
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 32px;
+  
+  z-index: 999;
+}
 .add-task-box {
   width: 272px;
   height: 125px;

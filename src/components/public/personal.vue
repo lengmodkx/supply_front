@@ -143,7 +143,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions("user", [ "initSrc"]),
+        ...mapActions("user", [ "initSrc","defaultImage"]),
 
         // 确认密码
         submitPassword (name) {
@@ -218,6 +218,8 @@ export default {
                 this.pic_show = false,
                 this.pic_hide = true,
                 this.imageUrl = fileReader.result
+              
+               
             })
             fileReader.readAsDataURL(files[0])
             this.image = files[0]
@@ -239,6 +241,7 @@ export default {
                     updateUserNews(data).then(res=>{
                         if(res.result==1){
                             localStorage.userImg = that.message.defaultImage;
+
                             that.initSrc(that.message.defaultImage);
                             that.$Message.info(res.msg);
                         }
