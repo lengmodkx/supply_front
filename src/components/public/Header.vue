@@ -37,7 +37,7 @@
         </span>
       </a>
       <Poptip placement="bottom-end" width="220" class="userPop" v-model="popVisible" @on-popper-show="initCompany">
-        <img class="avatar" :src="avatar" alt="" />
+        <img class="avatar" :src="defaultImage" alt="" />
         <div class="userInfo" slot="content">
           <ul class="org">
             <li
@@ -114,7 +114,6 @@ import suCai from "./sucai"; //素材
 import down from "./down"; //下载
 import message from "./message"; //消息
 import Mine from "./Mine"; //消息
-
 import CreateOrg from "./common/CreateOrg";
 import { mapState, mapActions, mapMutations } from "vuex";
 import SockJS from "sockjs-client";
@@ -178,6 +177,7 @@ export default {
       time: 0
     };
   },
+ 
   mounted() {
     this.initSocket(localStorage.userId);
     this.initCompany();
@@ -186,6 +186,7 @@ export default {
     ...mapActions("company", ["initCompany"]),
     ...mapActions("project", ["orgProjectInit"]),
     ...mapMutations("app", ["changeHeaderTag"]),
+    
     initSocket(id) {
       // 建立连接对象
       var url = "";
@@ -349,7 +350,8 @@ export default {
     }
   },
   computed: {
-    ...mapState("user", ["mineRouter"]),
+    ...mapState("index", ["headerImg"]),
+    ...mapState("user", ["mineRouter","defaultImage"]),
     ...mapState("app", ["activeHeaderTag"]),
     ...mapState("news", ["newsCount"]),
     ...mapState("company", ["companyList"]),
@@ -357,6 +359,7 @@ export default {
   },
   created() {
     this.getNewsCount();
+   console.log("头像+" +this.defaultImage)
   }
 };
 </script>
