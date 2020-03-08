@@ -134,7 +134,7 @@
         </div>
         <div class="picker-column thin-scroll flex-fill flex-vert">
           <Loading v-show="loading1"></Loading>
-          <v-jstree :data="asyncData" show-checkbox @item-click="treeClick" :multiple="false" whole-row ref="jstree" text-field-name="text" children-field-name="children"></v-jstree>
+          <tree :data="fileTree" ref="tree"></tree>
         </div>
       </div>
       <div slot="footer" class="move-footer">
@@ -149,7 +149,7 @@
 </template>
 <script>
 import modelFile from "@/components/project/file/model.vue"; //上传模型文件
-
+import tree from "@/components/project/newFile/Tree_move.vue"; //树
 import { mapState, mapActions, mapMutations } from "vuex";
 import { createFolder, getProjectList, folderChild } from "../../../axios/api.js";
 
@@ -159,7 +159,7 @@ export default {
   components: {
     commonFile: resolve => require(["../file/commonfile.vue"], resolve),
     modelFile,
-    VJstree
+    tree
   },
   data() {
     return {
@@ -193,7 +193,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("tree", ["showView", "slider"]),
+    ...mapState("tree", ["fileTree", "showView", "slider"]),
     ...mapState("file", ["files", "itemfile", "createFileId"])
   },
   methods: {
@@ -339,7 +339,7 @@ export default {
     },
     // 获取项目列表
     projectList() {
-      getProjectList().then(res => {
+      getProjectList(localStorage.companyId).then(res => {
         if (res.result == 1) {
           this.projects = res.data;
         }

@@ -54,7 +54,7 @@
               <DateTimePicker type="start" @on-change="startDate" :options="options1" @clear="clearTime('开始')" :max="task.endTime" @confirm="confirm1">
                 <div class="init" v-if="!task.startTime">开始时间</div>
                 <div class="setTime" v-if="task.startTime">
-                  {{ $moment(task.startTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
+                  {{ $moment(task.startTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
                   <span @click.stop="clearTime('开始')">&times;</span>
                 </div>
               </DateTimePicker>
@@ -62,7 +62,7 @@
               <DateTimePicker @on-change="endDate" :options="options2" @clear="clearTime('截止')" type="end" :min="task.startTime" @confirm="confirm2">
                 <div class="init" v-if="!task.endTime">截止时间</div>
                 <div class="setTime" v-if="task.endTime">
-                  {{ $moment(task.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
+                  {{ $moment(task.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
                   <!-- {{data.endDate}} -->
                   <span @click.stop="clearTime('截止')">&times;</span>
                 </div>
@@ -119,7 +119,7 @@
                     <div>
                       <Icon class="icon" type="calendar" v-if="!i.sontaskDate" size="20"></Icon>
                       <span v-else class="timeBox">
-                        {{ $moment(i.sontaskDate).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
+                        {{ $moment(i.sontaskDate).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]ddddLT", sameElse: "Y年M月D日LT" }) }}
                       </span>
                     </div>
                   </DateTimePicker>
@@ -536,13 +536,13 @@ export default {
         label = 1;
       }
       if (taskStatus) {
-        completeTask(taskId, label).then(res => {
+        completeTask(this.$route.params.id, taskId, label).then(res => {
           if (res.result !== 1) {
             this.$Message.error(res.msg);
           }
         });
       } else {
-        cancelcompleteTask(taskId, label).then(res => {
+        cancelcompleteTask(this.$route.params.id, taskId, label).then(res => {
           if (res.result !== 1) {
             this.$Message.error(res.msg);
           }

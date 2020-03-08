@@ -1,5 +1,5 @@
 <template>
-  <div class="add-share" :class="active" >
+  <div class="add-share" :class="active">
     <div class="context">
       <div class="input">
         <Input v-model="title" placeholder="输入文档标题" />
@@ -7,16 +7,16 @@
       <div class="html">
         <editor ref="editor" :contents="content"></editor>
       </div>
+      <shareMember ref="involveMember" :projectId="projectId"></shareMember>
     </div>
+
     <div class="footer">
-      <div class="fl" v-if="isPrivacy===1" @click="isPrivacy=2">
-        <p class="skt">
-          <i class="ivu-icon ivu-icon-unlocked"></i> 隐私模式</p>
+      <div class="fl" v-if="isPrivacy === 1" @click="isPrivacy = 2">
+        <p class="skt"><i class="ivu-icon ivu-icon-unlocked"></i> 隐私模式</p>
         <p class="ig">所有成员可见</p>
       </div>
-      <div class="fl" v-if="isPrivacy===2" @click="isPrivacy=1">
-        <p class="skt">
-          <i class="ivu-icon ivu-icon-locked"></i> 隐私模式</p>
+      <div class="fl" v-if="isPrivacy === 2" @click="isPrivacy = 1">
+        <p class="skt"><i class="ivu-icon ivu-icon-locked"></i> 隐私模式</p>
         <p class="ig">仅参与者可见</p>
       </div>
       <button type="button" class="fr ivu-btn ivu-btn-info ivu-btn-large" @click="publishShare" :loading="loading">
@@ -29,9 +29,10 @@
 
 <script>
 import editor from "../../resource/Simditor.vue";
+import shareMember from "./InvolveMember.vue";
 import { shareAdd, editShare } from "../../../axios/api.js";
 export default {
-  props: ["projectId", "shareTitle", "shareContent", 'shareId'],
+  props: ["projectId", "shareTitle", "shareContent", "shareId"],
   data() {
     return {
       value: "",
@@ -43,12 +44,12 @@ export default {
     };
   },
   components: {
-    editor
+    editor,
+    shareMember
   },
 
   mounted() {
     this.$refs.editor.contents = this.content;
-    console.log(this.$refs.editor)
     // editor.on('valuechanged', () => {
     //   this.content = editor.getValue()
     // })
@@ -59,7 +60,7 @@ export default {
       if (this.title == null || this.title == "") {
         this.$Notice.warning({
           title: "请输入分享标题",
-            duration: 0.5
+          duration: 0.5
         });
         return false;
       }
@@ -67,7 +68,7 @@ export default {
       if (this.content == null || this.content == "") {
         this.$Notice.warning({
           title: "请输入分享内容",
-         duration: 0.5
+          duration: 0.5
         });
         return false;
       }
@@ -77,14 +78,16 @@ export default {
         projectId: this.projectId,
         title: this.title,
         content: this.content,
-        isPrivacy: this.isPrivacy
+        isPrivacy: this.isPrivacy,
+        joinIds: this.$refs.involveMember.getIds().join(",")
       };
+
       // 编辑分享
       if (this.shareId) {
-        editShare(this.shareId,params).then(res => {
+        editShare(this.shareId, params).then(res => {
           this.$emit("close");
-        })
-      }else {
+        });
+      } else {
         // 新建分享
         shareAdd(params).then(res => {
           console.log(res);
@@ -96,7 +99,7 @@ export default {
           }
         });
       }
-    },
+    }
   }
 };
 </script>
@@ -130,12 +133,10 @@ export default {
     }
     .html {
       padding-top: 20px;
-      height: 600px;
-      overflow-y: auto;
     }
   }
   .footer {
-     z-index: 9999999;
+    z-index: 9999999;
     position: fixed;
     bottom: 0;
     left: 0;

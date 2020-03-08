@@ -4,37 +4,35 @@
     <div slot="content" class="task-menuwrapper-content" v-if="initCom">
       <div class="dropdownTitle">
         <span class="back">
-          <span v-if="active!=''" @click="active='';reset(true)">
+          <span
+            v-if="active != ''"
+            @click="
+              active = '';
+              reset(true);
+            "
+          >
             <svg-icon class="backicon" name="back"></svg-icon>
           </span>
         </span>
-        {{topTitle}}
-        <span class="guanbi" @click="visible=false">
+        {{ topTitle }}
+        <span class="guanbi" @click="reset(false)">
           <svg-icon class="closePop" name="close"></svg-icon>
         </span>
       </div>
-      <div class="task-menu-list" v-if="active==''">
-        <div class="menuItem" @click="listItemClick('a','编辑列表')">
-          <Icon type="md-create" size="20" />编辑列表</div>
-        <div class="menuItem" @click="listItemClick('b','添加列表')" style="border-bottom:1px solid #eee;">
-          <Icon type="md-add" size="20" />在此后添加新列表</div>
-        <div class="menuItem" @click="listItemClick('c','选择执行者')">
-          <Icon type="ios-contact-outline" size="20" />设置本列表所有任务执行者</div>
-        <div class="menuItem" @click="listItemClick('d','选择截止时间')">
-          <Icon type="ios-time-outline" size="20" />设置本列表所有任务截止时间</div>
-        <div class="menuItem" @click="listItemClick('e','移动本列表所有任务')">
-          <Icon type="ios-exit-outline" size="20" />移动本列表所有任务</div>
-        <div class="menuItem" @click="listItemClick('f','复制本列表所有任务')">
-          <Icon type="md-copy" size="20" />复制本列表所有任务</div>
-        <div class="menuItem" @click="listItemClick('g','移到回收站')" style="border-bottom:1px solid #eee;">
-          <Icon type="ios-trash-outline" size="20" />本列表所有任务移到回收站</div>
-        <div class="menuItem" @click="listItemClick('h','删除列表')">
-          <Icon type="ios-trash-outline" size="20" />删除列表</div>
+      <div class="task-menu-list" v-if="active == ''">
+        <div class="menuItem" @click="listItemClick('a', '编辑列表')"><Icon type="md-create" size="20" />编辑列表</div>
+        <div class="menuItem" @click="listItemClick('b', '添加列表')" style="border-bottom:1px solid #eee;"><Icon type="md-add" size="20" />在此后添加新列表</div>
+        <div class="menuItem" @click="listItemClick('c', '选择执行者')"><Icon type="ios-contact-outline" size="20" />设置本列表所有任务执行者</div>
+        <div class="menuItem" @click="listItemClick('d', '选择截止时间')"><Icon type="ios-time-outline" size="20" />设置本列表所有任务截止时间</div>
+        <div class="menuItem" @click="listItemClick('e', '移动本列表所有任务')"><Icon type="ios-exit-outline" size="20" />移动本列表所有任务</div>
+        <div class="menuItem" @click="listItemClick('f', '复制本列表所有任务')"><Icon type="md-copy" size="20" />复制本列表所有任务</div>
+        <div class="menuItem" @click="listItemClick('g', '移到回收站')" style="border-bottom:1px solid #eee;"><Icon type="ios-trash-outline" size="20" />本列表所有任务移到回收站</div>
+        <div class="menuItem" @click="listItemClick('h', '删除列表')"><Icon type="ios-trash-outline" size="20" />删除列表</div>
       </div>
 
       <!-- 内容部分的盒子： -->
       <div class="task-menu-detail">
-        <div class="con1" v-if="active=='a'">
+        <div class="con1" v-if="active == 'a'">
           <div>
             <Input v-model="title" :autofocus="true" />
           </div>
@@ -42,7 +40,7 @@
             <Button type="primary" style="width:100%;margin-top:14px;" @click="saveTitle">保存</Button>
           </div>
         </div>
-        <div class="con2" v-if="active=='b'">
+        <div class="con2" v-if="active == 'b'">
           <div class="con2tip">新列表将被添加在当前列表之后</div>
           <div>
             <Input v-model="newTask" :autofocus="true" placeholder="列表名称" />
@@ -51,7 +49,7 @@
             <Button type="primary" style="width:100%;margin-top:14px;">创建</Button>
           </div>
         </div>
-        <div class="con3" v-if="active=='c'">
+        <div class="con3" v-if="active == 'c'">
           <!-- <Input class="findInput"
                  v-model="findMember"
                  :autofocus="true"
@@ -72,19 +70,18 @@
 
           <Input class="findInput" v-model="findMember" :autofocus="true" placeholder="查找成员" />
           <ul class="memberList">
-            <li v-for='item  in memberList' :key="item.userId" @click="chooseExecutor(item.userId)">
-              <img :src="item.image">
-              {{item.userName}}
-              <div class="memberListIcon" v-if="curId==item.userId">
+            <li v-for="item in memberList" :key="item.userId" @click="chooseExecutor(item.userId)">
+              <img :src="item.image" />
+              {{ item.userName }}
+              <div class="memberListIcon" v-if="curId == item.userId">
                 <Icon style="margin-top: 5px" class="right" type="md-checkmark" size="20" />
               </div>
             </li>
           </ul>
-          <Button type="primary" long :disabled="curId==-1" @click='setAllMember'>确定</Button>
-
+          <Button type="primary" long :disabled="curId == -1" @click="setAllMember">确定</Button>
         </div>
 
-        <div class="con4" v-if="active=='d'">
+        <div class="con4" v-if="active == 'd'">
           <!-- <DatePicker :open="active=='d'"
                         type="datetime"
                         placeholder="Select date"
@@ -94,7 +91,7 @@
           <DateTimeInline @confirm="setAllTaskEndTime"></DateTimeInline>
         </div>
 
-        <div class="con5" v-if="active=='e'">
+        <div class="con5" v-if="active == 'e'">
           <div class="con5item1">
             <span>项目</span>
             <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
@@ -105,7 +102,6 @@
                 <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
               </OptionGroup>
             </Select>
-
           </div>
           <div class="con5item2">
             <span>分组</span>
@@ -127,7 +123,7 @@
           <Button type="primary" long style="margin-top:8px;" @click="moveAllTask">确定</Button>
         </div>
 
-        <div class="con6" v-if="active=='f'">
+        <div class="con6" v-if="active == 'f'">
           <div class="con5item1">
             <span>项目</span>
             <Select v-model="model7" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
@@ -170,7 +166,6 @@
 
             <!--</div>-->
             <!--</Poptip>-->
-
           </div>
           <div class="con5item2">
             <span>分组</span>
@@ -217,13 +212,13 @@
           <Button type="primary" long @click="copyAllTask">确定</Button>
         </div>
 
-        <div class="con7" v-if="active=='g'">
+        <div class="con7" v-if="active == 'g'">
           <div class="ask">您确定要把列表下的所有任务移到回收站吗？</div>
           <Button type="error" long @click="removeAllTask">移到回收站</Button>
         </div>
-        <div class="con8" v-if="active=='h'">
+        <div class="con8" v-if="active == 'h'">
           <!-- 如果列表内容不为空，则提示要先清空所有的列表 -->
-          <div class="nodelete" v-if="data.taskList.length>0">
+          <div class="nodelete" v-if="data.taskList.length > 0">
             <div>请先清空此列表上的任务，然后再删除这个列表.</div>
           </div>
           <!-- 如果列表为空，则可以删除该任务 -->
@@ -233,33 +228,12 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </Poptip>
-
 </template>
 <script>
-import {
-  editMenuName,
-  addMenu,
-  setAllTaskEndTime,
-  moveAllTask,
-  copyAllTask
-} from "@/axios/relation";
-import {
-  collectTask,
-  updateTaskPrivacy,
-  cancelCollect,
-  taskToRecycle,
-  getStarProjectList,
-  getGroupList,
-  getMenuList,
-  copyTask,
-  getmemberList,
-  moveTask,
-  taskAllToRecycle
-} from "@/axios/api";
+import { editMenuName, addMenu, setAllTaskEndTime, moveAllTask, copyAllTask } from "@/axios/relation";
+import { collectTask, updateTaskPrivacy, cancelCollect, taskToRecycle, getStarProjectList, getGroupList, getMenuList, copyTask, getmemberList, moveTask, taskAllToRecycle } from "@/axios/api";
 
 import { setAllTaskExecutor, deleteList } from "@/axios/relation";
 import { debuglog } from "util";
@@ -285,7 +259,7 @@ export default {
       starProject: [],
       notStarProject: [],
       curTopTitle: "列表菜单",
-      title: this.data.title,
+      title: this.data.relationName,
       findMember: "",
       findPro: "",
       notice: [],
@@ -303,11 +277,6 @@ export default {
     // }
   },
   watch: {
-    data: {
-      handler: function(newValue, oldValue) {},
-      deep: true
-    },
-
     findMember(newValue, oldValue) {
       if (newValue != "") {
         this.memberList = this.memberList.filter((item, index, self) => {
@@ -318,7 +287,9 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted() {
+    console.log(this.data);
+  },
   methods: {
     //获取执行者ID
     chooseExecutor(id) {
@@ -328,11 +299,7 @@ export default {
     saveTitle() {
       this.visible = false;
       //发请求修改标题
-      editMenuName(this.data.relationId, this.title).then(res => {
-        if (res.result === 0) {
-          this.$Message.error("修改失败!");
-        }
-      });
+      editMenuName(this.data.relationId, this.title);
     },
     //设置此列表下所有任务的截止时间
     setAllTaskEndTime(endTime) {
@@ -377,12 +344,7 @@ export default {
     },
     //移动所有任务
     moveAllTask() {
-      moveAllTask(
-        this.data.relationId,
-        this.currProjectId,
-        this.currGroupId,
-        this.currMenuId
-      ).then(res => {
+      moveAllTask(this.data.relationId, this.currProjectId, this.currGroupId, this.currMenuId).then(res => {
         if (res.result === 0) {
           this.$Message.error("移动失败!");
         }
@@ -390,12 +352,7 @@ export default {
     },
     //复制列表的所有任务
     copyAllTask() {
-      copyAllTask(
-        this.data.relationId,
-        this.currProjectId,
-        this.currGroupId,
-        this.currMenuId
-      ).then(res => {
+      copyAllTask(this.data.relationId, this.currProjectId, this.currGroupId, this.currMenuId).then(res => {
         if (res.result === 0) {
           this.$Message.error("复制失败!");
         }
@@ -430,21 +387,17 @@ export default {
     clearAll() {},
     createNew() {
       this.active = "";
-      addMenu(
-        this.data.projectId,
-        this.newTask,
-        this.data.parentId,
-        this.data.order
-      ).then(res => {
+      addMenu(this.data.projectId, this.newTask, this.data.parentId, this.data.order).then(res => {
         if (res.result === 0) {
           this.$Message.error("添加失败!");
         }
       });
     },
     reset(flag) {
-      Object.assign(this.$data, this.$options.data());
+      // Object.assign(this.$data, this.$options.data());
       this.visible = flag;
-      this.title = this.data.title;
+      // this.title = this.data.title;
+      this.active = "";
     },
     popHide() {
       setTimeout(_ => {
@@ -492,4 +445,3 @@ export default {
   }
 }
 </style>
-

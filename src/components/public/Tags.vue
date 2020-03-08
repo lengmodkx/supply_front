@@ -163,7 +163,7 @@ export default {
         this.tags(params);
         this.btnName = "创建标签";
       } else {
-        searchTags({ key: this.searchTag }).then(res => {
+        searchTags({ key: this.searchTag, projectId: this.projectId }).then(res => {
           if (res.result === 1) {
             if (res.data.length == 0) {
               this.totalTag = res.data;

@@ -9,7 +9,16 @@ import "./icons";
 import "./components/public/common"; //挂载common下组件到全局
 import moment from "moment";
 import gobal from "./global";
-moment.locale("zh-cn");
+moment.locale("zh-cn", {
+    weekdaysShort: '周日_周一_周二_周三_周四_周五_周六'.split('_'),
+    longDateFormat: {
+        LT: 'HH:mm'
+    },
+    week: {
+        dow: 1, // 星期的第一天是星期一
+        doy: 6 // 年份的第一周必须包含1月4日 (7 + 1 - 4)
+    }
+});
 import './assets/iconfont/iconfont.css'
 import {
     get,

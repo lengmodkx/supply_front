@@ -296,11 +296,13 @@ export function delRCProject(id) {
 //文件删除文件夹删除
 
 
-export function delWJProject(id,projectId) {
+export function delWJProject(id, projectId) {
     return fetch({
         url: `files/${id}`,
         method: "delete", // 请求方法
-        params: {projectId:projectId}
+        params: {
+            projectId: projectId
+        }
     });
 }
 
@@ -506,31 +508,27 @@ export function cancelCollect(publicId) {
     return $delete(`/collections/${publicId}`)
 }
 
+//完成/重做任务--2020-03-06修改
+
+export function changeTaskStatus() {
+    return $put(`${api.tasks}/${taskId}/changeStatus`);
+}
+
 //完成任务
-export function completeTask(taskId, label) {
-    if (label) {
-        var l = {
-            label: label
-        }
+export function completeTask(projectId, taskId, label) {
+    var l = {
+        projectId: projectId,
+        label: label
     }
-    return fetch({
-        url: `${api.tasks}/${taskId}/finish`,
-        method: "put", // 请求方法
-        params: l
-    });
+    return $put(`${api.tasks}/${taskId}/finish`, l);
 }
 //取消完成任务
-export function cancelcompleteTask(taskId, taskStatus) {
-    if (taskStatus) {
-        var l = {
-            label: taskStatus
-        }
+export function cancelcompleteTask(projectId, taskId, label) {
+    var l = {
+        projectId: projectId,
+        label: label
     }
-    return fetch({
-        url: `${api.tasks}/${taskId}/unFinish`,
-        method: "put", // 请求方法
-        params: l
-    });
+    return $put(`${api.tasks}/${taskId}/unFinish`, l);
 }
 //拖拽任务排序
 export function dragTask(data) {
@@ -718,7 +716,7 @@ export function addChildTask(taskId, params) {
 //获取当前用户消息
 export function getNews(data) {
     if (!data) {
-        return $get(`news`,data )
+        return $get(`news`, data)
     } else {
         return $get(`news`, {})
     }

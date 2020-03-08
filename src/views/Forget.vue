@@ -8,17 +8,17 @@
         </FormItem>
         <FormItem prop="captcha">
           <Input type="text" size="large" placeholder="请输入验证码" v-model="formValidate.captcha" clearable class="captcha-input" />
-          <img :src="formValidate.captchaUrl" class="captcha-img"  @click="changeImg">
+          <img :src="formValidate.captchaUrl" class="captcha-img" @click="changeImg" />
         </FormItem>
         <FormItem prop="code">
           <Input type="text" size="large" placeholder="请输入短信验证码" v-model="formValidate.code" clearable class="captcha-input" />
-          <Button type="primary" v-if="isTimes" class="code">{{timeNum}}秒后重新发送</Button>
-          <Button type="primary" v-else class="code" @click="getPhoneCode" :disabled="!formValidate.accountName||!formValidate.captcha">获取短信验证码</Button>
+          <Button type="primary" v-if="isTimes" class="code">{{ timeNum }}秒后重新发送</Button>
+          <Button type="primary" v-else class="code" @click="getPhoneCode" :disabled="!formValidate.accountName || !formValidate.captcha">获取短信验证码</Button>
         </FormItem>
         <FormItem prop="password">
           <Input type="password" size="large" placeholder="请输入密码" v-model="formValidate.password" clearable class="forget-input" />
         </FormItem>
-         <FormItem prop="passwordMore">
+        <FormItem prop="passwordMore">
           <Input type="password" size="large" placeholder="请再次输入密码" v-model="formValidate.passwordMore" clearable class="forget-input" />
         </FormItem>
         <FormItem>
@@ -41,15 +41,15 @@ export default {
         captcha: "",
         code: "",
         password: "",
-        captchaUrl:" ",
-        passwordMore:"",
+        captchaUrl: " ",
+        passwordMore: ""
       },
       ruleValidate: {
         accountName: [
           {
-            required:false,
-            validator:validatePhone,
-             trigger: 'blur' 
+            required: false,
+            validator: validatePhone,
+            trigger: "blur"
           }
         ],
         captcha: [
@@ -83,12 +83,11 @@ export default {
       }
     };
   },
-  created:function(){
-         this.changeImg();
+  created: function() {
+    this.changeImg();
   },
   methods: {
-
-   changeImg() {
+    changeImg() {
       this.formValidate.captchaUrl = "/api/captcha?d=" + Math.random();
     },
     forget: function(name) {
@@ -97,10 +96,10 @@ export default {
         if (valid) {
           console.log(this.formValidate);
           resetPwd(this.formValidate).then(res => {
-            if(res.result==1){
+            if (res.result == 1) {
               this.$Message.success("修改成功!");
               this.$router.push("/");
-            }else{
+            } else {
               this.$Message.error("修改失败");
             }
           });
@@ -119,36 +118,33 @@ export default {
           clearInterval(time);
         }
       }, 1000);
-      getPhone(this.formValidate.accountName, this.formValidate.captcha).then(
-        res => {
-          if(res.result===1){
-            this.$Message.success("获取成功");
-          }else{
-            this.$Message.error("获取失败");
-          }
+      getPhone(this.formValidate.accountName, this.formValidate.captcha).then(res => {
+        if (res.result === 1) {
+          this.$Message.success("获取成功");
+        } else {
+          this.$Message.error("获取失败");
         }
-      );
+      });
     }
   }
 };
 
- const validatePhone = (rule, value, callback) => {
-    if (!value) {
-        return callback(new Error('请输入手机号'));
-    } else if (!/^1[345789]\d{9}$/.test(value)) {
-        callback('手机号格式不正确');
-    } else {
-        callback();
-    }   
-}
-
+const validatePhone = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("请输入手机号"));
+  } else if (!/^1[345789]\d{9}$/.test(value)) {
+    callback("手机号格式不正确");
+  } else {
+    callback();
+  }
+};
 </script>
 <style scoped>
 .bj-box {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg.jpg") no-repeat center/cover;
+  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg2.jpg") no-repeat center/cover;
 }
 .forget-box {
   width: 340px;
@@ -192,10 +188,10 @@ export default {
 .code:hover {
   opacity: 0.8;
 }
-.go-login{
-    margin: -10px 0 0 auto;
-    cursor: pointer;
-    color: #3da8f5;
-    float: right;
-  }
+.go-login {
+  margin: -10px 0 0 auto;
+  cursor: pointer;
+  color: #3da8f5;
+  float: right;
+}
 </style>

@@ -75,7 +75,7 @@
                   <div class="task-info-wrapper">
                     <div class="task-infos">
                       <span class="label time-label" v-if="a.endTime"
-                        >{{ $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }} 截止</span
+                        >{{ $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }} 截止</span
                       >
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{ a.repeat }}</span>
                       <!--<span class="label">-->
@@ -129,7 +129,7 @@
                   <div class="task-info-wrapper">
                     <div class="task-infos">
                       <span class="label time-label" v-if="a.endTime"
-                        >{{ $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}截止</span
+                        >{{ $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}截止</span
                       >
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{ a.repeat }}</span>
                       <!--<span class="label">-->
@@ -149,11 +149,6 @@
                       <span class="label" v-if="a.fileId" style="margin-bottom:2px">
                         <Icon type="md-paper" size="16" />
                       </span>
-                      <div class="tag-box" v-if="a.tagList">
-                        <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId">
-                          <i :style="{ backgroundColor: tag.bgColor }"></i><span>{{ tag.tagName }}</span>
-                        </div>
-                      </div>
                       <div class="tag-box" v-if="a.tagList">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId">
                           <i :style="{ backgroundColor: tag.bgColor }"></i><span>{{ tag.tagName }}</span>
@@ -202,7 +197,7 @@
     <div v-if="view === '时间视图'" class="column-main" style="padding: 0">
       <timeView></timeView>
     </div>
-    <!-- 点击列表出来的弹框。编辑列表 -->
+    <!-- 点击列表出来的弹框。编辑列表 :closable="false" fullscreen-->
     <Modal v-model="showModal" class="myModal" :mask-closable="false" footer-hide>
       <my-modal v-if="showModal" @close="showModal = false" :taskId="taskId"></my-modal>
     </Modal>
@@ -223,7 +218,7 @@
 import draggable from "vuedraggable";
 import FilterBox from "./components/FilterBox";
 import SortBox from "./components/SortBox";
-import TaskMenu from "./components/TaskMenu";
+import TaskMenu from "./components/TaskMenu.vue";
 import myModal from "./components/EditList.vue";
 import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
@@ -426,23 +421,17 @@ export default {
         // });
 
         //完成任务  请求
-        completeTask(taskId).then(res => {
-          this.init(this.projectId).then(res => {});
-          // console.log(res,"完成任务了")
+        completeTask(this.projectId, taskId, 0).then(res => {
           if (res.result == 0) {
             this.$Message.error(res.msg);
-            this.init(this.projectId).then(res => {});
-          }
-          if (res.result == 203) {
-            this.$Message.error("没有权限");
-            this.init(this.projectId).then(res => {});
           }
         });
       } else {
         //取消完成任务 请求
-        cancelcompleteTask(taskId).then(res => {
-          // console.log(res,"取消完成任务")
-          this.init(this.projectId).then(res => {});
+        cancelcompleteTask(this.projectId, taskId, 0).then(res => {
+          if (res.result == 0) {
+            this.$Message.error(res.msg);
+          }
         });
       }
 
