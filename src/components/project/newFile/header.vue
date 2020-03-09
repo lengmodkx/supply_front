@@ -35,9 +35,8 @@ export default {
     }
   },
   computed: {
-      ...mapState("tree", ['fileTree',"userTree","tooltree","typetree",'showView',]),
-    
-       ...mapState("file", ["crumbs","crumbsCache","crumbsIndex",'createFileId']),
+    ...mapState("tree", ['fileTree',"userTree","tooltree","typetree",'showView',]),
+    ...mapState("file", ["crumbs","crumbsCache","crumbsIndex",'createFileId']),
    },
   methods: {
        ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag","initCrumbs"]),
@@ -58,16 +57,14 @@ export default {
         },
         // 后退
         back(){
-              if(this.crumbsIndex<0){
-                console.log('后退终止')
-                return
-              }  
-              this.$store.commit("file/crumbsBack");
-              //刷新页面
-              let params = { fileId: this.createFileId };
-                    this.initFile(params).then(res => {
-               });
-
+          if(this.crumbsIndex==0){
+            return
+          }  
+          console.log('xxxxxxxx')
+          this.$store.commit("file/crumbsBack");
+          //刷新页面
+          let params = { fileId: this.createFileId };
+          this.initFile(params);
         },
         //回到首页
           home(){

@@ -34,17 +34,27 @@
                   <span class="object-field__name">状态</span>
                 </div>
                 <div class="flex-space object-field__right">
-                  <Dropdown trigger="click">
+                  <Dropdown trigger="click" @on-click="taskStatusChange">
                     <div class="task-is-finish">
                       <svg-icon name="task-not-finish" class="task-not-finish" v-if="task.taskStatus == false"></svg-icon>
                       <svg-icon name="task-not-finish-hover" class="task-not-finish-hover" v-if="task.taskStatus == false"></svg-icon>
                       <svg-icon name="task-finish" class="task-finish" v-if="task.taskStatus == true"></svg-icon>
                       <svg-icon name="task-finish-hover" class="task-finish-hover" v-if="task.taskStatus == true"></svg-icon>
-                      <span>{{ task.taskStatus ? "已完成" : "未完成" }}</span>
+                      <span v-if="task.taskStatus == false">未完成</span>
+                      <span v-else class="task-status-title">已完成</span>
                     </div>
                     <DropdownMenu slot="list">
-                      <DropdownItem>未完成</DropdownItem>
-                      <DropdownItem>已完成</DropdownItem>
+                      <DropdownItem name="未完成">
+                        <div class="task-status-title_01">
+                          <span>未完成</span>
+                          <Icon type="ios-checkmark" size="20" v-if="task.taskStatus == false" />
+                        </div>
+                      </DropdownItem>
+                      <DropdownItem name="已完成"
+                        ><div class="task-status-title_01">
+                          <span style="color:#038a24">已完成</span>
+                          <Icon type="ios-checkmark" size="20" v-if="task.taskStatus == true" /></div
+                      ></DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
                 </div>
@@ -76,6 +86,7 @@
 <script>
 import Loading from "@/components/public/common/Loading.vue";
 import { mapState, mapActions } from "vuex";
+import {} from "../../../../../axios/api.js";
 export default {
   components: {
     Loading
@@ -97,13 +108,16 @@ export default {
   },
   mounted() {},
   methods: {
-    ...mapActions("task", ["updateStartTime", "updateEndTime", "addChildrenTask", "editTask"]),
+    ...mapActions("task", ["editTask"]),
     closeModal() {
       this.$emit("close");
     },
+    //修改任务名称
     updateTaskName() {
       console.log(this.$refs.taskName.innerHTML);
-    }
+    },
+    //修改任务状态
+    taskStatusChange() {}
   }
 };
 </script>

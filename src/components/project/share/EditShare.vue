@@ -7,7 +7,7 @@
       <div class="html">
         <editor ref="editor" :contents="content"></editor>
       </div>
-      <shareMember ref="involveMember" :projectId="projectId"></shareMember>
+      <shareMember ref="involveMember" :projectId="projectId" :joins="share.joinInfo"></shareMember>
     </div>
 
     <div class="footer">
@@ -32,15 +32,15 @@ import editor from "../../resource/Simditor.vue";
 import shareMember from "./InvolveMember.vue";
 import { shareAdd, editShare } from "../../../axios/api.js";
 export default {
-  props: ["projectId"],
+  props: ["projectId", "share"],
   data() {
     return {
       value: "",
       loading: false,
       isPrivacy: 1,
       active: "",
-      title: "",
-      content: ""
+      title: this.share.title,
+      content: this.share.content
     };
   },
   components: {
@@ -49,6 +49,7 @@ export default {
   },
 
   mounted() {
+    console.log(this.share);
     this.$refs.editor.contents = this.content;
     // editor.on('valuechanged', () => {
     //   this.content = editor.getValue()
@@ -81,13 +82,9 @@ export default {
         isPrivacy: this.isPrivacy,
         joinIds: this.$refs.involveMember.getIds().join(",")
       };
-      shareAdd(params).then(res => {
-        if (res.result === 1) {
-          this.title = "";
-          this.content = "";
-          this.loading = false;
-          this.$emit("close");
-        }
+      // 编辑分享
+      editShare(this.share.id, params).then(res => {
+        this.$emit("close");
       });
     }
   }

@@ -1,53 +1,39 @@
 <template>
-  <Poptip class="task-menuwrapper"
-          placement="bottom"
-          transfer
-          v-model="visible"
-          @on-popper-hide="popHide">
+  <Poptip class="task-menuwrapper" placement="bottom" transfer v-model="visible" @on-popper-hide="popHide">
     <Icon type="ios-arrow-down" size="20" />
     <!-- <Icon type="ios-arrow-down"
           size="20"></Icon> -->
-    <div slot="content"
-         class="task-menuwrapper-content"
-         v-if="initCom">
+    <div slot="content" class="task-menuwrapper-content" v-if="initCom">
       <div class="dropdownTitle">
         <span class="back">
-          <span v-if="active!=''"
-                @click="active='';reset(true)">
-            <svg-icon class="backicon"
-                      name="back"></svg-icon>
+          <span
+            v-if="active != ''"
+            @click="
+              active = '';
+              reset(true);
+            "
+          >
+            <svg-icon class="backicon" name="back"></svg-icon>
           </span>
         </span>
-        {{topTitle}}
-        <span class="guanbi"
-              @click="visible=false">
-          <svg-icon class="closePop"
-                    name="close"></svg-icon>
+        {{ topTitle }}
+        <span class="guanbi" @click="visible = false">
+          <svg-icon class="closePop" name="close"></svg-icon>
         </span>
       </div>
-      <div class="task-menu-list"
-           v-if="active==''">
-        <div class="menuItem"
-             @click="listItemClick('b','复制到')">
-          <Icon type="ios-copy-outline" />复制任务</div>
+      <div class="task-menu-list" v-if="active == ''">
+        <div class="menuItem" @click="listItemClick('b', '复制到')"><Icon type="ios-copy-outline" />复制任务</div>
         <!--<div class="menuItem tasklink" @click="copylink" :data-clipboard-text="link">-->
-          <!--<Icon type="ios-link-outline" />复制任务链接</div>-->
-        <div class="menuItem"
-             @click="listItemClick('a','移动到')">
-          <Icon type="ios-log-out" />移动任务</div>
-        <div class="menuItem" @click="collectTask">
-          <Icon type="md-star" />{{data.isCollect ? '取消收藏':'收藏任务'}}</div>
+        <!--<Icon type="ios-link-outline" />复制任务链接</div>-->
+        <div class="menuItem" @click="listItemClick('a', '移动到')"><Icon type="ios-log-out" />移动任务</div>
+        <div class="menuItem" @click="collectTask"><Icon type="md-star" />{{ data.isCollect ? "取消收藏" : "收藏任务" }}</div>
 
-        <div class="menuItem"
-             @click="listItemClick('c','移到回收站')">
-          <Icon type="ios-trash-outline" />移到回收站</div>
+        <div class="menuItem" @click="listItemClick('c', '移到回收站')"><Icon type="ios-trash-outline" />移到回收站</div>
 
         <div class="privacy">
-          <div class="p_left fl clearfix"
-               @click="updatePrivate">
+          <div class="p_left fl clearfix" @click="updatePrivate">
             <div v-if="!unlock" style="overflow:hidden;">
-              <Icon type="unlocked"
-                    class="fl"></Icon>
+              <Icon type="unlocked" class="fl"></Icon>
               <div class="p_title fl">
                 <h5>隐私模式</h5>
                 <p>所有成员可见</p>
@@ -55,8 +41,7 @@
             </div>
 
             <div v-if="unlock" style="overflow:hidden;">
-              <Icon type="locked"
-                    class="fl"></Icon>
+              <Icon type="locked" class="fl"></Icon>
               <div class="p_title fl">
                 <h5>隐私模式</h5>
                 <p>仅参与者可见</p>
@@ -64,15 +49,14 @@
             </div>
           </div>
           <div class="p_right fr">
-              <span>{{unlock==false?"已关闭":"已开启"}}</span>
+            <span>{{ unlock == false ? "已关闭" : "已开启" }}</span>
           </div>
         </div>
       </div>
 
       <!-- 内容部分的盒子： -->
       <div class="task-menu-detail">
-        <div class="con5"
-             v-if="active=='a'">
+        <div class="con5" v-if="active == 'a'">
           <div class="con5item1">
             <span>项目</span>
             <Select v-model="model1" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
@@ -83,7 +67,6 @@
                 <Option v-for="item in notStarProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>
               </OptionGroup>
             </Select>
-
           </div>
           <div class="con5item2">
             <span>分组</span>
@@ -102,12 +85,9 @@
             </template>
           </div>
           <div class="con5tip">跨项目移动时，部分参与者信息不会保留</div>
-          <Button type="primary"
-                  long
-                  style="margin-top:8px;" @click="moveTask">确定</Button>
+          <Button type="primary" long style="margin-top:8px;" @click="moveTask">确定</Button>
         </div>
-        <div class="con6"
-             v-if="active=='b'">
+        <div class="con6" v-if="active == 'b'">
           <div class="con5item1">
             <span>项目</span>
             <Select v-model="model7" style="width:150px" placeholder="当前项目" @on-open-change="getProjectList" @on-change="getGroupList">
@@ -119,38 +99,37 @@
               </OptionGroup>
             </Select>
             <!--<Poptip placement="bottom-end"-->
-                    <!--class="innerRight">-->
-              <!--<div class="inTitle">-->
-                <!--<span>当前项目-->
-                  <!--<Icon type="ios-arrow-down"-->
-                        <!--size="18"-->
-                        <!--style="margin-left:4px;"></Icon>-->
-                <!--</span>-->
-              <!--</div>-->
-              <!--<div slot="content"-->
-                   <!--class="content">-->
-                <!--<Input class="findInput"-->
-                       <!--v-model="findPro"-->
-                       <!--:autofocus="true"-->
-                       <!--placeholder="查找项目" />-->
-                <!--<div class="star">-->
-                  <!--<h5>星标项目</h5>-->
-                  <!--<div class="item">项目1-->
-                    <!--<svg-icon class="right"-->
-                              <!--name="right"></svg-icon>-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<div class="nostar">-->
-                  <!--<h5>非星标项目</h5>-->
-                  <!--<div class="item">项目1-->
-                    <!--<svg-icon class="right"-->
-                              <!--name="right"></svg-icon>-->
-                  <!--</div>-->
-                <!--</div>-->
+            <!--class="innerRight">-->
+            <!--<div class="inTitle">-->
+            <!--<span>当前项目-->
+            <!--<Icon type="ios-arrow-down"-->
+            <!--size="18"-->
+            <!--style="margin-left:4px;"></Icon>-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--<div slot="content"-->
+            <!--class="content">-->
+            <!--<Input class="findInput"-->
+            <!--v-model="findPro"-->
+            <!--:autofocus="true"-->
+            <!--placeholder="查找项目" />-->
+            <!--<div class="star">-->
+            <!--<h5>星标项目</h5>-->
+            <!--<div class="item">项目1-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="nostar">-->
+            <!--<h5>非星标项目</h5>-->
+            <!--<div class="item">项目1-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--</div>-->
 
-              <!--</div>-->
+            <!--</div>-->
             <!--</Poptip>-->
-
           </div>
           <div class="con5item2">
             <span>分组</span>
@@ -160,25 +139,25 @@
               </Select>
             </template>
             <!--<Poptip placement="bottom-end"-->
-                    <!--class="innerRight">-->
-              <!--<div class="inTitle">-->
-                <!--<span>当前任务-->
-                  <!--<Icon type="ios-arrow-down"-->
-                        <!--size="18"-->
-                        <!--style="margin-left:4px;"></Icon>-->
-                <!--</span>-->
-              <!--</div>-->
-              <!--<div slot="content"-->
-                   <!--class="content2">-->
-                <!--<div class="item">任务1-->
-                  <!--<svg-icon class="right"-->
-                            <!--name="right"></svg-icon>-->
-                <!--</div>-->
-                <!--<div class="item">任务2-->
-                  <!--<svg-icon class="right"-->
-                            <!--name="right"></svg-icon>-->
-                <!--</div>-->
-              <!--</div>-->
+            <!--class="innerRight">-->
+            <!--<div class="inTitle">-->
+            <!--<span>当前任务-->
+            <!--<Icon type="ios-arrow-down"-->
+            <!--size="18"-->
+            <!--style="margin-left:4px;"></Icon>-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--<div slot="content"-->
+            <!--class="content2">-->
+            <!--<div class="item">任务1-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--<div class="item">任务2-->
+            <!--<svg-icon class="right"-->
+            <!--name="right"></svg-icon>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</Poptip>-->
           </div>
           <div class="con5item3">
@@ -189,209 +168,192 @@
               </Select>
             </template>
           </div>
-          <CheckboxGroup v-model="notice"
-                         style="margin-top:5px;">
-            <Checkbox class="checkbox"
-                      label="原任务接收新任务的更新提醒"></Checkbox>
-            <Checkbox class="checkbox"
-                      label="新任务接收原任务的更新提醒"></Checkbox>
+          <CheckboxGroup v-model="notice" style="margin-top:5px;">
+            <Checkbox class="checkbox" label="原任务接收新任务的更新提醒"></Checkbox>
+            <Checkbox class="checkbox" label="新任务接收原任务的更新提醒"></Checkbox>
           </CheckboxGroup>
           <div class="con5tip">标题、子任务、备注将被复制</div>
-          <Button type="primary"
-                  long @click="copyTask">确定</Button>
-
+          <Button type="primary" long @click="copyTask">确定</Button>
         </div>
-        <div class="con7"
-             v-if="active=='c'">
-          <div class="ask">您确定要把列表下的所有任务移到回收站吗？</div>
-          <Button type="error" @click="recycle"
-                  long>移到回收站</Button>
-
+        <div class="con7" v-if="active == 'c'">
+          <div class="ask">您确定要把该任务移到回收站吗？</div>
+          <Button type="error" @click="recycle" long>移到回收站</Button>
         </div>
-        
       </div>
-
     </div>
-
   </Poptip>
-
 </template>
 <script>
-import Clipboard from 'clipboard'
-import {collectTask,updateTaskPrivacy,cancelCollect,
-taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask,moveTask} from "@/axios/api";
+import Clipboard from "clipboard";
+import { collectTask, updateTaskPrivacy, cancelCollect, taskToRecycle, getStarProjectList, getGroupList, getMenuList, copyTask, moveTask } from "@/axios/api";
 
 export default {
-  props: ['data'],
-  data () {
+  props: ["data"],
+  data() {
     return {
-      link:'https://www.baidu.com',
+      link: "https://www.baidu.com",
       initCom: true,
       visible: false,
-       unlock: true,
-      active: '',
-      newTask: '',
-      curTopTitle: '任务菜单',
+      unlock: true,
+      active: "",
+      newTask: "",
+      curTopTitle: "任务菜单",
       title: this.data.title,
-      findMember: '',
-      findPro: '',
+      findMember: "",
+      findPro: "",
       notice: [],
       starProject: [],
       notStarProject: [],
-      currProjectId:'',
-      currGroupId:'',
-      currMenuId:'',
+      currProjectId: "",
+      currGroupId: "",
+      currMenuId: "",
       groupList: [],
-      menuList:[],
-      model7: '',
-      model9:'',
-      model10:'',
-      model1: '',
-      model2:'',
-      model3:''
-    }
+      menuList: [],
+      model7: "",
+      model9: "",
+      model10: "",
+      model1: "",
+      model2: "",
+      model3: ""
+    };
   },
   computed: {
-    topTitle () {
-      return this.active ? this.curTopTitle : '任务菜单'
+    topTitle() {
+      return this.active ? this.curTopTitle : "任务菜单";
     }
   },
-  mounted () {
-    if(this.unlock){
-      this.data.privacyPattern = 0
-    } else{
-      this.data.privacyPattern = 1
+  mounted() {
+    if (this.unlock) {
+      this.data.privacyPattern = 0;
+    } else {
+      this.data.privacyPattern = 1;
     }
   },
   methods: {
-     copylink () {
-         var clipboard = new Clipboard('.tasklink')
-        clipboard.on('success', e => {
-          alert('复制成功')
-          // 释放内存
-          clipboard.destroy()
-        })
-        clipboard.on('error', e => {
-          // 不支持复制
-          console.log('该浏览器不支持自动复制')
-          clipboard.destroy()
-        })
-      },
+    copylink() {
+      var clipboard = new Clipboard(".tasklink");
+      clipboard.on("success", e => {
+        alert("复制成功");
+        // 释放内存
+        clipboard.destroy();
+      });
+      clipboard.on("error", e => {
+        // 不支持复制
+        console.log("该浏览器不支持自动复制");
+        clipboard.destroy();
+      });
+    },
     //更改任务的隐私模式
-     updatePrivate(){
-       this.unlock = !this.unlock
-       var privacy = this.unlock ? 0:1
-        updateTaskPrivacy(this.data.taskId,privacy)
-     },
-    saveTitle () {
+    updatePrivate() {
+      this.unlock = !this.unlock;
+      var privacy = this.unlock ? 0 : 1;
+      updateTaskPrivacy(this.data.taskId, privacy);
+    },
+    saveTitle() {
       this.visible = false;
       //发请求修改标题
     },
     //获取项目数据
-    getProjectList(){
+    getProjectList() {
       getStarProjectList().then(res => {
-            if(res.result === 1){
-                this.notStarProject = res.notStarProject
-                this.starProject = res.starProject
-            }
-        })
+        if (res.result === 1) {
+          this.notStarProject = res.notStarProject;
+          this.starProject = res.starProject;
+        }
+      });
     },
     //获取分组数据
-    getGroupList(projectId){
-      this.currProjectId = projectId
+    getGroupList(projectId) {
+      this.currProjectId = projectId;
       getGroupList(projectId).then(res => {
-          if(res.result === 1){
-              this.groupList = res.data
-          }
-      })
+        if (res.result === 1) {
+          this.groupList = res.data;
+        }
+      });
     },
     //获取菜单数据
-    getMenuLists(groupId){
-       this.currGroupId = groupId
-        getMenuList(groupId).then(res => {
-            if(res.result === 1){
-                this.menuList = res.data
-            }
-        })
+    getMenuLists(groupId) {
+      this.currGroupId = groupId;
+      getMenuList(groupId).then(res => {
+        if (res.result === 1) {
+          this.menuList = res.data;
+        }
+      });
     },
     //获取选中菜单id
-    getMenuId(menuId){
-       this.currMenuId = menuId
+    getMenuId(menuId) {
+      this.currMenuId = menuId;
     },
-    listItemClick (index, title) {
-      this.active = index
-      this.curTopTitle = title
+    listItemClick(index, title) {
+      this.active = index;
+      this.curTopTitle = title;
     },
-    clearAll () {
-
-    },
-    changeTitle () {
-      this.active = '';
+    clearAll() {},
+    changeTitle() {
+      this.active = "";
     },
     //项目选择框触发时间
-    createNew () {
-      this.active = '';
+    createNew() {
+      this.active = "";
     },
     collectTask() {
-      if(this.data.isCollect){
-          cancelCollect(this.data.taskId).then(res => {
-              if(res.result === 1){
-                  this.$Message.success(res.msg)
-                  this.data.isCollect = false
-              }
-          })
-      } else{
-          collectTask(this.data.projectId,this.data.taskId,'任务').then(res => {
-              if(res.result === 1){
-                  this.$Message.success(res.msg)
-                  this.data.isCollect = true
-              }
-          })
+      if (this.data.isCollect) {
+        cancelCollect(this.data.taskId).then(res => {
+          if (res.result === 1) {
+            this.$Message.success(res.msg);
+            this.data.isCollect = false;
+          }
+        });
+      } else {
+        collectTask(this.data.projectId, this.data.taskId, "任务").then(res => {
+          if (res.result === 1) {
+            this.$Message.success(res.msg);
+            this.data.isCollect = true;
+          }
+        });
       }
     },
     //复制任务
-    copyTask(){
-      copyTask(this.data.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
-        if(res.result === 1){
-          this.$Message.success(res.msg)
+    copyTask() {
+      copyTask(this.data.taskId, this.currProjectId, this.currGroupId, this.currMenuId).then(res => {
+        if (res.result === 1) {
+          this.$Message.success(res.msg);
         }
-      })
+      });
     },
     //移动任务
-    moveTask(){
-      moveTask(this.data.taskId,this.currProjectId,this.currGroupId,this.currMenuId).then(res => {
-        if(res.result === 1){
-          this.$Message.success(res.msg)
+    moveTask() {
+      moveTask(this.data.taskId, this.currProjectId, this.currGroupId, this.currMenuId).then(res => {
+        if (res.result === 1) {
+          this.$Message.success(res.msg);
         }
-      })
+      });
     },
     //任务移入回收站
     recycle() {
-      
-        taskToRecycle(this.data.taskId).then(res => {
-            console.log(this.data.task)
-        })
+      this.active = "";
+      taskToRecycle(this.data.taskId);
+      this.$emit("close");
     },
-    reset (flag) {
-      Object.assign(this.$data, this.$options.data())
-      this.visible = flag
-      this.title = this.data.title
+    reset(flag) {
+      Object.assign(this.$data, this.$options.data());
+      this.visible = flag;
+      this.title = this.data.title;
     },
-    popHide () {
+    popHide() {
       setTimeout(_ => {
-        this.reset()
-      }, 300)
+        this.reset();
+      }, 300);
     }
   }
-}
+};
 </script>
 <style lang="less">
-@import './poptipMenu';
-  .menuItem{
-    i{
-      font-size: 20px;
-      margin-right: 10px;
-    }
+@import "./poptipMenu";
+.menuItem {
+  i {
+    font-size: 20px;
+    margin-right: 10px;
   }
+}
 </style>
-

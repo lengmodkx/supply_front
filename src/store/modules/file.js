@@ -64,17 +64,17 @@ const store = {
         },
         //后退
         crumbsBack(state, data) {            
-            state.crumbsIndex -= 1
-            if(state.crumbsIndex < 0){
-                state.crumbsIndex = 0
-                return
-            }
+            state.crumbsIndex-=1
+            // if(state.crumbsIndex < 0){
+            //     return
+            // }
             console.log("队列：",state.crumbsCache,state.crumbsIndex)             
             console.log(state.crumbsCache[state.crumbsIndex])
-            state.crumbs=state.crumbsCache[state.crumbsIndex]
+            state.crumbs=[state.crumbsCache[state.crumbsIndex]]
             console.log(state.crumbs)
             //取最后一个值 用ID刷新面--start
             const curId=state.crumbs[state.crumbs.length-1] 
+            console.log(curId)
             state.createFileId=curId.id
             console.log(state.createFileId)
              //取最后一个值 用ID刷新面--end
@@ -98,12 +98,13 @@ const store = {
         },
         //单击树型菜单改
         crumbsTree(state, data) {
+            state.crumbsCache = [];
+            state.crumbsIndex = '';
             const json = JSON.parse(JSON.stringify(data).replace(/name/g,"fileName"));
             state.crumbs= json 
-            var [...save] = state.crumbs;   
-            state.crumbsCache.push(save)
-            state.crumbsIndex=state.crumbsCache.length - 1
-
+            state.crumbsCache.push(...state.crumbs)
+            state.crumbsIndex=state.crumbsCache.length
+            console.log("队列：",state.crumbsCache,"位置：",state.crumbsIndex) 
         },
         initFile(state, data) {
             state.files = data;

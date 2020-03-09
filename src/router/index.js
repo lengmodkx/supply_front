@@ -33,7 +33,7 @@ const router = new Router({
         keepAlive: false
       }
     },
-   
+
 
     {
       path: "/sucai/", // 素材裤
@@ -101,7 +101,7 @@ const router = new Router({
         {
           path: "schedules",
           name: "schedules",
-          component: _import("project/pages/schedule"),
+          component: _import("project/schedule/schedule"),
           meta: {
             requiresAuth: true,
             title: "阿拉丁BIM5D云平台",

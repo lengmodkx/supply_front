@@ -1,17 +1,9 @@
 <template>
   <div class="file-contant" v-if="files != null">
-    <ul class="file-list" v-if="files.length > 0">
-      <li
-        v-for="(file, index) in files"
-        :class="isactive == index ? 'li-hover' : ''"
-        v-bind:style="{ width: slider * 4 + 'px' }"
-        style="min-width:125px"
-        :key="index"
-        @dblclick="dfileDetail(file, index, file.catalog)"
-        @click="fileDetail(file.catalog, file.fileId, file, index)"
-      >
+    <Row class="file-list" v-if="files.length > 0" type="flex" justify="start">
+      <Col class="file-list-col" v-for="(file, index) in files" :key="index" span="3" :class="{ selectedcol: selected == index }" @click.native="fileDetail(file.catalog, file.fileId, file, index)">
+        <Icon type="ios-checkbox" class="ios-check" size="28" color="#a5a5a5" :class="{ showIcon: selected == index }" @click.native.stop="iosCheck(file,index)" />
         <div class="img-box">
-          <i class="file-content-chose" v-show="index == isactive"></i>
           <img v-if="file.catalog == 1 && file.filePrivacy === 0" src="../../../assets/images/folder.png" />
           <img v-else-if="file.catalog == 1 && (file.filePrivacy === 0 || file.filePrivacy == 2)" src="../../../assets/images/folder.png" />
           <img v-else-if="file.catalog == 1 && file.filePrivacy === 1" src="../../../assets/images/folder_privacy.png" />
@@ -31,13 +23,13 @@
           <div class="file-name">{{ file.fileName }}</div>
         </Tooltip>
         <Tooltip :content="file.fileName + file.ext" placement="top" transfer v-if="file.catalog == 0" max-width="250">
-          <div style="display:flex">
+          <div style="display:flex;justify-content: center">
             <div class="file-name">{{ file.fileName }}</div>
             <div>{{ file.ext }}</div>
           </div>
         </Tooltip>
-      </li>
-    </ul>
+      </Col>
+    </Row>
 
     <div v-else class="no-files">
       <Icon type="md-folder" />
@@ -66,7 +58,12 @@
         <div class="column-projects flex-static thin-scroll">
           <div class="project-title">项目</div>
           <ul>
-            <li v-for="(project, index) in projects" :key="index" :class="{ selected: project.projectId == projectId, unselected: project.projectId != projectId }" @click="changeProject(project.projectId)">
+            <li
+              v-for="(project, index) in projects"
+              :key="index"
+              :class="{ selected: project.projectId == projectId, unselected: project.projectId != projectId }"
+              @click="changeProject(project.projectId)"
+            >
               <span>{{ project.projectName }}</span>
             </li>
           </ul>
@@ -260,7 +257,8 @@ export default {
       loading1: false,
       mFile: null,
       curFile: {},
-      imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"]
+      imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
+      selected: -1
     };
   },
   watch: {
@@ -298,6 +296,10 @@ export default {
     if (localStorage.view) {
       this.view = localStorage.view;
     }
+    this.files.forEach(v => {
+      this.$set(v, "selected", true);
+    });
+    console.log(this.files);
   },
   created() {
     let params = { fileId: this.createFileId };
@@ -309,6 +311,11 @@ export default {
   methods: {
     ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag", "initItem"]),
     ...mapMutations("file", ["putOneFile"]),
+    iosCheck(file,index) {
+      this.selected = index;
+      this.initItem(file);
+      this.thisFileId = file.fileId
+    },
     leftShow() {},
     setCanSee() {
       this.showVisibilityModal = true;
@@ -396,19 +403,6 @@ export default {
       }
       window.location.href = url + "/files/" + fileId + "/download";
     },
-
-    // menuShow(catalog, fileId, e) {
-    //   if (catalog == 0) {
-    //     this.menu1Show = true;
-    //     this.menu2Show = false;
-    //   } else {
-    //     this.menu2Show = true;
-    //     this.menu1Show = false;
-    //   }
-    //   this.top = e.clientY + "px";
-    //   this.left = e.clientX + "px";
-    //   this.fileIdParam = fileId;
-    // },
     popHid() {
       setTimeout(() => {
         this.rublish = false;
@@ -519,7 +513,6 @@ export default {
           this.fileId = file.fileId;
           getChildFiles(file.fileId).then(res => {
             this.$store.commit("file/initFile", res.data);
-
             localStorage.fileParentId = this.fileId;
           });
         } else {
@@ -532,19 +525,34 @@ export default {
     },
     // 点击文件、文件夹进入详情
     fileDetail(catalog, id, file, index) {
+      console.log("xxxxxxxxxx");
       clearTimeout(timer);
       timer = setTimeout(() => {
-        console.log("dan");
-        this.isactive = index; //选中
-        this.initItem(file);
-        this.thisFileId = id;
+        // console.log("dan");
+       
+        // this.initItem(file);
+        // this.thisFileId = id;
         if (".svf".includes(file.ext)) {
+          getFileDetails(file.fileId).then(res => {
+            console.log(res.data.fileUrl);
+            this.svfUrl = res.data.fileUrl;
+            this.showModelFileDetail = true;
+          });
           console.log("模型文件");
         } else {
           if (catalog == 1) {
             //文件夹
+            this.$store.commit("file/changeCreateFileId", file.fileId); //重点改变fileId
+            this.$store.commit("file/crumbsAdd", file);
+            this.fileId = file.fileId;
+            getChildFiles(file.fileId).then(res => {
+              this.$store.commit("file/initFile", res.data);
+              localStorage.fileParentId = this.fileId;
+            });
           } else {
             //文件
+            this.showModelDetai = true;
+            this.curFile = file;
             console.log("文件", catalog);
           }
         }
@@ -668,8 +676,14 @@ export default {
 };
 </script>
 <style lang="less">
+.selectedcol {
+  border: 2px solid #1b9aee !important;
+}
+.showIcon {
+  display: block !important;
+  color: #1b9aee !important;
+}
 .file-contant {
-  width: 100vm;
   height: calc(100vh - 87px);
   overflow: hidden;
   overflow-y: auto;
@@ -677,22 +691,22 @@ export default {
   padding-top: 10px;
   padding-right: 10px;
   .file-list {
-    display: flex;
-    flex-flow: row wrap;
-    .li-hover {
-      border: 1px solid #66baff;
-      background: #cce8ff;
-    }
-    li {
-      width: 120px;
-      height: 148px;
+    .file-list-col {
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
-      list-style: none;
-      margin: 0 10px 10px 0;
       cursor: pointer;
-      position: relative;
+      padding-bottom: 10px;
+      border: 1px solid #e5e5e5;
+      margin-right: 15px;
+      margin-bottom: 15px;
+      height: 140px;
+      justify-content: center;
+      &:hover {
+        .ios-check {
+          display: block;
+        }
+      }
       /deep/ .ivu-tooltip {
         width: 120px;
       }
@@ -703,18 +717,15 @@ export default {
         text-align: center;
         overflow: hidden;
       }
+      .ios-check {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: none;
+      }
       .img-box {
         display: flex;
-        padding-bottom: 5px;
-        .file-content-chose {
-          width: 18px;
-          height: 18px;
-          background: url("~@/assets/images/chose.png") no-repeat center;
-          border-radius: 50%;
-          position: absolute;
-          left: 5px;
-          top: 5px;
-        }
+        padding-bottom: 20px;
         .file-content-opt {
           width: 18px;
           height: 18px;
@@ -728,12 +739,13 @@ export default {
 
         img {
           display: block;
-          width: 80px;
-          height: 100px;
-          padding: 10% 0;
+          width: 64px;
+          height: 52px;
         }
         .fileThumbnail-box img {
-          padding: 10% 0;
+          display: block;
+          width: 60px;
+          height: 60px;
         }
       }
     }
