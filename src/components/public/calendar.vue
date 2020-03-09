@@ -24,7 +24,7 @@
       <div class="what-task">
         <span>请选择项目：</span>
         <Select v-model="project" style="width:300px">
-          <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option v-for="item in projectList" :value="item.value" :key="item.value"> {{ item.label }}</Option>
         </Select>
       </div>
       <textarea class="taskInput" v-model="taskTitle" type="text" placeholder="任务标题"></textarea>
@@ -92,47 +92,52 @@ export default {
   },
   mounted() {
     this.initSocket(localStorage.userId);
-    getCalendar(localStorage.userId).then(res => {
-      if (res.result) {
-        let schedulesData = res.data.schedules;
-        let tasksData = res.data.tasks;
-        schedulesData.forEach((i, n) => {
-          var executorImg = "";
-          if (i.img) {
-            executorImg = '<img class="img20" src="' + i.img + '" />' + i.scheduleName;
-          } else {
-            executorImg = executorImg = '<img class="img20" src="' + this.morenImg + '" />' + i.scheduleName;
-          }
-          this.fcEvents.push({
-            title: executorImg,
-            start: this.getTime(i.startTime),
-            end: this.getTime(i.endTime),
-            id: i.scheduleId,
-            type: "日程"
-          });
-        });
-        tasksData.forEach(i => {
-          var executorImg = "";
-          if (i.executorImg) {
-            executorImg = '<img class="img20" src="' + i.executorImg + '" />' + i.taskName;
-          } else {
-            executorImg = '<img class="img20" src="' + this.morenImg + '" />' + i.taskName;
-          }
-          this.fcEvents.push({
-            title: executorImg,
-            start: this.getTime(i.startTime),
-            end: this.getTime(i.endTime),
-            id: i.taskId,
-            type: "任务"
-          });
-        });
-      }
-    });
+     this.initCalender();
+   
     //console.log(localStorage)
   },
   methods: {
     ...mapMutations("task", ["setTaskId"]),
     ...mapActions("schedule", ["getScheduleById"]),
+     //刷新日程
+    initCalender(){
+            getCalendar(localStorage.userId).then(res => {
+                if (res.result) {
+                  let schedulesData = res.data.schedules;
+                  let tasksData = res.data.tasks;
+                  schedulesData.forEach((i, n) => {
+                    var executorImg = "";
+                    if (i.img) {
+                      executorImg = '<img class="img20" src="' + i.img + '" />' + i.scheduleName;
+                    } else {
+                      executorImg = executorImg = '<img class="img20" src="' + this.morenImg + '" />' + i.scheduleName;
+                    }
+                    this.fcEvents.push({
+                      title: executorImg,
+                      start: this.getTime(i.startTime),
+                      end: this.getTime(i.endTime),
+                      id: i.scheduleId,
+                      type: "日程"
+                    });
+                  });
+                  tasksData.forEach(i => {
+                    var executorImg = "";
+                    if (i.executorImg) {
+                      executorImg = '<img class="img20" src="' + i.executorImg + '" />' + i.taskName;
+                    } else {
+                      executorImg = '<img class="img20" src="' + this.morenImg + '" />' + i.taskName;
+                    }
+                    this.fcEvents.push({
+                      title: executorImg,
+                      start: this.getTime(i.startTime),
+                      end: this.getTime(i.endTime),
+                      id: i.taskId,
+                      type: "任务"
+                    });
+                  });
+                }
+          });
+    },
     eventRender(event, element) {
       element.html(event.title);
     },
@@ -159,8 +164,9 @@ export default {
     },
     // 显示创建任务框
     showCreateTask() {
+    this.projectList=[];
       this.creatTask = true;
-      getProjectList().then(res => {
+      getProjectList(localStorage.companyId).then(res => {
         if (res.result) {
           res.data.forEach(i => {
             this.projectList.push({
@@ -188,13 +194,15 @@ export default {
           this.$Message.success("创建成功");
           this.creatTask = false;
           this.showCreate = false;
+           this.initCalender();//刷新列表
         });
       }
     },
     // 显示创建日程框
     showCreateRc() {
+      this.projectTypes=[];
       this.loading = true;
-      getProjectList().then(res => {
+      getProjectList(localStorage.companyId).then(res => {
         res.data.forEach((i, n) => {
           this.projectTypes.push({ projectId: i.projectId, projectName: i.projectName });
         });
@@ -206,6 +214,7 @@ export default {
     rcok() {
       this.showCreate = false;
       this.createRc = false;
+       this.initCalender();//刷新列表
     },
     // event的点击事件
     eventClick(event) {
