@@ -62,12 +62,12 @@
     </div>
     <div class="right">
       <!-- 缩放 -->
-      <Poptip placement="bottom" width="204">
+      <!-- <Poptip placement="bottom" width="204">
         <div class="view"><img src="../../../assets/images/view11.png" alt="" /></div>
         <div class="silder-box" slot="content">
           <Slider class="silder" v-model="sliderValue" :max="64" :tip-format="hideFormat"></Slider>
         </div>
-      </Poptip>
+      </Poptip> -->
 
       <!-- 排序 -->
       <!-- <Poptip placement="bottom" >
@@ -82,9 +82,17 @@
                   </div>
                 </Poptip> -->
       <!-- 列表 -->
-      <div class="view" @click="changeShowView('list')"><img src="../../../assets/images/view3.png" alt="" /></div>
+      <div class="view" @click="changeShowView('list')">
+        <Tooltip  placement="top" transfer content="列表">
+          <img src="../../../assets/images/view3.png" alt="" />
+        </Tooltip>
+      </div>
       <!-- 缩略图 -->
-      <div class="view " @click="changeShowView('view')"><img src="../../../assets/images/view2.png" alt="" /></div>
+      <div class="view " @click="changeShowView('view')">
+        <Tooltip  placement="top" transfer content="缩略图">
+          <img src="../../../assets/images/view2.png" alt="" />
+        </Tooltip>
+      </div>
     </div>
     <Modal v-model="showModelFile" title="上传模型文件" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
       <model-file @close="showModelFile = false" :fileId="createFileId"></model-file>
@@ -127,7 +135,12 @@
         <div class="column-projects flex-static thin-scroll">
           <div class="project-title">项目</div>
           <ul>
-            <li v-for="(project, index) in projects" :key="index" :class="{ selected: project.projectId == projectId, unselected: project.projectId != projectId }" @click="changeProject(project.projectId)">
+            <li
+              v-for="(project, index) in projects"
+              :key="index"
+              :class="{ selected: project.projectId == projectId, unselected: project.projectId != projectId }"
+              @click="changeProject(project.projectId)"
+            >
               <span>{{ project.projectName }}</span>
             </li>
           </ul>
@@ -167,7 +180,14 @@ export default {
         { name: "上传普通文件", src: require("../../../assets/images/view6.png") },
         { name: "上传模型文件", src: require("../../../assets/images/view6.png") }
       ],
-      sortList: [{ name: "名称", src: require("../../../assets/images/view10.png") }, { name: "类型" }, { name: "大小" }, { name: "修改时间" }, { name: "递增", src: require("../../../assets/images/view10.png") }, { name: "递减" }],
+      sortList: [
+        { name: "名称", src: require("../../../assets/images/view10.png") },
+        { name: "类型" },
+        { name: "大小" },
+        { name: "修改时间" },
+        { name: "递增", src: require("../../../assets/images/view10.png") },
+        { name: "递减" }
+      ],
       thisFileId: "",
       showCommonFile: false,
       showModelFile: false,

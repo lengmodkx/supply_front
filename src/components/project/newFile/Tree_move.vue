@@ -59,7 +59,7 @@ export default {
       var nodes = ztreeObj.getNodes();
       if (nodes.length > 0) {
         ztreeObj.selectNode(nodes[0]);
-        this.$store.commit("file/crumbsHome", nodes[0]); //初始化菜单
+        //this.$store.commit("file/crumbsHome", nodes[0]); //初始化菜单
       }
       console.log(process.env.VUE_APP_TREE_URL);
     },

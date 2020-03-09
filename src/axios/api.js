@@ -507,11 +507,10 @@ export function cancelCollect(publicId) {
 }
 
 //完成任务
-export function completeTask(taskId, label) {
-    if (label) {
-        var l = {
-            label: label
-        }
+export function completeTask(projectId,taskId, label) {
+    var l = {
+        label: label,
+        projectId:projectId
     }
     return fetch({
         url: `${api.tasks}/${taskId}/finish`,
@@ -520,11 +519,10 @@ export function completeTask(taskId, label) {
     });
 }
 //取消完成任务
-export function cancelcompleteTask(taskId, taskStatus) {
-    if (taskStatus) {
-        var l = {
-            label: taskStatus
-        }
+export function cancelcompleteTask(projectId,taskId, label) {
+    var l = {
+        label: label,
+        projectId:projectId
     }
     return fetch({
         url: `${api.tasks}/${taskId}/unFinish`,

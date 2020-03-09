@@ -1,7 +1,8 @@
 <template>
   <div class="file-contant" v-if="files != null">
     <Row class="file-list" v-if="files.length > 0" type="flex" justify="start">
-      <Col class="file-list-col" v-for="(file, index) in files" :key="index" span="3" :class="{ selectedcol: selected == index }" @click.native="fileDetail(file.catalog, file.fileId, file, index)">
+      <Col class="file-list-col" v-for="(file, index) in files" :key="index" span="3" 
+      :class="{ selectedcol: selected == index }" @click.native="fileDetail(file, index)">
         <Icon type="ios-checkbox" class="ios-check" size="28" color="#a5a5a5" :class="{ showIcon: selected == index }" @click.native.stop="iosCheck(file,index)" />
         <div class="img-box">
           <img v-if="file.catalog == 1 && file.filePrivacy === 0" src="../../../assets/images/folder.png" />
@@ -524,39 +525,29 @@ export default {
       }
     },
     // 点击文件、文件夹进入详情
-    fileDetail(catalog, id, file, index) {
-      console.log("xxxxxxxxxx");
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        // console.log("dan");
-       
-        // this.initItem(file);
-        // this.thisFileId = id;
-        if (".svf".includes(file.ext)) {
+    fileDetail(file, index) {
+      if (file.catalog == 1) {
+        //文件夹
+        this.$store.commit("file/changeCreateFileId", file.fileId); //重点改变fileId
+        this.$store.commit("file/crumbsAdd", file);
+        this.fileId = file.fileId;
+        getChildFiles(file.fileId).then(res => {
+          this.$store.commit("file/initFile", res.data);
+          localStorage.fileParentId = this.fileId;
+        });
+      } else {
+        //文件
+        if (file.ext!=null&&".svf"===file.ext) {
           getFileDetails(file.fileId).then(res => {
             console.log(res.data.fileUrl);
             this.svfUrl = res.data.fileUrl;
             this.showModelFileDetail = true;
           });
-          console.log("模型文件");
-        } else {
-          if (catalog == 1) {
-            //文件夹
-            this.$store.commit("file/changeCreateFileId", file.fileId); //重点改变fileId
-            this.$store.commit("file/crumbsAdd", file);
-            this.fileId = file.fileId;
-            getChildFiles(file.fileId).then(res => {
-              this.$store.commit("file/initFile", res.data);
-              localStorage.fileParentId = this.fileId;
-            });
-          } else {
-            //文件
-            this.showModelDetai = true;
-            this.curFile = file;
-            console.log("文件", catalog);
-          }
+        }else{
+          this.showModelDetai = true;
+          this.curFile = file;
         }
-      }, 300);
+      }
     },
     // 隐私模式
     changePrivacy() {
