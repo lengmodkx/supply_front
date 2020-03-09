@@ -101,42 +101,7 @@ export default {
     },
     mounted () {
          this.initSocket(localStorage.userId);
-        getCalendar(localStorage.userId).then(res => {
-           if (res.result){
-               let schedulesData=res.data.schedules
-               let tasksData=res.data.tasks
-               schedulesData.forEach((i,n) => {
-                   var executorImg = ''
-                   if(i.img){
-                       executorImg =  '<img class="img20" src="'+i.img+'" />'+i.scheduleName
-                   } else{
-                       executorImg = executorImg = '<img class="img20" src="'+this.morenImg+'" />'+i.scheduleName
-                   }
-                   this.fcEvents.push({
-                       'title':executorImg,
-                       'start': this.getTime(i.startTime),
-                       'end': this.getTime(i.endTime),
-                       'id': i.scheduleId,
-                       'type': '日程'
-                   })
-               })
-               tasksData.forEach(i => {
-                   var executorImg = ''
-                   if(i.executorImg){
-                       executorImg =  '<img class="img20" src="'+i.executorImg+'" />'+i.taskName
-                   } else{
-                       executorImg = '<img class="img20" src="'+this.morenImg+'" />'+i.taskName
-                   }
-                   this.fcEvents.push({
-                       'title': executorImg,
-                       'start': this.getTime(i.startTime),
-                       'end': this.getTime(i.endTime),
-                       'id': i.taskId,
-                       'type': '任务'
-                   })
-               })
-           }
-        })
+         this.initCalender();
         //console.log(localStorage)
        
 
@@ -146,6 +111,46 @@ export default {
         ...mapActions("schedule", ['getScheduleById']),
         eventRender(event,element) {
             element.html(event.title);
+        },
+        //刷新日程
+        initCalender(){
+                      getCalendar(localStorage.userId).then(res => {
+                          if (res.result){
+                              let schedulesData=res.data.schedules
+                              let tasksData=res.data.tasks
+                              schedulesData.forEach((i,n) => {
+                                  var executorImg = ''
+                                  if(i.img){
+                                      executorImg =  '<img class="img20" src="'+i.img+'" />'+i.scheduleName
+                                  } else{
+                                      executorImg = executorImg = '<img class="img20" src="'+this.morenImg+'" />'+i.scheduleName
+                                  }
+                                  this.fcEvents.push({
+                                      'title':executorImg,
+                                      'start': this.getTime(i.startTime),
+                                      'end': this.getTime(i.endTime),
+                                      'id': i.scheduleId,
+                                      'type': '日程'
+                                  })
+                              })
+                              tasksData.forEach(i => {
+                                  var executorImg = ''
+                                  if(i.executorImg){
+                                      executorImg =  '<img class="img20" src="'+i.executorImg+'" />'+i.taskName
+                                  } else{
+                                      executorImg = '<img class="img20" src="'+this.morenImg+'" />'+i.taskName
+                                  }
+                                  console.log(this.fcEvents)
+                                  this.fcEvents.push({
+                                      'title': executorImg,
+                                      'start': this.getTime(i.startTime),
+                                      'end': this.getTime(i.endTime),
+                                      'id': i.taskId,
+                                      'type': '任务'
+                                  })
+                              })
+                          }
+                  })
         },
         getTime (time) {
             if (time){
@@ -172,7 +177,7 @@ export default {
         // 显示创建任务框
         showCreateTask(){
             this.creatTask=true
-            getProjectList().then(res => {
+            getProjectList(localStorage.companyId).then(res => {
                 if (res.result){
                     res.data.forEach(i => {
                         this.projectList.push({
@@ -200,14 +205,16 @@ export default {
                     this.$Message.success('创建成功');
                     this.creatTask=false
                     this.showCreate=false
+                    this.initCalender();//刷新列表
                 })
             }
 
         },
         // 显示创建日程框
         showCreateRc(){
+           console.log(localStorage.companyId)
             this.loading=true
-            getProjectList().then(res => {
+            getProjectList(localStorage.companyId).then(res => {
                 res.data.forEach((i,n) => {
                     this.projectTypes.push({'projectId':i.projectId, 'projectName':i.projectName})
                 });
@@ -219,6 +226,7 @@ export default {
         rcok () {
             this.showCreate=false
             this.createRc=false
+            this.initCalender();//刷新列表
         },
         // event的点击事件
         eventClick (event) {
