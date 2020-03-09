@@ -38,26 +38,24 @@
         添加新日程，安排会议或其他活动，添加参与者即可通知其他成员参加。
       </div>
     </div>
-    <AddSchedule @input="addSchedule = false" v-model="addSchedule" :id="parameter.projectId" :projectTypes="richengData">
+    <AddSchedule @input="addSchedule = false" v-model="addSchedule" class="modalclass">
       <span slot="projectName">{{ projectName ? projectName : "添加日程" }}</span>
     </AddSchedule>
-    <Modal class-name="vertical-center-modal" v-model="editrc" :footer-hide="true" transfer>
-      <editRicheng @close="closeModal"></editRicheng>
+    <Modal class-name="vertical-center-modal" v-model="editrc" :footer-hide="true" transfer class="modalclass">
+      <editRicheng v-if="editrc" @close="closeModal"></editRicheng>
     </Modal>
   </div>
 </template>
-
 <script>
-import AddSchedule from "../../public/AddSchedule.vue";
-import loading from "../../public/common/Loading";
-import editRicheng from "../../public/common/EditRicheng";
+import AddSchedule from "./AddSchedule.vue";
+import editRicheng from "./EditRicheng.vue";
 import { schedules } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "",
-  components: { AddSchedule, userList, editRicheng, loading },
+  components: { AddSchedule, userList, editRicheng },
   data() {
     return {
       addSchedule: false,
@@ -101,9 +99,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.ivu-modal-body {
-  padding: 0 !important;
+.modalclass {
+  .ivu-modal-body {
+    padding: 0 !important;
+  }
 }
+
 .schedule {
   position: absolute;
   overflow-x: hidden;

@@ -14,7 +14,7 @@
             </span>
           </Tooltip> -->
           <span class="down">
-            <SingleTaskMenu :data="task"></SingleTaskMenu>
+            <SingleTaskMenu :data="task" @close="closeThisModal"></SingleTaskMenu>
           </span>
         </div>
         <div class="headerTool">
@@ -119,7 +119,16 @@
                     <div>
                       <Icon class="icon" type="calendar" v-if="!i.sontaskDate" size="20"></Icon>
                       <span v-else class="timeBox">
-                        {{ $moment(i.sontaskDate).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]ddddLT", sameElse: "Y年M月D日LT" }) }}
+                        {{
+                          $moment(i.sontaskDate).calendar(null, {
+                            sameDay: "[今天]LT",
+                            nextDay: "[明天]LT",
+                            nextWeek: "[下]dddLT",
+                            lastDay: "[昨天]LT",
+                            lastWeek: "[上]ddddLT",
+                            sameElse: "Y年M月D日LT"
+                          })
+                        }}
                       </span>
                     </div>
                   </DateTimePicker>
@@ -325,12 +334,12 @@
 <script>
 import SetRepeat from "./SetRepeat";
 import TaskWarn from "./TaskWarn";
-import rcModal from "@/components/public/common/EditRicheng";
+import rcModal from "@/components/project/schedule/EditRicheng";
 import AddRelation from "@/components/public/common/AddRelation";
 import Tags from "@/components/public/Tags";
 import insertText from "@/utils/insertText";
 import Emoji from "@/components/public/common/emoji/Emoji";
-import SingleTaskMenu from "./SingleTaskMenu";
+import SingleTaskMenu from "./SingleTaskMenu.vue";
 import SetExecutor from "./SetExecutor";
 import Simditor from "@/components/resource/Simditor";
 import myModel from "./EditList";
@@ -414,6 +423,9 @@ export default {
   methods: {
     ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
     // 设置开始时间小于结束时间
+    closeThisModal() {
+      this.$emit("close");
+    },
     startDate(date) {
       this.startTime = date;
       this.options2 = {

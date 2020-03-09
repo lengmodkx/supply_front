@@ -92,6 +92,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.joins);
     members(this.projectId).then(res => {
       this.memberList = res.data;
       this.popShow();
