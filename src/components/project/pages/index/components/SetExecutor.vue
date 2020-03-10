@@ -2,7 +2,7 @@
 
   <Poptip v-model="visible" class="involvelistBox" @on-popper-show="popShow" @on-popper-hide="popHide" transfer>
     <slot :close="close">
-        <div class="rlz fl" v-if="task.executor">
+        <div class="rlz fl" v-if="task.executor!=null&&task.executor!='0'">
             <img :src="task.executorImg" alt="">
             <span>{{task.executorName}}</span>
             <Icon @click.stop="deleteExecutor" type="ios-close" />
@@ -111,7 +111,7 @@ export default {
     }
   },
   mounted() {
-
+    console.log('xxxxxxxxxxxxxxxxxxx',this.task)
   }
 };
 </script>

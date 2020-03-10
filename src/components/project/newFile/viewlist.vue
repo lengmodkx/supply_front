@@ -5,9 +5,8 @@
       :class="{ selectedcol: selected == index }" @click.native="fileDetail(file, index)">
         <Icon type="ios-checkbox" class="ios-check" size="28" color="#a5a5a5" :class="{ showIcon: selected == index }" @click.native.stop="iosCheck(file,index)" />
         <div class="img-box">
-          <img v-if="file.catalog == 1 && file.filePrivacy === 0" src="../../../assets/images/folder.png" />
-          <img v-else-if="file.catalog == 1 && (file.filePrivacy === 0 || file.filePrivacy == 2)" src="../../../assets/images/folder.png" />
-          <img v-else-if="file.catalog == 1 && file.filePrivacy === 1" src="../../../assets/images/folder_privacy.png" />
+          <img v-if="file.catalog == 1 && file.filePrivacy == 0" src="../../../assets/images/folder.png" />
+          <img v-else-if="file.catalog == 1 && file.filePrivacy == 1" src="../../../assets/images/folder_privacy.png" />
           <div v-else class="fileThumbnail-box">
             <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
             <img v-else-if="imageExt.indexOf(file.ext) > -1" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileUrl}`" />
