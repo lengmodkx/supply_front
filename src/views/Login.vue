@@ -64,7 +64,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("app", ["loading"])
+    ...mapState("app", ["loading"]),
+    ...mapState("user", ["mineRouter","defaultImage"]),
   },
   mounted() {
     if (localStorage.token) {
@@ -72,7 +73,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions("user", ["updateUserInfo", "updateUserId"]),
+    ...mapActions("user", ["updateUserInfo", "updateUserId","initSrc"]),
+    
     login: function(name) {
       this.userInfo = this.formValidate;
 
@@ -87,6 +89,8 @@ export default {
               this.updateUserId(res.data); //存储、更新用户信息
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
+           
+              this.initSrc(res.data.image);
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
