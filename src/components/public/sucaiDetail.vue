@@ -112,6 +112,7 @@
        <!-- 右侧 -->
           <div class="f-content-right" v-if="type=='文件'">
             <div class="padd16">
+            <!-- 版本 -->
               <div class="bbxx">
                 <div><Icon type="ios-folder-open-outline" size="18" />版本信息</div>
                 <div class="sp-bw">
@@ -442,6 +443,7 @@ export default {
   },
   created:function(){
       console.log(this.file)
+
   }
 };
 </script>
