@@ -61,24 +61,27 @@ export function jionPeople(fileId, newJoin) {
 }
 
 // 移动文件
-export function removeFile(folderId, fileIds, toProjectId) {
+export function removeFile(folderId, fileIds, toProjectId,projectId) {
     return fetch({
         url: `/files/${folderId}/m_move`,
         method: "put",
         params: {
             fileId: fileIds,
-            toProjectId: toProjectId
+            toProjectId: toProjectId,
+            projectId:projectId
         }
     });
 }
 // 复制文件
-export function cloneFile(folderId, fileIds) {
+export function cloneFile(folderId, fileIds,toProjectId,projectId) {
     return fetch({
         url: '/files/copy',
         method: "post",
         data: {
             folderId: folderId,
-            fileId: fileIds
+            fileId: fileIds,
+            toProjectId: toProjectId,
+            projectId:projectId
         }
     });
 }

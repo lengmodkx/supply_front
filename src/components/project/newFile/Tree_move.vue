@@ -18,7 +18,12 @@ export default {
           selectedMulti: false
         },
         check: {
-          enable: true
+          enable: true,
+          chkboxType: {"Y": "", "N": ""}
+        },
+        callback: {
+            onCheck: this.zTreeOnCheck,//勾选事件回调函数
+            beforeClick:this.beforeClick
         },
         data: {
           simpleData: {
@@ -47,52 +52,32 @@ export default {
       }
     };
   },
-
-  computed: {
-    ...mapState("tree", ["fileTree", "showView"])
-  },
   methods: {
-    ...mapActions("tree", ["initFolders"]),
-    ...mapActions("file", ["initFile", "searchFile", "initTag"]),
+    getFolderId(){
+      var nodes =  this.ztreeObj.getCheckedNodes(true);
+      console.log(nodes)
+      return nodes[0].id;
+    },
     onCreated(ztreeObj) {
       this.ztreeObj = ztreeObj;
       var nodes = ztreeObj.getNodes();
       if (nodes.length > 0) {
         ztreeObj.selectNode(nodes[0]);
-        //this.$store.commit("file/crumbsHome", nodes[0]); //初始化菜单
       }
-      console.log(process.env.VUE_APP_TREE_URL);
     },
     onClick(evt, treeId, treeNode) {
-      //this.$store.commit("file/changeCreateFileId", treeNode.id);
-      // if(treeNode.level==0){
-      //     this.$store.commit("file/crumbsTree",treeNode);//根节点只做切换----菜单栏
-      // }else{
-      //     this.$store.commit("file/crumbsTreeAdd",treeNode);
-      // }
-      // this.folderId = treeNode.id;
-      // let params = { fileId: this.folderId };
-      // this.initFile(params);
-      // var allNode = [];
-      // allNode.push(treeNode); //获取当前选中节点
-      // var node = treeNode.getParentNode();
-      // this.getParentNodes(node, allNode);
-      // this.$store.commit("file/crumbsTree", allNode.reverse()); //初始化菜单
+      
     },
-    asyncRefresh(fileId) {
-      var node = this.ztreeObj.getNodeByParam("id", fileId);
-      node.isParent = true;
-      this.ztreeObj.reAsyncChildNodes(node, "refresh", true);
+    beforeClick() {
+      //禁止节点被选中
+      var e =  e ||window.event;
+      e.stopPropagation();
+      return false;
     },
-    removeNode(fileId) {
-      var node = this.ztreeObj.getNodeByParam("id", fileId);
-      this.ztreeObj.removeNode(node, false);
-    },
-    getParentNodes(node, allNode) {
-      if (node != null) {
-        allNode.push(node);
-        var curNode = node.getParentNode();
-        this.getParentNodes(curNode, allNode);
+    zTreeOnCheck(event, treeId, treeNode){
+      if(treeNode.checked){    //注意，这里的树节点的checked状态表示勾选之后的状态
+        this.ztreeObj.checkAllNodes(false);//取消所有节点的选中状态
+        this.ztreeObj.checkNode(treeNode,true,false,false);
       }
     }
   }

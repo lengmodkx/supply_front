@@ -19,7 +19,8 @@ const store = {
     //菜单栏
     crumbs: [],
     crumbsCache: [],
-    crumbsIndex: ""
+    crumbsIndex: "",
+    toolsShow:false
   },
   mutations: {
       //初始化导航条
@@ -112,9 +113,11 @@ const store = {
     initTag(state, data) {
       state.tags = data;
     },
-    initItem(state, data) {
+    initItem(state,data) {
       state.itemfile = data;
-      state.itemfile.show = true;
+    },
+    changeToolsShow(state,data) {
+      state.toolsShow = data;
     },
     changeCreateFileId(state, data) {
       state.createFileId = data;

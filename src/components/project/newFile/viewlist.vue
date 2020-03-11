@@ -309,11 +309,12 @@ export default {
     this.initTag(this.projectId).then(res => {});
   },
   methods: {
-    ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag", "initItem"]),
-    ...mapMutations("file", ["putOneFile"]),
+    ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag", ]),
+    ...mapMutations("file", ["putOneFile","changeToolsShow","initItem"]),
     iosCheck(file,index) {
       this.selected = index;
       this.initItem(file);
+      this.changeToolsShow(true);
       this.thisFileId = file.fileId
     },
     leftShow() {},
@@ -988,7 +989,7 @@ export default {
 .rublish {
   padding: 10px;
   .rublish-input {
-    margin: 15px 0;
+    margin-bottom: 10px;
   }
   .rublish-header {
     width: 100%;

@@ -21,7 +21,7 @@
           </Poptip>
         </div>
       </div>
-      <div class="pull-box" v-show="itemfile.show">
+      <div class="pull-box" v-show="toolsShow">
         <div class="pull" @click="downLoad(itemfile.fileId)">
           <img src="../../../assets/images/view9.png" alt="" />
           <span>下载</span>
@@ -42,6 +42,7 @@
           class="pull clear-border"
           @click="
             showFileEdit = true;
+            editFileName = itemfile.fileName;
             modalTitle = '修改文件名称';
           "
         >
@@ -82,13 +83,13 @@
                   </div>
                 </Poptip> -->
       <!-- 列表 -->
-      <div class="view" @click="changeShowView('list')">
+      <div class="view" @click="changeView('list')">
         <Tooltip  placement="top" transfer content="列表">
           <img src="../../../assets/images/view3.png" alt="" />
         </Tooltip>
       </div>
       <!-- 缩略图 -->
-      <div class="view " @click="changeShowView('view')">
+      <div class="view " @click="changeView('view')">
         <Tooltip  placement="top" transfer content="缩略图">
           <img src="../../../assets/images/view2.png" alt="" />
         </Tooltip>
@@ -117,7 +118,7 @@
         <Button long type="error" @click="putRecyclebin(itemfile.fileId)">移到回收站</Button>
       </div>
     </Modal>
-    <Modal v-model="showFileEdit" :width="350" :footer-hide="true">
+    <Modal v-model="showFileEdit" :width="350" :footer-hide="true" :title="modalTitle">
       <div class="rublish">
         <div class="rublish-input">
           <Input v-model.trim="editFileName" />
@@ -147,7 +148,7 @@
         </div>
         <div class="picker-column thin-scroll flex-fill flex-vert">
           <Loading v-show="loading1"></Loading>
-          <tree :data="fileTree" ref="tree"></tree>
+          <tree :data="mFileTree" ref="tree"></tree>
         </div>
       </div>
       <div slot="footer" class="move-footer">
@@ -202,23 +203,30 @@ export default {
       rublish: false,
       modalTitle: "文件菜单",
       showFileEdit: false,
-      editFileName: "",
+      editFileName: '',
       showMove: false,
       fileName: "",
       projects: [],
       loading1: false,
       asyncData: [],
       footerTxt: "跨项目移动时，部分信息不会被保留。",
-      caozuo: ""
+      caozuo: "",
+      mProjectId:this.$route.params.id
     };
   },
   computed: {
-    ...mapState("tree", ["fileTree", "showView", "slider"]),
-    ...mapState("file", ["files", "itemfile", "createFileId"])
+    ...mapState("tree", ["fileTree", "showView", "slider","mFileTree"]),
+    ...mapState("file", ["files", "itemfile", "createFileId","toolsShow"])
   },
+  
   methods: {
-    ...mapActions("tree", ["changeShowView", "changeSlider"]),
+    ...mapActions("tree", ["changeShowView", "changeSlider","initMTree"]),
     ...mapActions("file", ["initFile", "searchFile", "initTag"]),
+    ...mapMutations("file", ["changeToolsShow"]),
+    changeView(data){
+      this.changeShowView(data);
+      this.changeToolsShow(false)
+    },
     clearFiles() {
       this.$refs.commonFile.clearFiles();
     },
@@ -282,39 +290,23 @@ export default {
       this.caozuo = caozuo;
       this.showMove = true;
       this.footerTxt = "跨项目移动时，部分信息不会被保留。";
-      this.asyncData = [this.$refs.jstree.initializeLoading()];
-      folderChild(this.projectId).then(res => {
-        console.log(res.data);
-        this.asyncData = res.data;
-        this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
-      });
     },
     // 移动、复制文件的确定按钮
     removeCloneFile() {
+      var folderId = this.$refs.tree.getFolderId();
       if (this.caozuo === "移动") {
-        console.log(this.folderId, this.thisFileId, this.projectId);
-        removeFile(this.folderId, this.thisFileId, this.projectId).then(res => {
+        removeFile(folderId, this.itemfile.fileId, this.mProjectId,this.projectId).then(res => {
           if (res.result) {
             this.$Message.success("移动成功");
             this.showMove = false;
           }
         });
       } else if (this.caozuo === "复制") {
-        cloneFile(this.folderId, this.thisFileId).then(res => {
+        cloneFile(this.folderId, this.itemfile.fileId,this.mProjectId,this.projectId).then(res => {
           this.$Message.success("复制成功");
           this.showMove = false;
         });
       }
-    },
-    // 选中要移动到哪
-    // 选中要移动到哪
-    treeClick(node) {
-      this.folderId = node.data.id;
-      this.thisFileId = this.itemfile.fileId;
-      //   console.log(node.data.id);
-      //   let params = { fileId: this.folderId };
-      //  let data = { fileId: this.folderId, projectId: this.projectId };
-      //  this.initFolders(data).then(res => {});
     },
     // 移到回收站
     putRecyclebin(fileId) {
@@ -340,7 +332,7 @@ export default {
       }
       changeName(id, this.editFileName).then(res => {
         if (res.result == 1) {
-          this.$emit("createFolder");
+          this.$emit("updateNodeName",id,this.editFileName);
           this.showFileEdit = false;
           this.$Message.info("修改名称成功");
           this.editFileName = "";
@@ -351,6 +343,7 @@ export default {
     changeVisible(bool) {
       if (bool) {
         this.projectId = this.$route.params.id;
+        this.initMTree(this.projectId);
         this.projectList();
       } else {
         this.projects = [];
@@ -370,16 +363,13 @@ export default {
     changeProject(projectId) {
       this.loading1 = true;
       this.items = [];
-      this.projectId = projectId;
-      folderChild(this.projectId).then(res => {
-        this.asyncData = res.data;
-        this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
+      this.mProjectId = projectId;
+      this.initMTree(projectId).then(res => {
         this.loading1 = false;
       });
     },
     // 取消 移动复制
     cancelRemoveClone() {
-      this.folderId = "";
       this.showMove = false;
     }
   }
