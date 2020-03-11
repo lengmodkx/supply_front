@@ -176,23 +176,6 @@ export function getFolders(fileId,projectId) {
     });
 }
 
-// 获取文件树
-export function getFileTree(projectId) {
-    return fetch({
-        url: `/files/folder_all_tree`,
-        method: "get",
-        params: {projectId: projectId}
-    });
-}
-
-// 获取素材加
-export function getSuCaiTree(projectId) {
-    return fetch({
-        url: `/files/folder_tree_admin`,
-        method: "get",
-        params: {fileId: projectId}
-    });
-}
 
 //获取文件目录
 
@@ -214,7 +197,13 @@ export function getSucai(folderId,page,orderType) {
         }
     });
 }
-
+// 获取素材库树
+export function getMaterialTree() {
+    return fetch({
+        url: '/files/material/tree',
+        method: "get"
+    });
+}
 
 
 // 获取素材库 搜索

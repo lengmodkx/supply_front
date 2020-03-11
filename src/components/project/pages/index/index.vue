@@ -169,7 +169,8 @@
                 </div>
               </div>
             </draggable>
-            <div class="add"></div>
+            <div class="add" style="height:45px"></div>
+            
 
             <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
               <Icon type="android-add-circle"></Icon>
@@ -500,12 +501,13 @@ export default {
 .add-Box{
 
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  bottom: 0px;
+  left: 2.5%;
+  width: 93%;
   min-height: 32px;
-  
+  padding-bottom: 10px;
   z-index: 999;
+  background: #ececec;
 }
 .add-task-box {
   width: 272px;

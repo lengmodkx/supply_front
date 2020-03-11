@@ -166,8 +166,9 @@
       </div>
     </Modal>
     <!--文件详情-->
-    <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail">
-      <sucaiDetail @close="closeDetail" :file="curFile" v-if="showModelDetai"></sucaiDetail>
+    
+    <Modal v-model="showModelDetai"  fullscreen :footer-hide="true" class-name="model-detail" :closable="false">
+      <sucaiDetail @close="closeDetail" :type="'文件'"   :file="curFile" v-if="showModelDetai"></sucaiDetail>
     </Modal>
   </div>
 </template>

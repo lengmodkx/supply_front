@@ -1,5 +1,5 @@
 import { files, allTags } from "../../axios/api.js";
-import { getTSFile, filePrivacy, getFolders, getFileTree, searchFile, getFileByTag, getFileDetails } from "../../axios/fileApi";
+import { getTSFile, filePrivacy, getFolders, searchFile, getFileDetails } from "../../axios/fileApi";
 const store = {
   namespaced: true,
   state: {
@@ -272,9 +272,6 @@ const store = {
           commit("initBreadcrumb", res.data2);
         }
       });
-      // getFileTree(data.projectId).then(res => {
-      //     commit("initFolders", res.data)
-      // })
     },
     //搜索文件
     searchFile({ commit }, data) {

@@ -1,14 +1,11 @@
 <template>
      <div class="file">
-        <div :class="show?'file-side-show':'file-side'">
-          <Loading v-if="treeLoading"></Loading>
-        <v-jstree  opened  multiple allow-batch whole-row :data="treeData"  @item-click="treeClick"></v-jstree>
-        </div>
+
+         <div class="picker-column thin-scroll flex-fill flex-vert">
+             <Loading v-show="loading1"></Loading>
+             <tree :data="fileTree" ref="tree" @init="init"></tree>
+         </div>
         <div class="file-button" @click='show=!show'>
-        <div class="root__3UYM" :class="show?'left':'right'">
-            <i class="left__1DdF"></i>
-            <i class="indicator__1TO8"></i>
-        </div>
         </div>
 
         <div class="file-view-wrap fade in">
@@ -22,7 +19,6 @@
          <div class="input-box" style="padding:10px 20px 10px 20px;">
             <div class="input-box-left">
             <Input search enter-button placeholder="请输入搜索" style="width:350px;margin-right:20px;" @on-search="search" v-model="searched" />
-            
             </div>
             <div class="icon-box">
             <Icon type="ios-apps" @click="view='view'" />
@@ -78,7 +74,6 @@
                            <Poptip  trigger="hover" :content=file.fileName  placement="bottom">
                              {{file.fileName}}
                            </Poptip>
-                          
                           </p>
                     </li>
                 </ul>
@@ -120,8 +115,6 @@
                             <!-- <Tooltip content="删除">
                                 <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
                             </Tooltip> -->
-
-
                         </div>
 
                     </li>
@@ -234,8 +227,10 @@
 <script>
 import sucaiDetail from "./sucaiDetail";
 import VJstree from "vue-jstree";
-import {getSuCaiTreeDate,getSucai,getSuCaiTree,getSucaiSearch,getFileDetails, getChildFiles, putImportant} from '@/axios/fileApi'
+import {getSuCaiTreeDate,getSucai,getSucaiSearch,getMaterialTree} from '@/axios/fileApi';
+import tree from "@/components/public/fodderTree.vue"; //树
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
+
     export default {
         data () {
             return {
@@ -247,10 +242,11 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 show: true,
                 showModel: false,
                 showCommon: false,
-                fileId:localStorage.fileId||'ef6ba5f0e3584e58a8cc0b2d28286c93',
+                fileId:'ef6ba5f0e3584e58a8cc0b2d28286c93',
                 projectId: '',
                 showAddFolder: false,
                 folderName: '',
+                loading1: false,
                 wjj: 0,
                 allFile:[],
                 total: 0,
@@ -266,19 +262,16 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 treeId:'',
                 page:0,
                 curFile:{},
+                fileTree:[]
                 
             }
         },
         components : {
-              VJstree,
-              sucaiDetail
+              sucaiDetail,
+              tree
         },
         mounted () {
-            this.init();
-            // this.treeInit();
-        },
-        computed: {
-             ...mapState("file", ["files", "filePath", "tags", "breadcrumb"])
+            this.init(this.fileId);
         },
         watch: {
             // '$route'(to, from) {              
@@ -308,51 +301,23 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                 }    
                 deep: true          
              },
-           
-
            },
         created(){
-                     
-                     this.treeInit();
-        },
-        updated:function(){
-
-          //  this.$nextTick(function(){
-          //   var button = document.getElementById('finishDown');
-          //   var file=document.getElementsByClassName("file")[0]
-          //  console.log(file.scrollHeight)
-          //   })
-            
+            this.treeInit();
         },
         methods: {
           //关闭详情
            closeDetail() {
               this.showModelDetai = false;
             },
-          // 选中要移动到哪
-          treeClick(node) {             
-              if(this.treeId!=node.data.id){
-                this.pageNum=1
-              }
-              this.searched='';//重置搜索
-              this.flagTree=true;           
-              this.treeId=node.data.id
-              getSuCaiTreeDate(this.treeId,this.pageNum).then(res => {
-                this.allFile =res.data.records
-                this.total = res.data.total
-                // this.page=res.page
-                this.pageNum=res.data.current
-              });
-          },
            treeInit(){
-              getSuCaiTree('ef6ba5f0e3584e58a8cc0b2d28286c93').then(res => {
-                                this.treeData=res.data;
-                                this.treeLoading=false;
-                 })
+               getMaterialTree().then(res => {
+                    this.fileTree=res.data;
+               })
             },
             // 分页
             clickPage (data) {
-              
+
                 this.pageNum=data
                 if(this.flagTree){
                     //树形分页
@@ -370,7 +335,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
                   //搜索
                  this.search(this.searched)
                  return
-               }              
+               }
                  getSucai(this.fileId,this.pageNum,this.orderType).then(res => {
                     if (res.result) {                  
                         this.loading = false;
@@ -383,16 +348,28 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
             },
 
             // 初始化 页面信息和分页
-            init () {
-                getSucai(this.fileId,this.pageNum,this.orderType).then(res => {
-                    if (res.result) {
-                        this.loading = false;
-                        this.allFile =res.data.records
-                        this.total = res.data.total
-                        this.pageNum=1
-                    }
-                });
-                     
+            init (fileId) {
+                if (fileId===undefined){
+                    getSucai(this.fileId,this.pageNum,this.orderType).then(res => {
+                        if (res.result) {
+                            this.loading = false;
+                            this.allFile =res.data.records
+                            this.total = res.data.total
+                            this.pageNum=1,
+                            this.searched="";
+                        }
+                    });
+                } else {
+                    getSucai(fileId,this.pageNum,this.orderType).then(res => {
+                        if (res.result) {
+                            this.loading = false;
+                            this.allFile =res.data.records
+                            this.total = res.data.total
+                            this.pageNum=1
+                            this.searched="";
+                        }
+                    });
+                }
             },
            // 搜索文件
             search(value) {
@@ -416,14 +393,11 @@ import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
             // 点击的是文件夹
             goNext (type, id,file) {
-                
-              console.log(type)
                 if (type){
                   this.fileId=id;
                     this.flagTree=false
                    
-                }
-                else{
+                } else{
                     this.showModelDetai = true;
                     this.curFile=file
                      // this.$router.push(`/sucai/${id}`) 
