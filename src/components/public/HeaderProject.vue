@@ -5,7 +5,7 @@
         <BreadcrumbItem :to="toto">首页</BreadcrumbItem>
         <BreadcrumbItem>{{projectName}}</BreadcrumbItem>
       </Breadcrumb> -->
-      <div>
+      <div class="headerTo">
         <a :href="toto">首页</a> <span> > {{ projectName }}</span>
       </div>
     </div>
@@ -89,6 +89,11 @@ export default {
 };
 </script>
 <style lang="less">
+.headerTo{
+   a{
+     color: #495060;
+   }
+}
 .activeHeaderTag {
   color: #2d8cf0 !important;
 }
