@@ -125,7 +125,7 @@ const store = {
     // 文件详情 赋值
     putOneFile(state, data) {
       state.file = data;
-      state.joinInfoIds = data.data.joinInfo
+      state.joinInfoIds = data.joinInfo
         .map(v => {
           return v.userId;
         })
@@ -171,56 +171,56 @@ const store = {
     },
     // 推送 添加标签
     bindingTag(state, data) {
-      state.file.data.tagList.unshift(data.tag);
+      state.file.tagList.unshift(data.tag);
     },
     // 推送 删除标签
     removeTag(state, data) {
-      state.file.data.tagList.forEach((i, n) => {
+      state.file.tagList.forEach((i, n) => {
         if (i.tagId == data.tagId) {
-          state.file.data.tagList.splice(n, 1);
+          state.file.tagList.splice(n, 1);
         }
       });
     },
     // 推送 参与者
     player(state, data) {
-      state.file.data.joinInfo = data;
+      state.file.joinInfo = data;
     },
     // 推送 关联
     relevance(state, data) {
       if (data.publicType === "任务") {
-        state.file.data.bindTasks = state.file.data.bindTasks.concat(data.bind);
+        state.fil.bindTasks = state.file.bindTasks.concat(data.bind);
       } else if (data.publicType === "分享") {
-        state.file.data.bindShares = state.file.data.bindShares.concat(data.bind);
+        state.file.bindShares = state.file.bindShares.concat(data.bind);
       } else if (data.publicType === "日程") {
-        state.file.data.bindSchedules = state.file.data.bindSchedules.concat(data.bind);
+        state.file.bindSchedules = state.file.bindSchedules.concat(data.bind);
       } else if (data.publicType === "文件") {
-        state.file.data.bindFiles = state.file.data.bindFiles.concat(data.bind);
+        state.file.bindFiles = state.file.bindFiles.concat(data.bind);
       }
     },
     // 推送 取消关联
     cancelRelevance(state, data) {
       if (data.publicType === "任务") {
-        state.file.data.bindTasks.forEach((i, n) => {
+        state.file.bindTasks.forEach((i, n) => {
           if (i.taskId === data.bindId) {
-            state.file.data.bindTasks.splice(n, 1);
+            state.file.bindTasks.splice(n, 1);
           }
         });
       } else if (data.publicType === "分享") {
-        state.file.data.bindShares.forEach((i, n) => {
+        state.file.bindShares.forEach((i, n) => {
           if (i.shareId === data.bindId) {
-            state.file.data.bindShares.splice(n, 1);
+            state.file.bindShares.splice(n, 1);
           }
         });
       } else if (data.publicType === "日程") {
-        state.file.data.bindSchedules.forEach((i, n) => {
+        state.file.bindSchedules.forEach((i, n) => {
           if (i.scheduleId === data.bindId) {
-            state.file.data.bindSchedules.splice(n, 1);
+            state.file.bindSchedules.splice(n, 1);
           }
         });
       } else if (data.publicType === "文件") {
-        state.file.data.bindFiles.forEach((i, n) => {
+        state.file.bindFiles.forEach((i, n) => {
           if (i.fileId === data.bindId) {
-            state.file.data.bindFiles.splice(n, 1);
+            state.file.bindFiles.splice(n, 1);
           }
         });
       }
@@ -249,6 +249,14 @@ const store = {
             resolve();
           }
         });
+      });
+    },
+    //创建文件夹
+    createWjj({ commit }, data){
+      files(data).then(res => {
+        if (res.result == 1) {
+          commit("initFile", res.data);
+        }
       });
     },
     initItem({ commit }, data) {
@@ -295,7 +303,8 @@ const store = {
     // 更新文件详情
     putOneFile({ commit }, data) {
       getFileDetails(data).then(res => {
-        commit("putOneFile", res);
+        console.log(res.data)
+        commit("putOneFile", res.data);
       });
     }
   }
