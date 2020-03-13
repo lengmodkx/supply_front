@@ -18,6 +18,14 @@ const global = {
     //  保留的小数位数
     size = size.toFixed(2)
     return size + unitArr[index]
+  },
+  _isNotEmpty(value){
+    if(value!==null&&value!==''&&value!=undefined){
+      return true;
+    }else{
+      return false;
+    }
   }
+
 }
 export default global

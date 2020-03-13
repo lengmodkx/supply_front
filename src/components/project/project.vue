@@ -208,7 +208,7 @@ export default {
                 break;
               // 创建文件夹
               case "C1":
-                this.$store.commit("file/createWjj", result.object);
+                this.$store.dispatch("file/createWjj", result.object);
                 break;
               // 上传文件
               case "C2":

@@ -17,7 +17,7 @@
       <!-- 头 -->
       <file-header></file-header>
       <!--工具 -->
-      <file-tools @createFolder="createFolder" @removeFolder="removeFolder"> </file-tools>
+      <file-tools @createFolder="createFolder" @removeFolder="removeFolder" @updateNodeName="updateNodeName"> </file-tools>
       <!-- 列表内容 -->
       <list v-if="showView == 'list'"></list>
       <!-- 缩略图内容 -->
@@ -57,6 +57,9 @@ export default {
     },
     removeFolder(fileId) {
       this.$refs.tree.removeNode(fileId);
+    },
+    updateNodeName(fileId,fileName){
+      this.$refs.tree.updateNodeName(fileId,fileName);
     }
   },
   created: function() {

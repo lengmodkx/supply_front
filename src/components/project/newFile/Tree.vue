@@ -90,6 +90,11 @@ export default {
       var node = this.ztreeObj.getNodeByParam("id", fileId);
       this.ztreeObj.removeNode(node, false);
     },
+    updateNodeName(fileId,fileName){
+     var node = this.ztreeObj.getNodeByParam("id", fileId);
+      node.name = fileName;
+      this.ztreeObj.updateNode(node);
+    },
     getParentNodes(node, allNode) {
       if (node != null) {
         allNode.push(node);
