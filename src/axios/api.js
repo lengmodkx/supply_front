@@ -19,11 +19,14 @@ export function collect(data) {
     });
 }
 // 发送消息
-export function sendMsg(data) {
+export function sendMsg(str) {
     return fetch({
         url: '/logs/chat',
         method: "post",
-        data: data
+        data: str,
+        headers: {
+            'Content-Type': 'application/json'
+        }
     });
 }
 
