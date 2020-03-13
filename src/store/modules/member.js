@@ -7,7 +7,8 @@ const store = {
     state: {
         members: [], //项目成员（不包括参与者）
         users: [], //项目全部成员
-        roles: []
+        roles: [],
+        symbolData:[],//@中项目成员
     },
     mutations: {
         init(state, data) {
@@ -19,6 +20,14 @@ const store = {
         //初始化项目成员列表
         initUser(state, data) {
             state.users = data
+            state.symbolData=data;
+            console.log(state.symbolData)
+            const alluser={
+                memberName:'所有人'
+            }
+            state.symbolData.unshift(alluser)
+            console.log(localStorage.userId)
+           
         },
         initRoles(state, data) {
             state.roles = data
