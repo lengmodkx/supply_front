@@ -40,7 +40,7 @@
             <Button type="primary" @click="commitRole" class="op-btn">确定</Button>
             <Button type="default" @click="roleAdd = false" class="op-btn">取消</Button>
           </div>
-        </div>e
+        </div>
       </Modal>
       <Modal v-model="permissionAssign" title="权限分配" width="1200px" class="padd0" fullscreen footer-hide :z-index="1001">
         <project-permission :flag="false" :permissions="permissions" :role="nowRole" v-if="permissionAssign" ref="permission" @close="permissionAssign = false"></project-permission>

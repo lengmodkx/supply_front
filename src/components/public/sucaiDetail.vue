@@ -74,11 +74,11 @@
           <img :style="{ transform: 'scale(' + imgSize + ')' }" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl" alt="" />
         </div>
         <iframe
-          v-else-if="officeExt.includes(file.ext)>-1"
-          :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl"
-          width="100%"
-          height="100%"
-          frameborder="1"
+                v-else-if="officeExt.includes(file.ext)>-1"
+                :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl"
+                width="100%"
+                height="100%"
+                frameborder="1"
         >
         </iframe>
 
@@ -132,8 +132,8 @@
                     <!--<Icon type="ios-document-outline" size="22" />-->
                     <img v-if="b.userImage" :src="b.userImage" alt="执行者" />
                     <img
-                      v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg=="
+                            v-else
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABGlBMVEWmpqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqapqamtra2zs7O6urrAwMDCwsLDw8PExMTFxcXGxsbKysrMzMzS0tLY2Nje3t7f39/i4uLk5OTm5ubp6ent7e3v7+/x8fH09PT5+fn6+vr9/f3+/v7///9sumsYAAAAQHRSTlMABAUGExQWFxkaGxwlJikqTk9QUVdYW1xmaXBxcnV2enuNjo+TlJW2t7jLzM7P0NjZ2+zt7vHy8/T19vj5+vz+SWi1rwAAAhZJREFUGBmFwQ1b0mAUBuATirYyJZMCib6WikIqqUwxt6e5aeEGCoQ4Pf//byS6C8/7buB9U8LcilnZ2Ts+3tupmCtz9IzZ0pYDwdkqzdJkL78eIuHou0HpXpQtpLLKGUqxUMNEP5Yo4e0BprCWSVOwMZVdIEURzyqSkLOh8IMwDH0Xkp2jsUULgtuJ+FHXg2AtUiyzDcGL+EkAYTtDj8oQ3CFLHoRP9MCwILRZMYBgGTSyBsGNWOVDWKd72SYEnzUhhGaWiFYh+awJIa0SURWSz5oQ0hbRnAPJZY0PyTEoD1XEKg+K92RC4Q5Z5UFhUgWKkDVdKDaoDkXImj4UdWpAEbCmA0WDoHIHrIg8qAi6PguRC9UvakATstCF5ifVoTllIYCmThXo2jw2gG6DTCQMOBadQmdSHgktjrWR8IHmHeh8joXQOQZRFbqQY13oqkS0Cl2fY5ELzUciyjahCnisA1UzS/fWoQhZ6LiQ1mnEsPDE77NiGOCJZdCDMmJu0OeEYXiK2Cd6lKlhxOtEnK7bwkgtQ7GFAyAY8BTD8Dcab2gsZ+OSp7qEnSOhCFzwFBdAkRQFG61bnuCuBbtAmuUDeD1O1fNgvaOEhRrw5x8nDP4C20uUYuZzEzi7umPh7uoMaH6ZoXSvvh0COG/3rm9ub2+ue+1zAEdrr2mybKnqQHCqpSw9Yz5vbu7un5zs726a+XnS/QfUNwZ8HxlD9AAAAABJRU5ErkJggg=="
                     />
                     <div class="gl-con">
                       <div class="gl-con-top">
@@ -280,158 +280,158 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy } from "@/axios/fileApi";
-import { folderChild, getProjectList, collect, cancle, sendMsg } from "@/axios/api";
-import Tags from "../public/Tags.vue";
-import AddRelation from "@/components/public/common/AddRelation"; //关联
-import log from "@/components/public/log"; //标签
-import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
+    import { mapState } from "vuex";
+    import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy } from "@/axios/fileApi";
+    import { folderChild, getProjectList, collect, cancle, sendMsg } from "@/axios/api";
+    import Tags from "../public/Tags.vue";
+    import AddRelation from "@/components/public/common/AddRelation"; //关联
+    import log from "@/components/public/log"; //标签
+    import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
 
-export default {
-  props: ["type"],
-  data() {
-    return {
-      privacyStatus: "已关闭",
-      rublish: false,
-      menuShow: false,
-      relationModal: false, //关联
-      publicType: "文件",
-      imgSize: 1,
-      imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
-      officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx"]
+    export default {
+        props: ["type"],
+        data() {
+            return {
+                privacyStatus: "已关闭",
+                rublish: false,
+                menuShow: false,
+                relationModal: false, //关联
+                publicType: "文件",
+                imgSize: 1,
+                imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
+                officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx"]
+            };
+        },
+        components: { Tags, AddRelation, log, Emoji },
+        computed: {
+            ...mapState("file", ["joinInfoIds", "file"])
+        },
+        mounted() {
+            console.log(this.file);
+        },
+        methods: {
+            closeTag() {
+                this.$refs.tags.closeTag();
+            },
+
+            popHid() {
+                setTimeout(() => {
+                    this.rublish = false;
+                }, 300);
+            },
+            // 关联 回调
+            binkCallback() {
+                this.relationModal = false;
+            },
+
+            // 放大缩小图片
+            changeImgSize(n) {
+                if (n) {
+                    this.imgSize = this.imgSize + 0.1;
+                    console.log(this.imgSize);
+                } else {
+                    this.imgSize = this.imgSize - 0.1;
+                    console.log(this.imgSize);
+                }
+            },
+
+            // 新增右侧部分
+            // 添加参与者
+            saveInvolveMember(detailList) {
+                jionPeople(this.file.fileId, detailList).then(res => {
+                    if (res.result) {
+                        this.$Message.success("添加成功");
+                    }
+                });
+            },
+            // 发送消息
+            sendChat() {
+                let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
+                if (con) {
+                    let datas = {
+                        publicId: this.file.fileId,
+                        projectId: this.projectId,
+                        publicType: this.publicType,
+                        content: con
+                    };
+                    console.log(datas);
+                    sendMsg(datas).then(res => {
+                        this.$refs.textarea.innerHTML = "";
+                    });
+                }
+            },
+            chooseEmoji(name) {
+                alert(1);
+                this.$refs.textarea.innerHTML += '<img src="' + name + '" />';
+            },
+            // 更新文件
+            showFileChoose(data) {
+                console.log(data);
+                if (data === "model") {
+                    this.showModel = !this.showModel;
+                } else {
+                    this.showCommon = !this.showCommon;
+                }
+            },
+            //文件下载
+            downLoad(fileId) {
+                var url = "";
+                if (process.env.NODE_ENV == "test") {
+                    url = process.env.VUE_APP_TEST_URL;
+                } else if (process.env.NODE_ENV == "production") {
+                    url = process.env.VUE_APP_URL;
+                } else {
+                    url = "/api";
+                }
+                window.location.href = url + "/files/" + fileId + "/download";
+            },
+
+            // 移到回收站
+            putRecyclebin() {
+                recycleBin(this.file.fileId, this.projectId).then(res => {
+                    if (res.result) {
+                        this.$Message.success("成功移到回收站");
+                        this.popHid();
+                    }
+                });
+            },
+            // 收藏文件
+            collectFile() {
+                let data = {
+                    projectId: this.projectId,
+                    publicId: this.file.fileId,
+                    collectType: "文件"
+                };
+                collect(data).then(res => {
+                    if (res.result) {
+                        this.$Message.success("收藏成功");
+                    }
+                });
+            },
+            // 更改隐私模式
+            changePrivacy() {
+                let num = 0;
+                if (this.privacyStatus == "已关闭") {
+                    num = 1;
+                    this.privacyStatus = "已开启";
+                } else {
+                    num = 0;
+                    this.privacyStatus = "已关闭";
+                }
+                filePrivacy(this.file.fileId, num).then(res => {});
+            },
+            // 点击 移动、赋值文件
+            showModels(caozuo) {
+                this.caozuo = caozuo;
+                this.showMove = true;
+                this.footerTxt = `跨项目${caozuo}时，部分信息不会被保留。`;
+
+                folderChild(this.projectId).then(res => {});
+            }
+        }
     };
-  },
-  components: { Tags, AddRelation, log, Emoji },
-  computed: {
-    ...mapState("file", ["joinInfoIds", "file"])
-  },
-  mounted() {
-    console.log(this.file);
-  },
-  methods: {
-    closeTag() {
-      this.$refs.tags.closeTag();
-    },
-
-    popHid() {
-      setTimeout(() => {
-        this.rublish = false;
-      }, 300);
-    },
-    // 关联 回调
-    binkCallback() {
-      this.relationModal = false;
-    },
-
-    // 放大缩小图片
-    changeImgSize(n) {
-      if (n) {
-        this.imgSize = this.imgSize + 0.1;
-        console.log(this.imgSize);
-      } else {
-        this.imgSize = this.imgSize - 0.1;
-        console.log(this.imgSize);
-      }
-    },
-
-    // 新增右侧部分
-    // 添加参与者
-    saveInvolveMember(detailList) {
-      jionPeople(this.file.fileId, detailList).then(res => {
-        if (res.result) {
-          this.$Message.success("添加成功");
-        }
-      });
-    },
-    // 发送消息
-    sendChat() {
-      let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-      if (con) {
-        let datas = {
-          publicId: this.file.fileId,
-          projectId: this.projectId,
-          publicType: this.publicType,
-          content: con
-        };
-        console.log(datas);
-        sendMsg(datas).then(res => {
-          this.$refs.textarea.innerHTML = "";
-        });
-      }
-    },
-    chooseEmoji(name) {
-      alert(1);
-      this.$refs.textarea.innerHTML += '<img src="' + name + '" />';
-    },
-    // 更新文件
-    showFileChoose(data) {
-      console.log(data);
-      if (data === "model") {
-        this.showModel = !this.showModel;
-      } else {
-        this.showCommon = !this.showCommon;
-      }
-    },
-    //文件下载
-    downLoad(fileId) {
-      var url = "";
-      if (process.env.NODE_ENV == "test") {
-        url = process.env.VUE_APP_TEST_URL;
-      } else if (process.env.NODE_ENV == "production") {
-        url = process.env.VUE_APP_URL;
-      } else {
-        url = "/api";
-      }
-      window.location.href = url + "/files/" + fileId + "/download";
-    },
-
-    // 移到回收站
-    putRecyclebin() {
-      recycleBin(this.file.fileId, this.projectId).then(res => {
-        if (res.result) {
-          this.$Message.success("成功移到回收站");
-          this.popHid();
-        }
-      });
-    },
-    // 收藏文件
-    collectFile() {
-      let data = {
-        projectId: this.projectId,
-        publicId: this.file.fileId,
-        collectType: "文件"
-      };
-      collect(data).then(res => {
-        if (res.result) {
-          this.$Message.success("收藏成功");
-        }
-      });
-    },
-    // 更改隐私模式
-    changePrivacy() {
-      let num = 0;
-      if (this.privacyStatus == "已关闭") {
-        num = 1;
-        this.privacyStatus = "已开启";
-      } else {
-        num = 0;
-        this.privacyStatus = "已关闭";
-      }
-      filePrivacy(this.file.fileId, num).then(res => {});
-    },
-    // 点击 移动、赋值文件
-    showModels(caozuo) {
-      this.caozuo = caozuo;
-      this.showMove = true;
-      this.footerTxt = `跨项目${caozuo}时，部分信息不会被保留。`;
-
-      folderChild(this.projectId).then(res => {});
-    }
-  }
-};
 </script>
 
 <style scoped lang="less">
-@import "./sucaiDetail";
+  @import "./sucaiDetail";
 </style>
