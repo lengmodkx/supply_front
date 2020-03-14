@@ -41,17 +41,6 @@
         <div
           class="pull clear-border"
           @click="
-            showFileEdit = true;
-            editFileName = itemfile.fileName;
-            modalTitle = '修改文件名称';
-          "
-        >
-          <img src="../../../assets/images/view7.png" alt="" />
-          <span>重命名</span>
-        </div>
-        <div
-          class="pull clear-border"
-          @click="
             rublish = true;
             modalTitle = '移到回收站';
           "
@@ -118,15 +107,6 @@
         <Button long type="error" @click="putRecyclebin(itemfile.fileId)">移到回收站</Button>
       </div>
     </Modal>
-    <Modal v-model="showFileEdit" :width="350" :footer-hide="true" :title="modalTitle">
-      <div class="rublish">
-        <div class="rublish-input">
-          <Input v-model.trim="editFileName" />
-        </div>
-        <Button long type="primary" @click="fileEdit(itemfile.fileId)">确定</Button>
-      </div>
-    </Modal>
-
     <!--复制、移动 模态框-->
     <Modal v-model="showMove" :z-index="11111" class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
       <div slot="header">
@@ -202,8 +182,6 @@ export default {
       folderName: "",
       rublish: false,
       modalTitle: "文件菜单",
-      showFileEdit: false,
-      editFileName: '',
       showMove: false,
       fileName: "",
       projects: [],
@@ -216,7 +194,7 @@ export default {
   },
   computed: {
     ...mapState("tree", ["fileTree", "showView", "slider","mFileTree"]),
-    ...mapState("file", ["files", "itemfile", "createFileId","toolsShow"])
+    ...mapState("file", ["files", "fileIds", "createFileId","toolsShow"])
   },
   
   methods: {
@@ -295,25 +273,32 @@ export default {
     removeCloneFile() {
       var folderId = this.$refs.tree.getFolderId();
       if (this.caozuo === "移动") {
-        removeFile(folderId, this.itemfile.fileId, this.mProjectId,this.projectId).then(res => {
-          if (res.result) {
+        removeFile(folderId, this.fileIds.join(','), this.mProjectId,this.projectId).then(res => {
+          if (res.result==1) {
             this.$Message.success("移动成功");
             this.showMove = false;
+            this.toolsShow = false;
           }
         });
       } else if (this.caozuo === "复制") {
-        cloneFile(this.folderId, this.itemfile.fileId,this.mProjectId,this.projectId).then(res => {
-          this.$Message.success("复制成功");
-          this.showMove = false;
+        cloneFile(this.folderId, this.fileIds.join(','),this.mProjectId,this.projectId).then(res => {
+          if(res.result==1){
+            this.$Message.success("复制成功");
+            this.showMove = false;
+            this.toolsShow = false;
+          }
+          
         });
       }
     },
     // 移到回收站
     putRecyclebin(fileId) {
-      console.log(fileId);
       recycleBin(fileId, this.projectId).then(res => {
         if (res.result == 1) {
+          this.toolsShow = false;
           this.$emit("removeFolder", fileId);
+          //重置文件选中状态
+          this.$emit("recovery");
           this.$Message.success("成功移到回收站");
           this.popHid();
         }
@@ -322,22 +307,7 @@ export default {
     popHid() {
       setTimeout(() => {
         this.rublish = false;
-        this.showFileEdit = false;
       }, 300);
-    },
-    //文件修改名
-    fileEdit(id) {
-      if (this.editFileName == "") {
-        this.$Message.info("请输入名称");
-      }
-      changeName(id, this.editFileName).then(res => {
-        if (res.result == 1) {
-          this.$emit("updateNodeName",id,this.editFileName);
-          this.showFileEdit = false;
-          this.$Message.info("修改名称成功");
-          this.editFileName = "";
-        }
-      });
     },
     // 移动、赋值文件框打开关闭
     changeVisible(bool) {

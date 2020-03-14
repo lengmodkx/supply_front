@@ -3,7 +3,7 @@ import api from "./url"; // 引用url.js
 
 export function getOssSign() {
     return $get('/oss/sign', {
-        "dir": "upload/file/test/"
+        "dir": "upload/file/"
     });
 }
 
@@ -324,8 +324,10 @@ export function delBQProject(tagId) {
         params: {}
     });
 }
-
-
+//点击项目进入任务主页
+export function mView(projectId) {
+    return $get(`${api.projects}/view_member`,{projectId:projectId});
+}
 
 //点击项目进入任务主页
 export function enterTask(projectId) {

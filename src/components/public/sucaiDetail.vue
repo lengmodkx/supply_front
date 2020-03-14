@@ -5,20 +5,20 @@
       <div class="f-header-left">{{ file.fileName }}</div>
       <div class="f-header-right">
         <!-- 更新版本 -->
-        <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
+        <!-- <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
           <p class="padd8"><Icon type="ios-cloud-upload-outline" />更新版本</p>
           <DropdownMenu slot="list">
             <DropdownItem name="model">上传模型文件</DropdownItem>
             <DropdownItem name="commonfile">上传普通文件</DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown> -->
         <!-- 下载 -->
         <p class="padd8">
           <Icon type="ios-cloud-download-outline" />
           <a style="color: gray" :download="file.fileName" @click="downLoad(file.fileId)" ref="xiazai">下载</a>
         </p>
 
-        <Poptip class="menu-file" v-model="menuShow" placement="bottom" @on-popper-hide="popHid">
+        <!-- <Poptip class="menu-file" v-model="menuShow" placement="bottom" @on-popper-hide="popHid">
           <Icon type="ios-more" class="mr0" />
           <div slot="content">
             <div v-show="rublish" class="rublish">
@@ -55,7 +55,7 @@
               </div>
             </div>
           </div>
-        </Poptip>
+        </Poptip> -->
       </div>
     </header>
 
@@ -96,13 +96,12 @@
           <!-- 版本 -->
           <div class="bbxx">
             <div><Icon type="ios-folder-open-outline" size="18" />版本信息</div>
-            <div class="sp-bw">
+            <div class="sp-bw" v-for="(version,index) in file.versions" :key="index">
               <p>
                 <Icon type="ios-information-circle-outline" size="18" />
-                <span v-if="file.version">{{ file.version }}</span>
-                <span v-else>XXX</span>
+                <span>{{ version.info }}</span>
+                <span v-if="version.isMaster==1" class="is-ma">主版本</span>
               </p>
-              <p>{{ file.size }}</p>
             </div>
           </div>
           <!--标签-->

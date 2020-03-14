@@ -31,7 +31,7 @@
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
-        <Dropdown
+        <!-- <Dropdown
           trigger="click"
           @on-click="
             name => {
@@ -48,7 +48,7 @@
               <Icon type="checkmark" v-if="remind_data === i"></Icon>
             </DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown> -->
       </div>
       <!-- <div class="examine">
         <Icon type="checkmark-circled"></Icon> 所有人都有时间
@@ -142,7 +142,7 @@ export default {
         startTime: this.datetime[0] ? this.datetime[0].getTime().toString() : new Date().getTime().toString(),
         endTime: this.datetime[1] ? this.datetime[1].getTime().toString() : new Date().getTime().toString(),
         repeat: this.repetition_data,
-        remind: this.remind_data,
+        // remind: this.remind_data,
         memberIds: this.$refs.scheduleMember.getIds().join(","),
         privacy: this.locked ? "1" : "0",
         isAllday: this.checkbox ? 1 : 0
