@@ -46,7 +46,7 @@ export default {
     return {
       data: '',
       talkvalue: '',
-      showSymbol:false,
+      showSymbol:true,
       offsetLeft: 0,
       mentionIdList:[],
       ids:""
@@ -59,18 +59,34 @@ export default {
   methods: {
     //打开@
     SymbolBox(e){
-       
+       console.log(this.publicType)
         if(e.keyCode==50){
             console.log(e.keyCode)
             this.showSymbol=true
             const width=this.$refs.textarea.innerHTML.length*17
-
-            if(width<327){
-              this.offsetLeft=width+"px"
-            }else{
-              this.offsetLeft=327+"px"
-            }
+           
+            if(this.publicType=='任务'){
+                  if(width<327){
+                    this.offsetLeft=width+"px"
+                  }else{
+                    this.offsetLeft=327+"px"
+                  }
+            }else if(this.publicType=='日程'){
+                  if(width<307){
+                    this.offsetLeft=width+"px"
+                  }else{
+                  this.offsetLeft=327+"px"
+                  }
+           }else{
+                  if(width<680){
+                    this.offsetLeft=width+"px"
+                  }else{
+                  this.offsetLeft=327+"px"
+                  }                 
+           }
+           
             console.log(width)
+
         }else{
            this.showSymbol=false
         }
@@ -101,7 +117,6 @@ export default {
 
       let jsondatas=  JSON.stringify(datas)
       console.log(jsondatas)
-
         sendMsg(jsondatas).then(res => {
           this.$refs.textarea.innerHTML=''
           this.$emit('scroll')

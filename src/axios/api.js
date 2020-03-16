@@ -741,6 +741,21 @@ export function sendChat(projectId, content, files) {
     });
 }
 
+// 文件发送消息--新接口 2020-4-13
+export function newSendChat(projectId, content,publicId,publicType,mentionIdList) {
+    return fetch({
+        url: '/groupchat/',
+        method: "post", // 请求方法
+        params: {
+            projectId: projectId,
+            content: content,
+            publicId:publicId,
+            publicType:publicType,
+            mentionIdList:mentionIdList,
+        }
+    });
+}
+
 //用户消息设为已读
 export function readNews(id, isRead) {
     return $put(`news/${id}/read`, {
