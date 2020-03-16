@@ -3,7 +3,7 @@ import api from "./url"; // 引用url.js
 
 export function getOssSign() {
     return $get('/oss/sign', {
-        "dir": "upload/file/test/"
+        "dir": "upload/file/"
     });
 }
 
@@ -19,11 +19,14 @@ export function collect(data) {
     });
 }
 // 发送消息
-export function sendMsg(data) {
+export function sendMsg(str) {
     return fetch({
         url: '/logs/chat',
         method: "post",
-        data: data
+        data: str,
+        headers: {
+            'Content-Type': 'application/json'
+        }
     });
 }
 
@@ -324,8 +327,10 @@ export function delBQProject(tagId) {
         params: {}
     });
 }
-
-
+//点击项目进入任务主页
+export function mView(projectId) {
+    return $get(`${api.projects}/view_member`,{projectId:projectId});
+}
 
 //点击项目进入任务主页
 export function enterTask(projectId) {

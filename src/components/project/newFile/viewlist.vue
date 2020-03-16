@@ -2,9 +2,9 @@
   <div class="file-contant" v-if="files != null">
     <Row class="file-list" v-if="files.length > 0" type="flex" justify="start">
       <Col class="file-list-col" v-for="(file, index) in files" :key="index" span="3" 
-      :class="{ selectedcol: selected == index }" @click.native="fileDetail(file, index)">
-        <Icon type="ios-checkbox" class="ios-check" size="28" color="#a5a5a5" :class="{ showIcon: selected == index }" @click.native.stop="iosCheck(file,index)" />
-        <div class="img-box">
+       @click.native="fileDetail(file, index)">
+        <div class="img-box" :class="{ checked: fileArr.includes(file.fileId) }">
+          <Icon type="ios-checkbox" class="ios-check" size="28" color="#a5a5a5" :class="{ showIcon:fileArr.includes(file.fileId) }" @click.native.stop="iosCheck(file,index)" />
           <img v-if="file.catalog == 1 && file.filePrivacy == 0" src="../../../assets/images/folder.png" />
           <img v-else-if="file.catalog == 1 && file.filePrivacy == 1" src="../../../assets/images/folder_privacy.png" />
           <div v-else class="fileThumbnail-box">
@@ -19,18 +19,21 @@
             <img v-else src="@/icons/img/moren.png" />
           </div>
         </div>
-        <Tooltip :content="file.fileName" placement="top" transfer v-if="file.catalog == 1">
-          <div class="file-name">{{ file.fileName }}</div>
-        </Tooltip>
-        <Tooltip :content="file.fileName + file.ext" placement="top" transfer v-if="file.catalog == 0" max-width="250">
-          <div style="display:flex;justify-content: center">
-            <div class="file-name">{{ file.fileName }}</div>
-            <div>{{ file.ext }}</div>
-          </div>
-        </Tooltip>
+        <div class="file-hinted" @click.stop>
+          <Tooltip :content="file.fileName + (file.catalog==0?file.ext:'')" placement="top" transfer max-width="250" v-if="isactive!=index">
+            <div class="file-name" @click.stop="changeView(file,index)">
+              <span class="file-name-obj">{{ file.fileName }}</span>
+              <span v-if="file.catalog == 0">{{ file.ext }}</span>
+            </div>
+          </Tooltip>
+          <Input style="text-align:center;"  autofocus v-model.trim="editFileName" 
+            @on-enter="updateFileName(file.fileId)"  
+            v-if="isactive==index" 
+            :element-id="file.fileId"
+            v-click-outside="reset" ref="mFileName"/>
+        </div>
       </Col>
     </Row>
-
     <div v-else class="no-files">
       <Icon type="md-folder" />
       <p>暂无内容</p>
@@ -259,63 +262,39 @@ export default {
       mFile: null,
       curFile: {},
       imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
-      selected: -1
+      fileArr:[],
+      showInput:false
     };
   },
-  watch: {
-    $route(to, from) {
-      this.reload();
-    },
-    file: {
-      handler: function(val, oldVal) {},
-      deep: true
-    },
-
-    treeData: {
-      handler: function(val, oldVal) {},
-      deep: true
-    }
-    // curtag: {
-    //   handler: function(value, oldValue) {
-    //     console.log(value);
-    //     this.searched = "";
-    //     if (value != "") {
-    //       let data = { tag: value };
-    //       this.searchFile(data).then(res => {
-    //         this.loading = false;
-    //       });
-    //     }
-    //   },
-    //   deep: true
-    // }
-  },
   computed: {
-    ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb", "itemfile", "createFileId"]),
+    ...mapState("file", ["files", "filePath", "treeData", "tags", "breadcrumb", "createFileId"]),
     ...mapState("tree", ["slider"])
   },
   mounted: function() {
-    if (localStorage.view) {
-      this.view = localStorage.view;
-    }
-    this.files.forEach(v => {
-      this.$set(v, "selected", true);
-    });
-    console.log(this.files);
+    console.log('lllllllllllllllllll',this.files);
   },
   created() {
     let params = { fileId: this.createFileId };
     this.initFile(params).then(res => {
       this.loading = false;
     });
-    this.initTag(this.projectId).then(res => {});
   },
   methods: {
-    ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag", "putOneFile"]),
+    ...mapActions("file", ["initFile", "initFolders", "searchFile", "putOneFile"]),
     ...mapMutations("file", ["changeToolsShow","initItem"]),
     iosCheck(file,index) {
-      this.selected = index;
-      this.initItem(file);
-      this.changeToolsShow(true);
+      if(this.fileArr.includes(file.fileId)){
+				//includes()方法判断是否包含某一元素,返回true或false表示是否包含元素，对NaN一样有效
+				//filter()方法用于把Array的某些元素过滤掉，filter()把传入的函数依次作用于每个元素，然后根据返回值是true还是false决定保留还是丢弃该元素：生成新的数组
+				this.fileArr=this.fileArr.filter(ele=>ele!=file.fileId);
+				//this.arr=this.arr.filter((ele)=>ele!=i);
+				//filter()为假时删除
+			}else{
+        this.fileArr.push(file.fileId);
+      }
+      console.log('lllllllllllllllllll',this.fileArr);
+      this.initItem(this.fileArr);
+      this.changeToolsShow(this.fileArr.length!=0);
       this.thisFileId = file.fileId
     },
     leftShow() {},
@@ -497,34 +476,6 @@ export default {
       let data = { fileId: id, projectId: this.projectId };
       this.initFolders(data).then(res => {});
     },
-    dfileDetail(file, index, catalog) {
-      //双击只对文件夹操作
-      clearTimeout(timer);
-      if (".svf".includes(file.ext)) {
-        getFileDetails(file.fileId).then(res => {
-          console.log(res.data.fileUrl);
-          this.svfUrl = res.data.fileUrl;
-          this.showModelFileDetail = true;
-        });
-        console.log("模型文件");
-      } else {
-        if (catalog == 1) {
-          //文件夹
-          this.$store.commit("file/changeCreateFileId", file.fileId); //重点改变fileId
-          this.$store.commit("file/crumbsAdd", file);
-          this.fileId = file.fileId;
-          getChildFiles(file.fileId).then(res => {
-            this.$store.commit("file/initFile", res.data);
-            localStorage.fileParentId = this.fileId;
-          });
-        } else {
-          //文件
-          this.showModelDetai = true;
-          this.curFile = file;
-          console.log("文件", catalog);
-        }
-      }
-    },
     // 点击文件、文件夹进入详情
     fileDetail(file, index) {
       if (file.catalog == 1) {
@@ -655,21 +606,33 @@ export default {
       });
     },
     //文件修改名
-    fileEdit(id) {
+    updateFileName(id) {
       if (this.editFileName == "") {
         this.$Message.info("请输入名称");
       }
       changeName(id, this.editFileName).then(res => {
-        this.showFileEdit = false;
-        this.$Message.info("修改名称成功");
-        this.editFileName = "";
+         this.$emit("updateNodeName",id,this.editFileName);
+          this.showFileEdit = false;
+          this.$Message.info("修改名称成功");
+          this.editFileName = "";
+          this.isactive=-1;
       });
+    },
+    reset(){
+      this.updateFileName(this.$refs.mFileName[0].elementId)
+    },
+    changeView(file,index){
+      this.isactive=index;
+      this.editFileName=file.fileName
+      this.$nextTick(()=>{
+        this.$refs.mFileName[0].focus()
+      }) 
     }
   }
 };
 </script>
 <style lang="less">
-.selectedcol {
+.checked {
   border: 2px solid #1b9aee !important;
 }
 .showIcon {
@@ -685,54 +648,60 @@ export default {
   padding-right: 10px;
   .file-list {
     .file-list-col {
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
+      margin-bottom: 10px;  
       cursor: pointer;
-      padding-bottom: 10px;
-      border: 1px solid #e5e5e5;
-      margin-right: 15px;
-      margin-bottom: 15px;
+      margin-right: 10px;
+     
       height: 140px;
       justify-content: center;
-      &:hover {
-        .ios-check {
-          display: block;
+      
+      // /deep/ .ivu-tooltip {
+      //   width: 140px;
+      // }
+      .file-hinted{
+        margin: 10px auto 0;
+        width: 140px;
+        &:hover{
+          background-color: #f5f5f5;
+        }
+        .file-name {
+          width: 140px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .file-name-obj{
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            text-align: center;
+            overflow: hidden;
+          }
         }
       }
-      /deep/ .ivu-tooltip {
-        width: 120px;
-      }
-      .file-name {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        line-height: 20px;
-        text-align: center;
-        overflow: hidden;
-      }
-      .ios-check {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        display: none;
-      }
+      
+      
       .img-box {
         display: flex;
-        padding-bottom: 20px;
-        .file-content-opt {
-          width: 18px;
-          height: 18px;
+        border: 1px solid #e5e5e5;
+        height: 100px;
+        width: 140px;
+        justify-content: center;
+        align-items: center;
+        .ios-check {
           position: absolute;
-          display: flex;
-          width: 25px;
-          height: 25px;
-          right: 5px;
-          top: 5px;
+          top: 0px;
+          left: 0px;
+          display: none;
         }
-
+        &:hover {
+          .ios-check {
+            display: block;
+          }
+        }
         img {
           display: block;
-          width: 64px;
+          width: 60px;
           height: 52px;
         }
         .fileThumbnail-box img {

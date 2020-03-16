@@ -112,12 +112,10 @@ export default {
           'publicId':this.publicId,
           'projectId':this.projectId,
           'content':con,
-          "mentionIdList":this.ids
+          "mentionIdList":this.ids.split(",")
         }
 
-      let jsondatas=  JSON.stringify(datas)
-      console.log(jsondatas)
-        sendMsg(jsondatas).then(res => {
+        sendMsg(datas).then(res => {
           this.$refs.textarea.innerHTML=''
           this.$emit('scroll')
           this.mentionIdList=[]//发送成功清楚@

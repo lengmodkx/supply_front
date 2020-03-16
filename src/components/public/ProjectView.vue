@@ -15,6 +15,7 @@
       <Option value="看板视图">看板视图</Option>
       <Option value="列表视图">列表视图</Option>
       <Option value="时间视图">时间视图</Option>
+      <Option value="成员视图">成员视图</Option>
     </Select>
   </div>
 </template>
@@ -34,10 +35,7 @@ export default {
     //搜索任务
     filterTask() {
       var data = {projectId:this.projectId,name:this.keyword}
-      this.init2(data).then(res => {
-      
-         // this.$store.commit("task/initTask",res.menus)
-      });
+      this.init2(data);
     },
     // 视图方式改变、
     viewChange(value) {

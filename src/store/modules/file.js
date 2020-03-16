@@ -8,13 +8,8 @@ const store = {
     joinInfoIds: [],
     treeData: [],
     tags: [],
-    breadcrumb: [
-      // {
-      //     text: "项目文件夹",
-      //     id: 'sss'
-      //   }
-    ],
-    itemfile: {},
+    breadcrumb: [],
+    fileIds: [],//选中的文件id列表
     createFileId: "",
     //菜单栏
     crumbs: [],
@@ -106,6 +101,7 @@ const store = {
     },
     initFile(state, data) {
       state.files = data;
+     state.files.forEach(v=>v.checked = false)
     },
     searchFile(state, data) {
       state.files = data;
@@ -114,7 +110,7 @@ const store = {
       state.tags = data;
     },
     initItem(state,data) {
-      state.itemfile = data;
+      state.fileIds = data;
     },
     changeToolsShow(state,data) {
       state.toolsShow = data;
