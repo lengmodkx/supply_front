@@ -53,8 +53,18 @@
         <!--发消息-->
         <div class="talk">
           <div class="talkinner">
+            
+
             <div class="talkUp">
-              <div id="input" style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true" @keyup.enter="sendChat"></div>
+              <div class="talkSymbol" v-if="showSymbol" :style="{left:offsetLeft}"> 
+              <ul >
+                <li v-for='(item,index) in symbolData ' :key="index" @click="choseSymbol(item.name)" >
+                  <img src="../../../assets/images/headUser.png" alt="">  
+                  {{item.name}}  <span v-if="index==0">・{{symbolData.length-1}}</span>
+                </li>
+              </ul>
+            </div>
+              <div id="input"  style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true"  @keydown.50="SymbolBox($event)"  @keyup.enter="sendChat"></div>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="上传附件" class="fl">
@@ -90,7 +100,10 @@ export default {
       files: [],
       talkvalue: "",
       showCommon: false,
-      projectName: localStorage.projectName
+      projectName: localStorage.projectName,
+      symbolData:[{id:'111',name:'所有人'},{id:'222',name:'苗云宇'},{id:'333',name:'何少华'}],
+      offsetLeft: 0,
+      showSymbol:false,
     };
   },
   mounted() {
@@ -109,9 +122,22 @@ export default {
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
-    // 获取消息
+    // 获取消息e
+    SymbolBox(e){
+        console.log(e.keyCode)
+        this.showSymbol=true
+        const width=this.$refs.textarea.innerHTML.length*17
+        this.offsetLeft=width+"px"
+        console.log(width)
+
+    },
+    choseSymbol(name){
+      this.showSymbol=false;
+      this.$refs.textarea.innerHTML=this.$refs.textarea.innerHTML+name
+    },
     getChat() {
       this.initChat(this.$route.params.id);
+      
     },
     // 发送消息
     sendChat() {
@@ -154,6 +180,7 @@ export default {
   width: 100%;
   height: 60px;
   padding: 0 15px;
+ 
   .one-file {
     width: 400px;
     height: 60px;
@@ -332,6 +359,33 @@ export default {
       max-height: 290px;
       background-color: #fff;
       border-bottom: 1px solid #e8e8e8;
+       .talkSymbol{
+          position: absolute;
+          bottom:0;
+          display: flex;
+          flex-flow: column nowrap;
+           box-shadow:2px 2px 5px #eeeeee;
+          ul{
+            background: #ffffff;
+            max-height: 320px;
+            padding: 4px 0;
+            overflow-y: auto;
+          }
+          li{
+            display: flex;
+            cursor: pointer;
+            padding:10px 30px;
+            align-items: center;
+            img{
+              margin-right: 10px;
+              width: 32px;
+              height: 32px;
+            }
+          }
+          li:hover{
+            background: #f5f5f5;
+          }
+      }
       #input {
         input:hover {
           border-color: #dddee1;

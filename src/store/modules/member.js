@@ -20,14 +20,16 @@ const store = {
         //初始化项目成员列表
         initUser(state, data) {
             state.users = data
+            
+            data.filter(v => v.memberId != localStorage.userId);
+
             state.symbolData=data;
-            console.log(state.symbolData)
             const alluser={
                 memberName:'所有人'
             }
             state.symbolData.unshift(alluser)
-            console.log(localStorage.userId)
-           
+            console.log(state.symbolData,localStorage.userId)
+        
         },
         initRoles(state, data) {
             state.roles = data

@@ -17,8 +17,8 @@
              ref="textarea"
              placeholder="按Enter快速发布"
              contenteditable="true"
+             @keyup="SymbolBox($event)" 
              @keyup.enter="sendMsg"
-             @keydown="SymbolBox($event)" 
              >
         </div>
       </div>
@@ -46,7 +46,7 @@ export default {
     return {
       data: '',
       talkvalue: '',
-      showSymbol:true,
+      showSymbol:false,
       offsetLeft: 0,
       mentionIdList:[],
       ids:""
@@ -59,8 +59,8 @@ export default {
   methods: {
     //打开@
     SymbolBox(e){
-       console.log(this.publicType)
-        if(e.keyCode==50){
+       const inner=this.$refs.textarea.innerHTML.split('')
+        if(inner[inner.length-1]==="@"){
             console.log(e.keyCode)
             this.showSymbol=true
             const width=this.$refs.textarea.innerHTML.length*17
@@ -90,15 +90,23 @@ export default {
         }else{
            this.showSymbol=false
         }
-          
-
       },
       //选择成员
     choseSymbol(name,id,index){
       this.showSymbol=false;
       this.$refs.textarea.innerHTML=this.$refs.textarea.innerHTML+name
 
-      this.mentionIdList.push(id)
+      if(index==0){
+        //所有人
+        const idALL=this.symbolData.map(i => {
+              return i.memberId;
+          })
+           idALL.shift()
+          console.log(idALL)
+         this.mentionIdList.push(idALL)
+      }else{
+        this.mentionIdList.push(id)
+      }
       this.ids= this.mentionIdList.join(",")
      
       console.log(this.ids)
@@ -114,7 +122,6 @@ export default {
           'content':con,
           "mentionIdList":this.ids.split(",")
         }
-
         sendMsg(datas).then(res => {
           this.$refs.textarea.innerHTML=''
           this.$emit('scroll')
