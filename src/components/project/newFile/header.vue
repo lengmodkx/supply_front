@@ -42,6 +42,7 @@ export default {
     ...mapActions("file", ["initFile", "initFolders", "searchFile", "initTag", "initCrumbs"]),
     //前进
     forward() {
+      this.$emit("recovery");
       this.movehover = !this.movehover;
       console.log(this.crumbsIndex)
       if (this.crumbsIndex >= this.crumbsCache.length) {
@@ -55,6 +56,7 @@ export default {
     },
     // 后退
     back() {
+      this.$emit("recovery");
       if (this.crumbsIndex == 1) {
         console.log("后退终止");
         return;
@@ -66,6 +68,7 @@ export default {
     },
     //回到首页
     home() {
+      this.$emit("recovery");
       this.$store.commit("file/crumbsHome");
       //请求数据
       let params = { fileId: this.fileId };
@@ -73,6 +76,7 @@ export default {
     },
     //单击导航
     changeCrumbs(item, index) {
+      this.$emit("recovery");
       var data = {
         self: item,
         index: index
@@ -83,6 +87,7 @@ export default {
     },
     // 搜索文件
     search(value) {
+      this.$emit("recovery");
       if (value !== "") {
         var data = { fileName: value, projectId: this.projectId };
         this.searchFile(data).then(res => {

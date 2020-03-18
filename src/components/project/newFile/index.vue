@@ -2,7 +2,7 @@
   <div class="file">
     <div class="file-left">
       <!-- 树 -->
-      <tree :data="fileTree" ref="tree"></tree>
+      <tree :data="fileTree" ref="tree"  @recovery="recovery"></tree>
       <!-- <div class="tree-box" >
               <tree :data=userTree ></tree>
           </div>
@@ -15,13 +15,13 @@
     </div>
     <div class="file-right">
       <!-- 头 -->
-      <file-header></file-header>
+      <file-header ref="fileheader" @recovery="recovery"></file-header>
       <!--工具 -->
       <file-tools @createFolder="createFolder" @removeFolder="removeFolder"  @recovery="recovery"> </file-tools>
       <!-- 列表内容 -->
-      <list v-if="showView == 'list'"></list>
+      <!-- <list v-if="showView == 'list'"></list> -->
       <!-- 缩略图内容 -->
-      <view-list v-if="showView == 'view'" ref="viewlist" @updateNodeName="updateNodeName"></view-list>
+      <view-list  ref="viewlist" @updateNodeName="updateNodeName"></view-list>
     </div>
   </div>
 </template>
@@ -58,8 +58,8 @@ export default {
     createFolder(fileId) {
       this.$refs.tree.asyncRefresh(fileId);
     },
-    removeFolder(fileId) {
-      this.$refs.tree.removeNode(fileId);
+    removeFolder(fileIds) {
+      this.$refs.tree.removeNode(fileIds);
     },
     updateNodeName(fileId,fileName){
       this.$refs.tree.updateNodeName(fileId,fileName);

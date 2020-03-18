@@ -69,6 +69,8 @@ export function oss(filename, level, parentId, projectId) {
                     'x:parent_id': parentId,
                     'x:level': level
                 });
+            }else{
+                this.$Message.error(res.msg);
             }
         });
     })

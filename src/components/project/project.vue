@@ -220,11 +220,11 @@ export default {
                 break;
               // 复制文件
               case "C10":
-                this.$store.commit("file/copyFile", result.object);
+                this.$store.dispatch("file/initFile", result.object);
                 break;
               // 移动文件
               case "C12":
-                this.$store.commit("file/removeFile", result.object);
+                this.$store.dispatch("file/initFile", {fileId:result.object});
                 break;
               // 文件移到回收站
               case "C13":

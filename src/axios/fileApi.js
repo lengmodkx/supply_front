@@ -61,25 +61,25 @@ export function jionPeople(fileId, newJoin) {
 }
 
 // 移动文件
-export function removeFile(folderId, fileIds, toProjectId,projectId) {
+export function removeFile(folderId, fileIds, parentId,toProjectId,projectId) {
     return fetch({
         url: `/files/${folderId}/m_move`,
         method: "put",
         params: {
-            fileId: fileIds,
+            fileIds: fileIds,
+            parentId:parentId,
             toProjectId: toProjectId,
-            projectId:projectId
+            projectId: projectId
         }
     });
 }
 // 复制文件
 export function cloneFile(folderId, fileIds,toProjectId,projectId) {
     return fetch({
-        url: '/files/copy',
+        url: `/files/${folderId}/copy`,
         method: "post",
         data: {
-            folderId: folderId,
-            fileId: fileIds,
+            fileIds: fileIds,
             toProjectId: toProjectId,
             projectId:projectId
         }
@@ -88,10 +88,13 @@ export function cloneFile(folderId, fileIds,toProjectId,projectId) {
 // 文件移到回收站
 export function recycleBin(fileIds, projectId) {
     return fetch({
-        url: `/files/${fileIds}/m_recycle`,
-        method: "put",
+        url: '/recycle_bin/move_file_rb',
+        method: "post",
         params: {
-            projectId: projectId
+            publicId: fileIds,
+            projectId: projectId,
+            publicType:'file',
+            action:'move'
         }
     });
 }
@@ -224,5 +227,28 @@ export function getTree(fileId) {
     return fetch({
         url: `/files/tree/${fileId}`,
         method: "get",
+    });
+}
+
+
+export function checkPerm(){
+    return fetch({
+        url: '/oss/checkperm',
+        method: "get",
+    });
+}
+export function checkdownload(){
+    return fetch({
+        url: '/oss/checkdownload',
+        method: "get",
+    });
+}
+
+export function download(fileIds){
+    return fetch({
+        url: '/files/batch/download',
+        method: "post",
+        data: { fileIds: fileIds },
+        responseType: 'blob'
     });
 }

@@ -101,7 +101,7 @@ const store = {
     },
     initFile(state, data) {
       state.files = data;
-     state.files.forEach(v=>v.checked = false)
+      state.files.forEach(v=>v.checked = false)
     },
     searchFile(state, data) {
       state.files = data;
@@ -242,7 +242,7 @@ const store = {
         files(data.fileId).then(res => {
           if (res.result == 1) {
             commit("initFile", res.data);
-            resolve();
+            resolve(res.data);
           }
         });
       });

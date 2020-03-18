@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     ...mapActions("tree", ["initFolders"]),
-    ...mapActions("file", ["initFile", "searchFile", "initTag"]),
+    ...mapActions("file", ["searchFile", "initTag"]),
     onCreated(ztreeObj) {
       this.ztreeObj = ztreeObj;
       var nodes = ztreeObj.getNodes();

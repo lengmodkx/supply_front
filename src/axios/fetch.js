@@ -31,7 +31,6 @@ service.interceptors.request.use(config => {
         ...config.data
       })
     }
-
   }
   return config
 }, error => {
@@ -59,7 +58,6 @@ service.interceptors.response.use(
       //将续期的TOKEN存起来
       localStorage.setItem("token", token);
     }
-
     const res = response.data
     return res //后台如果规范可直接判断code后返回res.result
   }, error => {

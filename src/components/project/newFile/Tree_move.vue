@@ -19,6 +19,8 @@
                     },
                     check: {
                         enable: true,
+                        chkStyle : "checkbox",
+                        autoCheckTrigger: true,
                         chkboxType: {"Y": "", "N": ""}
                     },
                     callback: {

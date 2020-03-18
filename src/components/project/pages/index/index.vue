@@ -84,7 +84,7 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="top">
+                     <Tooltip :content="a.executorName"  placement="top" transfer>
                         <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
                      </Tooltip>
                   </div>

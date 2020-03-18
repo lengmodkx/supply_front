@@ -64,13 +64,8 @@ export default {
       console.log(process.env.VUE_APP_TREE_URL);
     },
     onClick(evt, treeId, treeNode) {
-        this.$store.commit("file/changeCreateFileId", treeNode.id);
-      // if(treeNode.level==0){
-      //     this.$store.commit("file/crumbsTree",treeNode);//根节点只做切换----菜单栏
-      // }else{
-      //     this.$store.commit("file/crumbsTreeAdd",treeNode);
-      // }
-
+      this.$emit("recovery")
+      this.$store.commit("file/changeCreateFileId", treeNode.id);
       this.folderId = treeNode.id;
       let params = { fileId: this.folderId };
       this.initFile(params);
@@ -86,9 +81,11 @@ export default {
       node.isParent = true;
       this.ztreeObj.reAsyncChildNodes(node, "refresh", true);
     },
-    removeNode(fileId) {
-      var node = this.ztreeObj.getNodeByParam("id", fileId);
-      this.ztreeObj.removeNode(node, false);
+    removeNode(fileIds) {
+      fileIds.forEach(fileId => {
+        var node = this.ztreeObj.getNodeByParam("id", fileId);
+        this.ztreeObj.removeNode(node, false);
+      });
     },
     updateNodeName(fileId,fileName){
      var node = this.ztreeObj.getNodeByParam("id", fileId);

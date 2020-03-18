@@ -29,12 +29,19 @@
                 <img v-else src="@/icons/img/moren.png" alt="" />
               </div>
             </div>
-            <Tooltip :content="file.fileName" placement="top" transfer v-if="file.catalog == 1">
-              <div class="file-name">{{ file.fileName }}</div>
-            </Tooltip>
-            <Tooltip :content="file.fileName + file.ext" placement="top" transfer v-if="file.catalog == 0">
-              <div class="file-name">{{ file.fileName + file.ext }}</div>
-            </Tooltip>
+            <div class="file-hinted" @click.stop>
+              <Tooltip :content="file.fileName + (file.catalog==0?file.ext:'')" placement="top" transfer max-width="250" v-if="isactive!=index">
+                <div class="file-name" @click.stop="changeView(file,index)">
+                  <span class="file-name-obj">{{ file.fileName }}</span>
+                  <span v-if="file.catalog == 0">{{ file.ext }}</span>
+                </div>
+              </Tooltip>
+              <Input style="text-align:center;"  autofocus v-model.trim="editFileName" 
+                @on-enter="updateFileName(file.fileId)"  
+                v-if="isactive==index" 
+                :element-id="file.fileId"
+                v-click-outside="reset" ref="mFileName"/>
+            </div>
             <div class="contant-erery">
               {{ file.size || "无" }}
             </div>

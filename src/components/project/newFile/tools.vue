@@ -8,21 +8,21 @@
         </div>
       </div>
       <div class="pull-box">
-        <div class="pull">
+        <div class="pull" @click="upload">
           <img src="../../../assets/images/view6.png" alt="" />
           <span>上传</span>
-          <Poptip placement="bottom" width="200" v-model="visibleTip">
+          <!-- <Poptip placement="bottom" width="200" v-model="visibleTip">
             <button class="pull-icon"><img src="../../../assets/images/button.png" alt="" /></button>
             <div class="pull-pop" slot="content">
               <ul>
                 <li v-for="(item, index) in pullList" :key="index" @click="upload(item)"><img :src="item.src" alt="" /> {{ item.name }}</li>
               </ul>
             </div>
-          </Poptip>
+          </Poptip> -->
         </div>
       </div>
       <div class="pull-box" v-show="toolsShow">
-        <div class="pull" @click="downLoad(itemfile.fileId)">
+        <div class="pull" @click="downLoad">
           <img src="../../../assets/images/view9.png" alt="" />
           <span>下载</span>
         </div>
@@ -73,13 +73,13 @@
                 </Poptip> -->
       <!-- 列表 -->
       <div class="view" @click="changeView('list')">
-        <Tooltip  placement="top" transfer content="列表">
+        <Tooltip placement="top" transfer content="列表">
           <img src="../../../assets/images/view3.png" alt="" />
         </Tooltip>
       </div>
       <!-- 缩略图 -->
       <div class="view " @click="changeView('view')">
-        <Tooltip  placement="top" transfer content="缩略图">
+        <Tooltip placement="top" transfer content="缩略图">
           <img src="../../../assets/images/view2.png" alt="" />
         </Tooltip>
       </div>
@@ -104,13 +104,13 @@
     <Modal v-model="rublish" :width="350" :footer-hide="true">
       <div class="rublish">
         <p>您确定要把该文件移到回收站吗？</p>
-        <Button long type="error" @click="putRecyclebin(itemfile.fileId)">移到回收站</Button>
+        <Button long type="error" @click="putRecyclebin">移到回收站</Button>
       </div>
     </Modal>
     <!--复制、移动 模态框-->
     <Modal v-model="showMove" :z-index="11111" class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
       <div slot="header">
-        <span style="font-size:18px">{{ caozuo }}文件{{ fileName }}至</span>
+        <span style="font-size:18px">{{ caozuo }}文件/文件夹至</span>
       </div>
       <div class="move-and-mobile-file">
         <div class="column-projects flex-static thin-scroll">
@@ -119,7 +119,7 @@
             <li
               v-for="(project, index) in projects"
               :key="index"
-              :class="{ selected: project.projectId == projectId, unselected: project.projectId != projectId }"
+              :class="{ selected: project.projectId == mProjectId, unselected: project.projectId != mProjectId }"
               @click="changeProject(project.projectId)"
             >
               <span>{{ project.projectName }}</span>
@@ -147,7 +147,7 @@ import tree from "@/components/project/newFile/Tree_move.vue"; //树
 import { mapState, mapActions, mapMutations } from "vuex";
 import { createFolder, getProjectList, folderChild } from "../../../axios/api.js";
 
-import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy } from "@/axios/fileApi";
+import { removeFile, cloneFile, recycleBin, filePrivacy, checkPerm, checkdownload,download } from "../../../axios/fileApi.js";
 import VJstree from "vue-jstree";
 export default {
   components: {
@@ -183,39 +183,45 @@ export default {
       rublish: false,
       modalTitle: "文件菜单",
       showMove: false,
-      fileName: "",
       projects: [],
       loading1: false,
       asyncData: [],
       footerTxt: "跨项目移动时，部分信息不会被保留。",
       caozuo: "",
-      mProjectId:this.$route.params.id
+      mProjectId: this.$route.params.id
     };
   },
   computed: {
-    ...mapState("tree", ["fileTree", "showView", "slider","mFileTree"]),
-    ...mapState("file", ["files", "fileIds", "createFileId","toolsShow"])
+    ...mapState("tree", ["fileTree", "showView", "slider", "mFileTree"]),
+    ...mapState("file", ["files", "fileIds", "createFileId", "toolsShow"])
   },
-  
+
   methods: {
-    ...mapActions("tree", ["changeShowView", "changeSlider","initMTree"]),
+    ...mapActions("tree", ["changeShowView", "changeSlider", "initMTree"]),
     ...mapActions("file", ["initFile", "searchFile", "initTag"]),
     ...mapMutations("file", ["changeToolsShow"]),
-    changeView(data){
+    changeView(data) {
+      this.$emit("recovery");
       this.changeShowView(data);
-      this.changeToolsShow(false)
     },
     clearFiles() {
       this.$refs.commonFile.clearFiles();
     },
     // 打开弹窗
-    upload(item) {
-      this.visibleTip = false;
-      if (item.name == "上传普通文件") {
-        this.showCommonFile = true;
-      } else if (item.name == "上传模型文件") {
-        this.showModelFile = true;
-      }
+    upload() {
+      // if (item.name == "上传普通文件") {
+      //   this.showCommonFile = true;
+      // } else if (item.name == "上传模型文件") {
+      //   this.showModelFile = true;
+      // }
+      checkPerm().then(res => {
+        if (res.result == 0) {
+          this.$Message.error(res.msg);
+        } else {
+          this.visibleTip = false;
+          this.showCommonFile = true;
+        }
+      });
     },
     // 缩放
     hideFormat() {
@@ -252,16 +258,30 @@ export default {
       });
     },
     // 下载
-    downLoad(fileId) {
-      var url = "";
-      if (process.env.NODE_ENV == "test") {
-        url = process.env.VUE_APP_TEST_URL;
-      } else if (process.env.NODE_ENV == "production") {
-        url = process.env.VUE_APP_URL;
-      } else {
-        url = "/api";
-      }
-      window.location.href = url + "/files/" + fileId + "/download";
+    downLoad() {
+      checkdownload().then(res => {
+        if (res.result == 0) {
+          this.$Message.error(res.msg);
+        } else {
+          var fileIds = this.fileIds.join(",");
+          console.log(this.fileIds);
+          var url = "";
+          if (process.env.NODE_ENV == "test") {
+            url = process.env.VUE_APP_TEST_URL;
+          } else if (process.env.NODE_ENV == "production") {
+            url = process.env.VUE_APP_URL;
+          } else {
+            url = "/api";
+          }
+          window.location.href = url + "/files/batch/download?fileIds=" + fileIds;
+          // download(fileIds).then(res=>{
+          //   console.log(res)
+          //     //let blob = new Blob([res],{type: "application/octet-stream"});
+          //     //let url = window.URL.createObjectURL(blob);
+          //     //window.location.href = url;
+          // })
+        }
+      });
     },
     //点击 移动、复制文件
     removeClone(caozuo) {
@@ -273,30 +293,30 @@ export default {
     removeCloneFile() {
       var folderId = this.$refs.tree.getFolderId();
       if (this.caozuo === "移动") {
-        removeFile(folderId, this.fileIds.join(','), this.mProjectId,this.projectId).then(res => {
-          if (res.result==1) {
+        console.log(JSON.stringify(this.fileIds));
+        removeFile(folderId, this.fileIds.join(","), this.createFileId, this.mProjectId, this.projectId).then(res => {
+          if (res.result == 1) {
             this.$Message.success("移动成功");
             this.showMove = false;
-            this.toolsShow = false;
+            this.changeToolsShow(false);
           }
         });
       } else if (this.caozuo === "复制") {
-        cloneFile(this.folderId, this.fileIds.join(','),this.mProjectId,this.projectId).then(res => {
-          if(res.result==1){
+        cloneFile(folderId, this.fileIds.join(","), this.mProjectId, this.projectId).then(res => {
+          if (res.result == 1) {
             this.$Message.success("复制成功");
             this.showMove = false;
-            this.toolsShow = false;
+            this.changeToolsShow(false);
           }
-          
         });
       }
     },
     // 移到回收站
-    putRecyclebin(fileId) {
-      recycleBin(fileId, this.projectId).then(res => {
+    putRecyclebin() {
+      recycleBin(this.fileIds.join(","), this.projectId).then(res => {
         if (res.result == 1) {
-          this.toolsShow = false;
-          this.$emit("removeFolder", fileId);
+          this.changeToolsShow(false);
+          this.$emit("removeFolder", this.fileIds);
           //重置文件选中状态
           this.$emit("recovery");
           this.$Message.success("成功移到回收站");
@@ -433,5 +453,28 @@ export default {
   margin-bottom: 15px;
   margin-top: 5px;
   margin-left: 0px;
+}
+.selected {
+  background: #3da8f5;
+  color: white;
+  height: 30px;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 30px;
+  padding-left: 10px;
+}
+.unselected {
+  &:hover {
+    background: #eee;
+  }
+  height: 30px;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 30px;
+  padding-left: 10px;
 }
 </style>

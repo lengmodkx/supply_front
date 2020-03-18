@@ -32,7 +32,7 @@
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue-wxlogin": "^1.0.1",
-    "vuedraggable": "^2.32.2",
+    "vuedraggable": "^2.23.2",
     "vuex": "^3.0.1",
     "wangeditor": "^3.1.1"
   },
