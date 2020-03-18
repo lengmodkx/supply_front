@@ -45,7 +45,10 @@
                     <div class="message-list-con">
                         <img :src="n.newsFromUser.defaultImage" alt="">
                         <div class="msg">
-                            <p v-html="n.newsContent"></p>
+                            <div class="msgContant">
+                                <div class="mention" v-if='n.isMention' >[@我]</div>
+                                <p v-html="n.newsContent"></p>
+                            </div>
                             <p class="msg-time"><Time :time="n.updateTime" /></p>
                         </div>
                     </div>
