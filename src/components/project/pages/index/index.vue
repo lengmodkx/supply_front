@@ -84,7 +84,7 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="top" transfer>
+                     <Tooltip :content="a.executorName"  placement="bottom" transfer>
                         <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
                      </Tooltip>
                   </div>
@@ -140,7 +140,7 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="top">
+                     <Tooltip :content="a.executorName"  placement="bottom">
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
                      </Tooltip>
                   </div>
