@@ -64,7 +64,14 @@
                 </li>
               </ul>
             </div>
-              <div id="input"  style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true"  @keydown.50="SymbolBox($event)"  @keyup.enter="sendChat"></div>
+              <div id="input"
+                      style="width: 100%;height: 40px;padding: 5px 10px" 
+                      ref="textarea" 
+                      placeholder="按Enter快速发布" 
+                      contenteditable="true"  
+                      @keyup.enter="sendChat" 
+                      @keyup="SymbolBox($event)"
+                ></div>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="上传附件" class="fl">
@@ -124,12 +131,23 @@ export default {
     ...mapActions("chat", ["initChat"]),
     // 获取消息e
     SymbolBox(e){
-        console.log(e.keyCode)
-        this.showSymbol=true
-        const width=this.$refs.textarea.innerHTML.length*17
-        this.offsetLeft=width+"px"
-        console.log(width)
+       const inner=this.$refs.textarea.innerHTML.split('')
+       if(inner[inner.length-1]==="@"){
+            this.showSymbol=true
+            const width=this.$refs.textarea.innerHTML.length*17
 
+              console.log(width)
+
+            if(width<1200){
+                   this.offsetLeft=width+"px"
+                }else{
+                  this.offsetLeft=850+"px"
+                }
+
+       }else{
+           this.showSymbol=false
+
+        }
     },
     choseSymbol(name){
       this.showSymbol=false;
@@ -361,7 +379,7 @@ export default {
       border-bottom: 1px solid #e8e8e8;
        .talkSymbol{
           position: absolute;
-          bottom:0;
+          bottom:40px;
           display: flex;
           flex-flow: column nowrap;
            box-shadow:2px 2px 5px #eeeeee;
