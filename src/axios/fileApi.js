@@ -145,11 +145,11 @@ export function updateFileVersion(fileId,fileObj) {
 
 
 //文件隐私模式
-export function filePrivacy(id, privacy) {
+export function filePrivacy(id, privacy,projectId,parentId) {
     return fetch({
         url: `/files/${id}/privacy/${privacy}`,
         method: "put",
-        data: ''
+        params: {projectId:projectId,parentId:parentId}
     });
 }
 // 模糊查询

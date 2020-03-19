@@ -9,9 +9,11 @@ const store = {
     mutations: {
         init(state, data) {
             state.shareList = data
-            // if (data.length > 0) {
-            //     state.share = data[0]
-            // }
+            if (data.length > 0) {
+                state.share = data[0]
+            }else{
+                state.share =null
+            }
         },
         changeShare(state, data) {
             state.share = data
@@ -26,7 +28,7 @@ const store = {
         },
         // 清空分享详情、
         removeShare ( ) {
-           
+            console.log("removeShare>>>>>>>>>>>>>>>>>>>")
             state.share=null
         },
     },
@@ -41,29 +43,20 @@ const store = {
                 })
             })
         },
+
         // 点击左侧分享,改变数据
         changeShares ({commit}, data) {
-            return new Promise(resolve => {
-                getShareDetail(data).then(res => {
-                    commit('changeShare',res.data)
-                    resolve()
-                })
-            })
-        },
-        // 删除分享 推送
-        deleteSahre ({commit}, data) {
             getShareDetail(data).then(res => {
                 commit('changeShare',res.data)
-                commit('removeShare', '')
             })
         },
+        
         // 移动分享 推送
         removeShare ({commit}, data) {   
             shares(data).then(res => {
                 if (res.result === 1) {
                     commit('init', res.data)
                     if (res.data.length){
-                        console.log(res.data)
                         getShareDetail(res.data[0].id).then(res => {
                             commit('changeShare',res.data)
                         })

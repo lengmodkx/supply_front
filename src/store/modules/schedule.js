@@ -1,4 +1,4 @@
-import { schedules } from "@/axios/api";
+import { schedules } from "../../axios/api.js";
 import {upRichengName, beginDate,endDate,getRicheng} from '@/axios/scheduleApi'
 const store ={
     namespaced: true,
@@ -91,9 +91,8 @@ const store ={
         // 初始化所有日程
         init({commit},params){
             schedules(params).then(res=>{
-                    commit('init',res.after);
+                commit('init',res.after);
             })
-
         },
         //获取单个日程的详情信息
         getScheduleById({dispatch,commit},scheduleId){

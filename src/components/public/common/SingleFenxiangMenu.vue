@@ -237,27 +237,27 @@ export default {
     //复制分享
     copyTask() {
       copyShare(this.data.id, this.currProjectId).then(res => {
-        console.log(res);
-        if (res.result === 1) {
+        if (res.result == 1) {
           this.$Message.success("复制成功");
+          this.visible=false;
         }
       });
     },
     // 移动分享
     removeRc() {
       moveShare(this.data.id, this.currProjectId, this.projectId).then(res => {
-        if (res.result) {
+        if (res.result==1) {
           this.$Message.success("移动成功");
-          this.$emit("removeSahre");
+          this.visible=false;
         }
       });
     },
     //分享移入回收站
     recycle() {
       recycleShare(this.data.id, this.projectId).then(res => {
-        if (res.result) {
+        if (res.result==1) {
           this.$Message.success("已移到回收站");
-          this.$emit("removeSahre");
+          this.visible=false;
         }
       });
     },

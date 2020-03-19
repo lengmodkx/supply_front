@@ -51,18 +51,46 @@
 
             <div class="timer fl">
               <Icon type="ios-calendar-outline" size="18" style="margin-right:5px;"></Icon>
-              <DateTimePicker type="start" @on-change="startDate" :options="options1" @clear="clearTime('开始')" :max="task.endTime" @confirm="confirm1">
+              <DateTimePicker type="start" @on-change="startDate" :options="options1" @clear="clearTime('开始')" :datetime="task.startTime" :max="task.endTime" @confirm="confirm1">
                 <div class="init" v-if="!task.startTime">开始时间</div>
                 <div class="setTime" v-if="task.startTime">
-                  {{ $moment(task.startTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
+                 {{ $moment(task.startTime).calendar(null, {
+                        sameDay: '[今天]LT',
+                        nextDay: '[明天]LT',
+                        lastDay: '[昨天]LT',
+                        lastWeek: (now)=>{
+                            const startDate = $moment().week($moment().week()).startOf('week').valueOf();
+                            return task.endTime<=startDate?'[上]dddLT':'dddLT'
+                          },
+                          nextWeek: (now)=>{
+                            const endDate =  $moment().week($moment().week()).endOf('week').valueOf();
+                            return task.endTime>=endDate?'[下]dddLT':'dddLT'
+                          },
+                         sameElse: 'Y年M月D日LT'
+                      })
+                  }}
                   <span @click.stop="clearTime('开始')">&times;</span>
                 </div>
               </DateTimePicker>
               <span>&nbsp;-&nbsp;</span>
-              <DateTimePicker @on-change="endDate" :options="options2" @clear="clearTime('截止')" type="end" :min="task.startTime" @confirm="confirm2">
+              <DateTimePicker @on-change="endDate" :options="options2" @clear="clearTime('截止')" type="end" :datetime="task.endTime" :min="task.startTime" @confirm="confirm2">
                 <div class="init" v-if="!task.endTime">截止时间</div>
                 <div class="setTime" v-if="task.endTime">
-                  {{ $moment(task.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}
+                  {{ $moment(task.endTime).calendar(null, {
+                        sameDay: '[今天]LT',
+                        nextDay: '[明天]LT',
+                        lastDay: '[昨天]LT',
+                        lastWeek: (now)=>{
+                            const startDate = $moment().week($moment().week()).startOf('week').valueOf();
+                            return task.endTime<=startDate?'[上]dddLT':'dddLT'
+                          },
+                          nextWeek: (now)=>{
+                            const endDate =  $moment().week($moment().week()).endOf('week').valueOf();
+                            return task.endTime>=endDate?'[下]dddLT':'dddLT'
+                          },
+                         sameElse: 'Y年M月D日LT'
+                      })
+                  }}
                   <!-- {{data.endDate}} -->
                   <span @click.stop="clearTime('截止')">&times;</span>
                 </div>
@@ -119,16 +147,21 @@
                     <div>
                       <Icon class="icon" type="calendar" v-if="!i.sontaskDate" size="20"></Icon>
                       <span v-else class="timeBox">
-                        {{
-                          $moment(i.sontaskDate).calendar(null, {
-                            sameDay: "[今天]LT",
-                            nextDay: "[明天]LT",
-                            nextWeek: "[下]dddLT",
-                            lastDay: "[昨天]LT",
-                            lastWeek: "[上]ddddLT",
-                            sameElse: "Y年M月D日LT"
-                          })
-                        }}
+                        {{ $moment(i.sontaskDate).calendar(null, {
+                        sameDay: '[今天]LT',
+                        nextDay: '[明天]LT',
+                        lastDay: '[昨天]LT',
+                        lastWeek: (now)=>{
+                            const startDate = $moment().week($moment().week()).startOf('week').valueOf();
+                            return i.sontaskDate<=startDate?'[上]dddLT':'dddLT'
+                          },
+                          nextWeek: (now)=>{
+                            const endDate =  $moment().week($moment().week()).endOf('week').valueOf();
+                            return i.sontaskDate>=endDate?'[下]dddLT':'dddLT'
+                          },
+                         sameElse: 'Y年M月D日LT'
+                      })
+                  }}
                       </span>
                     </div>
                   </DateTimePicker>

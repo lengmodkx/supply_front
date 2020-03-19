@@ -21,7 +21,7 @@
                 <div class="icon-box">
                     <Icon type="ios-apps" @click="view = 'view'" />
                     <Icon type="ios-list" @click="view = 'list'" />
-                    <Icon type="ios-arrow-round-down" @click="!orderType" />
+                    <!-- <Icon type="ios-arrow-round-down" @click="!orderType" /> -->
                 </div>
             </div>
             <Loading v-if="loading"></Loading>

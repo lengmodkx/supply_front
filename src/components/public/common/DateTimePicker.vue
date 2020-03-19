@@ -21,7 +21,7 @@ export default {
   name: 'mydatepicker',
   props: {
     datetime: {
-      type: String
+      type: Number
     },
     type: {
       type: String,

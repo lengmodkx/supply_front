@@ -585,8 +585,8 @@ export function updateTaskJoin(taskId, joinIds) {
 }
 
 /**日程初始化 */
-export function schedules(projectId) {
-    return $get(`/schedules/`, projectId);
+export function schedules(params) {
+    return $get(`/schedules/`, params);
 }
 /**添加日程 */
 export function addSchedule(params) {

@@ -185,8 +185,7 @@ export default {
                 break;
               // 移动分享
               case "B5":
-                this.$store.dispatch("share/removeShare", result.object);
-                // this.$store.commit("share/removeShare",'' );
+                this.$store.dispatch("share/init", result.object);
                 break;
               // 隐私模式
               case "B8":
@@ -293,6 +292,7 @@ export default {
               case "D11":
               case "D12":
               case "D13":
+                console.log("xxxxxxxxx")
                 this.$store.dispatch("schedule/init", {
                   projectId: result.object
                 });

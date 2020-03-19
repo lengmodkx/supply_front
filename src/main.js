@@ -16,7 +16,7 @@ moment.updateLocale("zh-cn", {
     },
     week: {
         dow: 1, // 星期的第一天是星期一
-        doy: 7 // 年份的第一周必须包含1月4日 (7 + 1 - 1)
+        doy: 7 // 年份的第一周必须包含1月1日 (7 + 1 - 1)
     }
 });
 import './assets/iconfont/iconfont.css'

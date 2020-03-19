@@ -67,11 +67,14 @@
               <div id="input"  style="width: 100%;height: 40px;padding: 5px 10px" ref="textarea" placeholder="按Enter快速发布" contenteditable="true"  @keydown.50="SymbolBox($event)"  @keyup.enter="sendChat"></div>
             </div>
             <div class="talkDown clearfix">
-              <Tooltip content="上传附件" class="fl">
+              <Tooltip content="添加附件" class="fl" transfer>
                 <Icon @click="showCommon = true" class="up-file" type="md-attach" />
               </Tooltip>
               <!-- 表情包组件 -->
-              <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
+              <Tooltip content="添加表情" class="fl" transfer>
+               <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
+              </Tooltip>
+              
               <div class="send fr">
                 <Button type="primary" @click="sendChat">发布</Button>
               </div>
@@ -80,9 +83,6 @@
         </div>
       </div>
     </div>
-    <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
-      <up-file @close="showCommon = false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
-    </Modal>
   </div>
 </template>
 

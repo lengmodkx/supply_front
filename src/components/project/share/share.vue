@@ -38,18 +38,18 @@
           </div>
           <div class="share-list">
             <Loading v-if="loading"></Loading>
-            <ul v-if="shareList.length">
-              <li v-for="(item, index) in shareList" :key="item.id" :class="{ active: index == indexNow }" @click="changeContent(index, item.id)">
+            <ul>
+              <li v-for="(item, index) in shareList" :key="index" :class="{ active: index == indexNow }" @click="changeContent(index, item.id)">
                 <img class="ava" v-bind:src="item.memberImg" />
                 <div class="">
                   <p class="t">{{ item.title }}</p>
-                  <p class="c">{{ item.memberName }}发布于{{ item.createTimeStr }}</p>
+                  <p class="c">{{ item.memberName }}发布于{{ $moment(item.createTime).format("YYYY-MM-DD HH:mm") }}</p>
                 </div>
               </li>
             </ul>
           </div>
         </iCol>
-        <iCol span="18" class="right" @click="closeTag">
+        <iCol span="18" class="right">
           <div class="share-view" v-if="share && open">
             <div class="share-text">
               <div class="rng">
@@ -72,7 +72,6 @@
                       <singleFenxiangMenu
                         @changeNowIndex="indexNow = 0"
                         @shareEdit="editShare = true"
-                        @removeSahre="indexNow = 0"
                         :data="share"
                         :name="publicType"
                         :projectId="projectId"
@@ -291,14 +290,11 @@ export default {
       projectId: this.$route.params.id,
       shareTitle: "",
       relationModal: false,
-      shareContent: "",
       indexNow: 0,
       showmenu: false,
       isPrivacy: 1,
       privacyTxt: "所有成员可见",
       privacyStatus: "未开启",
-      showTag: false,
-      tagList: [],
       publicType: "分享",
       showAddMember: false,
       zan: 0,
@@ -308,7 +304,7 @@ export default {
   computed: {
     ...mapState("member", ["members"]),
     ...mapState("project", ["projectName"]),
-    ...mapState("share", ["shareList", "share"]),
+    ...mapState("share", ["shareList","share"]),
     joinInfoIds() {
       return this.share.joinInfo.map(i => {
         return i.userId;
@@ -317,33 +313,15 @@ export default {
   },
   mounted() {
     this.init(this.$route.params.id).then(res => {
-      if (this.shareList.length > 0) {
-        this.changeShares(this.shareList[0].id).then(res => {
-          this.open = true;
-          this.indexNow = 0;
-          this.loading = false;
-        });
-      } else {
+        this.open = true;
+        this.indexNow = 0;
         this.loading = false;
-      }
-    });
-    // shares(this.$route.params.id).then(res => {
-    //   if (res.result == 1) {
-    //     this.shareList = res.data;
-    //     this.loading = false;
-    //     if (this.shareList != null && this.shareList.length > 0) {
-    //       this.share = this.shareList[0];
-    //       this.$store.dispatch("member/init", this.shareList[0].joinInfo);
-    //     }
-    //   }
-    // });
+      });
   },
   methods: {
     ...mapActions("share", ["init", "changeShares", "destroyShare"]),
     ...mapMutations("share", ["changeShare", "removeShare"]),
-    closeTag() {
-      this.$refs.tags.closeTag();
-    },
+    
     clickEvent(parameter) {},
     changePrivacy() {
       if (this.isPrivacy == 1) {
@@ -409,18 +387,9 @@ export default {
     addShares() {
       if (this.shareList.length) {
         this.showAddshare = false;
-        this.indexNow++;
+        this.indexNow=0;
       } else {
         this.showAddshare = false;
-        this.init(this.$route.params.id).then(res => {
-          if (this.shareList.length) {
-            this.changeShares(this.shareList[0].id).then(res => {
-              this.loading = false;
-            });
-          } else {
-            this.loading = false;
-          }
-        });
       }
 
       // this.loading = true;

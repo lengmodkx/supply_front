@@ -14,7 +14,7 @@ const store = {
     //   { id:22, pId:2, name:"leaf node 02", icon:"https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/wx_app_icon/2c4d11307f486c71aa6212926ea85a3.png"},
     //   { id:23, pId:2, name:"leaf node 03", icon:"https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/wx_app_icon/2c4d11307f486c71aa6212926ea85a3.png"},
     // ]
-    showView: "list",
+    showView: "view",
     slider: "",
     mFileTree:[]
 

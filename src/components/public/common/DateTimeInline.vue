@@ -29,7 +29,7 @@ export default {
   name: "mydatepicker",
   props: {
     datetime: {
-      type: String
+      type: Number
     },
     type: {
       type: String,
@@ -79,7 +79,8 @@ export default {
     },
     init() {
       if (this.datetime) {
-        var date = this.datetime.split(" ");
+        var datetime = this.$moment(this.datetime).format("YYYY-MM-DD HH:mm")
+        var date = datetime.split(" ");
         this.date = date[0];
         this.time = date[1];
       } else {
