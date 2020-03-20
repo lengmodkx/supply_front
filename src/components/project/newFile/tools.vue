@@ -46,7 +46,7 @@
           "
         >
           <img src="../../../assets/images/view8.png" alt="" />
-          <span>删除</span>
+          <span>移入回收站</span>
         </div>
       </div>
     </div>
