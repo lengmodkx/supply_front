@@ -15,25 +15,19 @@
       <div class="intimate" v-if="visibility === '1'">
         <div class="intimate-head">
           <span>当前可见成员：</span>
-          <InvolveMember :projectId="projectId" @addUser="addUser" :joins="jonins" v-if="projectId"></InvolveMember>
-          <!-- <Poptip v-model="popVisible" :transfer="true" popper-class="pop">
+          <Poptip v-model="popVisible" :transfer="true" popper-class="pop">
             <p class="pop-title"><Icon type="md-add-circle" />添加可见成员</p>
-          </Poptip> -->
+            <InvolveMember :projectId="projectId" @addUser="addUser"  :joins="joins" slot="content"></InvolveMember>
+          </Poptip>
         </div>
         <ul class="intimate-con">
-          <div class="create-people">
-            <div>
-                <Avatar :src="image" />
-                <p style="margin-left:15px">{{userName}}</p>
-            </div>
-            <span>拥有者</span>
-          </div>
-          <li v-if="jonins!=null&&jonins.length>0" v-for="(user,index) in jonins" :key="index">
+          <li v-if="joins.length>0" v-for="(user,index) in joins" :key="index">
             <div>
               <Avatar :src="user.image" />
               <p style="margin-left:15px">{{user.userName}}</p>
             </div>
-            <Icon type="ios-trash-outline" @click.native.stop="remove(user)"/>
+            <Icon type="ios-trash-outline" v-if="user.userId!=userId" @click.native.stop="remove(user)"/>
+            <span v-if="user.userId==userId">拥有者</span>
           </li>
         </ul>
       </div>
@@ -43,28 +37,36 @@
 
 <script>
 import {projectMembers} from '../../../axios/api.js'
-import {filePrivacy} from '../../../axios/fileApi.js'
+import { filePrivacy,updateFolderPrivacy } from '../../../axios/fileApi.js'
 import InvolveMember from '../newFile/InvolveMember.vue'
+import { mapState, mapActions } from "vuex";
 export default {
   name: "fileCanSee",
-  props:["sFile"],
   components:{
       InvolveMember
   },
   data() {
     return {
-      visibility: this.sFile.filePrivacy+"",
+      visibility: "",
       popVisible: false,
       projectId:this.$route.params.id,
       userId:localStorage.userId,
       image:localStorage.userImg,
       userName:localStorage.userName,
-      jonins:[]
+      joins:[]
     };
   },
+  computed:{
+    ...mapState("file", ["sFile"]),
+  },
   mounted(){
-      console.log(this.sFile)
-      this.jonins = this.sFile.joinInfo; 
+      this.joins= [];
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",this.joins)
+      this.visibility = this.sFile.filePrivacy+"";
+     // this.joins = this.sFile.joinInfo; 
+      Object.assign(this.joins,this.sFile.joinInfo);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",this.joins)
+      this.joins.push(this.sFile.user);
   },
   methods:{
     onchange(value){
@@ -75,22 +77,22 @@ export default {
         });
     },
     remove(user){
-        this.jonins = this.jonins.filter(v=>v.userId!=user.userId)
-        console.log('xxxxxxxxx',this.jonins.length)
+        this.joins = this.joins.filter(v=>v.userId!=user.userId)
+        
     },
     addUser(ids,peopleData){
+      this.popVisible = false;
         console.log(ids);
-        this.jonins = peopleData.filter(v=>v.userId!=localStorage.userId);
-        console.log(this.jonins)
+        this.joins = peopleData;
+        var userIds = ids.filter(v=>v!=this.userId);
+        console.log(userIds)
+        updateFolderPrivacy(this.sFile.fileId,userIds.join(','),this.projectId,this.sFile.parentId);
     }
   }
 };
 </script>
 
 <style scoped lang="less">
-.pop {
-  z-index: 99999999;
-}
 .cansee-header {
   height: 48px;
   line-height: 48px;
@@ -147,8 +149,7 @@ export default {
   .intimate-con {
     width: 100%;
     height: 310px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    
     &::-webkit-scrollbar {
       width: 6px;
       height: 8px;

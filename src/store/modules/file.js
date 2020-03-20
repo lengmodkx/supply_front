@@ -15,7 +15,8 @@ const store = {
     crumbs: [],
     crumbsCache: [],
     crumbsIndex: "",
-    toolsShow:false
+    toolsShow:false,
+    sFile:null
   },
   mutations: {
       //初始化导航条
@@ -234,6 +235,9 @@ const store = {
     },
     initBreadcrumb(state, data) {
       state.breadcrumb = data.reverse();
+    },
+    setSFile(state, data){
+        state.sFile = data;
     }
   },
   actions: {

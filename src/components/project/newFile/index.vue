@@ -17,11 +17,11 @@
       <!-- 头 -->
       <file-header ref="fileheader" @recovery="recovery"></file-header>
       <!--工具 -->
-      <file-tools @createFolder="createFolder" @removeFolder="removeFolder"  @recovery="recovery"> </file-tools>
+      <file-tools ref="filetools" @createFolder="createFolder" @removeFolder="removeFolder"  @recovery="recovery"> </file-tools>
       <!-- 列表内容 -->
       <!-- <list v-if="showView == 'list'"></list> -->
       <!-- 缩略图内容 -->
-      <view-list  ref="viewlist" @updateNodeName="updateNodeName"></view-list>
+      <view-list  ref="viewlist" @updateNodeName="updateNodeName" @removeClone="removeClone"></view-list>
     </div>
   </div>
 </template>
@@ -54,6 +54,9 @@ export default {
     ...mapActions("tree", ["initTree"]),
     recovery(){
       this.$refs.viewlist.recoverySelected();
+    },
+    removeClone(caozuo){
+        this.$refs.filetools.removeClone(caozuo)
     },
     createFolder(fileId) {
       this.$refs.tree.asyncRefresh(fileId);

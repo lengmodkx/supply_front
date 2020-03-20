@@ -14,8 +14,6 @@
           <a> </a>
         </li>
       </ul>
-      <!-- <span><img src="../../../assets/images/04.png" alt=""></span> -->
-      <!-- <span><img src="../../../assets/images/05.png" alt=""></span> -->
     </div>
     <div class="right">
       <Input search enter-button v-model="searched" @on-search="search" />

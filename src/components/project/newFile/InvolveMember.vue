@@ -1,28 +1,6 @@
 <template>
-  <div>
-    <!-- <div class="join-member">
-      <div style="font-size:14px;color:#262626">参与者 · {{ joinMembers.length }}</div>
-      <div class="member-avatar fl" v-for="(item, index) in joinMembers" :key="index">
-        <Tooltip :content="`${item.userName},创建者`" placement="top" transfer v-if="item.isCreate">
-          <div class="ava1">
-            <img v-if="item.image" :src="item.image" />
-          </div>
-        </Tooltip>
-        <Tooltip :content="item.userName" placement="top" transfer v-else>
-          <div class="ava">
-            <img :src="item.image" alt="" />
-            <span class="close" @click="deleteInvolve(item.userId)">×</span>
-          </div>
-        </Tooltip>
-      </div>
-    </div> -->
     <div class="addButton fl">
-      <Poptip v-model="visible" class="involvelistBox" transfer>
-        <span class="button">
-          <p class="pop-title"><Icon type="md-add-circle" />添加可见成员</p>
-        </span>
-
-        <div slot="content" style="height:320px;position: relative">
+        <div style="height:320px;position: relative">
           <Input v-model="searchvalue" placeholder="搜索" style="width:220px;margin-top:10px;height:36px;" />
           <div class="selectable">
             <ul>
@@ -70,9 +48,8 @@
             <Button type="primary" long @click="save">确定</Button>
           </div>
         </div>
-      </Poptip>
     </div>
-  </div>
+  
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
@@ -81,8 +58,6 @@ export default {
   props: ["projectId", "joins"],
   data() {
     return {
-      visible: false,
-      aaa: false,
       searchvalue: "",
       memberList: [],
       joinMembers: [],
@@ -90,8 +65,9 @@ export default {
       ids: [localStorage.userId]
     };
   },
+  
   mounted() {
-    console.log('xxxxxxxxxx')
+    console.log('xxxxxxxxxxxxx')
     members(this.projectId).then(res => {
       this.memberList = res.data;
       this.popShow();
@@ -125,79 +101,32 @@ export default {
         if (v.userId == localStorage.userId) v.isCreate = true;
         if (v.checked) this.ids.push(v.userId);
       });
-      this.$emit("addUser",this.ids,peopleData)
+      this.$emit("addUser", this.ids, peopleData);
       this.visible = false;
     },
     popShow() {
+      console.log("yyyyyyyy", this.joins);
       this.memberList.forEach(v => {
-        this.$set(v, "checked", false);
+          this.$set(v, "checked", false);
       });
       if (this.joins != undefined && this.joins != null && this.joins.length > 0) {
         this.ids = [];
         this.joins.forEach(v => {
           this.ids.push(v.userId);
-          if (v.userId == localStorage.userId) {
-            v.isCreate = true;
-          }
-          v.checked = true;
-          this.joinMembers.push(v);
           this.memberList.forEach(v1 => {
             if (v1.userId == v.userId) this.$set(v1, "checked", true);
           });
         });
-      } else {
-        
-        this.memberList.forEach(v => {
-          if (v.userId == localStorage.userId) {
-            v.isCreate = true;
-            v.checked = true;
-            this.joinMembers.push(v);
-          }
-        });
-      }
-      console.log(this.joinMembers);
+      } 
     }
   }
 };
 </script>
 <style scoped lang="less">
-.loading {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  i {
-    animation: zhuan 1s infinite;
-  }
-  @keyframes zhuan {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
+.addButton{
+  padding: 10px;
 }
-.involvelistBox {
-  .button {
-    cursor: pointer;
-    line-height: 24px;
-    display: inline-block;
-    i {
-      font-size: 24px;
-      color: #3da8f5;
-      margin-top: 2px;
-      &:hover {
-        color: #2d8cf0;
-      }
-    }
-  }
-}
+
 .selectable {
   height: calc(100% - 46px - 63px);
   overflow-y: auto;

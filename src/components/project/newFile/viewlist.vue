@@ -91,6 +91,7 @@
             <div style="height: 30px;line-height: 30px;">
               <span class="info"  @click.stop="downLoad(row.fileId)">下载</span>
               <span class="info"  @click.stop="reFileName(row, index)" ref="btnName">{{isactive1 != index?'重命名':'保存'}}</span>
+              <span class="info"  @click.stop="getFileid($event,row, index)">更多</span>
             </div>
           </template>
         </Table>
@@ -154,7 +155,7 @@
     </Modal>
     <!--文件夹 可见性设置 模态框-->
     <Modal v-model="showVisibilityModal" title="文件夹可见性设置" :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
-      <fileCanSee v-if="showVisibilityModal" :sFile="sFile"></fileCanSee>
+      <fileCanSee v-if="showVisibilityModal"></fileCanSee>
     </Modal>
     <Modal v-model="fileMenu" :styles="{ left: left, top: top }" width="200" :footer-hide="true" :mask-closable="true" v-if="mFile" class="mf0">
       <div slot="header" class="file-menu-header">
@@ -169,7 +170,7 @@
       <div>
         <div v-show="rublish" class="rublish">
           <p>您确定要把该文件移到回收站吗？</p>
-          <Button long type="error" @click="putRecyclebin(mFile)">移到回收站</Button>
+          <Button long type="error" @click="putRecyclebin">移到回收站</Button>
         </div>
         <div v-show="!rublish">
           <section v-if="mFile.catalog==1" class="file-folder-opt">
@@ -298,7 +299,6 @@ export default {
       svfUrl: "",
       loading1: false,
       mFile: null,
-      sFile:null,
       curFile: {},
       imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
       columns: [
@@ -316,13 +316,13 @@ export default {
           title: "大小",
           key: "size",
           slot: "size",
-          maxWidth: 100,
+          maxWidth: 80,
           sortable: true
         },
         {
           title: "创建者",
           key: "memberName",
-          maxWidth: 100
+          maxWidth: 80
         },
         {
           title: "创建时间",
@@ -354,7 +354,7 @@ export default {
   },
   methods: {
     ...mapActions("file", ["initFile", "initFolders", "searchFile", "putOneFile"]),
-    ...mapMutations("file", ["changeToolsShow", "initItem"]),
+    ...mapMutations("file", ["changeToolsShow", "initItem","setSFile"]),
     onSelectionChange(selection){
       this.fileArr=[];
       selection.forEach(element => {
@@ -392,7 +392,9 @@ export default {
     setCanSee() {
       this.showVisibilityModal = true;
       this.rublish = false;
-      this.sFile = this.mFile;
+      this.fileMenu = false;
+      console.log('<<<<<<<<<<<<<<',this.mFile)
+      this.setSFile(this.mFile);
     },
     
     closeDetail() {
@@ -440,30 +442,13 @@ export default {
         this.loading = false;
       });
     },
-    // 搜索文件
-    search(value) {
-      this.curtag = "";
-      if (value !== "") {
-        this.loading = true;
-        var data = { fileName: value, projectId: this.projectId };
-        this.searchFile(data).then(res => {
-          this.loading = false;
-        });
-      } else {
-        let params = { fileId: this.fileId };
-        this.initFile(params).then(res => {
-          this.loading = false;
-        });
-      }
-    },
+   
     //文件下载
     downLoad(fileId) {
       checkdownload().then(res => {
         if (res.result == 0) {
           this.$Message.error(res.msg);
         } else {
-          var fileIds = this.fileIds.join(",");
-          console.log(this.fileIds);
           var url = "";
           if (process.env.NODE_ENV == "test") {
             url = process.env.VUE_APP_TEST_URL;
@@ -499,65 +484,19 @@ export default {
         }
       });
     },
-
-    showFileChoose(data) {
-      if (data === "model") {
-        this.showModel = !this.showModel;
-      } else {
-        this.showCommon = !this.showCommon;
-      }
-    },
-    // download() {
-    //   window.location.href = `http://192.168.1.103:8080/files/${
-    //     this.fileIdParam
-    //   }/download`;
-    // },
     // 收藏文件
     collectFile() {
+      this.fileMenu = false;
       let data = {
         projectId: this.projectId,
         publicId: this.fileId,
         collectType: "文件"
       };
       collect(data).then(res => {
-        if (res.result) {
+        if (res.result==1) {
           this.$Message.success("收藏成功");
         }
       });
-    },
-    // 点击 上面文件夹的路径
-    whereGo(i, n) {
-      this.loading = true;
-      this.pathData.splice(n + 1);
-      getChildFiles(i.id).then(res => {
-        this.$store.commit("file/initFile", res.data);
-        this.loading = false;
-        localStorage.fileParentId = res.parentId;
-      });
-    },
-    // 选中要移动到哪
-    treeClick(node) {
-      this.folderId = node.data.id;
-
-      let params = { fileId: this.folderId };
-      // this.initFile(params).then(res => {
-      //   this.loading = false;
-      // });
-      this.$router.push({
-        path: `/project/${this.$route.params.id}/files/${this.folderId}`
-      });
-      let data = { fileId: this.folderId, projectId: this.projectId };
-      this.initFolders(data).then(res => {});
-    },
-    // 选中要移动到哪
-    breadcrumbClick(id) {
-      this.folderId = id;
-      let params = { fileId: this.folderId };
-      this.initFile(params).then(res => {
-        this.loading = false;
-      });
-      let data = { fileId: id, projectId: this.projectId };
-      this.initFolders(data).then(res => {});
     },
     // 点击文件、文件夹进入详情
     fileDetail(file, index) {
@@ -580,7 +519,6 @@ export default {
             this.showModelFileDetail = true;
           });
         } else {
-          console.log("xxxxxxxxxxxxxxxxx");
           this.showModelDetai = true;
           this.putOneFile(file.fileId);
         }
@@ -596,100 +534,35 @@ export default {
         num = 0;
         this.mFile.filePrivacy = 0;
       }
-      filePrivacy(this.mFile.fileId, num,projectId,this.mFile.parentId).then(res => {
+      filePrivacy(this.mFile.fileId, num,this.projectId,this.mFile.parentId).then(res => {
         if(res.result==1){
-          this.$$Message.success("隐私设置成功")
+          this.$Message.success("隐私设置成功")
         }else{
-          this.$$Message.success(res.msg)
+          this.$Message.success(res.msg)
         }
       });
-    },
-    showMore(fileName, fileId, catalog) {
-      this.fileName = fileName;
-      this.catalog = catalog;
-      if (catalog == 0) {
-        this.menu1Show = !this.menu1Show;
-      } else {
-        this.menu2Show = !this.menu2Show;
-      }
     },
     // 移到回收站
     putRecyclebin() {
-      console.log(this.thisFileId, this.projectId);
-      recycleBin(this.thisFileId, this.projectId).then(res => {
-        if (res.result) {
-          this.$Message.success("成功移到回收站");
-        }
+        this.fileMenu = false;
+        this.rublish =false;
+        recycleBin(this.mFile.fileId, this.projectId).then(res => {
+          if (res.result==1) {
+            this.$Message.success("成功移到回收站");
+          }
       });
     },
-    copyFile() {
-      this.showMove = true;
-      this.footerTxt = "跨项目复制时，部分信息不会被保留。";
-    },
-
     itemClick(node) {},
     // 取消 移动复制
     cancelRemoveClone() {
-      this.folderId = "";
       this.showMove = false;
     },
     //点击 移动、复制文件
     removeClone(caozuo) {
-      console.log("xxxxxxxxxxx");
-      this.caozuo = caozuo;
-      this.showMove = true;
-      this.footerTxt = "跨项目移动时，部分信息不会被保留。";
-      this.asyncData = [this.$refs.jstree.initializeLoading()];
-      folderChild(this.projectId).then(res => {
-        console.log(res.data);
-        this.asyncData = res.data;
-        this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
-      });
-    },
-    // 移动、复制文件的确定按钮
-    removeCloneFile() {
-      if (this.caozuo === "移动") {
-        removeFile(this.folderId, this.thisFileId, this.projectId).then(res => {
-          if (res.result) {
-            this.$Message.success("移动成功");
-            this.showMove = false;
-          }
-        });
-      } else if (this.caozuo === "复制") {
-        cloneFile(this.folderId, this.thisFileId).then(res => {
-          this.$Message.success("复制成功");
-          this.showMove = false;
-        });
-      }
-    },
-    // 获取项目列表
-    projectList() {
-      getProjectList().then(res => {
-        if (res.result == 1) {
-          this.projects = res.data;
-        }
-      });
-    },
-    // 移动、赋值文件框打开关闭
-    changeVisible(bool) {
-      if (bool) {
-        this.projectId = this.$route.params.id;
-        this.projectList();
-      } else {
-        this.projects = [];
-        this.items = [];
-      }
-    },
-    // 改变选择的项目
-    changeProject(projectId) {
-      this.loading1 = true;
-      this.items = [];
-      this.projectId = projectId;
-      folderChild(this.projectId).then(res => {
-        this.asyncData = res.data;
-        this.$refs.jstree.handleAsyncLoad(this.asyncData, this.$refs.jstree);
-        this.loading1 = false;
-      });
+     this.fileMenu = false;
+     this.caozuo = caozuo;
+      this.initItem([this.mFile.fileId]);
+      this.$emit('removeClone',caozuo);
     },
     //文件修改名
     updateFileName(id) {

@@ -108,7 +108,7 @@
       </div>
     </Modal>
     <!--复制、移动 模态框-->
-    <Modal v-model="showMove" :z-index="11111" class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
+    <Modal v-model="showMove" class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
       <div slot="header">
         <span style="font-size:18px">{{ caozuo }}文件/文件夹至</span>
       </div>

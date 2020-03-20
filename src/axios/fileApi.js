@@ -252,3 +252,11 @@ export function download(fileIds){
         responseType: 'blob'
     });
 }
+
+export function updateFolderPrivacy(folderId,userIds,projectId,parentId){
+    return fetch({
+        url: '/files/folder/look',
+        method: "put",
+        params:{folderId:folderId,userIds:userIds,projectId:projectId,parentId:parentId}
+    });
+}
