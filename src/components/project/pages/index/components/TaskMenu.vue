@@ -287,9 +287,7 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.data);
-  },
+  
   methods: {
     //获取执行者ID
     chooseExecutor(id) {

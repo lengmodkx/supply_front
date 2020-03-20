@@ -28,8 +28,6 @@ const store = {
                 memberName:'所有人'
             }
             state.symbolData.unshift(alluser)
-            console.log(state.symbolData,localStorage.userId)
-        
         },
         initRoles(state, data) {
             state.roles = data

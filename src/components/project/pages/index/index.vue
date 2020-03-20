@@ -67,26 +67,26 @@
           </div>
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="i.taskList.length * 60 + 42 > wHeight ? 'overflow-y: scroll' : ''">
             <draggable :list="i.taskList" 
-            :options="{ 
-              group: 'uncheckedTask', 
-              forceFallback: true, 
-              delay: 1, 
-              touchStartThreshold:10,
-              dragClass: 'dragClass', 
-              fallbackClass: 'fallbackClass' 
-            }" 
+              :options="{ 
+                group: 'uncheckedTask', 
+                forceFallback: true, 
+                delay: 1, 
+                touchStartThreshold:10,
+                dragClass: 'dragClass', 
+                fallbackClass: 'fallbackClass' 
+              }" 
               class="ul" @end="dragList">
-              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
+              <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click.stop="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="teskCheck" @click.stop @click="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
+                  <div class="teskCheck" @click.stop="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
                   <div class="check">
                     <div @click.stop class="checkbox-wrap">
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="bottom" transfer>
-                        <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
-                     </Tooltip>
+                    <Tooltip :content="a.executorName"  placement="bottom" transfer>
+                      <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
+                    </Tooltip>
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -119,7 +119,6 @@
                         <Icon type="ios-list" size="22" />
                         <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
-
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
@@ -146,9 +145,9 @@
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
             <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 0.5 }" class="ul" @end="dragList">
-              <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
+              <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click.stop="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
-                  <div class="teskCheck" @click.stop @click="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
+                  <div class="teskCheck" @click.stop="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
                   <div class="check">
                     <div class="checkbox-wrap" @click.stop>
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
@@ -238,7 +237,8 @@
     </div>
     <!-- 点击列表出来的弹框。编辑列表 :closable="false" fullscreen-->
     <Modal v-model="showModal" class="myModal" :mask-closable="false" footer-hide>
-      <my-modal v-if="showModal" @close="showModal = false" :taskId="taskId"></my-modal>
+      <my-modal v-if="showModal" @close="showModal = false"></my-modal>
+      <!-- <div>xxxx</div> -->
     </Modal>
     <Modal v-model="showAddGroup" :footer-hide="true" title="创建分组" :width="350">
       <Input v-model="groupName" placeholder="请输入分组名称" class="group-name-input" ref="input" />
@@ -388,9 +388,9 @@ export default {
 
     //打开任务详情
     initTask(taskId) {
+      this.showModal = true;
       this.taskId = taskId;
       this.setTaskId(taskId);
-      this.showModal = true;
     },
 
     addCurTask(groupId, id, taskList, index) {
