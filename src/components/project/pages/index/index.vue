@@ -55,7 +55,8 @@
       <div class="column" :key="k" v-for="(i, k) in allTask">
         <div style="max-height: 85vh;position:relative;" :data-index="k">
            <div class="add-Box">
-                 <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
+              <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId"> -->
+                 <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)">
                     <Icon type="android-add-circle"></Icon>
                     <Button type="info" long icon="md-add"></Button>
                   </span>
@@ -136,12 +137,12 @@
               </div>
             </draggable>
 
-            <div @click.stop class="add-task-box" v-show="currentEditId == i.relationId" ref="currentadd">
+            <!-- <div @click.stop class="add-task-box" v-show="currentEditId == i.relationId" ref="currentadd">
               <textarea placeholder="任务内容" v-model="textarea"></textarea>
               <div class="add-task-btn">
                 <Button @click="createTask()" type="primary">创建</Button>
               </div>
-            </div>
+            </div> -->
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
             <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 10 }" class="ul" @end="dragList">
@@ -250,10 +251,18 @@
     <div class="demo-spin-container" v-if="loading">
       <Loading></Loading>
     </div>
+
+    <!--创建 myy 2020-3-20 -->
+
+    <Modal v-model="shwoCreate"    title="创建任务"  :width="440" :mask-closable="false"   footer-hide>
+      <creat-list :projectId=projectId  :taskMenuId=taskMenuId :taskGroupId=taskGroupId @close="shwoCreate = false"></creat-list>
+    </Modal>
+
   </div>
 </template>
 
 <script>
+import creatList from  "./components/creatList.vue"; // <!--创建 myy 2020-3-20 -->
 import draggable from "vuedraggable";
 import FilterBox from "./components/FilterBox";
 import SortBox from "./components/SortBox";
@@ -270,6 +279,7 @@ import { enterTask, sortTaskMenu, addnewTask, completeTask, cancelcompleteTask, 
 export default {
   name: "",
   components: {
+    creatList,// <!--创建 myy 2020-3-20 -->
     draggable,
     timeView,
     listView,
@@ -288,6 +298,7 @@ export default {
   },
   data() {
     return {
+      shwoCreate:false,//打开新建任务 创建 myy 2020-3-20 
       show: false,
       showmodal: false,
       showAdd: true,
@@ -396,6 +407,8 @@ export default {
     addCurTask(groupId, id, taskList, index) {
       this.currentEditId = id;
       this.taskMenuId = id;
+      this.shwoCreate=true;
+
     },
     // 创建任务
     createTask() {
