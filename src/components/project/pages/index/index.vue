@@ -71,7 +71,7 @@
               :options="{ 
                 group: 'uncheckedTask', 
                 forceFallback: true, 
-                delay: 1, 
+                delay: 10, 
                 touchStartThreshold:10,
                 dragClass: 'dragClass', 
                 fallbackClass: 'fallbackClass' 
@@ -85,7 +85,7 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                    <Tooltip :content="a.executorName"  placement="bottom" transfer>
+                    <Tooltip :content="a.executorName"  placement="top" transfer>
                       <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
                     </Tooltip>
                   </div>
@@ -145,7 +145,7 @@
             </div> -->
 
             <!--已完成任务区域 分成上下两段循环，让已经勾选的不能拖拽上去，只能拖到下面的位置并一直在下面 -->
-            <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 0.5 }" class="ul" @end="dragList">
+            <draggable :list="i.taskList" :options="{ group: 'checkedTask', delay: 10 }" class="ul" @end="dragList">
               <div class="li done" v-if="a.taskStatus" v-for="(a, b) in i.taskList" :key="b" :data-id="a.taskId" @click.stop="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="teskCheck" @click.stop="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
@@ -154,7 +154,7 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="bottom">
+                     <Tooltip :content="a.executorName"  placement="top" transfer>
                     <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
                      </Tooltip>
                   </div>

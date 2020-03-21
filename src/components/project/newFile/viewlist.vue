@@ -116,7 +116,7 @@
       </div>
     </Modal>
     <!--复制、移动 模态框-->
-    <Modal v-model="showMove" :z-index="11111" class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
+    <!-- <Modal v-model="showMove" :z-index="11111" class-name="vertical-center-modal" width="800" @on-visible-change="changeVisible" class="show-move">
       <div slot="header">
         <span style="font-size:18px">移动文件{{ fileName }}至</span>
       </div>
@@ -146,7 +146,7 @@
           <Button type="primary" size="large" @click="removeCloneFile">确定</Button>
         </div>
       </div>
-    </Modal>
+    </Modal> -->
 
     <!--模型文件详情-->
     <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
@@ -666,6 +666,7 @@ export default {
         width: 140px;
         justify-content: center;
         align-items: center;
+        position: relative;
         .ios-check {
           color:rgba(0,0,0,0.34);
           position: absolute;
