@@ -279,10 +279,10 @@
             'publicId':this.publicId,
             'fromType':this.fromType,
             'bindId':'',
-            'publicType':''
+            'publicType':'',
+            'projectId':this.$route.params.id
         },
-        orgId: localStorage.companyId,
-
+        orgId: localStorage.companyId
       }
       
     },
@@ -478,12 +478,13 @@
       relation(){
           this.relationing=true
           addRelation(this.guanlianData).then(res => {
-              if (res.result){
+              if (res.result==1){
                   this.$emit('binkCallback')
+                  this.$emit('close')
                   this.$Message.success('关联成功');
               }
               else {
-                  this.$Message.error('关联失败，请重新选择');
+                  this.$Message.error(res.msg);
               }
               this.relationing=false
           })

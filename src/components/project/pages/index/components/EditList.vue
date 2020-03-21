@@ -196,7 +196,7 @@
             <p class="name" style="float: none;"><Icon type="ios-link-outline" />关联内容</p>
             <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
             <Modal v-model="relationModal" footer-hide class="relationModal" id="relationModal">
-              <AddRelation :publicId="task.taskId" :fromType="publicType"></AddRelation>
+              <AddRelation :publicId="task.taskId" :fromType="publicType" @close="relationModal=false"></AddRelation>
             </Modal>
           </div>
           <div class="has-relevance">
@@ -218,7 +218,7 @@
                 <Poptip @click.stop>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
                     <div class="glpop-list" @click.stop="cancle(b.taskId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
@@ -241,7 +241,7 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
                     <div class="glpop-list" @click.stop="cancle(b.fileId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
@@ -264,7 +264,7 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
                     <div class="glpop-list" @click.stop="cancle(b.scheduleId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
@@ -286,7 +286,7 @@
                 <Poptip>
                   <Icon class="glpop" type="ios-arrow-down" size="20" />
                   <div slot="content">
-                    <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div>
+                    <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
                     <div class="glpop-list" @click.stop="cancle(b.shareId)"><Icon type="md-link" size="20" /><span>取消关联</span></div>
                   </div>
                 </Poptip>
