@@ -288,7 +288,7 @@ export default {
       };
     },
     endDate(date) {
-      this.project.startTime = new Date(date).getTime();
+      this.project.endTime = new Date(date).getTime();
       this.options1 = {
         disabledDate(date1) {
           return date1 && date1.valueOf() >= new Date(date).getTime();

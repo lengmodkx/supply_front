@@ -9,12 +9,12 @@
       <!-- <li :class="{ checked: nowChecked === 'group' }" @click="changeNav('group')"><Icon type="ios-paper-outline" />分组</li> -->
       <li :class="{ checked: nowChecked === 'tag' }" @click="changeNav('tag')"><Icon type="ios-pricetag-outline" />标签</li>
     </ul>
-    <div class="recycle-right">
-      <div v-if="dataList.length" class="has-con">
+    <div class="recycle-right" v-if="dataList">
+      <div v-if="dataList.length>0" class="has-con">
         <header class="recycle-head"><span>名称</span><span>修改时间</span></header>
         <div class="recycle-list" v-for="(info, index) in dataList" :key="index">
-          <p class="name">{{ info.publicName }}</p>
-          <p class="time">{{ info.updateTime | timeFilter }}</p>
+          <div class="name"><span>{{ info.publicName }}</span><span v-if="info.ext">{{info.ext}}</span></div>
+          <p class="time">{{ $moment(info.updateTime).format("YYYY-MM-DD") }}</p>
           <Poptip class="task-menuwrapper" placement="bottom" transfer trigger="hover">
             <div slot="content" class="task-menuwrapper-content">
               <div class="recyTitle">
@@ -62,7 +62,7 @@
 
             <div><Icon type="md-refresh" />恢复内容</div>
           </Poptip>
-          <div v-if="nowChecked !== 'file'" @click="deleteForever(info.id)" style="cursor:pointer"><Icon type="ios-trash-outline" />彻底删除</div>
+          <div  @click="deleteForever(info.id)" style="cursor:pointer"><Icon type="ios-trash-outline" />彻底删除</div>
         </div>
       </div>
       <div v-else class="no-con">
@@ -182,7 +182,7 @@ export default {
           }
         });
       }
-      if (this.nowChecked === "file") {
+      if (this.nowChecked === "file" || this.nowChecked ==='folder') {
         console.log("文件");
         delWJProject(id, this.projectId).then(res => {
           if (res.result === 1) {
