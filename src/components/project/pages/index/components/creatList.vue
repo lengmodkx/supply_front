@@ -1,6 +1,7 @@
 <template>
   <div class="creat-list">
-     <textarea placeholder="输入标题以新建任务" v-model="textarea"></textarea>
+     <!-- <textarea placeholder="输入标题以新建任务" v-model="textarea"></textarea> -->
+     <Input v-model="textarea" maxlength="100" show-word-limit type="textarea" placeholder="输入标题以新建任务" ref="textarea" />
       <!-- 设置认领者 -->
        <!-- <div class="img-box">
                
@@ -49,7 +50,8 @@ export default {
  
   },
   mounted() {
-   
+    console.log(this.$refs.textarea)
+    this.$refs.textarea.focus();
   },
   watch: {
    

@@ -255,7 +255,7 @@
     <!--创建 myy 2020-3-20 -->
 
     <Modal v-model="shwoCreate"    title="创建任务"  :width="440" :mask-closable="false"   footer-hide>
-      <creat-list :projectId=projectId  :taskMenuId=taskMenuId :taskGroupId=taskGroupId @close="shwoCreate = false"></creat-list>
+      <creat-list v-if="shwoCreate"  :projectId=projectId  :taskMenuId=taskMenuId :taskGroupId=taskGroupId @close="shwoCreate = false"></creat-list>
     </Modal>
 
   </div>
