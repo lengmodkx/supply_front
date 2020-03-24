@@ -869,14 +869,15 @@ export function getScheduleByMonth(month) {
 }
 
 /**
- * 获取我创建的文件
+ * 获取我创建的或我参与的文件
  */
-export function getMeFile(order) {
+export function getMeFile(order,type) {
     return fetch({
         url: `me/file`,
         method: "get", // 请求方法
         params: {
-            order: order
+            order: order,
+            type:type
         }
     });
 }
