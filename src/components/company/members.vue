@@ -424,6 +424,10 @@ export default {
         case "新加入的成员":
           this.flag = 3;
           break;
+        case "外部成员":
+         this.flag = 5;
+         break;
+
       }
       initOrgMember(localStorage.companyId, this.flag).then(res => {
         this.loading = false;
