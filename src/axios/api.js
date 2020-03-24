@@ -425,6 +425,7 @@ export function addnewTag(params) {
     return $post(`/tags`, params)
 }
 
+
 //创建标签并且绑定信息
 export function addTagAndBind(params) {
     return $post(`/tags/add_and_bind`, params)
@@ -463,6 +464,37 @@ export function bindingTag(tagId, publicId, publicType) {
 export function searchTags(params) {
     return $get(`/tags/search`, params)
 }
+
+//修改进度
+
+export function progress(params) {
+    return $post(`/tasks/progress`, params)
+}
+
+//修改计划工时
+
+export function workHour(params) {
+    return $post(`/tasks/work_hours`, params)
+}
+
+//添加实际工时
+export function additionHour(params) {
+    return $post(`/taskWorkingHours/addition`, params)
+}
+
+
+//获取工时列表
+
+export function  getTaskWorkingHours(params) {
+    return $get(`/taskWorkingHours/list`, params)
+}
+
+//删除工时列表
+
+export function removeTaskWorkingHours(params) {
+    return $post(`/taskWorkingHours/remove`, params)
+}
+
 //拖拽任务大盒子 排序菜单
 export function sortTaskMenu(idList) {
     return fetch({
