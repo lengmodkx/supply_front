@@ -1,7 +1,7 @@
 <template>
         <div style="text-align:center;height:400px">
             <div>
-                <Input search enter-button placeholder="请输入手机号查找"
+                <Input search enter-button placeholder="请输入姓名或手机号查找"
                        @on-search="searchUser" v-model="searchWord" @on-keyup="searchInput" />
             </div>
             <loading v-if="loading"></loading>
@@ -15,9 +15,10 @@
                         <li v-for="(people,index) in searchPeople" :key="index" class="invit-user">
                             <div class="member-info">
                                 <img :src="`${people.image}`">
-                                <span>{{people.userName}}</span>
+                                <span>{{people.userName}} </span>
                             </div>
-                            <Button type="primary" @click="adduser(people.userId)">添加</Button>
+                            <Button  v-if="people.existId === 1"  type="primary"   v-bind:disabled="dis">已添加</Button>
+                            <Button  v-if="people.existId === 0"  type="primary"   @click="adduser(people.userId)">添加</Button>
                         </li>
                     </ul>
                 </div>
@@ -36,6 +37,7 @@
                 searchWord: '',
                 searchPeople: [],
                 isSearch: false,
+                dis: true
             }
         },
         methods: {
@@ -50,10 +52,11 @@
                         if (res.result){
                             this.$Message.success('添加成功');
                             this.$emit('add',res.data)
+                        }else {
+                            this.$Message.info(res.msg);
                         }
                     })
                 } else if (this.type==='部门') {
-                    alert('bumen')
                     let data={
                         'memberId':id
                     }
@@ -68,6 +71,7 @@
             // 搜索 成员
             searchUser(value){
                 this.loading=true
+
                 searchMembers(value, localStorage.companyId).then(res => {
                     if(res.result==1){
                         this.searchPeople=res.data
