@@ -96,7 +96,7 @@
     </Modal>
     <!-- 日历 -->
 
-    <Modal v-model="tagHeader" :mask="false" width="100vh" :z-index="10" @on-cancel="closeTag" :styles="{ top: '50px' }" class="tab-content">
+    <Modal v-model="tagHeader" :mask="false" fullscreen :title="title" footer-hide @on-cancel="closeTag" :styles="{ top: '50px' }" class="tab-content">
       <Mine v-if="showtag == 'Mine'"></Mine>
       <calendar v-if="showtag == 'canlender'"></calendar>
       <suCai v-else-if="showtag == 'sucai'"></suCai>
@@ -174,7 +174,8 @@ export default {
           path: "/management"
         }
       ],
-      time: 0
+      time: 0,
+      title:''
     };
   },
  
@@ -261,22 +262,27 @@ export default {
         //我的
         this.tagHeader = true;
         this.showtag = "Mine";
+        this.title = '我的'
       } else if (id === 2) {
         //日历
         this.tagHeader = true;
         this.showtag = "canlender";
+        this.title = '日历'
       } else if (id === 3) {
         //素材
         this.tagHeader = true;
         this.showtag = "message";
+        
       } else if (id === 6) {
         //素材
         this.tagHeader = true;
         this.showtag = "sucai";
+        this.title = '素材'
       } else if (id === 4) {
         //下载
         this.tagHeader = true;
         this.showtag = "down";
+        this.title = '下载'
       } else if (id === 5) {
         if (runPlatform == "browse") {
           this.$Message.error("设计系统必须在阿拉丁BIM云平台客户端打开");

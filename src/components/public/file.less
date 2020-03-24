@@ -1,13 +1,21 @@
 
-.file{
+.material-file{
   display: flex;
   flex-flow: row nowrap;
-  height:100vh;
-  
+  overflow: hidden;
+  .material-fill {
+    width: 350px;
+  }
+  .picker-column {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    overflow-y: auto;
+  }
 }
 
 .file-side-show{
-  width:298px;
+  width:200px;
   // max-height: 300px;
   overflow-y: auto;
   overflow-x: auto;
@@ -33,16 +41,6 @@
   border-left: 2px #e5e5e5  solid;
   padding-top:50px;
 }
-.file-button:hover{
-  width:15px;
-  border-left: 2px #3da8f5  solid;
-  padding-top:50px;
-  min-height: calc(100vh - 50px);
-}
-
-
-
-
 
 // 伸缩按钮样式
 .board-left-panel-indicator {
