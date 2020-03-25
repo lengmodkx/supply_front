@@ -9,8 +9,8 @@
                 <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
             </div>
             <div class="task-head-right">
-                <Select v-model="order" placeholder="按更新时间排序" @on-change="getMeFile">
-                    <!--<Option value="create" >按更新时间排序</Option>-->
+                <Select v-model="order" placeholder="请选择排序" @on-change="getMeFile">
+                    <Option value="create" >按创建时间排序</Option>
                     <Option value="size">按文件大小排序</Option>
                 </Select>
             </div>
@@ -24,6 +24,7 @@
                                 <div class="file-name">名称</div>
                             </div>
                             <div class="file-size">大小</div>
+                            <div class="file-create">创建时间</div>
                             <div class="file-time">更新时间</div>
                         </div>
                     </div>
@@ -66,6 +67,7 @@
                                 </Tooltip>
                             </div>
                             <div class="file-size">{{f.size}}</div>
+                            <div class="file-create"><Time :time="f.createTime" /></div>
                             <div class="file-time"><Time :time="f.updateTime" /></div>
                             <Icon type="ios-cloud-download-outline" />
                             <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0', f.fileId)"></Icon>
@@ -174,7 +176,7 @@ export default {
           rublish: false,
           thisFileId: "",
           fileType:1,
-          order:'create'
+          order:''
       }
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
@@ -193,13 +195,15 @@ export default {
             this.showModelDetai = false;
         },
         changeType(n){
-            this.fileType=n
+            this.fileType=n;
             if(n === 1){
-                this.type = 'create'
+                this.type = 'create';
+                this.order='';
                 this.getMeFile();
             }
             if(n === 2){
-                this.type = 'join'
+                this.type = 'join';
+                this.order='';
                 this.getMeFile();
             }
         },
@@ -209,6 +213,7 @@ export default {
             getMeFile(this.order,this.type).then(res => {
                 if(res.result === 1){
                     this.loading=false;
+                    console.log(res);
                     this.files = res.data
                 }
             })
