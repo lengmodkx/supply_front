@@ -1,9 +1,18 @@
 <template>
     <!-- 文件 -->
     <div >
+        <Loading v-if="loading"></Loading>
         <div class="inner file">
             <div class="file-head">
-                <span class="now">我创建的</span><span>我参与的</span>
+                <!-- <span class="now">我创建的</span><span>我参与的</span> -->
+                <span :class="{now: fileType==1}" @click="changeType(1)">我创建的</span>
+                <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
+            </div>
+            <div class="task-head-right">
+                <Select v-model="order" placeholder="请选择排序" @on-change="getMeFile">
+                    <Option value="create" >按创建时间排序</Option>
+                    <Option value="size">按文件大小排序</Option>
+                </Select>
             </div>
             <div class="file-title">
                 <!--没选文件时-->
@@ -15,6 +24,7 @@
                                 <div class="file-name">名称</div>
                             </div>
                             <div class="file-size">大小</div>
+                            <div class="file-create">创建时间</div>
                             <div class="file-time">更新时间</div>
                         </div>
                     </div>
@@ -57,6 +67,7 @@
                                 </Tooltip>
                             </div>
                             <div class="file-size">{{f.size}}</div>
+                            <div class="file-create"><Time :time="f.createTime" /></div>
                             <div class="file-time"><Time :time="f.updateTime" /></div>
                             <Icon type="ios-cloud-download-outline" />
                             <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0', f.fileId)"></Icon>
@@ -141,6 +152,7 @@ import {mapMutations} from 'vuex'
 export default {
     data () {
       return {
+          type:"create",
           moShi: 'liebiao',
           single:'',
           left:0,
@@ -163,6 +175,8 @@ export default {
           folderId: "",
           rublish: false,
           thisFileId: "",
+          fileType:1,
+          order:''
       }
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
@@ -180,9 +194,26 @@ export default {
         closeDetail() {
             this.showModelDetai = false;
         },
+        changeType(n){
+            this.fileType=n;
+            if(n === 1){
+                this.type = 'create';
+                this.order='';
+                this.getMeFile();
+            }
+            if(n === 2){
+                this.type = 'join';
+                this.order='';
+                this.getMeFile();
+            }
+        },
+
         getMeFile(){
-            getMeFile().then(res => {
+            this.loading=true
+            getMeFile(this.order,this.type).then(res => {
                 if(res.result === 1){
+                    this.loading=false;
+                    console.log(res);
                     this.files = res.data
                 }
             })
@@ -366,5 +397,15 @@ export default {
     cursor: pointer;
     line-height: 30px;
     padding-left: 10px;
+}
+.task-head-right{
+    display: flex;
+    align-items: center;
+    /deep/ .ivu-select-selection{
+        border: 0 none;
+    }
+    /deep/ .ivu-select-visible .ivu-select-selection{
+        box-shadow: 0 0 0 0;
+    }
 }
 </style>
