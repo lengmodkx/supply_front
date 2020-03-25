@@ -493,7 +493,10 @@ export default {
               taskId:this.task.taskId,
               progress:this.task.progress
         }
-        progress(data).then(res => {});
+        progress(data).then(res => {
+           this.showSchedule=false;
+           this.$Message.success("保存进度成功");
+        });
     },
     // 设置开始时间小于结束时间
     closeThisModal() {
