@@ -123,11 +123,32 @@
               <UrgentDropdown v-on:priority="changePriority" v-bind:checked-name="task.priority"></UrgentDropdown>
             </div>
           </div>
+          <div class="priority clearfix">
+            <span class="name"> <Icon type="ios-clock-outline" />工时</span>
+            <div class="urgentButton workHour">
+              <workHour  :task='task' ></workHour>
+            </div>
+          </div>
+           <div class="priority clearfix">
+            <span class="name"> <Icon type="ios-pulse" />进度</span>
+            <div class="urgentButton">
+               <Input-number class="scheduleTop" :max="100" :min="0" v-model="task.progress"  @on-change="scheduleChange"></Input-number>
+               <div class="scheduleBottom" v-show='showSchedule'>
+                   <Button  style="padding:6px 20px;"  @click="scheduleCancel">取消</Button>
+                   <Button  type="primary"  style="padding:6px 20px;" @click="scheduleSave">保存</Button>
+               </div>
+            </div>
+          </div>
+
+          
           <div @click.stop class="tags clearfix" style="display: flex;align-items: center">
             <span class="name"> <Icon type="ios-pricetags-outline"></Icon>标签 </span>
             <!-- 取到data.tag了再添加孙子辈组件 -->
             <Tags class="fl" :taglist="task.tagList" :publicId="task.taskId" :publicType="publicType" :projectId="task.projectId" v-if="task.tagList" ref="tags"></Tags>
           </div>
+
+          
+
           <div class="childTask clearfix">
             <p class="name" style="float:none;"><Icon type="ios-options-outline" />子任务</p>
             <!-- 已添加的子任务列表 -->
@@ -370,6 +391,7 @@ import TaskWarn from "./TaskWarn";
 import rcModal from "@/components/project/schedule/EditRicheng";
 import AddRelation from "@/components/public/common/AddRelation";
 import Tags from "@/components/public/Tags";
+import workHour from "@/components/public/workHour";
 import insertText from "@/utils/insertText";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import SingleTaskMenu from "./SingleTaskMenu.vue";
@@ -382,7 +404,7 @@ import fileDetail from "./fileDetail";
 import { mapState, mapActions } from "vuex";
 import commonFile from "./commonfile.vue";
 import Loading from "@/components/public/common/Loading.vue";
-import { updateTaskName, updatePriority, cancelcompleteTask, completeTask, updateRepeat, updateTaskJoin, fabulous, cancelFabulous, updateTaskRemarks, taskExecutor, cancle } from "@/axios/api";
+import { updateTaskName, updatePriority, cancelcompleteTask, completeTask, updateRepeat, updateTaskJoin, fabulous, cancelFabulous, updateTaskRemarks, taskExecutor, cancle,progress } from "@/axios/api";
 import { setSysClip } from "@/axios/api2.js";
 import { downloadFile, getFileDetails } from "@/axios/fileApi";
 export default {
@@ -391,6 +413,7 @@ export default {
     SetRepeat,
     TaskWarn,
     Tags,
+    workHour,
     Emoji,
     Simditor,
     SingleTaskMenu,
@@ -405,6 +428,7 @@ export default {
   },
   data() {
     return {
+      showSchedule:false,
       options1: {},
       options2: {},
       glPop: false,
@@ -455,6 +479,22 @@ export default {
   },
   methods: {
     ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
+    //进度
+    scheduleChange(data){
+       this.showSchedule=true
+    },
+    scheduleCancel(){
+          this.showSchedule=false
+    },
+    scheduleSave(){
+      console.log(this.task.progress)
+
+        const data={
+              taskId:this.task.taskId,
+              progress:this.task.progress
+        }
+        progress(data).then(res => {});
+    },
     // 设置开始时间小于结束时间
     closeThisModal() {
       this.$emit("close");
@@ -728,6 +768,9 @@ export default {
 </script>
 <style scoped lang="less">
 @import "./EditList.less";
+.ivu-input-number-input{
+
+}
 .backEdit {
   cursor: pointer;
 }

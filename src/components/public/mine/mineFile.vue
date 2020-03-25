@@ -1,9 +1,18 @@
 <template>
     <!-- 文件 -->
     <div >
+        <Loading v-if="loading"></Loading>
         <div class="inner file">
             <div class="file-head">
-                <span class="now">我创建的</span><span>我参与的</span>
+                <!-- <span class="now">我创建的</span><span>我参与的</span> -->
+                <span :class="{now: fileType==1}" @click="changeType(1)">我创建的</span>
+                <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
+            </div>
+            <div class="task-head-right">
+                <Select v-model="order" placeholder="按更新时间排序" @on-change="getMeFile">
+                    <!--<Option value="create" >按更新时间排序</Option>-->
+                    <Option value="size">按文件大小排序</Option>
+                </Select>
             </div>
             <div class="file-title">
                 <!--没选文件时-->
@@ -141,6 +150,7 @@ import {mapMutations} from 'vuex'
 export default {
     data () {
       return {
+          type:"create",
           moShi: 'liebiao',
           single:'',
           left:0,
@@ -163,6 +173,8 @@ export default {
           folderId: "",
           rublish: false,
           thisFileId: "",
+          fileType:1,
+          order:'create'
       }
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
@@ -180,9 +192,23 @@ export default {
         closeDetail() {
             this.showModelDetai = false;
         },
+        changeType(n){
+            this.fileType=n
+            if(n === 1){
+                this.type = 'create'
+                this.getMeFile();
+            }
+            if(n === 2){
+                this.type = 'join'
+                this.getMeFile();
+            }
+        },
+
         getMeFile(){
-            getMeFile().then(res => {
+            this.loading=true
+            getMeFile(this.order,this.type).then(res => {
                 if(res.result === 1){
+                    this.loading=false;
                     this.files = res.data
                 }
             })
@@ -366,5 +392,15 @@ export default {
     cursor: pointer;
     line-height: 30px;
     padding-left: 10px;
+}
+.task-head-right{
+    display: flex;
+    align-items: center;
+    /deep/ .ivu-select-selection{
+        border: 0 none;
+    }
+    /deep/ .ivu-select-visible .ivu-select-selection{
+        box-shadow: 0 0 0 0;
+    }
 }
 </style>
