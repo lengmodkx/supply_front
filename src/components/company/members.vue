@@ -28,8 +28,8 @@
                   </Poptip>
                   <!--<div class="bsort"><Icon type="md-swap" />部门排序</div>-->
                 </div>
-                <tree :data="departmentTree" ref="tree"></tree>
-                <branch @getBranchMember="getBranchMember" :branchData="branchData"></branch>
+                <!-- <tree :data="departmentTree" ref="tree"></tree> -->
+                <branch @getBranchMember="getBranchMember" :branchData="branchData" ref="branch"></branch>
               </div>
             </TabPane>
             <TabPane label="企业群组" name="企业群组">
@@ -349,7 +349,9 @@ export default {
       title: "成员菜单",
       roles: [],
       user: {},
-      flag: 0
+      flag: 0,
+      index:'',
+      curBranch:''
     };
   },
   mounted() {
@@ -445,7 +447,6 @@ export default {
           parentId: this.nowBranch.id
         };
         createBranchs(localStorage.companyId, data).then(res => {
-          this.$refs.tree.asyncRefresh()
           this.isCreateBranch = false;
           this.sonBranch = false;
         });
@@ -454,10 +455,12 @@ export default {
           partmentName: this.branchName
         };
         createBranchs(localStorage.companyId, data).then(res => {
-          console.log(res);
-          this.isCreateBranch = false;
-          this.branch = false;
-          this.branchData.push(res.data);
+          if(res.result==1){
+            this.isCreateBranch = false;
+            this.branch = false;
+            this.branchData.push(res.data);
+            this.branchName = '';
+          }
         });
       }
     },
@@ -472,7 +475,7 @@ export default {
       });
     },
     // 获取某个部门下成员
-    getBranchMember(item) {
+    getBranchMember(item,n) {
       this.nowType = "部门";
       this.peopleList = [];
       this.partmentId = item.partmentId;
@@ -480,6 +483,8 @@ export default {
       this.memberType = item.partmentName;
       this.nowBranch.id = item.partmentId;
       this.nowBranch.name = item.partmentName;
+      this.curBranch = item;
+      this.index = n;
       this.loading = true;
       getBranchpeople(item.partmentId).then(res => {
         console.log(res);
@@ -513,10 +518,11 @@ export default {
     deleteIt() {
       this.isCreateBranch = true;
       deleteBranch(this.nowBranch.id).then(res => {
-        if (res.result) {
+        if (res.result==1) {
           this.$Message.success("删除成功");
           this.isCreateBranch = false;
-          this.$router.go(0);
+          this.branchMenu = false;
+          this.$refs.branch.delPartment(this.nowBranch.id);
         }
       });
     },
