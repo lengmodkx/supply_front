@@ -86,12 +86,21 @@ export function addBranchPeople(partmentId, data) {
         data:data
     });
 }
+
+// 移除部门成员
+export function removeBranchPeople(partmentId, data) {
+    return fetch({
+        url: `/partment_members/${partmentId}/member`,
+        method: "delete",
+        params:data
+    });
+}
 // 更新部门 （更改部门名称）
-export function changeBranchNames(partmentId, data) {
+export function changeBranchNames(partmentId, params) {
     return fetch({
         url: `/partments/${partmentId}`,
         method: "put",
-        data:data
+        params:params
     });
 }
 // 删除部门
@@ -157,5 +166,13 @@ export function getDepartmentTree(orgId, departmentId) {
         url: `/partments/tree`,
         method: "post",
         data:{orgId:orgId, departmentId:departmentId}
+    });
+}
+
+export function lockUser(orgId,userId,lock){
+    return fetch({
+        url: `/organization/members/${orgId}/lock`,
+        method: "put",
+        params:{userId:userId, lock:lock}
     });
 }

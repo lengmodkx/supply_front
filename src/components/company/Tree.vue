@@ -16,7 +16,8 @@ export default {
       ztreeObj: null,
       setting: {
         view: {
-          showIcon: true,
+          showIcon: false,
+          showTitle: false,
           selectedMulti: false,
         },
         check: {
@@ -26,21 +27,15 @@ export default {
           simpleData: {
             enable: true,
             idKey: "id",
-          }
-        },
-        edit:{
-          enable:true,
-          editNameSelectAll:true,
-          removeTitle: "删除部门",
-          drag:{
-              isCopy:false
+            pIdKey: "pId",
+            rootPId: 0
           }
         },
         async: {
               //异步设置
               enable: true,
               type: "post",
-              url: 'http://localhost:8080/partments/tree',
+              url: process.env.VUE_APP_URL+'/partments/tree',
               autoParam: ["id=departmentId"],
               dataType: "JSON",
               headers: { "x-auth-token": localStorage.token },
@@ -64,35 +59,42 @@ export default {
     onCreated(ztreeObj) {
       this.ztreeObj = ztreeObj;
       var nodes = ztreeObj.getNodes();
-      if (nodes.length > 0) {
-        ztreeObj.selectNode(nodes[0]);
-        this.$store.commit("file/crumbsHome", nodes[0]); //初始化菜单
-      }
     },
     onClick(evt, treeId, treeNode) {
         console.log(treeId, treeNode);
-        getDepartmentTree("",treeId).then(res => {
-            this.treeData = res.data
-        })
-
-
+        this.$emit('changePartment',treeNode.id,treeNode.name,treeNode.pId);
     },
-    asyncRefresh() {
-      var nodes = this.ztreeObj.getSelectedNodes();
-      console.log(nodes);
-      if (nodes.length > 0) {
-        this.ztreeObj.reAsyncChildNodes(nodes[0], "refresh", true);
-      }
+    asyncRefresh(id) {
+      var node = this.ztreeObj.getNodeByParam("id", id);
+      node.isParent = true;
+      this.ztreeObj.reAsyncChildNodes(node, "refresh", true);
     },
-    getParentNodes(node, allNode) {
-      if (node != null) {
-        allNode.push(node);
-        var curNode = node.getParentNode();
-        this.getParentNodes(curNode, allNode);
+    removeNode(id) {
+      var sNode = this.ztreeObj.getNodeByParam("id", id);
+      var nodeN = sNode.getNextNode();
+      var nodeP = sNode.getPreNode();
+      var nodeF = sNode.getParentNode();
+      if(nodeN!=null){
+          this.ztreeObj.selectNode(nodeN);
+          this.$emit('changePartment',nodeN.id,nodeN.name);
+      }else if(nodeP!=null){
+          this.ztreeObj.selectNode(nodeP);
+          this.$emit('changePartment',nodeP.id,nodeP.name);
+      }else if(nodeF!=null){
+          this.ztreeObj.selectNode(nodeF);
+          this.$emit('changePartment',nodeF.id,nodeF.name);
+      }else{
+         this.$emit('reSetPartment');
       }
-    }
+      this.ztreeObj.removeNode(sNode, false);
+    },
+    updateNodeName(id,name){
+     var node = this.ztreeObj.getNodeByParam("id", id);
+      node.name = name;
+      this.ztreeObj.updateNode(node);
+    },
   }
 };
 </script>
-<style scoped >
+<style scoped lang="less">
 </style>
