@@ -14,7 +14,7 @@
                     </Select>
                 </div>
             </div>
-            
+
             <div class="file-title">
                 <!--没选文件时-->
                 <div v-if="checkedFile.length=='0'" class="select-no">
@@ -25,9 +25,8 @@
                                 <div class="file-name">名称</div>
                             </div>
                             <div class="file-size">大小</div>
-                          
+                            <div class="file-create">创建时间</div>
                             <div class="file-time">更新时间</div>
-                              <div class="file-create">创建时间</div>
                         </div>
                     </div>
 
@@ -69,9 +68,10 @@
                                 </Tooltip>
                             </div>
                             <div class="file-size">{{f.size}}</div>
-                           
-                            <div class="file-time"><Time :time="f.updateTime" /></div>
-                             <div class="file-create"><Time :time="f.createTime" /></div>
+                            <!--<div class="file-time">{{f.updateTime}}</div>
+                             <div class="file-create">{{f.createTime}}</div>-->
+                             <div class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</div>
+                             <div class="file-create">{{ $moment(f.updateTime).format("YYYY-MM-DD HH:mm") }}</div>
                             <Icon type="ios-cloud-download-outline" />
                             <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0', f.fileId)"></Icon>
                         </li>
@@ -403,7 +403,7 @@ export default {
 }
 .task-head-right{
     padding-left:600px;
-    
+
     display: flex;
     align-items: center;
     /deep/ .ivu-select-selection{
