@@ -21,15 +21,44 @@
               <span>
                 实际工时
               </span>
-              <span>
+              <span v-if='task.totalWorkHours'>
                 {{task.totalWorkHours}}
+              </span>
+              <span v-else>
+                  0小时
               </span>
           </div>
           <div class="middle">
-                  <i-input v-model="hour">
-                    <span slot="prepend">今天</span>
-                    <span @click="setHour" slot="append">确定</span>
-               </i-input>
+              <div class="data">
+                   <Date-picker
+                      :open="opendata"
+                      :value="dataValue"
+                      confirm
+                      type="date"
+                      @on-change="handleChange"
+                      @on-clear="handleClear"
+                      @on-ok="handleOk">
+                      <div  href="javascript:void(0)" @click="handleClick">
+                          
+                          <template  v-if="dataValue === ''">今天</template>
+                          <template v-else>
+                            {{ $moment(dataValue).calendar(null, {
+                              sameDay: '[今天]',
+                              nextDay: '[明天]',
+                              lastDay: '[昨天]',
+                              sameElse: 'M月D日'
+                            })
+                           }}
+                          </template>
+                      </div>
+                  </Date-picker>
+              </div>
+            
+
+              <input type="text" v-model="hour">
+              <span class="sure" @click="setHour" >
+                 确定
+              </span>
  
           </div>
 
@@ -37,11 +66,16 @@
                  <ul>
                    <li v-for="(item, index) in hourList" :key="index" >
                         <div class="name">
-                          
-                            <Icon type="ios-contacts"  @click="delTimeList(item.id)"/>
+                            <Icon type="ios-trash-outline"  @click="delTimeList(item.id)"/>
                             <div>
                                 <span>{{item.createName}}</span><br/>
-                                <!-- <span>{{item.hours}}</span> -->
+                                <span> {{ $moment(item.hoursDate).calendar(null, {
+                                        sameDay: '[今天]',
+                                        nextDay: '[明天]',
+                                        lastDay: '[昨天]',
+                                        sameElse: 'M月D日'
+                                      })
+                                 }}</span>
                             </div>                         
                         </div>
                         <span class="time">
@@ -70,7 +104,10 @@ export default {
   props: ["task",],
   data() {
     return {
-      hourList:[{name:'1',id:'1'},{name:'2',id:'2'}],
+     
+      opendata: false,
+      dataValue: new Date(),
+      hourList:[],
       hour:'',//实际工时
       planHour: "",//计划工时
       showSearch: false,
@@ -99,7 +136,20 @@ export default {
             
         },
   methods: {
-    
+     handleClick () {
+              
+          this.opendata = !this.opendata;
+      },
+      handleChange (date) {
+          this.dataValue = date;
+      },
+      handleClear () {
+          this.opendata = false;
+      },
+      handleOk () {
+          this.opendata = false;
+      },
+ 
     open() {
       //打开弹框
       this.showTag = true;
@@ -111,6 +161,7 @@ export default {
       this.showSearch = false;
       this.hour = "";
       this.planHour = "";
+      this.dataValue=new Date();
      
     },
     change(){
@@ -127,11 +178,17 @@ export default {
     },
     //修改实际工时
     setHour(){
-      console.log(this.hour)
+
+     
+
+       console.log(new Date(this.dataValue).getTime())
             const data={
               taskId:this.task.taskId,
-              hours:this.hour
+              hours:this.hour,
+              hoursDate:new Date(this.dataValue).getTime()
         }
+
+      
         additionHour(data).then(res => {
           this.getTimeLise()
         });
@@ -189,7 +246,29 @@ export default {
     margin-bottom: 10px;
   }
   .middle{
-    padding:0 10px;
+    padding:0px;
+    border:1px solid #e5e5e5;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 5px;
+    display: flex;
+    .data{
+      padding:0px 2px;
+
+      border-right: 1px solid #e5e5e5;
+    }
+    input{
+      flex:  1 auto;
+      border: none;
+      text-indent: 10px;
+    }
+    .sure{
+      width: 60px;
+      padding:0px 10px;
+      color: #2d8cf0;
+      cursor: pointer;
+    }
+
   }
   .bottom{
     ul {

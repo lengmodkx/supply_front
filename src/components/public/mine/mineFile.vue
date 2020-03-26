@@ -2,18 +2,19 @@
     <!-- 文件 -->
     <div >
         <Loading v-if="loading"></Loading>
-        <div class="inner file">
+        <div class="inner file" style="padding-left:0px">
             <div class="file-head">
                 <!-- <span class="now">我创建的</span><span>我参与的</span> -->
                 <span :class="{now: fileType==1}" @click="changeType(1)">我创建的</span>
                 <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
+                <div class="task-head-right">
+                    <Select v-model="order" placeholder="请选择排序" @on-change="getMeFile">
+                        <Option value="create" >按创建时间排序</Option>
+                        <Option value="size">按文件大小排序</Option>
+                    </Select>
+                </div>
             </div>
-            <div class="task-head-right">
-                <Select v-model="order" placeholder="按更新时间排序" @on-change="getMeFile">
-                    <!--<Option value="create" >按更新时间排序</Option>-->
-                    <Option value="size">按文件大小排序</Option>
-                </Select>
-            </div>
+
             <div class="file-title">
                 <!--没选文件时-->
                 <div v-if="checkedFile.length=='0'" class="select-no">
@@ -24,6 +25,7 @@
                                 <div class="file-name">名称</div>
                             </div>
                             <div class="file-size">大小</div>
+                            <div class="file-create">创建时间</div>
                             <div class="file-time">更新时间</div>
                         </div>
                     </div>
@@ -66,7 +68,10 @@
                                 </Tooltip>
                             </div>
                             <div class="file-size">{{f.size}}</div>
-                            <div class="file-time"><Time :time="f.updateTime" /></div>
+                            <!--<div class="file-time">{{f.updateTime}}</div>
+                             <div class="file-create">{{f.createTime}}</div>-->
+                             <div class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</div>
+                             <div class="file-create">{{ $moment(f.updateTime).format("YYYY-MM-DD HH:mm") }}</div>
                             <Icon type="ios-cloud-download-outline" />
                             <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0', f.fileId)"></Icon>
                         </li>
@@ -174,7 +179,7 @@ export default {
           rublish: false,
           thisFileId: "",
           fileType:1,
-          order:'create'
+          order:''
       }
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
@@ -193,13 +198,15 @@ export default {
             this.showModelDetai = false;
         },
         changeType(n){
-            this.fileType=n
+            this.fileType=n;
             if(n === 1){
-                this.type = 'create'
+                this.type = 'create';
+                this.order='';
                 this.getMeFile();
             }
             if(n === 2){
-                this.type = 'join'
+                this.type = 'join';
+                this.order='';
                 this.getMeFile();
             }
         },
@@ -209,6 +216,7 @@ export default {
             getMeFile(this.order,this.type).then(res => {
                 if(res.result === 1){
                     this.loading=false;
+                    console.log(res);
                     this.files = res.data
                 }
             })
@@ -394,6 +402,8 @@ export default {
     padding-left: 10px;
 }
 .task-head-right{
+    padding-left:600px;
+
     display: flex;
     align-items: center;
     /deep/ .ivu-select-selection{
