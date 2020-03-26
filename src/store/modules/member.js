@@ -20,8 +20,6 @@ const store = {
         //初始化项目成员列表
         initUser(state, data) {
             state.users = data
-            
-            
         
         },
         initSymbol(state, data) {
