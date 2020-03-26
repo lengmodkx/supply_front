@@ -99,7 +99,7 @@ export default {
       //获取任务数据
       getMeTask(){
           this.loading=true
-          getMeTask(this.isDone === 1,this.order,this.type).then(res => {
+          getMeTask(this.isDone,this.order,this.type).then(res => {
               console.log(res)
               if(res.result === 1){
                   this.loading=false
