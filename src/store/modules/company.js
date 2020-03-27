@@ -1,5 +1,5 @@
 import {getAllOrg} from '@/axios/companyApi'
-import {getDepartmentTree} from "../../axios/companyApi";
+import {getDepartmentTree} from "../../axios/companyApi.js";
 const  store ={
     namespaced: true,
     state: {
@@ -15,7 +15,7 @@ const  store ={
         setBranchId (state, data) {
             state.branchId=data
         },
-        getDepartmentTree(state, data){
+        initTree(state, data){
             state.departmentTree = data
         }
     },
@@ -27,10 +27,8 @@ const  store ={
         },
 
         getDepartmentTree({commit}, data){
-            console.log(">>>>>>>>>>>>>>>>>>>>>>>>");
-            console.log(data)
             getDepartmentTree(data.orgId, data.departmentId).then(res => {
-                commit('getDepartmentTree', res.data)
+                commit('initTree', res.data)
             })
         }
     }

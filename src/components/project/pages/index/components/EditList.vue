@@ -15,6 +15,10 @@
           </Tooltip> -->
           <span class="down">
             <SingleTaskMenu :data="task" @close="closeThisModal"></SingleTaskMenu>
+            
+          </span>
+          <span class="guanbi" >
+             <svg-icon  @click="closeThisModal()" class="closePop" style="width: 13px; height: 13px;margin-left:10px;  cursor: pointer;" name="close"></svg-icon>
           </span>
         </div>
         <div class="headerTool">
@@ -771,6 +775,7 @@ export default {
 </script>
 <style scoped lang="less">
 @import "./EditList.less";
+
 .ivu-input-number-input{
 
 }
@@ -782,11 +787,12 @@ export default {
 }
 .toolRight {
   display: flex;
+
   align-items: center;
   position: absolute;
   top: -3px;
   right: 10px;
-  margin-right: 30px;
+  // margin-right: 30px;
   .zan {
     display: flex;
     margin-right: 10px;

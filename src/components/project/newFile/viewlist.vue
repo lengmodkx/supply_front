@@ -1,7 +1,7 @@
 <template>
   <div class="file-contant" v-if="files != null">
-    <Row class="file-list" v-if="files.length > 0 && showView == 'view'" type="flex" justify="start">
-      <Col class="file-list-col" v-for="(file, index) in files" :key="index" span="3" @click.native="fileDetail(file, index)">
+    <Row class="file-list" v-if="files.length > 0 && showView == 'view'" type="flex" :gutter="10" justify="start">
+      <Col class="file-list-col" v-for="(file, index) in files" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)">
         <div class="img-box" :class="{ checked: fileArr.includes(file.fileId) }">
           <Icon type="ios-checkbox" class="ios-check" size="28"  :class="{ showIcon: fileArr.includes(file.fileId) }" @click.native.stop="iosCheck(file, index)" />
           <Button icon="ios-arrow-down" class="file-more_opt" :class="{ showIcon: isactive2 == index }" @click.stop="getFileid($event,file, index)"></Button>
@@ -626,8 +626,6 @@ export default {
     .file-list-col {
       margin-bottom: 10px;
       cursor: pointer;
-      margin-right: 10px;
-
       height: 140px;
       justify-content: center;
 
@@ -636,7 +634,9 @@ export default {
       // }
       .file-hinted {
         margin: 10px auto 0;
-        width: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         &:hover {
           background-color: #f5f5f5;
           .file-lock{
@@ -644,12 +644,13 @@ export default {
           }
         }
         .file-name {
-          width: 140px;
+          // width: 140px;
           height: 30px;
           display: flex;
           align-items: center;
           justify-content: center;
           .file-name-obj {
+            width: 80px;
             display: block;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -663,7 +664,7 @@ export default {
         display: flex;
         border: 1px solid #e5e5e5;
         height: 100px;
-        width: 140px;
+        // width: 140px;
         justify-content: center;
         align-items: center;
         position: relative;

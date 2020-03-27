@@ -59,9 +59,14 @@ export default {
   methods: {
     //打开@
     SymbolBox(e){
+      console.log(e.keyCode)
+      if(e.keyCode=='27'){
+        this.showSymbol=false
+        return
+      }
        const inner=this.$refs.textarea.innerHTML.split('')
         if(inner[inner.length-1]==="@"){
-            console.log(e.keyCode)
+            
             this.showSymbol=true
             const width=this.$refs.textarea.innerHTML.length*17
            
@@ -84,9 +89,6 @@ export default {
                   this.offsetLeft=327+"px"
                   }                 
            }
-           
-            console.log(width)
-
         }else{
            this.showSymbol=false
         }

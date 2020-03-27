@@ -63,7 +63,7 @@
           </div>
 
            <div class="bottom">
-                 <ul>
+                 <ul v-if="hourList">
                    <li v-for="(item, index) in hourList" :key="index" >
                         <div class="name">
                             <Icon type="ios-trash-outline"  @click="delTimeList(item.id)"/>
@@ -85,6 +85,14 @@
                     
                    
                  </ul>
+                 
+                   <div v-else class="clockBox">
+                     <div class="clock"></div>
+                         暂无工时记录
+                         
+                   </div>
+
+                
  
           </div>
 
@@ -271,6 +279,21 @@ export default {
 
   }
   .bottom{
+    .clockBox{
+      display: flex;
+      flex-flow: column ;
+      text-align: center;
+      margin-bottom: 20px;;
+    }
+    .clock {
+      width:60px;
+      height: 60px;
+      margin:30px 100px 10px 100px;
+      background: #fff url("~@/assets/images/clock.png") no-repeat center ;
+      background-size: cover;
+      
+      
+    }
     ul {
       margin-top:10px;
      
