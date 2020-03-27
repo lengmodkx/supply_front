@@ -4,7 +4,7 @@
       <div class="members">
         <!--左侧筛选成员-->
         <div class="member-left">
-          <Input class="search"  @on-search="searchOrgProple"  search placeholder="搜索..." />
+          <Input  class="search"  @on-change="searchOrgProple"   placeholder="搜索企业内成员..." />
           <Tabs value="组织架构" @on-click="clickTabs">
             <TabPane label="组织架构" name="组织架构">
               <div class="zzjg">
@@ -126,7 +126,7 @@
               </div>
             </div>
           </header>
-          <div class="scroll-box">
+          <div class="scroll-box" v-if="showPrise">
             <Loading v-if="loading"></Loading>
             <!--点击成员显示-->
             <ul v-if="nowType === '成员' && peopleList.length">
@@ -410,6 +410,7 @@ export default {
       groupName: "",
       showAddPeople: false,
       showAddPeople1:false,
+      showPrise:true,
       peopleList: [],
       memModal: false,
       loading: true,
@@ -716,16 +717,36 @@ export default {
       this.allOrgPeople[n].isChecked = !this.allOrgPeople[n].isChecked;
     },
     // 搜索企业内成员  直接搜索和  创建群组时使用
-    searchOrgProple(value) {
-        searchOrgMembers(value, localStorage.companyId).then(res => {
+    searchOrgProple(event) {
 
-            if(res.result===1){
-                console.log("搜索企业内成员信息成功")
-                console.log(res)
-            }else{
-                this.$Message.error('未搜索到成员');
-            }
-        })
+        this.loading = true;
+        if (event.currentTarget.value==='') {
+            this.memberType='所有成员';
+            initOrgMember(localStorage.companyId).then(res => {
+                if (res.result === 1) {
+                    res.data.forEach(i => {
+                        i.isChecked = false;
+                    });
+                    this.peopleList = res.data;
+                    this.allOrgPeople = res.data;
+                }
+                this.showPrise=true;
+                this.loading = false;
+            });
+        }else{
+            this.memberType='企业成员';
+            searchOrgMembers(event.currentTarget.value, localStorage.companyId).then(res => {
+                if(res.result===1){
+                    this.showPrise=true;
+                    this.peopleList = res.data;
+                }else{
+                    this.showPrise=false;
+                    this.peopleList.length=0;
+                    this.$Message.error('未搜索到成员');
+                }
+                this.loading = false;
+            })
+        }
     },
     // 点击某个群组
     changeNowGroup(item) {
