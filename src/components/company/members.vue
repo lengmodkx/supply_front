@@ -4,7 +4,7 @@
       <div class="members">
         <!--左侧筛选成员-->
         <div class="member-left">
-          <Input class="search" search placeholder="搜索..." />
+          <Input class="search"  @on-search="searchOrgProple"  search placeholder="搜索..." />
           <Tabs value="组织架构" @on-click="clickTabs">
             <TabPane label="组织架构" name="组织架构">
               <div class="zzjg">
@@ -393,7 +393,8 @@ import {
   changeGroupsname,
   deleteGroup,
   lockUser,
-  removeBranchPeople
+  removeBranchPeople,
+    searchOrgMembers
 } from "@/axios/companyApi";
 
 export default {
@@ -706,8 +707,18 @@ export default {
     checkedPeople(n) {
       this.allOrgPeople[n].isChecked = !this.allOrgPeople[n].isChecked;
     },
-    // 搜索企业内成员  创建群组时使用
-    searchOrgProple() {},
+    // 搜索企业内成员  直接搜索和  创建群组时使用
+    searchOrgProple(value) {
+        searchOrgMembers(value, localStorage.companyId).then(res => {
+
+            if(res.result===1){
+                console.log("搜索企业内成员信息成功")
+                console.log(res)
+            }else{
+                this.$Message.error('未搜索到成员');
+            }
+        })
+    },
     // 点击某个群组
     changeNowGroup(item) {
       this.nowGroup.name = item.groupName;
