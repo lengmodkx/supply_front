@@ -827,8 +827,7 @@ export default {
           });
         }
       });
-    }
-  },
+    },
   created() {
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
   }
