@@ -237,7 +237,7 @@
       <memberView></memberView>
     </div>
     <!-- 点击列表出来的弹框。编辑列表 :closable="false" fullscreen-->
-    <Modal v-model="showModal" class="myModal" :mask-closable="false" footer-hide>
+    <Modal v-model="showModal" class="myModal" :mask-closable="false" :closable='false' footer-hide>
       <my-modal v-if="showModal" @close="showModal = false"></my-modal>
       <!-- <div>xxxx</div> -->
     </Modal>
