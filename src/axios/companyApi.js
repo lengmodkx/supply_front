@@ -44,7 +44,7 @@ export function searchOrgMembers(phone,orgId) {
 // 添加企业成员/部门成员
 export function addPeople(data) {
     return fetch({
-        url: '/organization/members/',
+        url: '/organization/members',
         method: "post",
         data: data
     });
