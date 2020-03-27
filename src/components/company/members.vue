@@ -4,7 +4,7 @@
       <div class="members">
         <!--左侧筛选成员-->
         <div class="member-left">
-          <Input class="search" search placeholder="搜索..." @on-search="searchCompany"/>
+          <Input class="search" search placeholder="搜索..." />
           <Tabs value="组织架构" @on-click="clickTabs">
             <TabPane label="组织架构" name="组织架构">
               <div class="zzjg">
@@ -707,35 +707,8 @@ export default {
       this.allOrgPeople[n].isChecked = !this.allOrgPeople[n].isChecked;
     },
     // 搜索企业内成员  创建群组时使用
-    searchOrgProple() {
-        searchMembers(value, localStorage.companyId).then(res => {
-
-            if(res.result===1){
-                console.log("创建群组搜索成员")
-                console.log(res)
-            }else{
-                this.$Message.error('未搜索到成员');
-            }
-        })
-    },
-    },
-
-      //搜索企业成员
-      searchCompany(value){
-
-          searchOrgMembers(value, localStorage.companyId).then(res => {
-
-              if(res.result===1){
-                  console.log("搜索企业内成员信息成功")
-                  console.log(res)
-              }else{
-                  this.$Message.error('未搜索到成员');
-              }
-          })
-
-      },
-
-      // 点击某个群组
+    searchOrgProple() {},
+    // 点击某个群组
     changeNowGroup(item) {
       this.nowGroup.name = item.groupName;
       this.nowGroup.id = item.groupId;
@@ -827,7 +800,8 @@ export default {
           });
         }
       });
-    },
+    }
+  },
   created() {
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
   }
