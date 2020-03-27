@@ -326,14 +326,14 @@
       <p slot="header" style="color:#000;text-align:center">
         <span>添加成员至企业</span>
       </p>
-      <addPeople @add="addPeople" v-if="showAddPeople" :type="nowType" :partmentId="partmentId"></addPeople>
+      <addPeople @addPeople="addPeople" v-if="showAddPeople" :type="nowType" :partmentId="partmentId"></addPeople>
     </Modal>
     <!--添加人员至部门-->
     <Modal v-model="showAddPeople1" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>添加成员至部门</span>
       </p>
-      <addPeople @add="addPeople" v-if="showAddPeople1" :invitUsers="allOrgPeople" :type="nowType" :partmentId="partmentId"></addPeople>
+      <addPeople @addPeople1="addPeople1" v-if="showAddPeople1" :invitUsers="allOrgPeople" :type="nowType" :partmentId="partmentId"></addPeople>
     </Modal>
     <!--创建群组 框1 输入群组名称-->
     <Modal v-model="groupStep1" width="360" class-name="vertical-center-modal">
@@ -524,6 +524,14 @@ export default {
     },
     // 添加成员 回调
     addPeople(data) {
+     initOrgMember(localStorage.companyId, this.flag).then(res => {
+        if (res.result === 1) {
+          this.peopleList = res.data;
+        }
+      });
+    },
+    // 添加成员 回调
+    addPeople1(data) {
       this.changePartment(data.partmentId,data.partmentName);
       initOrgMember(localStorage.companyId).then(res => {
         if (res.result == 1) {

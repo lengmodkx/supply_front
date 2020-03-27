@@ -4,8 +4,8 @@
       <Input search enter-button placeholder="请输入姓名或手机号查找" @on-search="searchUser" v-model="searchWord" @on-keyup="searchInput" />
     </div>
     <loading v-if="loading"></loading>
-    <div class="people-wrap" v-if="invitUsers">
-      <ul v-if="invitUsers.length > 0 && !isSearch">
+    <div class="people-wrap">
+      <ul v-if="invitUsers && !isSearch">
         <li v-for="(people, index) in invitUsers" :key="index" class="invit-user">
           <div class="member-info">
             <img :src="`${people.userEntity.image}`" />
@@ -16,18 +16,16 @@
         </li>
       </ul>
       <!--搜索显示的-->
-      <div v-if="isSearch">
-        <ul>
-          <li v-for="(people, index) in searchPeople" :key="index" class="invit-user">
-            <div class="member-info">
-              <img :src="`${people.image}`" />
-              <span>{{ people.userName }} </span>
-            </div>
-            <Button v-if="people.existId === 1" type="primary" v-bind:disabled="dis">已加入</Button>
-            <Button v-if="people.existId === 0" type="primary" @click="adduser(people.userId)">添加</Button>
-          </li>
-        </ul>
-      </div>
+      <ul v-else>
+        <li v-for="(people, index) in searchPeople" :key="index" class="invit-user">
+          <div class="member-info">
+            <img :src="people.image" />
+            <span>{{ people.userName }} </span>
+          </div>
+          <span v-if="people.existId === 1" v-bind:disabled="dis">已加入</span>
+          <Button v-if="people.existId === 0" type="primary" @click="adduser(people.userId)">添加</Button>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -60,7 +58,7 @@ export default {
         addPeople(data).then(res => {
           if (res.result) {
             this.$Message.success("添加成功");
-            this.$emit("add", res.data);
+            this.$emit("addPeople", res.data);
           } else {
             this.$Message.info(res.msg);
           }
@@ -73,7 +71,7 @@ export default {
         addBranchPeople(this.partmentId, data).then(res => {
           if (res.result == 1) {
             this.$Message.success("添加成功");
-            this.$emit("add", res.data);
+            this.$emit("addPeople1", res.data);
           }
         });
       }
@@ -84,6 +82,7 @@ export default {
 
       searchMembers(value, localStorage.companyId).then(res => {
         if (res.result == 1) {
+          console.log(res.data)
           this.searchPeople = res.data;
         } else {
           this.$Message.error("搜索失败");
