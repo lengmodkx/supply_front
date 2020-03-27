@@ -56,7 +56,7 @@ export default {
           memberId: id
         };
         addPeople(data).then(res => {
-          if (res.result) {
+          if (res.result==1) {
             this.$Message.success("添加成功");
             this.$emit("addPeople", res.data);
           } else {
