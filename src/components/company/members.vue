@@ -134,7 +134,7 @@
                 <img :src="item.userEntity.image" alt="" />
                 <div class="one-member-name">
                   <span>{{ item.userEntity.userName }}</span>
-                  <span>{{item.partment.partmentName}}</span>
+                  <span v-if="item.partment!=null">{{item.partment.partmentName}}</span>
                 </div>
                 <span v-if="item.organizationLable == 1">拥有者</span>
                 <Poptip v-if="item.memberLock==1" placement="bottom" transfer width="280" @on-popper-show="visibleChange(item.userEntity)" v-model="item.userEntity.visible">
