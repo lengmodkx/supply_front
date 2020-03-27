@@ -381,16 +381,22 @@ export default {
       // })
     },
     handleSave() {
-      this.loading = true;
+      //this.loading = true;
       this.showAddGroup = false;
       addGroup(this.projectId, this.groupName).then(res => {
-        if (res.result === 1) {
-          this.taskGroupId = res.groupId;
-          this.$router.replace(`/project/${this.projectId}/tasks/group/${res.groupId}`);
-          this.init(this.projectId).then(res => {
-            this.loading = false;
-          });
-        }
+
+          this.$store.commit("task/addGroup", res.data);
+        // if (res.result === 1) {
+        //   this.taskGroupId = res.groupId;
+        //   this.$router.replace(`/project/${this.projectId}/tasks/group/${res.groupId}`);
+        //   this.init(this.projectId).then(res => {
+        //     this.loading = false;
+        //   });
+        //   setTimeout(() => {
+        //      this.show= true
+        //   }, 3000);
+
+        // }
       });
     },
     getGroup() {

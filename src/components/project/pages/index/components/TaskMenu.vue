@@ -369,13 +369,22 @@ export default {
       getmemberList(this.currProjectId).then(res => {
         if (res.result === 1) {
           this.memberList = res.data;
+          
         }
       });
     },
     //设置执行者
     setAllMember() {
       console.log(this.data.relationId, this.curId);
-      setAllTaskExecutor(this.data.relationId, this.curId).then(res => {});
+      setAllTaskExecutor(this.data.relationId, this.curId).then(res => {
+         if (res.result === 1) {
+          this.popHide();
+          this.$Message.success("设置成功!")
+        }else{
+          this.$Message.error("设置失败!");
+        }
+        
+      });
     },
     //删除任务
     deleteTask() {
