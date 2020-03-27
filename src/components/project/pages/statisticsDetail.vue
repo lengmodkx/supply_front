@@ -73,7 +73,7 @@
                         <Radio label="否"></Radio>
                     </RadioGroup>
                     <p>优先级</p>
-                    <RadioGroup v-model="priority_task" class="redio_box" vertical @on-change="Task_priority">
+                    <RadioGroup v-model="priority_task" class="redio_box2" vertical @on-change="Task_priority">
                         <Radio label="普通"></Radio>
                         <Radio label="紧急"></Radio>
                         <Radio label="非常紧急"></Radio>
@@ -118,7 +118,7 @@
                                 :options="options2"
                         ></DatePicker>
                     </div>
-                    <div long @click="defaultButton()" class="default">恢复默认</div>
+                    <!-- <div long @click="defaultButton()" class="default">恢复默认</div> -->
                     <div style="margin-top: 20px">
                         <Button type="info" long @click="filterData">确定</Button>
                     </div>
@@ -528,6 +528,9 @@
     }
     .redio_box{
         columns:2,
+    }
+    .redio_box2{
+        columns:3,
     }
     .type3-chart{
         width: 532px;

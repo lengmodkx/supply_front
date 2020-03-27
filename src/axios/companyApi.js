@@ -22,7 +22,7 @@ export function createCompany(data) {
         data: data
     });
 }
-// 搜索 企业成员
+// 搜索 全部成员
 export function searchMembers(phone,orgId) {
     return fetch({
         url: `/organization/members/${phone}/user`,
@@ -30,10 +30,21 @@ export function searchMembers(phone,orgId) {
         params: {orgId:orgId}
     });
 }
+
+// 搜索 企业成员
+export function searchOrgMembers(phone,orgId) {
+    return fetch({
+        url: `/organization/members/${phone}/searchOrgUser`,
+        method: "get",
+        params: {orgId:orgId}
+    });
+}
+
+
 // 添加企业成员/部门成员
 export function addPeople(data) {
     return fetch({
-        url: '/organization/members/',
+        url: '/organization/members',
         method: "post",
         data: data
     });

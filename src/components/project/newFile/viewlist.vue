@@ -374,7 +374,7 @@ export default {
     getFileid(e, file) {
       this.mFile = file;
       this.top = e.clientY + "px";
-      this.left = e.clientX - 125 + "px";
+      this.left = e.clientX - 180 + "px";
       this.fileMenu = true;
       this.rublish = false;
     },
