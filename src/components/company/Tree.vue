@@ -35,7 +35,7 @@ export default {
               //异步设置
               enable: true,
               type: "post",
-              url: process.env.VUE_APP_URL+'/partments/tree',
+              url: process.env.VUE_APP_TREE_URL3,
               autoParam: ["id=departmentId"],
               dataType: "JSON",
               headers: { "x-auth-token": localStorage.token },
