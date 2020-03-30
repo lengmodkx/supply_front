@@ -30,29 +30,7 @@
             <!--缩略图模式搜索-->
             <ul v-show="view === 'view'" class="view-file-box">
               <li v-for="(file, index) in searchData" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
-                <Poptip trigger="hover" @click.stop class="poptip" width="200" @on-popper-hide="popHid" @on-popper-show="fileName = file.fileName">
-                  <Icon class="deletes" type="ios-arrow-dropdown" size="20" />
-                  <div slot="title" style="text-align: center">
-                    <Icon class="go-return" v-show="opearteShow !== '文件菜单'" type="ios-arrow-back" @click="opearteShow = '文件菜单'" />
-                    {{ opearteShow }}
-                  </div>
-                  <div slot="content">
-                    <div class="opearte-list" v-show="opearteShow === '文件菜单'">
-                      <p @click="opearteShow = '修改文件名称'">修改文件名称</p>
-                      <p @click="downLoad(file.fileId)">下载文件</p>
-                      <p @click="opearteShow = '删除文件'">删除文件</p>
-                    </div>
-                    <div class="change-name" v-show="opearteShow === '修改文件名称'">
-                      <Input v-model="fileName" />
-                      <Button @click="changeFileName(file.fileId)" style="margin-top: 10px;display: block" type="info" long>确定</Button>
-                    </div>
-                    <!-- <div class="change-name" v-show="opearteShow==='删除文件'">
-                                                        <p>您确定要删除该文件吗</p>
-                                                        <Button @click.stop="deleteFile(file.fileId)" style="margin-top: 10px" type="error" long>删除</Button>
-                                                    </div> -->
-                  </div>
-                </Poptip>
-
+                <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
                 <div class="top-img" v-if="file.catalog">
                   <img src=" @/assets/images/folder.png" />
                 </div>
@@ -105,7 +83,7 @@
                 <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
                 <div class="list-file-part opeart-icon">
                   <Tooltip v-if="!file.catalog" content="下载" style="margin-right: 15px">
-                    <Icon type="md-arrow-down" @click="downLoad(file.fileId)" />
+                    <Icon type="md-arrow-down" @click.stop="downLoad(file.fileId)" />
                   </Tooltip>
                   <!-- <Tooltip content="删除">
                                                   <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
@@ -118,7 +96,7 @@
             <!--缩略图模式-->
             <ul v-if="view === 'view'" class="view-file-box">
               <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
-                <Icon class="xiazai" v-if="!file.catalog" @click="downLoad(file.fileId)" type="md-cloud-download" />
+                <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
                 <div class="top-img" :data-id="file.fileId" v-if="file.catalog">
                   <div class="down-img">
                     <span>已下载</span>
@@ -183,7 +161,7 @@
                 <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
                 <div class="list-file-part opeart-icon">
                   <Tooltip v-if="!file.catalog" content="下载" style="margin-right: 15px">
-                    <Icon type="md-arrow-down" @click="downLoad(file.fileId)" />
+                    <Icon type="md-arrow-down" @click.stop="downLoad(file.fileId)" />
                   </Tooltip>
                   <!-- <Tooltip content="删除">
                                                   <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
@@ -386,7 +364,19 @@ export default {
 
     // 下载文件
     downLoad(fileId) {
-      window.location.href = process.env.NODE_ENV == "development" ? "/api/files/" + fileId + "/download" : process.env.VUE_APP_URL + "/files/" + fileId + "/download";
+     if (res.result == 0) {
+          this.$Message.error(res.msg);
+        } else {
+          var url = "";
+          if (process.env.NODE_ENV == "test") {
+            url = process.env.VUE_APP_TEST_URL;
+          } else if (process.env.NODE_ENV == "production") {
+            url = process.env.VUE_APP_URL;
+          } else {
+            url = "/api";
+          }
+          window.location.href = url + "/files/batch/download?fileIds=" + fileId;
+        }
     },
     popHid() {
       setTimeout(() => {

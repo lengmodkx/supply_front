@@ -151,7 +151,7 @@
     <!--模型文件详情-->
     <Modal class="nopadding" v-model="showModelFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
       <!-- <modelFileDetail :url="svfUrl" v-if="showModelFileDetail"></modelFileDetail> -->
-      <iframe :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/viewer-offline.html?path=${svfUrl}`" style="width:100vw;height:100vh" v-if="showModelFileDetail"></iframe>
+      <iframe :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${svfUrl}`" style="width:100vw;height:100vh" v-if="showModelFileDetail"></iframe>
     </Modal>
     <!--文件夹 可见性设置 模态框-->
     <Modal v-model="showVisibilityModal" title="文件夹可见性设置" :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
@@ -512,16 +512,8 @@ export default {
         });
       } else {
         //文件
-        if (file.ext != null && ".svf" === file.ext) {
-          getFileDetails(file.fileId).then(res => {
-            console.log(res.data.fileUrl);
-            this.svfUrl = res.data.fileUrl;
-            this.showModelFileDetail = true;
-          });
-        } else {
-          this.showModelDetai = true;
-          this.putOneFile(file.fileId);
-        }
+        this.showModelDetai = true;
+        this.putOneFile(file.fileId);
       }
     },
     // 隐私模式

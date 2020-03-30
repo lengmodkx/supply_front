@@ -260,3 +260,11 @@ export function updateFolderPrivacy(folderId,userIds,projectId,parentId){
         params:{folderId:folderId,userIds:userIds,projectId:projectId,parentId:parentId}
     });
 }
+
+export function modelChange(fileId){
+    return fetch({
+        url: '/files/model/change',
+        method: "post",
+        data:{fileId:fileId}
+    });
+}
