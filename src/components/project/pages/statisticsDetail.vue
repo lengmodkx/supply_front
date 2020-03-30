@@ -31,6 +31,13 @@
                 <!-- right -->
                 <!--按条件查询-->
                 <div class="filter-box">
+                    <div v-show="show_summary">
+                        <p>汇总方式</p>
+                        <RadioGroup v-model="summary" vertical @on-change="Task_Summarize">
+                            <Radio label="按任务数"></Radio>
+                            <Radio label="按计划工时"></Radio>
+                        </RadioGroup>
+                    </div>
                     <div v-show="show_finish">
                         <p>按任务完成情况</p>
                         <RadioGroup v-model="finished" vertical @on-change="Task_Finish">
@@ -142,6 +149,7 @@
     export default {
         data: function () {
             return {
+                show_summary:'',
                 show_finish:'',
                 show_finish1:'',
                 time_scope:'',
@@ -150,6 +158,7 @@
                 id: '',
                 nowChecked: 1,
                 color:['#0DA9F5','#8BDC76','#FF7969','#A0A3D6','#FFC669'],
+                summary:'按任务数',
                 finished: '全部',
                 finish:'已完成',
                 child_task:'',
@@ -212,6 +221,9 @@
             },
             Task_Finish(data) {
                 this.StatisticsDTO.taskCase = data;
+            },
+            Task_Summarize(data){
+                this.StatisticsDTO.taskCount =data;
             },
             Task_zxz(data){
                 this.StatisticsDTO.taskMember = data
@@ -277,6 +289,7 @@
                 switch(n){
                     case 1 :
                         this.show_finish = true,
+                        this.show_summary = true,
                         this.time_scope = false,
                         //this.hide_div=true;
                         //this.show_div=false;

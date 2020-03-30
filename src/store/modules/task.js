@@ -58,6 +58,12 @@ const store = {
         initGroup(state, data) {
             state.groups = data
         },
+        addGroup(state, data) {
+            debugger
+            console.log( state.groups)
+            state.groups.unshift(data);
+                console.log( state.groups)
+        },
         setTaskId(state, data) {
             state.taskId = data
         },

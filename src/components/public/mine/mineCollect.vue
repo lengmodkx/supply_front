@@ -4,7 +4,27 @@
     <div class="inner collect">
       <!-- 头部 -->
       <div class="header1">
-        <div class="h1_title">
+              <div class="h1_title">
+                    <ul class="selectlistBox">
+                      <li @click="chooseCollectType(1, '所有收藏')">
+                        <span class="myiconBox"><Icon type="ios-heart-outline"></Icon></span>所有收藏
+                      </li>
+                      <li @click="chooseCollectType(2, '任务')">
+                        <span class="myiconBox"><Icon type="md-checkbox-outline"/></span>任务
+                      </li>
+                      <li @click="chooseCollectType(3, '分享')">
+                        <span class="myiconBox"><Icon class="shareIcon" type="ios-paper-outline"></Icon></span>分享
+                      </li>
+                      <li @click="chooseCollectType(4, '文件')">
+                        <span class="myiconBox"><Icon type="ios-document-outline"/></span>文件
+                      </li>
+                      <li @click="chooseCollectType(5, '日程')">
+                        <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>日程
+                      </li>
+                    </ul>
+              </div>
+
+        <!-- <div class="h1_title">
           <Poptip placement="bottom-start" v-model="collectVisible" @on-popper-hide="getCollect">
             <span class="showchoose">{{ collectType }}<Icon type="ios-arrow-down" style="margin-left:6px;"></Icon></span>
             <div slot="content">
@@ -27,7 +47,7 @@
               </ul>
             </div>
           </Poptip>
-        </div>
+        </div> -->
       </div>
       <Loading v-if="loading"></Loading>
       <!-- 内容 -->
@@ -104,6 +124,7 @@ export default {
       this.activeCollect = i;
       this.collectType = name;
       this.collectVisible = false;
+      this.getCollect()
     },
     cancleCollect(id) {
       cancelCollect(id).then(res => {
@@ -111,6 +132,7 @@ export default {
       });
     },
     getCollect() {
+      
       this.loading = true;
       let type = null;
       if (this.collectType !== "所有收藏") {
