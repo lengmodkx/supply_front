@@ -354,7 +354,7 @@
         选择企业成员
       </p>
       <div class="craete-group-con">
-        <Input search @on-search="searchOrgProple" placeholder="搜索企业成员" />
+        <Input search @on-search="searchOrgPeople" placeholder="搜索企业成员.." />
         <Loading v-if="loading"></Loading>
         <ul class="people-ul">
           <li v-for="(item, index) in allOrgPeople" :key="index" @click="checkedPeople(index)">
@@ -486,6 +486,7 @@ export default {
       } else if (value === "企业群组") {
         this.tabType = "企业群组";
         this.branchMenuTitle = "群组菜单";
+
       }
     },
     // 页面初始化
@@ -528,6 +529,8 @@ export default {
      initOrgMember(localStorage.companyId, this.flag).then(res => {
         if (res.result === 1) {
           this.peopleList = res.data;
+        }else {
+
         }
       });
     },
@@ -716,9 +719,8 @@ export default {
     checkedPeople(n) {
       this.allOrgPeople[n].isChecked = !this.allOrgPeople[n].isChecked;
     },
-    // 搜索企业内成员  直接搜索和  创建群组时使用
+    // 搜索企业内成员  直接搜索
     searchOrgProple(event) {
-
         this.loading = true;
         if (event.currentTarget.value==='') {
             this.memberType='所有成员';
@@ -748,6 +750,22 @@ export default {
             })
         }
     },
+      // 搜索企业内成员   创建群组时使用
+      searchOrgPeople(event) {
+          this.loading = true;
+          searchOrgMembers(event, localStorage.companyId).then(res => {
+              if(res.result===1){
+                  console.log(11)
+                  this.peopleList = res.data;
+              }else{
+                  this.showPrise=false;
+                  this.peopleList.length=0;
+                  this.$Message.error('未搜索到成员');
+              }
+              this.loading = false;
+          })
+
+      },
     // 点击某个群组
     changeNowGroup(item) {
       this.nowGroup.name = item.groupName;
@@ -758,6 +776,7 @@ export default {
     },
     // 点击群组的添加成员 按钮
     showAddGroupPeople() {
+
       this.groupStep2 = true;
       this.againAdd = true;
       this.allOrgPeople.forEach((i, n) => {
