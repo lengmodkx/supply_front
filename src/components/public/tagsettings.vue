@@ -157,6 +157,7 @@ export default {
     // 标签移到回收站
     removeTag(tag, index) {
       this.btnLoading = true;
+      
       receclyTag(tag.tagId).then(res => {
         if (res.result) {
           this.btnLoading = false;
@@ -164,6 +165,7 @@ export default {
           this.removeTagBin(tag.tagId);
         }
       });
+
     }
   }
 };

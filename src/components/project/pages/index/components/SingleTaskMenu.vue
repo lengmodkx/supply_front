@@ -332,7 +332,16 @@ export default {
     //任务移入回收站
     recycle() {
       this.active = "";
-      taskToRecycle(this.data.taskId);
+      //taskToRecycle(this.data.taskId);
+      console.log(this.data)
+      var data={
+        publicId:this.data.taskId,
+        publicType:'task',
+        projectId:this.data.projectId,
+        action:'move'
+      }
+      taskToRecycle(data).then(res => { });
+
       this.$emit("close");
     },
     reset(flag) {

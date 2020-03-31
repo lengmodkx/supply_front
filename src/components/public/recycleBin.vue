@@ -251,6 +251,7 @@ export default {
     },
     //恢复文件
     recycleSure(publicId) {
+      
       recycle(publicId, this.nowChecked, this.projectId).then(res => {
         if (res.result === 1) {
           var fileType = 0;

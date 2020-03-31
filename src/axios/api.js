@@ -382,10 +382,18 @@ export function updatePriority(taskId, priority) {
 }
 
 // 任务移入回收站
-export function taskToRecycle(taskId) {
+// export function taskToRecycle(taskId) {
 
-    return $put(`/tasks/${taskId}/recyclebin`);
+//     return $put(`/tasks/${taskId}/recyclebin`);
+// }
+
+export function taskToRecycle(params) {
+
+    return $post(`/recycle_bin/move_task_rb`,params);
 }
+
+
+
 
 //移动所有任务到回收站
 export function taskAllToRecycle(menuId) {
@@ -431,13 +439,24 @@ export function addTagAndBind(params) {
     return $post(`/tags/add_and_bind`, params)
 }
 //删除标签
-export function delTag(tagId, params) {
-    return $delete(`/tags/${tagId}`, params);
+// export function delTag(tagId, params) {
+//     return $delete(`/tags/${tagId}`, params);
+// }
+
+
+export function delTag(params) {
+
+    return $post(`/recycle_bin/move_tag_rb`,params);
 }
+
 // 标签移动到回收站
 export function receclyTag(tagId) {
     return $put(`/tags/${tagId}/dropTag`, null);
 }
+
+
+
+
 //修改标签
 export function modifyTag(tagId, params) {
     return $put(`/tags/${tagId}`, params);
@@ -653,11 +672,20 @@ export function deleteShare(shareId) {
     return $delete(`/shares/${shareId}`, "");
 }
 //将分享移入回收站
-export function recycleShare(shareId, projectId) {
-    return $put(`/shares/${shareId}/recyclebin`, {
-        projectId: projectId
-    });
+// export function recycleShare(shareId, projectId) {
+//     return $put(`/shares/${shareId}/recyclebin`, {
+//         projectId: projectId
+//     });
+// }
+
+export function recycleShare(params) {
+
+    return $post(`/recycle_bin/move_share_rb`,params);
 }
+
+
+
+
 //恢复分享
 export function recovery(shareId) {
     return $put(`/shares/${shareId}/recovery`, "");

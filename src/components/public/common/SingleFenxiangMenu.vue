@@ -254,12 +254,27 @@ export default {
     },
     //分享移入回收站
     recycle() {
-      recycleShare(this.data.id, this.projectId).then(res => {
-        if (res.result==1) {
+
+
+        var data={
+        publicId:this.data.id,
+        publicType:'share',
+        projectId:this.projectId,
+        action:'move'
+      }
+      recycleShare(data).then(res => { 
+         if (res.result==1) {
           this.$Message.success("已移到回收站");
           this.visible=false;
         }
       });
+
+      // recycleShare(this.data.id, this.projectId).then(res => {
+      //   if (res.result==1) {
+      //     this.$Message.success("已移到回收站");
+      //     this.visible=false;
+      //   }
+      // });
     },
     // 更新隐私模式
     privacyChange() {

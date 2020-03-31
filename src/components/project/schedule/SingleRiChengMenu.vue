@@ -253,13 +253,28 @@
             },
             //任务移入回收站
             recycle() {
-                recycleRc(this.data.scheduleId).then(res => {
-                    if (res.result){
+                var data={
+                        publicId:this.data.scheduleId,
+                        publicType:'schedule',
+                        projectId:this.data.projectId,
+                        action:'move'
+                    }
+                    recycleRc(data).then(res => {
+                        if (res.result){
                         this.$Message.success('已移到回收站')
                         this.visible=false
                         this.$emit('closeMenu')
                     }
-                })
+                     });
+
+
+                // recycleRc(this.data.scheduleId).then(res => {
+                //     if (res.result){
+                //         this.$Message.success('已移到回收站')
+                //         this.visible=false
+                //         this.$emit('closeMenu')
+                //     }
+                // })
             },
             // 更新隐私模式
             privacyChange(){
