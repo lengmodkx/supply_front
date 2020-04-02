@@ -33,7 +33,7 @@
                 <div class="filter-box">
                     <div v-show="show_summary">
                         <p>汇总方式</p>
-                        <RadioGroup v-model="summary" vertical @on-change="Task_Summarize">
+                        <RadioGroup v-model="summary"     vertical @on-change="Task_Summarize">
                             <Radio label="按任务数"></Radio>
                             <Radio label="按计划工时"></Radio>
                         </RadioGroup>
@@ -302,9 +302,9 @@
                         })
                         break;
                     case 2:
+                            this.show_summary = true,
                             this.show_finish1 = true,
                             this.time_scope = false
-                            //this.hide_div=true;
                             if(this.StatisticsDTO.taskCase == ""){
                                 this.StatisticsDTO.taskCase = "已完成"
                             }
@@ -313,7 +313,11 @@
                             this.data1=res.hisResultlist;
                             this.executorData = res.executor
                             this.peopleList = res.taskGroup;
-                            this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
+                            if(res.staticHistogram.taskType=="按计划工时"){
+                                this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.doubleArray)
+                            }else{
+                                this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
+                            }
                         })
                         break;
                     case 3:
