@@ -89,12 +89,24 @@ export function removeRc(scheduleId,projectId) {
     });
 }
 // 移动到回收站
-export function recycleRc(scheduleId) {
+// export function recycleRc(scheduleId) {
+//     return fetch({
+//         url: `/schedules/${scheduleId}/recyclebin`,
+//         method: "put"
+//     });
+// }
+
+
+
+
+export function recycleRc(params) {
     return fetch({
-        url: `/schedules/${scheduleId}/recyclebin`,
-        method: "put"
+        url: `/recycle_bin/move_schedule_rb`,
+        method: "post",
+        params: params
     });
 }
+
 // 更新隐私模式
 export function privacy(scheduleId,privacy) {
     return fetch({

@@ -192,16 +192,36 @@ export default {
       //删除标签
       this.showdiv3 = false;
       this.showdiv1 = true;
-      let params = {
+    
+    let params = {
         projectId: this.projectId,
         publicId: this.publicId,
         publicType: this.publicType
       };
-      delTag(this.tag.tagId, params).then(res => {
+      var data={
+                        publicId:this.tag.tagId,
+                        publicType:'tag',
+                        projectId:this.projectId,
+                        action:'move'
+       }
+      delTag(data).then(res => {  
         if (res.result === 1) {
           this.tags(params);
         }
       });
+
+
+      // let params = {
+      //   projectId: this.projectId,
+      //   publicId: this.publicId,
+      //   publicType: this.publicType
+      // };
+      
+      // delTag(this.tag.tagId, params).then(res => {
+      //   if (res.result === 1) {
+      //     this.tags(params);
+      //   }
+      // });
     },
 
     chooseTag(tag) {

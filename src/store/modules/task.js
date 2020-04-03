@@ -58,6 +58,21 @@ const store = {
         initGroup(state, data) {
             state.groups = data
         },
+        //修改企业名称
+        changNameGroup(state, data) {
+            const name=data.name
+            const id=data.id
+            state.groups.map((v, i) => {
+                if(v.groupId==id){
+                    v.groupName=name
+                }
+            })
+        },
+        changDelGroup(state, data){
+            const name=data.name
+            const id=data.id
+            state.groups.filter(v => v.groupId == id).forEach(i=>state.groups.splice(i,1))
+        },
         addGroup(state, data) {
             debugger
             console.log( state.groups)

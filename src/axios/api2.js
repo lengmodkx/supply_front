@@ -88,13 +88,14 @@ export function getUsers(keyword) {
 }
 //通过关键字查询用户 获取企业中的用户列表 20200224
 
-export function getOrgIdUsers(keyword, orgId) {
+export function getOrgIdUsers(keyword, orgId,projectId) {
     return fetch({
-        url: `/organization/members/keyword/`,
+            url: `/organization/members/keyword/`,
         method: 'get', // 请求方法
         params: {
             'orgId': orgId,
             'keyword': keyword,
+            'projectId': projectId
         }
     })
 }

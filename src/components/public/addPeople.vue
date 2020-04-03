@@ -11,7 +11,7 @@
             <img :src="`${people.userEntity.image}`" />
             <span>{{ people.userEntity.userName }} </span>
           </div>
-          <span v-if="people.partmentId !== '0'" v-bind:disabled="dis">已加入</span>
+          <span v-if="people.partmentId !== '0'" v-bind:disabled="dis"> 已加入 </span>
           <Button v-else type="primary" @click="adduser(people.memberId)">添加</Button>
         </li>
       </ul>

@@ -98,6 +98,8 @@ export function recycleBin(fileIds, projectId) {
         }
     });
 }
+
+
 // 添加关联
 export function addRelation(data) {
     return fetch({

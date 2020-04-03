@@ -85,7 +85,8 @@
                 <img :src="`${user.image}`" />
                 <p>{{ user.userName }}</p>
               </div>
-              <Button type="primary" @click="adduser(user.userId)">添加</Button>
+              <span v-if="user.existId === 1" v-bind:disabled="dis">已加入</span>
+              <Button v-if="user.existId === 0" type="primary" @click="adduser(people.userId)">添加</Button>
             </li>
           </ul>
         </div>
@@ -115,7 +116,8 @@ export default {
       title: "成员菜单",
       user: "",
       visible1: false,
-      roleKey: localStorage.getItem(localStorage.userId)
+      roleKey: localStorage.getItem(localStorage.userId),
+      dis: true
     };
   },
 
@@ -142,7 +144,7 @@ export default {
       }
       this.loading = true;
       let projectId = this.$route.params.id;
-      getOrgIdUsers(this.keyword2, localStorage.companyId).then(res => {
+      getOrgIdUsers(this.keyword2, localStorage.companyId,projectId).then(res => {
         this.loading = false;
         if (res.result === 1) {
           this.invitUsers = res.data;

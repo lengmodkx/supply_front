@@ -12,9 +12,14 @@
                 </div>
                 <p class="little-title">企业名称</p>
                 <Input v-model="orgName" style="width: 420px;margin-bottom: 15px" />
+                 <p class="little-title">企业规模</p>
+                <Select class="selectBox" v-model="selectmodel1" placeholder="企业规模" style="width: 420px;margin-bottom: 15px" >
+                    <Option v-for="item in sizeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
                 <p class="little-title">企业简介</p>
                 <Input v-model="orgDes" type="textarea" :rows="3" placeholder="介绍一下这个企业" style="width: 420px;margin-bottom: 15px" />
                 <p class="little-title">企业公开性</p>
+
                 <Select v-model="orgPublick" style="width:420px">
                     <Option value="1">公开企业（访客可以查看企业中的公开项目和成员）</Option>
                     <Option value="0">私有企业（仅企业成员可见）</Option>
@@ -63,6 +68,33 @@ export default {
     data () {
         return {
             orgId: localStorage.companyId,
+             selectmodel1: "",
+             sizeList: [
+                {
+                value: "1-10人",
+                label: "1-10人"
+                },
+                {
+                value: "10-50人",
+                label: "10-50人"
+                },
+                {
+                value: "50-100人",
+                label: "50-100人"
+                },
+                {
+                value: "100-300人",
+                label: "100-300人"
+                },
+                {
+                value: "300-1000人",
+                label: "300-1000人"
+                },
+                {
+                value: "1000人以上",
+                label: "1000人以上"
+                }
+            ],
             img: '',
             orgName: '',
             orgDes: '',
@@ -111,7 +143,8 @@ export default {
                 if(res.result==1){
                     this.img = res.data.organizationImage
                     this.orgName = res.data.organizationName
-                    this.orgDes = res.data.organizationDes
+                    this.selectmodel1=res.data.organizationDes
+                    this.orgDes = res.data.organizationIntro
                     this.orgPublick = res.data.isPublic+""
                     this.contact = res.data.contact
                     this.ownerId=res.data.organizationMember
@@ -160,9 +193,10 @@ export default {
         saveOrg(){
             let params = {
                 orgName:this.orgName,
-                orgDes:this.orgDes,
+                orgDes:this.selectmodel1,
+                orgIntro:this.orgDes,
                 isPublic:this.orgPublick,
-                memberId:localStorage.userId
+                memberId:localStorage.userId,
             }
             updateOrg(localStorage.companyId,params).then(res=>{
                 if(res.result==1){

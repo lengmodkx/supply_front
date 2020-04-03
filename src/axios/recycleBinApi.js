@@ -10,7 +10,8 @@ export function recycle(publicId,publicType,projectId,groupId,menuId) {
             publicType:publicType,
             projectId:projectId,
             groupId:groupId,
-            menuId:menuId
+            menuId:menuId,
+            action:'recovery'
         }
     });
 }
