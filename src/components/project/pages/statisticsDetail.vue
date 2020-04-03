@@ -314,9 +314,9 @@
                             this.executorData = res.executor
                             this.peopleList = res.taskGroup;
                             if(res.staticHistogram.taskType=="按计划工时"){
-                                this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.doubleArray)
+                                this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.doubleArray,"计划工时(单位:h)")
                             }else{
-                                this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray)
+                                this.initChart2(res.staticHistogram.nameArray,res.staticHistogram.dataArray,"任务数")
                             }
                         })
                         break;
@@ -394,7 +394,7 @@
                     }]
                 });
             },
-            initChart2(nameArray,dataArray){
+            initChart2(nameArray,dataArray,text){
                 Highcharts.chart('chart7',{
                     chart: {
                         type: 'column'
@@ -412,7 +412,7 @@
                     yAxis: {
                         min: 0,
                         title: {
-                            text: '任务数'
+                            text: text
                         }
                     },
                     tooltip: {
@@ -423,7 +423,7 @@
                         }
                     },
                     series: [{
-                        name: '任务数',
+                        name: text,
                         data: dataArray
                     }]
                 });
@@ -664,5 +664,4 @@
                 }
             }
 }
-
 </style>
