@@ -13,7 +13,7 @@ if (process.env.NODE_ENV == 'test') {
 const service = axios.create({
   //baseURL: "/api",
   // headers: {
-  // 'token_in_header': "123",//  token从全局变量那里传过来
+  //   'Content-Type': 'multipart/form-data',
   // },
   //判断是生产环境还是开发环境
   baseURL: url,
@@ -25,7 +25,7 @@ service.interceptors.request.use(config => {
   if (localStorage.token) config.headers['x-auth-token'] = `${localStorage.token}`
   if (config.method == 'post' && !config.isJson && config.headers['Content-Type'] !== 'application/json') {
     if (config.specialPost) {
-
+        console.log('specialPost')
     } else {
       config.data = qs.stringify({
         ...config.data

@@ -53,56 +53,47 @@
         <!--发消息-->
         <div class="talk">
           <div class="talkinner">
-            
-
             <div class="talkUp">
-              <div class="talkSymbol" v-if="showSymbol" :style="{left:offsetLeft}"> 
-              <ul >
-                <li v-for='(item,index) in symbolData ' :key="index" @click="choseSymbol(item.name)" >
-                  <img src="../../../assets/images/headUser.png" alt="">  
-                  {{item.name}}  <span v-if="index==0">・{{symbolData.length-1}}</span>
+              <div class="talkSymbol" v-if="showSymbol" :style="{ left: offsetLeft }">
+                <ul>
+                  <li v-for="(item, index) in symbolData" :key="index" @click="choseSymbol(item.name)">
+                    <img src="../../../assets/images/headUser.png" alt="" />
+                    {{ item.name }} <span v-if="index == 0">・{{ symbolData.length - 1 }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div
+                id="input"
+                style="width: 100%;height: 40px;padding: 5px 10px"
+                ref="textarea"
+                placeholder="按Enter快速发布"
+                contenteditable="true"
+                @keyup.enter="sendChat"
+                @keyup="SymbolBox($event)"
+              ></div>
+              <ul class="updata-box">
+                <li v-for="(item, index) in uploadList" :key="index">
+                  <div class="group-chat-file">
+                      <span> {{ item.name }} {{ item.size }}</span>
+                      <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
+                    </div>
+                    <Progress :percent="25" :stroke-width="5" hdie-info/>
                 </li>
               </ul>
             </div>
-              <div id="input"
-                      style="width: 100%;height: 40px;padding: 5px 10px" 
-                      ref="textarea" 
-                      placeholder="按Enter快速发布" 
-                      contenteditable="true"  
-                      @keyup.enter="sendChat" 
-                      @keyup="SymbolBox($event)"
-                >
-              
-                </div>
-                <ul class="updata-box">
-                    <li v-for="(item,index) in uploadList " :key="index">
-                          {{item.name}}
-                          <div>
-                            {{item.size}}
-                             <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
-                          </div>
-                          
-                    </li >
-                </ul>
-                
-            </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-
-                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/" >
-                    <Icon  class="up-file" type="md-attach" />
+                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/">
+                  <Icon class="up-file" type="md-attach" />
                 </Upload>
 
-
-                    <!-- <Icon  class="up-file" @click="showCommon=true" type="md-attach" /> -->
-               
-
+                <!-- <Icon  class="up-file" @click="showCommon=true" type="md-attach" /> -->
               </Tooltip>
               <!-- 表情包组件 -->
               <Tooltip content="添加表情" class="fl" transfer>
-               <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
+                <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
               </Tooltip>
-              
+
               <div class="send fr">
                 <Button type="primary" @click="sendChat">发送</Button>
               </div>
@@ -115,7 +106,6 @@
     <!-- <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" :mask-closable="false" footer-hide transfer :width="500">
       <up-file @close="showCommon=false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
     </Modal> -->
-
   </div>
 </template>
 
@@ -124,7 +114,7 @@ import axios from "axios";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import insertText from "@/utils/insertText";
 import upFile from "./index/chatUpFile";
-import { sendChat, getChat, recall } from "@/axios/api";
+import { sendChat, getChat, recall } from "../../../axios/api";
 import { mapActions, mapState } from "vuex";
 // 上传
 import OSS from "ali-oss";
@@ -144,9 +134,13 @@ export default {
       talkvalue: "",
       showCommon: false,
       projectName: localStorage.projectName,
-      symbolData:[{id:'111',name:'所有人'},{id:'222',name:'苗云宇'},{id:'333',name:'何少华'}],
+      symbolData: [
+        { id: "111", name: "所有人" },
+        { id: "222", name: "苗云宇" },
+        { id: "333", name: "何少华" }
+      ],
       offsetLeft: 0,
-      showSymbol:false,
+      showSymbol: false,
       showupload: true,
       showProgress: false,
       dirName: "upload/chat/",
@@ -172,38 +166,35 @@ export default {
   methods: {
     ...mapActions("chat", ["initChat"]),
     // 获取消息e
-    SymbolBox(e){
-       const inner=this.$refs.textarea.innerHTML.split('')
-       if(inner[inner.length-1]==="@"){
-            this.showSymbol=true
-            const width=this.$refs.textarea.innerHTML.length*17
+    SymbolBox(e) {
+      const inner = this.$refs.textarea.innerHTML.split("");
+      if (inner[inner.length - 1] === "@") {
+        this.showSymbol = true;
+        const width = this.$refs.textarea.innerHTML.length * 17;
 
-              console.log(width)
+        console.log(width);
 
-            if(width<1200){
-                   this.offsetLeft=width+"px"
-                }else{
-                  this.offsetLeft=850+"px"
-                }
-
-       }else{
-           this.showSymbol=false
-
+        if (width < 1200) {
+          this.offsetLeft = width + "px";
+        } else {
+          this.offsetLeft = 850 + "px";
         }
+      } else {
+        this.showSymbol = false;
+      }
     },
-    choseSymbol(name){
-      this.showSymbol=false;
-      this.$refs.textarea.innerHTML=this.$refs.textarea.innerHTML+name
+    choseSymbol(name) {
+      this.showSymbol = false;
+      this.$refs.textarea.innerHTML = this.$refs.textarea.innerHTML + name;
     },
     getChat() {
       this.initChat(this.$route.params.id);
-      
     },
-    
+
     getFiles(files) {
       this.files = files;
       this.showCommon = false;
-      console.log(files)
+      console.log(files);
     },
     //下载附件
     downLoad(id) {
@@ -218,14 +209,13 @@ export default {
     chehui(chatId) {
       recall(chatId, this.$route.params.id);
     },
-    delFile(index){
-      this.uploadList.splice(index,1);
+    delFile(index) {
+      this.uploadList.splice(index, 1);
     },
 
-  
     // 上传
-     handleBeforeUpload(file) {
-      console.log(file)
+    handleBeforeUpload(file) {
+      console.log(file);
       var that = this;
       this.showupload = false;
       this.showProgress = true;
@@ -237,7 +227,7 @@ export default {
         });
         this.uploadList.splice(6, this.uploadList.length - 1);
       }
-      console.log(this.uploadList)
+      console.log(this.uploadList);
 
       // let fd = new FormData()
       // fd.append('projectId',this.$route.params.id)
@@ -256,61 +246,58 @@ export default {
       //       //handle error
       //       console.log(response);
       //   });
-     
+
       return false;
     },
     // 发送消息
-        sendChat() {
-        
-
-          let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-          let fd = new FormData()
-      fd.append('projectId',this.$route.params.id)
-      fd.append('files',this.uploadList)
-      fd.append('content',con)
-          sendChat(fd).then(res => {
-              this.$refs.textarea.innerHTML = "";
-              this.$nextTick(() => {
-                var div = document.getElementById("data-list-content");
-                div.scrollTop = div.scrollHeight + 1;
-                this.charFiles=[];
-              });
-            });
-          // if (con) {
-          // }
+    sendChat() {
+      let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
+      let fd = new FormData();
+      fd.append("projectId", this.$route.params.id);
+      this.uploadList.forEach(v => fd.append("file", v));
+      fd.append("content", con);
+      sendChat(fd).then(res => {
+        this.$refs.textarea.innerHTML = "";
+        this.$nextTick(() => {
+          var div = document.getElementById("data-list-content");
+          div.scrollTop = div.scrollHeight + 1;
+          this.charFiles = [];
+        });
+      });
+      // if (con) {
+      // }
     },
 
-
-     uploadFile() {
-       
-       
+    uploadFile() {
       var that = this;
       this.uploadList.forEach((file, index) => {
-          var fileName =this.dirName + this.random_string(10) + this.get_suffix(file.name);
-          client.multipartUpload(fileName, file, {
-              progress: function(p) {
-                that.percentage.splice(index, 1, Math.floor(p * 100));
-              }
-            }) .then(function(result) {
-              var myfile = {};
-              myfile.fileName = file.name;
-              myfile.fileUrl = result.name;
-              myfile.size = that.renderSize(file.size);
-              that.charFiles.push(myfile);
-              if (that.uploadList.length == that.charFiles.length) {
-                console.log(that.charFiles)
-                that.files=that.charFiles;
-                console.log(that.files)
-                this.uploadList=[];
-              }
-            })
-            .catch(function(err) {
-              console.log(err);
-            });
+        var fileName = this.dirName + this.random_string(10) + this.get_suffix(file.name);
+        client
+          .multipartUpload(fileName, file, {
+            progress: function(p) {
+              that.percentage.splice(index, 1, Math.floor(p * 100));
+            }
+          })
+          .then(function(result) {
+            var myfile = {};
+            myfile.fileName = file.name;
+            myfile.fileUrl = result.name;
+            myfile.size = that.renderSize(file.size);
+            that.charFiles.push(myfile);
+            if (that.uploadList.length == that.charFiles.length) {
+              console.log(that.charFiles);
+              that.files = that.charFiles;
+              console.log(that.files);
+              this.uploadList = [];
+            }
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
       });
     },
-     
-     random_string(len) {
+
+    random_string(len) {
       len = len || 32;
       var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
       var maxPos = chars.length;
@@ -327,11 +314,7 @@ export default {
         suffix = filename.substring(pos);
       }
       return suffix;
-    },
-   
-
-
-
+    }
   }
 };
 </script>
@@ -341,7 +324,7 @@ export default {
   width: 100%;
   height: 60px;
   padding: 0 15px;
- 
+
   .one-file {
     width: 400px;
     height: 60px;
@@ -350,7 +333,7 @@ export default {
     padding: 10px 12px;
     background-color: #e5f6fb;
     border-radius: 5px;
-    margin:0px 0px 5px 5px ;
+    margin: 0px 0px 5px 5px;
     img {
       width: 32px;
       height: 40px;
@@ -523,51 +506,54 @@ export default {
       background-color: #fff;
       border-bottom: 1px solid #e8e8e8;
       // 上传文件
-      .updata-box{
+      .updata-box {
         max-height: 164px;
         overflow-y: auto;
-        li{
+        
+        li {
           width: 99%;
-          padding:0px 10px;
-          margin:5px auto;
+          padding: 0px 10px;
+          margin: 5px auto;
           height: 48px;
-          line-height: 48px;
           background: #f0f0f0;
           display: flex;
-          justify-content: space-between;
-          i{
+          flex-direction: column;
+          .group-chat-file{
+            display: flex;
+            justify-content: space-between;
+            i {
             margin-left: 10px;
             cursor: pointer;
           }
+          }
         }
-
       }
-       .talkSymbol{
-          position: absolute;
-          bottom:40px;
+      .talkSymbol {
+        position: absolute;
+        bottom: 40px;
+        display: flex;
+        flex-flow: column nowrap;
+        box-shadow: 2px 2px 5px #eeeeee;
+        ul {
+          background: #ffffff;
+          max-height: 320px;
+          padding: 4px 0;
+          overflow-y: auto;
+        }
+        li {
           display: flex;
-          flex-flow: column nowrap;
-           box-shadow:2px 2px 5px #eeeeee;
-          ul{
-            background: #ffffff;
-            max-height: 320px;
-            padding: 4px 0;
-            overflow-y: auto;
+          cursor: pointer;
+          padding: 10px 30px;
+          align-items: center;
+          img {
+            margin-right: 10px;
+            width: 32px;
+            height: 32px;
           }
-          li{
-            display: flex;
-            cursor: pointer;
-            padding:10px 30px;
-            align-items: center;
-            img{
-              margin-right: 10px;
-              width: 32px;
-              height: 32px;
-            }
-          }
-          li:hover{
-            background: #f5f5f5;
-          }
+        }
+        li:hover {
+          background: #f5f5f5;
+        }
       }
       #input {
         input:hover {
@@ -638,4 +624,10 @@ export default {
     width: 26px;
   }
 }
+
+.group-chat-file{
+  display: flex;
+  flex-direction: column;
+}
+
 </style>

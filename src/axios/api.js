@@ -799,7 +799,11 @@ export function sendChat(data) {
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
-        data: data
+        data: data,
+        specialPost:true,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
     });
 }
 

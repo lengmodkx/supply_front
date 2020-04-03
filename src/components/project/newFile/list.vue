@@ -197,7 +197,6 @@
   </div>
 </template>
 <script>
-import "./list1.less";
 import model from "../file/move.vue";
 import commonFile from "../file/commonfile.vue";
 import fileDetail from "../file/fileDetail";
@@ -667,11 +666,8 @@ export default {
   }
 };
 </script>
-<style scoped src="./list.less">
-
-</style>
 <style lang="less" scoped>
-
+@import './list.less';
 .input-box {
   width: 100%;
   display: flex;
