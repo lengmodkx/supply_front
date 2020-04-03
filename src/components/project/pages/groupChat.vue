@@ -73,13 +73,11 @@
               ></div>
               <ul class="updata-box">
                 <li v-for="(item, index) in uploadList" :key="index">
-                   <div class="group-chat-file">
+                   <p class="group-chat-file">
                       <span> {{ item.name }} &nbsp; {{ item.size | globalFilter }} KB</span>
-                      <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
-                    </div>
-                    <div class="progress">
-                          <Progress :percent="25" :stroke-width="5" hdie-info/>
-                    </div>
+                      <Progress :percent="25" :stroke-width="5" hdie-info/>
+                    </p>
+                   <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                 </li>
               </ul>
             </div>
@@ -170,7 +168,6 @@ export default {
         console.log(val)
         return (val/1024).toFixed(2)
       }
-        
    },
   methods: {
     ...mapActions("chat", ["initChat"]),
@@ -525,21 +522,18 @@ export default {
           margin: 5px auto;
           background: #f0f0f0;
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
+         align-items:center;
           .group-chat-file{
+            text-align: left;
+            flex: 1;
             display: flex;
-            flex-flow: row nowrap;
+            flex-flow: column nowrap;
             justify-content: space-between;
             position: relative;
             padding:5px 0px;
-            i {
-              position: absolute;
-                top:14px;
-                right:0px;
-                margin-left: 10px;
-                cursor: pointer;
-              }
           }
+         
           .progress{
             width: 98%;
           }
@@ -636,7 +630,7 @@ export default {
 }
 .content {
   display: flex !important;
-  align-items: center;
+  // align-items: center;
   img {
     width: 26px;
   }
