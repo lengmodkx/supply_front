@@ -78,7 +78,7 @@
                       <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                     </div>
                     <div class="progress">
-                          <Progress :percent="25" :stroke-width="5" hdie-info/>
+                          <Progress :percent="percentage[index]" :stroke-width="5" hide-info/>
                     </div>
                 </li>
               </ul>
@@ -86,10 +86,7 @@
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
                 <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple 
-                :data="params"
-                :headers="headers"
-                :action="actionUrl"
-                :on-progress="onProgress">
+                >
                   <Icon class="up-file" type="md-attach" />
                 </Upload>
 
@@ -241,42 +238,21 @@ export default {
       this.showProgress = true;
       this.percentage.push(0);
       this.uploadList.push(file);
-      if (this.uploadList.length > 7) {
-        this.$Notice.warning({
-          title: "最多同时只能上传7个文件"
-        });
-        this.uploadList.splice(6, this.uploadList.length - 1);
-      }
-      console.log(this.uploadList);
-
-      // let fd = new FormData()
-      // fd.append('projectId',this.$route.params.id)
-      // fd.append('files',file)
-      // fd.append('content','xxxx')
-      // axios({
-      //   method: 'post',
-      //   url: '/groupchat/',
-      //   data: fd,
-      //   headers: { 'Content-Type': 'multipart/form-data'}})
-      //   .then(function (response) {
-      //       //handle success
-      //       console.log(response);
-      //   })
-      //   .catch(function (response) {
-      //       //handle error
-      //       console.log(response);
-      //   });
-
-      // return false;
+      this.uploadFile(this.uploadList);
+      return false;
     },
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
       let fd = new FormData();
       fd.append("projectId", this.$route.params.id);
-      this.uploadList.forEach(v => fd.append("file", v));
       fd.append("content", con);
-      sendChat(fd).then(res => {
+      var data = {
+        'projectId':this.$route.params.id,
+        'content':con,
+        'files':this.charFiles
+      }
+      sendChat(data).then(res => {
         this.$refs.textarea.innerHTML = "";
         this.$nextTick(() => {
           var div = document.getElementById("data-list-content");
@@ -284,11 +260,9 @@ export default {
           this.charFiles = [];
         });
       });
-      // if (con) {
-      // }
     },
 
-    uploadFile() {
+    uploadFile(uploadList) {
       var that = this;
       this.uploadList.forEach((file, index) => {
         var fileName = this.dirName + this.random_string(10) + this.get_suffix(file.name);
@@ -305,9 +279,6 @@ export default {
             myfile.size = that.renderSize(file.size);
             that.charFiles.push(myfile);
             if (that.uploadList.length == that.charFiles.length) {
-              console.log(that.charFiles);
-              that.files = that.charFiles;
-              console.log(that.files);
               this.uploadList = [];
             }
           })
