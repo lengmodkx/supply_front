@@ -73,11 +73,13 @@
               ></div>
               <ul class="updata-box">
                 <li v-for="(item, index) in uploadList" :key="index">
-                  <div class="group-chat-file">
-                      <span> {{ item.name }} {{ item.size }}</span>
+                   <div class="group-chat-file">
+                      <span> {{ item.name }} &nbsp; {{ item.size | globalFilter }} KB</span>
                       <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                     </div>
-                    <Progress :percent="25" :stroke-width="5" hdie-info/>
+                    <div class="progress">
+                          <Progress :percent="25" :stroke-width="5" hdie-info/>
+                    </div>
                 </li>
               </ul>
             </div>
@@ -163,6 +165,13 @@ export default {
   computed: {
     ...mapState("chat", ["chatData", "images"])
   },
+  filters: {
+      globalFilter(val,location) {
+        console.log(val)
+        return (val/1024).toFixed(2)
+      }
+        
+   },
   methods: {
     ...mapActions("chat", ["initChat"]),
     // 获取消息e
@@ -514,17 +523,25 @@ export default {
           width: 99%;
           padding: 0px 10px;
           margin: 5px auto;
-          height: 48px;
           background: #f0f0f0;
           display: flex;
           flex-direction: column;
           .group-chat-file{
             display: flex;
+            flex-flow: row nowrap;
             justify-content: space-between;
+            position: relative;
+            padding:5px 0px;
             i {
-            margin-left: 10px;
-            cursor: pointer;
+              position: absolute;
+                top:14px;
+                right:0px;
+                margin-left: 10px;
+                cursor: pointer;
+              }
           }
+          .progress{
+            width: 98%;
           }
         }
       }
