@@ -13,7 +13,13 @@
         </div>
         <ul>
           <li v-for="(g, index) in groups" :key="index" :class="{ groupActive: taskGroupId == g.groupId }" class="group-li" @click="changeGroup(g.groupId)">
-            <div class="group-name">{{ g.groupName }} · {{ g.completeCount }}/{{ g.taskTotal }}</div>
+            <div class="group-name">
+             <div>{{ g.groupName }} · {{ g.completeCount }}/{{ g.taskTotal }}</div> 
+              <div class="group-icon">
+                <Icon type="ios-brush-outline" @click.stop="groupEdit(g.groupId)"></Icon>
+                 <Icon type="ios-trash-outline" @click.stop="groupEditdel(g.groupId)"></Icon>
+              </div>
+            </div>
             <div class="group-progress">
               <div class="p1" :style="{ width: (g.completePercentage * 278) / 100 + 'px' }">
                 <span>已完成 · {{ g.completeCount }}</span>
@@ -247,6 +253,22 @@
         <Button type="info" long @click="handleSave" :disabled="!groupName">确定</Button>
       </div>
     </Modal>
+
+      <Modal v-model="showAddGroupItem" :footer-hide="true" title="修改分组名称" :width="350">
+       <Input v-model="groupNameItem" placeholder="请输入修改分组名称" class="group-name-input" ref="input" />
+        <div>
+          <Button type="info" long  @click="handleSaveItem" :disabled="!groupNameItem">确定</Button>
+        </div>
+     </Modal>
+
+     <Modal v-model="showDelGroupItem" :footer-hide="true" title="删除分组名称" :width="350">
+       <span>是否确定删除任务分组?</span>
+        <div style="margin-top:15px">
+          <Button type="error" long  @click="handleDelItem">确定</Button>
+        </div>
+     </Modal>
+
+
     <!--加载中-->
     <div class="demo-spin-container" v-if="loading">
       <Loading></Loading>
@@ -322,7 +344,11 @@ export default {
         //是数据里面的arr里面的每一项
       },
       showAddGroup: false,
+      showAddGroupItem:false,
+      showDelGroupItem:false,
+      curGroupItemId:'',
       groupName: "",
+      groupNameItem:'',
       loading: true,
       allTask: [],
       showGroupPower: "",
@@ -358,6 +384,20 @@ export default {
     hideAddTask() {
       this.currentEditId = "";
     },
+    //修改企业名
+    groupEdit(id){
+       
+        this.showAddGroupItem=true;
+        this.curGroupItemId=id
+         console.log(this.curGroupItemId)
+    },
+    //删除任务
+    groupEditdel(id){
+      
+      this.showDelGroupItem=true;
+        this.curGroupItemId=id
+
+    },
     changeGroup(groupId) {
       this.taskGroupId = groupId;
       this.loading = true;
@@ -379,6 +419,22 @@ export default {
 
       //     }
       // })
+    },
+    //修改分组名称
+    handleSaveItem(){
+      const data={
+        id:this.curGroupItemId,
+        name:this.groupNameItem
+      }
+       this.$store.commit("task/changNameGroup",data );
+    },
+     //删除分组名称
+    handleDelItem(){
+      // const data={
+      //   id:this.curGroupItemId,
+      //   name:this.groupNameItem
+      // }
+      //       this.$store.commit("task/changNameGroup",data );
     },
     handleSave() {
       //this.loading = true;
@@ -545,7 +601,6 @@ export default {
 <style lang="less">
 @import "./index";
 .add-Box{
-
   position: absolute;
   bottom: 0px;
   left: 2.5%;
@@ -640,6 +695,14 @@ export default {
 .group-name {
   margin-left: 10px;
   margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  .group-icon{
+    margin-right: 15px;
+    i{
+      padding-left: 10px;
+    }
+  }
 }
 .groupActive {
   background-color: #f5f5f5;

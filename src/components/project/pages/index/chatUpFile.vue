@@ -9,7 +9,7 @@
           <span>{{file.name}}</span>
           <Progress :percent="percentage[index]" ref="progress" />
         </div>
-        <Button type="default" @click="removeFile(file)">移除</Button>
+        <!-- <Button type="default" @click="removeFile(file)">移除</Button> -->
       </div>
     </div>
     <div class="model-op">
@@ -36,11 +36,12 @@ export default {
       dirName: "upload/chat/",
       uploadList: [],
       percentage: [],
-      files: []
+      charFiles: []
     };
   },
   methods: {
     random_string(len) {
+       
       len = len || 32;
       var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
       var maxPos = chars.length;
@@ -51,6 +52,7 @@ export default {
       return pwd;
     },
     get_suffix(filename) {
+       
       var pos = filename.lastIndexOf(".");
       var suffix = "";
       if (pos !== -1) {
@@ -59,6 +61,7 @@ export default {
       return suffix;
     },
     removeFile(file) {
+       
       this.uploadList.splice(this.uploadList.indexOf(file), 1);
       this.percentage.splice(this.uploadList.indexOf(file), 1);
       if (this.uploadList.length == 0) {
@@ -67,6 +70,7 @@ export default {
       }
     },
     resetFile() {
+       
       this.showupload = true;
       this.showProgress = false;
       this.uploadList = [];
@@ -75,6 +79,8 @@ export default {
     },
 
     handleBeforeUpload(file) {
+      debugger
+       
       var that = this;
       this.showupload = false;
       this.showProgress = true;
@@ -85,45 +91,43 @@ export default {
           title: "最多同时只能上传7个文件"
         });
         this.uploadList.splice(6, this.uploadList.length - 1);
-      }
+      } 
       return false;
     },
     uploadFile() {
+       
       var that = this;
       this.uploadList.forEach((file, index) => {
-        var fileName =
-          this.dirName + this.random_string(10) + this.get_suffix(file.name);
-        client
-          .multipartUpload(fileName, file, {
-            progress: function(p) {
-              that.percentage.splice(index, 1, Math.floor(p * 100));
-            }
-          })
-          .then(function(result) {
-            var myfile = {};
-            myfile.fileName = file.name;
-            myfile.fileUrl = result.name;
-            myfile.size = that.renderSize(file.size);
-            that.files.push(myfile);
-            if (that.uploadList.length == that.files.length) {
-              console.log(that.files)
-              that.$emit("saveFileInfo",that.files);
-              that.resetFile();
-            }
-          })
-          .catch(function(err) {
-            console.log(err);
-          });
+          var fileName =this.dirName + this.random_string(10) + this.get_suffix(file.name);
+          client.multipartUpload(fileName, file, {
+              progress: function(p) {
+                that.percentage.splice(index, 1, Math.floor(p * 100));
+              }
+            }) .then(function(result) {
+              var myfile = {};
+              myfile.fileName = file.name;
+              myfile.fileUrl = result.name;
+              myfile.size = that.renderSize(file.size);
+              that.charFiles.push(myfile);
+              if (that.uploadList.length == that.charFiles.length) {
+                console.log(that.charFiles)
+                that.$emit("saveFileInfo",that.charFiles);
+                that.resetFile();
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
       });
     },
     // uploadServer() {
     //   let params = {
     //     projectId: this.projectId,
-    //     files: JSON.stringify(this.files)
+    //     files: JSON.stringify(this.charFiles)
     //   };
     //   uploadCommonFile(this.fileId, params).then(res => {
     //     if (res.result === 1) {
-    //       this.files = [];
+    //       this.charFiles = [];
     //       this.$Notice.success({
     //         title: "上传成功"
     //       });
@@ -137,7 +141,7 @@ export default {
 <style lang="less" scoped>
 .common-file-content {
   width: 100%;
-  height: 400px;
+  height: 440px;
   .model-op {
     margin-left: -16px;
     position: absolute;

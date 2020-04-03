@@ -10,9 +10,9 @@
           <!--有消息-->
           <div style="height: 100%">
             <div v-if="chatData != null && chatData.length > 0">
-              <div v-for="(item, index) in chatData" :key="index">
+              <div v-for="(item, index) in chatData" :key="index" style="padding-bottom:10px;">
                 <div class="me-msg" v-if="item.isOwn && item.chatDel == 0">
-                  <div class="me">
+                  <div class="me" v-if="item.content">
                     <div class="content" v-html="item.content"></div>
                   </div>
                   <div class="file-box" v-if="item.fileList.length">
@@ -71,11 +71,32 @@
                       contenteditable="true"  
                       @keyup.enter="sendChat" 
                       @keyup="SymbolBox($event)"
-                ></div>
+                >
+              
+                </div>
+                <ul class="updata-box">
+                    <li v-for="(item,index) in uploadList " :key="index">
+                          {{item.name}}
+                          <div>
+                            {{item.size}}
+                             <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
+                          </div>
+                          
+                    </li >
+                </ul>
+                
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-                <Icon @click="showCommon = true" class="up-file" type="md-attach" />
+
+                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/" >
+                    <Icon  class="up-file" type="md-attach" />
+                </Upload>
+
+
+                    <!-- <Icon  class="up-file" @click="showCommon=true" type="md-attach" /> -->
+               
+
               </Tooltip>
               <!-- 表情包组件 -->
               <Tooltip content="添加表情" class="fl" transfer>
@@ -83,22 +104,37 @@
               </Tooltip>
               
               <div class="send fr">
-                <Button type="primary" @click="sendChat">发布</Button>
+                <Button type="primary" @click="sendChat">发送</Button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" :mask-closable="false" footer-hide transfer :width="500">
+      <up-file @close="showCommon=false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
+    </Modal> -->
+
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import insertText from "@/utils/insertText";
 import upFile from "./index/chatUpFile";
 import { sendChat, getChat, recall } from "@/axios/api";
 import { mapActions, mapState } from "vuex";
+// 上传
+import OSS from "ali-oss";
+let client = new OSS({
+  region: "oss-cn-beijing",
+  accessKeyId: "LTAIP4MyTAbONGJx",
+  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
+  bucket: "art1001-bim-5d"
+});
+
 export default {
   name: "App",
   components: { Emoji, upFile },
@@ -111,6 +147,12 @@ export default {
       symbolData:[{id:'111',name:'所有人'},{id:'222',name:'苗云宇'},{id:'333',name:'何少华'}],
       offsetLeft: 0,
       showSymbol:false,
+      showupload: true,
+      showProgress: false,
+      dirName: "upload/chat/",
+      uploadList: [],
+      percentage: [],
+      charFiles: []
     };
   },
   mounted() {
@@ -157,24 +199,11 @@ export default {
       this.initChat(this.$route.params.id);
       
     },
-    // 发送消息
-    sendChat() {
-      let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-      if (con) {
-        sendChat(this.$route.params.id, con, JSON.stringify(this.files)).then(res => {
-          this.$refs.textarea.innerHTML = "";
-          this.$nextTick(() => {
-            var div = document.getElementById("data-list-content");
-            div.scrollTop = div.scrollHeight + 1;
-            this.files=[];
-          });
-
-        });
-      }
-    },
+    
     getFiles(files) {
       this.files = files;
       this.showCommon = false;
+      console.log(files)
     },
     //下载附件
     downLoad(id) {
@@ -188,7 +217,121 @@ export default {
     // 撤回消息
     chehui(chatId) {
       recall(chatId, this.$route.params.id);
-    }
+    },
+    delFile(index){
+      this.uploadList.splice(index,1);
+    },
+
+  
+    // 上传
+     handleBeforeUpload(file) {
+      console.log(file)
+      var that = this;
+      this.showupload = false;
+      this.showProgress = true;
+      this.percentage.push(0);
+      this.uploadList.push(file);
+      if (this.uploadList.length > 7) {
+        this.$Notice.warning({
+          title: "最多同时只能上传7个文件"
+        });
+        this.uploadList.splice(6, this.uploadList.length - 1);
+      }
+      console.log(this.uploadList)
+
+      // let fd = new FormData()
+      // fd.append('projectId',this.$route.params.id)
+      // fd.append('files',file)
+      // fd.append('content','xxxx')
+      // axios({
+      //   method: 'post',
+      //   url: '/groupchat/',
+      //   data: fd,
+      //   headers: { 'Content-Type': 'multipart/form-data'}})
+      //   .then(function (response) {
+      //       //handle success
+      //       console.log(response);
+      //   })
+      //   .catch(function (response) {
+      //       //handle error
+      //       console.log(response);
+      //   });
+     
+      return false;
+    },
+    // 发送消息
+        sendChat() {
+        
+
+          let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
+          let fd = new FormData()
+      fd.append('projectId',this.$route.params.id)
+      fd.append('files',this.uploadList)
+      fd.append('content',con)
+          sendChat(fd).then(res => {
+              this.$refs.textarea.innerHTML = "";
+              this.$nextTick(() => {
+                var div = document.getElementById("data-list-content");
+                div.scrollTop = div.scrollHeight + 1;
+                this.charFiles=[];
+              });
+            });
+          // if (con) {
+          // }
+    },
+
+
+     uploadFile() {
+       
+       
+      var that = this;
+      this.uploadList.forEach((file, index) => {
+          var fileName =this.dirName + this.random_string(10) + this.get_suffix(file.name);
+          client.multipartUpload(fileName, file, {
+              progress: function(p) {
+                that.percentage.splice(index, 1, Math.floor(p * 100));
+              }
+            }) .then(function(result) {
+              var myfile = {};
+              myfile.fileName = file.name;
+              myfile.fileUrl = result.name;
+              myfile.size = that.renderSize(file.size);
+              that.charFiles.push(myfile);
+              if (that.uploadList.length == that.charFiles.length) {
+                console.log(that.charFiles)
+                that.files=that.charFiles;
+                console.log(that.files)
+                this.uploadList=[];
+              }
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+      });
+    },
+     
+     random_string(len) {
+      len = len || 32;
+      var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+      var maxPos = chars.length;
+      var pwd = "";
+      for (var i = 0; i < len; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+      }
+      return pwd;
+    },
+    get_suffix(filename) {
+      var pos = filename.lastIndexOf(".");
+      var suffix = "";
+      if (pos !== -1) {
+        suffix = filename.substring(pos);
+      }
+      return suffix;
+    },
+   
+
+
+
   }
 };
 </script>
@@ -206,7 +349,8 @@ export default {
     align-items: center;
     padding: 10px 12px;
     background-color: #e5f6fb;
-    border-radius: 10px;
+    border-radius: 5px;
+    margin:0px 0px 5px 5px ;
     img {
       width: 32px;
       height: 40px;
@@ -224,6 +368,7 @@ export default {
       margin-left: 12px;
       flex: none;
       text-align: right;
+      margin-right: 15px;
     }
   }
 }
@@ -297,7 +442,7 @@ export default {
       font-size: 15px;
       word-break: break-word;
       background-color: #eee;
-      border-radius: 10px;
+      border-radius: 5px;
     }
   }
   .me {
@@ -377,6 +522,26 @@ export default {
       max-height: 290px;
       background-color: #fff;
       border-bottom: 1px solid #e8e8e8;
+      // 上传文件
+      .updata-box{
+        max-height: 164px;
+        overflow-y: auto;
+        li{
+          width: 99%;
+          padding:0px 10px;
+          margin:5px auto;
+          height: 48px;
+          line-height: 48px;
+          background: #f0f0f0;
+          display: flex;
+          justify-content: space-between;
+          i{
+            margin-left: 10px;
+            cursor: pointer;
+          }
+        }
+
+      }
        .talkSymbol{
           position: absolute;
           bottom:40px;
