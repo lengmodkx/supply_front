@@ -83,7 +83,11 @@
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/">
+                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple 
+                :data="params"
+                :headers="headers"
+                :action="actionUrl"
+                :on-progress="onProgress">
                   <Icon class="up-file" type="md-attach" />
                 </Upload>
 
@@ -146,7 +150,12 @@ export default {
       dirName: "upload/chat/",
       uploadList: [],
       percentage: [],
-      charFiles: []
+      charFiles: [],
+      actionUrl:process.env.VUE_APP_URL+"/groupchat",
+      params:{
+        'projectId':this.$route.params.id
+      },
+      headers:{'x-auth-token':localStorage.token}
     };
   },
   mounted() {
@@ -212,7 +221,9 @@ export default {
     delFile(index) {
       this.uploadList.splice(index, 1);
     },
-
+    onProgress(event, file, fileList){
+        console.log(event)
+    },
     // 上传
     handleBeforeUpload(file) {
       console.log(file);
@@ -247,7 +258,7 @@ export default {
       //       console.log(response);
       //   });
 
-      return false;
+      // return false;
     },
     // 发送消息
     sendChat() {
