@@ -73,20 +73,17 @@
               ></div>
               <ul class="updata-box">
                 <li v-for="(item, index) in uploadList" :key="index">
-                   <div class="group-chat-file">
+                   <p class="group-chat-file">
                       <span> {{ item.name }} &nbsp; {{ item.size | globalFilter }} KB</span>
-                      <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
-                    </div>
-                    <div class="progress">
-                          <Progress :percent="percentage[index]" :stroke-width="5" hide-info/>
-                    </div>
+                      <Progress :percent="25" :stroke-width="5" hdie-info/>
+                    </p>
+                   <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                 </li>
               </ul>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple 
-                >
+                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/">
                   <Icon class="up-file" type="md-attach" />
                 </Upload>
 
@@ -149,12 +146,7 @@ export default {
       dirName: "upload/chat/",
       uploadList: [],
       percentage: [],
-      charFiles: [],
-      actionUrl:process.env.VUE_APP_URL+"/groupchat",
-      params:{
-        'projectId':this.$route.params.id
-      },
-      headers:{'x-auth-token':localStorage.token}
+      charFiles: []
     };
   },
   mounted() {
@@ -176,7 +168,6 @@ export default {
         console.log(val)
         return (val/1024).toFixed(2)
       }
-        
    },
   methods: {
     ...mapActions("chat", ["initChat"]),
@@ -227,9 +218,7 @@ export default {
     delFile(index) {
       this.uploadList.splice(index, 1);
     },
-    onProgress(event, file, fileList){
-        console.log(event)
-    },
+
     // 上传
     handleBeforeUpload(file) {
       console.log(file);
@@ -238,7 +227,32 @@ export default {
       this.showProgress = true;
       this.percentage.push(0);
       this.uploadList.push(file);
-      this.uploadFile(this.uploadList);
+      if (this.uploadList.length > 7) {
+        this.$Notice.warning({
+          title: "最多同时只能上传7个文件"
+        });
+        this.uploadList.splice(6, this.uploadList.length - 1);
+      }
+      console.log(this.uploadList);
+
+      // let fd = new FormData()
+      // fd.append('projectId',this.$route.params.id)
+      // fd.append('files',file)
+      // fd.append('content','xxxx')
+      // axios({
+      //   method: 'post',
+      //   url: '/groupchat/',
+      //   data: fd,
+      //   headers: { 'Content-Type': 'multipart/form-data'}})
+      //   .then(function (response) {
+      //       //handle success
+      //       console.log(response);
+      //   })
+      //   .catch(function (response) {
+      //       //handle error
+      //       console.log(response);
+      //   });
+
       return false;
     },
     // 发送消息
@@ -246,13 +260,9 @@ export default {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
       let fd = new FormData();
       fd.append("projectId", this.$route.params.id);
+      this.uploadList.forEach(v => fd.append("file", v));
       fd.append("content", con);
-      var data = {
-        'projectId':this.$route.params.id,
-        'content':con,
-        'files':this.charFiles
-      }
-      sendChat(data).then(res => {
+      sendChat(fd).then(res => {
         this.$refs.textarea.innerHTML = "";
         this.$nextTick(() => {
           var div = document.getElementById("data-list-content");
@@ -260,9 +270,11 @@ export default {
           this.charFiles = [];
         });
       });
+      // if (con) {
+      // }
     },
 
-    uploadFile(uploadList) {
+    uploadFile() {
       var that = this;
       this.uploadList.forEach((file, index) => {
         var fileName = this.dirName + this.random_string(10) + this.get_suffix(file.name);
@@ -279,6 +291,9 @@ export default {
             myfile.size = that.renderSize(file.size);
             that.charFiles.push(myfile);
             if (that.uploadList.length == that.charFiles.length) {
+              console.log(that.charFiles);
+              that.files = that.charFiles;
+              console.log(that.files);
               this.uploadList = [];
             }
           })
@@ -507,21 +522,18 @@ export default {
           margin: 5px auto;
           background: #f0f0f0;
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
+         align-items:center;
           .group-chat-file{
+            text-align: left;
+            flex: 1;
             display: flex;
-            flex-flow: row nowrap;
+            flex-flow: column nowrap;
             justify-content: space-between;
             position: relative;
             padding:5px 0px;
-            i {
-              position: absolute;
-                top:14px;
-                right:0px;
-                margin-left: 10px;
-                cursor: pointer;
-              }
           }
+         
           .progress{
             width: 98%;
           }
@@ -618,7 +630,7 @@ export default {
 }
 .content {
   display: flex !important;
-  align-items: center;
+  // align-items: center;
   img {
     width: 26px;
   }
