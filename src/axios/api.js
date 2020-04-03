@@ -794,15 +794,11 @@ export function deleteNews(id) {
 }
 
 // 群聊发送消息
-export function sendChat(projectId, content, files) {
+export function sendChat(data) {
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
-        params: {
-            projectId: projectId,
-            content: content,
-            files: files
-        }
+        data: data,
     });
 }
 

@@ -667,7 +667,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "./list.less";
+@import './list.less';
 .input-box {
   width: 100%;
   display: flex;
