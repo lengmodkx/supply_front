@@ -795,15 +795,10 @@ export function deleteNews(id) {
 
 // 群聊发送消息
 export function sendChat(data) {
-    console.log(files)
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
         data: data,
-        specialPost:true,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
     });
 }
 
