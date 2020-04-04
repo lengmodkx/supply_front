@@ -74,7 +74,7 @@
                     this.cumulativeTask = res.statisticsBurnout.cumulativeTask
                     this.completionTask = res.statisticsBurnout.completionTask
                     this.initChart1(this.chartData1);
-                    this.initChart2(this.chartData2,this.chartData3);
+                    this.initChart2(this.chartData2,this.chartData3,"任务数");
                     this.initChart4(this.chartEveryDate1,this.chartTrueTask,this.chartIdealTask);
                     this.initChart5(this.chartEveryDate1,this.cumulativeTask,this.completionTask);
                 })
@@ -141,7 +141,7 @@
                             }
                         });
                 },
-                initChart2(data2,data3) {
+                initChart2(data2,data3,text) {
                         Highcharts.chart('chart2', {
                             chart: {
                                 type: 'column'
