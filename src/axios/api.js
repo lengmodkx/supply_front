@@ -7,6 +7,12 @@ export function getOssSign() {
     });
 }
 
+export function getWebSign(key) {
+    return $get('/oss/websign', {
+        "dir": 'upload/chat/'
+    });
+}
+
 export function changeOrganization(orgId) {
     return $post(`/organization/members/${orgId}`)
 }
@@ -798,7 +804,7 @@ export function sendChat(data) {
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
-        data: data,
+        data: data
     });
 }
 

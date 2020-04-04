@@ -71,11 +71,11 @@
                 @keyup.enter="sendChat"
                 @keyup="SymbolBox($event)"
               ></div>
-              <ul class="updata-box">
+              <ul class="updata-box" >
                 <li v-for="(item, index) in uploadList" :key="index">
                    <p class="group-chat-file">
-                      <span> {{ item.name }} &nbsp; {{ item.size | globalFilter }} KB</span>
-                      <Progress :percent="25" :stroke-width="5" hdie-info/>
+                      <span> {{ item.name }} &nbsp; {{ renderSize(item.size) }} KB</span>
+                      <Progress v-if="item.showProgress" :percent="item.percentage" :stroke-width="5" hide-info/>
                     </p>
                    <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                 </li>
@@ -83,7 +83,13 @@
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple action="/">
+                <Upload ref="upload" :show-upload-list="false" 
+                :before-upload="handleBeforeUpload" 
+                multiple 
+                :action="host"
+                :data="uploadData"
+                :headers="headers"
+                >
                   <Icon class="up-file" type="md-attach" />
                 </Upload>
 
@@ -110,11 +116,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import insertText from "@/utils/insertText";
 import upFile from "./index/chatUpFile";
-import { sendChat, getChat, recall } from "../../../axios/api";
+import { sendChat, getChat, recall} from "../../../axios/api";
 import { mapActions, mapState } from "vuex";
 // 上传
 import OSS from "ali-oss";
@@ -124,7 +129,7 @@ let client = new OSS({
   accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
   bucket: "art1001-bim-5d"
 });
-
+import { oss } from "../../../axios/ossweb";
 export default {
   name: "App",
   components: { Emoji, upFile },
@@ -134,11 +139,7 @@ export default {
       talkvalue: "",
       showCommon: false,
       projectName: localStorage.projectName,
-      symbolData: [
-        { id: "111", name: "所有人" },
-        { id: "222", name: "苗云宇" },
-        { id: "333", name: "何少华" }
-      ],
+      symbolData: [],
       offsetLeft: 0,
       showSymbol: false,
       showupload: true,
@@ -146,11 +147,17 @@ export default {
       dirName: "upload/chat/",
       uploadList: [],
       percentage: [],
-      charFiles: []
+      charFiles: [],
+      uploadData:{},
+      host:'',
+      headers:{
+        'x-auth-token':localStorage.token
+      }
     };
   },
   mounted() {
     this.getChat();
+    this.uploadList = this.$refs.upload.fileList;
   },
   watch: {
     chatData() {
@@ -163,12 +170,6 @@ export default {
   computed: {
     ...mapState("chat", ["chatData", "images"])
   },
-  filters: {
-      globalFilter(val,location) {
-        console.log(val)
-        return (val/1024).toFixed(2)
-      }
-   },
   methods: {
     ...mapActions("chat", ["initChat"]),
     // 获取消息e
@@ -217,65 +218,44 @@ export default {
     },
     delFile(index) {
       this.uploadList.splice(index, 1);
+      this.charFiles.splice(index, 1);
     },
 
     // 上传
     handleBeforeUpload(file) {
-      console.log(file);
-      var that = this;
-      this.showupload = false;
-      this.showProgress = true;
-      this.percentage.push(0);
-      this.uploadList.push(file);
-      if (this.uploadList.length > 7) {
-        this.$Notice.warning({
-          title: "最多同时只能上传7个文件"
-        });
-        this.uploadList.splice(6, this.uploadList.length - 1);
-      }
-      console.log(this.uploadList);
-
-      // let fd = new FormData()
-      // fd.append('projectId',this.$route.params.id)
-      // fd.append('files',file)
-      // fd.append('content','xxxx')
-      // axios({
-      //   method: 'post',
-      //   url: '/groupchat/',
-      //   data: fd,
-      //   headers: { 'Content-Type': 'multipart/form-data'}})
-      //   .then(function (response) {
-      //       //handle success
-      //       console.log(response);
-      //   })
-      //   .catch(function (response) {
-      //       //handle error
-      //       console.log(response);
-      //   });
-
-      return false;
+      return oss(file.name).then(res=>{
+        this.host = res.host;
+        this.uploadData = res;
+        var object={};
+        object.size = this.renderSize(file.size);
+        object.url = res.key;
+        object.name = file.name.substring(0,file.name.lastIndexOf('.'));
+        object.ext = file.name.substring(file.name.lastIndexOf('.'))
+        this.charFiles.push(object);
+      })
     },
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-      let fd = new FormData();
-      fd.append("projectId", this.$route.params.id);
-      this.uploadList.forEach(v => fd.append("file", v));
-      fd.append("content", con);
-      sendChat(fd).then(res => {
+      let data = {
+          'projectId':this.$route.params.id,
+          'content':con,
+          'files':JSON.stringify(this.charFiles)
+      }
+      // console.log(JSON.stringify(this.charFiles))
+      sendChat(data).then(res => {
         this.$refs.textarea.innerHTML = "";
         this.$nextTick(() => {
           var div = document.getElementById("data-list-content");
           div.scrollTop = div.scrollHeight + 1;
-          this.charFiles = [];
         });
+        this.charFiles=[];
+        this.uploadList.splice(0, this.uploadList.length);
+        this.$refs.upload.clearFiles();
       });
-      // if (con) {
-      // }
     },
 
     uploadFile() {
-      var that = this;
       this.uploadList.forEach((file, index) => {
         var fileName = this.dirName + this.random_string(10) + this.get_suffix(file.name);
         client
@@ -290,12 +270,6 @@ export default {
             myfile.fileUrl = result.name;
             myfile.size = that.renderSize(file.size);
             that.charFiles.push(myfile);
-            if (that.uploadList.length == that.charFiles.length) {
-              console.log(that.charFiles);
-              that.files = that.charFiles;
-              console.log(that.files);
-              this.uploadList = [];
-            }
           })
           .catch(function(err) {
             console.log(err);
