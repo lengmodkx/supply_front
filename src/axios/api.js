@@ -808,6 +808,8 @@ export function sendChat(data) {
     });
 }
 
+
+
 // 文件发送消息--新接口 2020-4-13
 export function newSendChat(projectId, content,publicId,publicType,mentionIdList) {
     return fetch({
@@ -955,6 +957,21 @@ export function notBindWx(userId) {
         userId: userId
     })
 }
+// 修改任务分组名称
+export function changRelationName(data) {
+    return $post(`/relations/updateGroupName`, {
+        relationId: data.id,
+        newName:data.name
+    })
+}
+
+
+
+export function delRelationName(groupId) {
+    return $delete(`relations/${groupId}/group`, {
+    })
+}
+
 
 export function group(projectId) {
     return $get(`relations/${projectId}/groups`, '')
