@@ -194,7 +194,6 @@
 </template>
 <script>
 import sucaiDetail from "./sucaiDetail";
-import VJstree from "vue-jstree";
 import { getSuCaiTreeDate, getSucai, getSucaiSearch, getMaterialTree } from "../../axios/fileApi";
 import tree from "@/components/public/fodderTree.vue"; //树
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";

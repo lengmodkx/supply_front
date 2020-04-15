@@ -86,7 +86,7 @@
                 <p>{{ user.userName }}</p>
               </div>
               <span v-if="user.existId === 1" v-bind:disabled="dis">已加入</span>
-              <Button v-if="user.existId === 0" type="primary" @click="adduser(people.userId)">添加</Button>
+              <Button v-if="user.existId === 0" type="primary" @click="adduser(user.userId)">添加</Button>
             </li>
           </ul>
         </div>
@@ -388,6 +388,8 @@ export default {
   width: 320px;
   padding-top: 5px;
   margin: 0px auto;
+  overflow-y: auto;
+  height: 80%;
   ul li {
     height: 50px;
     border-bottom: 1px solid #e5e5e5;
