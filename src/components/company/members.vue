@@ -484,6 +484,7 @@ export default {
         this.tabType = "组织架构";
         this.branchMenuTitle = "部门菜单";
       } else if (value === "企业群组") {
+       //this.showgetGroups();
         this.tabType = "企业群组";
         this.branchMenuTitle = "群组菜单";
 
@@ -502,16 +503,15 @@ export default {
         }
         this.loading = false;
       });
-      // 获取群组信息
-      getGroups(localStorage.companyId).then(res => {
-        if (res.result) {
+      //获取群组信息
+      getGroups(localStorage.companyId).then(res => {my
           this.groupData = res.data;
           this.nowGroup.name = this.groupData[0].groupName;
           this.nowGroup.id = this.groupData[0].groupId;
           getGroupPeople(this.groupData[0].groupId).then(res => {
             this.groupPeople = res.data;
           });
-        }
+        
       });
     },
     // 显示添加人员匡
@@ -543,6 +543,18 @@ export default {
         }
       });
     },
+    //显示成员列表
+    // showgetGroups(){
+    //   getGroups(localStorage.companyId).then(res => {
+    //       this.groupData = res.data;
+    //       this.nowGroup.name = this.groupData[0].groupName;
+    //       this.nowGroup.id = this.groupData[0].groupId;
+    //       getGroupPeople(this.groupData[0].groupId).then(res => {
+    //         this.groupPeople = res.data;
+    //       });
+    //   });
+
+    // },
     // 点击左侧 成员类型
     changeMemberType(item) {
       this.nowType = "成员";

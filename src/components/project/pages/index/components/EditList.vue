@@ -332,9 +332,12 @@
                     <Icon type="md-search" @click="getFileDetail(f.fileId)" />
                   </div>
                 </div>
-                <Tooltip :content="f.fileName">
+                <Tooltip :content="f.fileName" max-width="250"  >
                   <p class="file-name">{{ f.fileName }}</p>
                 </Tooltip>
+                <p class="file-time">
+                  {{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}
+                </p>
               </div>
               <div style="width: 117px;height:117px;line-height: 117px;border: 1px solid #e5e5e5;display: flex;align-items: center;justify-content: center" @click="showCommon = true">
                 <Icon type="md-add" size="40" style="margin-right: 0px"></Icon>
