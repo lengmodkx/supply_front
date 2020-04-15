@@ -297,7 +297,7 @@ import timeView from "./timeView";
 import memberView from "./memberView";
 import { scrollTo, dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-import { enterTask, sortTaskMenu, addnewTask, completeTask, cancelcompleteTask, dragTask, addTask, group, addGroup, changeGroup, getIsGroupPower } from "@/axios/api";
+import { enterTask, sortTaskMenu, addnewTask, completeTask, cancelcompleteTask, dragTask, addTask, group, addGroup, changeGroup, getIsGroupPower,changRelationName,delRelationName} from "@/axios/api";
 export default {
   name: "",
   components: {
@@ -389,7 +389,7 @@ export default {
        
         this.showAddGroupItem=true;
         this.curGroupItemId=id
-         console.log(this.curGroupItemId)
+        console.log(this.curGroupItemId)
     },
     //删除任务
     groupEditdel(id){
@@ -426,15 +426,32 @@ export default {
         id:this.curGroupItemId,
         name:this.groupNameItem
       }
-       this.$store.commit("task/changNameGroup",data );
+        changRelationName(data).then(res => {
+          if (res.result == 1) {
+            
+              this.showAddGroupItem=false
+              this.$store.commit("task/changNameGroup",data );
+              this.$Message.success("修改任务分组名称")
+          }else{
+            this.$Message.error("修改任务分组失败")
+          }
+        });
     },
      //删除分组名称
     handleDelItem(){
-      // const data={
-      //   id:this.curGroupItemId,
-      //   name:this.groupNameItem
-      // }
-      //       this.$store.commit("task/changNameGroup",data );
+      const data={
+        id:this.curGroupItemId,
+        name:this.groupNameItem
+      } 
+      delRelationName(data.id).then(res => {
+          if (res.result == 1) {
+              this.showDelGroupItem=false
+              this.$store.commit("task/changDelGroup",data);
+              this.$Message.success("删除任务分组名称")
+          }else{
+            this.$Message.error("删除任务分组失败")
+          }
+        })
     },
     handleSave() {
       //this.loading = true;
