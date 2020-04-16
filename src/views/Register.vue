@@ -31,7 +31,7 @@
       <router-link class="go-login" to="/">去登录</router-link>
     </div>
 
-    <Modal v-model="userDeal" footer-hide title="用户协议" :closable="false" :mask-closable="false">
+    <Modal v-model="userDeal" footer-hide title="用户协议">
       <div class="modelText">
         <p>
           阿拉丁BIM云平台《用户协议》（以下简称“本协议”）是由壹仟零壹艺网络科技（北京）有限公司（以下简称“一千零一艺”）与您（包含注册、登录、使用、浏览阿拉丁BIM云平台产品、服务的个人或组织）之间所订立的协议。您使用阿拉丁BIM云平台的任何行为都将视为对本协议的接受，并同意接受本协议各项条款的约束。
@@ -182,10 +182,9 @@
         <p>邮编：100041</p>
         <p>邮件：kf#art1001.com（请将#替换为@）</p>
         <p>客服中心电话：400-064-1001</p>
-        <Button type="primary" @click="userDealSure()">已阅读《用户协议》</Button>
       </div>
     </Modal>
-    <Modal v-model="privacyDeal" :footer-hide="true" title="隐私条款" :closable="false" :mask-closable="false">
+    <Modal v-model="privacyDeal" :footer-hide="true" title="隐私条款">
       <div class="modelText">
         <p>本政策仅适用于壹仟零壹艺网络科技（北京）有限公司（以下简称“一千零一艺”）的阿拉丁BIM云平台产品服务。</p>
         <p>最近更新日期：2019年12月24日。</p>
@@ -344,7 +343,6 @@
         <p>
           一千零一艺深知个人信息对您的重要性，并会尽全力保护您的个人信息安全可靠。我们致力于维持您对我们的信任，恪守以下原则，保护您的个人信息：权责一致原则、目的明确原则、选择同意原则、最小必要原则、确保安全原则、主体参与原则、公开透明原则等。同时，我们承诺，我们将按业界成熟的安全标准，采取相应的安全保护措施来保护您的个人信息。请在使用我们的产品（或服务）前，仔细阅读并了解本《隐私条款》。
         </p>
-        <Button type="primary" @click="privacyDealSure()">已阅读《隐私条款》</Button>
       </div>
     </Modal>
   </div>
@@ -422,29 +420,7 @@ export default {
     ...mapState("app", ["loading"])
   },
   methods: {
-    //请您阅读《隐私条款》
-    privacyDealSure: function() {
-      this.privacyDeal = false;
-      this.flagPrivacyDeal = true;
-      this.$Modal.remove();
-    },
-    //用户协议
-    userDealSure: function() {
-      this.userDeal = false;
-      this.flaguserDeal = true;
-      this.$Modal.remove();
-    },
     register: function(name) {
-      if (!this.flaguserDeal) {
-        // 校验是否勾选用户协议
-        this.$Message.error("请您阅读《用户协议》");
-        return;
-      }
-      if (!this.flagPrivacyDeal) {
-        // 校验是否勾选用户协议
-        this.$Message.error("请您阅读《隐私条款》");
-        return;
-      }
       if (!this.single) {
         // 校验是否勾选用户协议
         this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
