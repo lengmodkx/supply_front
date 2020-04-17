@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "@/axios/api";
+import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "../axios/api";
 import { mapState, mapActions } from "vuex";
 import { Encrypt } from "@/utils/cryptoUtils";
 import wxlogin from "vue-wxlogin";
@@ -68,7 +68,7 @@ export default {
     ...mapState("user", ["mineRouter","defaultImage"]),
   },
   mounted() {
-    if (localStorage.token) {
+    if (localStorage.token&&localStorage.companyId) {
       this.$router.replace("/org/" + localStorage.companyId);
     }
   },
@@ -85,12 +85,10 @@ export default {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
-              console.log(res.data);
               this.updateUserId(res.data); //存储、更新用户信息
+              this.initSrc(res.data.image);
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
-           
-              this.initSrc(res.data.image);
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
@@ -131,21 +129,26 @@ export default {
     next(vm => {
       if (code) {
         getWeChatToken(code).then(res => {
+          console.log(res)
           if (res.result === 1) {
-            if (!res.bindPhone) {
-              localStorage.token = res.data.accessToken;
+            if (res.data.bindPhone) {
+              vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
+            } else {
+              vm.updateUserId(res.data); //存储、更新用户信息
+              vm.initSrc(res.data.image);
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
+              localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
               if (res.data.orgId) {
                 vm.$router.replace("/org/" + res.data.orgId);
               } else {
                 vm.$router.replace("/organization-is-empty");
               }
-            } else {
-              vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             }
+          }else{
+            vm.$Message.error("登录失败");
           }
         });
       }
