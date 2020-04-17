@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "@/axios/api";
+import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "../axios/api";
 import { mapState, mapActions } from "vuex";
 import { Encrypt } from "@/utils/cryptoUtils";
 import wxlogin from "vue-wxlogin";
@@ -132,7 +132,9 @@ export default {
       if (code) {
         getWeChatToken(code).then(res => {
           if (res.result === 1) {
-            if (!res.bindPhone) {
+            if (res.bindPhone==true) {
+              vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
+            } else {
               localStorage.token = res.data.accessToken;
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
@@ -143,8 +145,6 @@ export default {
               } else {
                 vm.$router.replace("/organization-is-empty");
               }
-            } else {
-              vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             }
           }
         });
