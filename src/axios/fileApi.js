@@ -263,6 +263,20 @@ export function updateFolderPrivacy(folderId,userIds,projectId,parentId){
     });
 }
 
+//删除文件夹可见性设置
+
+
+export function delFolderUser(folderId,userIds,projectId,parentId) {
+
+    return fetch({
+        url: '/files/folder/delUser',
+        method: "put",
+        params:{folderId:folderId,userIds:userIds,projectId:projectId,parentId:parentId}
+    });
+    
+  
+}
+
 export function modelChange(fileId){
     return fetch({
         url: '/files/model/change',

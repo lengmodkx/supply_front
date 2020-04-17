@@ -37,7 +37,7 @@
 
 <script>
 import {projectMembers} from '../../../axios/api.js'
-import { filePrivacy,updateFolderPrivacy } from '../../../axios/fileApi.js'
+import { filePrivacy,updateFolderPrivacy,delFolderUser } from '../../../axios/fileApi.js'
 import InvolveMember from '../newFile/InvolveMember.vue'
 import { mapState, mapActions } from "vuex";
 export default {
@@ -77,8 +77,17 @@ export default {
         });
     },
     remove(user){
-        this.joins = this.joins.filter(v=>v.userId!=user.userId)
         
+        delFolderUser(this.sFile.fileId,user.userId,this.projectId,this.sFile.parentId).then(res=>{
+          if(res.result==1){
+                    this.joins = this.joins.filter(v=>v.userId!=user.userId)
+                    this.$Message.success("删除当时可见成员成功")
+          }else{
+                  this.$Message.error("删除当时可见成员失败")
+          }
+         
+        })
+
     },
     addUser(ids,peopleData){
       this.popVisible = false;
