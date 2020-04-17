@@ -68,7 +68,7 @@ export default {
     ...mapState("user", ["mineRouter","defaultImage"]),
   },
   mounted() {
-    if (localStorage.token) {
+    if (localStorage.token&&localStorage.companyId) {
       this.$router.replace("/org/" + localStorage.companyId);
     }
   },
@@ -85,12 +85,10 @@ export default {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
-              console.log(res.data);
               this.updateUserId(res.data); //存储、更新用户信息
+              this.initSrc(res.data.image);
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
-           
-              this.initSrc(res.data.image);
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
@@ -136,10 +134,12 @@ export default {
             if (res.data.bindPhone) {
               vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             } else {
-              localStorage.token = res.data.accessToken;
+              this.updateUserId(res.data); //存储、更新用户信息
+              this.initSrc(res.data.image);
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
+              localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
               if (res.data.orgId) {
                 vm.$router.replace("/org/" + res.data.orgId);
@@ -148,7 +148,7 @@ export default {
               }
             }
           }else{
-            this.$Message.error("登录失败");
+            vm.$Message.error("登录失败");
           }
         });
       }

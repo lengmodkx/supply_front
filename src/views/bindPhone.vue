@@ -42,7 +42,7 @@
    </div>
 </template>
 <script>
-import { bindPhone, getPhoneCode } from "@/axios/api";
+import { bindPhone, getPhoneCode } from "../axios/api";
 import { mapState, mapActions } from "vuex";
 export default {
     data() {
@@ -89,12 +89,18 @@ export default {
                   if (res.result == 0) {
                      this.$Message.error('绑定失败');
                   } else {
-                     localStorage.token = res.accessToken;
-                     this.updateUserId(res.userInfo); //存储、更新用户信息
-                     localStorage.userId = res.userInfo.userId;
-                     localStorage.userImg = res.userInfo.image;
-                     localStorage.userName = res.userInfo.userName;
-                     this.$router.push("/home");
+                     this.updateUserId(res.data); //存储、更新用户信息
+                     this.initSrc(res.data.image);
+                     localStorage.userId = res.data.userId;
+                     localStorage.userImg = res.data.image;
+                     localStorage.userName = res.data.userName;
+                     localStorage.token = res.data.accessToken;
+                     localStorage.companyId = res.data.orgId;
+                     if (res.data.orgId) {
+                        this.$router.replace("/org/" + res.data.orgId);
+                     } else {
+                        this.$router.replace("/organization-is-empty");
+                     }
                   }
                });
             } else {
