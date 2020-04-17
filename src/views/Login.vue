@@ -132,7 +132,7 @@ export default {
       if (code) {
         getWeChatToken(code).then(res => {
           if (res.result === 1) {
-            if (res.bindPhone==true) {
+            if (res.data.bindPhone==true) {
               vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             } else {
               localStorage.token = res.data.accessToken;
