@@ -134,8 +134,8 @@ export default {
             if (res.data.bindPhone) {
               vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             } else {
-              this.updateUserId(res.data); //存储、更新用户信息
-              this.initSrc(res.data.image);
+              vm.updateUserId(res.data); //存储、更新用户信息
+              vm.initSrc(res.data.image);
               localStorage.userId = res.data.userId;
               localStorage.userImg = res.data.image;
               localStorage.userName = res.data.userName;
