@@ -131,8 +131,8 @@ export default {
     next(vm => {
       if (code) {
         getWeChatToken(code).then(res => {
+          console.log(res)
           if (res.result === 1) {
-            console.log(res)
             if (res.data.bindPhone) {
               vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
             } else {
@@ -147,6 +147,8 @@ export default {
                 vm.$router.replace("/organization-is-empty");
               }
             }
+          }else{
+            this.$Message.error("登录失败");
           }
         });
       }
