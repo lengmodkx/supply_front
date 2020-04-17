@@ -81,7 +81,7 @@ export default {
        }
     },
     methods:{
-       ...mapActions("user", ["updateUserInfo", "updateUserId"]),
+       ...mapActions("user", ["updateUserInfo", "updateUserId","initSrc"]),
        bind: function(name) {
           this.$refs[name].validate(valid => {
             if (valid) {
