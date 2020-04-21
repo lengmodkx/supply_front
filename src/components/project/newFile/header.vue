@@ -80,7 +80,7 @@ export default {
         index: index
       };
       this.$store.commit("file/crumbsClick", data);
-      const params = { fileId: item.fileId };
+      const params = { fileId: item.id };
       this.initFile(params);
     },
     // 搜索文件

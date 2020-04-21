@@ -11,7 +11,7 @@ import calendar from '../components/public/calendar'
 import members from "../components/company/members"
 import personal from '../components/public/personal'
 import down from '../components/public/down'
-import sucai from '../components/public/sucai'
+import Material from '../components/public/sucai'
 import Bind from '../views/bindPhone.vue'
 import orgEmpty from '../views/orgEmpty.vue'
 import delOrg from '../views/delOrg.vue'
@@ -27,17 +27,8 @@ Vue.use(Router);
 const router = new Router({
   mode: 'history',
   routes: [{
-      path: "/sucai/:id", // 素材裤
-      component: sucai,
-      meta: {
-        keepAlive: false
-      }
-    },
-
-
-    {
-      path: "/sucai/", // 素材裤
-      component: sucai,
+      path: "/material", // 素材裤
+      component: Material,
       meta: {
         keepAlive: false
       }

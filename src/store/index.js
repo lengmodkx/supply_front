@@ -4,6 +4,7 @@ import user from './modules/user'
 import task from './modules/task'
 import app from './modules/app'
 import file from './modules/file'
+import materialfile from './modules/materialfile'
 import tag from './modules/tag'
 import project from './modules/project'
 import schedule from './modules/schedule'
@@ -33,6 +34,7 @@ const store = new Vuex.Store({
         company,
         relation,
         tree,
+        materialfile
        // gantt
     }
 })
