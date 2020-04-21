@@ -143,7 +143,7 @@ export default {
      }
     this.initUser(data );
     console.log(this.roleKey);
-    
+
   },
   methods: {
     ...mapActions("member", ["initUser", "filterUser", "getRoles"]),
@@ -177,10 +177,16 @@ export default {
     },
     //筛选用户
     FUser(keyword) {
+      debugger
       if (keyword != "") {
         this.filterUser(keyword);
       } else {
-        this.initUser(this.$route.params.id);
+
+         const data={
+              id:this.$route.params.id,
+              orgId:localStorage.companyId 
+          }
+          this.initUser(data );
       }
     },
     adduser(userId) {
@@ -208,7 +214,11 @@ export default {
 
       addUser(params).then(res => {
         if (res.result === 1) {
-          this.initUser(this.$route.params.id);
+           const data={
+              id:this.$route.params.id,
+              orgId:localStorage.companyId 
+          }
+          this.initUser(data );
         } else {
           this.$Notice.warning({
             title: res.msg
@@ -222,7 +232,11 @@ export default {
       removeUser(this.$route.params.id, userId).then(res => {
         console.log(userId);
         if (res.result === 1) {
-          this.initUser(this.$route.params.id);
+           const data={
+              id:this.$route.params.id,
+              orgId:localStorage.companyId 
+          }
+          this.initUser(data );
         } else {
           this.$Notice.warning({
             title: "移除失败"
@@ -244,7 +258,11 @@ export default {
       let data = { roleId: roleId, userId: this.user.memberId, projectId: this.$route.params.id };
       updateUserRole(data).then(res => {
         if (res.result == 1) {
-          this.initUser(this.$route.params.id);
+           const data={
+              id:this.$route.params.id,
+              orgId:localStorage.companyId 
+          }
+          this.initUser(data );
           this.$Message.success("设置成功");
           this.user.visible = false;
         } else {
