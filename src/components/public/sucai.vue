@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background:#fff">
     <Loading v-if="loading"></Loading>
     <div class="material-file">
       <div class="picker-column material-fill">
