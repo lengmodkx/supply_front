@@ -1,109 +1,84 @@
 <template>
-  <div class="material-file">
-    <div class="picker-column material-fill">
-      <Loading v-show="loading1"></Loading>
-      <tree :data="fileTree" ref="tree" @init="init"></tree>
-    </div>
-
-    <div class="file-view-wrap fade in">
-      <header class="material-header">
-        <div class="file-header-title">
-          <!-- <span v-show='breadcrumb.length' @click="breadcrumbClick(item.fileId)" v-for="(item) in breadcrumb" :key="item.fileId">{{item.fileName}}＞</span> -->
-          素材库
-        </div>
-      </header>
-
-      <div class="input-box" style="padding:10px 20px 10px 20px;">
-        <div class="input-box-left">
-          <Input search enter-button placeholder="请输入搜索" style="width:350px;margin-right:20px;" @on-search="search" v-model="searched" />
-        </div>
-        <div class="icon-box">
-          <Icon type="ios-apps" @click="view = 'view'" />
-          <Icon type="md-list" @click="view = 'list'" />
-          <!-- <Icon type="ios-arrow-round-down" @click="!orderType" /> -->
-        </div>
+  <div style="background:#fff">
+    <Loading v-if="loading"></Loading>
+    <div class="material-file">
+      <div class="picker-column material-fill">
+        <tree :data="fileTree" ref="tree" @init="init"></tree>
       </div>
-      <Loading v-if="loading"></Loading>
-      <div class="file-home">
-        <div class="main-content">
-          <div v-if="isSearch" style="width: 100%">
-            <!--缩略图模式搜索-->
-            <ul v-show="view === 'view'" class="view-file-box">
-              <li v-for="(file, index) in searchData" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
-                <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
-                <div class="top-img" v-if="file.catalog">
-                  <img src=" @/assets/images/folder.png" />
-                </div>
-                <div class="top-img" v-else>
-                  <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-                  <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="" />
-                  <img v-else-if="'.doc'.includes(file.ext) || '.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="" />
-                  <img v-else-if="'.xls'.includes(file.ext) || '.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="" />
-                  <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="" />
-                  <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="" />
-                  <img v-else-if="'.zip'.includes(file.ext) || '.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="" />
-                  <img v-else src="@/icons/img/moren.png" alt="" />
-                </div>
-                <p class="bottom-font">
-                  <Poptip trigger="hover" :content="file.fileName" placement="bottom">
-                    {{ file.fileName }}
-                  </Poptip>
-                </p>
-              </li>
-            </ul>
-            <!--列表模式搜索-->
-            <ul v-show="view === 'list'" class="list-file-box">
-              <div class="list-file-title">
-                <span>名称</span>
-                <span>大小</span>
-                <span>创建者</span>
-                <span>更新时间</span>
-              </div>
-              <li v-for="(file, index) in searchData" :key="index">
-                <div class="list-file-part" @click="goNext(file.catalog, file.fileId, file)">
-                  <div class="list-file-img" v-if="file.catalog">
-                    <img src="@/assets/images/folder.png" />
-                  </div>
-                  <div class="list-file-img" v-else>
-                    <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-                    <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="" />
-                    <img v-else-if="'.doc'.includes(file.ext) || '.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="" />
-                    <img v-else-if="'.xls'.includes(file.ext) || '.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="" />
-                    <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="" />
-                    <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="" />
-                    <img v-else-if="'.zip'.includes(file.ext) || '.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="" />
-                    <img v-else src="@/icons/img/moren.png" alt="" />
-                  </div>
-                  <Poptip trigger="hover" :content="file.fileName" placement="bottom">
-                    <p>{{ file.fileName }}</p>
-                  </Poptip>
-                </div>
-                <div class="list-file-part">{{ file.size }}</div>
-                <div class="list-file-part">平台</div>
-                <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
-                <div class="list-file-part opeart-icon">
-                  <Tooltip v-if="!file.catalog" content="下载" style="margin-right: 15px">
-                    <Icon type="md-arrow-down" @click.stop="downLoad(file.fileId)" />
-                  </Tooltip>
-                  <!-- <Tooltip content="删除">
-                                                  <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
-                                              </Tooltip> -->
-                </div>
+      <Divider type="vertical" class="divide"></Divider>
+      <div class="file-view-wrap fade in">
+        <div class="file-header">
+          <div class="left">
+            <button class="move" @click="back"></button>
+            <!--后退 -->
+            <button class="back" @click="forward"></button>
+          </div>
+          <div class="middle">
+            <span @click="home"><img src="../../assets/images/03.png" alt=""/></span>
+            <ul class="crumbs">
+              <li v-for="(item, index) in crumbs" :key="index" @click="changeCrumbs(item, index)">
+                {{ item.fileName }}
+                <a> </a>
               </li>
             </ul>
           </div>
-          <div v-else style="width: 100%;">
-            <!--缩略图模式-->
-            <ul v-if="view === 'view'" class="view-file-box">
-              <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
-                <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
-                <div class="top-img" :data-id="file.fileId" v-if="file.catalog">
+          <div class="right">
+            <Input search enter-button v-model="searched" @on-search="search" placeholder="请输入搜索" />
+          </div>
+        </div>
+        <div class="input-box">
+          <div class="icon-box">
+            <Icon type="ios-apps" @click="view = 'view'" />
+            <Icon type="md-list" @click="view = 'list'" />
+          </div>
+        </div>
+        <div class="main-content">
+          <ul v-if="view === 'view'" class="view-file-box">
+            <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
+              <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
+              <div class="top-img" :data-id="file.fileId" v-if="file.catalog">
+                <div class="down-img">
+                  <span>已下载</span>
+                </div>
+                <img src="@/assets/images/folder.png" />
+              </div>
+              <div class="top-img" :data-id="file.fileId" v-else>
+                <div class="down-img">
+                  <span>已下载</span>
+                </div>
+                <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
+                <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="" />
+                <img v-else-if="'.doc'.includes(file.ext) || '.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="" />
+                <img v-else-if="'.xls'.includes(file.ext) || '.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="" />
+                <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="" />
+                <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="" />
+                <img v-else-if="'.zip'.includes(file.ext) || '.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="" />
+                <img v-else src="@/icons/img/moren.png" alt="" />
+              </div>
+              <p class="bottom-font">
+                <Poptip trigger="hover" :content="file.fileName" placement="bottom">
+                  {{ file.fileName }}
+                </Poptip>
+              </p>
+            </li>
+          </ul>
+          <!--列表模式-->
+          <ul v-if="view === 'list'" class="list-file-box">
+            <div class="list-file-title">
+              <span>名称</span>
+              <span>大小</span>
+              <span>创建者</span>
+              <span>更新时间</span>
+            </div>
+            <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)">
+              <div class="list-file-part">
+                <div class="list-file-img" :data-id="file.fileId" v-if="file.catalog">
                   <div class="down-img">
                     <span>已下载</span>
                   </div>
                   <img src="@/assets/images/folder.png" />
                 </div>
-                <div class="top-img" :data-id="file.fileId" v-else>
+                <div class="list-file-img" :data-id="file.fileId" v-else>
                   <div class="down-img">
                     <span>已下载</span>
                   </div>
@@ -116,79 +91,29 @@
                   <img v-else-if="'.zip'.includes(file.ext) || '.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="" />
                   <img v-else src="@/icons/img/moren.png" alt="" />
                 </div>
-                <p class="bottom-font">
-                  <Poptip trigger="hover" :content="file.fileName" placement="bottom">
-                    {{ file.fileName }}
-                  </Poptip>
-                </p>
-              </li>
-            </ul>
-            <!--列表模式-->
-            <ul v-if="view === 'list'" class="list-file-box">
-              <div class="list-file-title">
-                <span>名称</span>
-                <span>大小</span>
-                <span>创建者</span>
-                <span>更新时间</span>
+                <Poptip trigger="hover" :content="file.fileName" placement="bottom">
+                  <p>{{ file.fileName }}</p>
+                </Poptip>
               </div>
-              <li v-for="(file, index) in allFile" :key="index">
-                <div class="list-file-part" @click="goNext(file.catalog, file.fileId, file)">
-                  <div class="list-file-img" :data-id="file.fileId" v-if="file.catalog">
-                    <div class="down-img">
-                      <span>已下载</span>
-                    </div>
-                    <img src="@/assets/images/folder.png" />
-                  </div>
-                  <div class="list-file-img" :data-id="file.fileId" v-else>
-                    <div class="down-img">
-                      <span>已下载</span>
-                    </div>
-                    <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-                    <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" alt="" />
-                    <img v-else-if="'.doc'.includes(file.ext) || '.docx'.includes(file.ext)" src="@/icons/img/word.png" alt="" />
-                    <img v-else-if="'.xls'.includes(file.ext) || '.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" alt="" />
-                    <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" alt="" />
-                    <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" alt="" />
-                    <img v-else-if="'.zip'.includes(file.ext) || '.rar'.includes(file.ext)" src="@/icons/img/zip.png" alt="" />
-                    <img v-else src="@/icons/img/moren.png" alt="" />
-                  </div>
-                  <Poptip trigger="hover" :content="file.fileName" placement="bottom">
-                    <p>{{ file.fileName }}</p>
-                  </Poptip>
-                </div>
-                <div class="list-file-part">{{ file.size }}</div>
-                <div class="list-file-part">平台</div>
-                <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
-                <div class="list-file-part opeart-icon">
-                  <Tooltip v-if="!file.catalog" content="下载" style="margin-right: 15px">
-                    <Icon type="md-arrow-down" @click.stop="downLoad(file.fileId)" />
-                  </Tooltip>
-                  <!-- <Tooltip content="删除">
-                                                  <Icon type="ios-trash-outline"  @click.stop="deleteFile(file.fileId)" />
-                                              </Tooltip> -->
-                </div>
-              </li>
-            </ul>
+              <div class="list-file-part">{{ file.size }}</div>
+              <div class="list-file-part">平台</div>
+              <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
+              <div class="list-file-part opeart-icon" @click.stop="downLoad(file.fileId)">
+                <Icon type="md-arrow-down" />
+              </div>
+            </li>
+          </ul>
+          <div v-if="allFile">
+            <div v-show="allFile.length == 0" class="no-files">
+              <Icon type="md-folder" />
+              <p>暂无内容</p>
+            </div>
           </div>
-
-          <div v-show="total == 0" class="no-files">
-            <Icon type="md-folder" />
-            <p>暂无内容</p>
-          </div>
-        </div>
-
-        <!--分页-->
-        <div class="page" v-if="total > 0">
-          <Page :page-size="10" :current="pageNum" :total="total" @on-change="clickPage" />
         </div>
       </div>
     </div>
-    <!-- <div class="finish-down" id='finishDown'>
-
-            已下载
-           </div> -->
     <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail">
-      <sucaiDetail @close="closeDetail" :file="curFile" v-if="showModelDetai"></sucaiDetail>
+      <sucaiDetail @close="closeDetail" :type="'素材'" v-if="showModelDetai"></sucaiDetail>
     </Modal>
   </div>
 </template>
@@ -228,188 +153,129 @@ export default {
       treeId: "",
       page: 0,
       curFile: {},
-      fileTree: []
+      fileTree: [],
     };
   },
   components: {
     sucaiDetail,
-    tree
+    tree,
   },
   mounted() {
     this.init(this.fileId);
   },
-  watch: {
-    // '$route'(to, from) {
-    //     if(to.params.id != from.params.id){
-    //           this.fileId=to.params.id || 'ef6ba5f0e3584e58a8cc0b2d28286c93'
-    //           this.pageNum=1
-    //           this.init();//重新加载数据
-    //           return
-    //     }
-    // },
-
-    searched: function(val, oldVal) {
-      if (val != oldVal) {
-        this.pageNum = 1;
-      }
-      deep: true;
-    },
-
-    fileId: function(val, oldVal) {
-      if (val != oldVal) {
-        this.fileId = val || "ef6ba5f0e3584e58a8cc0b2d28286c93";
-        this.pageNum = 1;
-        this.init(); //重新加载数据
-        return;
-      }
-      deep: true;
-    }
+  computed: {
+    ...mapState("tree", ["showView"]),
+    ...mapState("materialfile", ["crumbs", "crumbsCache", "crumbsIndex", "createFileId"]),
   },
+
   created() {
     this.treeInit();
   },
   methods: {
+    ...mapActions("file", ["putOneFile"]),
+    back() {
+      if (this.crumbsIndex == 1) {
+        console.log("后退终止");
+        return;
+      }
+      this.$store.commit("materialfile/crumbsBack");
+      //刷新页面
+      this.init(this.createFileId);
+    },
+    forward() {
+      if (this.crumbsIndex >= this.crumbsCache.length) {
+        console.log("前进终止");
+        return;
+      }
+      this.$store.commit("materialfile/crumbsForward");
+      //刷新页面
+      this.init(this.createFileId);
+    },
+    home() {
+      this.$store.commit("materialfile/crumbsHome");
+      this.init(this.fileId);
+    },
+    changeCrumbs(item, index) {
+      console.log(item);
+      var data = {
+        self: item,
+        index: index,
+      };
+      this.$store.commit("materialfile/crumbsClick", data);
+      this.init(item.id);
+    },
+
     //关闭详情
     closeDetail() {
       this.showModelDetai = false;
     },
     treeInit() {
-      getMaterialTree().then(res => {
+      getMaterialTree().then((res) => {
         this.fileTree = res.data;
       });
     },
-    // 分页
-    clickPage(data) {
-      this.pageNum = data;
-      if (this.flagTree) {
-        //树形分页
-        getSuCaiTreeDate(this.treeId, this.pageNum).then(res => {
-          this.allFile = res.data.records;
-          this.total = res.data.total;
-          this.pageNum = res.data.current;
-          this.treeId = res.parentId;
-        });
-
-        return;
-      }
-
-      if (this.searched) {
-        //搜索
-        this.search(this.searched);
-        return;
-      }
-      getSucai(this.fileId, this.pageNum, this.orderType).then(res => {
-        if (res.result) {
-          this.loading = false;
-          this.allFile = res.data.records;
-          this.total = res.data.total;
-          this.pageNum = res.data.current;
-        }
-      });
-    },
-
     // 初始化 页面信息和分页
     init(fileId) {
-      if (fileId === undefined) {
-        getSucai(this.fileId, this.pageNum, this.orderType).then(res => {
-          if (res.result) {
-            this.loading = false;
-            this.allFile = res.data.records;
-            this.total = res.data.total;
-            (this.pageNum = 1), (this.searched = "");
-          }
-        });
-      } else {
-        getSucai(fileId, this.pageNum, this.orderType).then(res => {
-          if (res.result) {
-            this.loading = false;
-            this.allFile = res.data.records;
-            this.total = res.data.total;
-            this.pageNum = 1;
-            this.searched = "";
-          }
-        });
-      }
+      getSucai(fileId, this.pageNum, this.orderType).then((res) => {
+        if (res.result == 1) {
+          this.loading = false;
+          this.allFile = res.data.records;
+          this.searched = "";
+        }
+      });
     },
     // 搜索文件
     search(value) {
       if (value !== "") {
         this.loading = true;
-        getSucaiSearch(value, this.pageNum).then(res => {
-          if (res.result) {
+        getSucaiSearch(value, this.pageNum).then((res) => {
+          if (res.result == 1) {
             this.loading = false;
             this.allFile = res.data;
-            this.total = res.totle;
           }
         });
       } else {
-        this.$Notice.warning({
-          title: "请输入搜索关键字"
-        });
+       this.init(this.fileId);
       }
     },
 
     // 点击的是文件夹
-    goNext(type, id, file) {
-      if (type) {
-        this.fileId = id;
+    goNext(type, fileId, file) {
+      if (type == 1) {
+        this.init(fileId);
         this.flagTree = false;
       } else {
         this.showModelDetai = true;
-        this.curFile = file;
-        // this.$router.push(`/sucai/${id}`)
+        this.putOneFile(fileId);
       }
     },
 
     // 下载文件
     downLoad(fileId) {
-     if (res.result == 0) {
-          this.$Message.error(res.msg);
-        } else {
-          var url = "";
-          if (process.env.NODE_ENV == "test") {
-            url = process.env.VUE_APP_TEST_URL;
-          } else if (process.env.NODE_ENV == "production") {
-            url = process.env.VUE_APP_URL;
-          } else {
-            url = "/api";
-          }
-          window.location.href = url + "/files/batch/download?fileIds=" + fileId;
-        }
+      var url = "";
+      if (process.env.NODE_ENV == "test") {
+        url = process.env.VUE_APP_TEST_URL;
+      } else if (process.env.NODE_ENV == "production") {
+        url = process.env.VUE_APP_URL;
+      } else {
+        url = "/api";
+      }
+      window.location.href = url + "/files/" + fileId + "/download";
     },
     popHid() {
       setTimeout(() => {
         this.opearteShow = "文件菜单";
       }, 300);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped lang="less">
 @import "./file";
-.file-home {
-  padding-top: 20px;
-}
 .main-content {
   width: 100%;
   display: flex;
-  min-height: calc(100vh - 480px);
   position: relative;
-  .left-tree {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 200px;
-    flex: none;
-    border-right: 1px solid #f5f5f5;
-    /deep/ .tree-anchor {
-      width: 90%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
 }
 @media screen and (max-width: 1440px) {
   .main-content {
@@ -563,7 +429,7 @@ export default {
 
 @media screen and (max-width: 1440px) {
   .list-file-box {
-    max-height: 330px;
+    max-height: 480px;
     overflow-x: auto;
   }
 }
@@ -572,7 +438,8 @@ export default {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  padding: 0 20px;
+  overflow-y: auto;
+  height: 430px;
   .cur {
     cursor: pointer;
   }
@@ -580,7 +447,6 @@ export default {
     width: 165px;
     height: 200px;
     margin-right: 16px;
-    margin-bottom: 16px;
     list-style: none;
     position: relative;
     &:hover {
@@ -695,7 +561,6 @@ export default {
     li {
       width: 106px;
       height: 150px;
-      margin-left: 60px;
       .top-img {
         width: 106px;
         height: 106px;
@@ -715,14 +580,6 @@ export default {
   }
 }
 
-.page {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .opearte-list p {
   width: 100%;
   height: 30px;
@@ -754,28 +611,18 @@ export default {
 }
 
 .input-box {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  .input-box-left {
-    display: flex;
-    .circle {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      float: left;
-      margin: 5px 5px 0 0;
-    }
-  }
-  .icon-box {
-    color: #2d8cf0;
-
-    i {
-      cursor: pointer;
-      padding-left: 10px;
-      line-height: 22px;
-      font-size: 22px;
-    }
+  float: right;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.icon-box {
+  color: #2d8cf0;
+  i {
+    cursor: pointer;
+    padding-left: 10px;
+    line-height: 22px;
+    font-size: 22px;
   }
 }
 
@@ -807,10 +654,8 @@ export default {
   background: #f7f7f7;
 }
 .file-view-wrap {
-  flex: 1 1 auto;
+  flex: 8;
   min-height: 300px;
-  border-radius: 4px;
-  border-left: 1px solid #e5e5e5;
   background-color: #ffffff;
   margin: 0 auto;
 }
@@ -822,20 +667,12 @@ export default {
   opacity: 0;
   transition: opacity 0.15s linear;
 }
-.material-header{
-  height: 30px;
-  width: 100%;
-  padding: 0px 20px 0;
+.material-header {
+  height: 45px;
 }
 .file-header-title {
   font-size: 18px;
   line-height: 60px;
-  float: left;
-  display: flex;
-  span {
-    margin-right: 10px;
-    cursor: pointer;
-  }
 }
 .file-header-add {
   float: right;
@@ -1089,7 +926,6 @@ export default {
   }
 }
 
-
 .menu-file-title {
   height: 40px;
   line-height: 40px;
@@ -1170,5 +1006,91 @@ export default {
   line-height: 60px;
   color: #2d8cf0;
   border: 2px solid #2d8cf0;
+}
+.file-header {
+  width: 100vm;
+  height: 52px;
+  padding: 10px;
+  background-image: linear-gradient(#fff, #f3f3f3);
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  .left {
+    width: 65px;
+    button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #dddddd;
+    }
+    button:hover {
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+    .move {
+      background: #fff url("~@/assets/images/01.png") no-repeat center;
+      background-size: 10px;
+    }
+    .back {
+      background: #fff url("~@/assets/images/02.png") no-repeat center;
+      background-size: 10px;
+      border-left: none;
+    }
+    .button-disable {
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .middle {
+    flex: 1;
+    margin: 0px 100px 0px 30px;
+    border: 1px solid #ddd;
+    display: flex;
+    line-height: 32px;
+    span {
+      display: block;
+      background: #fafafa;
+      width: 35px;
+      height: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-left: 1px solid #dddddd;
+      cursor: pointer;
+    }
+    span:hover {
+      background: #e4f8ff;
+    }
+    span:first-child {
+      border-left: none;
+      border-right: 1px solid #dddddd;
+    }
+    .crumbs {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      li {
+        display: flex;
+        align-items: center;
+        background: #f2f2f2;
+        cursor: pointer;
+        padding-left: 10px;
+        img {
+          padding: 10px 10px 10px 0;
+        }
+      }
+      a {
+        display: block;
+        width: 14px;
+        height: 28px;
+        background: url("~@/assets/images/06.png") no-repeat center;
+      }
+      li:last-child a {
+        background: url("~@/assets/images/07.png") no-repeat center;
+      }
+    }
+  }
+  .right {
+    float: right;
+    width: 200px;
+    margin-right: 10px;
+  }
 }
 </style>

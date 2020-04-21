@@ -22,8 +22,8 @@
             <img :src="people.image" />
             <span>{{ people.userName }} </span>
           </div>
-          <span v-if="people.existId === 1" v-bind:disabled="dis">已加入</span>
-          <Button v-if="people.existId === 0" type="primary" @click="adduser(people.userId)">添加</Button>
+          <span v-if="people.existId === 1"    v-bind:disabled="dis" >已加入</span>
+          <Button v-if="people.existId === 0" type="primary" @click="adduser(people.userId, people)">添加</Button>
         </li>
       </ul>
     </div>
@@ -41,14 +41,15 @@ export default {
       searchWord: "",
       searchPeople: [],
       isSearch: false,
-      dis: true
+      dis: false,
+      active : -1
     };
   },
   mounted() {
     console.log(">>>>>>>>>>>", this.invitUsers);
   },
   methods: {
-    adduser(id) {
+    adduser(id,obj) {
       // 添加企业成员
       if (this.type === "成员") {
         let data = {
@@ -59,6 +60,8 @@ export default {
           if (res.result==1) {
             this.$Message.success("添加成功");
             this.$emit("addPeople", res.data);
+            //将按钮变为已加入
+            obj.existId=1
           } else {
             this.$Message.info(res.msg);
           }

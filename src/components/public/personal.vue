@@ -294,6 +294,7 @@ export default {
         },
         info(){
             findUserInfo(this.message.userId).then(res=>{
+                console.log(res)
                 //获取信息
                 if(res.result==1){
                     this.loading=false;

@@ -197,7 +197,7 @@ export function getSucai(folderId,page,orderType) {
         method: "get",
         params: {
             current:page,
-            size: 10,
+            size: 999999,
             downloadCount:orderType
         }
     });
@@ -218,7 +218,7 @@ export function getSucaiSearch(fileName,page) {
         method: "get",
         params: {
             page:page,
-            size: 10
+            size: 999999
         }
     });
 }
