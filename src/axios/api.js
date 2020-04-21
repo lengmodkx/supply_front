@@ -423,8 +423,9 @@ export function moveTask(taskId, projectId, groupId, menuId) {
     });
 }
 //获取项目成员
-export function projectMembers(projectId) {
-    return $get(`/projects/${projectId}/members`, '');
+export function projectMembers(projectId,orgId) {
+    
+    return $get(`/projects/${projectId}/members/${orgId}`, '');
 }
 //获取参与者列表
 export function getmemberList(projectId) {

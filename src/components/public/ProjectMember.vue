@@ -14,7 +14,7 @@
 
     <div class="userBox">
       <ul>
-        <li v-for="(user, index) in users" :key="index">
+        <li v-for="(user, index) in users" :key="index" @click="inofoUser(user)">
           <div class="member-item">
             <Avatar :src="user.memberImg" class="avatar" />
             <div class="memberInfo">
@@ -92,6 +92,12 @@
         </div>
       </div>
     </Modal>
+
+     <Modal v-model="showAddshare" title="成员信息" transfer fullscreen footer-hide  class="padd0"  class-name="ivu-modal-wrap">
+         <info-user ref="addshare" :user='itemUser' ></info-user>
+     </Modal>
+
+
   </div>
 </template>
 <script>
@@ -99,13 +105,17 @@ import { mapState, mapActions } from "vuex";
 import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 import loading from "./common/Loading.vue";
+import infoUser from "../public/infoUser.vue";
 export default {
   name: "",
   components: {
-    loading
+    loading,
+    infoUser
   },
   data() {
     return {
+      showAddshare: false,
+      itemUser:[],
       keyword: "",
       keyword2: "",
       modal: false,
@@ -125,8 +135,15 @@ export default {
     ...mapState("member", ["users", "roles"])
   },
   mounted() {
-    this.initUser(this.$route.params.id);
+    
+    console.log(localStorage.companyId);
+     const data={
+        id:this.$route.params.id,
+        orgId:localStorage.companyId 
+     }
+    this.initUser(data );
     console.log(this.roleKey);
+    
   },
   methods: {
     ...mapActions("member", ["initUser", "filterUser", "getRoles"]),
@@ -213,6 +230,12 @@ export default {
         }
       });
     },
+    //进入项目
+    inofoUser(user){
+      console.log(user)
+       this.showAddshare=true;
+       this.itemUser=user;
+    },
     closebox() {
       this.modal1 = false;
       this.$emit("hideBox");
@@ -238,6 +261,14 @@ export default {
 };
 </script>
 <style scoped lang="less">
+
+.padd0 {
+  /deep/ .ivu-modal-body {
+    padding: 0;
+    background: #f5f5f5;
+  }
+}
+
 .projectMember {
   position: fixed;
   top: 98px;
