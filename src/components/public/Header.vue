@@ -375,7 +375,7 @@ export default {
 }
 /deep/.ivu-modal-body {
   padding: 0;
-  overflow: hidden;
+  overflow: hidden !important;
 }
 /deep/ .ivu-modal-content {
   box-shadow: none;

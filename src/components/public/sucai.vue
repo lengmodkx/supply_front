@@ -98,7 +98,7 @@
               <div class="list-file-part">{{ file.size }}</div>
               <div class="list-file-part">平台</div>
               <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
-              <div class="list-file-part opeart-icon" @click.stop="downLoad(file.fileId)">
+              <div class="list-file-part opeart-icon" @click.stop="downLoad(file.fileId)" v-if="file.catalog==0">
                 <Icon type="md-arrow-down" />
               </div>
             </li>
@@ -357,8 +357,8 @@ export default {
         margin-right: 10px;
         flex: none;
         img {
-          width: 100%;
-          height: 100%;
+          width: 64px;
+          height: 52px;
         }
 
         .down-img span {
@@ -381,7 +381,6 @@ export default {
           -o-transition: 0 0.1s ease-in;
           transition: transform 0.1s ease-in;
         }
-
         .down-img-show span {
           display: block;
           position: absolute;
@@ -429,7 +428,7 @@ export default {
 
 @media screen and (max-width: 1440px) {
   .list-file-box {
-    max-height: 480px;
+    max-height: 460px;
     overflow-x: auto;
   }
 }
