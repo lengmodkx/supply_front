@@ -63,7 +63,7 @@ const store = {
         }, data) {
             
            
-            projectMembers(data.id,data.orgId).then(res => {
+            projectMembers(data).then(res => {
                 
                 if (res.result === 1) {
                     commit('initUser', res.data);

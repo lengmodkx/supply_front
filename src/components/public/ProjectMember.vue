@@ -137,11 +137,8 @@ export default {
   mounted() {
     
     console.log(localStorage.companyId);
-     const data={
-        id:this.$route.params.id,
-        orgId:localStorage.companyId 
-     }
-    this.initUser(data );
+     this.initUser(this.$route.params.id);
+ 
     console.log(this.roleKey);
 
   },
@@ -182,11 +179,9 @@ export default {
         this.filterUser(keyword);
       } else {
 
-         const data={
-              id:this.$route.params.id,
-              orgId:localStorage.companyId 
-          }
-          this.initUser(data );
+         
+           this.initUser(this.$route.params.id);
+          
       }
     },
     adduser(userId) {
@@ -214,11 +209,8 @@ export default {
 
       addUser(params).then(res => {
         if (res.result === 1) {
-           const data={
-              id:this.$route.params.id,
-              orgId:localStorage.companyId 
-          }
-          this.initUser(data );
+           
+          this.initUser(this.$route.params.id);
         } else {
           this.$Notice.warning({
             title: res.msg
@@ -232,11 +224,8 @@ export default {
       removeUser(this.$route.params.id, userId).then(res => {
         console.log(userId);
         if (res.result === 1) {
-           const data={
-              id:this.$route.params.id,
-              orgId:localStorage.companyId 
-          }
-          this.initUser(data );
+          
+          this.initUser(this.$route.params.id);
         } else {
           this.$Notice.warning({
             title: "移除失败"
@@ -258,11 +247,8 @@ export default {
       let data = { roleId: roleId, userId: this.user.memberId, projectId: this.$route.params.id };
       updateUserRole(data).then(res => {
         if (res.result == 1) {
-           const data={
-              id:this.$route.params.id,
-              orgId:localStorage.companyId 
-          }
-          this.initUser(data );
+           
+           this.initUser(this.$route.params.id);
           this.$Message.success("设置成功");
           this.user.visible = false;
         } else {
