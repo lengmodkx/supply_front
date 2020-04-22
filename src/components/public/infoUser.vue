@@ -23,7 +23,10 @@
                   </div>
             </div>
             <div class="title-nav">
-
+                <!-- <div class="add-talk">
+                    <Icon type="ios-add-circle-outline"  />
+                    发起群聊
+                </div> -->
                <Tabs active-key="key1">
                   <Tab-pane label="详细资料" key="key1">
                     
@@ -133,20 +136,34 @@
                     <div class="title">
                       最近动态
                     </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-1.png" width="100" />
+                    </div>
+
+                     
                   </Tab-pane>
                   <Tab-pane label="任务安排" key="key3">
                     <div class="title">
                       任务安排
                     </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-2.png" width="100" />
+                    </div>
                   </Tab-pane>
-                  <Tab-pane label="任务安排" key="key4">
+                  <Tab-pane label="日程安排" key="key4">
                     <div class="title">
                       日程安排
+                    </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-3.png" width="100" />
                     </div>
                   </Tab-pane>
                   <Tab-pane label="项目经历" key="key5">
                     <div class="title">
                      项目经历
+                    </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-4.png" width="100" />
                     </div>
                   </Tab-pane>
               </Tabs>
@@ -340,6 +357,17 @@ export default {
   }
   .title-nav{
         padding: 20px;
+        position: relative;
+        .add-talk{
+          cursor: pointer;
+          position: absolute;
+          top: 28px;
+          right: 20px;
+          color: #3da8f5;
+          i{
+            margin-top:-5px;
+          }
+        }
         .title{
           display: flex;
           justify-content: space-between;
@@ -381,6 +409,12 @@ export default {
             ul:last-child{
               border-bottom:none;
             }
+        }
+
+        .box-no{
+              width:100px;
+              height:100px;
+              margin:150px auto;
         }
 
    }
