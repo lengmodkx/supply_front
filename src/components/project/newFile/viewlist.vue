@@ -44,7 +44,7 @@
     <div class="file-view-wrap fade in" v-if="files.length > 0 && showView == 'list'">
       <!-- 列表展示 -->
       <div class="file-list1">
-        <Table border :columns="columns" :data="files" height="420" 
+        <Table border :columns="columns" :data="files" ref="table" :height="tableHeight" 
          @on-row-click="fileDetail"
          @on-selection-change="onSelectionChange">
           <template slot-scope="{ row, index }" slot="fileName">
@@ -338,7 +338,8 @@ export default {
         }
       ],
       fileArr: [],
-      showInput: false
+      showInput: false,
+      tableHeight:510,
     };
   },
   computed: {
@@ -346,6 +347,12 @@ export default {
     ...mapState("tree", ["showView"])
   },
 
+    mounted() {
+    // 设置表格高度
+    
+    
+    this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 160
+  },
   created() {
     let params = { fileId: this.createFileId };
     this.initFile(params).then(res => {

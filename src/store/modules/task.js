@@ -74,7 +74,7 @@ const store = {
             state.groups.filter(v => v.groupId == id).forEach(i=>state.groups.splice(i,1))
         },
         addGroup(state, data) {
-            debugger
+            
             console.log( state.groups)
             state.groups.unshift(data);
                 console.log( state.groups)

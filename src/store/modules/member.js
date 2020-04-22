@@ -61,7 +61,10 @@ const store = {
         initUser({
             commit
         }, data) {
+            
+           
             projectMembers(data).then(res => {
+                
                 if (res.result === 1) {
                     commit('initUser', res.data);
                     commit('initSymbol', res.data);

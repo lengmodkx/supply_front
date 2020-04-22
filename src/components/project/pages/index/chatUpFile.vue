@@ -79,7 +79,7 @@ export default {
     },
 
     handleBeforeUpload(file) {
-      debugger
+      
        
       var that = this;
       this.showupload = false;
