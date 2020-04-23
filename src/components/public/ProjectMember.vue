@@ -94,7 +94,7 @@
     </Modal>
 
      <Modal v-model="showAddshare" title="成员信息" transfer fullscreen footer-hide  class="padd0"  class-name="ivu-modal-wrap">
-         <info-user ref="addshare" :user='itemUser' ></info-user>
+         <info-user ref="addshare" :user='itemUser' @close="showAddshare=false"  ></info-user>
      </Modal>
 
 

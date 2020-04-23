@@ -209,3 +209,11 @@ export function changeUser(params) {
         params: params,
     })
 }
+
+
+export function getOrg(orgId) {
+    return fetch({
+        url: `/partments/${orgId}/getDeptNameByOrgId/`,
+        method: 'get', // 请求方法
+    })
+}
