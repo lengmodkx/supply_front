@@ -48,7 +48,7 @@
                                   姓名:
                                 </span> 
                                 <span>
-                                  {{user.userName || '-'}}
+                                  {{user.organizationMemberInfo.userName || '-'}}
                                 </span>
                               </li>
                               <li>
@@ -56,7 +56,7 @@
                                   司龄:
                                   </span> 
                                    <span>
-                                    {{user.stayComDate || '-'}}
+                                    {{user.organizationMemberInfo.stayComDate || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -64,35 +64,26 @@
                                   职位:
                                 </span> 
                                 <span>
-                                    {{user.job || '-'}}
+                                    {{user.organizationMemberInfo.job || '-'}}
                                 </span>
                               </li>
                           </ul>
                           <ul >
                               <li>
                                 <span>员工类型:</span> 
-                                 <span v-if='user.memberLabel==0'>
-                                   
-                                  普通成员 
-                                   </span>
-                                   <span v-else-if='user.memberLabel==1'>
-                                   拥有者
-                                  
-                                   </span>
-                                   <span v-else> 
-                                     -
-                                   </span>
+                                {{user.organizationMemberInfo.memberLabel || '-'}}
+                                
                               </li>
                               <li>
                                  <span>办公地点：</span>
                                   <span>
-                                     {{user.address || '-'}}
+                                     {{user.organizationMemberInfo.address || '-'}}
                                    </span>
                               </li>
                               <li>
                                  <span>电子邮件：</span>
                                   <span>
-                                  {{user.memberEmail || '-'}}
+                                  {{user.organizationMemberInfo.memberEmail || '-'}}
                                    </span>
                               </li>
                           </ul>
@@ -105,13 +96,13 @@
                               <li>
                                    <span>生日：</span> 
                                     <span>
-                                      {{user.birthday || '-'}}
+                                      {{user.organizationMemberInfo.birthday || '-'}}
                                    </span>
                               </li>
                               <li>
                                    <span>部门：</span>  
                                    <span>
-                                  {{user.deptName || '-'}}
+                                  {{user.organizationMemberInfo.deptName || '-'}}
                                    </span>
                               </li>
                           </ul>
@@ -119,7 +110,7 @@
                               <li> 
                                 <span>上级:</span>  
                               <span>
-                                   {{user.parentName || '-'}}
+                                   {{user.organizationMemberInfo.parentName || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -197,7 +188,7 @@
                               </i-col>
                               <i-col span="12">
                                   <FormItem label="入职时间">
-                                      <DatePicker type="date" placeholder="选择日期" v-model="message.time"></DatePicker>
+                                      <DatePicker type="date" placeholder="选择日期" v-model="message.entryTime"></DatePicker>
                                   </FormItem>
                               </i-col>
                          </Row>
@@ -205,38 +196,27 @@
 
                        <FormItem >
                          <Row>
-                              <i-col span="10">
+                              <i-col span="12">
                                   <FormItem label="员工类型" style="padding-right:10px;">
                                           <Input v-model="message.memberLabel" placeholder="请输入姓名"></Input>
                                   </FormItem>
                               </i-col>
-                               <i-col span="2" style="padding-top:35px;padding-left:10px;  cursor: pointer;">
+                               <!-- <i-col span="2" style="padding-top:35px;padding-left:10px;  cursor: pointer;">
                                   
                                       <Icon type="ios-add-circle-outline" @click="showInformationAdd=true;addTitle='添加员工类型'" />
-                                 
-                              </i-col>
-                              <i-col span="10">
+                              </i-col> -->
+                              <i-col span="12">
                                   <FormItem label="职位">
-                                          <i-select :model.sync="message.job" placeholder="请选择">
-                                                          <i-option value="beijing">北京市</i-option>
-                                                          <i-option value="shanghai">上海市</i-option>
-                                                          <i-option value="shenzhen">深圳市</i-option>
-                                          </i-select>
-                                     
+                                          <Input v-model="message.job" placeholder="请输入姓名"></Input>
                                   </FormItem>
                               </i-col>
-                              <i-col span="2" style="padding-top:35px;padding-left:10px;  cursor: pointer;">
-                                  
+                              <!-- <i-col span="2" style="padding-top:35px;padding-left:10px;  cursor: pointer;">                               
                                         <Icon type="ios-add-circle-outline" @click="showInformationAdd=true;addTitle='添加职位'" />
-                                 
-                              </i-col>
-
-                              
+                              </i-col> -->
                          </Row>
                        </FormItem>
                         <FormItem label="部门">
-
-                           <i-select :model.sync="message.job" placeholder="请选择">
+                           <i-select :model.sync="message.deptName" placeholder="请选择">
                                     <i-option value="beijing">北京市</i-option>
                                     <i-option value="shanghai">上海市</i-option>
                                     <i-option value="shenzhen">深圳市</i-option>
@@ -249,8 +229,6 @@
                          <FormItem label="工作地点">
                         <Input v-model="message.address" placeholder="请输入工作地点"></Input>
                         </FormItem>
-                    
-                        
                         <FormItem>
                                <Button  style="width:570px;" type="primary" @click="changeUserInfo()">保存</Button>
                         </FormItem>
@@ -272,7 +250,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser,changeUser } from "../../axios/api2.js";
+import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser,changeUser,getOrg } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 
 export default {
@@ -289,20 +267,15 @@ export default {
       message:{
                 userId:localStorage.userId,
                 userName:'',
-                accountName:'',
+               
                 memberEmail:'',
                 birthday:'',
-                time:'',
+                entryTime:'',
                 memberLabel:'',
                 job:'',
                 phone:'',
                 address:'',
-                email:'',
-                
-
-              
-
-                
+                email:'',              
             },
       
     };
@@ -312,7 +285,10 @@ export default {
    
   },
   mounted() {
-    
+    getOrg(localStorage.companyId).then(res => {
+               
+                   console.log(res)
+            });
   },
   methods: {
      changeUserInfo () {
@@ -330,6 +306,9 @@ export default {
                     this.showInformation=false
             });
      }
+  },
+  created:function(){
+             
   }
   
 };
