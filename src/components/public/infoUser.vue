@@ -18,7 +18,7 @@
                       <img src="./../../assets/images/user-e.png" width="22" />
                        {{user.memberEmail}}</div>
                     <div> 
-                      <img src="./../../assets/images/user-t.png" width="14" />{{user.memberPhone}}
+                      <img src="./../../assets/images/user-t.png" width="14" />{{user.accountName}}
                       </div>
                   </div>
             </div>
@@ -56,7 +56,7 @@
                                   司龄:
                                   </span> 
                                    <span>
-                                    {{user.stayCompanyAge || '-'}}
+                                    {{user.stayComDate || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -99,7 +99,7 @@
                           <ul >
                               <li> <span>电话:</span> 
                                <span>
-                                   {{user.memberPhone || '-'}}
+                                   {{user.accountName || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -111,7 +111,7 @@
                               <li>
                                    <span>部门：</span>  
                                    <span>
-                                  {{user.partmentName || '-'}}
+                                  {{user.deptName || '-'}}
                                    </span>
                               </li>
                           </ul>
@@ -119,7 +119,7 @@
                               <li> 
                                 <span>上级:</span>  
                               <span>
-                                   {{user.parentMentName || '-'}}
+                                   {{user.parentName || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -256,7 +256,7 @@
                     
                         
                         <FormItem>
-                               <Button  style="width:570px;" type="primary" @click="handleSubmit()">保存</Button>
+                               <Button  style="width:570px;" type="primary" @click="changeUserInfo()">保存</Button>
                         </FormItem>
                     </Form>
               
@@ -276,7 +276,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
+import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser,changeUser } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 
 export default {
@@ -290,18 +290,22 @@ export default {
       showInformation:false,
       showInformationAdd:false,
       addTitle:'',
-       message:{
+      message:{
                 userId:localStorage.userId,
                 memberName:'',
+                accountName:'',
                 memberEmail:'',
                 birthday:'',
                 time:'',
                 memberLabel:'',
                 job:'',
-                accountName:'',
                 memberPhone:'',
                 address:'',
                 email:'',
+                
+
+              
+
                 
             },
       
@@ -315,7 +319,19 @@ export default {
     
   },
   methods: {
-     handleSubmit () {}
+     changeUserInfo () {
+           if(this.message.birthday!=null&&this.message.birthday!=""){
+                console.log(this.message.birthday)
+                var dataEE=new Date(this.message.birthday).toJSON();
+                var birthDay = new Date(new Date(dataEE).getTime()+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            }
+            this.message.birthday=birthDay;
+            this.message.memberId=this.user.organizationMemberInfo.memberId;
+            this.message.projectId=this.user.organizationMemberInfo.projectId;
+            changeUser(this.message).then(res => {
+
+            });
+     }
   }
   
 };

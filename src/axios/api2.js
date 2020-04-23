@@ -198,3 +198,14 @@ export function setSysClip(url) {
         }
     })
 }
+
+
+//关联复制联接
+
+export function changeUser(params) {
+    return fetch({
+        url: `/projects/updateMembersInfo/`,
+        method: 'post', // 请求方法
+        params: params,
+    })
+}
