@@ -18,12 +18,15 @@
                       <img src="./../../assets/images/user-e.png" width="22" />
                        {{user.memberEmail}}</div>
                     <div> 
-                      <img src="./../../assets/images/user-t.png" width="14" />{{user.memberPhone}}
+                      <img src="./../../assets/images/user-t.png" width="14" />{{user.accountName}}
                       </div>
                   </div>
             </div>
             <div class="title-nav">
-
+                <!-- <div class="add-talk">
+                    <Icon type="ios-add-circle-outline"  />
+                    发起群聊
+                </div> -->
                <Tabs active-key="key1">
                   <Tab-pane label="详细资料" key="key1">
                     
@@ -53,7 +56,7 @@
                                   司龄:
                                   </span> 
                                    <span>
-                                    {{user.stayCompanyAge || '-'}}
+                                    {{user.stayComDate || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -96,7 +99,7 @@
                           <ul >
                               <li> <span>电话:</span> 
                                <span>
-                                   {{user.memberPhone || '-'}}
+                                   {{user.accountName || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -108,7 +111,7 @@
                               <li>
                                    <span>部门：</span>  
                                    <span>
-                                  {{user.partmentName || '-'}}
+                                  {{user.deptName || '-'}}
                                    </span>
                               </li>
                           </ul>
@@ -116,7 +119,7 @@
                               <li> 
                                 <span>上级:</span>  
                               <span>
-                                   {{user.parentMentName || '-'}}
+                                   {{user.parentName || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -133,20 +136,34 @@
                     <div class="title">
                       最近动态
                     </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-1.png" width="100" />
+                    </div>
+
+                     
                   </Tab-pane>
                   <Tab-pane label="任务安排" key="key3">
                     <div class="title">
                       任务安排
                     </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-2.png" width="100" />
+                    </div>
                   </Tab-pane>
-                  <Tab-pane label="任务安排" key="key4">
+                  <Tab-pane label="日程安排" key="key4">
                     <div class="title">
                       日程安排
+                    </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-3.png" width="100" />
                     </div>
                   </Tab-pane>
                   <Tab-pane label="项目经历" key="key5">
                     <div class="title">
                      项目经历
+                    </div>
+                    <div class="box-no" >
+                        <img src="./../../assets/images/user-4.png" width="100" />
                     </div>
                   </Tab-pane>
               </Tabs>
@@ -239,7 +256,7 @@
                     
                         
                         <FormItem>
-                               <Button  style="width:570px;" type="primary" @click="handleSubmit()">保存</Button>
+                               <Button  style="width:570px;" type="primary" @click="changeUserInfo()">保存</Button>
                         </FormItem>
                     </Form>
               
@@ -259,7 +276,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
+import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser,changeUser } from "../../axios/api2.js";
 import { updateUserRole } from "../../axios/api.js";
 
 export default {
@@ -273,18 +290,22 @@ export default {
       showInformation:false,
       showInformationAdd:false,
       addTitle:'',
-       message:{
+      message:{
                 userId:localStorage.userId,
                 memberName:'',
+                accountName:'',
                 memberEmail:'',
                 birthday:'',
                 time:'',
                 memberLabel:'',
                 job:'',
-                accountName:'',
                 memberPhone:'',
                 address:'',
                 email:'',
+                
+
+              
+
                 
             },
       
@@ -298,7 +319,19 @@ export default {
     
   },
   methods: {
-     handleSubmit () {}
+     changeUserInfo () {
+           if(this.message.birthday!=null&&this.message.birthday!=""){
+                console.log(this.message.birthday)
+                var dataEE=new Date(this.message.birthday).toJSON();
+                var birthDay = new Date(new Date(dataEE).getTime()+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            }
+            this.message.birthday=birthDay;
+            this.message.memberId=this.user.organizationMemberInfo.memberId;
+            this.message.projectId=this.user.organizationMemberInfo.projectId;
+            changeUser(this.message).then(res => {
+
+            });
+     }
   }
   
 };
@@ -340,6 +373,17 @@ export default {
   }
   .title-nav{
         padding: 20px;
+        position: relative;
+        .add-talk{
+          cursor: pointer;
+          position: absolute;
+          top: 28px;
+          right: 20px;
+          color: #3da8f5;
+          i{
+            margin-top:-5px;
+          }
+        }
         .title{
           display: flex;
           justify-content: space-between;
@@ -381,6 +425,12 @@ export default {
             ul:last-child{
               border-bottom:none;
             }
+        }
+
+        .box-no{
+              width:100px;
+              height:100px;
+              margin:150px auto;
         }
 
    }
