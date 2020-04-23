@@ -301,6 +301,14 @@ export function delRCProject(id) {
         params: {}
     });
 }
+export function createMeeting(userId,meetingName,scheduleId){
+    return $post("/aliyun/createMeeting",{
+        userId:userId,
+        meetingName:meetingName,
+        scheduleId:scheduleId
+    })    
+}
+
 
 //文件删除文件夹删除
 

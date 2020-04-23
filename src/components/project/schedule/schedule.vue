@@ -26,7 +26,7 @@
               </p>
             </div>
           </div>
-          <div @click.stop="openZoom" class="zoom">
+          <div @click.stop="openZoom(i.scheduleId)" class="zoom">
             <Icon type="md-videocam" size="32" color="#3da8f5" />
           </div>
         </div>
@@ -49,7 +49,7 @@
 <script>
 import AddSchedule from "./AddSchedule.vue";
 import editRicheng from "./EditRicheng.vue";
-import { schedules } from "@/axios/api";
+import { schedules, createMeeting } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 import { mapState, mapActions, mapMutations } from "vuex";
 
@@ -63,13 +63,13 @@ export default {
       load: false,
       richengData: null,
       parameter: {
-        projectId: this.$route.params.id
-      }
+        projectId: this.$route.params.id,
+      },
     };
   },
   computed: {
     ...mapState("schedule", ["loading", "schedules"]),
-    ...mapState("project", ["projectName"])
+    ...mapState("project", ["projectName"]),
   },
   methods: {
     ...mapActions("schedule", ["init", "getScheduleById"]),
@@ -87,13 +87,20 @@ export default {
     closeModal() {
       this.editrc = false;
     },
-    openZoom() {
-      window.open("https://zoom.us/signin");
-    }
+    openZoom(scheduleId) {
+      //window.open("https://zoom.us/signin");
+      createMeeting(localStorage.userId, "测试会议", scheduleId).then((res) => {
+        // const { href } = this.$router.resolve({
+        //   name: "organizationAdmin",
+        //   params: { orgId: localStorage.companyId },
+        // });
+        window.open("https://www.aldbim.com/detail/index.html?code="+res.data.meetingCode+"&userId="+localStorage.userId);
+      });
+    },
   },
   mounted() {
     this.init(this.parameter);
-  }
+  },
 };
 </script>
 
