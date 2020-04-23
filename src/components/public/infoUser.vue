@@ -48,7 +48,7 @@
                                   姓名:
                                 </span> 
                                 <span>
-                                  {{user.memberName || '-'}}
+                                  {{user.userName || '-'}}
                                 </span>
                               </li>
                               <li>
@@ -99,7 +99,7 @@
                           <ul >
                               <li> <span>电话:</span> 
                                <span>
-                                   {{user.accountName || '-'}}
+                                   {{user.organizationMemberInfo.phone || '-'}}
                                    </span>
                               </li>
                               <li>
@@ -177,7 +177,7 @@
                          <Row>
                               <i-col span="12">
                                   <FormItem label="姓名" style="padding-right:10px;">
-                                          <Input v-model="message.memberName" placeholder="请输入姓名"></Input>
+                                          <Input v-model="message.userName" placeholder="请输入姓名"></Input>
                                   </FormItem>
                               </i-col>
                               <i-col span="12">
@@ -207,11 +207,7 @@
                          <Row>
                               <i-col span="10">
                                   <FormItem label="员工类型" style="padding-right:10px;">
-                                          <i-select :model.sync="message.memberLabel" placeholder="请选择">
-                                                          <i-option value="beijing">北京市</i-option>
-                                                          <i-option value="shanghai">上海市</i-option>
-                                                          <i-option value="shenzhen">深圳市</i-option>
-                                          </i-select>
+                                          <Input v-model="message.memberLabel" placeholder="请输入姓名"></Input>
                                   </FormItem>
                               </i-col>
                                <i-col span="2" style="padding-top:35px;padding-left:10px;  cursor: pointer;">
@@ -247,7 +243,7 @@
                            </i-select>
                         </FormItem>
                         <FormItem label="联系电话">
-                        <Input v-model="message.memberPhone" placeholder="请输入联系电话"></Input>
+                        <Input v-model="message.phone" placeholder="请输入联系电话"></Input>
                         </FormItem>
 
                          <FormItem label="工作地点">
@@ -292,14 +288,14 @@ export default {
       addTitle:'',
       message:{
                 userId:localStorage.userId,
-                memberName:'',
+                userName:'',
                 accountName:'',
                 memberEmail:'',
                 birthday:'',
                 time:'',
                 memberLabel:'',
                 job:'',
-                memberPhone:'',
+                phone:'',
                 address:'',
                 email:'',
                 
@@ -325,11 +321,13 @@ export default {
                 var dataEE=new Date(this.message.birthday).toJSON();
                 var birthDay = new Date(new Date(dataEE).getTime()+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
             }
+            console.log(birthDay)
             this.message.birthday=birthDay;
             this.message.memberId=this.user.organizationMemberInfo.memberId;
             this.message.projectId=this.user.organizationMemberInfo.projectId;
             changeUser(this.message).then(res => {
-
+                    //this.$emit("close");
+                    this.showInformation=false
             });
      }
   }
