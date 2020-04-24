@@ -90,11 +90,12 @@ export default {
     openZoom(scheduleId) {
       //window.open("https://zoom.us/signin");
       createMeeting(localStorage.userId, "测试会议", scheduleId).then((res) => {
-        // const { href } = this.$router.resolve({
-        //   name: "organizationAdmin",
-        //   params: { orgId: localStorage.companyId },
-        // });
-        window.open("https://www.aldbim.com/detail/?code="+res.data.meetingCode+"&userId="+localStorage.userId);
+        const { href } = this.$router.resolve({
+            path:'/detail',
+            query: { code: res.data.meetingCode }
+          });
+          console.log(href)
+          window.open(href, "_blank");
       });
     },
   },

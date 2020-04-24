@@ -15,7 +15,7 @@ import Material from '../components/public/sucai'
 import Bind from '../views/bindPhone.vue'
 import orgEmpty from '../views/orgEmpty.vue'
 import delOrg from '../views/delOrg.vue'
-
+import Detail from '../views/detail.vue'
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -29,6 +29,14 @@ const router = new Router({
   routes: [{
       path: "/material", // 素材裤
       component: Material,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: "/detail", //
+      component: Detail,
+      name:'Detail',
       meta: {
         keepAlive: false
       }
