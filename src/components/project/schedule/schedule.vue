@@ -94,7 +94,7 @@ export default {
         //   name: "organizationAdmin",
         //   params: { orgId: localStorage.companyId },
         // });
-        window.open("https://www.aldbim.com/detail/index.html?code="+res.data.meetingCode+"&userId="+localStorage.userId);
+        window.open("https://www.aldbim.com/detail/?code="+res.data.meetingCode+"&userId="+localStorage.userId);
       });
     },
   },
