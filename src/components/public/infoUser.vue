@@ -220,8 +220,8 @@
                        </FormItem>
                         <FormItem label="部门">
 
-                          <Select v-model="message.deptName"  placeholder="请选择" >
-                              <Option v-for="item in message.deptNameList" :value="item" :key="item">{{ item }}</Option>
+                          <Select v-model="message.deptId"  placeholder="请选择" >
+                              <Option v-for="item in message.deptNameList" :value="item.partmentId" :key="item.partmentId">{{ item.partmentName }}</Option>
                           </Select>
                            
                         </FormItem>
@@ -278,7 +278,7 @@ export default {
                 phone:'',
                 address:'',
                 email:'', 
-                deptName:'',   
+                deptId:'',   
                 deptNameList:[], 
             },
       
@@ -317,7 +317,22 @@ export default {
             this.message.projectId=this.user.organizationMemberInfo.projectId;
             changeUser(this.message).then(res => {
                     //this.$emit("close");
-                    this.showInformation=false
+                    this.showInformation=false;
+
+                     message={
+                        userId:localStorage.userId,
+                        userName:'',
+                        memberEmail:'',
+                        birthday:'',
+                        entryTime:'',
+                        memberLabel:'',
+                        job:'',
+                        phone:'',
+                        address:'',
+                        email:'', 
+                        deptId:'',   
+                        deptNameList:[], 
+                    }
             });
      }
   },
