@@ -115,7 +115,9 @@ export default {
   data() {
     return {
       showAddshare: false,
-      itemUser:[],
+      itemUser:{
+        organizationMemberInfo:{}
+      },
       keyword: "",
       keyword2: "",
       modal: false,
