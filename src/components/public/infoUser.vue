@@ -319,7 +319,8 @@ export default {
             this.message.memberId=this.user.organizationMemberInfo.memberId;
             this.message.projectId=this.user.organizationMemberInfo.projectId;
             changeUser(this.message).then(res => {
-                    this.$emit("close",res.data);
+                   
+                    this.$emit("close",res.date);
                     this.showInformation=false;
                      this.message={
                         userId:localStorage.userId,
