@@ -14,10 +14,10 @@
 
     <div class="userBox">
       <ul>
-        <li v-for="(user, index) in users" :key="index" @click="inofoUser(user)">
+        <li v-for="(user, index) in users" :key="index" >
           <div class="member-item">
             <Avatar :src="user.memberImg" class="avatar" />
-            <div class="memberInfo">
+            <div class="memberInfo" @click="inofoUser(user)">
               <span class="uname">{{ user.memberName }} &nbsp;&nbsp;&nbsp;职位：{{ user.job ? user.job : "无" }}</span>
               <span>联系方式：{{ user.accountName }}</span>
             </div>
@@ -94,7 +94,7 @@
     </Modal>
 
      <Modal v-model="showAddshare" title="成员信息" transfer fullscreen footer-hide  class="padd0"  class-name="ivu-modal-wrap">
-         <info-user ref="addshare" :user='itemUser' @close="showAddshare=false"  ></info-user>
+         <info-user ref="addshare" :user='itemUser' @close="chageItem"  ></info-user>
      </Modal>
 
 
@@ -176,7 +176,7 @@ export default {
     },
     //筛选用户
     FUser(keyword) {
-      debugger
+      
       if (keyword != "") {
         this.filterUser(keyword);
       } else {
@@ -240,6 +240,11 @@ export default {
       console.log(user)
        this.showAddshare=true;
        this.itemUser=user;
+    },
+    //修改用户信息
+    chageItem(data){
+      this.itemUser=data;
+        
     },
     closebox() {
       this.modal1 = false;

@@ -84,12 +84,14 @@ export default {
     initSocket(id) {
       // 建立连接对象
       var url = "";
+      
       if (process.env.NODE_ENV == "test") {
         url = process.env.VUE_APP_TEST_SOCKET;
       } else if (process.env.NODE_ENV == "production") {
         url = process.env.VUE_APP_SOCKET;
       } else {
         url = process.env.VUE_APP_SOCKET;
+       //url='http://192.168.3.112:8080/webSocketServer'
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
@@ -100,7 +102,9 @@ export default {
         frame => {
           this.stompClient.subscribe(`/topic/${id}`, msg => {
             var result = JSON.parse(msg.body);
+        
             console.log(result.type);
+            
             switch (result.type) {
               case "A1": //创建任务
                 this.$store.dispatch("task/init", result.object);
@@ -287,6 +291,9 @@ export default {
               case "D7":
                 this.$store.dispatch("schedule/getScheduleById", result.object);
                 break;
+                case "K1":
+                  this.$store.dispatch("member/initUser", result.object.projectId);
+                break;
               //复制日程
               case "D10":
               case "D11":
@@ -346,6 +353,7 @@ export default {
                   this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
+                 
               // 发消息
               case "F1":
                 if (result.object.type === "任务") {

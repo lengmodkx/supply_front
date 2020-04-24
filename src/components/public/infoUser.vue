@@ -286,9 +286,12 @@ export default {
   },
 
   computed: {
-   
+    
   },
   mounted() {
+    
+    console.log(this.user)
+
     getOrg(localStorage.companyId).then(res => {
                this.message.deptNameList=res.data
                    console.log(res.data)
@@ -316,10 +319,9 @@ export default {
             this.message.memberId=this.user.organizationMemberInfo.memberId;
             this.message.projectId=this.user.organizationMemberInfo.projectId;
             changeUser(this.message).then(res => {
-                    //this.$emit("close");
+                    this.$emit("close",res.data);
                     this.showInformation=false;
-
-                     message={
+                     this.message={
                         userId:localStorage.userId,
                         userName:'',
                         memberEmail:'',

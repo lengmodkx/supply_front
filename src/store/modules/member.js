@@ -23,6 +23,7 @@ const store = {
         
         },
         initSymbol(state, data) {
+            
 
             data.filter(v => v.memberId != localStorage.userId);
 
@@ -62,7 +63,6 @@ const store = {
             commit
         }, data) {
             
-           
             projectMembers(data).then(res => {
                 
                 if (res.result === 1) {
