@@ -1,10 +1,10 @@
 <template>
 
-    <div class="info-user">
+    <div class="info-user" >
       <div class="info-nav"> 
            成员 > {{user.memberName}}
       </div>
-      <div class=" title-section">
+      <div class=" title-section" >
             <div class="info-tilel">
                   <div class="left"> 
                       <Avatar :src="user.memberImg" class="avatar" />
@@ -96,7 +96,10 @@
                               <li>
                                    <span>生日：</span> 
                                     <span>
-                                      {{user.organizationMemberInfo.birthday || '-'}}
+
+                                      <!-- {{ new Date(1587657600000).Format("yyyy-MM-dd")  }} -->
+                                     
+                                      {{ user.organizationMemberInfo.birthday| dataFormat}}
                                    </span>
                               </li>
                               <li>
@@ -216,11 +219,11 @@
                          </Row>
                        </FormItem>
                         <FormItem label="部门">
-                           <i-select :model.sync="message.deptName" placeholder="请选择">
-                                    <i-option value="beijing">北京市</i-option>
-                                    <i-option value="shanghai">上海市</i-option>
-                                    <i-option value="shenzhen">深圳市</i-option>
-                           </i-select>
+
+                          <Select v-model="message.deptId"  placeholder="请选择" >
+                              <Option v-for="item in message.deptNameList" :value="item.partmentId" :key="item.partmentId">{{ item.partmentName }}</Option>
+                          </Select>
+                           
                         </FormItem>
                         <FormItem label="联系电话">
                         <Input v-model="message.phone" placeholder="请输入联系电话"></Input>
@@ -267,7 +270,6 @@ export default {
       message:{
                 userId:localStorage.userId,
                 userName:'',
-               
                 memberEmail:'',
                 birthday:'',
                 entryTime:'',
@@ -275,7 +277,9 @@ export default {
                 job:'',
                 phone:'',
                 address:'',
-                email:'',              
+                email:'', 
+                deptId:'',   
+                deptNameList:[], 
             },
       
     };
@@ -286,10 +290,20 @@ export default {
   },
   mounted() {
     getOrg(localStorage.companyId).then(res => {
-               
-                   console.log(res)
+               this.message.deptNameList=res.data
+                   console.log(res.data)
             });
   },
+    filters: {
+                        dataFormat(msg) {
+                            if(msg){
+                                return new Date(1587657600000).Format("yyyy-MM-dd") 
+                            }else{
+                               return "-" 
+                            }
+                            
+                        }
+    },
   methods: {
      changeUserInfo () {
            if(this.message.birthday!=null&&this.message.birthday!=""){
@@ -303,12 +317,28 @@ export default {
             this.message.projectId=this.user.organizationMemberInfo.projectId;
             changeUser(this.message).then(res => {
                     //this.$emit("close");
-                    this.showInformation=false
+                    this.showInformation=false;
+
+                     message={
+                        userId:localStorage.userId,
+                        userName:'',
+                        memberEmail:'',
+                        birthday:'',
+                        entryTime:'',
+                        memberLabel:'',
+                        job:'',
+                        phone:'',
+                        address:'',
+                        email:'', 
+                        deptId:'',   
+                        deptNameList:[], 
+                    }
             });
      }
   },
   created:function(){
-             
+           //debugger
+            // console.log(localStorage.companyId)
   }
   
 };
