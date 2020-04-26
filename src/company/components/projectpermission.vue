@@ -30,6 +30,7 @@
       </CheckboxGroup>
     </div>
     <div class="footer-btn">
+      <Button type="primary" class="close-btn"  @click="closePower">关闭</Button>
       <Button type="primary" @click="savePower">保存</Button>
     </div>
   </div>
@@ -89,6 +90,9 @@ export default {
         permission.checkAll = false;
       }
     },
+    closePower(){
+        this.$emit("close");
+    },
     // 保存 按钮
     savePower() {
       let resourcesArr = [];
@@ -127,6 +131,9 @@ export default {
   display: flex;
   justify-content: center;
   margin-top: 25px;
+}
+.close-btn {
+  margin-right: 10px;
 }
 .modal-per-content {
   display: flex;
