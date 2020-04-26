@@ -123,9 +123,9 @@ export default {
     },
     // 分配权限
     givePower() {
-      if (this.nowRole == null) {
+      if (this.nowRole.roleId === undefined) {
         this.$Notice.warning({
-          title: "请选择一个角色进行分配"
+          title: "请选择一个角色分配权限"
         });
       } else {
         getAllPower(this.nowRole.roleId).then(res => {
