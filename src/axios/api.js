@@ -437,7 +437,6 @@ export function moveTask(taskId, projectId, groupId, menuId) {
 }
 //获取项目成员
 export function projectMembers(projectId) {
-    
     return $get(`/projects/${projectId}/members`, '');
 }
 //获取参与者列表

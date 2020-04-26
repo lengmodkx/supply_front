@@ -5,10 +5,14 @@
             <div class="base-info">
                 <p class="little-title">企业头像</p>
                 <div class="awart-box">
-                    <img :src="img" alt="">
-                    <!-- <Upload action="//jsonplaceholder.typicode.com/posts/">
-                        <Button type="primary" ghost>上传新头像</Button>
-                    </Upload> -->
+                    <img alt="" :src="img"   v-if="pic_show" accept="image/*">
+                    <img :src="img" alt v-if="pic_hide" accept="image/*">
+                    <input type="file"
+                           ref="fileInput"
+                           accept="image/*"
+                           style="display: none"
+                           @change="getFile">
+                    <Button class="upLoadButton" @click="onPickFile">更换头像</Button>
                 </div>
                 <p class="little-title">企业名称</p>
                 <Input v-model="orgName" style="width: 420px;margin-bottom: 15px" />
@@ -63,6 +67,13 @@
 
 <script>
 import { orgInfo , updateOrg, delOrg,getAllTransfer,postTransfer} from '../axios/api'
+import OSS from "ali-oss";
+let client = new OSS({
+    region: "oss-cn-beijing",
+    accessKeyId: "LTAIP4MyTAbONGJx",
+    accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
+    bucket: "art1001-bim-5d"
+});
 export default {
     name: "enterpriseInformation",
     data () {
@@ -96,6 +107,9 @@ export default {
                 }
             ],
             img: '',
+            postUrl: "",
+            pic_show:true,
+            pic_hide:false,
             orgName: '',
             orgDes: '',
             orgPublick: '0',
@@ -138,6 +152,63 @@ export default {
         this.getOrgInfo()
     },
     methods:{
+        get_suffix(filename) {
+            var pos = filename.lastIndexOf(".");
+            var suffix = "";
+            if (pos !== -1) {
+                suffix = filename.substring(pos);
+            }
+            return suffix;
+        },
+        random_string(len) {
+            len = len || 32;
+            var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+            var maxPos = chars.length;
+            var pwd = "";
+            for (var i = 0; i < len; i++) {
+                pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        },
+        onPickFile () {
+            this.$refs.fileInput.click()
+        },
+        getFile(event) {
+            var that = this;
+            const files = event.target.files
+            this.filename = files[0].name          //只有一个文件
+            if (this.filename.lastIndexOf('.') <= 0) {
+                return alert("Please add a valid image!")        //判断图片是否有效
+            }
+            const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
+            fileReader.addEventListener('load', () => {
+                this.pic_show = false,
+                    this.pic_hide = true,
+                    this.img = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
+            this.image = files[0]
+            //到这里后, 选择图片就可以显示出来了
+            this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
+
+            if(this.filename){
+                client.multipartUpload("/orgImg/"+this.fileName, this.image, {
+                    progress: function(p) {
+                    }
+                }).then(function(result){
+                })
+            }
+            let params = {
+                orgImg:"https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/orgImg/"+this.fileName,
+            }
+            updateOrg(localStorage.companyId,params).then(res=>{
+                if(res.result === 1){
+                    this.$Message.success('修改成功');
+                }else{
+                    this.$Message.eror('修改失败');
+                }
+            })
+        },
         getOrgInfo(){
             orgInfo(localStorage.companyId).then(res=>{
                 if(res.result==1){
@@ -192,6 +263,7 @@ export default {
 
         saveOrg(){
             let params = {
+                orgImg:this.img,
                 orgName:this.orgName,
                 orgDes:this.selectmodel1,
                 orgIntro:this.orgDes,

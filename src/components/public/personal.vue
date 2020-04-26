@@ -218,16 +218,16 @@ export default {
                 this.pic_show = false,
                 this.pic_hide = true,
                 this.imageUrl = fileReader.result
-              
-               
+
+
             })
             fileReader.readAsDataURL(files[0])
             this.image = files[0]
             //到这里后, 选择图片就可以显示出来了
             this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
-            
+
             if(this.filename){
-                this.message.defaultImage="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/"+this.fileName 
+                this.message.defaultImage="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/"+this.fileName
                 client.multipartUpload(this.fileName, this.image, {
                     progress: function(p) {
                     }
@@ -247,7 +247,7 @@ export default {
                         }
                     });
                 })
-                
+
             }
         },
         handleSubmit () {
@@ -273,7 +273,7 @@ export default {
                 var dataEE=new Date(this.message.birthday).toJSON();
                 var birthDay = new Date(new Date(dataEE).getTime()+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
             }
-            
+
             let data={
                 userId:localStorage.userId,
                 image:this.message.defaultImage,
@@ -290,7 +290,7 @@ export default {
                     this.$Message.info(res.msg);
                 }
             });
-            
+
         },
         info(){
             findUserInfo(this.message.userId).then(res=>{
@@ -314,12 +314,12 @@ export default {
             }
             var code = theRequest.code
             console.log(code)
-            next(vm => { 
+            next(vm => {
                 bindWx(code,this.message.userId).then(res => {
                     if(res.result==1){
                         this.$Message.success(res.msg);
                     }
-                }) 
+                })
             })
         }
     },
@@ -334,7 +334,7 @@ const validatePhone = (rule, value, callback) => {
         callback('手机号格式不正确');
     } else {
         callback();
-    }   
+    }
     }
 const validateEmail = (rule, value, callback) => {
     if (!value) {
@@ -343,7 +343,7 @@ const validateEmail = (rule, value, callback) => {
         callback('邮箱格式不正确');
     } else {
         callback();
-    }   
+    }
 }
 
 </script>
@@ -400,7 +400,7 @@ const validateEmail = (rule, value, callback) => {
                 font-weight: bold
             }
         }
-        
+
     }
     .personal-right{
         width:620px;
@@ -408,12 +408,12 @@ const validateEmail = (rule, value, callback) => {
         background: #ffffff;
         padding:20px;
         .title{
-            font-size: 16px; 
+            font-size: 16px;
             font-weight: bold
         }
         .information{
             padding: 20px 0;
-            h4{  
+            h4{
                 display: block;
                 text-align: right;
                 float: left;
@@ -427,10 +427,10 @@ const validateEmail = (rule, value, callback) => {
             }
             .head{
                 display: flex;
-                // margin-bottom: 40px;   
+                // margin-bottom: 40px;
                 h4{
                     padding-top:20px;
-                }             
+                }
                 img{
                     width: 100px;
                     height: 100px;
@@ -442,7 +442,7 @@ const validateEmail = (rule, value, callback) => {
                     line-height: 30px;
                     text-align: center;
                     margin:30px;
-                    position: relative;      
+                    position: relative;
                     &:hover {
                         .upLoadButton{
                             background: #3da8f5;
@@ -458,7 +458,7 @@ const validateEmail = (rule, value, callback) => {
                         border-radius: 4px;
                         border: none;
                         border:1px solid #3DA8F5;
-                        
+
                     }
                     input{
                         position: absolute;

@@ -504,7 +504,7 @@ export default {
         this.loading = false;
       });
       //获取群组信息
-      getGroups(localStorage.companyId).then(res => {my
+      getGroups(localStorage.companyId).then(res => {
           this.groupData = res.data;
           this.nowGroup.name = this.groupData[0].groupName;
           this.nowGroup.id = this.groupData[0].groupId;
