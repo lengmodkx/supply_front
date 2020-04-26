@@ -49,7 +49,7 @@
 <script>
 import AddSchedule from "./AddSchedule.vue";
 import editRicheng from "./EditRicheng.vue";
-import { schedules, createMeeting } from "@/axios/api";
+import { schedules, createMeeting, joinMeeting } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 import { mapState, mapActions, mapMutations } from "vuex";
 
