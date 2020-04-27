@@ -95,6 +95,7 @@ export default {
         //   params: { orgId: localStorage.companyId },
         // });
         document.cookie = "userId" + "=" + localStorage.userId + ";" + "path=/";
+        document.cookie = "orgId" + "=" + localStorage.companyId + ";" + "path=/";
         window.open("https://www.aldbim.com/detail?code="+res.data.meetingCode+"&userId="+localStorage.userId);
       });
     },
