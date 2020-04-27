@@ -26,8 +26,9 @@
               </p>
             </div>
           </div>
-          <div @click.stop="openZoom(i.scheduleId)" class="zoom">
-            <Icon type="md-videocam" size="32" color="#3da8f5" />
+          <div  class="zoom">
+            <Button type="primary" v-if="i.meetingCode" @click.stop="enterZoom(i.meetingCode)">进入会议</Button>
+            <Button type="primary" v-else @click.stop="openZoom(i.scheduleId)">开启会议</Button>
           </div>
         </div>
       </div>
@@ -65,6 +66,7 @@ export default {
       parameter: {
         projectId: this.$route.params.id,
       },
+      meetingCode:""
     };
   },
   computed: {
@@ -89,16 +91,13 @@ export default {
     },
     openZoom(scheduleId) {
       //window.open("https://zoom.us/signin");
-      createMeeting(localStorage.userId, "测试会议", scheduleId).then((res) => {
-        // const { href } = this.$router.resolve({
-        //   name: "organizationAdmin",
-        //   params: { orgId: localStorage.companyId },
-        // });
-        document.cookie = "userId" + "=" + localStorage.userId + ";" + "path=/";
-        document.cookie = "orgId" + "=" + localStorage.companyId + ";" + "path=/";
-        window.open("https://www.aldbim.com/detail?code="+res.data.meetingCode+"&userId="+localStorage.userId);
+      createMeeting(localStorage.userId, "会议", scheduleId,this.$route.params.id).then((res) => {
+        window.open("https://www.aldbim.com/detail?code="+res.meeting.meetingCode+"&userId="+localStorage.userId);
       });
     },
+    enterZoom(meetingCode){
+      window.open("https://www.aldbim.com/detail?code="+meetingCode+"&userId="+localStorage.userId);
+    }
   },
   mounted() {
     this.init(this.parameter);

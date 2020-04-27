@@ -314,6 +314,12 @@ export default {
                       fileId: result.object
                   });
                 break;
+              case "D15":
+                console.log("xxxxxxxxx")
+                this.$store.dispatch("schedule/init", {
+                  projectId: result.object
+                });
+                break;
               case "E1":
                 if (result.object.publicType === "任务") {
                   this.$store.dispatch("task/changeTask", result.object.publicId);

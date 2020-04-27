@@ -278,6 +278,8 @@ export default {
     ...mapState("project", ["projects", "loading", "project"])
   },
   mounted() {
+    document.cookie = "orgId" + "=" + localStorage.companyId + ";" + "path=/";
+    document.cookie = "userId" + "=" + localStorage.userId + ";" + "path=/";
     this.$store.state.project.loading = true;
     this.orgProjectInit({ id: this.companyId, type: "全部项目" });
   },

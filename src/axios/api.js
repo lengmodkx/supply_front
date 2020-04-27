@@ -301,11 +301,12 @@ export function delRCProject(id) {
         params: {}
     });
 }
-export function createMeeting(userId,meetingName,scheduleId){
+export function createMeeting(userId,meetingName,scheduleId,projectId){
     return $get("/aliyun/createMeeting",{
         userId:userId,
         meetingName:meetingName,
-        scheduleId:scheduleId
+        scheduleId:scheduleId,
+        projectId:projectId
     })    
 }
 export function joinMeeting(userId,meetingCode){
