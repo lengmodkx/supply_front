@@ -440,6 +440,12 @@ export function moveTask(taskId, projectId, groupId, menuId) {
 export function projectMembers(projectId) {
     return $get(`/projects/${projectId}/members`, '');
 }
+
+//获取单个项目成员详情
+export function projectOneMembers(projectId,userId) {
+    return $get(`/projects/${projectId}/membersInfo/${userId}`, '');
+}
+
 //获取参与者列表
 export function getmemberList(projectId) {
     return $get(`/members/${projectId}/member`, '');
