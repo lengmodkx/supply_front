@@ -19,7 +19,7 @@
             <Avatar :src="user.memberImg" class="avatar" />
             <div class="memberInfo" @click="inofoUser(user.memberId)">
               <span class="uname">{{ user.memberName }} &nbsp;&nbsp;&nbsp;职位：{{ user.job ? user.job : "无" }}</span>
-              <span>联系方式：{{ user.accountName }}</span>
+              <span>联系方式：{{ user.memberPhone }}</span>
             </div>
             <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible" v-if="roleKey == 'administrator'">
               <a href="javascript:void(0)" v-if="user.memberLabel == 0">
