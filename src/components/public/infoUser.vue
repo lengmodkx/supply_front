@@ -128,10 +128,123 @@
                   </Tab-pane>
                   <Tab-pane label="最近动态" key="key2">
                     <div class="title">
-                      最近动态
+                      <span>
+                          最近动态
+                      </span>
+                      <button  @click="showInformation=true">
+                         时间
+                      </button>
+                      
                     </div>
-                    <div class="box-no" >
+                    
+                    <!-- <div class="box-no" >
                         <img src="./../../assets/images/user-1.png" width="100" />
+                    </div> -->
+
+                    <div>
+                        <div class="dynamic-time">
+                              <Avatar class="avatar" /> 时间
+                        </div>
+                        <ul  class="dynamic">
+                          <li>
+                            <div class="dynamicI"></div>
+                             <div class="dynamic-Contant">
+                                  <h4>dssfdfds</h4>
+                                  <ul class="dynamic-task">
+                                          <li>
+                                            <i></i>
+                                            <span>项目</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>4月1</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>1</span>
+                                           </li>
+                                        
+                                  </ul>
+                           
+                             </div>
+                            <Avatar :src="user.memberImg" class="avatar" />
+                          </li>
+                          <li>
+                            <div class="dynamicI"></div>
+                             <div class="dynamic-Contant">
+                                  <h4>dssfdfds</h4>
+                                  <ul class="dynamic-task">
+                                          <li>
+                                            <i></i>
+                                            <span>项目</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>4月1</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>1</span>
+                                           </li>
+                                        
+                                  </ul>
+                           
+                             </div>
+                            <Avatar :src="user.memberImg" class="avatar" />
+                          </li>
+                        </ul>
+
+                         <div class="dynamic-time">
+                              <Avatar class="avatar" /> 时间
+                        </div>
+                        <ul  class="dynamic">
+                          <li>
+                            <div class="dynamicI"></div>
+                             <div class="dynamic-Contant">
+                                  <h4>dssfdfds</h4>
+                                  <ul class="dynamic-task">
+                                          <li>
+                                            <i></i>
+                                            <span>项目</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>4月1</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>1</span>
+                                           </li>
+                                        
+                                  </ul>
+                           
+                             </div>
+                            <Avatar :src="user.memberImg" class="avatar" />
+                          </li>
+                          <li>
+                            <div class="dynamicI"></div>
+                             <div class="dynamic-Contant">
+                                  <h4>dssfdfds</h4>
+                                  <ul class="dynamic-task">
+                                          <li>
+                                            <i></i>
+                                            <span>项目</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>4月1</span>
+                                           </li>
+                                           <li>
+                                            <i></i>
+                                            <span>1</span>
+                                           </li>
+                                        
+                                  </ul>
+                           
+                             </div>
+                            <Avatar :src="user.memberImg" class="avatar" />
+                          </li>
+                        </ul>
                     </div>
 
                      
@@ -411,6 +524,7 @@ export default {
             }
           
         }
+        // 详细资料
         .information{
 
           ul{
@@ -442,6 +556,61 @@ export default {
               height:100px;
               margin:150px auto;
         }
+        // 最近动态
+        .dynamic-time{
+          padding-top: 10px;
+          .avatar{
+            width: 10px;
+            height: 10px;
+            background: #3da8f5;
+          }
+        }
+        .dynamic{
+          border: 1px solid #e5e5e5;
+          border-radius: 5px;
+          margin-top:10px;
+          li{
+            cursor: pointer;
+            height: 70px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            padding:10px;
+            .dynamicI{
+              height: 20px;
+              width: 20px;
+              border: 2px solid #a6a6a6;
+              border-radius: 3px;
+              margin-right: 10px;
+            }
+            .dynamic-Contant{
+               display: flex;
+               flex: 1;
+               flex-flow: column;
+               .dynamic-task{
+                 display: flex;
+                 flex-flow: row;
+                 li{
+                   margin:5px 10px 0px 0px ;
+                   padding:0;
+                   border: none;
+                   color: #a6a6a6;
+                 }
+
+               }
+            }
+            .avatar{
+              width: 24px;
+              height: 24px;
+            }
+
+          };
+          li:last-child{
+            border:none
+          }
+          
+
+        }
+
 
    }
   
