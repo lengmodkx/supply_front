@@ -17,9 +17,9 @@
         <li v-for="(user, index) in users" :key="index" >
           <div class="member-item">
             <Avatar :src="user.memberImg" class="avatar" />
-            <div class="memberInfo" @click="inofoUser(user)">
+            <div class="memberInfo" @click="inofoUser(user.memberId)">
               <span class="uname">{{ user.memberName }} &nbsp;&nbsp;&nbsp;职位：{{ user.job ? user.job : "无" }}</span>
-              <span>联系方式：{{ user.accountName }}</span>
+              <span>联系方式：{{ user.memberPhone }}</span>
             </div>
             <Poptip placement="left" width="250" @on-popper-show="visibleChange(user)" v-model="user.visible" v-if="roleKey == 'administrator'">
               <a href="javascript:void(0)" v-if="user.memberLabel == 0">
@@ -103,7 +103,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { getUsers, getOrgIdUsers, getAssignUsers, addUser, addProjectUser, removeUser } from "../../axios/api2.js";
-import { updateUserRole } from "../../axios/api.js";
+import { updateUserRole,projectOneMembers } from "../../axios/api.js";
 import loading from "./common/Loading.vue";
 import infoUser from "../public/infoUser.vue";
 export default {
@@ -115,9 +115,7 @@ export default {
   data() {
     return {
       showAddshare: false,
-      itemUser:{
-        organizationMemberInfo:{}
-      },
+      itemUser:{},
       keyword: "",
       keyword2: "",
       modal: false,
@@ -137,12 +135,7 @@ export default {
     ...mapState("member", ["users", "roles"])
   },
   mounted() {
-    
-    console.log(localStorage.companyId);
      this.initUser(this.$route.params.id);
- 
-    console.log(this.roleKey);
-
   },
   methods: {
     ...mapActions("member", ["initUser", "filterUser", "getRoles"]),
@@ -236,16 +229,18 @@ export default {
       });
     },
     //进入项目
-    inofoUser(user){
-      console.log(user)
+    inofoUser(userId){
        this.showAddshare=true;
-       this.itemUser=user;
+        projectOneMembers(localStorage.companyId,userId).then(res=>{
+
+            this.itemUser=res.data;
+            this.itemUser.birthday = res.data.birthday
+            this.itemUser.entryTime = res.data.entryTime
+        })
     },
     //修改用户信息
     chageItem(data){
-      
-      this.itemUser=data[0];
-        
+      this.itemUser=data;
     },
     closebox() {
       this.modal1 = false;
