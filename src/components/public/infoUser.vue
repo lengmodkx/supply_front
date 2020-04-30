@@ -1,5 +1,4 @@
 <template>
-
     <div class="info-user">
         <div class="info-nav">
             成员 > {{user.userName}}
@@ -29,6 +28,7 @@
                     发起群聊
                 </div> -->
                 <Tabs active-key="key1">
+                
                     <Tab-pane label="详细资料" key="key1">
 
                         <div class="title">
@@ -39,7 +39,6 @@
                                 <img src="./../../assets/images/user-edit.png" width="14"/>
                                 编辑
                             </button>
-
                         </div>
                         <div class="information">
                             <ul>
@@ -132,23 +131,96 @@
 
                     </Tab-pane>
                     <Tab-pane label="最近动态" key="key2">
-                        <div class="title">
-                            最近动态
-                        </div>
-                        <div class="box-no">
-                            <img src="./../../assets/images/user-1.png" width="100"/>
-                        </div>
-
-
+                          <div class="title">
+                            <span>
+                                最近动态
+                            </span>
+                            <button  >
+                              时间
+                            </button>
+                            
+                          </div>                        
+                          <!-- <div class="box-no" >
+                              <img src="./../../assets/images/user-1.png" width="100" />
+                          </div> -->
+                          <div>
+                              <!-- <div class="dynamic-time">
+                                    <Avatar class="avatar" /> 时间
+                              </div> -->
+                              <ul  class="dynamic">
+                                <li>
+                                  <div class="dynamicI"></div>
+                                  <div class="dynamic-Contant">
+                                        <h4>dssfdfds</h4>
+                                        <ul class="dynamic-task">
+                                                <li>
+                                                  <i></i>
+                                                  <span>项目</span>
+                                                </li>
+                                                <li>
+                                                  <i></i>
+                                                  <span>4月1</span>
+                                                </li>
+                                                <li>
+                                                  <i></i>
+                                                  <span>1</span>
+                                                </li>
+                                              
+                                        </ul>
+                                
+                                  </div>
+                                  <Avatar :src="user.memberImg" class="avatar" />
+                                </li>
+                                <li>
+                                  <div class="dynamicI"></div>
+                                  <div class="dynamic-Contant">
+                                        <h4>dssfdfds</h4>
+                                        <ul class="dynamic-task">
+                                                <li>
+                                                  <i></i>
+                                                  <span>项目</span>
+                                                </li>
+                                                <li>
+                                                  <i></i>
+                                                  <span>4月1</span>
+                                                </li>
+                                                <li>
+                                                  <i></i>
+                                                  <span>1</span>
+                                                </li>
+                                              
+                                        </ul>
+                                
+                                  </div>
+                                  <Avatar :src="user.memberImg" class="avatar" />
+                                </li>
+                              </ul>
+                          </div>
                     </Tab-pane>
-                    <Tab-pane label="任务安排" key="key3">
+                       <Tab-pane label="任务安排" key="key3">
                         <div class="title">
                             任务安排
                         </div>
                         <div class="box-no">
-                            <img src="./../../assets/images/user-2.png" width="100"/>
+                           未完成任务
                         </div>
+                        <!-- <div>
+                          <ul>
+                            <li>
+                              <div>
+                                 <div class="dynamicI"></div>
+                                 <span>1111</span>
+                                 <span>项目2020</span>
+
+                              </div>
+                              <div>
+                                3月20日
+                              </div>
+                            </li>
+                          </ul>
+                        </div> -->
                     </Tab-pane>
+
                     <Tab-pane label="日程安排" key="key4">
                         <div class="title">
                             日程安排
@@ -344,102 +416,161 @@
     };
 </script>
 <style scoped lang="less">
-    /deep/ .ivu-date-picker {
-        width: 275px;
+   /deep/.ivu-date-picker{
+      width: 275px;
     }
 
-    .info-user {
-        width: 780px;
-        margin: 0px auto;
-        .info-nav {
-            margin: 20px 0;
-        }
-        .title-section {
+    .info-user{
+      width: 780px;
+      margin:0px auto;
+      .info-nav{
+        margin: 20px 0;
+      }
+      .title-section{
             background: #ffffff;
-
+          
             border: 1px solid #e5e5e5;
             border-radius: 3px;
-            .info-tilel {
-                display: flex;
-                justify-content: space-between;
-                padding: 20px;
-                justify-items: center;
-                i {
-                    padding-right: 10px;
-                }
-                .left {
-                    display: flex;
-                    .avatar {
-                        width: 48px;
-                        height: 48px;
-                        margin-right: 10px;
+          .info-tilel{
+              display: flex;
+              justify-content: space-between;
+              padding:20px;
+              justify-items: center;
+              i{
+                padding-right:10px;
+              }
+              .left{
+                  display: flex;
+                    .avatar{
+                      width: 48px;
+                      height: 48px;
+                      margin-right:10px;
                     }
-                }
-
+              }
+              
             }
-        }
-        .title-nav {
+      }
+      .title-nav{
             padding: 20px;
             position: relative;
-            .add-talk {
-                cursor: pointer;
-                position: absolute;
-                top: 28px;
-                right: 20px;
-                color: #3da8f5;
-                i {
-                    margin-top: -5px;
-                }
+            .add-talk{
+              cursor: pointer;
+              position: absolute;
+              top: 28px;
+              right: 20px;
+              color: #3da8f5;
+              i{
+                margin-top:-5px;
+              }
             }
-            .title {
-                display: flex;
-                justify-content: space-between;
-                background: #f5f5f5;
-                padding: 10px 10px;
-                margin: 0px;
-                span:first-child {
-                    font-size: 16px;
-                    font-weight: bold;
+            .title{
+              display: flex;
+              justify-content: space-between;
+              background: #f5f5f5;
+              padding:10px 10px;
+              margin:0px;
+                span:first-child{
+                  font-size: 16px;
+                  font-weight: bold;
                 }
-                button {
-                    border: none;
-                    cursor: pointer;
-                    background: none;
+                button{
+                  border: none;
+                  cursor: pointer;
+                  background: none;
                 }
-
+              
             }
-            .information {
+            // 详细资料
+            .information{
 
-                ul {
-                    border-bottom: 1px solid #e5e5e5;
-                    display: flex;
-                    justify-content: space-around;
-                    padding: 20px 10px;
-                    li {
+              ul{
+                  border-bottom: 1px solid #e5e5e5;
+                  display: flex; 
+                  justify-content: space-around;
+                  padding:20px 10px;
+                  li{
                         flex: 1;
                         display: flex;
                         flex-flow: column wrap;
-                        span {
+                        span{
+                          
+                            padding-top:5px;
+                        }
+                        span:first-child{
+                              color: #a6a6a6;
+                        }
+                  }
+              }
+              
+                ul:last-child{
+                  border-bottom:none;
+                }
+            }
 
-                            padding-top: 5px;
-                        }
-                        span:first-child {
-                            color: #a6a6a6;
-                        }
+            .box-no{
+                  width:100px;
+                  height:100px;
+                  margin:150px auto;
+            }
+            // 最近动态
+            .dynamic-time{
+              padding-top: 10px;
+              .avatar{
+                width: 10px;
+                height: 10px;
+                background: #3da8f5;
+              }
+            }
+            .dynamic{
+              border: 1px solid #e5e5e5;
+              border-radius: 5px;
+              margin-top:10px;
+              li{
+                cursor: pointer;
+                height: 70px;
+                border-bottom: 1px solid #e5e5e5;
+                display: flex;
+                padding:10px;
+                .dynamicI{
+                  height: 20px;
+                  width: 20px;
+                  border: 2px solid #a6a6a6;
+                  border-radius: 3px;
+                  margin-right: 10px;
+                }
+                .dynamic-Contant{
+                  display: flex;
+                  flex: 1;
+                  flex-flow: column;
+                  .dynamic-task{
+                    display: flex;
+                    flex-flow: row;
+                    li{
+                      margin:5px 10px 0px 0px ;
+                      padding:0;
+                      border: none;
+                      color: #a6a6a6;
                     }
+
+                  }
+                }
+                .avatar{
+                  width: 24px;
+                  height: 24px;
                 }
 
-                ul:last-child {
-                    border-bottom: none;
-                }
-            }
-            .box-no {
-                width: 100px;
-                height: 100px;
-                margin: 150px auto;
-            }
-        }
+              };
+              li:last-child{
+                border:none
+              }
+              
 
+            }
+
+
+      }
+      
+      
     }
 
 </style>
