@@ -1242,3 +1242,20 @@ export function changePassword(oldPassword, newPassword) {
         }
     })
 }
+// 成员--最新动态-时间
+
+export function dynamictime() {
+    return fetch({
+        url: `/projects/getYearOfAllMonth`,
+        method: "get", // 请求方法
+    });
+}
+
+// 成员--最新动态-列表
+
+export function dynamiclist(memberId,orgId,time) {
+    return fetch({
+        url: `/projects/${memberId}/${orgId}/tasks/${time}`,
+        method: "get", // 请求方法
+    });
+}

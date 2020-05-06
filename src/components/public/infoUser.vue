@@ -27,9 +27,55 @@
                     <Icon type="ios-add-circle-outline"  />
                     发起群聊
                 </div> -->
-                <Tabs active-key="key1">
+                <Tabs active-key="key1" @on-click="clickTabs">
+                       <Tab-pane label="最近动态" name="最近动态" key="最近动态">
+                          <div class="title">
+                            <span>
+                                最近动态
+                            </span>
+                            <button  >
+                                <Select class="selectBox" v-model="timeModel" @on-change="getDynamicList" >
+                                    <Option v-for="item in timeList" :value="item.yearOfMonth" :key="item.timeStamp">{{ item.yearOfMonth }}</Option>
+                                </Select>
+                            </button>
+                          </div>                        
+                         
+                          <div v-if="dynamicList.length">
+                              <ul  class="dynamic" >
+                                <li v-for='item in dynamicList' :key='item.taskId'>
+                                  <div class="dynamicI"></div>
+                                  <div class="dynamic-Contant">
+                                        <h4>{{item.taskName}}</h4>
+                                        <ul class="dynamic-task">
+                                                <li>
+                                                  <i></i>
+                                                  <span>{{item.projectName}}</span>
+                                                </li>
+                                                <li>
+                                                  <i></i>
+                                                  <span v-if="item.endTime"  >{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</span>
+                                                </li>
+                                                
+                                              
+                                        </ul>
+                                
+                                  </div>
+                                  <Avatar v-if="item.executorImg "  :src="item.executorImg " class="avatar" />
+                                </li>
+                               
+                              </ul>
+                               <!-- <div class="dynamic-time" >
+                                    <Avatar class="avatar" /> 时间
+                              </div>  -->
+                          </div>
+
+                           <div class="box-no" v-else>
+                              <img src="./../../assets/images/user-1.png" width="100" />
+                          </div>
+                    </Tab-pane>
+
                 
-                    <Tab-pane label="详细资料" key="key1">
+                    <Tab-pane label="详细资料" name="详细资料"  key="key1">
 
                         <div class="title">
                       <span>
@@ -130,74 +176,9 @@
                         </div>
 
                     </Tab-pane>
-                    <Tab-pane label="最近动态" key="key2">
-                          <div class="title">
-                            <span>
-                                最近动态
-                            </span>
-                            <button  >
-                              时间
-                            </button>
-                            
-                          </div>                        
-                          <!-- <div class="box-no" >
-                              <img src="./../../assets/images/user-1.png" width="100" />
-                          </div> -->
-                          <div>
-                              <!-- <div class="dynamic-time">
-                                    <Avatar class="avatar" /> 时间
-                              </div> -->
-                              <ul  class="dynamic">
-                                <li>
-                                  <div class="dynamicI"></div>
-                                  <div class="dynamic-Contant">
-                                        <h4>dssfdfds</h4>
-                                        <ul class="dynamic-task">
-                                                <li>
-                                                  <i></i>
-                                                  <span>项目</span>
-                                                </li>
-                                                <li>
-                                                  <i></i>
-                                                  <span>4月1</span>
-                                                </li>
-                                                <li>
-                                                  <i></i>
-                                                  <span>1</span>
-                                                </li>
-                                              
-                                        </ul>
-                                
-                                  </div>
-                                  <Avatar :src="user.memberImg" class="avatar" />
-                                </li>
-                                <li>
-                                  <div class="dynamicI"></div>
-                                  <div class="dynamic-Contant">
-                                        <h4>dssfdfds</h4>
-                                        <ul class="dynamic-task">
-                                                <li>
-                                                  <i></i>
-                                                  <span>项目</span>
-                                                </li>
-                                                <li>
-                                                  <i></i>
-                                                  <span>4月1</span>
-                                                </li>
-                                                <li>
-                                                  <i></i>
-                                                  <span>1</span>
-                                                </li>
-                                              
-                                        </ul>
-                                
-                                  </div>
-                                  <Avatar :src="user.memberImg" class="avatar" />
-                                </li>
-                              </ul>
-                          </div>
-                    </Tab-pane>
-                       <Tab-pane label="任务安排" key="key3">
+                 
+
+                    <Tab-pane label="任务安排"  name="任务安排"  key="key3">
                         <div class="title">
                             任务安排
                         </div>
@@ -221,7 +202,7 @@
                         </div> -->
                     </Tab-pane>
 
-                    <Tab-pane label="日程安排" key="key4">
+                    <Tab-pane label="日程安排" name="日程安排"  key="key4">
                         <div class="title">
                             日程安排
                         </div>
@@ -229,7 +210,7 @@
                             <img src="./../../assets/images/user-3.png" width="100"/>
                         </div>
                     </Tab-pane>
-                    <Tab-pane label="项目经历" key="key5">
+                    <Tab-pane label="项目经历" name="项目经历"  key="key5">
                         <div class="title">
                             项目经历
                         </div>
@@ -319,17 +300,12 @@
             </Form>
 
         </Modal>
-
         <Modal v-model="showInformationAdd" :title="addTitle" :width="300" :footer-hide="true">
             <Input v-model="message.userName" placeholder="请输入姓名"></Input>
             <Button style="width:270px;margin-top:10px" type="primary" @click="handleSubmit()">保存</Button>
 
         </Modal>
-
-
     </div>
-
-
 </template>
 <script>
     import {mapState, mapActions} from "vuex";
@@ -343,7 +319,7 @@
         changeUser,
         getOrg
     } from "../../axios/api2.js";
-    import {updateUserRole} from "../../axios/api.js";
+    import {updateUserRole,dynamictime,dynamiclist} from "../../axios/api.js";
 
     export default {
         name: "",
@@ -370,7 +346,16 @@
                     email: '',
                     deptId: '',
                     deptNameList: [],
+                   
+                    
                 },
+                 // 最新动态
+                timeModel:'',
+                timeList:[],
+                dynamicList:[],
+                
+                memberId:'',
+                orgId:localStorage.companyId 
             };
         },
 
@@ -391,6 +376,48 @@
             }
         },
         methods: {
+            // tab切换
+            clickTabs(value) {
+              console.log(value);
+              if (value === "最近动态") {
+                console.log("最近动态")
+            
+                this.getDynamicList();
+              } else if (value === "企业群组") {
+              //this.showgetGroups();
+                this.tabType = "企业群组";
+                this.branchMenuTitle = "群组菜单";
+
+              }
+            },
+            //获取最新动态日期
+            getDynamictime(){
+              dynamictime().then(res => {
+                  if(res.data){
+                     this.timeModel=res.data[0].yearOfMonth
+                     this.timeList=res.data;
+                  
+                  }
+                });
+            },
+            //最新动态列表
+            getDynamicList(){
+              console.log(this.user.memberId),
+              console.log(this.orgId)
+              if(this.timeModel){
+                var findVal = this.timeList.find(item => {
+                    return item.yearOfMonth === this.timeModel;
+                })
+              }
+              dynamiclist(this.user.memberId,this.orgId,findVal.timeStamp).then(res => {
+                    if(res.data[0]){
+                        this.dynamicList=res.data[0].tasks;
+                    }else{
+                      this.dynamicList=[];
+                    }
+                });
+            },
+            
             showUpdate() {
                 this.showInformation = true;
                 this.message = this.user;
@@ -403,14 +430,15 @@
                      if (res.data  != null){
                          this.siLing1 =false,
                          this.siLing2 = true,
-                         this.message.stayComDate  =res.data
+                         this.message.stayComDate=res.data
                     }
                     this.showInformation = false;
-            });
+                });
             }
         },
         created: function () {
             //debugger
+            this.getDynamictime();
         }
 
     };
