@@ -1242,6 +1242,8 @@ export function changePassword(oldPassword, newPassword) {
         }
     })
 }
+
+
 // 成员--最新动态-时间
 
 export function dynamictime() {
@@ -1260,11 +1262,14 @@ export function dynamiclist(memberId,orgId,time) {
     });
 }
 
+//成员任务安排
 
-//任务安排
-export function getTaskPlan(projectId,memberId) {
+export function taskList(memberId,projectId,classify) {
     return fetch({
-        url: `/schedules/getScheduleList/${projectId}/${memberId}`,
+        url: `/tasks/${memberId}/getTaskInfoList/${projectId}/${classify}`,
         method: "get",
     });
 }
+
+
+

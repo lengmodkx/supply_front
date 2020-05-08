@@ -31,7 +31,45 @@
                 </div> -->
                 <Tabs active-key="key1" @on-click="clickTabs">
                     
+                    <Tab-pane label="任务安排"  name="任务安排"  key="key3">
+                        <div class="title">
+                            任务安排
+                        </div>
+                        <!-- <div class="box-no" >
+                              <img src="./../../assets/images/user-2.png" width="100" />
+                          </div> -->
 
+                         <div v-if="taskList.length">
+                              <ul  class="dynamic" >
+                                <li v-for='item in taskList' :key='item.taskId'>
+                                  <div class="dynamicI"></div>
+                                  <div class="dynamic-Contant">
+                                        <h4>{{item.taskName}}111</h4>
+                                  </div>
+                                  <Avatar v-if="item.executorImg "  :src="item.executorImg " class="avatar" />
+                                </li>
+                               
+                              </ul>
+                               <!-- <div class="dynamic-time" >
+                                    <Avatar class="avatar" /> 时间
+                              </div>  -->
+                          </div>  
+                        <!-- <div>
+                          <ul>
+                            <li>
+                              <div>
+                                 <div class="dynamicI"></div>
+                                 <span>1111</span>
+                                 <span>项目2020</span>
+
+                              </div>
+                              <div>
+                                3月20日
+                              </div>
+                            </li>
+                          </ul>
+                        </div> -->
+                    </Tab-pane>
                 
                     <Tab-pane label="详细资料" name="详细资料"  key="key1">
 
@@ -39,7 +77,7 @@
                       <span>
                           详细资料
                       </span>
-                            <button @click="showUpdate()">
+                            <button @click="showInformation = true">
                                 <img src="./../../assets/images/user-edit.png" width="14"/>
                                 编辑
                             </button>
@@ -175,29 +213,7 @@
                     </Tab-pane>
                  
 
-                    <Tab-pane label="任务安排"  name="任务安排"  key="key3">
-                        <div class="title">
-                            任务安排
-                        </div>
-                        <div class="box-no">
-                           未完成任务
-                        </div>
-                        <!-- <div>
-                          <ul>
-                            <li>
-                              <div>
-                                 <div class="dynamicI"></div>
-                                 <span>1111</span>
-                                 <span>项目2020</span>
-
-                              </div>
-                              <div>
-                                3月20日
-                              </div>
-                            </li>
-                          </ul>
-                        </div> -->
-                    </Tab-pane>
+                    
 
                     <Tab-pane label="日程安排" name="日程安排"  key="key4">
                         <div class="title">
@@ -314,7 +330,7 @@
         changeUser,
         getOrg
     } from "../../axios/api2.js";
-    import {updateUserRole,dynamictime,dynamiclist} from "../../axios/api.js";
+    import {updateUserRole,dynamictime,dynamiclist,taskList} from "../../axios/api.js";
 
     export default {
         name: "",
@@ -322,8 +338,10 @@
         components: {},
         data() {
             return {
-               
-                showInformation: false,
+                memberId:'',
+                orgId:localStorage.companyId,
+                projectId :this.$route.params.id,
+                showInformation: false,//修改信息
                 showInformationAdd: false,
                 addTitle: '',
                 message: {
@@ -339,6 +357,7 @@
                     address: '',
                     email: '',
                     deptId: '',
+                    deptName:'',
                     deptNameList: [],
 
 
@@ -348,8 +367,8 @@
                 timeList:[],
                 dynamicList:[],
                 
-                memberId:'',
-                orgId:localStorage.companyId 
+                // 任务安排
+                taskList:[],
             };
         },
 
@@ -375,17 +394,20 @@
             clickTabs(value) {
               console.log(value);
               if (value === "最近动态") {
-                console.log("最近动态")
-            
                 this.getDynamicList();
-              } else if (value === "企业群组") {
-              //this.showgetGroups();
-                this.tabType = "企业群组";
-                this.branchMenuTitle = "群组菜单";
-
+              } else if (value === "任务安排") {
+                 this.getTaskList();
               }
             },
-            //获取最新动态日期
+            // 任务安排
+            getTaskList(){
+                 taskList(this.user.memberId,this.projectId,'全部').then(res => {
+                    console.log(res)
+                });
+                
+            },
+
+            //最新动态获取日期
             getDynamictime(){
               dynamictime().then(res => {
                   if(res.data){
@@ -412,15 +434,17 @@
                     }
                 });
             },
-            
-            showUpdate() {
-                this.showInformation = true;
-               // this.message = this.user;
-
-            },
+            // 详细资料-修改
             changeUserInfo() {
                 this.message.memberId = this.user.memberId;
                 this.message.orgId = this.user.organizationId;
+                
+                if(this.message.deptId){
+                         var deptName = this.message.deptNameList.find(item => {
+                            return item.partmentId === this.message.deptId;
+                        })
+                        this.message.deptName = deptName.partmentName;
+                }
                 changeUser(this.message).then(res => {
                      if (res.data  != null){
                          
