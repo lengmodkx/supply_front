@@ -24,13 +24,13 @@
       <Icon type="code" @click="openMenu"></Icon>
     </div>
     <div class="fr menu">
-      <a :class="{ activeHeaderTag: activeHeaderTag == 1 }" @click="showHeaderTag(1)"><span class="text">我的</span></a>
-      <a :class="{ activeHeaderTag: activeHeaderTag == 2 }" @click="showHeaderTag(2)"><span class="text">日历</span></a>
-      <a :class="{ activeHeaderTag: activeHeaderTag == 5 }" @click="showHeaderTag(6)"><span class="text">素材</span></a>
-      <a :class="{ activeHeaderTag: activeHeaderTag == 4 }" @click="showHeaderTag(4)"><span class="text">下载</span></a>
-      <a @click="showHeaderTag(5)" v-if="companyId"><span class="text">设计</span></a>
+      <a :class="{ activeHeaderTag: activeHeaderTag == 1 }" @click="showHeaderTag(1)"><span class="texttag">我的</span></a>
+      <a :class="{ activeHeaderTag: activeHeaderTag == 2 }" @click="showHeaderTag(2)"><span class="texttag">日历</span></a>
+      <a :class="{ activeHeaderTag: activeHeaderTag == 5 }" @click="showHeaderTag(6)"><span class="texttag">素材</span></a>
+      <a :class="{ activeHeaderTag: activeHeaderTag == 4 }" @click="showHeaderTag(4)"><span class="texttag">下载</span></a>
+      <a @click="showHeaderTag(5)" v-if="companyId"><span class="texttag">设计</span></a>
       <a :class="{ activeHeaderTag: activeHeaderTag == 3 }" @click="showHeaderTag(3)">
-        <span class="text" style="border-right:none;">
+        <span class="texttag" style="border-right:none;">
           <Badge :count="newsCount ? newsCount : 0" overflow-count="99" type="info" :offset="[10, 0]">
             <Icon type="ios-notifications-outline" size="22" />
           </Badge>

@@ -1259,3 +1259,12 @@ export function dynamiclist(memberId,orgId,time) {
         method: "get", // 请求方法
     });
 }
+
+
+//任务安排
+export function getTaskPlan(projectId,memberId) {
+    return fetch({
+        url: `/schedules/getScheduleList/${projectId}/${memberId}`,
+        method: "get",
+    });
+}

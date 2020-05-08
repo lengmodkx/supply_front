@@ -3,9 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import iView from "view-design";
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI)//全局使用ElementUI
 import "view-design/dist/styles/iview.css";
 import FullCalendar from 'vue-full-calendar'
 import "./icons";

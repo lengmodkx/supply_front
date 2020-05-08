@@ -56,22 +56,22 @@ export default {
     //   editor.txt.clear();
     // };
     editor.customConfig.menus = [
-      "head", // 标题
       "bold", // 粗体
-      "fontSize", // 字号
-      "fontName", // 字体
       "italic", // 斜体
       "underline", // 下划线
       "strikeThrough", // 删除线
-      "foreColor", // 文字颜色
-      "backColor", // 背景颜色
+      "emoticon", // 表情
       "link", // 插入链接
       "list", // 列表
       "justify", // 对齐方式
       "quote", // 引用
-      "emoticon", // 表情
       "image", // 插入图片
       "table", // 表格
+      "fontName", // 字体
+      "head", // 标题
+      "fontSize", // 字号
+      "foreColor", // 文字颜色
+      "backColor", // 背景颜色
       "undo", // 撤销
       "redo" // 重复
     ];
@@ -117,5 +117,18 @@ export default {
 }
 .w-e-toolbar{
   flex-wrap: wrap;
+}
+.editor {
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 0;
+}
+.toolbar {
+    border: 1px solid #ccc;
+}
+.text {
+    border: 1px solid #ccc;
+    min-height: 500px;
 }
 </style>
