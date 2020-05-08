@@ -241,13 +241,13 @@
                     <Row>
                         <i-col span="12">
                             <FormItem label="生日">
-                                <DatePicker type="date" placeholder="选择日期" v-model="message.birthday"></DatePicker>
+                                <DatePicker type="date" placeholder="选择日期" v-model="message.birthday"  format="yyyy-MM-dd" @on-change="message.birthday=$event"></DatePicker>
                                    <!-- <el-date-picker class="input-class"  type="date"  v-model="message.birthday" placeholder="选择时间" value-format="yyyy-MM-dd"   style="width: 96%;"></el-date-picker>-->
                             </FormItem>
                         </i-col>
                         <i-col span="12">
                             <FormItem label="入职时间">
-                                <DatePicker type="date" placeholder="选择日期" v-model="message.entryTime"></DatePicker>
+                                <DatePicker type="date" placeholder="选择日期" v-model="message.entryTime"  format="yyyy-MM-dd" @on-change="message.entryTime=$event"></DatePicker>
                                <!-- <el-date-picker  class="input-class"  type="date"  v-model="message.entryTime" placeholder="选择时间" value-format="yyyy-MM-dd"  style="width: 100%;"></el-date-picker>-->
                             </FormItem>
                         </i-col>
