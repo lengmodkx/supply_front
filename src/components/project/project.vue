@@ -105,6 +105,7 @@ export default {
         
             console.log(result.type);
             
+            
             switch (result.type) {
               case "A1": //创建任务
                 this.$store.dispatch("task/init", result.object);
@@ -178,6 +179,11 @@ export default {
               case "A30":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
+              // 修改工时
+               case "A31":
+                 
+                this.$store.dispatch("task/changeTask", result.object);
+               break;
               // 添加分享
               case "B1":
                 this.$store.dispatch("share/init", result.object);

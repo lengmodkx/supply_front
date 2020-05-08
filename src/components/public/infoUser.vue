@@ -18,7 +18,9 @@
                         {{user.memberEmail}}
                     </div>
                     <div>
-                        <img src="./../../assets/images/user-t.png" width="14"/>{{user.phone}}
+                        <img src="./../../assets/images/user-t.png" width="14"/>
+                        &nbsp;{{user.phone}}
+
                     </div>
                 </div>
             </div>
@@ -28,51 +30,7 @@
                     发起群聊
                 </div> -->
                 <Tabs active-key="key1" @on-click="clickTabs">
-                       <Tab-pane label="最近动态" name="最近动态" key="最近动态">
-                          <div class="title">
-                            <span>
-                                最近动态
-                            </span>
-                            <button  >
-                                <Select class="selectBox" v-model="timeModel" @on-change="getDynamicList" >
-                                    <Option v-for="item in timeList" :value="item.yearOfMonth" :key="item.timeStamp">{{ item.yearOfMonth }}</Option>
-                                </Select>
-                            </button>
-                          </div>                        
-                         
-                          <div v-if="dynamicList.length">
-                              <ul  class="dynamic" >
-                                <li v-for='item in dynamicList' :key='item.taskId'>
-                                  <div class="dynamicI"></div>
-                                  <div class="dynamic-Contant">
-                                        <h4>{{item.taskName}}</h4>
-                                        <ul class="dynamic-task">
-                                                <li>
-                                                  <i></i>
-                                                  <span>{{item.projectName}}</span>
-                                                </li>
-                                                <li>
-                                                  <i></i>
-                                                  <span v-if="item.endTime"  >{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</span>
-                                                </li>
-                                                
-                                              
-                                        </ul>
-                                
-                                  </div>
-                                  <Avatar v-if="item.executorImg "  :src="item.executorImg " class="avatar" />
-                                </li>
-                               
-                              </ul>
-                               <!-- <div class="dynamic-time" >
-                                    <Avatar class="avatar" /> 时间
-                              </div>  -->
-                          </div>
-
-                           <div class="box-no" v-else>
-                              <img src="./../../assets/images/user-1.png" width="100" />
-                          </div>
-                    </Tab-pane>
+                    
 
                 
                     <Tab-pane label="详细资料" name="详细资料"  key="key1">
@@ -96,22 +54,15 @@
                                   {{user.userName || '-'}}
                                 </span>
                                 </li>
-                                <li v-show="siLing1">
-                                <span>
-                                  司龄:
+                                <li>
+                                  <span>
+                                    司龄:
                                   </span>
                                     <span>
                                     {{user.stayComDate || '-'}}
                                    </span>
                                 </li>
-                                <li v-show="siLing2">
-                                <span>
-                                  司龄:
-                                  </span>
-                                    <span>
-                                    {{message.stayComDate || '-'}}
-                                   </span>
-                                </li>
+                                
                                 <li>
                                 <span>
                                   职位:
@@ -175,6 +126,52 @@
                             </ul>
                         </div>
 
+                    </Tab-pane>
+
+                    <Tab-pane label="最近动态" name="最近动态" key="key2">
+                          <div class="title">
+                            <span>
+                                最近动态
+                            </span>
+                            <button  >
+                                <Select class="selectBox" v-model="timeModel" @on-change="getDynamicList" >
+                                    <Option v-for="item in timeList" :value="item.yearOfMonth" :key="item.timeStamp">{{ item.yearOfMonth }}</Option>
+                                </Select>
+                            </button>
+                          </div>                        
+                         
+                          <div v-if="dynamicList.length">
+                              <ul  class="dynamic" >
+                                <li v-for='item in dynamicList' :key='item.taskId'>
+                                  <div class="dynamicI"></div>
+                                  <div class="dynamic-Contant">
+                                        <h4>{{item.taskName}}</h4>
+                                        <ul class="dynamic-task">
+                                                <li>
+                                                  <i></i>
+                                                  <span>{{item.projectName}}</span>
+                                                </li>
+                                                <li>
+                                                  <i></i>
+                                                  <span v-if="item.endTime"  >{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</span>
+                                                </li>
+                                                
+                                              
+                                        </ul>
+                                
+                                  </div>
+                                  <Avatar v-if="item.executorImg "  :src="item.executorImg " class="avatar" />
+                                </li>
+                               
+                              </ul>
+                               <!-- <div class="dynamic-time" >
+                                    <Avatar class="avatar" /> 时间
+                              </div>  -->
+                          </div>
+
+                           <div class="box-no" v-else>
+                              <img src="./../../assets/images/user-1.png" width="100" />
+                          </div>
                     </Tab-pane>
                  
 
@@ -280,11 +277,9 @@
                 </FormItem>
                 <FormItem label="部门">
 
-                    <Select v-model="message.deptId" placeholder="请选择">
-                        <Option v-for="item in message.deptNameList" :value="item.partmentId" :key="item.partmentId">{{
-                            item.partmentName }}
-                        </Option>
-                    </Select>
+                <Select v-model="message.deptId" placeholder="请选择">
+                    <Option v-for="item in message.deptNameList" :value="item.partmentId" :key="item.partmentId">{{item.partmentName }}</Option>
+                </Select>
 
                 </FormItem>
                 <FormItem label="联系电话">
@@ -327,8 +322,7 @@
         components: {},
         data() {
             return {
-                siLing1 : true,
-                siLing2 : false,
+               
                 showInformation: false,
                 showInformationAdd: false,
                 addTitle: '',
@@ -364,6 +358,7 @@
             getOrg(localStorage.companyId).then(res => {
                 this.message.deptNameList = res.data
                 console.log(res.data)
+                console.log(this.message.deptNameList)
             });
         },
         filters: {
@@ -410,8 +405,8 @@
                 })
               }
               dynamiclist(this.user.memberId,this.orgId,findVal.timeStamp).then(res => {
-                    if(res.data[0]){
-                        this.dynamicList=res.data[0].tasks;
+                    if(res.data){
+                        this.dynamicList=res.data;
                     }else{
                       this.dynamicList=[];
                     }
@@ -420,7 +415,7 @@
             
             showUpdate() {
                 this.showInformation = true;
-                this.message = this.user;
+               // this.message = this.user;
 
             },
             changeUserInfo() {
@@ -428,9 +423,13 @@
                 this.message.orgId = this.user.organizationId;
                 changeUser(this.message).then(res => {
                      if (res.data  != null){
-                         this.siLing1 =false,
-                         this.siLing2 = true,
-                         this.message.stayComDate=res.data
+                         
+                         console.log(res.data)
+                        this.$emit("close",res.data); 
+                       
+                        //  this.siLing1 =false;
+                        //  this.siLing2 = true;
+                        //  this.message=res.data
                     }
                     this.showInformation = false;
                 });

@@ -240,6 +240,7 @@ export default {
     },
     //修改用户信息
     chageItem(data){
+      
       this.itemUser=data;
     },
     closebox() {
