@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="list" ref="addIcon">
-      <span  @click="open" v-if='task.planWorkHours||task.totalWorkHours'>计划工时{{task.planWorkHours}}小时，实际已用工时{{task.totalWorkHours}}小时</span>
+      <span  @click="open" v-if='task.planWorkHours||task.totalWorkHours'>计划工时{{task.planWorkHours}}小时，实际已用工时{{task.totalWorkHours === null?0 :task.totalWorkHours}}小时</span>
       <Button v-else icon="ios-add" type="dashed" size="small" @click="open">待添加</Button>
     </div>
     <Modal v-model="showTag" :footer-hide="true" :width="300" @on-cancel="cancel">
@@ -112,7 +112,6 @@ export default {
   props: ["task",],
   data() {
     return {
-     
       opendata: false,
       dataValue: new Date(),
       hourList:[],
