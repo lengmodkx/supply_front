@@ -245,7 +245,7 @@
                           </button>
                             
                         </div>
-                        <div v-if="isExperienceList.length">
+                        <div v-if="isExperienceList">
                               <ul  class="experience" >
                                 <li v-for='item in isExperienceList' :key='item.projectId'>
                                   <div class="dynamicI">
@@ -445,7 +445,9 @@
                       {name:"全部"},
                 ],
                 // 日程
-                schedulesList:[],
+                schedulesList:[
+                  
+                ],
                 // 项目
                 isExperienceList:[],//列表
                 experienceList:[],
