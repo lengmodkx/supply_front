@@ -29,54 +29,14 @@
                     <Icon type="ios-add-circle-outline"  />
                     发起群聊
                 </div> -->
-                <Tabs active-key="key1" @on-click="clickTabs">
+                <Tabs active-key="key1" @on-click="clickTabs">                  
                     
-                    <Tab-pane label="任务安排"  name="任务安排"  key="key3">
-                        <div class="title">
-                            任务安排
-                        </div>
-                        <!-- <div class="box-no" >
-                              <img src="./../../assets/images/user-2.png" width="100" />
-                          </div> -->
-
-                         <div v-if="taskList.length">
-                              <ul  class="dynamic" >
-                                <li v-for='item in taskList' :key='item.taskId'>
-                                  <div class="dynamicI"></div>
-                                  <div class="dynamic-Contant">
-                                        <h4>{{item.taskName}}111</h4>
-                                  </div>
-                                  <Avatar v-if="item.executorImg "  :src="item.executorImg " class="avatar" />
-                                </li>
-                               
-                              </ul>
-                               <!-- <div class="dynamic-time" >
-                                    <Avatar class="avatar" /> 时间
-                              </div>  -->
-                          </div>  
-                        <!-- <div>
-                          <ul>
-                            <li>
-                              <div>
-                                 <div class="dynamicI"></div>
-                                 <span>1111</span>
-                                 <span>项目2020</span>
-
-                              </div>
-                              <div>
-                                3月20日
-                              </div>
-                            </li>
-                          </ul>
-                        </div> -->
-                    </Tab-pane>
-                
                     <Tab-pane label="详细资料" name="详细资料"  key="key1">
 
                         <div class="title">
-                      <span>
-                          详细资料
-                      </span>
+                            <span>
+                                详细资料
+                            </span>
                             <button @click="showInformation = true">
                                 <img src="./../../assets/images/user-edit.png" width="14"/>
                                 编辑
@@ -165,7 +125,6 @@
                         </div>
 
                     </Tab-pane>
-
                     <Tab-pane label="最近动态" name="最近动态" key="key2">
                           <div class="title">
                             <span>
@@ -176,8 +135,7 @@
                                     <Option v-for="item in timeList" :value="item.yearOfMonth" :key="item.timeStamp">{{ item.yearOfMonth }}</Option>
                                 </Select>
                             </button>
-                          </div>                        
-                         
+                          </div>                                 
                           <div v-if="dynamicList.length">
                               <ul  class="dynamic" >
                                 <li v-for='item in dynamicList' :key='item.taskId'>
@@ -190,8 +148,7 @@
                                                   <span>{{item.projectName}}</span>
                                                 </li>
                                                 <li>
-                                                  <i></i>
-                                                  <span v-if="item.endTime"  >{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</span>
+                                                  <span v-if="item.endTime"  > <Icon type="ios-clock-outline" /> {{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</span>
                                                 </li>
                                                 
                                               
@@ -206,33 +163,117 @@
                                     <Avatar class="avatar" /> 时间
                               </div>  -->
                           </div>
-
                            <div class="box-no" v-else>
                               <img src="./../../assets/images/user-1.png" width="100" />
                           </div>
                     </Tab-pane>
-                 
-
-                    
-
+                    <Tab-pane label="任务安排"  name="任务安排"  key="key3">
+                        <div class="title">
+                          <span>
+                                任务安排&nbsp;&nbsp; 
+                                <Select class="selectBox" v-model="classify" @on-change="getTaskList"  style="width:130px;">
+                                    <Option v-for="item in classifyList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+                                </Select>
+                          </span>
+                            
+                            <button  >
+                                
+                                
+                             <Icon type="ios-people-outline" /> &nbsp;批量交接任务
+                            </button>
+                        </div>
+                         <div v-if="taskList.length">
+                              <ul  class="task" >
+                                <li v-for='item in taskList' :key='item.taskId'>
+                                  <div class="dynamicI"></div>
+                                  <div class="dynamic-Contant">
+                                        <h4>{{item.taskName}}</h4> &nbsp;&nbsp;&nbsp;
+                                        
+                                        <span>  <Icon type="ios-copy-outline" /> {{item.projectName}}</span>
+                                  </div>
+                                  <span v-if="item.endTime" >{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</span>
+                                </li>
+                               
+                              </ul>
+                               <!-- <div class="dynamic-time" >
+                                    <Avatar class="avatar" /> 时间
+                              </div>  -->
+                          </div>  
+                          <div class="box-no" v-else>
+                              <img src="./../../assets/images/user-2.png" width="100" />
+                          </div>
+                       
+                    </Tab-pane>
                     <Tab-pane label="日程安排" name="日程安排"  key="key4">
                         <div class="title">
-                            日程安排
+                          <span>
+                              日程安排
+                          </span>
+                            
                         </div>
-                        <div class="box-no">
+                        <div v-if="schedulesList.length" >
+                              <div  v-for='item in schedulesList' :key='item.createTime'>
+                                <div class="schedulesTime">
+                                      {{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}
+                                </div>
+                                <ul  class="schedules" v-if='item.scheduleSimpleInfoVOS' >
+                                  <li  v-for='i in item.scheduleSimpleInfoVOS' :key='i.scheduleId'>
+                                          <div class="time">
+                                              {{i.startTime}} 
+                                               <span v-if="i.endTime">  -- </span>
+                                              {{i.endTime}}
+                                           </div>
+                                          <h4 v-if='i.scheduleName'>{{i.scheduleName}}&nbsp;&nbsp;&nbsp;</h4> 
+                                          <span><Icon type="ios-copy-outline" /> {{i.projectName}}</span>
+                                  </li>
+                                
+                                </ul>
+                            </div>  
+                        </div>
+                        <div class="box-no" v-else>
                             <img src="./../../assets/images/user-3.png" width="100"/>
                         </div>
                     </Tab-pane>
                     <Tab-pane label="项目经历" name="项目经历"  key="key5">
                         <div class="title">
-                            项目经历
+                          <span>
+                                  项目经历
+                          </span>
+                          <button @click="showexperienceList">
+                              <img src="./../../assets/images/user-edit.png" width="14"/>
+                              编辑
+                          </button>
+                            
                         </div>
-                        <div class="box-no">
+                        <div v-if="isExperienceList.length">
+                              <ul  class="experience" >
+                                <li v-for='item in isExperienceList' :key='item.projectId'>
+                                  <div class="dynamicI">
+                                    <img src="./../../assets/images/download.jpg" width="100" />
+                                  </div>
+                                  <div class="dynamic-Contant">
+                                        <h4>{{item.projectName}}</h4>
+                                        <ul class="dynamic-task">
+                                                <li>
+                                                  <i></i>
+                                                  <span>{{item.projectDes}} </span>
+                                                </li>
+                                                
+                                              
+                                        </ul>
+                                
+                                  </div>
+                                  
+                                </li>
+                               
+                              </ul>
+                            
+                          </div>
+                        <div class="box-no" v-else>
                             <img src="./../../assets/images/user-4.png" width="100"/>
                         </div>
                     </Tab-pane>
                 </Tabs>
-
             </div>
         </div>
 
@@ -311,10 +352,36 @@
             </Form>
 
         </Modal>
+
         <Modal v-model="showInformationAdd" :title="addTitle" :width="300" :footer-hide="true">
             <Input v-model="message.userName" placeholder="请输入姓名"></Input>
             <Button style="width:270px;margin-top:10px" type="primary" @click="handleSubmit()">保存</Button>
 
+        </Modal>
+        <!-- 添加项目经历-->
+          <Modal v-model="showExperience" title="添加项目经历" :width="600" :footer-hide="true">
+                    <ul  class="addExperience" >
+                      <li v-for='item in experienceList' :key='item.projectId'>
+                        <div class="dynamicI">
+                          <img src="./../../assets/images/download.jpg" width="100" />
+                        </div>
+                        <div class="dynamic-Contant">
+                              <h4>{{item.projectName}}</h4>
+                              <ul class="dynamic-task">
+                                <li>
+                                  <i></i>
+                                  <span>{{item.projectDes}} </span>
+                                </li>
+                              </ul>                 
+                        </div>
+                        <div>
+                            <Button v-if='item.isAdd' type="primary" @click="putAddExperience(item.memberId,item.projectId)" >添加</Button> 
+                            <Button v-else @click="putDelExperience(item.memberId,item.projectId)" >取消</Button>
+                        </div>
+                        
+                      </li>
+                      
+                    </ul>
         </Modal>
     </div>
 </template>
@@ -330,7 +397,7 @@
         changeUser,
         getOrg
     } from "../../axios/api2.js";
-    import {updateUserRole,dynamictime,dynamiclist,taskList} from "../../axios/api.js";
+    import {updateUserRole,dynamictime,dynamiclist,taskList,schedulesList,IsexperienceList,experienceList,addExperience,delExperience} from "../../axios/api.js";
 
     export default {
         name: "",
@@ -369,7 +436,22 @@
                 
                 // 任务安排
                 taskList:[],
-            };
+                classify:'全部',
+                classifyList:[
+                      {name:"未完成的任务"},
+                      {name:"今天"},
+                      {name:"最近一周"},
+                      {name:"最近一个月"},
+                      {name:"全部"},
+                ],
+                // 日程
+                schedulesList:[],
+                // 项目
+                isExperienceList:[],//列表
+                experienceList:[],
+                showExperience:false,
+
+                };
         },
 
         computed: {},
@@ -397,12 +479,51 @@
                 this.getDynamicList();
               } else if (value === "任务安排") {
                  this.getTaskList();
+              } else if (value === "日程安排") {
+                 this.getschedulesList();
+              }else if (value === "项目经历") {
+                 this.getexperienceList();
               }
+            },
+            // 项目列表
+            getexperienceList(){
+                  IsexperienceList(this.user.memberId,).then(res => {
+                      this.isExperienceList=res.data
+                      console.log(this.experienceList)
+                  });
+            },
+            // 编辑项目列表
+            showexperienceList(){
+                  this.showExperience = true
+                  experienceList(this.user.memberId,).then(res => {
+                      this.experienceList=res.data
+                      console.log(this.experienceList)
+                  });
+            },
+            // 删除项目经历
+             putDelExperience(memberId,projectId){
+                delExperience(memberId,projectId).then(res => {
+                    
+                });
+            },
+            // 添加项目经历
+            putAddExperience(memberId,projectId){
+                addExperience(memberId,projectId).then(res => {
+                    
+                });
+            },
+            //  日程列表
+            getschedulesList(){
+              schedulesList(this.projectId,this.user.memberId,).then(res => {
+                   this.schedulesList=res.data;
+                   console.log(this.schedulesList)
+                });
+
             },
             // 任务安排
             getTaskList(){
-                 taskList(this.user.memberId,this.projectId,'全部').then(res => {
-                    console.log(res)
+                 taskList(this.user.memberId,this.projectId,this.classify).then(res => {
+                   this.taskList=res.data
                 });
                 
             },
@@ -467,6 +588,11 @@
     };
 </script>
 <style scoped lang="less">
+  .input-class{
+          .el-input__inner{
+              height: 33px;
+          }
+      }
    /deep/.ivu-date-picker{
       width: 275px;
     }
@@ -518,6 +644,7 @@
               display: flex;
               justify-content: space-between;
               background: #f5f5f5;
+              line-height: 30px;
               padding:10px 10px;
               margin:0px;
                 span:first-child{
@@ -593,6 +720,7 @@
                   display: flex;
                   flex: 1;
                   flex-flow: column;
+                  
                   .dynamic-task{
                     display: flex;
                     flex-flow: row;
@@ -616,19 +744,180 @@
               }
               
 
-            }
+            };
+            .task{
+              margin-top:8px;
+              li{
+                cursor: pointer;
+                height: 50px;
+                display: flex;
+                padding:10px;
+                .dynamicI{
+                  height: 20px;
+                  width: 20px;
+                  border: 2px solid #a6a6a6;
+                  border-radius: 3px;
+                  margin-right: 10px;
+                }
+                .dynamic-Contant{
+                  display: flex;
+                  flex: 1;
+                  flex-flow: row;
+                  .dynamic-task{
+                    display: flex;
+                    flex-flow: row;
+                    li{
+                      margin:5px 10px 0px 0px ;
+                      padding:0;
+                      border: none;
+                      color: #a6a6a6;
+                    }
+
+                  }
+                }
+                .avatar{
+                  width: 24px;
+                  height: 24px;
+                }
+
+              };
+              li:last-child{
+                border:none
+              }
+            };
+            .schedulesTime{
+              height: 50px;
+              line-height: 50px;
+              text-indent: 10px;
+              border-bottom: 1px solid #e5e5e5;
+              font-weight: bold;
+            };
+          
+            .schedules{
+              margin-top:8px;
+              li{
+                cursor: pointer;
+                height: 50px;
+                
+                padding:10px;
+                display: flex;
+                .time{
+                  width: 190px;
+                }
+                
+                
+
+              };
+              li:last-child{
+                border:none
+              }
+            };
+
+            .experience{
+              border: 1px solid #e5e5e5;
+              border-radius: 5px;
+              margin-top:10px;
+              li{
+                cursor: pointer;
+                height: 70px;
+                border-bottom: 1px solid #e5e5e5;
+                display: flex;
+                padding:10px;
+                .dynamicI{
+                  height: 40px;
+                  width: 45px;
+                  margin-right: 10px;
+                  img{
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+                .dynamic-Contant{
+                  display: flex;
+                  flex: 1;
+                  flex-flow: column;
+                  
+                  .dynamic-task{
+                    display: flex;
+                    flex-flow: row;
+                    li{
+                      margin:5px 10px 0px 0px ;
+                      padding:0;
+                      border: none;
+                      color: #a6a6a6;
+                    }
+
+                  }
+                }
+                .avatar{
+                  width: 24px;
+                  height: 24px;
+                }
+
+              };
+              li:last-child{
+                border:none
+              }
+              
+
+            };
+
+            
+
+
+            
 
 
       }
       
       
+      
     }
 
-</style>
-<style lang="less">
-    .input-class{
-        .el-input__inner{
-            height: 33px;
-        }
-    }
+     .addExperience{
+              li{
+                cursor: pointer;
+                height: 60px;
+               
+                display: flex;
+                padding:10px;
+                .dynamicI{
+                  height: 40px;
+                  width: 45px;
+                  margin-right: 10px;
+                  img{
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+                .dynamic-Contant{
+                  display: flex;
+                  flex: 1;
+                  flex-flow: column;
+                  
+                  .dynamic-task{
+                    display: flex;
+                    flex-flow: row;
+                    li{
+                      margin:5px 10px 0px 0px ;
+                      padding:0;
+                      border: none;
+                      color: #a6a6a6;
+                    }
+
+                  }
+                }
+                .avatar{
+                  width: 24px;
+                  height: 24px;
+                }
+
+              };
+              li:last-child{
+                border:none
+              }
+              
+
+      };
+
 </style>

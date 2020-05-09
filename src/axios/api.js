@@ -1266,8 +1266,60 @@ export function dynamiclist(memberId,orgId,time) {
 
 export function taskList(memberId,projectId,classify) {
     return fetch({
-        url: `/tasks/${memberId}/getTaskInfoList/${projectId}/${classify}`,
+        url: `/tasks/${memberId}/getTaskInfoList/${projectId}`,
         method: "get",
+        params: {
+            classify :classify,
+        }
+    });
+}
+
+
+//成员日程
+
+export function schedulesList(projectId,memberId,) {
+    return fetch({
+        url: `/schedules/getScheduleList/${projectId}/${memberId}`,
+        method: "get",
+    });
+}
+
+// 已添加项目经历
+
+export function IsexperienceList(memberId,) {
+    return fetch({
+        url: `/projects/getIsExperience/${memberId}`,
+        method: "get",
+    });
+}
+
+
+
+//查询项目经历
+
+export function experienceList(memberId,) {
+    return fetch({
+        url: `/projects/getExperience/${memberId}`,
+        method: "get",
+    });
+}
+// 添加项目经历
+
+
+export function addExperience(memberId,projectId) {
+    return fetch({
+        url: `/projects/addExperience/${memberId}/${projectId}`,
+        method: "put",
+    });
+}
+
+// 删除项目经历
+
+
+export function delExperience(memberId,projectId) {
+    return fetch({
+        url: `/projects/deleteExperience/${memberId}/${projectId}`,
+        method: "delete",
     });
 }
 
