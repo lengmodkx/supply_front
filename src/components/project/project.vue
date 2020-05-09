@@ -181,7 +181,7 @@ export default {
                 break;
               // 修改工时
                case "A31":
-                 
+
                 this.$store.dispatch("task/changeTask", result.object);
                break;
               // 添加分享
