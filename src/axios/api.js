@@ -1286,9 +1286,9 @@ export function schedulesList(projectId,memberId,) {
 
 // 已添加项目经历
 
-export function IsexperienceList(memberId,) {
+export function IsexperienceList(memberId,organizationId) {
     return fetch({
-        url: `/projects/getIsExperience/${memberId}`,
+        url: `/projects/getIsExperience/${organizationId}/${memberId}`,
         method: "get",
     });
 }
@@ -1297,18 +1297,18 @@ export function IsexperienceList(memberId,) {
 
 //查询项目经历
 
-export function experienceList(memberId,) {
+export function experienceList(memberId,organizationId) {
     return fetch({
-        url: `/projects/getExperience/${memberId}`,
+        url: `/projects/getExperience/${organizationId}/${memberId}`,
         method: "get",
     });
 }
 // 添加项目经历
 
 
-export function addExperience(memberId,projectId) {
+export function addExperience(memberId,projectId,organizationId) {
     return fetch({
-        url: `/projects/addExperience/${memberId}/${projectId}`,
+        url: `/projects/${memberId}/${projectId}/${organizationId}`,
         method: "put",
     });
 }
@@ -1323,5 +1323,20 @@ export function delExperience(memberId,projectId) {
     });
 }
 
+// 用户-任务-项目
 
+export function userProjectTasks(orgId,memberId) {
+    return fetch({
+        url: `/tasks/${orgId}/getProjectsByMemberIdAndOrgId/${memberId}`,
+        method: "get",
+    });
+}
 
+//用户 任务
+
+export function userTasksInit(memberId,projectId) {
+    return fetch({
+        url: `/tasks/${memberId}/getTasksByProjectIdAndMemberId/${projectId}`,
+        method: "get",
+    });
+}

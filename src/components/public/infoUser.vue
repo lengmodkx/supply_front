@@ -176,10 +176,12 @@
                                 </Select>
                           </span>
                             
-                            <button  >
-                                
-                                
-                             <Icon type="ios-people-outline" /> &nbsp;批量交接任务
+                            <button  @click="getTask" >
+                             <Icon type="ios-people-outline" /> &nbsp;
+                             <span >
+                                      批量交接任务
+                             </span>
+                             
                             </button>
                         </div>
                          <div v-if="taskList.length">
@@ -375,14 +377,47 @@
                               </ul>                 
                         </div>
                         <div>
-                            <Button v-if='item.isAdd' type="primary" @click="putAddExperience(item.memberId,item.projectId)" >添加</Button> 
-                            <Button v-else @click="putDelExperience(item.memberId,item.projectId)" >取消</Button>
+                          <Button   v-if='item.isAdd' @click="putDelExperience(item.memberId,item.projectId)" >取消</Button>
+                            <Button v-else type="primary" @click="putAddExperience(item.memberId,item.projectId)" >添加</Button> 
+                            
                         </div>
                         
                       </li>
                       
                     </ul>
         </Modal>
+        <!--  -->
+
+        <Modal v-model="showTask" title="选择交接任务" :width="800" :footer-hide="true">
+
+                    <div class="recycle-move">
+                            <ul class="recycle-left" >
+                              <li  v-for='item in projectList'  @click="initTask(item.projectId)" :key='item.projectId'><Icon type="md-checkbox-outline" />{{item.projectName}}</li>
+                            </ul>
+                            <div class="recycle-right" >
+                              <div  class="has-con">
+                                <!-- <header class="recycle-head"><span>名称</span><span>修改时间</span></header> -->
+                                <div class="recycle-list" v-for='item in projectInfoList'   :key='item.taskId' >
+                                  <div class="name"><span>{{item.taskName}}</span></div>
+                                  <p class="time" v-if="item.endTime">{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</p>
+                                </div>
+                              </div>
+                              
+                            </div>
+                   </div>
+                   <div class="recycle-move-right">
+                          <Button  type="primary" @click="showset=true">指派给</Button>
+                   </div>
+                   
+        </Modal>
+
+
+         <Modal v-model="showset" title="指派给" :width="300" :footer-hide="true">
+
+                    ss
+                   
+        </Modal>
+        
     </div>
 </template>
 <script>
@@ -397,7 +432,7 @@
         changeUser,
         getOrg
     } from "../../axios/api2.js";
-    import {updateUserRole,dynamictime,dynamiclist,taskList,schedulesList,IsexperienceList,experienceList,addExperience,delExperience} from "../../axios/api.js";
+    import {updateUserRole,dynamictime,dynamiclist,taskList,schedulesList,IsexperienceList,experienceList,addExperience,delExperience,userProjectTasks,userTasksInit} from "../../axios/api.js";
 
     export default {
         name: "",
@@ -435,6 +470,8 @@
                 dynamicList:[],
                 
                 // 任务安排
+                showTask:false,
+                showset:false,//指派给
                 taskList:[],
                 classify:'全部',
                 classifyList:[
@@ -444,6 +481,9 @@
                       {name:"最近一个月"},
                       {name:"全部"},
                 ],
+                projectList:[],
+                projectInfoList:[],
+
                 // 日程
                 schedulesList:[
                   
@@ -452,7 +492,6 @@
                 isExperienceList:[],//列表
                 experienceList:[],
                 showExperience:false,
-
                 };
         },
 
@@ -489,7 +528,7 @@
             },
             // 项目列表
             getexperienceList(){
-                  IsexperienceList(this.user.memberId,).then(res => {
+                  IsexperienceList(this.user.memberId,this.orgId).then(res => {
                       this.isExperienceList=res.data
                       console.log(this.experienceList)
                   });
@@ -497,7 +536,7 @@
             // 编辑项目列表
             showexperienceList(){
                   this.showExperience = true
-                  experienceList(this.user.memberId,).then(res => {
+                  experienceList(this.user.memberId,this.orgId).then(res => {
                       this.experienceList=res.data
                       console.log(this.experienceList)
                   });
@@ -505,13 +544,18 @@
             // 删除项目经历
              putDelExperience(memberId,projectId){
                 delExperience(memberId,projectId).then(res => {
+                      this.showExperience = false;
+                      this.getexperienceList();
+                       this.$Message.success("删除项目经历");
                     
                 });
             },
             // 添加项目经历
             putAddExperience(memberId,projectId){
-                addExperience(memberId,projectId).then(res => {
-                    
+                addExperience(memberId,projectId,this.orgId).then(res => {
+                      this.showExperience = false;
+                      this.getexperienceList();
+                      this.$Message.success("添加项目经历");
                 });
             },
             //  日程列表
@@ -528,6 +572,21 @@
                    this.taskList=res.data
                 });
                 
+            },
+            getTask(){
+                this.showTask=true;
+                userProjectTasks(this.orgId,this.user.memberId).then(res => {
+                     this.projectList=res.data
+                     console.log(this.projectList)
+                });
+
+            },
+            initTask(projectId){
+                 userTasksInit(this.user.memberId,projectId).then(res => {
+                     this.projectInfoList=res.data
+                    console.log(this.projectInfoList)
+                });
+
             },
 
             //最新动态获取日期
@@ -590,15 +649,69 @@
     };
 </script>
 <style scoped lang="less">
-  .input-class{
-          .el-input__inner{
-              height: 33px;
+        .input-class{
+                .el-input__inner{
+                    height: 33px;
+                }
+        }
+        /deep/.ivu-date-picker{
+            width: 275px;
           }
-      }
-   /deep/.ivu-date-picker{
-      width: 275px;
-    }
-
+        .recycle-move {
+            /deep/ .ivu-modal-body {
+               padding: 0 !important;
+            }
+                width: 100%;
+                height: 100%;
+                display: flex;
+            .recycle-left {
+                  width: 300px;
+                  height: 100%;
+                  border-right: 1px solid #e5e5e5;
+                    .checked {
+                          background-color: #f7f7f7;
+                          color: #3da8f5;
+                    }
+              li {
+                  width: 100%;
+                  height: 44px;
+                  display: flex;
+                  overflow: hidden;
+                  align-items: center;
+                  padding: 0 16px;
+                  cursor: pointer;
+                  color: gray;
+                  font-size: 14px;
+                  &:hover {
+                  background-color: #f7f7f7;
+                  color: #3da8f5;
+              }
+              i {
+              font-size: 20px;
+              margin-right: 8px;
+              }
+            }
+            }
+            .recycle-right {
+                width: 620px;
+                height: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                
+            &::-webkit-scrollbar {
+                width: 6px;
+                height: 8px;
+                background-color: #e5e5e5;
+            }
+            &::-webkit-scrollbar-thumb {
+               background-color: #cecece;
+            }
+            }
+        }
+        .recycle-move-right{
+            display: flex;
+             justify-content: flex-end;
+        }
     .info-user{
       width: 780px;
       margin:0px auto;
@@ -870,12 +983,8 @@
             
 
 
-      }
-      
-      
-      
+      }      
     }
-
      .addExperience{
               li{
                 cursor: pointer;
@@ -921,5 +1030,8 @@
               
 
       };
+
+
+      
 
 </style>
