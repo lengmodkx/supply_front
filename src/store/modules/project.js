@@ -37,7 +37,10 @@ const store = {
         // 获取全部项目
         projectTotle(state, data) {
             state.allProject = data
-        }
+        },
+        deleteProject(state,data){
+            state.projects = state.projects.filter(v=>v.projectId!==data);
+        },
     },
     actions: {
         init({
