@@ -54,10 +54,11 @@
                                 </li>
                                 <li>
                                   <span>
-                                    司龄:
+                                    入职时间:
                                   </span>
                                     <span>
-                                    {{user.stayComDate || '-'}}
+                                      {{ $moment(user.entryTime).format("YYYY-MM-DD HH:mm")||  '-'}}
+                                    
                                    </span>
                                 </li>
                                 
@@ -395,18 +396,21 @@
                               <li  v-for='item in projectList'  @click="initTask(item.projectId)" :key='item.projectId'><Icon type="md-checkbox-outline" />{{item.projectName}}</li>
                             </ul>
                             <div class="recycle-right" >
-                              <div  class="has-con">
-                                <!-- <header class="recycle-head"><span>名称</span><span>修改时间</span></header> -->
-                                <div class="recycle-list" v-for='item in projectInfoList'   :key='item.taskId' >
+                              <div  class="has-con"  v-if='projectInfoList'>
+                               
+                                <div class="recycle-list" :class="{active:ItemtaskBG==index}" v-for='(item,index) in projectInfoList'   :key='item.taskId' @click="Itemtask(item.taskId,index)" >
                                   <div class="name"><span>{{item.taskName}}</span></div>
                                   <p class="time" v-if="item.endTime">{{ $moment(item.endTime).format("YYYY-MM-DD HH:mm") }}</p>
                                 </div>
+                              </div>
+                              <div v-else>
+                                    目前还没有任务
                               </div>
                               
                             </div>
                    </div>
                    <div class="recycle-move-right">
-                          <Button  type="primary" @click="showset=true">指派给</Button>
+                          <Button  type="primary" @click="getset()">指派给</Button>
                    </div>
                    
         </Modal>
@@ -414,7 +418,22 @@
 
          <Modal v-model="showset" title="指派给" :width="300" :footer-hide="true">
 
-                    ss
+              <div class="set-box">
+                <ul>
+                  <li v-for="(item,index) in setList"  :class="{active:setexecutorBG==index}"   :key='item.taskId' @click="itemexecutor(item.executor,index)"> 
+                     <Avatar :src="item.executorImg" class="avatar"/>
+                    <span>
+                      {{item.executorName}}
+                    </span>
+                    </li>
+                </ul>
+                <div class="setButton" >
+                       <Button  type="primary" @click="setSureExecutor"> 确定 </Button>
+                </div>
+                
+
+              </div>
+
                    
         </Modal>
         
@@ -432,7 +451,7 @@
         changeUser,
         getOrg
     } from "../../axios/api2.js";
-    import {updateUserRole,dynamictime,dynamiclist,taskList,schedulesList,IsexperienceList,experienceList,addExperience,delExperience,userProjectTasks,userTasksInit} from "../../axios/api.js";
+    import {updateUserRole,dynamictime,dynamiclist,taskList,schedulesList,IsexperienceList,experienceList,addExperience,delExperience,userProjectTasks,userTasksInit,setList,sureExecutor} from "../../axios/api.js";
 
     export default {
         name: "",
@@ -483,6 +502,12 @@
                 ],
                 projectList:[],
                 projectInfoList:[],
+                setList:[],
+                setexecutor:'',//指派人
+                setexecutorBG:null,//指派人
+                setItemtask:'',//当前指派任务
+                ItemtaskBG:null,
+                setitemproject:'',
 
                 // 日程
                 schedulesList:[
@@ -573,22 +598,60 @@
                 });
                 
             },
+            // 当前指派对像
+            Itemtask(taskId,index){
+                    this.ItemtaskBG = index
+                   this.setItemtask=taskId
+            },
+            itemexecutor(executor,index){
+                    this.setexecutorBG=index
+                    this.setexecutor=executor
+            },
+             // 确定指派送
+            setSureExecutor(){
+               
+               if(!this.setItemtask){
+                   this.$Message.error("请选择任务");
+                   return
+               }
+                sureExecutor(this.setItemtask,this.setexecutor).then(res => {
+                          this.showset=false;
+                          this.initTask(this.setitemproject);                        
+                          if(res.result==1){
+                              this.$Message.success("指派成功");
+                          }
+                });
+            },
+            //获取项目
             getTask(){
                 this.showTask=true;
                 userProjectTasks(this.orgId,this.user.memberId).then(res => {
-                     this.projectList=res.data
-                     console.log(this.projectList)
+                      this.projectList=res.data
+                      this.initTask(this.projectList[0].projectId)
+                      
                 });
 
             },
+            //获取当前任务
             initTask(projectId){
-                 userTasksInit(this.user.memberId,projectId).then(res => {
+
+                 this.setitemproject=projectId
+                 userTasksInit(this.user.memberId,this.setitemproject).then(res => {
                      this.projectInfoList=res.data
                     console.log(this.projectInfoList)
                 });
 
-            },
 
+            },
+            // 获取指派人员
+            getset(){              
+                    this.showset=true;
+                    setList(this.projectId).then(res => {
+                      this.setList=res.data
+                });
+
+            },
+           
             //最新动态获取日期
             getDynamictime(){
               dynamictime().then(res => {
@@ -642,7 +705,7 @@
             }
         },
         created: function () {
-            //debugger
+            
             this.getDynamictime();
         }
 
@@ -666,7 +729,7 @@
                 display: flex;
             .recycle-left {
                   width: 300px;
-                  height: 100%;
+                  height: 300px;
                   border-right: 1px solid #e5e5e5;
                     .checked {
                           background-color: #f7f7f7;
@@ -694,21 +757,27 @@
             }
             .recycle-right {
                 width: 620px;
-                height: 100%;
+                height: 300px;
                 overflow-x: hidden;
                 overflow-y: auto;
-                
-            &::-webkit-scrollbar {
-                width: 6px;
-                height: 8px;
-                background-color: #e5e5e5;
-            }
-            &::-webkit-scrollbar-thumb {
-               background-color: #cecece;
-            }
+                .has-con{
+                  cursor: pointer;
+                }
+                .active{
+                    background-color: #f7f7f7;
+                }
+                &::-webkit-scrollbar {
+                    width: 6px;
+                    height: 8px;
+                    background-color: #e5e5e5;
+                }
+                &::-webkit-scrollbar-thumb {
+                  background-color: #cecece;
+                }
             }
         }
         .recycle-move-right{
+          margin-top: 10px;
             display: flex;
              justify-content: flex-end;
         }
@@ -1030,6 +1099,22 @@
               
 
       };
+      .set-box{
+        li{
+          cursor: pointer;
+          margin-bottom:10px;
+        }
+        .active{
+                    background-color: #f7f7f7;
+                }
+        .setButton{
+            margin-top: 10px;
+            button{
+              width: 100%;
+            }
+      }
+      }
+      
 
 
       

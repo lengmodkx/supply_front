@@ -1340,3 +1340,24 @@ export function userTasksInit(memberId,projectId) {
         method: "get",
     });
 }
+// 指派
+
+
+
+export function setList(projectId) {
+    return fetch({
+        url: `/tasks/${projectId}/getExecutors`,
+        method: "get",
+    });
+}
+
+// 确定指派送
+
+
+
+export function sureExecutor(taskId,executor) {
+    return fetch({
+        url: `/tasks/updateExecutor/${taskId}/${executor}`,
+        method: "get",
+    });
+}
