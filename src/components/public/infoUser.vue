@@ -552,24 +552,15 @@
             },
             // 打开编辑
             information(){
-                  this.showInformation=true
-
+                this.showInformation=true
                 this.message.userName= JSON.parse(JSON.stringify(this.user.userName));
-
                 this.message.memberEmail= JSON.parse(JSON.stringify(this.user.memberEmail));
-
                 this.message.birthday= JSON.parse(JSON.stringify(this.user.birthday));
-
                 this.message.job= JSON.parse(JSON.stringify(this.user.job));
-
                 this.message.phone= JSON.parse(JSON.stringify(this.user.phone));
-
                 this.message.entryTime= JSON.parse(JSON.stringify(this.user.entryTime));
-
                 this.message.memberLabel= JSON.parse(JSON.stringify(this.user.memberLabel));
-
                 this.message.address= JSON.parse(JSON.stringify(this.user.address));
-
             },
             // 项目列表
             getexperienceList(){
