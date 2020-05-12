@@ -15,25 +15,25 @@ module.exports = {
             template: 'public/company.html',
         }
     },
-    // chainWebpack: config => {
-    //     config.resolve.alias
-    //         .set('@$', resolve('src'));
-    //     config.module
-    //         .rule("svg")
-    //         .exclude.add(resolve("src/icons"))
-    //         .end();
+    chainWebpack: config => {
+        config.resolve.alias
+            .set('@$', resolve('src'));
+        config.module
+            .rule("svg")
+            .exclude.add(resolve("src/icons"))
+            .end();
 
-    //     config.module
-    //         .rule("icons")
-    //         .test(/\.svg$/)
-    //         .include.add(resolve("src/icons"))
-    //         .end()
-    //         .use("svg-sprite-loader")
-    //         .loader("svg-sprite-loader")
-    //         .options({
-    //             symbolId: "svg-[name]"
-    //         });
-    // },
+        config.module
+            .rule("icons")
+            .test(/\.svg$/)
+            .include.add(resolve("src/icons"))
+            .end()
+            .use("svg-sprite-loader")
+            .loader("svg-sprite-loader")
+            .options({
+                symbolId: "svg-[name]"
+            });
+    },
     lintOnSave: false,
     productionSourceMap: false,
     devServer: {
@@ -44,9 +44,8 @@ module.exports = {
         // proxy: 'http://localhost:4000'// 配置跨域处理,只有一个代理
         proxy: {
             "/api": {
-                target: "http://192.168.3.190:8080",
-               // target: "http://test.art1001.com/api/",
-
+             target: "http://localhost:8080",
+              //target: "http://test.art1001.com/api/",
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {

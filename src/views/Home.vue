@@ -11,8 +11,8 @@
           <Input v-model.trim="searchWords" search enter-button placeholder="请输入项目名称关键字进行搜索" @on-search="searchProject" @on-keyup="searchNo" />
         </div>
         <div class="filtrate-box">
-          <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
-            <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="projectType" @on-change="selectProjectType"   style="width:200px" placeholder="我创建的项目">
+            <Option v-for="item in projectList"  @inputMess="inputMess"   :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <RadioGroup class="select-view" v-model="selectView" type="button" @on-change="changeView">
             <Radio label="卡片视图"></Radio>
@@ -292,6 +292,9 @@ export default {
       this.$store.state.project.loading = true;
       //this.init(value);
       this.orgProjectInit({ id: this.companyId, type: value });
+    },
+    inputMess(val){
+        this.projectList= this.projectList[1];
     },
     path(item) {
       this.setName(item.projectName);
