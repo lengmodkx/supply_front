@@ -177,7 +177,7 @@
       </Modal>
       <!-- 项目设置 -->
       <Modal v-model="projectSet" class="setPro-modal">
-        <ProjectSettings @close-settings="closeSettings"></ProjectSettings>
+        <ProjectSettings @closesettings="closeSettings"></ProjectSettings>
       </Modal>
 
       <Modal class="confirmModal" v-model="showBin" title="移到回收站">
