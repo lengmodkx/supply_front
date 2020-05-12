@@ -26,7 +26,7 @@
               </p>
             </div>
           </div>
-          <div  class="zoom">
+          <div class="zoom">
             <Button type="primary" v-if="i.meetingCode" @click.stop="enterZoom(i.meetingCode)">进入会议</Button>
             <Button type="primary" v-else @click.stop="openZoom(i.scheduleId)">开启会议</Button>
           </div>
@@ -50,7 +50,7 @@
 <script>
 import AddSchedule from "./AddSchedule.vue";
 import editRicheng from "./EditRicheng.vue";
-import { schedules, createMeeting, joinMeeting } from "@/axios/api";
+import { schedules, createMeeting, joinMeeting, createUser } from "@/axios/api";
 import userList from "@/components/resource/userList.vue";
 import { mapState, mapActions, mapMutations } from "vuex";
 
@@ -66,7 +66,7 @@ export default {
       parameter: {
         projectId: this.$route.params.id,
       },
-      meetingCode:""
+      meetingCode: "",
     };
   },
   computed: {
@@ -91,13 +91,17 @@ export default {
     },
     openZoom(scheduleId) {
       //window.open("https://zoom.us/signin");
-      createMeeting(localStorage.userId, "会议", scheduleId,this.$route.params.id).then((res) => {
-        window.open("https://www.aldbim.com/detail?code="+res.meeting.meetingCode+"&userId="+localStorage.userId);
+      createUser(localStorage.userId, localStorage.companyId).then((res) => {
+        if (res.result == 1) {
+          createMeeting(localStorage.userId, "会议", scheduleId, this.$route.params.id).then((res) => {
+            window.open("https://www.aldbim.com/detail?code=" + res.meeting.meetingCode + "&userId=" + localStorage.userId);
+          });
+        }
       });
     },
-    enterZoom(meetingCode){
-      window.open("https://www.aldbim.com/detail?code="+meetingCode+"&userId="+localStorage.userId);
-    }
+    enterZoom(meetingCode) {
+      window.open("https://www.aldbim.com/detail?code=" + meetingCode + "&userId=" + localStorage.userId);
+    },
   },
   mounted() {
     this.init(this.parameter);
