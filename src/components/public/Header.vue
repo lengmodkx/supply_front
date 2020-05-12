@@ -208,7 +208,7 @@ export default {
             var result = JSON.parse(msg.body);
             switch (result.type) {
               case "I1":
-                this.$store.dispatch("project/init", "我创建的项目");
+                  this.$store.commit("project/deleteProject", result.object);
                 break;
               default:
                 this.$store.commit("news/addNews", result.message);

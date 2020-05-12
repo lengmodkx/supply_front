@@ -105,6 +105,7 @@ export default {
         
             console.log(result.type);
             
+            
             switch (result.type) {
               case "A1": //创建任务
                 this.$store.dispatch("task/init", result.object);
@@ -178,6 +179,11 @@ export default {
               case "A30":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
+              // 修改工时
+               case "A31":
+
+                this.$store.dispatch("task/changeTask", result.object);
+               break;
               // 添加分享
               case "B1":
                 this.$store.dispatch("share/init", result.object);
@@ -391,31 +397,7 @@ export default {
               case "H6":
               case "H7":
               case "H8":
-                this.$store.dispatch("task/init", result.object);
-                break;
-              case "I1":
-                this.$Notice.warning({
-                  title: "这个项目已被移入回收站!",
-                  duration: 0,
-                  name: "project_del",
-                  render: h => {
-                    return h("div", [
-                      h(
-                        "Button",
-                        {
-                          style: {
-                            color: "red",
-                            fontSize: "14px"
-                          },
-                          on: {
-                            click: this.clickHandler
-                          }
-                        },
-                        "我知道啦!"
-                      )
-                    ]);
-                  }
-                });
+                  this.$store.dispatch("task/init", result.object);
                 break;
             }
           });

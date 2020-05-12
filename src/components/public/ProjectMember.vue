@@ -232,7 +232,7 @@ export default {
     inofoUser(userId){
        this.showAddshare=true;
         projectOneMembers(localStorage.companyId,userId).then(res=>{
-
+            
             this.itemUser=res.data;
             this.itemUser.birthday = res.data.birthday
             this.itemUser.entryTime = res.data.entryTime
@@ -240,6 +240,7 @@ export default {
     },
     //修改用户信息
     chageItem(data){
+      
       this.itemUser=data;
     },
     closebox() {

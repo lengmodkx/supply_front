@@ -213,7 +213,7 @@ export function changeUser(params) {
 
 export function getOrg(orgId) {
     return fetch({
-        url: `/partments/${orgId}/getDeptNameByOrgId/`,
+        url: `/projects/${orgId}/getDeptNameByOrgId`,
         method: 'get', // 请求方法
     })
 }

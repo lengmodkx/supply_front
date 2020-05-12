@@ -1249,6 +1249,8 @@ export function changePassword(oldPassword, newPassword) {
         }
     })
 }
+
+
 // 成员--最新动态-时间
 
 export function dynamictime() {
@@ -1267,11 +1269,102 @@ export function dynamiclist(memberId,orgId,time) {
     });
 }
 
+//成员任务安排
 
-//任务安排
-export function getTaskPlan(projectId,memberId) {
+export function taskList(memberId,projectId,classify) {
+    return fetch({
+        url: `/tasks/${memberId}/getTaskInfoList/${projectId}`,
+        method: "get",
+        params: {
+            classify :classify,
+        }
+    });
+}
+
+
+//成员日程
+
+export function schedulesList(projectId,memberId,) {
     return fetch({
         url: `/schedules/getScheduleList/${projectId}/${memberId}`,
+        method: "get",
+    });
+}
+
+// 已添加项目经历
+
+export function IsexperienceList(memberId,organizationId) {
+    return fetch({
+        url: `/projects/getIsExperience/${organizationId}/${memberId}`,
+        method: "get",
+    });
+}
+
+
+
+//查询项目经历
+
+export function experienceList(memberId,organizationId) {
+    return fetch({
+        url: `/projects/getExperience/${organizationId}/${memberId}`,
+        method: "get",
+    });
+}
+// 添加项目经历
+
+
+export function addExperience(memberId,projectId,organizationId) {
+    return fetch({
+        url: `/projects/${memberId}/${projectId}/${organizationId}`,
+        method: "put",
+    });
+}
+
+// 删除项目经历
+
+
+export function delExperience(memberId,projectId) {
+    return fetch({
+        url: `/projects/deleteExperience/${memberId}/${projectId}`,
+        method: "delete",
+    });
+}
+
+// 用户-任务-项目
+
+export function userProjectTasks(orgId,memberId) {
+    return fetch({
+        url: `/tasks/${orgId}/getProjectsByMemberIdAndOrgId/${memberId}`,
+        method: "get",
+    });
+}
+
+//用户 任务
+
+export function userTasksInit(memberId,projectId) {
+    return fetch({
+        url: `/tasks/${memberId}/getTasksByProjectIdAndMemberId/${projectId}`,
+        method: "get",
+    });
+}
+// 指派
+
+
+
+export function setList(projectId) {
+    return fetch({
+        url: `/tasks/${projectId}/getExecutors`,
+        method: "get",
+    });
+}
+
+// 确定指派送
+
+
+
+export function sureExecutor(taskId,executor) {
+    return fetch({
+        url: `/tasks/updateExecutor/${taskId}/${executor}`,
         method: "get",
     });
 }
