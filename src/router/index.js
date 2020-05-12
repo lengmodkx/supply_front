@@ -348,6 +348,16 @@ const router = new Router({
             requireAuth: true,
             keepAlive: false
           }
+        },
+        { // 项目模板
+          path: 'project-template',
+          name: "project-template",
+          component: _importc('project-template'),
+          meta: {
+            title: "阿拉丁BIM5D云平台",
+            requireAuth: true,
+            keepAlive: false
+          }
         }
       ]
     }

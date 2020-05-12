@@ -301,6 +301,13 @@ export function delRCProject(id) {
         params: {}
     });
 }
+export function createUser(userId,orgId){
+    return $post("/aliyun/createUser",{
+        userId:userId,
+        orgId:orgId
+    })
+}
+
 export function createMeeting(userId,meetingName,scheduleId,projectId){
     return $get("/aliyun/createMeeting",{
         userId:userId,

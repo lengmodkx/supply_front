@@ -27,6 +27,10 @@
                                 <Icon type="logo-buffer" size="16" />
                                 项目权限
                             </MenuItem>
+                            <MenuItem name="/project-template" to="project-template">
+                                <Icon type="ios-albums" size="16"/>
+                                项目模板
+                            </MenuItem>
                         </MenuGroup>
                     </Menu>
                 </div>
