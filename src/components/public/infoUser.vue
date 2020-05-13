@@ -241,7 +241,7 @@
                           <span>
                                   项目经历
                           </span>
-                          <button @click="showexperienceList">
+                          <button @click="showexperienceList" v-show="this.message.userId==this.user.memberId">
                               <img src="./../../assets/images/user-edit.png" width="14"/>
                               编辑
                           </button>
@@ -731,6 +731,7 @@
         created: function () {
             
             this.getDynamictime();
+            
         }
 
     };
@@ -1069,13 +1070,6 @@
               
 
             };
-
-            
-
-
-            
-
-
       }      
     }
      .addExperience{
