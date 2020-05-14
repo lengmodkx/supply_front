@@ -130,6 +130,8 @@ export default {
           this.options2 = {};
           this.loading = false;
           this.$emit("getNewList", "我创建的项目");
+          this.$emit("inputMess", "我创建的项目");
+
           this.$emit("hideModal");
         }
         //创建成功后关闭modal this.$emit("hideModal")  再次请求获取项目列表
