@@ -113,7 +113,7 @@
                                 <div class="gengduo"><Icon type="ios-arrow-dropdown" @click.stop="showFileMenu($event,'110', f.fileId)"></Icon></div>
                             </div>
                             <div class="file-name-box">
-                                <Tooltip content="Here is the prompt text">
+                                <Tooltip :content="f.fileName">
                                     <input type="text" v-model="f.fileName">
                                 </Tooltip>
                             </div>
@@ -127,7 +127,7 @@
                                 <img v-else src="@/icons/img/moren.png" alt="">
                             </div>
                             <div class="file-name-box">
-                                <Tooltip content="Here is the prompt text">
+                                <Tooltip :content="f.fileName">
                                     <input type="text" v-model="f.fileName">
                                 </Tooltip>
                             </div>
