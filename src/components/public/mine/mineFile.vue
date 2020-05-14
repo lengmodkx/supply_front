@@ -83,14 +83,14 @@
                         <li v-for="(f,n) in downList" :key="n">
                             <div class="check-box">
                             </div>
-                            <div class="file-con">
+                            <div   @click="fileDetail(f.fileId,f)"  class="file-con">
                                 <img v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
                                 <img v-else src="@/icons/img/moren.png" alt="">
                                 <Tooltip class="file-name" :content="f.fileName">
                                     {{f.fileName}}
                                 </Tooltip>
                             </div>
-                            <div class="file-size">{{f.size}}</div>
+                            <div class="file-size">{{f.size || " - "}}</div>
                              <div class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</div>
                              <div class="file-create" v-if="f.isDelete==0">未删除</div>
                              <div class="file-create" v-else>已删除</div>
@@ -122,7 +122,7 @@
 
                     <ul v-if="moShi==='tupian' && fileType==3" class="tupian">
                         <li v-for="f in downList" :class="{checked:checkedFile.includes(f.fileId)}" :key="f.fileId">
-                            <div  class="file-img-box">
+                            <div @click="fileDetail(f.fileId,f)"   class="file-img-box">
                                 <img  v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
                                 <img v-else src="@/icons/img/moren.png" alt="">
                             </div>
