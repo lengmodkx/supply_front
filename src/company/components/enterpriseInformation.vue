@@ -39,7 +39,7 @@
                 <div class="little-title">企业归属</div>
                 <div class="org-vest-con">
                     <div class="org-vest-con-left">
-                        <Icon type="md-contact" size='32'/>
+                        <img :src="userImg" alt="">
                         <span>{{contact}}</span>
                     </div>
                     <Button type="primary" ghost @click="getTransfer()">移交</Button>
@@ -107,6 +107,7 @@ export default {
                 }
             ],
             img: '',
+            userImg:'',
             postUrl: "",
             pic_show:true,
             pic_hide:false,
@@ -211,6 +212,7 @@ export default {
         },
         getOrgInfo(){
             orgInfo(localStorage.companyId).then(res=>{
+                console.log(res)
                 if(res.result==1){
                     this.img = res.data.organizationImage
                     this.orgName = res.data.organizationName
@@ -219,6 +221,7 @@ export default {
                     this.orgPublick = res.data.isPublic+""
                     this.contact = res.data.contact
                     this.ownerId=res.data.organizationMember
+                    this.userImg=res.data.userImg
                 }
             })
         },
