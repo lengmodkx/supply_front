@@ -942,6 +942,19 @@ export function getMeFile(order,type) {
 }
 
 /**
+ * 获取我创建的或我参与的文件--下载
+ */
+export function getMeDown(memberId) {
+    return fetch({
+        url: `/files/getIsDownload/${memberId}`,
+        method: "get", // 请求方法
+    });
+}
+
+
+
+
+/**
  * 获取我的收藏数据
  * @param order
  */
