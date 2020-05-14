@@ -74,7 +74,7 @@
                              <div class="file-create">{{f.createTime}}</div>-->
                              <div class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</div>
                              <div class="file-create">{{ $moment(f.updateTime).format("YYYY-MM-DD HH:mm") }}</div>
-                            <Icon type="ios-cloud-download-outline" />
+                            <Icon type="ios-cloud-download-outline" @click="downloadFile(f.fileId)"/>
                             <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0', f.fileId)"></Icon>
                         </li>
                     </ul>
@@ -219,6 +219,15 @@ export default {
       }
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
+    mounted() {
+        document.addEventListener('click',event => {
+            if(!this.$el.contains(event.target)){
+                this.visible = false//点击其他区域关闭
+            }else{
+                this.visible = true
+            }
+        })
+    },
     methods: {
         ...mapMutations("file", ["putOneFile"]),
         showFileMenu(e, n, id){
@@ -251,8 +260,19 @@ export default {
             }
 
         },
+        //点击下载文件
+        downloadFile(id){
+            var url = "";
+            if (process.env.NODE_ENV == "test") {
+                url = process.env.VUE_APP_TEST_URL;
+            } else if (process.env.NODE_ENV == "production") {
+                url = process.env.VUE_APP_URL;
+            } else {
+                url = "/api";
+            }
+            window.location.href = url + "/files/" + id + "/download";
+        },
         getDown(){
-
              getMeDown(localStorage.userId).then(res => {
                 if(res.result === 1){
                     this.loading=false;
