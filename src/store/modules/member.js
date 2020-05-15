@@ -1,6 +1,7 @@
 import {
     projectMembers,
-    getMemRoles
+    getMemRoles,
+    projectMembersSerach
 } from "../../axios/api.js"
 const store = {
     namespaced: true,
@@ -75,7 +76,16 @@ const store = {
         filterUser({
             commit
         }, data) {
-            commit('filterUser', data)
+            
+
+            projectMembersSerach(data.id,data.key).then(res => {
+                
+                if (res.result === 1) {
+                    commit('initUser', data)
+                }
+            })
+           
+            // commit('filterUser', data)
         },
         getRoles({
             commit

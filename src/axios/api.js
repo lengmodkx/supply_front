@@ -462,6 +462,18 @@ export function projectMembers(projectId) {
     return $get(`/projects/${projectId}/members`, '');
 }
 
+//搜索项目成员
+export function projectMembersSerach(projectId,condition) {
+
+    return fetch({
+        url: `/projects/${projectId}/members`,
+        method: "get", // 请求方法
+        data: {
+            condition: condition,
+        }
+    });
+}
+
 //获取单个项目成员详情
 export function projectOneMembers(projectId,userId) {
     return $get(`/projects/${projectId}/membersInfo/${userId}`, '');
