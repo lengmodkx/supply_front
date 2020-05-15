@@ -465,14 +465,18 @@ export function projectMembers(projectId) {
 //搜索项目成员
 export function projectMembersSerach(projectId,condition) {
 
+
     return fetch({
         url: `/projects/${projectId}/members`,
-        method: "get", // 请求方法
-        data: {
+        method: "get",
+        params: {
             condition: condition,
         }
     });
 }
+
+  
+
 
 //获取单个项目成员详情
 export function projectOneMembers(projectId,userId) {
