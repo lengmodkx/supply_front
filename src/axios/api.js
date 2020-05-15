@@ -175,16 +175,30 @@ export function updateProject(data) {
     });
 }
 // 搜索项目
-export function searchProjects(projectName, condition) {
+// export function searchProjects(projectName, condition) {
+//     return fetch({
+//         url: '/projects/seach',
+//         method: "get", // 请求方法
+//         params: {
+//             projectName: projectName,
+//             condition: condition
+//         }
+//     });
+// }
+
+// 搜索项目 2020-5-15
+export function searchProjects(projectName, condition,orgId) {
     return fetch({
         url: '/projects/seach',
         method: "get", // 请求方法
         params: {
             projectName: projectName,
-            condition: condition
+            condition: condition,
+            orgId:orgId,
         }
     });
 }
+
 //获取项目列表
 // export function getProjectList() {
 //     return fetch({
