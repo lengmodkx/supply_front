@@ -230,6 +230,7 @@ export default {
                 postTransfer(localStorage.companyId,this.ownerId,this.transferId).then(res=>{
                         if(res.result==1){
                             this.$Message.success('移交成功');
+                            this.$router.push('/')
                         }else{
                             this.$Message.error('移交失败');
                             console.log(res.msg)
