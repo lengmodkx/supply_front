@@ -80,8 +80,9 @@ const store = {
 
             projectMembersSerach(data.id,data.key).then(res => {
                 
+                
                 if (res.result === 1) {
-                    commit('initUser', data)
+                    commit('initUser', res.data)
                 }
             })
            

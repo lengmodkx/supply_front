@@ -171,10 +171,13 @@ export default {
     FUser(keyword) {
       
       if (keyword != "") {
-        this.filterUser(keyword);
-      } else {
+           var data={
+             id:this.$route.params.id,
+             key:keyword
+           }
+          this.filterUser(data);
 
-         
+      } else {
            this.initUser(this.$route.params.id);
           
       }
