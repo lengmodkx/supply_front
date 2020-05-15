@@ -465,9 +465,9 @@ export function projectMembers(projectId) {
 //搜索项目成员
 export function projectMembersSerach(projectId,condition) {
 
-
+    
     return fetch({
-        url: `/projects/${projectId}/members`,
+        url: `/projects/searchMemberByName/${projectId}`,
         method: "get",
         params: {
             condition: condition,
