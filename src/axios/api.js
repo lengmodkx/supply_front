@@ -175,16 +175,30 @@ export function updateProject(data) {
     });
 }
 // 搜索项目
-export function searchProjects(projectName, condition) {
+// export function searchProjects(projectName, condition) {
+//     return fetch({
+//         url: '/projects/seach',
+//         method: "get", // 请求方法
+//         params: {
+//             projectName: projectName,
+//             condition: condition
+//         }
+//     });
+// }
+
+// 搜索项目 2020-5-15
+export function searchProjects(projectName, condition,orgId) {
     return fetch({
         url: '/projects/seach',
         method: "get", // 请求方法
         params: {
             projectName: projectName,
-            condition: condition
+            condition: condition,
+            orgId:orgId,
         }
     });
 }
+
 //获取项目列表
 // export function getProjectList() {
 //     return fetch({
@@ -447,6 +461,22 @@ export function moveTask(taskId, projectId, groupId, menuId) {
 export function projectMembers(projectId) {
     return $get(`/projects/${projectId}/members`, '');
 }
+
+//搜索项目成员
+export function projectMembersSerach(projectId,condition) {
+
+    
+    return fetch({
+        url: `/projects/searchMemberByName/${projectId}`,
+        method: "get",
+        params: {
+            condition: condition,
+        }
+    });
+}
+
+  
+
 
 //获取单个项目成员详情
 export function projectOneMembers(projectId,userId) {
@@ -940,6 +970,19 @@ export function getMeFile(order,type) {
         }
     });
 }
+
+/**
+ * 获取我创建的或我参与的文件--下载
+ */
+export function getMeDown(memberId) {
+    return fetch({
+        url: `/files/getIsDownload/${memberId}`,
+        method: "get", // 请求方法
+    });
+}
+
+
+
 
 /**
  * 获取我的收藏数据

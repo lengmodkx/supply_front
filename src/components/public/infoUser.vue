@@ -37,7 +37,7 @@
                             <span>
                                 详细资料
                             </span>
-                            <button @click="showInformation = true">
+                            <button @click="information">
                                 <img src="./../../assets/images/user-edit.png" width="14"/>
                                 编辑
                             </button>
@@ -55,11 +55,10 @@
                                 <li>
                                   <span>
                                     入职时间:
-                                  </span>
-                                    <span>
-                                      {{ $moment(user.entryTime).format("YYYY-MM-DD HH:mm")||  '-'}}
-                                    
-                                   </span>
+                                    </span>
+
+                                    {{user.entryTime || '-'}}
+                                 
                                 </li>
                                 
                                 <li>
@@ -242,7 +241,7 @@
                           <span>
                                   项目经历
                           </span>
-                          <button @click="showexperienceList">
+                          <button @click="showexperienceList" v-show="this.message.userId==this.user.memberId">
                               <img src="./../../assets/images/user-edit.png" width="14"/>
                               编辑
                           </button>
@@ -551,6 +550,18 @@
                  this.getexperienceList();
               }
             },
+            // 打开编辑
+            information(){
+                this.showInformation=true
+                this.message.userName= JSON.parse(JSON.stringify(this.user.userName));
+                this.message.memberEmail= JSON.parse(JSON.stringify(this.user.memberEmail));
+                this.message.birthday= JSON.parse(JSON.stringify(this.user.birthday));
+                this.message.job= JSON.parse(JSON.stringify(this.user.job));
+                this.message.phone= JSON.parse(JSON.stringify(this.user.phone));
+                this.message.entryTime= JSON.parse(JSON.stringify(this.user.entryTime));
+                this.message.memberLabel= JSON.parse(JSON.stringify(this.user.memberLabel));
+                this.message.address= JSON.parse(JSON.stringify(this.user.address));
+            },
             // 项目列表
             getexperienceList(){
                   IsexperienceList(this.user.memberId,this.orgId).then(res => {
@@ -695,10 +706,23 @@
                          
                          console.log(res.data)
                         this.$emit("close",res.data); 
-                       
-                        //  this.siLing1 =false;
-                        //  this.siLing2 = true;
-                        //  this.message=res.data
+
+                        this.message={
+                          stayComDate:'',
+                              userId: localStorage.userId,
+                              userName: '',
+                              memberEmail: '',
+                              birthday: '',
+                              entryTime: '',
+                              memberLabel: '',
+                              job: '',
+                              phone: '',
+                              address: '',
+                              email: '',
+                              deptId: '',
+                              deptName:'',
+                              deptNameList: [],
+                        }  
                     }
                     this.showInformation = false;
                 });
@@ -707,6 +731,7 @@
         created: function () {
             
             this.getDynamictime();
+            
         }
 
     };
@@ -1045,13 +1070,6 @@
               
 
             };
-
-            
-
-
-            
-
-
       }      
     }
      .addExperience{

@@ -7,6 +7,7 @@
                 <!-- <span class="now">我创建的</span><span>我参与的</span> -->
                 <span :class="{now: fileType==1}" @click="changeType(1)">我创建的</span>
                 <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
+                <span :class="{now: fileType==3}" @click="changeType(3)">我下载的</span>
                 <div class="task-head-right">
                     <Select v-model="order" placeholder="请选择排序" @on-change="getMeFile">
                         <Option value="create" >按创建时间排序</Option>
@@ -26,7 +27,8 @@
                             </div>
                             <div class="file-size">大小</div>
                             <div class="file-create">创建时间</div>
-                            <div class="file-time">更新时间</div>
+                            <div class="file-time" v-if='fileType==2||fileType==1'>更新时间</div>
+                            <div class="file-time" v-else>是否删除</div>
                         </div>
                     </div>
 
@@ -54,7 +56,7 @@
             <div class="file-content">
                 <!--列表模式-->
                 <CheckboxGroup v-model="checkedFile" @on-change="checkedClick">
-                    <ul v-if="moShi==='liebiao'" class="liebiao">
+                    <ul v-if="moShi==='liebiao'&& (fileType==1||fileType==2)" class="liebiao" >
                         <li v-for="(f,n) in files" :key="n">
                             <div class="check-box">
                                 <Checkbox  :label="f.fileId" size="default"><span> </span></Checkbox>
@@ -72,15 +74,34 @@
                              <div class="file-create">{{f.createTime}}</div>-->
                              <div class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</div>
                              <div class="file-create">{{ $moment(f.updateTime).format("YYYY-MM-DD HH:mm") }}</div>
-                            <Icon type="ios-cloud-download-outline" />
+                            <Icon type="ios-cloud-download-outline" @click="downloadFile(f.fileId)"/>
                             <Icon type="ios-arrow-dropdown" @click="showFileMenu($event,'0', f.fileId)"></Icon>
                         </li>
                     </ul>
+
+                    <ul v-if="moShi==='liebiao'&& fileType==3" class="liebiao" >
+                        <li v-for="(f,n) in downList" :key="n">
+                            <div class="check-box">
+                            </div>
+                            <div   @click="fileDetail(f.fileId,f)"  class="file-con">
+                                <img v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
+                                <img v-else src="@/icons/img/moren.png" alt="">
+                                <Tooltip class="file-name" :content="f.fileName">
+                                    {{f.fileName}}
+                                </Tooltip>
+                            </div>
+                            <div class="file-size">{{f.size || " - "}}</div>
+                             <div class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</div>
+                             <div class="file-create" v-if="f.isDelete==0">未删除</div>
+                             <div class="file-create" v-else>已删除</div>
+                        </li>
+                    </ul>
+
                 </CheckboxGroup>
 
                 <!--图片模式-->
                 <CheckboxGroup v-model="checkedFile" @on-change="checkedClick">
-                    <ul v-if="moShi==='tupian'" class="tupian">
+                    <ul v-if="moShi==='tupian' && (fileType==1||fileType==2) " class="tupian">
                         <li v-for="f in files" :class="{checked:checkedFile.includes(f.fileId)}" :key="f.fileId">
                             <div @click="fileDetail(f.fileId,f)" class="file-img-box">
                                 <img  v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
@@ -92,7 +113,21 @@
                                 <div class="gengduo"><Icon type="ios-arrow-dropdown" @click.stop="showFileMenu($event,'110', f.fileId)"></Icon></div>
                             </div>
                             <div class="file-name-box">
-                                <Tooltip content="Here is the prompt text">
+                                <Tooltip :content="f.fileName">
+                                    <input type="text" v-model="f.fileName">
+                                </Tooltip>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul v-if="moShi==='tupian' && fileType==3" class="tupian">
+                        <li v-for="f in downList" :class="{checked:checkedFile.includes(f.fileId)}" :key="f.fileId">
+                            <div @click="fileDetail(f.fileId,f)"   class="file-img-box">
+                                <img  v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
+                                <img v-else src="@/icons/img/moren.png" alt="">
+                            </div>
+                            <div class="file-name-box">
+                                <Tooltip :content="f.fileName">
                                     <input type="text" v-model="f.fileName">
                                 </Tooltip>
                             </div>
@@ -149,7 +184,7 @@ import VJstree from "vue-jstree";
 import mineFileMenu from './mineFileMenu'
 import fileDetail from "@/components/project/file/fileDetail";
 import modelFileDetail from "@/components/project/file/modelFileDetail";
-import {files, createFolder, getProjectList, folderChild, collect, getMeFile} from "@/axios/api.js";
+import {files, createFolder, getProjectList, folderChild, collect, getMeFile,getMeDown} from "@/axios/api.js";
 import { getFileDetails, getChildFiles, removeFile, cloneFile } from "@/axios/fileApi";
 import {mapMutations} from 'vuex'
 export default {
@@ -179,10 +214,20 @@ export default {
           rublish: false,
           thisFileId: "",
           fileType:1,
-          order:''
+          order:'',
+          downList:[],
       }
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
+    mounted() {
+        document.addEventListener('click',event => {
+            if(!this.$el.contains(event.target)){
+                this.visible = false//点击其他区域关闭
+            }else{
+                this.visible = true
+            }
+        })
+    },
     methods: {
         ...mapMutations("file", ["putOneFile"]),
         showFileMenu(e, n, id){
@@ -209,6 +254,32 @@ export default {
                 this.order='';
                 this.getMeFile();
             }
+            if(n === 3){
+                  this.type = 'dwon';
+                  this.getDown()
+            }
+
+        },
+        //点击下载文件
+        downloadFile(id){
+            var url = "";
+            if (process.env.NODE_ENV == "test") {
+                url = process.env.VUE_APP_TEST_URL;
+            } else if (process.env.NODE_ENV == "production") {
+                url = process.env.VUE_APP_URL;
+            } else {
+                url = "/api";
+            }
+            window.location.href = url + "/files/" + id + "/download";
+        },
+        getDown(){
+             getMeDown(localStorage.userId).then(res => {
+                if(res.result === 1){
+                    this.loading=false;
+                    this.downList = res.data
+                }
+            })
+                console.log("获取下载数据")
         },
 
         getMeFile(){

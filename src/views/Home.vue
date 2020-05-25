@@ -8,11 +8,12 @@
     <div class="container index">
       <div class="container-title">
         <div class="search-box">
-          <Input v-model.trim="searchWords" search enter-button placeholder="请输入项目名称关键字进行搜索" @on-search="searchProject" @on-keyup="searchNo" />
+          <!-- @on-keyup="searchNo" -->
+          <Input v-model.trim="searchWords" search enter-button placeholder="请输入项目名称关键字进行搜索" @on-search="searchProject"  />
         </div>
         <div class="filtrate-box">
-          <Select v-model="projectType" @on-change="selectProjectType" style="width:200px" placeholder="我创建的项目">
-            <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="projectType" @on-change="searchProject(searchWords)"   style="width:200px" placeholder="我创建的项目">
+            <Option v-for="item in projectList"  @inputMess="inputMess"   :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <RadioGroup class="select-view" v-model="selectView" type="button" @on-change="changeView">
             <Radio label="卡片视图"></Radio>
@@ -288,10 +289,16 @@ export default {
     ...mapMutations("project", ["setName"]),
     // 选择项目类型
     selectProjectType(value) {
+
+      
+      
       this.projectType = value;
       this.$store.state.project.loading = true;
-      //this.init(value);
+   
       this.orgProjectInit({ id: this.companyId, type: value });
+    },
+    inputMess(val){
+        this.projectList= this.projectList[1];
     },
     path(item) {
       this.setName(item.projectName);
@@ -338,25 +345,30 @@ export default {
     },
     // 搜索项目
     searchProject(value) {
-      if (value == "") {
-        //this.init(this.projectType);
-        this.orgProjectInit({ id: this.companyId, type: this.projectType });
-        return;
-      }
+      
+      // if (value == "") {
+       
+      //   this.orgProjectInit({ id: this.companyId, type: this.projectType });
+      //   return;
+      // }
 
       let arr = {
+        全部项目:'all',
         我创建的项目: "created",
         我参与的项目: "join",
-        星标项目: "star"
+        星标项目: "star",
+        已归档的项目:'complete',
+        回收站的项目:'trash',
       };
       this.searchLoading = true;
       this.isSearch = true;
-      searchProjects(value, arr[this.projectType]).then(res => {
+      searchProjects(value, arr[this.projectType],this.companyId).then(res => {
         this.searchLoading = false;
         this.searchData = res.data;
       });
     },
     searchNo() {
+      
       if (this.searchWords == "") {
         this.searchData = [];
         this.isSearch = false;
