@@ -220,13 +220,13 @@ export default {
     },
     components:{ mineFileMenu, fileDetail, modelFileDetail, VJstree },
     mounted() {
-        document.addEventListener('click',event => {
-            if(!this.$el.contains(event.target)){
-                this.visible = false//点击其他区域关闭
-            }else{
-                this.visible = true
-            }
-        })
+        // document.addEventListener('click',event => {
+        //     if(!this.$el.contains(event.target)){
+        //         this.visible = false//点击其他区域关闭
+        //     }else{
+        //         this.visible = true
+        //     }
+        // })
     },
     methods: {
         ...mapMutations("file", ["putOneFile"]),
