@@ -63,6 +63,46 @@ export function postTransfer(orgId,ownerId,userId){
     return $post('/organization/members/transferOwner',{"orgId":orgId,"ownerId":ownerId,"userId":userId})
 }
 
+//创建模板
+export function createTemplate(data){
+    return $post('/templates',data)
+}
+
+//修改模板
+export function updateTemplate(data){
+    return $put('/templates',data)
+}
+
+//删除模板
+export function deleteTemplate(data){
+    return $delete('/templates',data)
+}
+
+export function initTemplate(data){
+    return $get('/templates',data)
+}
+
+//模板任务列表
+export function initTemplateRelation(data){
+    return $get('/templates/relations',data)
+}
+
+//修改模板任务列表
+export function updateTemplateRelation(data){
+    return $put('/templates/relations',data)
+}
+
+//删除模板任务列表
+export function deleteTemplateRelation(data){
+    return $delete('/templates/relations',data)
+}
+
+//创建模板任务列表
+export function createTemplateRelation(data){
+    return $post('/templates/relations',data)
+}
+
+
 export function $post(url, params) {
     return fetch({
         url: url,
