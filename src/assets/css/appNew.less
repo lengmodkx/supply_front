@@ -1,0 +1,92 @@
+body {
+  background-color: rgb(244, 244, 244);
+   // font-family: 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+body {
+  .pop {
+    z-index: 999999 !important;
+
+    /deep/ .ivu-poptip-body {
+      padding: 0;
+    }
+  }
+}
+
+.ivu-layout-header{
+  background: #ffffff !important;
+  padding: 0px !important;
+}
+
+/deep/.ivu-modal-wrap {
+  overflow: hidden;
+}
+/deep/.ivu-modal-body {
+  padding: 0;
+  overflow: hidden !important;
+}
+/deep/ .ivu-modal-content {
+  box-shadow: none;
+}
+/deep/.ivu-modal-footer {
+  border-top: none;
+}
+
+.ivu-input-icon {
+  height: 40px !important;
+  line-height: 40px !important;
+}
+
+
+.content-main {
+  // padding-top: 48px;
+  .container {
+    width: 1180px;
+    margin: 0 auto;
+  }
+}
+
+.fl {
+  float: left !important;
+}
+
+.fr {
+  float: right !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.oh {
+  overflow: hidden;
+}
+
+li {
+  list-style: none;
+}
+
+.clearfix::after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+}
+
+.text-nowrap {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.font-bold{
+  font-weight: bold;
+}
+
+
+// 头
+@import "headerNew";
+// home页
+@import "homeNew";

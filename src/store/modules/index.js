@@ -3,7 +3,8 @@
 const store = {
     namespaced: true,
     state: {
-       headerImg:localStorage.userImg
+       headerImg:localStorage.userImg,
+       header:false,//控制头部
     },
     mutations: {
       

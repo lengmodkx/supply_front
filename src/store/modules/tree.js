@@ -16,8 +16,8 @@ const store = {
     // ]
     showView: "view",
     slider: "",
-    mFileTree:[]
-
+    mFileTree:[],
+ 
   },
   mutations: {
     // 改变列表状态

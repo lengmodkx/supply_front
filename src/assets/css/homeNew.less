@@ -1,0 +1,164 @@
+.wrap-box{
+     height: 100vh;
+     background: #f4f3f4;
+     
+    .page-header{
+      background: #fff;
+      padding:  19px  32px  0;
+      display: flex;
+      flex-flow: column wrap;
+      border-bottom: 1px solid #e8e8e8;
+      .header-title{
+        color: #8c8c8c;
+        padding-bottom: 1em;
+      }
+      .header-contant{
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 1em;
+        .left-contant{
+          display: flex;
+          line-height: 33px;
+          .avatar{
+            width:64px ;
+            height: 64px;
+            margin-right: 14px;
+          }
+          .title{
+            font-size: 20px;
+            color: #2d2d2d;
+          }
+          .team{
+            color: #8c8c8c;
+          }
+  
+        }
+        .right-contant{
+          display: flex;
+          flex-flow: row nowrap;
+          .contant-item{
+            padding:0px 30px;
+            border-right: 1px solid  #e5e4e5;
+            .title{
+              color: #8c8c8c;
+            }
+            .number{
+              color: #2d2d2d;
+              font-size: 35px;
+            }
+          }
+          .contant-item:last-child{
+            border-right: none;
+          }
+          
+        }
+      }
+    }
+    .page-wrapper{
+      padding: 1.5em 1.5em 0 1.5em;
+      .ivu-card-body{
+        padding: 0px  !important;
+      }
+      //  项目
+      .porject-contant{
+        display: flex;
+        flex-flow: row wrap;
+          li{
+            width: 33.33%;
+            padding: 20px;
+            color: #8c8c8c;
+            cursor: pointer;
+            .title{
+              i{
+                padding: 0 10px;
+                color: #ffa531;
+              }
+              span{
+                color: #262626;
+                font-weight: 1000px; 
+              }
+            }
+            .datetime{
+              display: flex;
+              justify-content: space-between;
+              font-size: 12px;
+            }
+            .description{
+              padding:10px 0;
+             }
+          }
+          li:nth-child(3n){
+            border-right: none;
+          }
+          li:hover{
+             box-shadow: 0 0 8px  rgba(0, 0, 0, .20);  
+          }
+      }
+      // 动态
+      .dynamic-contant{
+        padding: 20px;
+      }
+      // 任务
+      .task-contant-waper{
+        padding: 10px 20px 20px;
+        .task-contant{
+          li{
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            padding:10px 0px;
+            .level{
+              color: #52c41a;
+              background: #f6ffed;
+              border-color: #b7eb8f;
+              float: left;
+              margin-right: 15px;
+            }
+            .level:hover{
+              cursor: pointer;
+            }
+            span{
+              color: #2d8cf0;
+              font-weight: bold;
+            }
+            span:hover{
+              cursor: pointer;
+            }
+          }
+          li:last-child{
+            border-bottom: none;
+          }
+        } 
+        .task-page{
+          display: flex;
+          justify-content:  flex-end ;
+          margin-top:10px; 
+        }
+        
+      }
+      // 团队
+      .team-contant{
+        display: flex;
+        flex-flow: row wrap;
+          padding-top: 20px;
+          li{
+            width: 33.33%;
+            padding: 0 20px 20px 20px;
+            .avatar{
+              width: 24px;
+              height: 24px;
+            }
+          }
+          li{
+            span:hover{
+              cursor: pointer;
+              color: #2d8cf0;
+            }
+          } 
+      }
+    }
+   
+    
+   
+    
+}
