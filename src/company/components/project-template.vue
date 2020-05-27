@@ -262,12 +262,17 @@ export default {
       }
     },
     showRelationAdd(relation) {
+      this.addRelation = true;
       if (relation) {
         this.relationName = relation.relationName;
         this.relationOrder = relation.relationOrder;
         this.relationId = relation.relationId;
+      }else{
+        this.relationName = '';
+        this.relationOrder = '0';
+        this.relationId ='';
       }
-      this.addRelation = true;
+      
     },
     initRelation() {
       initTemplateRelation({ templateId: this.templateId }).then((res) => {

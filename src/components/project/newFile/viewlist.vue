@@ -451,7 +451,7 @@ export default {
     },
    
     //文件下载
-    downLoad(fileId) {
+    downLoad(fileIds) {
       checkdownload().then(res => {
         if (res.result == 0) {
           this.$Message.error(res.msg);

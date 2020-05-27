@@ -121,32 +121,7 @@ export default {
             //移交
             showTransfer:false,
             transferId:'',
-            transferList: [
-                    // {
-                    //     value: 'New York',
-                    //     label: 'New York'
-                    // },
-                    // {
-                    //     value: 'London',
-                    //     label: 'London'
-                    // },
-                    // {
-                    //     value: 'Sydney',
-                    //     label: 'Sydney'
-                    // },
-                    // {
-                    //     value: 'Ottawa',
-                    //     label: 'Ottawa'
-                    // },
-                    // {
-                    //     value: 'Paris',
-                    //     label: 'Paris'
-                    // },
-                    // {
-                    //     value: 'Canberra',
-                    //     label: 'Canberra'
-                    // }
-                ],
+            transferList: []
         }
     },
     mounted(){
