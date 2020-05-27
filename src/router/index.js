@@ -16,6 +16,8 @@ import Bind from '../views/bindPhone.vue'
 import orgEmpty from '../views/orgEmpty.vue'
 import delOrg from '../views/delOrg.vue'
 import Detail from '../views/detail.vue'
+import loginCompany from '../components/public/companyIn' //企业登陆
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -33,10 +35,18 @@ const router = new Router({
         keepAlive: false
       }
     },
+   
     {
       path: "/detail", //
       component: Detail,
       name:'Detail',
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: "/loginCompany", // 企业登陆
+      component: loginCompany,
       meta: {
         keepAlive: false
       }
