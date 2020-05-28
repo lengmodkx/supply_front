@@ -14,10 +14,10 @@
         <ul>
           <li v-for="(g, index) in groups" :key="index" :class="{ groupActive: taskGroupId == g.groupId }" class="group-li" @click="changeGroup(g.groupId)">
             <div class="group-name">
-             <div>{{ g.groupName }} · {{ g.completeCount }}/{{ g.taskTotal }}</div> 
+              <div>{{ g.groupName }} · {{ g.completeCount }}/{{ g.taskTotal }}</div>
               <div class="group-icon">
                 <Icon type="ios-brush-outline" @click.stop="groupEdit(g.groupId)"></Icon>
-                 <Icon type="ios-trash-outline" @click.stop="groupEditdel(g.groupId)"></Icon>
+                <Icon type="ios-trash-outline" @click.stop="groupEditdel(g.groupId)"></Icon>
               </div>
             </div>
             <div class="group-progress">
@@ -54,18 +54,18 @@
         fallbackClass: 'boxFallbackClass',
         forceFallback: true,
         delay: 1,
-        preventDragY: true // 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
+        preventDragY: true, // 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
       }"
       @end="dragBox"
     >
       <div class="column" :key="k" v-for="(i, k) in allTask">
         <div style="max-height: 85vh;position:relative;" :data-index="k">
-           <div class="add-Box">
-              <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId"> -->
-                 <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)">
-                    <Icon type="android-add-circle"></Icon>
-                    <Button type="info" long icon="md-add"></Button>
-                  </span>
+          <div class="add-Box">
+            <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId"> -->
+            <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)">
+              <Icon type="android-add-circle"></Icon>
+              <Button type="info" long icon="md-add"></Button>
+            </span>
           </div>
           <div class="title handle">
             {{ i.relationName }} · {{ i.taskList ? i.taskList.length : "0" }}
@@ -73,16 +73,19 @@
             <TaskMenu class="fr" :data="i"></TaskMenu>
           </div>
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="i.taskList.length * 60 + 42 > wHeight ? 'overflow-y: scroll' : ''">
-            <draggable :list="i.taskList" 
-              :options="{ 
-                group: 'uncheckedTask', 
-                forceFallback: true, 
-                delay: 10, 
-                touchStartThreshold:10,
-                dragClass: 'dragClass', 
-                fallbackClass: 'fallbackClass' 
-              }" 
-              class="ul" @end="dragList">
+            <draggable
+              :list="i.taskList"
+              :options="{
+                group: 'uncheckedTask',
+                forceFallback: true,
+                delay: 10,
+                touchStartThreshold: 10,
+                dragClass: 'dragClass',
+                fallbackClass: 'fallbackClass',
+              }"
+              class="ul"
+              @end="dragList"
+            >
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click.stop="initTask(a.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(a.priority)">
                   <div class="teskCheck" @click.stop="changeStatus(!a.taskStatus, k, b, a.taskId)"></div>
@@ -91,7 +94,7 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                    <Tooltip :content="a.executorName"  placement="top" transfer>
+                    <Tooltip :content="a.executorName" placement="top" transfer>
                       <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
                     </Tooltip>
                   </div>
@@ -99,20 +102,27 @@
                   <div class="task-info-wrapper">
                     <div class="task-infos">
                       <span class="label time-label" v-if="a.endTime">
-                              {{ $moment(a.endTime).calendar(null, {
-                              sameDay: '[今天]LT',
-                              nextDay: '[明天]LT',
-                              lastDay: '[昨天]LT',
-                              lastWeek: (now)=>{
-                                  const startDate = $moment().week($moment().week()).startOf('week').valueOf();
-                                  return a.endTime<=startDate?'[上]dddLT':'dddLT'
-                                },
-                                nextWeek: (now)=>{
-                                  const endDate =  $moment().week($moment().week()).endOf('week').valueOf();
-                                  return a.endTime>=endDate?'[下]dddLT':'dddLT'
-                                },
-                              sameElse: 'Y年M月D日LT'
-                            })
+                        {{
+                          $moment(a.endTime).calendar(null, {
+                            sameDay: "[今天]LT",
+                            nextDay: "[明天]LT",
+                            lastDay: "[昨天]LT",
+                            lastWeek: (now) => {
+                              const startDate = $moment()
+                                .week($moment().week())
+                                .startOf("week")
+                                .valueOf();
+                              return a.endTime <= startDate ? "[上]dddLT" : "dddLT";
+                            },
+                            nextWeek: (now) => {
+                              const endDate = $moment()
+                                .week($moment().week())
+                                .endOf("week")
+                                .valueOf();
+                              return a.endTime >= endDate ? "[下]dddLT" : "dddLT";
+                            },
+                            sameElse: "Y年M月D日LT",
+                          })
                         }}
                       </span>
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{ a.repeat }}</span>
@@ -160,15 +170,17 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="top" transfer>
-                    <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
-                     </Tooltip>
+                    <Tooltip :content="a.executorName" placement="top" transfer>
+                      <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
+                    </Tooltip>
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
                     <div class="task-infos">
                       <span class="label time-label" v-if="a.endTime"
-                        >{{ $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" }) }}截止</span
+                        >{{
+                          $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" })
+                        }}截止</span
                       >
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{ a.repeat }}</span>
                       <!--<span class="label">-->
@@ -199,14 +211,11 @@
               </div>
             </draggable>
             <div class="add" style="height:45px"></div>
-            
 
             <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
               <Icon type="android-add-circle"></Icon>
               <Button type="info" long icon="md-add"></Button>
             </span> -->
-
-           
           </div>
         </div>
       </div>
@@ -243,7 +252,7 @@
       <memberView></memberView>
     </div>
     <!-- 点击列表出来的弹框。编辑列表 :closable="false" fullscreen-->
-    <Modal v-model="showModal" class="myModal" :mask-closable="false" :closable='false' footer-hide>
+    <Modal v-model="showModal" class="myModal" :mask-closable="false" :closable="false" footer-hide>
       <my-modal v-if="showModal" @close="showModal = false"></my-modal>
       <!-- <div>xxxx</div> -->
     </Modal>
@@ -254,20 +263,19 @@
       </div>
     </Modal>
 
-      <Modal v-model="showAddGroupItem" :footer-hide="true" title="修改分组名称" :width="350">
-       <Input v-model="groupNameItem" placeholder="请输入修改分组名称" class="group-name-input" ref="input" />
-        <div>
-          <Button type="info" long  @click="handleSaveItem" :disabled="!groupNameItem">确定</Button>
-        </div>
-     </Modal>
+    <Modal v-model="showAddGroupItem" :footer-hide="true" title="修改分组名称" :width="350">
+      <Input v-model="groupNameItem" placeholder="请输入修改分组名称" class="group-name-input" ref="input" />
+      <div>
+        <Button type="info" long @click="handleSaveItem" :disabled="!groupNameItem">确定</Button>
+      </div>
+    </Modal>
 
-     <Modal v-model="showDelGroupItem" :footer-hide="true" title="删除分组名称" :width="350">
-       <span>是否确定删除任务分组?</span>
-        <div style="margin-top:15px">
-          <Button type="error" long  @click="handleDelItem">确定</Button>
-        </div>
-     </Modal>
-
+    <Modal v-model="showDelGroupItem" :footer-hide="true" title="删除分组名称" :width="350">
+      <span>是否确定删除任务分组?</span>
+      <div style="margin-top:15px">
+        <Button type="error" long @click="handleDelItem">确定</Button>
+      </div>
+    </Modal>
 
     <!--加载中-->
     <div class="demo-spin-container" v-if="loading">
@@ -276,15 +284,14 @@
 
     <!--创建 myy 2020-3-20 -->
 
-    <Modal v-model="shwoCreate"    title="创建任务"  :width="440" :mask-closable="false"   footer-hide>
-      <creat-list v-if="shwoCreate"  :projectId=projectId  :taskMenuId=taskMenuId :taskGroupId=taskGroupId @close="shwoCreate = false"></creat-list>
+    <Modal v-model="shwoCreate" title="创建任务" :width="440" :mask-closable="false" footer-hide>
+      <creat-list v-if="shwoCreate" :projectId="projectId" :taskMenuId="taskMenuId" :taskGroupId="taskGroupId" @close="shwoCreate = false"></creat-list>
     </Modal>
-
   </div>
 </template>
 
 <script>
-import creatList from  "./components/creatList.vue"; // <!--创建 myy 2020-3-20 -->
+import creatList from "./components/creatList.vue"; // <!--创建 myy 2020-3-20 -->
 import draggable from "vuedraggable";
 import FilterBox from "./components/FilterBox";
 import SortBox from "./components/SortBox";
@@ -297,11 +304,25 @@ import timeView from "./timeView";
 import memberView from "./memberView";
 import { scrollTo, dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-import { enterTask, sortTaskMenu, addnewTask, completeTask, cancelcompleteTask, dragTask, addTask, group, addGroup, changeGroup, getIsGroupPower,changRelationName,delRelationName} from "@/axios/api";
+import {
+  enterTask,
+  sortTaskMenu,
+  addnewTask,
+  completeTask,
+  cancelcompleteTask,
+  dragTask,
+  addTask,
+  group,
+  addGroup,
+  changeGroup,
+  getIsGroupPower,
+  changRelationName,
+  delRelationName,
+} from "@/axios/api";
 export default {
   name: "",
   components: {
-    creatList,// <!--创建 myy 2020-3-20 -->
+    creatList, // <!--创建 myy 2020-3-20 -->
     draggable,
     timeView,
     listView,
@@ -309,18 +330,18 @@ export default {
     // FilterBox,
     // SortBox,
     TaskMenu,
-    myModal
+    myModal,
     // LeftTaskInfo,
     // CurrentAdd
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup", "abc"]),
     ...mapState("task", ["allTasks", "sort", "groups"]),
-    ...mapState("app", ["view"])
+    ...mapState("app", ["view"]),
   },
   data() {
     return {
-      shwoCreate:false,//打开新建任务 创建 myy 2020-3-20 
+      shwoCreate: false, //打开新建任务 创建 myy 2020-3-20
       show: false,
       showmodal: false,
       showAdd: true,
@@ -344,27 +365,20 @@ export default {
         //是数据里面的arr里面的每一项
       },
       showAddGroup: false,
-      showAddGroupItem:false,
-      showDelGroupItem:false,
-      curGroupItemId:'',
+      showAddGroupItem: false,
+      showDelGroupItem: false,
+      curGroupItemId: "",
       groupName: "",
-      groupNameItem:'',
+      groupNameItem: "",
       loading: true,
       allTask: [],
       showGroupPower: "",
-      taskId: ""
+      taskId: "",
     };
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
-    this.init(this.projectId).then(res => {
-      this.loading = false;
-      this.allTask = this.allTasks;
-    });
-    window.onscroll = () => {
-      this.wHeight = window.outerHeight - 261;
-    };
-    dragscroll(["column-main", "scrum-stage-tasks"]);
+    this.initTasks();
   },
   watch: {
     allTasks(newName, oldName) {
@@ -372,39 +386,47 @@ export default {
     },
     deep: true,
     view() {
-      this.init(this.projectId).then(res => {
+      this.init(this.projectId).then((res) => {
         this.loading = false;
         this.allTask = this.allTasks;
       });
-    }
+    },
   },
   methods: {
     ...mapActions("task", ["init", "editTask"]),
     ...mapMutations("task", ["changeTask", "setTaskId"]),
+
+    initTasks() {
+      this.init(this.projectId).then((res) => {
+        this.loading = false;
+        this.allTask = this.allTasks;
+      });
+      window.onscroll = () => {
+        this.wHeight = window.outerHeight - 261;
+      };
+      dragscroll(["column-main", "scrum-stage-tasks"]);
+    },
     hideAddTask() {
       this.currentEditId = "";
     },
     //修改企业名
-    groupEdit(id){
-       
-        this.showAddGroupItem=true;
-        this.curGroupItemId=id
-        console.log(this.curGroupItemId)
+    groupEdit(id) {
+      this.showAddGroupItem = true;
+      this.curGroupItemId = id;
+      console.log(this.curGroupItemId);
     },
     //删除任务
-    groupEditdel(id){
-      
-      this.showDelGroupItem=true;
-        this.curGroupItemId=id
-
+    groupEditdel(id) {
+      this.showDelGroupItem = true;
+      this.curGroupItemId = id;
     },
     changeGroup(groupId) {
       this.taskGroupId = groupId;
       this.loading = true;
-      changeGroup(groupId, this.projectId).then(res => {
+      changeGroup(groupId, this.projectId).then((res) => {
         if (res.result == 1) {
           this.$router.replace(`/project/${this.projectId}/tasks/group/${groupId}`);
-          this.init(this.projectId).then(res => {
+          this.init(this.projectId).then((res) => {
             this.loading = false;
           });
         }
@@ -421,44 +443,42 @@ export default {
       // })
     },
     //修改分组名称
-    handleSaveItem(){
-      const data={
-        id:this.curGroupItemId,
-        name:this.groupNameItem
-      }
-        changRelationName(data).then(res => {
-          if (res.result == 1) {
-            
-              this.showAddGroupItem=false
-              this.$store.commit("task/changNameGroup",data );
-              this.$Message.success("修改任务分组名称")
-          }else{
-            this.$Message.error("修改任务分组失败")
-          }
-        });
+    handleSaveItem() {
+      const data = {
+        id: this.curGroupItemId,
+        name: this.groupNameItem,
+      };
+      changRelationName(data).then((res) => {
+        if (res.result == 1) {
+          this.showAddGroupItem = false;
+          this.$store.commit("task/changNameGroup", data);
+          this.$Message.success("修改任务分组名称");
+        } else {
+          this.$Message.error("修改任务分组失败");
+        }
+      });
     },
-     //删除分组名称
-    handleDelItem(){
-      const data={
-        id:this.curGroupItemId,
-        name:this.groupNameItem
-      } 
-      delRelationName(data.id).then(res => {
-          if (res.result == 1) {
-              this.showDelGroupItem=false
-              this.$store.commit("task/changDelGroup",data);
-              this.$Message.success("删除任务分组名称")
-          }else{
-            this.$Message.error("删除任务分组失败")
-          }
-        })
+    //删除分组名称
+    handleDelItem() {
+      const data = {
+        id: this.curGroupItemId,
+        name: this.groupNameItem,
+      };
+      delRelationName(data.id).then((res) => {
+        if (res.result == 1) {
+          this.showDelGroupItem = false;
+          this.$store.commit("task/changDelGroup", data);
+          this.$Message.success("删除任务分组名称");
+        } else {
+          this.$Message.error("删除任务分组失败");
+        }
+      });
     },
     handleSave() {
       //this.loading = true;
       this.showAddGroup = false;
-      addGroup(this.projectId, this.groupName).then(res => {
-
-          this.$store.commit("task/addGroup", res.data);
+      addGroup(this.projectId, this.groupName).then((res) => {
+        this.$store.commit("task/addGroup", res.data);
         // if (res.result === 1) {
         //   this.taskGroupId = res.groupId;
         //   this.$router.replace(`/project/${this.projectId}/tasks/group/${res.groupId}`);
@@ -486,8 +506,7 @@ export default {
     addCurTask(groupId, id, taskList, index) {
       this.currentEditId = id;
       this.taskMenuId = id;
-      this.shwoCreate=true;
-
+      this.shwoCreate = true;
     },
     // 创建任务
     createTask() {
@@ -500,9 +519,9 @@ export default {
         taskName: this.textarea,
         projectId: this.projectId,
         taskMenuId: this.taskMenuId,
-        taskGroupId: this.taskGroupId
+        taskGroupId: this.taskGroupId,
       };
-      addTask(data).then(res => {
+      addTask(data).then((res) => {
         if (res.result === 1) {
           this.textarea = "";
           this.isCreateTask = false;
@@ -514,15 +533,15 @@ export default {
       //拖拽大盒子
       //this.changeTask(this.allTask);
       //获取拖动的大盒子的id排序数组
-      let newArr = this.allTask.map(v => v.relationId).join(",");
-      sortTaskMenu(newArr).then(res => {});
+      let newArr = this.allTask.map((v) => v.relationId).join(",");
+      sortTaskMenu(newArr).then((res) => {});
     },
     dragList(evt) {
       //拖拽小的任务列表项 排序
       let targetIndex = evt.to.parentNode.parentNode.getAttribute("data-index");
       let obj = this.allTask[targetIndex];
       let listId = obj.taskList
-        .map(v => {
+        .map((v) => {
           return v.taskId;
         })
         .join(",");
@@ -532,10 +551,13 @@ export default {
         newMenu: obj.relationId, //当前菜单id
         taskId: taskId, //当前拖动的任务的id
         taskIds: listId, //逗号隔开的id
-        projectId: this.projectId //项目id
+        projectId: this.projectId, //项目id
       };
-      dragTask(finalObj).then(res => {
+      dragTask(finalObj).then((res) => {
         console.log(res);
+        if(res.result==2){
+          this.initTasks();
+        }
       });
     },
     changeStatus(flag, i, j, taskId) {
@@ -554,14 +576,14 @@ export default {
         // });
 
         //完成任务  请求
-        completeTask(this.projectId, taskId, 0).then(res => {
+        completeTask(this.projectId, taskId, 0).then((res) => {
           if (res.result == 0) {
             this.$Message.error(res.msg);
           }
         });
       } else {
         //取消完成任务 请求
-        cancelcompleteTask(this.projectId, taskId, 0).then(res => {
+        cancelcompleteTask(this.projectId, taskId, 0).then((res) => {
           if (res.result == 0) {
             this.$Message.error(res.msg);
           }
@@ -591,7 +613,7 @@ export default {
       this.isCreateTask = true;
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
-      addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then(res => {
+      addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then((res) => {
         if (res.result == 1) {
           this.newProTitle = "";
           this.showAdd = true;
@@ -610,14 +632,14 @@ export default {
       }
       return priority;
       // return priority=='普通'?'':(priority=='紧急'?'warning':'urgent')
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less">
 @import "./index";
-.add-Box{
+.add-Box {
   position: absolute;
   bottom: 0px;
   left: 2.5%;
@@ -714,9 +736,9 @@ export default {
   margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
-  .group-icon{
+  .group-icon {
     margin-right: 15px;
-    i{
+    i {
       padding-left: 10px;
     }
   }

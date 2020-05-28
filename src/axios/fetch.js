@@ -1,6 +1,5 @@
 import axios from 'axios'
 import qs from 'qs'
-import store from '@/store'
 import iView from 'view-design'
 let url = '';
 if (process.env.NODE_ENV == 'test') {
@@ -43,7 +42,6 @@ service.interceptors.response.use(
       iView.Notice.error({
         title: response.data.msg
       })
-      return
     }
 
     var token
