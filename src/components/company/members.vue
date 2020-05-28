@@ -322,12 +322,21 @@
       </div>
     </div>
     <!--添加人员至企业-->
-    <Modal v-model="showAddPeople" width="360" footer-hide>
+
+     <Modal v-model="showAddPeople" width="450" footer-hide>
+      <p slot="header" style="color:#000;text-align:center">
+        <span>邀请您的团队成员加入企业</span>
+      </p>
+      <addPeopleCompany ></addPeopleCompany>
+    </Modal>
+
+
+    <!-- <Modal v-model="showAddPeople" width="450" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>添加成员至企业</span>
       </p>
       <addPeople @addPeople="addPeople" v-if="showAddPeople" :type="nowType" :partmentId="partmentId"></addPeople>
-    </Modal>
+    </Modal> -->
     <!--添加人员至部门-->
     <Modal v-model="showAddPeople1" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
@@ -375,6 +384,7 @@
 
 <script>
 import addPeople from "@/components/public/addPeople";
+import addPeopleCompany from "@/components/public/addPeopleCompany";
 import branch from "./branch";
 import { mapState, mapActions, mapMutations } from "vuex";
 import Tree from "@/components/company/Tree.vue";
@@ -408,7 +418,7 @@ export default {
       groupStep1: false,
       groupStep2: false,
       groupName: "",
-      showAddPeople: false,
+      showAddPeople: false,//显示添加企业成员
       showAddPeople1:false,
       showPrise:true,
       peopleList: [],
@@ -451,7 +461,7 @@ export default {
   mounted() {
     this.initMember();
   },
-  components: { Tree, addPeople, branch },
+  components: { Tree, addPeople, branch ,addPeopleCompany},
   methods: {
     ...mapActions("company", ["getDepartmentTree"]),
     ...mapMutations("company", ["initTree"]),
