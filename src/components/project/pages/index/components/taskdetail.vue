@@ -33,7 +33,7 @@
                   <svg-icon name="task-status" class="task-img"></svg-icon>
                   <span class="object-field__name">状态</span>
                 </div>
-                <div class="flex-space object-field__right">
+                <div class="object-field__right">
                   <Dropdown trigger="click" @on-click="taskStatusChange">
                     <div class="task-is-finish">
                       <svg-icon name="task-not-finish" class="task-not-finish" v-if="task.taskStatus == false"></svg-icon>
@@ -66,12 +66,18 @@
                   <svg-icon name="task-executor" class="task-img"></svg-icon>
                   <span class="object-field__name">执行者</span>
                 </div>
-                <div class="flex-space object-field__right">
-                  <div>
-                    <svg-icon name="task-executor-avatar" class="task-img"></svg-icon>
-                    <!-- <Avatar src="" /> -->
-                    <span>待认领</span>
-                  </div>
+                <div class="object-field__right">
+                 <div class="remove-shortcut__2G3s">
+                      <span class="remove"></span>
+                      <div class="content__3gKP circle">
+                        <div class="executor__2pBD">
+                          <div class="executor-handler not-assigned">
+                            <svg-icon name="task-executor-avatar" class="task-img"></svg-icon>
+                            <span class="name">待认领</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -89,12 +95,12 @@ import { mapState, mapActions } from "vuex";
 import {} from "../../../../../axios/api.js";
 export default {
   components: {
-    Loading
+    Loading,
   },
   props: ["taskId"],
   data() {
     return {
-      selectValue: "未完成"
+      selectValue: "未完成",
     };
   },
   created() {
@@ -104,7 +110,7 @@ export default {
     ...mapState("task", ["task", "joinInfoIds", "images_suffix"]),
     vuexTask() {
       return this.$store.state.task.joinInfo;
-    }
+    },
   },
   mounted() {},
   methods: {
@@ -117,8 +123,8 @@ export default {
       console.log(this.$refs.taskName.innerHTML);
     },
     //修改任务状态
-    taskStatusChange() {}
-  }
+    taskStatusChange() {},
+  },
 };
 </script>
 <style lang="less" scoped>
