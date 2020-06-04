@@ -1,20 +1,19 @@
 <template>
   <div id="app">
-     <Layout>
-        <Header>
-          <header-main v-if="hasHeader" :companyId="companyId" :avatar="avatar"></header-main>
-        </Header>
-        <Content>
-          <router-view v-if="isRouterAlive" :key="$route.fullPath" />
-        </Content>
-    </Layout>
+    <header-main v-if="hasHeader" :companyId="companyId" :avatar="avatar"></header-main>
+    <div class="content-main">
+      <router-view v-if="isRouterAlive" :key="$route.fullPath" />
+      <!-- <keep-alive>
+        <router-view v-if="$route.meta.keepAlive">
+        </router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+    </div>
   </div>
 </template>
 
 <script>
-
-import Header from "./components/public/Header2.vue";
-//import Header from "./components/public/Header.vue";
+import Header from "./components/public/Header.vue";
 
 export default {
   name: "App",
