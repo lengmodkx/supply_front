@@ -6,9 +6,9 @@
         <Icon type="md-close"></Icon>
       </span>
     </div>
-    <div class="searchBox">
+    <!-- <div class="searchBox">
         <Input v-model.trim="keyword" search enter-button  placeholder="搜索任务" @on-search="filterTask"/>
-    </div>
+    </div> -->
     <!-- <Input class="search" v-model="keyword" placeholder="搜索任务" @on-search="filterTask" /> -->
     <div style="font-size:16px;margin-left:15px"> </div>
     <Select v-model="model" style="width:320px;margin-left:15px" transfer size="large" @on-change="viewChange">

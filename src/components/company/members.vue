@@ -323,20 +323,20 @@
     </div>
     <!--添加人员至企业-->
 
-     <Modal v-model="showAddPeople" width="450" footer-hide>
+     <!-- <Modal v-model="showAddPeople" width="450" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请您的团队成员加入企业</span>
       </p>
       <addPeopleCompany ></addPeopleCompany>
-    </Modal>
+    </Modal> -->
 
 
-    <!-- <Modal v-model="showAddPeople" width="450" footer-hide>
+    <Modal v-model="showAddPeople" width="450" footer-hide>
       <p slot="header" style="color:#000;text-align:center">
         <span>添加成员至企业</span>
       </p>
       <addPeople @addPeople="addPeople" v-if="showAddPeople" :type="nowType" :partmentId="partmentId"></addPeople>
-    </Modal> -->
+    </Modal>
     <!--添加人员至部门-->
     <Modal v-model="showAddPeople1" width="360" footer-hide>
       <p slot="header" style="color:#000;text-align:center">

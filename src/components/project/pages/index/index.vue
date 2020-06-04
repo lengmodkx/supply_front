@@ -556,7 +556,7 @@ export default {
       dragTask(finalObj).then((res) => {
         console.log(res);
         if(res.result==2){
-          this.initTasks();
+          this.initTasks()
         }
       });
     },
