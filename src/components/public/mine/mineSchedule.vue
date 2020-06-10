@@ -2,13 +2,16 @@
   <!-- 日程 -->
   <div>
     <div class="inner richeng">
-      <div class="rc-head">
-        <span :class="{ now: scheduleType == 1 }" @click="changeType(1)">未来的日程</span>
-        <span :class="{ now: scheduleType == 2 }" @click="changeType(2)">过去的日程</span>
-      </div>
+      <div class="h1_title">日程&nbsp;&nbsp;&nbsp;<span class="list-number">  {{ name == 1?this.scheduleList.length:timeoutNum  }}</span></div>
+      <!-- <div class="rc-head">
+        <div class="rc-head-left">
+          <span :class="{ now: scheduleType == 1 }" @click="changeType(1)">未来的日程</span>
+          <span :class="{ now: scheduleType == 2 }" @click="changeType(2)">过去的日程</span>
+        </div>
+      </div> -->
       <Loading v-if="loading"></Loading>
       <div class="rc-con">
-        <div class="weilai-rc" v-if="scheduleType === 1">
+        <div class="weilai-rc" v-if="name == 1">
           <div v-if="scheduleList.length" class="weilai-rc">
             <div class="weilai-rc" v-for="(s, n) in scheduleList" :key="n">
               <ul>
@@ -28,16 +31,16 @@
           </div>
 
           <div v-else class="wu">
-            <img src="../../../icons/img/sys-msg.png" alt="" />
-            <p>还没有未来的日程</p>
+            <img src="../../../icons/img/no-list.png" alt="" />
+            <!-- <p>还没有未来的日程</p> -->
           </div>
         </div>
 
-        <div v-if="scheduleType === 2" class="guoqu-rc">
+        <div v-if="name == 2" class="guoqu-rc">
           <div v-if="month.length">
             <Collapse v-model="guoquRC" @on-change="getScheduleByMonth()" :accordion="accordion" simple>
-              <Panel v-for="m in month" :name="m" :key="m">
-                {{ m }}
+              <Panel v-for="m in month" :name="m.date" :key="m.date">
+                {{ m.date }}
                 <ul slot="content">
                   <li @click="showEditRC(s)" class="weilai-rc-list" v-for="s in monthSchedule" :key="s.scheduleId">
                     <div class="rc-time" v-if="s.startTime && s.endTime">
@@ -54,7 +57,7 @@
           </div>
 
           <div v-else class="wu">
-            <img src="../../../icons/img/sys-msg.png" alt="" />
+            <img src="../../../icons/img/no-list.png" alt="" />
             <p>还没有过去的日程</p>
           </div>
         </div>
@@ -83,17 +86,19 @@ export default {
       monthSchedule: [],
       scheduleType: 1,
       loading: true,
-      editrc: false
+      editrc: false,
+      timeoutNum:0
     };
   },
+  props: ["name"],
   methods: {
     ...mapActions("schedule", ["getScheduleById"]),
     changeType(n) {
       this.scheduleType = n;
-      if (n === 1) {
+      if (n == 1) {
         this.getMeAfterSchedule();
       }
-      if (n === 2) {
+      if (n == 2) {
         this.getMonth();
       }
     },
@@ -110,10 +115,14 @@ export default {
         if (res.result === 1) {
           this.month = res.data;
           this.loading = false;
+          this.timeoutNum=0
+          this.month.map(p => {
+            this.timeoutNum+=parseInt(p.timeoutNum)
+          });
         }
       });
     },
-    getScheduleByMonth() {
+    getScheduleByMonth(key) {
       if (!this.guoquRC[0]) {
         return false;
       } else {
@@ -139,6 +148,11 @@ export default {
   },
   components: {
     editRicheng
+  },
+  watch:{
+    'name':function(val){
+      this.changeType(val);
+    }
   }
 };
 </script>

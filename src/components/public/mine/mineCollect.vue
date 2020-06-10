@@ -3,8 +3,8 @@
   <div>
     <div class="inner collect">
       <!-- 头部 -->
-      <div class="header1">
-              <div class="h1_title">
+      <!--<div class="header1">
+               <div class="h1_title">
                     <ul class="selectlistBox">
                       <li @click="chooseCollectType(1, '所有收藏')">
                         <span class="myiconBox"><Icon type="ios-heart-outline"></Icon></span>所有收藏
@@ -22,7 +22,7 @@
                         <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>日程
                       </li>
                     </ul>
-              </div>
+              </div> -->
 
         <!-- <div class="h1_title">
           <Poptip placement="bottom-start" v-model="collectVisible" @on-popper-hide="getCollect">
@@ -47,8 +47,19 @@
               </ul>
             </div>
           </Poptip>
-        </div> -->
-      </div>
+        </div> 
+      </div>-->
+      <div class="h1_title">收藏</div>
+      <!-- <div class="collect-head">
+                <div class="collect-head-left">
+                      <span :class="{now: activeCollect==1}" @click="chooseCollectType(1, '所有收藏')">所有收藏</span>
+                      <span :class="{now: activeCollect==2}" @click="chooseCollectType(2, '任务')">任务</span>
+                      <span :class="{now: activeCollect==3}" @click="chooseCollectType(3, '分享')">分享</span>
+                      <span :class="{now: activeCollect==4}" @click="chooseCollectType(4, '文件')">文件</span>
+                      <span :class="{now: activeCollect==5}" @click="chooseCollectType(5, '日程')">日程</span>
+                </div>
+                
+            </div> -->
       <Loading v-if="loading"></Loading>
       <!-- 内容 -->
       <div class="favoriteList">
@@ -63,13 +74,19 @@
               <span class="img" v-if="c.item.userImage"><img v-if="c.collectType !== '日程'" :src="c.item.userImage"/></span>
               <span class="img" v-else><img src="../../../assets/images/headUser.png" alt=""/></span>
               <span class="title">{{ c.item.taskName }}{{ c.item.shareName }}{{ c.item.fileName }}{{ c.item.title }}{{ c.item.scheduleName }}</span>
-              <!--<span class="update fr">已更新</span>-->
+              <!-- <span class="collect-time fr">已更新</span> -->
+              <!-- <div :class="{new Date().getTime()>c.item.endTime?'past-time':'', 'collect-time' , 'fr'}" v-if="c.item.endTime"> -->
+              <div :class="[{'past-time':new Date().getTime() > c.item.endTime}, 'collect-time' , 'fr']" v-if="c.item.endTime">
+
+                <div>{{$moment(c.item.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
+              </div>
             </div>
+            <div class="bottom-line"></div>
           </li>
         </ul>
         <div v-else class="wu">
-          <img src="../../../icons/img/sys-msg.png" alt="" />
-          <p>还没有收藏内容</p>
+          <img src="../../../icons/img/no-list.png" alt="" />
+          <!-- <p>还没有收藏内容</p> -->
         </div>
       </div>
     </div>
@@ -113,6 +130,7 @@ export default {
       svfUrl: ""
     };
   },
+  props: ["name","content"],
   components: {
     myModal,
     editRicheng,
@@ -154,6 +172,11 @@ export default {
   },
   mounted() {
     this.getCollect();
+  },
+  watch:{
+    'name':function(val){
+      this.chooseCollectType(val,this.content);
+    }
   }
 };
 </script>

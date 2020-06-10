@@ -910,10 +910,17 @@ export function recall(chatId, projectId) {
     });
 }
 
-// 获取近期的事儿
+// 获取近期的事儿 -日程
 export function nearThing() {
     return fetch({
         url: '/me/recentThing',
+        method: "get", // 请求方法
+    });
+}
+// 获取近期的事儿 -任务
+export function nearThingByTask() {
+    return fetch({
+        url: '/me/recentThingByTask',
         method: "get", // 请求方法
     });
 }
