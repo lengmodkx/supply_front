@@ -13,7 +13,7 @@
               <div class="cont" v-if="task.level === 0">
                 {{ task.taskName }}
                 <span class="taskgroup">{{ task.project.projectName }}</span>
-                <span class="deadline red fr">
+                <span :class="[{'past-time':new Date().getTime() >task.endTime}, 'deadline','red' , 'fr']">
                   <!-- <Time :time="task.startTime"/> - <Time :time="task.endTime"/> -->
                   <div>{{$moment(task.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
                   </span>
@@ -21,7 +21,7 @@
               <div class="cont" v-else>
                 {{ task.taskName }}
                 <span class="taskgroup">所属任务:{{ task.parentTask.taskName }}</span>
-                <span class="deadline red fr">
+                <span :class="[{'past-time':new Date().getTime() >task.endTime}, 'deadline','red' , 'fr']">
                   <!-- <Time :time="task.startTime"/> - <Time :time="task.endTime"/> -->
                   <div>{{$moment(task.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
                 </span>
@@ -40,7 +40,7 @@
               <div class="cont">
                 {{ schedule.scheduleName }}
                 <span class="taskgroup">{{ schedule.project.projectName }}</span>
-                <span class="deadline fr">
+                <span :class="[{'past-time':new Date().getTime() >schedule.endTime}, 'deadline','red' , 'fr']">
                   <!-- <Time :time="schedule.startTime"/> - <Time :time="schedule.endTime"/> -->
                   <div>{{$moment(schedule.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
                 </span>

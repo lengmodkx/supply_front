@@ -171,6 +171,7 @@ export default {
     }
   },
   mounted() {
+    this.collectType = this.content;
     this.getCollect();
   },
   watch:{

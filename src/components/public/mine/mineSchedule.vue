@@ -144,7 +144,12 @@ export default {
     }
   },
   created() {
-    this.getMeAfterSchedule();
+      if (this.name == 1) {
+        this.getMeAfterSchedule();
+      }else {
+        this.getMonth();
+      }
+     
   },
   components: {
     editRicheng

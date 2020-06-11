@@ -49,7 +49,7 @@
               <p>属于任务：{{task.parentTask.taskName}}</p>
             </div>
           </div>
-          <div class="task-time" v-if="task.endTime">
+          <div v-if="task.endTime" :class="[{'past-time':new Date().getTime() >task.endTime}, 'task-time']">
             <div>{{$moment(task.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
           </div>
           <div class="bottom-line"></div>
@@ -128,7 +128,7 @@ export default {
     }
   },
   created() {
-    this.getMeTask();
+    this.changeType(this.name);
   },
   watch:{
     'name':function(val){

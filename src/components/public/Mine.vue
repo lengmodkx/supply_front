@@ -7,11 +7,12 @@
         width="200px"
         :class="fold?'':'foldMenuWidth'"
         @on-select="openTag"
-        active-name="nearThing"
+        active-name="nearThing,1" 
+        :open-names="['nearThing,1']"
       >
         <!-- 展开菜单 -->
         <div v-if="showFold" ref="openMenu">
-          <Submenu v-for="(item,index) in MenuList" :key="index" :name="item.name">
+          <Submenu v-for="(item,index) in MenuList" :key="index" :name="item.name" >
             <template slot="title">
               <Icon :type="item.icon" />
               <span>{{item.oneName}}</span>
@@ -20,7 +21,7 @@
           </Submenu>
           <div class="foldMenuBtn">
             <MenuItem name="foldMenu">
-              <Icon type="md-arrow-back" />
+              <Icon type="md-arrow-back" color="#ffffff"/>
             </MenuItem>
           </div>
         </div>
@@ -33,7 +34,7 @@
               placement="right-start"
               class="menu-dropdown"
             >
-              <MenuItem :name="item.name">
+              <MenuItem :name="item.name" >
                 <Icon :type="item.icon" />
               </MenuItem>
               <DropdownMenu slot="list" class="drop">
@@ -43,15 +44,15 @@
               </DropdownMenu>
             </Dropdown>
           </div>
-          <div>
+          <div class="foldMenuBtn">
             <MenuItem name="openMenu">
-              <Icon type="md-arrow-forward" @click="openMenu" />
+              <Icon type="md-arrow-forward" @click="openMenu"  color="#ffffff"/>
             </MenuItem>
           </div>
         </div>
       </Menu>
       <Content class="mainContent">
-        <nearThing v-if="mineTag=='nearThing'" :name="name"></nearThing>
+        <nearThing v-if="mineTag=='nearThing'" :name="name?name:1"></nearThing>
         <task v-else-if="mineTag=='task'" :name="name"></task>
         <schedule v-else-if="mineTag=='schedule'" :name="name"></schedule>
         <file v-else-if="mineTag=='file'" :name="name"></file>
@@ -105,7 +106,7 @@ export default {
       MenuList: [
         {
           oneName: "近期的事",
-          name: "nearThing",
+          name: "nearThing,1",
           icon: "ios-albums-outline",
           childNode: [
             { text: "任务", name: "nearThing,1" },
@@ -114,7 +115,7 @@ export default {
         },
         {
           oneName: "任务",
-          name: "task",
+          name: "task,1",
           icon: "ios-list-box-outline",
           childNode: [
             { text: "我执行的", name: "task,1" },
@@ -124,7 +125,7 @@ export default {
         },
         {
           oneName: "日程",
-          name: "schedule",
+          name: "schedule,1",
           icon: "ios-calendar-outline",
           childNode: [
             { text: "未来的日程", name: "schedule,1" },
@@ -133,7 +134,7 @@ export default {
         },
         {
           oneName: "文件",
-          name: "file",
+          name: "file,1",
           icon: "ios-folder-outline",
           childNode: [
             { text: "我创建的", name: "file,1" },
@@ -143,7 +144,7 @@ export default {
         },
         {
           oneName: "收藏",
-          name: "collect",
+          name: "collect,1,所有收藏",
           icon: "ios-star-outline",
           childNode: [
             { text: "所有收藏", name: "collect,1,所有收藏" },
@@ -167,7 +168,7 @@ export default {
     },
     //切换TAG
     openTag(tagName) {
-      console.log(tagName);
+      console.log(tagName)
       if (tagName == "foldMenu") {
         this.foldMenu();
       } else if (tagName == "openMenu") {
@@ -184,9 +185,7 @@ export default {
     //折叠菜单
     foldMenu() {
       this.fold = false;
-      setTimeout(() => {
-        this.showFold = false;
-      }, 300);
+      this.showFold = false;
     },
     //收起菜单
     openMenu() {
@@ -214,4 +213,3 @@ export default {
 <style scoped lang="less">
 @import "./Mine";
 </style>
-
