@@ -793,8 +793,10 @@ export default {
 
   align-items: center;
   position: absolute;
-  top: -3px;
-  right: 10px;
+  // top: -3px;
+  // right: 10px;
+  top:-1px;
+  right: 2px;
   // margin-right: 30px;
   .zan {
     display: flex;
