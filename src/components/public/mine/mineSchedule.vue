@@ -2,16 +2,21 @@
   <!-- 日程 -->
   <div>
     <div class="inner richeng">
-      <div class="h1_title">日程&nbsp;&nbsp;&nbsp;<span class="list-number">  {{ name == 1?this.scheduleList.length:timeoutNum  }}</span></div>
+      <div class="h1_title">
+        <div>
+          日程&nbsp;&nbsp;&nbsp;
+          <span class="list-number">{{ this.scheduleList.length}}</span>
+        </div>
+      </div>
       <!-- <div class="rc-head">
         <div class="rc-head-left">
           <span :class="{ now: scheduleType == 1 }" @click="changeType(1)">未来的日程</span>
           <span :class="{ now: scheduleType == 2 }" @click="changeType(2)">过去的日程</span>
         </div>
-      </div> -->
+      </div>-->
       <Loading v-if="loading"></Loading>
       <div class="rc-con">
-        <div class="weilai-rc" v-if="name == 1">
+        <!-- <div class="weilai-rc" v-if="name == 1">
           <div v-if="scheduleList.length" class="weilai-rc">
             <div class="weilai-rc" v-for="(s, n) in scheduleList" :key="n">
               <ul>
@@ -22,7 +27,7 @@
                 <li @click="showEditRC(schedule)" class="weilai-rc-list" v-for="schedule in s.scheduleList" :key="schedule.scheduleId">
                   <div class="rc-time" v-if="schedule.startTime && schedule.endTime"><Time :time="schedule.startTime" /> - <Time :time="schedule.endTime" /></div>
                   <div class="rc-xm">
-                    <p>{{ schedule.scheduleName }}</p>
+                    <p>{{ schedule.scheduleName }}   {{$moment(s.scheduleList.endTime).format("YYYY年MM月DD日 dddd h:mm a")}}</p>
                     <span>{{ schedule.project.projectName }}</span>
                   </div>
                 </li>
@@ -32,11 +37,10 @@
 
           <div v-else class="wu">
             <img src="../../../icons/img/no-list.png" alt="" />
-            <!-- <p>还没有未来的日程</p> -->
           </div>
-        </div>
+        </div>-->
 
-        <div v-if="name == 2" class="guoqu-rc">
+        <!-- <div v-if="name == 2" class="guoqu-rc">
           <div v-if="month.length">
             <Collapse v-model="guoquRC" @on-change="getScheduleByMonth()" :accordion="accordion" simple>
               <Panel v-for="m in month" :name="m.date" :key="m.date">
@@ -60,11 +64,52 @@
             <img src="../../../icons/img/no-list.png" alt="" />
             <p>还没有过去的日程</p>
           </div>
+        </div>-->
+        <div>
+          <Row class="schedule-content" v-if="scheduleList.length" :gutter="20">
+            <Col
+              :xs="12"
+              :sm="8"
+              :md="8"
+              :lg="8"
+              :xl="6"
+              :xxl="4"
+              v-for="(s, n) in scheduleList"
+              :key="n"
+            >
+              <div class="schedule-item" @click="showEditRC(s)">
+                <div class="schedule-header df jsb">
+                  <div class="schedule-time">{{$moment(s.startTime).format("YYYY年MM月DD日 dddd")}}</div>
+                  <Tooltip :content="s.userName" placement="bottom">
+                    <img :src="s.img" alt />
+                  </Tooltip>
+                </div>
+                <div class="schedule-bottom">
+                  <div class="schedule-bl df jsb">
+                    <div>{{$moment(s.startTime).format("ah:mm")}}</div>
+                    <div>{{$moment(s.endTime).format("ah:mm")}}</div>
+                  </div>
+                  <div class="schedule-br df jsb">
+                    <div class="schedule-name">{{s.scheduleName}}</div>
+                    <span class="project-name">{{s.project.projectName}}</span>
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+          <div v-else class="wu">
+            <img src="../../../icons/img/no-list.png" alt />
+          </div>
         </div>
       </div>
     </div>
     <!-- 编辑日程模态框 -->
-    <Modal class="nopadding" class-name="vertical-center-modal" v-model="editrc" :footer-hide="true">
+    <Modal
+      class="nopadding"
+      class-name="vertical-center-modal"
+      v-model="editrc"
+      :footer-hide="true"
+    >
       <editRicheng @close="closeModal"></editRicheng>
     </Modal>
   </div>
@@ -87,7 +132,7 @@ export default {
       scheduleType: 1,
       loading: true,
       editrc: false,
-      timeoutNum:0
+      timeoutNum: 0
     };
   },
   props: ["name"],
@@ -113,12 +158,12 @@ export default {
     getMonth() {
       getMonth().then(res => {
         if (res.result === 1) {
-          this.month = res.data;
+          this.scheduleList = res.data;
           this.loading = false;
-          this.timeoutNum=0
-          this.month.map(p => {
-            this.timeoutNum+=parseInt(p.timeoutNum)
-          });
+          // this.timeoutNum=0
+          // this.month.map(p => {
+          //   this.timeoutNum+=parseInt(p.timeoutNum)
+          // });
         }
       });
     },
@@ -144,18 +189,17 @@ export default {
     }
   },
   created() {
-      if (this.name == 1) {
-        this.getMeAfterSchedule();
-      }else {
-        this.getMonth();
-      }
-     
+    if (this.name == 1) {
+      this.getMeAfterSchedule();
+    } else {
+      this.getMonth();
+    }
   },
   components: {
     editRicheng
   },
-  watch:{
-    'name':function(val){
+  watch: {
+    name: function(val) {
       this.changeType(val);
     }
   }

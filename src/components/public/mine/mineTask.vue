@@ -3,13 +3,29 @@
   <div>
     <Loading v-if="loading"></Loading>
     <div class="inner task">
-      <div class="h1_title">任务&nbsp;&nbsp;&nbsp;<span class="list-number">  {{ this.taskList.length}}</span></div>
+      <div class="h1_title">
+        <div>
+          任务&nbsp;&nbsp;&nbsp;
+          <span class="list-number">{{ this.taskList.length}}</span>
+        </div>
+        <div class="head-right">
+          <Select v-model="isDone" placeholder="已完成" @on-change="getMeTask">
+            <Option value="1">已完成</Option>
+            <Option value="0">未完成</Option>
+          </Select>
+          <Select v-model="order" placeholder="按优先级排序" @on-change="getMeTask">
+            <Option value="priority">按优先级排序</Option>
+            <Option value="dueDate">按截止时间排序</Option>
+            <Option value="created">按创建时间排序</Option>
+          </Select>
+        </div>
+      </div>
 
-      <div class="task-head">
+      <!-- <div class="task-head">
         <div class="task-head-left">
-          <!-- <span :class="{now: taskType==1}" @click="changeType(1)">我执行的</span>
+          <span :class="{now: taskType==1}" @click="changeType(1)">我执行的</span>
           <span :class="{now: taskType==2}" @click="changeType(2)">我创建的</span>
-          <span :class="{now: taskType==3}" @click="changeType(3)">我参与的</span> -->
+          <span :class="{now: taskType==3}" @click="changeType(3)">我参与的</span>
         </div>
         <div class="task-head-right">
           <Select v-model="isDone" placeholder="已完成" @on-change="getMeTask">
@@ -20,10 +36,9 @@
             <Option value="priority">按优先级排序</Option>
             <Option value="dueDate">按截止时间排序</Option>
             <Option value="created">按创建时间排序</Option>
-            <!--<Option value="project">按项目名称排序</Option>-->
           </Select>
         </div>
-      </div>
+      </div> -->
       <ul class="task-con" v-if="taskList.length">
         <li
           @click.stop="showTaskDetail(task.taskId)"
@@ -49,7 +64,10 @@
               <p>属于任务：{{task.parentTask.taskName}}</p>
             </div>
           </div>
-          <div v-if="task.endTime" :class="[{'past-time':new Date().getTime() >task.endTime}, 'task-time']">
+          <div
+            v-if="task.endTime"
+            :class="[{'past-time':new Date().getTime() >task.endTime}, 'task-time']"
+          >
             <div>{{$moment(task.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
           </div>
           <div class="bottom-line"></div>
@@ -130,8 +148,8 @@ export default {
   created() {
     this.changeType(this.name);
   },
-  watch:{
-    'name':function(val){
+  watch: {
+    name: function(val) {
       this.changeType(val);
     }
   }

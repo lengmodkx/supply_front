@@ -3,13 +3,20 @@
   <div>
     <Loading v-if="loading"></Loading>
     <div class="inner file" style="padding-left:0px">
-      <div class="h1_title">文件</div>
-      <div class="file-head">
-        <!-- <span class="now">我创建的</span><span>我参与的</span> -->
+      <div class="h1_title">
+        <div>文件</div>
+        <div class="head-right">
+          <Select v-model="order" placeholder="请选择排序" @on-change="getMeFile">
+            <Option value="create">按创建时间排序</Option>
+            <Option value="size">按文件大小排序</Option>
+          </Select>
+        </div>
+      </div>
+      <!-- <div class="file-head">
         <div class="task-head-left">
-          <!-- <span :class="{now: fileType==1}" @click="changeType(1)">我创建的</span>
-                    <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
-          <span :class="{now: fileType==3}" @click="changeType(3)">我下载的</span>-->
+          <span :class="{now: fileType==1}" @click="changeType(1)">我创建的</span>
+          <span :class="{now: fileType==2}" @click="changeType(2)">我参与的</span>
+          <span :class="{now: fileType==3}" @click="changeType(3)">我下载的</span>
         </div>
         <div class="task-head-right">
           <Select v-model="order" placeholder="请选择排序" @on-change="getMeFile">
@@ -17,7 +24,7 @@
             <Option value="size">按文件大小排序</Option>
           </Select>
         </div>
-      </div>
+      </div> -->
 
       <div class="file-title">
         <!--没选文件时-->
@@ -147,39 +154,64 @@
 
         <!--图片模式-->
         <CheckboxGroup v-model="checkedFile" @on-change="checkedClick">
-                    <ul v-if="moShi==='tupian' && (fileType==1||fileType==2) " class="tupian">
-                        <li v-for="f in files" :class="{checked:checkedFile.includes(f.fileId)}" :key="f.fileId">
-                            <div @click="fileDetail(f.fileId,f)" class="file-img-box">
-                                <img  v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
-                                <img v-else src="@/icons/img/moren.png" alt="">
-                                <div @click.stop class="check-box">
-                                    <Checkbox  :label="f.fileId" size="default"><span> </span></Checkbox>
-                                </div>
-                                <div class="xiazai"><Icon type="ios-cloud-download-outline" /></div>
-                                <div class="gengduo"><Icon type="ios-arrow-dropdown" @click.stop="showFileMenu($event,'110', f.fileId)"></Icon></div>
-                            </div>
-                            <div class="file-name-box">
-                                <Tooltip :content="f.fileName">
-                                    <input type="text" v-model="f.fileName">
-                                </Tooltip>
-                            </div>
-                        </li>
-                    </ul>
+          <ul v-if="moShi==='tupian' && (fileType==1||fileType==2) " class="tupian">
+            <li
+              v-for="f in files"
+              :class="{checked:checkedFile.includes(f.fileId)}"
+              :key="f.fileId"
+            >
+              <div @click="fileDetail(f.fileId,f)" class="file-img-box">
+                <img
+                  v-if="f.ext==='.jpg' || f.ext==='.png' "
+                  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`"
+                  alt
+                />
+                <img v-else src="@/icons/img/moren.png" alt />
+                <div @click.stop class="check-box">
+                  <Checkbox :label="f.fileId" size="default">
+                    <span></span>
+                  </Checkbox>
+                </div>
+                <div class="xiazai">
+                  <Icon type="ios-cloud-download-outline" />
+                </div>
+                <div class="gengduo">
+                  <Icon
+                    type="ios-arrow-dropdown"
+                    @click.stop="showFileMenu($event,'110', f.fileId)"
+                  ></Icon>
+                </div>
+              </div>
+              <div class="file-name-box">
+                <Tooltip :content="f.fileName">
+                  <input type="text" v-model="f.fileName" />
+                </Tooltip>
+              </div>
+            </li>
+          </ul>
 
-                    <ul v-if="moShi==='tupian' && fileType==3" class="tupian">
-                        <li v-for="f in downList" :class="{checked:checkedFile.includes(f.fileId)}" :key="f.fileId">
-                            <div @click="fileDetail(f.fileId,f)"   class="file-img-box">
-                                <img  v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt="">
-                                <img v-else src="@/icons/img/moren.png" alt="">
-                            </div>
-                            <div class="file-name-box">
-                                <Tooltip :content="f.fileName">
-                                    <input type="text" v-model="f.fileName">
-                                </Tooltip>
-                            </div>
-                        </li>
-                    </ul>
-                </CheckboxGroup>
+          <ul v-if="moShi==='tupian' && fileType==3" class="tupian">
+            <li
+              v-for="f in downList"
+              :class="{checked:checkedFile.includes(f.fileId)}"
+              :key="f.fileId"
+            >
+              <div @click="fileDetail(f.fileId,f)" class="file-img-box">
+                <img
+                  v-if="f.ext==='.jpg' || f.ext==='.png' "
+                  :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`"
+                  alt
+                />
+                <img v-else src="@/icons/img/moren.png" alt />
+              </div>
+              <div class="file-name-box">
+                <Tooltip :content="f.fileName">
+                  <input type="text" v-model="f.fileName" />
+                </Tooltip>
+              </div>
+            </li>
+          </ul>
+        </CheckboxGroup>
       </div>
     </div>
     <mineFileMenu

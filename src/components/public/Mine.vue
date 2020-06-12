@@ -144,10 +144,10 @@ export default {
         },
         {
           oneName: "收藏",
-          name: "collect,1,所有收藏",
+          name: "collect,2,任务",
           icon: "ios-star-outline",
           childNode: [
-            { text: "所有收藏", name: "collect,1,所有收藏" },
+            // { text: "所有收藏", name: "collect,1,所有收藏" },
             { text: "任务", name: "collect,2,任务" },
             { text: "分享", name: "collect,3,分享" },
             { text: "文件", name: "collect,4,文件" },
