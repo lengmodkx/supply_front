@@ -79,7 +79,7 @@
             >
               <div class="schedule-item" @click="showEditRC(s)">
                 <div class="schedule-header df jsb">
-                  <div class="schedule-time">{{$moment(s.startTime).format("YYYY年MM月DD日 dddd")}}</div>
+                  <div class="schedule-time">{{$moment(s.startTime).format("MM月DD日 dddd")}}</div>
                   <Tooltip :content="s.userName" placement="bottom">
                     <img :src="s.img" alt />
                   </Tooltip>
