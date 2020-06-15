@@ -860,18 +860,21 @@
     margin-right: 16px;
   }
 
-  .file-con {
+   .file-con {
     // width: 450px;
     width: 95%;
     display: flex;
     align-items: center;
-
-    img {
-      width: 32px;
-      height: 32px;
-      margin-right: 12px;
-      flex: none;
+    /deep/.imgContent {
+      img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+        flex: none;
+      }
     }
+
+    
 
     .file-name {
       width: 100%;
@@ -939,7 +942,12 @@
     .content-row-bg {
       width: 100%;
     }
-
+    img {
+      width: 32px;
+      height: 32px;
+      margin-right: 12px;
+      flex: none;
+    }
     i {
       font-size: 20px;
       margin-left: 10px;
@@ -1021,9 +1029,12 @@
         }
       }
 
-      img {
+      /deep/ .imgContent {
+        text-align: center;
+        img {
         max-width: 50%;
       }
+    }
 
       .check-box {
         position: absolute;

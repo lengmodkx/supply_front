@@ -7,17 +7,7 @@
           <Button icon="ios-arrow-down" class="file-more_opt" :class="{ showIcon: isactive2 == index }" @click.stop="getFileid($event,file, index)"></Button>
           <img v-if="file.catalog == 1 && file.filePrivacy == 0" src="../../../assets/images/folder.png" />
           <img v-else-if="file.catalog == 1 && file.filePrivacy == 1" src="../../../assets/images/folder_privacy.png" />
-          <div v-else class="fileThumbnail-box">
-            <img v-if="file.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileThumbnail}`" />
-            <img v-else-if="imageExt.indexOf(file.ext) > -1" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${file.fileUrl}`" />
-            <img v-else-if="'.txt'.includes(file.ext)" src="@/icons/img/txt.png" />
-            <img v-else-if="'.doc'.includes(file.ext) || '.docx'.includes(file.ext)" src="@/icons/img/word.png" />
-            <img v-else-if="'.xls'.includes(file.ext) || '.xlsx'.includes(file.ext)" src="@/icons/img/excel.png" />
-            <img v-else-if="'.pdf'.includes(file.ext)" src="@/icons/img/pdf.png" />
-            <img v-else-if="'.pp'.includes(file.ext)" src="@/icons/img/ppt.png" />
-            <img v-else-if="'.zip'.includes(file.ext) || '.rar'.includes(file.ext)" src="@/icons/img/zip.png" />
-            <img v-else src="@/icons/img/moren.png" />
-          </div>
+          <suffix v-else class="fileThumbnail-box" :file="file"></suffix>
         </div>
         <div class="file-hinted" @click.stop>
           <Tooltip :content="file.fileName + (file.catalog == 0 ? file.ext : '')" placement="top" transfer max-width="250" v-if="isactive != index">
@@ -41,7 +31,7 @@
       </Col>
     </Row>
 
-    <div class="file-view-wrap fade in" v-if="files.length > 0 && showView == 'list'">
+    <div class="file-view-wrap fade in" v-show="files.length > 0 && showView == 'list'">
       <!-- 列表展示 -->
       <div class="file-list1">
         <Table border :columns="columns" :data="files" ref="table" :height="tableHeight" 
@@ -52,17 +42,7 @@
               <div class="contant-titel">
                 <img v-if="row.catalog == 1 && row.filePrivacy == 0" src="../../../assets/images/folder.png" />
                 <img v-else-if="row.catalog == 1 && row.filePrivacy == 1" src="../../../assets/images/folder_privacy.png" />
-                <div v-else>
-                  <img v-if="row.fileThumbnail" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${row.fileThumbnail}`" />
-                  <img v-else-if="imageExt.indexOf(row.ext) > -1" :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${row.fileUrl}`" />
-                  <img v-else-if="'.txt'.includes(row.ext)" src="@/icons/img/txt.png" alt="" />
-                  <img v-else-if="'.doc'.includes(row.ext) || '.docx'.includes(row.ext)" src="@/icons/img/word.png" alt="" />
-                  <img v-else-if="'.xls'.includes(row.ext) || '.xlsx'.includes(row.ext)" src="@/icons/img/excel.png" alt="" />
-                  <img v-else-if="'.pdf'.includes(row.ext)" src="@/icons/img/pdf.png" alt="" />
-                  <img v-else-if="'.pp'.includes(row.ext)" src="@/icons/img/ppt.png" alt="" />
-                  <img v-else-if="'.zip'.includes(row.ext) || '.rar'.includes(row.ext)" src="@/icons/img/zip.png" alt="" />
-                  <img v-else src="@/icons/img/moren.png" alt="" />
-                </div>
+                <suffix v-else class="fileThumbnail-box" :file="row"></suffix>
                 <div @click.stop>
                   <span v-if="isactive1 != index">{{ row.fileName }}</span>
                   <Input autofocus
@@ -220,6 +200,7 @@ import commonFile from "../file/commonfile.vue";
 import fileDetail from "../file/fileDetail";
 import modelFileDetail from "../file/modelFileDetail";
 import fileCanSee from "../file/fileCanSee.vue";
+import suffix from './suffixCom.vue'
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import { getFileDetails, getChildFiles, putImportant } from "@/axios/fileApi";
 import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy,checkdownload } from "@/axios/fileApi";
@@ -235,7 +216,8 @@ export default {
     fileDetail,
     modelFileDetail,
     fileCanSee,
-    sucaiDetail
+    sucaiDetail,
+    suffix
   },
   data() {
     return {
@@ -316,7 +298,7 @@ export default {
           title: "大小",
           key: "size",
           slot: "size",
-          maxWidth: 80,
+          maxWidth: 100,
           sortable: true
         },
         {
@@ -339,7 +321,7 @@ export default {
       ],
       fileArr: [],
       showInput: false,
-      tableHeight:510,
+      tableHeight:490,
     };
   },
   computed: {
@@ -349,9 +331,7 @@ export default {
 
     mounted() {
     // 设置表格高度
-    
-    
-    this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 160
+    this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 200
   },
   created() {
     let params = { fileId: this.createFileId };
@@ -369,7 +349,7 @@ export default {
       });
       this.initItem(this.fileArr);
       this.changeToolsShow(this.fileArr.length != 0);
-      console.log(this.fileArr)
+      // console.log(this.fileArr)
     },
 
     recoverySelected() {
@@ -400,7 +380,7 @@ export default {
       this.showVisibilityModal = true;
       this.rublish = false;
       this.fileMenu = false;
-      console.log('<<<<<<<<<<<<<<',this.mFile)
+      // console.log('<<<<<<<<<<<<<<',this.mFile)
       this.setSFile(this.mFile);
     },
     

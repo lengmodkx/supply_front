@@ -92,12 +92,9 @@
                 </Col>
                 <Col span="10">
                   <div @click="fileDetail(f.fileId,f)" class="file-con">
-                    <img
-                      v-if="f.ext==='.jpg' || f.ext==='.png' "
-                      :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`"
-                      alt
-                    />
-                    <img v-else src="@/icons/img/moren.png" alt />
+                    <!-- <img v-if="f.ext==='.jpg' || f.ext==='.png' " :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`" alt />
+                    <img v-else src="@/icons/img/moren.png" alt /> -->
+                    <suffix :file="f" class="imgContent"></suffix>
 
                     <Tooltip class="file-name" :content="f.fileName" max-width="300">{{f.fileName}}</Tooltip>
                   </div>
@@ -127,12 +124,13 @@
                 </Col>
                 <Col span="10">
                   <div @click="fileDetail(f.fileId,f)" class="file-con">
-                    <img
+                    <!-- <img
                       v-if="f.ext==='.jpg' || f.ext==='.png' "
                       :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`"
                       alt
                     />
-                    <img v-else src="@/icons/img/moren.png" alt />
+                    <img v-else src="@/icons/img/moren.png" alt /> -->
+                    <suffix :file="f" class="imgContent"></suffix>
                     <Tooltip class="file-name" :content="f.fileName">{{f.fileName}}</Tooltip>
                   </div>
                 </Col>
@@ -161,12 +159,13 @@
               :key="f.fileId"
             >
               <div @click="fileDetail(f.fileId,f)" class="file-img-box">
-                <img
+                <!-- <img
                   v-if="f.ext==='.jpg' || f.ext==='.png' "
                   :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`"
                   alt
                 />
-                <img v-else src="@/icons/img/moren.png" alt />
+                <img v-else src="@/icons/img/moren.png" alt /> -->
+                <suffix :file="f" class="imgContent"></suffix>
                 <div @click.stop class="check-box">
                   <Checkbox :label="f.fileId" size="default">
                     <span></span>
@@ -197,12 +196,12 @@
               :key="f.fileId"
             >
               <div @click="fileDetail(f.fileId,f)" class="file-img-box">
-                <img
+                <!-- <img
                   v-if="f.ext==='.jpg' || f.ext==='.png' "
                   :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${f.fileUrl}`"
                   alt
                 />
-                <img v-else src="@/icons/img/moren.png" alt />
+                <img v-else src="@/icons/img/moren.png" alt /> -->
               </div>
               <div class="file-name-box">
                 <Tooltip :content="f.fileName">
@@ -298,6 +297,7 @@ import VJstree from "vue-jstree";
 import mineFileMenu from "./mineFileMenu";
 import fileDetail from "@/components/project/file/fileDetail";
 import modelFileDetail from "@/components/project/file/modelFileDetail";
+import suffix from '@/components/project/newFile/suffixCom.vue'
 import {
   files,
   createFolder,
@@ -346,7 +346,7 @@ export default {
     };
   },
   props: ["name"],
-  components: { mineFileMenu, fileDetail, modelFileDetail, VJstree },
+  components: { mineFileMenu, fileDetail, modelFileDetail, VJstree,suffix },
   mounted() {
     // document.addEventListener('click',event => {
     //     if(!this.$el.contains(event.target)){
