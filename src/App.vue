@@ -72,53 +72,5 @@ export default {
 
 <style lang="less">
 @import "assets/css/font.less";
-@import "assets/css/app.less";
-* {
-  user-select: none;
-  outline: none;
-}
-.ivu-checkbox-large .ivu-checkbox-inner {
-  transform: scale(1.5);
-}
-.file-vertical-center-modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .ivu-modal {
-    top: 0;
-  }
-}
-.mytaskModal {
-  .ivu-modal {
-    width: 600px !important;
-  }
-}
-.tag,
-.tags {
-  .tagtitle {
-    cursor: pointer;
-  }
-  .list {
-    white-space: normal;
-  }
-}
-.myRcModal {
-  .ivu-modal-close {
-    .ivu-icon-ios-close-empty {
-      color: #7fd4fb !important;
-    }
-  }
-}
-.demo-spin-container {
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: white;
-  border: 1px solid #eee;
-  z-index: 999999999;
-}
+@import "assets/css/appNew.less";
 </style>

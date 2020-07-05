@@ -107,7 +107,7 @@ export default {
   padding: 0 20px;
   padding-right: 0;
   position: fixed;
-  top: 48px;
+  top: 65px;
   left: 0;
   z-index: 999999;
   background-color: #f4f4f4;

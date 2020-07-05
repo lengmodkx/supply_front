@@ -378,6 +378,7 @@ export default {
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
+    console.log(localStorage.taskId)
     this.initTasks();
   },
   watch: {
@@ -400,6 +401,9 @@ export default {
       this.init(this.projectId).then((res) => {
         this.loading = false;
         this.allTask = this.allTasks;
+        if(localStorage.taskId !='undefined'){
+          this.initTask(localStorage.taskId)
+        }
       });
       window.onscroll = () => {
         this.wHeight = window.outerHeight - 261;
@@ -498,6 +502,7 @@ export default {
 
     //打开任务详情
     initTask(taskId) {
+      console.log(taskId)
       this.showModal = true;
       this.taskId = taskId;
       this.setTaskId(taskId);

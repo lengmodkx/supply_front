@@ -187,14 +187,14 @@ export function updateProject(data) {
 // }
 
 // 搜索项目 2020-5-15
-export function searchProjects(projectName, condition,orgId) {
+export function searchProjects(projectName, condition, orgId) {
     return fetch({
         url: '/projects/seach',
         method: "get", // 请求方法
         params: {
             projectName: projectName,
             condition: condition,
-            orgId:orgId,
+            orgId: orgId,
         }
     });
 }
@@ -315,36 +315,38 @@ export function delRCProject(id) {
         params: {}
     });
 }
-export function createUser(userId,orgId){
-    return $post("/aliyun/createUser",{
-        userId:userId,
-        orgId:orgId
+export function createUser(userId, orgId) {
+    return $post("/aliyun/createUser", {
+        userId: userId,
+        orgId: orgId
     })
 }
 
-export function createMeeting(userId,meetingName,scheduleId,projectId){
-    return $get("/aliyun/createMeeting",{
-        userId:userId,
-        meetingName:meetingName,
-        scheduleId:scheduleId,
-        projectId:projectId
-    })    
+export function createMeeting(userId, meetingName, scheduleId, projectId) {
+    return $get("/aliyun/createMeeting", {
+        userId: userId,
+        meetingName: meetingName,
+        scheduleId: scheduleId,
+        projectId: projectId
+    })
 }
-export function joinMeeting(userId,meetingCode){
-    return $get("/aliyun/joinMeeting",{
-        userId:userId,
-        meetingCode:meetingCode
-    })    
+export function joinMeeting(userId, meetingCode) {
+    return $get("/aliyun/joinMeeting", {
+        userId: userId,
+        meetingCode: meetingCode
+    })
 }
 
 //文件删除文件夹删除
 
 
-export function delWJProject(id,projectId) {
+export function delWJProject(id, projectId) {
     return fetch({
         url: `files/${id}`,
         method: "delete", // 请求方法
-        params: {projectId:projectId}
+        params: {
+            projectId: projectId
+        }
     });
 }
 
@@ -370,7 +372,9 @@ export function delBQProject(tagId) {
 }
 //点击项目进入任务主页
 export function mView(projectId) {
-    return $get(`${api.projects}/view_member`,{projectId:projectId});
+    return $get(`${api.projects}/view_member`, {
+        projectId: projectId
+    });
 }
 
 //点击项目进入任务主页
@@ -430,7 +434,7 @@ export function updatePriority(taskId, priority) {
 
 export function taskToRecycle(params) {
 
-    return $post(`/recycle_bin/move_task_rb`,params);
+    return $post(`/recycle_bin/move_task_rb`, params);
 }
 
 
@@ -463,9 +467,9 @@ export function projectMembers(projectId) {
 }
 
 //搜索项目成员
-export function projectMembersSerach(projectId,condition) {
+export function projectMembersSerach(projectId, condition) {
 
-    
+
     return fetch({
         url: `/projects/searchMemberByName/${projectId}`,
         method: "get",
@@ -475,11 +479,11 @@ export function projectMembersSerach(projectId,condition) {
     });
 }
 
-  
+
 
 
 //获取单个项目成员详情
-export function projectOneMembers(projectId,userId) {
+export function projectOneMembers(projectId, userId) {
     return $get(`/projects/${projectId}/membersInfo/${userId}`, '');
 }
 
@@ -509,7 +513,7 @@ export function addTagAndBind(params) {
 
 export function delTag(params) {
 
-    return $post(`/recycle_bin/move_tag_rb`,params);
+    return $post(`/recycle_bin/move_tag_rb`, params);
 }
 
 // 标签移动到回收站
@@ -567,7 +571,7 @@ export function additionHour(params) {
 
 //获取工时列表
 
-export function  getTaskWorkingHours(params) {
+export function getTaskWorkingHours(params) {
     return $get(`/taskWorkingHours/list`, params)
 }
 
@@ -626,10 +630,10 @@ export function cancelCollect(publicId) {
 }
 
 //完成任务
-export function completeTask(projectId,taskId, label) {
+export function completeTask(projectId, taskId, label) {
     var l = {
         label: label,
-        projectId:projectId
+        projectId: projectId
     }
     return fetch({
         url: `${api.tasks}/${taskId}/finish`,
@@ -638,10 +642,10 @@ export function completeTask(projectId,taskId, label) {
     });
 }
 //取消完成任务
-export function cancelcompleteTask(projectId,taskId, label) {
+export function cancelcompleteTask(projectId, taskId, label) {
     var l = {
         label: label,
-        projectId:projectId
+        projectId: projectId
     }
     return fetch({
         url: `${api.tasks}/${taskId}/unFinish`,
@@ -743,7 +747,7 @@ export function deleteShare(shareId) {
 
 export function recycleShare(params) {
 
-    return $post(`/recycle_bin/move_share_rb`,params);
+    return $post(`/recycle_bin/move_share_rb`, params);
 }
 
 
@@ -845,7 +849,7 @@ export function addChildTask(taskId, params) {
 export function getNews(data) {
     //console.log(data.isRead)
     if (!data.isRead) {
-        return $get(`news`,data )
+        return $get(`news`, data)
     } else {
         return $get(`news`, {})
     }
@@ -868,16 +872,16 @@ export function sendChat(data) {
 
 
 // 文件发送消息--新接口 2020-4-13
-export function newSendChat(projectId, content,publicId,publicType,mentionIdList) {
+export function newSendChat(projectId, content, publicId, publicType, mentionIdList) {
     return fetch({
         url: '/groupchat/',
         method: "post", // 请求方法
         params: {
             projectId: projectId,
             content: content,
-            publicId:publicId,
-            publicType:publicType,
-            mentionIdList:mentionIdList,
+            publicId: publicId,
+            publicType: publicType,
+            mentionIdList: mentionIdList,
         }
     });
 }
@@ -926,14 +930,16 @@ export function nearThingByTask() {
 }
 
 // 获取我的任务信息并且排序
-export function getMeTask(isDone, order, type) {
+export function getMeTask(isDone, order, type, pageSize, pageNum) {
     return fetch({
         url: '/me/task',
         method: "get", // 请求方法
         params: {
             isDone: isDone,
             order: order,
-            type: type
+            type: type,
+            pageSize: pageSize,
+            pageNum: pageNum
         }
     });
 }
@@ -967,13 +973,13 @@ export function getScheduleByMonth(month) {
 /**
  * 获取我创建的或我参与的文件
  */
-export function getMeFile(order,type) {
+export function getMeFile(order, type) {
     return fetch({
         url: `me/file`,
         method: "get", // 请求方法
         params: {
             order: order,
-            type:type
+            type: type
         }
     });
 }
@@ -1038,15 +1044,14 @@ export function notBindWx(userId) {
 export function changRelationName(data) {
     return $post(`/relations/updateGroupName`, {
         relationId: data.id,
-        newName:data.name
+        newName: data.name
     })
 }
 
 
 
 export function delRelationName(groupId) {
-    return $delete(`relations/${groupId}/group`, {
-    })
+    return $delete(`relations/${groupId}/group`, {})
 }
 
 
@@ -1144,10 +1149,11 @@ export function updateOrgUserRole(roleId, userId, orgId) {
     })
 }
 
-export function removeOrgUser(userId, orgId) {
+export function removeOrgUser(userId, orgId, memberId) {
     return $delete('/organization/members', {
         "orgId": orgId,
-        "userId": userId
+        "userId": userId,
+        "memberId": memberId
     })
 }
 
@@ -1312,7 +1318,7 @@ export function dynamictime() {
 
 // 成员--最新动态-列表
 
-export function dynamiclist(memberId,orgId,time) {
+export function dynamiclist(memberId, orgId, time) {
     return fetch({
         url: `/projects/${memberId}/${orgId}/tasks/${time}`,
         method: "get", // 请求方法
@@ -1321,12 +1327,12 @@ export function dynamiclist(memberId,orgId,time) {
 
 //成员任务安排
 
-export function taskList(memberId,projectId,classify) {
+export function taskList(memberId, projectId, classify) {
     return fetch({
         url: `/tasks/${memberId}/getTaskInfoList/${projectId}`,
         method: "get",
         params: {
-            classify :classify,
+            classify: classify,
         }
     });
 }
@@ -1334,7 +1340,7 @@ export function taskList(memberId,projectId,classify) {
 
 //成员日程
 
-export function schedulesList(projectId,memberId,) {
+export function schedulesList(projectId, memberId, ) {
     return fetch({
         url: `/schedules/getScheduleList/${projectId}/${memberId}`,
         method: "get",
@@ -1343,7 +1349,7 @@ export function schedulesList(projectId,memberId,) {
 
 // 已添加项目经历
 
-export function IsexperienceList(memberId,organizationId) {
+export function IsexperienceList(memberId, organizationId) {
     return fetch({
         url: `/projects/getIsExperience/${organizationId}/${memberId}`,
         method: "get",
@@ -1354,7 +1360,7 @@ export function IsexperienceList(memberId,organizationId) {
 
 //查询项目经历
 
-export function experienceList(memberId,organizationId) {
+export function experienceList(memberId, organizationId) {
     return fetch({
         url: `/projects/getExperience/${organizationId}/${memberId}`,
         method: "get",
@@ -1363,7 +1369,7 @@ export function experienceList(memberId,organizationId) {
 // 添加项目经历
 
 
-export function addExperience(memberId,projectId,organizationId) {
+export function addExperience(memberId, projectId, organizationId) {
     return fetch({
         url: `/projects/${memberId}/${projectId}/${organizationId}`,
         method: "put",
@@ -1373,7 +1379,7 @@ export function addExperience(memberId,projectId,organizationId) {
 // 删除项目经历
 
 
-export function delExperience(memberId,projectId) {
+export function delExperience(memberId, projectId) {
     return fetch({
         url: `/projects/deleteExperience/${memberId}/${projectId}`,
         method: "delete",
@@ -1382,7 +1388,7 @@ export function delExperience(memberId,projectId) {
 
 // 用户-任务-项目
 
-export function userProjectTasks(orgId,memberId) {
+export function userProjectTasks(orgId, memberId) {
     return fetch({
         url: `/tasks/${orgId}/getProjectsByMemberIdAndOrgId/${memberId}`,
         method: "get",
@@ -1391,7 +1397,7 @@ export function userProjectTasks(orgId,memberId) {
 
 //用户 任务
 
-export function userTasksInit(memberId,projectId) {
+export function userTasksInit(memberId, projectId) {
     return fetch({
         url: `/tasks/${memberId}/getTasksByProjectIdAndMemberId/${projectId}`,
         method: "get",
@@ -1412,9 +1418,55 @@ export function setList(projectId) {
 
 
 
-export function sureExecutor(taskId,executor) {
+export function sureExecutor(taskId, executor) {
     return fetch({
         url: `/tasks/updateExecutor/${taskId}/${executor}`,
         method: "get",
     });
+}
+
+export function getUserInfo(orgId) {
+    return fetch({
+        url: `/organizations/getUserInfo/${orgId}`,
+        method: 'get', // 请求方法
+    })
+}
+
+export function getTeamInfo(orgId) {
+    return fetch({
+        url: `/organization/members/getMembers/${orgId}`,
+        method: 'get', // 请求方法
+    })
+}
+
+//新首页动态
+export function getMyDynamic() {
+    return fetch({
+        url: `/me/getMyDynamic`,
+        method: 'get', // 请求方法
+    })
+}
+
+//创建项目获取模板
+export function getTemplate(orgId) {
+    return fetch({
+        url: `/templates`,
+        method: 'get', // 请求方法
+        params: {
+            orgId: orgId,
+        }
+    })
+}
+
+//项目邀请成员
+export function proInviteMen(orgId, projectId, memberId) {
+    return fetch({
+        url: `/members`,
+        method: 'post', // 请求方法
+        params: {
+            projectId: projectId,
+            memberId: memberId,
+            orgId: orgId,
+        }
+    })
 }

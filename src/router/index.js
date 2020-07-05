@@ -4,7 +4,7 @@ import store from '../store/index'
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Forget from "../views/Forget.vue";
-import Home from "../views/Home.vue";
+import Home from "../views/Home2.vue";
 import mine from '../components/public/Mine'
 import message from '../components/public/message'
 import calendar from '../components/public/calendar'
@@ -17,6 +17,7 @@ import orgEmpty from '../views/orgEmpty.vue'
 import delOrg from '../views/delOrg.vue'
 import Detail from '../views/detail.vue'
 import loginCompany from '../components/public/companyIn' //企业登陆
+import prolist from '../views/projectList.vue' //项目管理
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -370,7 +371,18 @@ const router = new Router({
           }
         }
       ]
-    }
+    },
+    {
+      path: "/prolist/:orgId",
+      name: "prolist",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: prolist
+    },
+
   ]
 });
 router.afterEach((to, from) => {

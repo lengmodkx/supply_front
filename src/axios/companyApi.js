@@ -23,20 +23,25 @@ export function createCompany(data) {
     });
 }
 // 搜索 全部成员
-export function searchMembers(phone,orgId) {
+export function searchMembers(phone, orgId) {
     return fetch({
         url: `/organization/members/${phone}/user`,
         method: "get",
-        params: {orgId:orgId}
+        params: {
+            orgId: orgId
+        }
     });
 }
 
 // 搜索 企业成员
-export function searchOrgMembers(phone,orgId) {
+export function searchOrgMembers(phone, orgId, projectId) {
     return fetch({
         url: `/organization/members/${phone}/searchOrgUser`,
         method: "get",
-        params: {orgId:orgId}
+        params: {
+            orgId: orgId,
+            projectId: projectId
+        }
     });
 }
 
@@ -56,7 +61,33 @@ export function initOrgMember(orgId, flag) {
         method: "get",
         params: {
             'pageSize': 9999,
-            'flag': flag?flag:0,
+            'flag': flag ? flag : 0,
+        }
+    });
+}
+
+// 初始化企业成员信息  查询信息 新 add2020/6/23
+export function initOrgMemberNew(orgId, flag, memberLabel) {
+    return fetch({
+        url: `/organization/members/${orgId}/getOrgPartment`,
+        method: "get",
+        params: {
+            'memberLabel': memberLabel,
+            'flag': flag,
+        }
+    });
+}
+
+//部门角色筛选
+export function getOrgPartmentByMemberLebel(orgId, partmentId, flag, memberLabel) {
+    return fetch({
+        url: `/organization/members/getOrgPartmentByMemberLebel`,
+        method: "get",
+        params: {
+            'orgId': orgId,
+            'partmentId': partmentId,
+            'memberLabel': memberLabel,
+            'flag': flag,
         }
     });
 }
@@ -94,7 +125,7 @@ export function addBranchPeople(partmentId, data) {
     return fetch({
         url: `/partment_members/${partmentId}/add`,
         method: "post",
-        data:data
+        data: data
     });
 }
 
@@ -103,7 +134,7 @@ export function removeBranchPeople(partmentId, data) {
     return fetch({
         url: `/partment_members/${partmentId}/member`,
         method: "delete",
-        params:data
+        params: data
     });
 }
 // 更新部门 （更改部门名称）
@@ -111,7 +142,7 @@ export function changeBranchNames(partmentId, params) {
     return fetch({
         url: `/partments/${partmentId}`,
         method: "put",
-        params:params
+        params: params
     });
 }
 // 删除部门
@@ -133,7 +164,7 @@ export function addGroup(orgId, data) {
     return fetch({
         url: `/organization_group/${orgId}`,
         method: "post",
-        data:data
+        data: data
     });
 }
 // 获取某个群组下的成员
@@ -144,12 +175,12 @@ export function getGroupPeople(groupId) {
     });
 }
 // 添加群组成员
-export function addGroupPeople(groupId,memberId) {
+export function addGroupPeople(groupId, memberId) {
     return fetch({
         url: `/organization_group_member/${groupId}`,
         method: "post",
         data: {
-            memberId:memberId
+            memberId: memberId
         }
     });
 }
@@ -159,7 +190,7 @@ export function changeGroupsname(groupId, groupName) {
         url: `/organization_group/${groupId}`,
         method: "put",
         params: {
-            groupName:groupName
+            groupName: groupName
         }
     });
 }
@@ -176,14 +207,38 @@ export function getDepartmentTree(orgId, departmentId) {
     return fetch({
         url: `/partments/tree`,
         method: "post",
-        data:{orgId:orgId, departmentId:departmentId}
+        data: {
+            orgId: orgId,
+            departmentId: departmentId
+        }
     });
 }
 
-export function lockUser(orgId,userId,lock){
+export function lockUser(orgId, userId, lock) {
     return fetch({
         url: `/organization/members/${orgId}/lock`,
         method: "put",
-        params:{userId:userId, lock:lock}
+        params: {
+            userId: userId,
+            lock: lock
+        }
     });
+}
+
+//判断被邀请人电话号或邮箱是否注册过账号
+export function verifyPhone(orgId, data) {
+    return fetch({
+        url: `/organization/members/checkMemberIsRegister/${orgId}`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//根据电话号/邮箱邀请企业成员
+export function invitation(orgId, data) {
+    return fetch({
+        url: `/organization/members/inviteOrgMemberByPhone/${orgId}`,
+        method: 'get', // 请求方法
+        params: data
+    })
 }

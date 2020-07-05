@@ -1,7 +1,7 @@
 .wrap-box{
-     height: 100vh;
+     min-height: 100vh;
      background: #f4f3f4;
-     
+     padding-top: 65px;
     .page-header{
       background: #fff;
       padding:  19px  32px  0;
@@ -63,10 +63,14 @@
       .porject-contant{
         display: flex;
         flex-flow: row wrap;
+        margin-top: -1px;
           li{
             width: 33.33%;
             padding: 20px;
             color: #8c8c8c;
+            // border-left: 1px solid
+            box-shadow: 1px 0 0 0 #e8e8e8, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;
+            transition: all .3s;
             cursor: pointer;
             .title{
               i{
@@ -107,12 +111,34 @@
             display: flex;
             justify-content: space-between;
             padding:10px 0px;
+            cursor: pointer;
+            .task-item {
+              width: 100%;
+            }
+            .task-item-left {
+              flex: 1;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              padding-right: 10px;
+              display: flex;
+              .ivu-tooltip {
+                overflow: hidden;
+              }
+              .ivu-tooltip-rel {
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+                display: block;
+              }
+            }
             .level{
               color: #52c41a;
               background: #f6ffed;
               border-color: #b7eb8f;
-              float: left;
+              // float: left;
               margin-right: 15px;
+              display: inline-block;
             }
             .level:hover{
               cursor: pointer;
@@ -120,6 +146,9 @@
             span{
               color: #2d8cf0;
               font-weight: bold;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
             }
             span:hover{
               cursor: pointer;
@@ -147,6 +176,7 @@
             .avatar{
               width: 24px;
               height: 24px;
+              margin-right: 6px;
             }
           }
           li{
@@ -161,4 +191,10 @@
     
    
     
+}
+.df {
+  display: flex;
+}
+.jsb {
+  justify-content: space-between;
 }

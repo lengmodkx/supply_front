@@ -416,7 +416,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  top: 48px;
+  top: 65px;
   overflow: auto;
   background-color: #fff;
   overflow: hidden;
