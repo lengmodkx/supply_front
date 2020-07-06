@@ -378,7 +378,6 @@ export default {
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
-    console.log(localStorage.taskId)
     this.initTasks();
   },
   watch: {
@@ -401,7 +400,7 @@ export default {
       this.init(this.projectId).then((res) => {
         this.loading = false;
         this.allTask = this.allTasks;
-        if(localStorage.taskId !='undefined'){
+        if(localStorage.taskId !='undefined'&&localStorage.taskId !=undefined){
           this.initTask(localStorage.taskId)
         }
       });
