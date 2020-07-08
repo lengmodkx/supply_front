@@ -1459,14 +1459,66 @@ export function getTemplate(orgId) {
 }
 
 //项目邀请成员
-export function proInviteMen(orgId, projectId, memberId) {
+export function proInviteMen(projectId, memberId) {
     return fetch({
-        url: `/members`,
+        url: `/members/addMember1`,
         method: 'post', // 请求方法
         params: {
             projectId: projectId,
             memberId: memberId,
-            orgId: orgId,
+        }
+    })
+}
+
+
+//通过链接使用其他账号加入项目
+export function userExist(accountName) {
+    return fetch({
+        url: `/check_account_exist`,
+        method: 'get', // 请求方法
+        params: {
+            accountName: accountName,
+        }
+    })
+}
+//链接邀请跳转页面获取 项目/企业邀请人信息
+export function getInvitees(orgId,memberId,projectId) {
+    return fetch({
+        url: `/invite/getInviteMemberInfo/${memberId}`,
+        method: 'get', // 请求方法
+        params: {
+            orgId:orgId,
+            memberId:memberId,
+            projectId:projectId
+        }
+    })
+}
+
+//注册并加入项目
+export function registerJoin(data) {
+    return fetch({
+        url: `/register/projectMember`,
+        method: 'post', // 请求方法
+        params: data
+    })
+}
+
+//注册并加入企业
+export function registerJoinEnter(data) {
+    return fetch({
+        url: `/register/orgMember`,
+        method: 'post', // 请求方法
+        params: data
+    })
+}
+
+//项目角色判断
+export function roleJudgment(projectId) {
+    return fetch({
+        url: `/projects/judgmentRoles/${projectId}`,
+        method: 'get', // 请求方法
+        params: {
+            projectId:projectId
         }
     })
 }

@@ -72,12 +72,12 @@
                   添加成员
                 </div>
                 <div slot="content">
-                  <p @click="showAddModel(1)">添加企业成员</p>
-                  <p @click="showAddModel(0)">添加外部成员</p>
+                  <p @click="showAddModel(true)">添加企业成员</p>
+                  <p @click="showAddModel(false)">添加外部成员</p>
                 </div>
               </Poptip>
 
-              <div class="branch" @click="">
+              <div class="branch" >
                 <Icon type="ios-settings" />
                 成员管理
               </div>
@@ -103,11 +103,12 @@
                 </div>
                 </Col>
                 <Col span="9">
-                <div @click="showUserInfo(item)">{{item.deptName}}</div>
+                <div @click="showUserInfo(item)">{{item.deptName?item.deptName:'-'}}</div>
                 </Col>
                 <Col span="5">
                 <span v-if="item.organizationLable == 1">拥有者</span>
-                <Poptip v-if="item.memberLock==1" placement="bottom" transfer width="280"
+                <span v-else>{{item.memberLabel}}</span>
+                <!-- <Poptip v-if="item.memberLock==1" placement="bottom" transfer width="280"
                   @on-popper-show="visibleChange(item.userEntity)" v-model="item.userEntity.visible">
                   <a href="javascript:void(0)" v-if="item.organizationLable != 1">
                     <Icon type="ios-arrow-down"></Icon>
@@ -184,7 +185,7 @@
                     </div>
                     <Button type="primary" long @click="lock(item.userEntity.userId,1)">确定</Button>
                   </div>
-                </Poptip>
+                </Poptip> -->
                 </Col>
               </Row>
             </div>
@@ -227,7 +228,9 @@
                 <Col span="5">{{i.deptName}}</Col>
                 <Col span="5">{{i.job}}</Col>
                 <Col span="4">  
-                  <div class="operation">
+                  <span v-if="i.organizationLable == 1">拥有者</span>
+                  <span v-else>{{i.memberLabel}}</span>
+                  <!-- <div class="operation">
                     <Poptip placement="bottom"  v-model="i.userEntity.visible">
                       <div class="operation-title">
                         <Icon type="ios-arrow-down" size="20" />
@@ -245,7 +248,7 @@
                         </div>
                       </div>
                     </Poptip>
-                  </div>
+                  </div> -->
                 </Col>
               </Row>
             </div>

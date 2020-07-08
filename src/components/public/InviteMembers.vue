@@ -54,7 +54,7 @@
     },
     methods: {
       adduser(id, obj) {
-        proInviteMen(localStorage.companyId, this.projectId, id).then(res => {
+        proInviteMen(this.projectId, id).then(res => {
           if (res.result == 1) {
             this.$Message.success("添加成功");
             // this.$emit("addPeople", res.data);  //暂不需要回调

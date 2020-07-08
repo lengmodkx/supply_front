@@ -4,10 +4,10 @@
     <!-- <div class="pic"></div> -->
     <!-- <p class="myindex">为不同的事物建立各自的项目</p> -->
     <Input class="inputbox" v-model.trim="proName" :maxlength="20" placeholder="项目名称（必填）" />
-    <Select v-model="protemId" filterable placeholder="项目模板" class="inputbox">
+    <!-- <Select v-model="protemId" filterable placeholder="项目模板" class="inputbox">
       <Option v-for="item in proTemplate" :value="item.templateId" :key="item.templateId">{{ item.templateName }}
       </Option>
-    </Select>
+    </Select> -->
     <Input type="textarea" :rows="4" class="inputbox" v-model="proDes" :maxlength="50" placeholder="项目简介（选填）" />
     <!-- <Select v-model="parentProject" filterable placeholder="选择父项目" class="inputbox">
       <Option v-for="item in allProject" :value="item.projectId" :key="item.projectId">{{ item.projectName }}</Option>

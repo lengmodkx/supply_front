@@ -103,7 +103,7 @@ export default {
 .header-project {
   width: 100%;
   border-bottom: 1px solid #d9d9d9;
-  height: 50px;
+  height: 40px;
   padding: 0 20px;
   padding-right: 0;
   position: fixed;
@@ -112,7 +112,7 @@ export default {
   z-index: 999999;
   background-color: #f4f4f4;
   .menu {
-    height: 50px;
+    height: 40px;
     position: absolute;
     left: 50%;
     top: 0;
@@ -120,8 +120,8 @@ export default {
     a {
       display: inline-block;
       border-bottom: 3px solid transparent;
-      height: 50px;
-      line-height: 50px;
+      height: 40px;
+      line-height: 40px;
       font-size: 15px;
       color: #495060;
       margin: 0 15px;
@@ -136,7 +136,7 @@ export default {
     font-size: 16px;
   }
   .fl {
-    margin-top: 13px;
+    margin-top: (40-16)/2px;;
   }
   .breadcrumb-separator,
   .ivu-icon-chevron-down {
@@ -147,7 +147,7 @@ export default {
     font-weight: 100 !important;
   }
   .fr {
-    margin-top: (50-16)/2px;
+    margin-top: (40-16)/2px;
     .last {
       border-right: 0;
     }

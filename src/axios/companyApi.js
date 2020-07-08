@@ -242,3 +242,12 @@ export function invitation(orgId, data) {
         params: data
     })
 }
+
+// 链接邀请登录添加企业成员/部门成员
+export function linkaddPeople(data) {
+    return fetch({
+        url: '/organization/members/addMember1',
+        method: "post",
+        data: data
+    });
+}
