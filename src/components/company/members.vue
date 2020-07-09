@@ -57,6 +57,7 @@
         </div>
         <!--右侧显示成员-->
         <!--组织架构显示-->
+
         <div v-if="tabType === '成员和部门'" class="member-right">
           <header class="member-right-head">
             <div style="font-size: 16px">{{ memberType }} · {{ peopleList.length ? peopleList.length : "0" }}</div>
@@ -67,7 +68,7 @@
                 添加成员
               </div>
               <Poptip v-model="memModal" placement="bottom" v-else>
-                <div class="branch" >
+                <div class="branch">
                   <Icon type="md-add" />
                   添加成员
                 </div>
@@ -77,7 +78,7 @@
                 </div>
               </Poptip>
 
-              <div class="branch" >
+              <div class="branch">
                 <Icon type="ios-settings" />
                 成员管理
               </div>
@@ -227,10 +228,10 @@
                 <Col span="5">{{i.userEntity.accountName}}</Col>
                 <Col span="5">{{i.deptName}}</Col>
                 <Col span="5">{{i.job}}</Col>
-                <Col span="4">  
-                  <span v-if="i.organizationLable == 1">拥有者</span>
-                  <span v-else>{{i.memberLabel}}</span>
-                  <!-- <div class="operation">
+                <Col span="4">
+                <span v-if="i.organizationLable == 1">拥有者</span>
+                <span v-else>{{i.memberLabel}}</span>
+                <!-- <div class="operation">
                     <Poptip placement="bottom"  v-model="i.userEntity.visible">
                       <div class="operation-title">
                         <Icon type="ios-arrow-down" size="20" />
@@ -269,8 +270,9 @@
               </div>
               <!-- 更多 按钮-->
               <div class="more-bumen-opearte">
-                <img :src="checkIconType=='message'?messageA:message" @mouseover="checkIcon('message')" @mouseleave="leaveIcon">
-                
+                <img :src="checkIconType=='message'?messageA:message" @mouseover="checkIcon('message')"
+                  @mouseleave="leaveIcon">
+
                 <Poptip v-model="branchMenu">
                   <!-- <Icon type="ios-more" /> -->
                   <img :src="checkIconType=='more'?moreA:more" @mouseover="checkIcon('more')" @mouseleave="leaveIcon">
@@ -319,18 +321,23 @@
               </div>
               </Col>
               <Col span="5">
-              <span>{{ item.isOwner ? "退出" : "移除" }}</span>
+              <Poptip placement="bottom" transfer width="280" v-model="item.userEntity.visible">
+                <span v-if="isOwnerCom">{{ item.isOwner ? "退出" : "移除" }}</span>
+                <span v-else-if="item.memberId==userId">退出</span>
+                <div slot="title" class="member-title">
+                  <span>{{ item.isOwner ? "退出群组" : "移除成员" }}</span>
+                  <Icon type="md-close" size="18" class="role-md-close" @click.self="closeExit(index)" />
+                </div>
+                <div slot="content">
+                  <div style="margin-top:10px;margin-bottom:10px">
+                    <span v-if="item.isOwner">退出群组后，拥有者将移交给下一位成员</span>
+                    <span v-else>你确定把 {{item.userName}} 从群组中移除吗？</span>
+                  </div>
+                  <Button type="error" long @click="groupExit(item)">确定</Button>
+                </div>
+              </Poptip>
               </Col>
             </Row>
-
-            <!-- <ul>
-              <li class="group-people" v-for="(item, index) in groupPeople" :key="index">
-                <div class="group-people-con">
-                  <img :src="item.image" alt="" />
-                  <p>{{ item.userName }} {{ item.isOwner ? "（拥有者）" : "" }}</p>
-                </div>
-              </li>
-            </ul> -->
           </div>
         </div>
       </div>
@@ -409,7 +416,8 @@
       </div>
       <div slot="footer" class='df ac craete-group-foot'>
         <div class="selected">已选{{social.length}}</div>
-        <Button type="info" :loading="isCreateBranch" size="large" @click="createGroup" :disabled="social.length==0">完成</Button>
+        <Button type="info" :loading="isCreateBranch" size="large" @click="createGroup"
+          :disabled="social.length==0">完成</Button>
       </div>
     </Modal>
     <!-- 成员详细信息 -->
@@ -419,7 +427,7 @@
       </p>
       <div class="craete-group-con">
         <div class="df  con-content">
-          <img src="../../icons/img/jichuxinxi-01.png" class="iconImg" >
+          <img src="../../icons/img/jichuxinxi-01.png" class="iconImg">
           <div class="con-content-text">基础信息</div>
           <div class="line"></div>
         </div>
@@ -440,7 +448,7 @@
           <div>{{userInfoList.birthday=='null'?'----':userInfoList.birthday}}</div>
         </div>
         <div class="df  con-content">
-          <img src="../../icons/img/gongzuoxinxi-01.png" class="iconImg" >
+          <img src="../../icons/img/gongzuoxinxi-01.png" class="iconImg">
           <div class="con-content-text">工作信息</div>
           <div class="line"></div>
         </div>
@@ -505,7 +513,8 @@
     removeBranchPeople,
     searchOrgMembers,
     initOrgMemberNew,
-    getOrgPartmentByMemberLebel
+    getOrgPartmentByMemberLebel,
+    groupRemoval
   } from "@/axios/companyApi";
 
   export default {
@@ -585,11 +594,13 @@
         loadings: false,
         direct: true,  //群组直接点击添加成员
         social: [],
-        checkIconType:'',
-        messageA:require('../../icons/img/liaotianA.png'),
-        message:require('../../icons/img/liaotian-01.png'),
-        more:require('../../icons/img/gengduo-01.png'),
-        moreA:require('../../icons/img/gengduoA.png'),
+        checkIconType: '',
+        messageA: require('../../icons/img/liaotianA.png'),
+        message: require('../../icons/img/liaotian-01.png'),
+        more: require('../../icons/img/gengduo-01.png'),
+        moreA: require('../../icons/img/gengduoA.png'),
+        userId:localStorage.userId,
+        isOwnerCom:false,
       };
     },
     mounted() {
@@ -652,6 +663,11 @@
           this.nowGroup.id = this.groupData[0].groupId;
           getGroupPeople(this.groupData[0].groupId).then(res => {
             this.groupPeople = res.data;
+            this.groupPeople.map(p => {
+              if(p.isOwner && p.memberId==this.userId){
+                  this.isOwnerCom=true
+              }
+            });
           });
 
         });
@@ -668,7 +684,7 @@
         this.memModal = false;
 
       },
-      bmAdd(){
+      bmAdd() {
         this.showAddPeople1 = true;
       },
       // 添加成员 回调
@@ -805,6 +821,11 @@
               this.direct = true
               getGroupPeople(this.nowGroup.id).then(res => {
                 this.groupPeople = res.data;
+                this.groupPeople.map(p => {
+                  if(p.isOwner && p.memberId==this.userId){
+                      this.isOwnerCom=true
+                  }
+                });
               });
             }
           });
@@ -869,7 +890,6 @@
         this.loading = true;
         searchOrgMembers(event, localStorage.companyId).then(res => {
           if (res.result === 1) {
-            console.log(11)
             this.allOrgPeople = res.data;
           } else {
             this.showPrise = false;
@@ -886,6 +906,11 @@
         this.nowGroup.id = item.groupId;
         getGroupPeople(item.groupId).then(res => {
           this.groupPeople = res.data;
+          this.groupPeople.map(p => {
+              if(p.isOwner && p.memberId==this.userId){
+                  this.isOwnerCom=true
+              }
+            });
         });
       },
       // 点击群组的添加成员 按钮
@@ -967,7 +992,7 @@
                   i.isChecked = false;
                 });
                 this.memberType = '所有成员';
-                this.checkId='';
+                this.checkId = '';
                 this.peopleList = res.data.members;
                 this.allOrgPeople = res.data.members;
                 this.departmentTreeNew = res.data.partment;
@@ -982,7 +1007,7 @@
         });
       },
       //点击部门显示部门成员
-      DepMembers(item,index) {
+      DepMembers(item, index) {
         // this.flag = -1;
         this.nowType = "部门";
         this.partmentId = item.partmentId;
@@ -1002,23 +1027,22 @@
       //部门列表筛选角色
       screenRole(name) {
         this.loading = true;
-        console.log(name)
         if (name == 1 || name == 2 || name == 3) {
-          getOrgPartmentByMemberLebel(localStorage.companyId,this.partmentId, '', name).then(res => {
+          getOrgPartmentByMemberLebel(localStorage.companyId, this.partmentId, '', name).then(res => {
             this.loading = false;
             if (res.result === 1) {
               this.peopleList = res.data;
             }
           });
         } else if (name == 4) {
-          getOrgPartmentByMemberLebel(localStorage.companyId,this.partmentId, 0).then(res => {
+          getOrgPartmentByMemberLebel(localStorage.companyId, this.partmentId, 0).then(res => {
             this.loading = false;
             if (res.result === 1) {
               this.peopleList = res.data;
             }
           });
         } else {
-          getOrgPartmentByMemberLebel(localStorage.companyId,this.partmentId, 1).then(res => {
+          getOrgPartmentByMemberLebel(localStorage.companyId, this.partmentId, 1).then(res => {
             this.loading = false;
             if (res.result === 1) {
               this.peopleList = res.data;
@@ -1031,18 +1055,18 @@
         this.groupStepInfo = true
       },
       selectDep(value) {
-        if(value==undefined){
+        if (value == undefined) {
           this.changeDep = ''
-        }else {
+        } else {
           this.changeDep = value
         }
         this.getMemberLebel()
       },
       //新建群组 筛选角色和部门添加成员
       modalChange(value) {
-        if(value==undefined){
+        if (value == undefined) {
           this.changeSRole = '5'
-        }else {
+        } else {
           this.changeSRole = value
         }
         this.getMemberLebel()
@@ -1051,21 +1075,21 @@
       getMemberLebel() {
         this.loadings = true;
         if (this.changeSRole == 1 || this.changeSRole == 2 || this.changeSRole == 3) {
-          getOrgPartmentByMemberLebel(localStorage.companyId,this.changeDep, '', this.changeSRole).then(res => {
+          getOrgPartmentByMemberLebel(localStorage.companyId, this.changeDep, '', this.changeSRole).then(res => {
             this.loadings = false;
             if (res.result === 1) {
               this.allOrgPeople = res.data;
             }
           });
-        } else if(this.changeSRole == 4){
-          getOrgPartmentByMemberLebel(localStorage.companyId,this.changeDep, 0).then(res => {
+        } else if (this.changeSRole == 4) {
+          getOrgPartmentByMemberLebel(localStorage.companyId, this.changeDep, 0).then(res => {
             this.loadings = false;
             if (res.result === 1) {
               this.allOrgPeople = res.data;
             }
           });
-        }else {
-          getOrgPartmentByMemberLebel(localStorage.companyId,this.changeDep, 1).then(res => {
+        } else {
+          getOrgPartmentByMemberLebel(localStorage.companyId, this.changeDep, 1).then(res => {
             this.loadings = false;
             if (res.result === 1) {
               this.allOrgPeople = res.data;
@@ -1090,13 +1114,39 @@
       },
       peopleCheck() {
       },
-      checkIcon(type){
-        this.checkIconType=type
+      checkIcon(type) {
+        this.checkIconType = type
       },
-      leaveIcon(){
-        this.checkIconType=''
+      leaveIcon() {
+        this.checkIconType = ''
 
-      }
+      },
+      //群组退出或者移除
+      groupExit(item) {
+        groupRemoval(this.nowGroup.id, item.memberId).then(res => {
+          if (res.result == 1) {
+            this.$Message.success("移除成功");
+            //获取群组信息
+            getGroups(localStorage.companyId).then(res => {
+              this.groupData = res.data;
+              this.nowGroup.name = this.groupData[0].groupName;
+              this.nowGroup.id = this.groupData[0].groupId;
+              getGroupPeople(this.groupData[0].groupId).then(res => {
+                this.groupPeople = res.data;
+                this.groupPeople.map(p => {
+                  if(p.isOwner && p.memberId==this.userId){
+                      this.isOwnerCom=true
+                  }
+                });
+              });
+            });
+          }
+        })
+      },
+      closeExit(index) {
+        this.$set(this.groupPeople[index].userEntity, "visible", false)
+      },
+
     },
     created() {
       this.initMember();

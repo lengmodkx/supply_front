@@ -251,3 +251,13 @@ export function linkaddPeople(data) {
         data: data
     });
 }
+
+export function groupRemoval(groupId, memberId) {
+    return fetch({
+        url: `/organization_group_member/${groupId}/member`,
+        method: "delete", // 请求方法
+        params: {
+            memberId: memberId
+        }
+    });
+}

@@ -5,7 +5,7 @@
     </div>
 
     <Tabs active-key="key1">
-      <Tab-pane label="分享链接/申请码邀请" key="key1" v-if="tabOneShow" index="1">
+      <Tab-pane label="分享链接/申请码邀请" key="key1" v-if="tabOneShow" :index="one">
         <div class="share df">
           <Icon type="ios-link" color="#1379FF" size="19" class="link" />
           <div>
@@ -29,7 +29,7 @@
         </div>
         <Button class="shareButton btn" type="primary"  @click="copylink" data-clipboard-target=".tasklink">复制邀请信息</Button>
       </Tab-pane>
-      <Tab-pane label="手机/邮箱邀请" key="key2" index="2">
+      <Tab-pane label="手机/邮箱邀请" key="key2" :index="two">
         <div class="iphone">
           <Input v-model="iphoneModel1" placeholder="请输入手机号和邮箱" />
           <div class="tip">
@@ -84,6 +84,8 @@
         exiPhone3: false,  //手机号已存在提示
         phoneList: [],
         emailList: [],
+        one:1,
+        two:2
       };
     },
     mounted() {
