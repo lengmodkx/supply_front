@@ -84,14 +84,39 @@
               </div>
             </div>
           </header>
-          <div class="scroll-box" v-if="showPrise">
-            <Loading v-if="loading"></Loading>
-            <!--点击成员显示-->
+          <div v-if="showPrise" class="scroll-box-title">
             <Row class="titleRow" v-if="nowType === '成员'">
               <Col span="10" class-name="member-name">姓名</Col>
               <Col span="9">部门</Col>
               <Col span="5">角色</Col>
             </Row>
+          </div>
+          <div v-if="nowType === '部门'"  class="scroll-box-title">
+               <Row class="titleRow">
+                <Col span="5" class-name="member-name">姓名</Col>
+                <Col span="5">手机号</Col>
+                <Col span="5">部门</Col>
+                <Col span="5">职位</Col>
+                <Col span="4">
+                <Dropdown @on-click="screenRole">
+                  <a href="javascript:void(0)">
+                    角色
+                    <Icon type="md-arrow-dropdown" />
+                  </a>
+                  <DropdownMenu slot="list">
+                    <DropdownItem name='1'>成员</DropdownItem>
+                    <DropdownItem name='3'>管理员</DropdownItem>
+                    <DropdownItem name='2'>拥有者</DropdownItem>
+                    <DropdownItem name='4'>外部成员</DropdownItem>
+                    <DropdownItem name='5'>全部成员</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+                </Col>
+              </Row>
+          </div>
+          <div class="scroll-box" v-if="showPrise">
+            <Loading v-if="loading"></Loading>
+            <!--点击成员显示-->
             <div v-if="nowType === '成员' && peopleList.length">
               <Row class="one-member" v-for="(item, index) in peopleList" :key="index">
                 <Col span="10">
@@ -190,31 +215,8 @@
                 </Col>
               </Row>
             </div>
-
-
             <!--点击部门显示-->
             <div v-else-if="nowType === '部门' && peopleList.length" class="branch-show">
-              <Row class="titleRow">
-                <Col span="5" class-name="member-name">姓名</Col>
-                <Col span="5">手机号</Col>
-                <Col span="5">部门</Col>
-                <Col span="5">职位</Col>
-                <Col span="4">
-                <Dropdown @on-click="screenRole">
-                  <a href="javascript:void(0)">
-                    角色
-                    <Icon type="md-arrow-dropdown" />
-                  </a>
-                  <DropdownMenu slot="list">
-                    <DropdownItem name='1'>成员</DropdownItem>
-                    <DropdownItem name='3'>管理员</DropdownItem>
-                    <DropdownItem name='2'>拥有者</DropdownItem>
-                    <DropdownItem name='4'>外部成员</DropdownItem>
-                    <DropdownItem name='5'>全部成员</DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-                </Col>
-              </Row>
               <Row class="branch-list" v-for="(i, n) in peopleList" :key="n">
                 <Col span="5" class-name="member-name">
                 <div class="df">
@@ -303,12 +305,14 @@
               </div>
             </div>
           </header>
-          <div class="scroll-box">
-            <Loading v-if="loading"></Loading>
+          <div  class="scroll-box-title">
             <Row class="titleRow" type="flex" justify="space-between">
               <Col span="10" class-name="member-name">姓名</Col>
               <Col span="5">操作</Col>
             </Row>
+          </div>
+          <div class="scroll-box">
+            <Loading v-if="loading"></Loading>
             <Row type="flex" justify="space-between" class="group-people" v-for="(item, index) in groupPeople"
               :key="index">
               <Col span="10" class-name="member-name">
@@ -349,7 +353,7 @@
         <span v-if="tabOneShow">邀请您的团队成员加入企业</span>
         <span v-else>邀请加入企业外部人员</span>
       </p>
-      <addPeopleCompany :tabOneShow="tabOneShow" @successInv='successInv'></addPeopleCompany>
+      <addPeopleCompany :tabOneShow="tabOneShow" @successInv='successInv' v-if='showAddPeople'></addPeopleCompany>
     </Modal>
     <!--添加人员至部门-->
     <Modal v-model="showAddPeople1" width="360" footer-hide>
@@ -809,6 +813,7 @@
               this.isCreateBranch = false;
               this.groupStep1 = false;
               this.groupStep2 = false;
+              this.social=[]
               this.groupData.push(res.data);
             }
           });
@@ -819,6 +824,8 @@
               this.groupStep1 = false;
               this.groupStep2 = false;
               this.direct = true
+              this.social=[]
+              this.$Message.success("添加成功");
               getGroupPeople(this.nowGroup.id).then(res => {
                 this.groupPeople = res.data;
                 this.groupPeople.map(p => {
@@ -827,6 +834,8 @@
                   }
                 });
               });
+            }else {
+              this.$Message.error(res.msg);
             }
           });
         }
@@ -835,7 +844,7 @@
       // 创建群组的下一步
       addGroupNext() {
         this.groupStep2 = true;
-        this.loading = true;
+        this.loadings = true;
         initOrgMember(localStorage.companyId).then(res => {
           if (res.result) {
             if (res.data === "无数据") {
@@ -845,7 +854,7 @@
                 i.isChecked = false;
               });
               this.allOrgPeople = res.data;
-              this.loading = false;
+              this.loadings = false;
             }
           }
         });
@@ -887,7 +896,7 @@
       },
       // 搜索企业内成员   创建群组时使用
       searchOrgPeople(event) {
-        this.loading = true;
+        this.loadings = true;
         searchOrgMembers(event, localStorage.companyId).then(res => {
           if (res.result === 1) {
             this.allOrgPeople = res.data;
@@ -896,7 +905,7 @@
             this.allOrgPeople.length = 0;
             this.$Message.error('未搜索到成员');
           }
-          this.loading = false;
+          this.loadings = false;
         })
 
       },

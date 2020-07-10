@@ -238,7 +238,7 @@
 }
 .scroll-box{
   width: 100%;
-  height: calc(100% - 55px) ;
+  height: calc(100% - 100px) ;
   overflow-y: auto;
   &::-webkit-scrollbar {
     width: 6px;
@@ -248,6 +248,22 @@
   &::-webkit-scrollbar-thumb {
     background-color: #cecece;
   }
+  .titleRow {
+    line-height: 45px;
+    padding: 0 20px;
+    background-color: #f0f0f0;
+    .member-name {
+      // padding-left: 47px;
+    }
+    .branch {
+      margin-top: 0;
+    }
+    a {
+      color:#333333;
+    }
+  }
+}
+.scroll-box-title {
   .titleRow {
     line-height: 45px;
     padding: 0 20px;

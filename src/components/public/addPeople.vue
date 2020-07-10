@@ -46,7 +46,7 @@ export default {
     };
   },
   mounted() {
-    console.log(">>>>>>>>>>>", this.invitUsers);
+    // console.log(">>>>>>>>>>>", this.invitUsers);
   },
   methods: {
     adduser(id,obj) {
@@ -75,6 +75,8 @@ export default {
           if (res.result == 1) {
             this.$Message.success("添加成功");
             this.$emit("addPeople1", res.data);
+          }else {
+            this.$Message.info(res.msg);
           }
         });
       }
@@ -85,7 +87,6 @@ export default {
 
       searchMembers(value, localStorage.companyId).then(res => {
         if (res.result == 1) {
-          console.log(res.data)
           this.searchPeople = res.data;
         } else {
           this.$Message.error("搜索失败");
