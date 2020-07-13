@@ -46,7 +46,7 @@ const router = new Router({
       }
     },
     {
-      path: "/loginCompany/:orgid", // 企业登陆
+      path: "/loginCompany", // 企业登陆
       component: loginCompany,
       meta: {
         keepAlive: false

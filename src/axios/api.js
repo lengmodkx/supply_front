@@ -1522,3 +1522,15 @@ export function roleJudgment(projectId) {
         }
     })
 }
+
+//生成链接邀请成员
+export function linkInvitation(orgId,projectId) {
+    return fetch({
+        url: `/organization/members/getOrganizationMemberByUrl`,
+        method: 'get', // 请求方法
+        params: {
+            orgId:orgId,
+            projectId:projectId
+        }
+    })
+}

@@ -386,15 +386,15 @@ export default {
       this.showLogin = true;
     }
     this.fromType = this.$route.query.from;
-    this.memberId = this.$route.query.memerId;
-    localStorage.companyId=this.$route.params.orgid
+    this.memberId = this.$route.query.memberId;
+    localStorage.companyId=this.$route.query.companyId;
     if (this.fromType == "project") {
       this.showText = "项目";
       this.projectId = this.$route.query.id;
       this.formValidate.projectId = this.$route.query.id;
     } else {
       this.showText = "企业";
-      this.formValidate.orgId = this.$route.params.orgid;
+      this.formValidate.orgId = this.$route.query.companyId;
     }
     this.getInviteesInfo();
   }

@@ -216,7 +216,8 @@
         <span>邀请新成员</span>
       </p>
       <div>
-        <!-- <div>链接有日期：2020年6月27日</div> -->
+        <Loading v-if="linkLoading"></Loading>
+        <div>链接有日期：{{linkExpireTime}}</div>
         <div class="linkContent">
           <div class="link-name tasklink">{{linkText}}</div>
           <div class="copyBtn" @click="copyLinks" data-clipboard-target=".tasklink">复制链接</div>
@@ -254,7 +255,8 @@ import {
   delProject,
   searchProjects,
   getProjectTree,
-  roleJudgment
+  roleJudgment,
+  linkInvitation
 } from "@/axios/api";
 export default {
   // name: "index",
@@ -368,7 +370,9 @@ export default {
       showLink: false, //链接邀请弹窗
       linkText: "",
       tabValue: "0", //项目列表tab栏选中项
-      menuActive: "1,0" //菜单栏选中项
+      menuActive: "1,0", //菜单栏选中项
+      linkLoading:false,
+      linkExpireTime:'',//链接有效期
     };
   },
   computed: {
@@ -400,7 +404,7 @@ export default {
       this.projectList = this.projectList[1];
     },
     path(item) {
-      console.log(item);
+      // console.log(item);
       this.setName(item.projectName);
       localStorage.projectName = item.projectName;
       this.$router.push(
@@ -434,9 +438,9 @@ export default {
     setProject(item) {
       // roleJudgment(item.projectId).then(res => {
       //   if (res.data == 0) {
-          this.openSet(item.projectId).then(res => {
-            this.projectSet = true;
-          });
+      this.openSet(item.projectId).then(res => {
+        this.projectSet = true;
+      });
       //   } else {
       //     this.$Message.error('只有项目拥有者或管理员才可修改项目设置');
       //   }
@@ -453,7 +457,7 @@ export default {
     },
     // 搜索项目
     searchProject(name) {
-      console.log(name);
+      // console.log(name);
       let arr = {
         全部项目: "all",
         我创建的: "created",
@@ -554,15 +558,16 @@ export default {
     inviteMem(id) {
       this.showInviteMembers = true;
       this.projectId = id;
-      this.linkText =
-        window.location.host +
-        "/loginCompany/" +
-        localStorage.companyId +
-        "?id=" +
-        id +
-        "&memerId=" +
-        localStorage.userId +
-        "&from=project";
+      this.linkLoading=true
+      linkInvitation(localStorage.companyId,id).then(res=>{
+            this.linkLoading=false
+            if (res.result === 1) {
+              this.linkExpireTime=res.data.expireTime
+              this.linkText =res.data.shortUrl
+            } else {
+              this.$Message.error(res.msg);
+            }
+      })
     },
     copyLinks() {
       var clipboard = new Clipboard(".copyBtn");
@@ -578,7 +583,7 @@ export default {
       });
     },
     openTag(tagName) {
-      console.log(tagName);
+      // console.log(tagName);
       if (tagName.split(",")[0] == 1) {
         this.tabValue = tagName.split(",")[1];
         this.tabChange(tagName.split(",")[1]);
