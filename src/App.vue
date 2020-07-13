@@ -54,7 +54,7 @@ export default {
         this.$route.path.indexOf("/organization-admin") < 0&&
         this.$route.path.indexOf("/material") < 0&&
         this.$route.path.indexOf("/detail") < 0 &&
-        this.$route.path!== "/loginCompany" < 0 ;
+        this.$route.path!== "/loginCompany";
       // this.hasHeader = this.$route.path !== '/management'
       this.companyId = localStorage.companyId;
       this.avatar = localStorage.userImg;

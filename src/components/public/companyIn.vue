@@ -23,14 +23,28 @@
         </div>
         <!-- 使用其他账号登录 -->
         <div v-else class="inputContent">
+          <Icon type="md-arrow-round-back" size="30" color="#2d8cf0" class="backIcon" @click='showLogin=false'/>
           <Input v-model="iphone" placeholder="你的手机号或工作邮箱" size="large" />
           <div class="df tipsContent" v-if="illegalPhone">
             <Icon type="md-alert" color="#F74555" size="15" />
             <div class="tips">请输入正确的手机号码</div>
           </div>
-          <Input v-model="passLogin" placeholder="密码" size="large" type='password' password v-if='haveUser' style='margin-top:20px;'/>
+          <Input
+            v-model="passLogin"
+            placeholder="密码"
+            size="large"
+            type="password"
+            password
+            v-if="haveUser"
+            style="margin-top:20px;"
+          />
         </div>
-        <Button type="primary" style="height:48px;margin-top:25px;" @click="join" v-if='!haveUser'>加入{{showText}}</Button>
+        <Button
+          type="primary"
+          style="height:48px;margin-top:25px;"
+          @click="join"
+          v-if="!haveUser"
+        >加入{{showText}}</Button>
         <Button type="primary" style="height:48px;margin-top:25px;" @click="login" v-else>登录</Button>
       </div>
       <div class="company company-bottom" v-else>
@@ -209,18 +223,15 @@ export default {
           }
         ]
       },
-      passLogin:"", //直接登录时的密码
-      haveUser:false,
+      passLogin: "", //直接登录时的密码
+      haveUser: false
     };
   },
   methods: {
-    ...mapActions("user", ["updateUserInfo", "updateUserId","initSrc"]),
+    ...mapActions("user", ["updateUserInfo", "updateUserId", "initSrc"]),
     //加入项目
     joinProject() {
-      proInviteMen(
-        this.projectId,
-        localStorage.userId
-      ).then(res => {
+      proInviteMen(this.projectId, localStorage.userId).then(res => {
         if (res.result == 1) {
           this.$router.push(
             `/project/${this.projectId}/tasks/group/${this.inviteesInfo.groupId}`
@@ -264,7 +275,7 @@ export default {
               this.changeImg();
             } else {
               //注册完了，填密码
-              this.haveUser=true
+              this.haveUser = true;
             }
           });
         } else {
@@ -353,31 +364,31 @@ export default {
         this.showLogin = true;
       }
     },
-    login(){
-      let data={
+    login() {
+      let data = {
         accountName: this.iphone,
-        password:this.passLogin
-      }
+        password: this.passLogin
+      };
       userlogin(data).then(res => {
-            if (res.result == 0) {
-              this.$Message.error(res.msg);
-            } else {
-              this.updateUserId(res.data); //存储、更新用户信息
-              this.initSrc(res.data.image);
-              localStorage.userId = res.data.userId;
-              localStorage.userImg = res.data.image;
-              localStorage.userName = res.data.userName;
-              localStorage.token = res.data.accessToken;
-              // localStorage.companyId = res.data.orgId;
-              console.log(res.data.orgId);
-              this.$Message.success("登录成功!");
-              if (this.fromType == "project") {
-                this.joinProject();
-              } else {
-                this.joinEnterprise();
-              }
-            }
-          });
+        if (res.result == 0) {
+          this.$Message.error(res.msg);
+        } else {
+          this.updateUserId(res.data); //存储、更新用户信息
+          this.initSrc(res.data.image);
+          localStorage.userId = res.data.userId;
+          localStorage.userImg = res.data.image;
+          localStorage.userName = res.data.userName;
+          localStorage.token = res.data.accessToken;
+          // localStorage.companyId = res.data.orgId;
+          console.log(res.data.orgId);
+          this.$Message.success("登录成功!");
+          if (this.fromType == "project") {
+            this.joinProject();
+          } else {
+            this.joinEnterprise();
+          }
+        }
+      });
     }
   },
   mounted() {
@@ -387,7 +398,7 @@ export default {
     }
     this.fromType = this.$route.query.from;
     this.memberId = this.$route.query.memberId;
-    localStorage.companyId=this.$route.query.companyId;
+    localStorage.companyId = this.$route.query.companyId;
     if (this.fromType == "project") {
       this.showText = "项目";
       this.projectId = this.$route.query.id;
@@ -440,6 +451,13 @@ export default {
     display: flex;
     flex-flow: column nowrap;
     padding-bottom: 40px;
+    // position: relative;
+    .backIcon {
+      position: absolute;
+      left: 30px;
+      top: 30px;
+      cursor: pointer;
+    }
     .logo {
       width: 70%;
       margin: 0px auto 20px;

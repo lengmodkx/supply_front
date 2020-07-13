@@ -6,11 +6,14 @@
         <div class="header-contant">
           <div class="left-contant">
             <div>
-              <Avatar :src="userInfo.image" class="avatar" />
+              <img :src="userInfo.image" class="avatar" v-if='userInfo.image'/>
             </div>
             <div>
               <div class="title">下午好，{{userInfo.userName}}，祝你开心每一天！</div>
-              <div class="team">{{userInfo.job}}|{{userInfo.partmemt}}</div>
+              <div class="team">
+                {{userInfo.job}}|
+                <span v-for="i in userInfo.partmemt" :key="i.partmentId">{{i.partmentName}}</span>
+              </div>
             </div>
           </div>
           <div class="right-contant">
@@ -135,12 +138,14 @@
             <p slot="title">团队 · {{teamList.length}}</p>
 
             <ul class="team-contant">
-              <li v-for="(item,index) in teamList" :key="index">
-                <Avatar :src="item.image" class="avatar" />
-                <span>{{item.userName}}</span>
-              </li>
               <div class="noList" v-if="teamList.length == 0 ">
                 <img src="../assets/images/noproject-new.png" />
+              </div>
+              <div>
+                <li v-for="(item,index) in teamList" :key="index">
+                  <img :src="item.image" class="avatar" v-if='item.image'/>
+                  <span>{{item.userName}}</span>
+                </li>
               </div>
             </ul>
           </Card>
@@ -200,7 +205,12 @@ export default {
       pageNum: "1", //页数
       tasktotal: 0, //总任务数
       tabName: "1",
-      userInfo: [], //个人信息
+      userInfo: {
+        image: "",
+        userName: "",
+        job: "",
+        partmemt: []
+      }, //个人信息
       teamList: [], //团队信息
       dynamicList: [], //动态
       tabList: [
@@ -223,7 +233,7 @@ export default {
     });
     this.changeType("1");
     this.getUser(); //获取信息
-    this.getTeam();
+    // this.getTeam();
     this.getDynamic();
   },
   methods: {
@@ -293,15 +303,18 @@ export default {
     },
     getUser() {
       getUserInfo(localStorage.companyId).then(res => {
+        console.log(res);
         if (res.result === 1) {
           this.userInfo = res.data;
+          this.getTeam();
         }
       });
     },
     getTeam() {
       getTeamInfo(localStorage.companyId).then(res => {
-        if (res.result === 1) {
+        if (res.result == 1) {
           this.teamList = res.data;
+          console.log(res.data);
         }
       });
     },

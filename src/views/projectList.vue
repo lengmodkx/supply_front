@@ -822,6 +822,7 @@ export default {
 
     i {
       margin-right: 16px;
+      cursor: pointer;
     }
 
     .create {

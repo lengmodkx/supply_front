@@ -7,71 +7,134 @@
   background: #fff;
   display: flex;
   justify-content: space-between;
-  .left-header{
+
+  .left-header {
     display: flex;
-    .logo-big{
+
+    .logo-big {
       width: 240px;
     }
-    .logo-small{
+
+    .logo-small {
       width: 80px;
     }
-    .logo{
+
+    .logo {
       background: #002140;
       border-bottom: 1px solid #002140;
       color: #fff;
       font-size: 20px;
-      box-shadow: 2px 0 6px rgba(0,21,41,.35);
+      box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
       text-align: center;
       display: flex;
       justify-content: center;
       transition: all 0.3s;
 
-      img{
+      img {
         width: 1.5em;
         height: 1.7em;
-        margin:15px 10px 0 0;
-        
+        margin: 15px 10px 0 0;
+
       }
-      .small{
+
+      .small {
         display: none;
       }
-      .big{
+
+      .big {
         display: block;
         line-height: 65px;
       }
     }
-    ul{
+
+    ul {
       display: flex;
-      li{
-         cursor: pointer;
-          padding: 0 1.2em;
-          line-height: 65px;
-          i{
-            font-size: 14px;
-            padding-right: 3px;
-          }
+
+      li {
+        cursor: pointer;
+        padding: 0 1.2em;
+        line-height: 65px;
+
+        i {
+          font-size: 14px;
+          padding-right: 3px;
+        }
       }
-      li:hover{
+
+      li:hover {
         color: #2d8cf0;
         border-bottom: 2px solid #2d8cf0;
       }
-       .hover{
+
+      .hover {
         color: #2d8cf0;
         border-bottom: 2px solid #2d8cf0;
       }
     }
-    
+
 
   }
-  .right-header{
+
+  .right-header {
     padding-right: 1.5em;
     color: #2d2d2d;
     line-height: 65px;
-    .avatar{
+
+    .avatar {
       width: 32px;
       height: 32px;
-      margin-right:10px;
+      margin-right: 10px;
+    }
+
+    .userPop {
+      /deep/.ivu-poptip-body {
+        padding: 8px 0 !important;
+      }
+    }
+
+    .hoverClass {
+      color: #2d8cf0;
+    }
+
+    .userInfo {
+      .createdOrg {
+        cursor: pointer;
+        padding: 8px 10px;
+        font-size: 14px;
+
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+
+      li {
+        cursor: pointer;
+        padding: 8px 10px;
+        font-size: 14px;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+
+      .org,
+      .admin {
+        border-bottom: 1px solid #efefef;
+      }
+
+      .org {
+        .addOrgPro {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          i {
+            font-size: 18px;
+            color: #a6a6a6;
+          }
+        }
+      }
     }
   }
 }
-
