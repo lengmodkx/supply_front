@@ -1,73 +1,47 @@
 <template>
   <header class="header" id="header">
     <div class="left-header">
-      <div class="logo" :class="header?'logo-big':'logo-small'">
+      <div class="logo" :class="header ? 'logo-big' : 'logo-small'">
         <img src="../../assets/images/download.png" alt />
 
-        <span :class="header?'big':'small'">Ald Bim</span>
+        <span :class="header ? 'big' : 'small'">Ald Bim</span>
       </div>
       <ul>
-        <li :class="{hover:active==0}" @click="goOrg">
-          <Icon type="ios-keypad-outline" />工作台
-        </li>
-        <li :class="{hover:active==1}" @click="projectList">
-          <Icon type="ios-photos-outline" />项目管理
-        </li>
-        <li @click="goMembers" :class="{hover:active==2}">
-          <Icon type="ios-contacts-outline" />团队成员
-        </li>
-        <li :class="{hover:active==3}">
-          <Icon type="ios-cog" size="18" />系统设置
-        </li>
+        <li :class="{ hover: active == 0 }" @click="goOrg"><Icon type="ios-keypad-outline" />工作台</li>
+        <li :class="{ hover: active == 1 }" @click="projectList"><Icon type="ios-photos-outline" />项目管理</li>
+        <li @click="goMembers" :class="{ hover: active == 2 }"><Icon type="ios-contacts-outline" />团队成员</li>
+        <li :class="{ hover: active == 3 }"><Icon type="ios-cog" size="18" />系统设置</li>
       </ul>
     </div>
-    <div class="right-header">
-      <Poptip
-        placement="bottom-end"
-        width="220"
-        class="userPop"
-        v-model="popVisible"
-        @on-popper-show="initCompany"
-      >
-        <div>
-          <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" class="avatar" />
-          <span>vilson.li</span>
-        </div>
-        <div class="userInfo" slot="content">
-          <!-- <ul class="org">
-            <li
-              class="addOrgPro"
-              :class="hoverClass == 'create' ? 'hoverClass' : ''"
-              @click="
-                addOrgModal = true;
-                popVisible = false;
-                hoverClass = 'create';
-              "
-            >创建企业</li>
-            <li
-              class="addOrgPro"
-              v-for="(item, index) in companyList"
-              :key="index"
-              @click="changeOrg(item)"
-            >
-              {{ item.organizationName }}
-              <Icon v-if="item.isSelection" type="md-checkmark" />
-            </li>
-          </ul> -->
-          <!-- <ul class="admin">
-            <li
-              :class="hoverClass == 'person' ? 'hoverClass' : ''"
-              @click="
-                personal();
-                popVisible = false;
-              "
-            >账号设置</li>
-          </ul> -->
-          <ul class="logOut">
-            <li @click="goout">退出登录</li>
-          </ul>
-        </div>
-      </Poptip>
+    <div>
+      <div class="right-header">
+        <Avatar :src="headeImg" class="avatar" @click.native="showMenu" v-click-outside="showMenu" />
+      </div>
+      <div class="userInfo" :style="{ display: popVisible }">
+        <ul>
+          <li class="tab-menu-item">
+            <div class="tab-menu-item-content1">
+              升级
+            </div>
+          </li>
+          <li class="tb-navigation-menu-divider"></li>
+          <li class="tab-menu-item">
+            <div class="tab-menu-item-content2">
+              <div>切换企业</div>
+              <div style="font-size:12px;color:#8c8c8c">我的企业</div>
+            </div>
+          </li>
+          <li class="tb-navigation-menu-divider"></li>
+          <li class="tab-menu-item"><div class="tab-menu-item-content3">账号设置</div></li>
+          <li class="tab-menu-item"><div class="tab-menu-item-content3">下载ALDCAD</div></li>
+          <li class="tb-navigation-menu-divider"></li>
+          <li class="tab-menu-item">
+            <div class="tab-menu-item-content1" @click="goout">
+              退出登陆
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </header>
 </template>
@@ -80,15 +54,14 @@ export default {
   name: "header-main",
   components: {},
   computed: {
-    ...mapState("app", ["header"])
+    ...mapState("app", ["header"]),
   },
   data() {
     return {
       companyId: "",
       active: 0,
-      hoverClass: "",
-      popVisible: false,
-
+      popVisible: "none",
+      headeImg: localStorage.userImg,
     };
   },
 
@@ -116,7 +89,7 @@ export default {
     },
     // 去成员页面
     goMembers() {
-      checkPermission(localStorage.companyId).then(res => {
+      checkPermission(localStorage.companyId).then((res) => {
         if (res.result == 1 && res.data == true) {
           this.active = 2;
           this.$router.push("/members");
@@ -130,12 +103,17 @@ export default {
       this.hoverClass = "person";
     },
     goout() {
-      localStorage.token = "";
-      localStorage.companyId = "";
+      localStorage.clear();
       this.$router.push("/");
-    }
-  }
+    },
+    showMenu() {
+      if (this.popVisible == "none") {
+        this.popVisible = "block";
+      } else {
+        this.popVisible = "none";
+      }
+    },
+  },
 };
 </script>
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>
