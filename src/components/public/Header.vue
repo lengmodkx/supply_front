@@ -15,7 +15,7 @@
     </div>
     <div>
       <div class="right-header">
-        <Avatar :src="headeImg" class="avatar" @click.native="showMenu" v-click-outside="showMenu" />
+        <Avatar :src="headeImg" class="avatar" @click.native="showMenu" v-click-outside="popVisible=='none'" />
       </div>
       <div class="userInfo" :style="{ display: popVisible }">
         <ul>
