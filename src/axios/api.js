@@ -1534,3 +1534,11 @@ export function linkInvitation(orgId,projectId) {
         }
     })
 }
+
+// 设置企业默认角色
+export function enterDefaultRole(orgId, roleId) {
+    return fetch({
+        url: `roles/${orgId}/${roleId}/org_default_role`,
+        method: "put", // 请求方法
+    });
+}

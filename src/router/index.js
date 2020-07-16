@@ -18,6 +18,7 @@ import delOrg from '../views/delOrg.vue'
 import Detail from '../views/detail.vue'
 import loginCompany from '../components/public/companyIn' //企业登陆
 import prolist from '../views/projectList.vue' //项目管理
+import systemSettings from '../views/systemSettings.vue' //系统设置
 
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
@@ -382,7 +383,16 @@ const router = new Router({
       },
       component: prolist
     },
-
+    {
+      path: "/systemSettings",
+      name: "systemSettings",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: systemSettings
+    },
   ]
 });
 router.afterEach((to, from) => {

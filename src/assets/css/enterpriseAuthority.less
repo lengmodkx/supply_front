@@ -1,0 +1,123 @@
+.container {
+    width: 100%;
+    color: #333333;
+    font-size: 14px;
+    height: 100%;
+    background: #ffffff;
+    overflow-y: auto;
+    .content {
+        padding-bottom: 20px;
+
+        .title {
+            border-bottom: 1px solid #D5D5D5;
+            padding: 24px 32px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            .routerNav {
+                color: #333333;
+                .backBtn {
+                    color: #999999;
+                    margin-right: 14px;
+                    cursor: pointer;
+                }
+            }
+            .line {
+                width: 56px;
+                height: 2px;
+                background: #2B85E4;
+                position: absolute;
+                bottom: 0;
+            }
+
+            .icon-content {
+                display: flex;
+                align-items: center;
+
+                .r-jump {
+                    color: #2B85E4;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    i {
+                        margin-right: 10px;
+                    }
+                }
+                .r-jump-two {
+                    color: #BFBFBF;
+                }
+
+            }
+        }
+
+        .jur-content {
+            padding: 0 32px;
+
+            .jur-item {
+                padding: 18px 5px;
+                border-bottom: 1px solid #D5D5D5;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                .default {
+                    color: #2B85E4;
+                    background: #F2FBFF;
+                    font-size: 12px;
+                    width: 90px;
+                    line-height: 22px;
+                    text-align: center;
+                    border-radius: 11px;
+                    margin-right: 16px;
+                }
+                .default-seeting {
+                    display: none;
+                    margin-right: 5px;
+                    color: #8c8c8c;
+                    &:hover {
+                        color: #2B85E4;
+                    }
+                }
+                &:hover {
+                    .default-seeting {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+        .jur-checkContent {
+            padding: 0 32px;
+        }
+    }
+    
+}
+.add-role {
+    padding: 20px 20px;
+    height: 230px;
+    .add-role-input {
+        margin-bottom: 20px;
+    }
+}
+.model-op {
+    .op-btn {
+        float: right;
+        margin-right: 10px;
+        margin-top: 6px;
+    }
+}
+
+.df {
+    display: flex;
+}
+
+.ac {
+    align-items: center;
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}

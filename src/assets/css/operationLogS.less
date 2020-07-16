@@ -1,0 +1,142 @@
+.container {
+    width: 100%;
+    color: #333333;
+    font-size: 14px;
+    background: #ffffff;
+    height: 100%;
+
+    .content {
+        padding-bottom: 20px;
+
+        .title {
+            border-bottom: 1px solid #D5D5D5;
+            padding: 24px 32px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+
+            .line {
+                width: 56px;
+                height: 2px;
+                background: #2B85E4;
+                position: absolute;
+                bottom: 0;
+            }
+
+            .icon-content {
+                display: flex;
+                align-items: center;
+
+                i {
+                    margin-right: 10px;
+
+                }
+
+                .r-jump {
+                    color: #2B85E4;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .search {
+            padding: 24px 32px;
+
+            .secrch-title {
+                margin-bottom: 8px;
+            }
+
+            .ivu-date-picker {
+                width: 100%;
+            }
+        }
+
+        .table-content {
+            padding: 0 32px;
+
+            .titleRow {
+                line-height: 50px;
+                padding: 0 20px;
+                background-color: #f0f0f0;
+            }
+
+            .scroll-box {
+                width: 100%;
+                height: calc(100% - 100px);
+                overflow-y: auto;
+
+                &::-webkit-scrollbar {
+                    width: 6px;
+                    height: 8px;
+                    background-color: #e5e5e5;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: #cecece;
+                }
+
+                .group-people {
+                    width: 100%;
+                    min-height: 70px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 20px;
+                    justify-content: space-between;
+                    border-bottom: 1px solid #D5D5D5;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: #F2FBFF;
+                    }
+
+                    .group-people-con {
+
+                        .con-top {
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 6px;
+                        }
+
+                        img {
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            margin-right: 20px;
+                            background: blue;
+                        }
+
+                        .userName {
+                            font-size: 16px;
+                        }
+
+                        .userPhone {
+                            font-size: 12px;
+                            color: #979797;
+                        }
+
+                        .log-content {
+                            word-wrap: break-word;
+                            word-break: normal;
+                        }
+                    }
+
+                    .operation {}
+
+                }
+            }
+        }
+
+    }
+}
+
+.df {
+    display: flex;
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}

@@ -404,7 +404,7 @@ export default {
     
 
     .layout-left{
-       height: calc(100vh - 65px);
+       height: calc(100vh - 48px);
        background: #515a6e;
        position: relative;
        .menu{

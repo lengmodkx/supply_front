@@ -1,0 +1,369 @@
+.container {
+    width: 100%;
+    color: #333333;
+    font-size: 14px;
+
+    .content {
+        background: #ffffff;
+        padding-bottom: 20px;
+
+        .title {
+            border-bottom: 1px solid #D5D5D5;
+            padding: 24px 32px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+
+            .line {
+                width: 28px;
+                height: 2px;
+                background: #2B85E4;
+                position: absolute;
+                bottom: 0;
+            }
+
+            .icon-content {
+                display: flex;
+                align-items: center;
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                    vertical-align: bottom;
+                    cursor: pointer;
+                    margin-left: 30px;
+
+                }
+
+                .r-jump {
+                    color: #2B85E4;
+                    margin-left: 6px;
+                    cursor: pointer;
+                }
+
+                .popContent {
+                    width: 158px;
+
+                    p {
+                        width: 100%;
+                        height: 30px;
+                        line-height: 30px;
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: #f5f5f5;
+                        }
+                    }
+
+                    p:last-child {
+                        border-top: 1px solid #d5d5d5;
+                    }
+                }
+
+            }
+        }
+
+        .search {
+            padding: 24px 32px;
+
+            /deep/.ivu-input {
+                width: 500px;
+            }
+        }
+
+        .table-title {
+            padding-left: 32px;
+            margin-bottom: 13px;
+        }
+
+        .table-content {
+            padding: 0 32px;
+
+            .titleRow {
+                line-height: 50px;
+                padding: 0 20px;
+                background-color: #f0f0f0;
+            }
+
+            .scroll-box {
+                width: 100%;
+                height: calc(100% - 100px);
+                overflow-y: auto;
+
+                &::-webkit-scrollbar {
+                    width: 6px;
+                    height: 8px;
+                    background-color: #e5e5e5;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: #cecece;
+                }
+
+                .group-people {
+                    width: 100%;
+                    height: 70px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 20px;
+                    justify-content: space-between;
+                    border-bottom: 1px solid #D5D5D5;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: #F2FBFF;
+                    }
+
+                    .group-people-con {
+
+                        .ivu-checkbox-group-item {
+                            display: flex;
+                            align-items: center;
+                        }
+
+                        img {
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            margin-right: 16px;
+                            background: blue;
+                            margin-left: 25px;
+                        }
+
+                        .userName {
+                            font-size: 16px;
+                        }
+
+                        .userPhone {
+                            font-size: 12px;
+                            color: #666666;
+                        }
+                    }
+
+                    .operation {}
+
+                }
+            }
+        }
+
+        .orgContent {
+            padding: 20px 32px;
+
+            .org-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                img {
+                    height: 20px;
+                    width: 20px;
+                    margin-right: 6px;
+                    vertical-align: bottom;
+                }
+
+                .addDep:hover {
+                    background: #effbff;
+                    transition: all 0.3s;
+
+                    i {
+                        color: #2CB7F5 !important;
+
+                    }
+                }
+
+            }
+
+            .org-container {
+                padding-left: 20px;
+                margin-top: 18px;
+
+                .content-item {
+                    width: 100%;
+                    height: 44px;
+                    border-bottom: 1px solid #e5e5e5;
+                    padding-left: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    &:hover {
+                        background: #f7f7f7;
+                        .right-item {
+                            display: flex;
+                        }
+                    }
+                    .left-item {
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            margin-right: 10px;
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    .right-item {
+                        display: none;
+                        flex: none;
+                        .ivu-tooltip {
+                            margin-right: 20px;
+                        }
+
+                        i:hover {
+                            color: #2B85E4 !important;
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dep-pop {
+    margin-bottom: 10px;
+
+    .dep-pop-tit {
+        margin-top: 10px;
+
+    }
+
+    .people-ul {
+        width: 100%;
+        margin-top: 10px;
+        height: 200px;
+
+        .ivu-radio-group {
+            width: 100%;
+
+        }
+
+        li {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            // padding-left:8px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #f5f5f5;
+            }
+
+            div {
+                display: flex;
+                align-items: center;
+
+                .people-check {
+                    align-items: center;
+                }
+
+                img {
+                    width: 24px;
+                    height: 24px;
+                    margin-right: 12px;
+                    margin-left: 12px;
+                }
+            }
+
+            i {
+                font-size: 16px;
+                color: #3da8f5;
+            }
+        }
+    }
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+
+    img {
+        width: 30px;
+        height: 30px;
+        margin-right: 12px;
+        margin-left: 12px;
+    }
+
+    p {
+        color: #333333;
+    }
+}
+
+.userInfo-con {
+    .userInfo-item {
+        margin-bottom: 15px;
+
+        .inpTit {
+            margin-bottom: 8px;
+        }
+
+        .ivu-date-picker {
+            width: 100%;
+        }
+    }
+
+    .dividing {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #D8D8D8;
+        padding-bottom: 12px;
+        margin: 30px 0 15px;
+        color: #666666;
+
+        img {
+            width: 20px;
+            height: 20px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+    }
+}
+
+.org-role {
+    li {
+        height: 40px;
+        line-height: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &:hover {
+            background-color: #e5e5e5;
+        }
+    }
+}
+
+.member-title {
+    position: relative;
+    text-align: center;
+
+    .role-md-close {
+        position: absolute;
+        right: 0px;
+    }
+
+    .role-arrow-back {
+        position: absolute;
+        left: 0px;
+    }
+}
+
+.determine {
+    display: block;
+}
+
+.required {
+    color: #e62412;
+}
+
+.df {
+    display: flex;
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}

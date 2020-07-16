@@ -4,13 +4,14 @@
       <div class="logo" :class="header ? 'logo-big' : 'logo-small'">
         <img src="../../assets/images/download.png" alt />
 
-        <span :class="header ? 'big' : 'small'">Ald Bim</span>
+        <!-- <span :class="header ? 'big' : 'small'">Ald Bim</span> -->
       </div>
       <ul>
-        <li :class="{ hover: active == 0 }" @click="goOrg"><Icon type="ios-keypad-outline" />工作台</li>
-        <li :class="{ hover: active == 1 }" @click="projectList"><Icon type="ios-photos-outline" />项目管理</li>
-        <li @click="goMembers" :class="{ hover: active == 2 }"><Icon type="ios-contacts-outline" />团队成员</li>
-        <li :class="{ hover: active == 3 }"><Icon type="ios-cog" size="18" />系统设置</li>
+        <li :class="{ hover: active == 0 }" @click="goOrg">工作台</li>
+        <li :class="{ hover: active == 1 }" @click="projectList">项目管理</li>
+        <li :class="{ hover: active == 2 }" @click="goMembers" >团队成员</li>
+        <li :class="{ hover: active == 3 }" @click="goSys" >系统设置</li>
+        <li :class="{ hover: active == 4 }">我的</li>
       </ul>
     </div>
     <div>
@@ -86,6 +87,10 @@ export default {
     projectList() {
       this.active = 1;
       this.$router.push("/prolist/" + this.companyId);
+    },
+    goSys(){
+       this.active = 3;
+      this.$router.push("/systemSettings" );
     },
     // 去成员页面
     goMembers() {
