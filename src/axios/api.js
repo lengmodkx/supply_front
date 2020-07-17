@@ -1542,3 +1542,21 @@ export function enterDefaultRole(orgId, roleId) {
         method: "put", // 请求方法
     });
 }
+
+
+//根据条件筛选日志信息
+export function getLoglist(orgId,data) {
+    return fetch({
+        url: `/logs/operatingLog/${orgId}`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//导出日志
+export function expUserLog() {
+    return fetch({
+        url: `/logs/expUser`,
+        method: 'get', // 请求方法
+    })
+}

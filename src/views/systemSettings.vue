@@ -51,6 +51,7 @@
       <enterpriseAuthority v-if="mineTag=='3,0'"></enterpriseAuthority>
       <projectAuthority v-if="mineTag=='3,1'"></projectAuthority>
       <operationLog v-if="mineTag=='4,0'"></operationLog>
+      <exportApplication v-if="mineTag=='4,1'"></exportApplication>
     </div>
   </div>
 </template>
@@ -62,7 +63,7 @@ import orgStructure from "./orgStructureS.vue";
 import enterpriseAuthority from "./enterpriseAuthorityS.vue";
 import projectAuthority from "./projectAuthorityS.vue";
 import operationLog from "./operationLogS.vue";
-
+import exportApplication from "./exportApplicationS.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
 export default {
   components: {
@@ -72,7 +73,8 @@ export default {
     orgStructure,
     enterpriseAuthority,
     projectAuthority,
-    operationLog
+    operationLog,
+    exportApplication
   },
   inject: ["reload"],
   data() {
@@ -111,7 +113,7 @@ export default {
           icon: require("../assets/images/systemSet/anquanguanli.png"),
           childNode: [
             { text: "操作日志", name: "4,0" },
-            { text: "到处申请", name: "4,1" }
+            { text: "导出申请", name: "4,1" }
           ]
         }
       ],
@@ -129,7 +131,6 @@ export default {
   },
   methods: {
     openTag(tagName) {
-      // console.log(tagName);
       this.mineTag = tagName;
       //   if (tagName.split(",")[0] == 1) {
       //     this.tabValue = tagName.split(",")[1];

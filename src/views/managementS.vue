@@ -4,9 +4,9 @@
       <div class="title">
         <div>成员</div>
         <div class="icon-content">
-          <div>
+          <!-- <div>
             <img src="../assets/images/systemSet/piliang.png" alt />
-          </div>
+          </div>-->
           <div>
             <Poptip v-model="memModal" placement="bottom">
               <div class="branch">
@@ -19,7 +19,7 @@
               </div>
             </Poptip>
           </div>
-          <div class="r-jump">
+          <div class="r-jump" @click="goMember">
             <img src="../assets/images/systemSet/chengyuang.png" alt />
             <span>成员</span>
           </div>
@@ -32,7 +32,7 @@
       <div class="table-title">
         <Dropdown trigger="click">
           <div>
-            企业成员·1
+            企业成员·{{peopleList.length}}
             <Icon type="ios-arrow-down" color="#999999"></Icon>
           </div>
           <DropdownMenu slot="list">
@@ -64,23 +64,23 @@
               type="flex"
               justify="space-between"
               class-name="group-people"
-              v-for="(item, index) in groupPeople"
+              v-for="(item, index) in peopleList"
               :key="index"
               @click="showUserInfoModal(item)"
             >
               <Col span="9">
                 <div class="group-people-con">
-                  <Checkbox :label="item.userId">
-                    <img :src="item.image" alt />
+                  <Checkbox :label="item.userEntity.userId">
+                    <img :src="item.userEntity.image" alt />
                     <div>
-                      <p class="userName">{{ item.userName }}</p>
-                      <div class="userPhone">{{item.phone}}</div>
+                      <p class="userName">{{ item.userEntity.userName }}</p>
+                      <div class="userPhone">{{item.userEntity.accountName}}</div>
                     </div>
                   </Checkbox>
                 </div>
               </Col>
-              <Col span="5">{{ item.job }}</Col>
-              <Col span="5">{{ item.role }}</Col>
+              <Col span="5">{{ item.parentName }}</Col>
+              <Col span="5">{{ item.memberLabel }}</Col>
               <Col span="5" class-name="operation">
                 <Poptip placement="bottom" transfer width="280" v-model="item.visible">
                   <a href="javascript:void(0)">
@@ -120,10 +120,10 @@
                       </span>
                       <Select v-model="model4">
                         <Option
-                          v-for="item in cityList"
-                          :value="item.value"
-                          :key="item.value"
-                        >{{ item.label }}</Option>
+                          v-for="item in departmentTreeNew"
+                          :value="item.partmentId"
+                          :key="item.partmentId"
+                        >{{ item.partmentName }}</Option>
                       </Select>
                     </div>
                     <Button type="primary" long>确定</Button>
@@ -232,6 +232,8 @@
 <script>
 import Loading from "../components/public/common/Loading.vue";
 import addPeopleCompany from "@/components/public/addPeopleCompany";
+import { initOrgMemberNew } from "@/axios/companyApi";
+// import { getTeamInfo } from "@/axios/api";
 
 export default {
   components: {
@@ -240,29 +242,7 @@ export default {
   },
   data() {
     return {
-      groupPeople: [
-        {
-          userName: "樊",
-          phone: "18744404610",
-          job: "技术部",
-          role: "员工",
-          userId: "1"
-        },
-        {
-          userName: "美",
-          phone: "18744404610",
-          job: "技术部",
-          role: "员工",
-          userId: "2"
-        },
-        {
-          userName: "玲",
-          phone: "18744404610",
-          job: "技术部",
-          role: "员工",
-          userId: "3"
-        }
-      ],
+      peopleList: [],
       visible: false,
       title: "更多菜单",
       cityList: [
@@ -299,12 +279,28 @@ export default {
       showUserInfo: false, //成员详细信息弹窗
       loading: false,
       tabOneShow: "",
-      showAddPeople: false
+      showAddPeople: false,
+      departmentTreeNew:[]
     };
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.getList();
+  },
   methods: {
+    getList() {
+      initOrgMemberNew(localStorage.companyId, 1).then(res => {
+        if (res.result == 1) {
+          res.data.members.forEach(i => {
+            i.isChecked = false;
+          });
+          this.peopleList = res.data.members;
+          // this.allOrgPeople = res.data.members;
+          this.departmentTreeNew = res.data.partment;
+        }
+        this.loading = false;
+      });
+    },
     handleCheckAll() {
       if (this.indeterminate) {
         this.checkAll = false;
@@ -345,20 +341,23 @@ export default {
       this.memModal = false;
     },
     successInv() {
-        this.showAddPeople = false
-        // 获取成员信息
-        // initOrgMemberNew(localStorage.companyId, 1).then(res => {
-        //   if (res.result == 1) {
-        //     res.data.members.forEach(i => {
-        //       i.isChecked = false;
-        //     });
-        //     this.peopleList = res.data.members;
-        //     this.allOrgPeople = res.data.members;
-        //     this.departmentTreeNew = res.data.partment;
-        //   }
-        //   this.loading = false;
-        // });
-      },
+      this.showAddPeople = false;
+      // 获取成员信息
+      // initOrgMemberNew(localStorage.companyId, 1).then(res => {
+      //   if (res.result == 1) {
+      //     res.data.members.forEach(i => {
+      //       i.isChecked = false;
+      //     });
+      //     this.peopleList = res.data.members;
+      //     this.allOrgPeople = res.data.members;
+      //     this.departmentTreeNew = res.data.partment;
+      //   }
+      //   this.loading = false;
+      // });
+    },
+    goMember() {
+      this.$router.push("/members");
+    }
   }
 };
 </script>

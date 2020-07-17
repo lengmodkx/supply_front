@@ -141,12 +141,12 @@
               <div class="noList" v-if="teamList.length == 0 ">
                 <img src="../assets/images/noproject-new.png" />
               </div>
-              <div>
+              <!-- <div> -->
                 <li v-for="(item,index) in teamList" :key="index">
                   <img :src="item.image" class="avatar" v-if='item.image'/>
                   <span>{{item.userName}}</span>
                 </li>
-              </div>
+              <!-- </div> -->
             </ul>
           </Card>
         </Col>
