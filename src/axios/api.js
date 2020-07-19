@@ -1560,3 +1560,11 @@ export function expUserLog() {
         method: 'get', // 请求方法
     })
 }
+
+//解绑
+export function notBindPhone() {
+    return fetch({
+        url: `/notBindPhone`,
+        method: 'get', // 请求方法
+    })
+}

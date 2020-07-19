@@ -33,7 +33,7 @@
             </div>
           </li>
           <li class="tb-navigation-menu-divider"></li>
-          <li class="tab-menu-item"><div class="tab-menu-item-content3">账号设置</div></li>
+          <li class="tab-menu-item"><div class="tab-menu-item-content3" @click="personal">账号设置</div></li>
           <li class="tab-menu-item"><div class="tab-menu-item-content3">下载ALDCAD</div></li>
           <li class="tb-navigation-menu-divider"></li>
           <li class="tab-menu-item">
@@ -59,7 +59,6 @@ export default {
   },
   data() {
     return {
-      companyId: "",
       active: 0,
       popVisible: "none",
       headeImg: localStorage.userImg,
@@ -67,7 +66,6 @@ export default {
   },
 
   mounted() {
-    this.companyId = localStorage.companyId;
     //切换路由页面刷新时用
     if (this.$route.name == "organization") {
       this.active = 0;
@@ -82,11 +80,11 @@ export default {
     //去首页
     goOrg() {
       this.active = 0;
-      this.$router.push("/org/" + this.companyId);
+      this.$router.push("/org/" + localStorage.companyId);
     },
     projectList() {
       this.active = 1;
-      this.$router.push("/prolist/" + this.companyId);
+      this.$router.push("/prolist/" + localStorage.companyId);
     },
     goSys(){
        this.active = 3;
@@ -105,7 +103,7 @@ export default {
     },
     personal() {
       this.$router.push("/personal");
-      this.hoverClass = "person";
+      this.popVisible = "none";
     },
     goout() {
       localStorage.clear();
