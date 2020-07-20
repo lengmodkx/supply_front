@@ -9,21 +9,24 @@
       <ul>
         <li :class="{ hover: active == 0 }" @click="goOrg">工作台</li>
         <li :class="{ hover: active == 1 }" @click="projectList">项目管理</li>
-        <li :class="{ hover: active == 2 }" @click="goMembers" >团队成员</li>
-        <li :class="{ hover: active == 3 }" @click="goSys" >系统设置</li>
+        <li :class="{ hover: active == 2 }" @click="goMembers">团队成员</li>
+        <li :class="{ hover: active == 3 }" @click="goSys">系统设置</li>
         <li :class="{ hover: active == 4 }">我的</li>
       </ul>
     </div>
     <div>
       <div class="right-header">
-        <Avatar :src="headeImg" class="avatar" @click.native="showMenu" v-click-outside="popVisible=='none'" />
+        <Avatar
+          :src="headeImg"
+          class="avatar"
+          @click.native="showMenu"
+          v-click-outside="popVisible=='none'"
+        />
       </div>
       <div class="userInfo" :style="{ display: popVisible }">
         <ul>
           <li class="tab-menu-item">
-            <div class="tab-menu-item-content1">
-              升级
-            </div>
+            <div class="tab-menu-item-content1">升级</div>
           </li>
           <li class="tb-navigation-menu-divider"></li>
           <li class="tab-menu-item">
@@ -33,13 +36,15 @@
             </div>
           </li>
           <li class="tb-navigation-menu-divider"></li>
-          <li class="tab-menu-item"><div class="tab-menu-item-content3" @click="personal">账号设置</div></li>
-          <li class="tab-menu-item"><div class="tab-menu-item-content3">下载ALDCAD</div></li>
+          <li class="tab-menu-item">
+            <div class="tab-menu-item-content3" @click="personal">账号设置</div>
+          </li>
+          <li class="tab-menu-item">
+            <div class="tab-menu-item-content3">下载ALDCAD</div>
+          </li>
           <li class="tb-navigation-menu-divider"></li>
           <li class="tab-menu-item">
-            <div class="tab-menu-item-content1" @click="goout">
-              退出登陆
-            </div>
+            <div class="tab-menu-item-content1" @click="goout">退出登陆</div>
           </li>
         </ul>
       </div>
@@ -55,13 +60,13 @@ export default {
   name: "header-main",
   components: {},
   computed: {
-    ...mapState("app", ["header"]),
+    ...mapState("app", ["header"])
   },
   data() {
     return {
       active: 0,
       popVisible: "none",
-      headeImg: localStorage.userImg,
+      headeImg: localStorage.userImg
     };
   },
 
@@ -86,13 +91,13 @@ export default {
       this.active = 1;
       this.$router.push("/prolist/" + localStorage.companyId);
     },
-    goSys(){
-       this.active = 3;
-      this.$router.push("/systemSettings" );
+    goSys() {
+      this.active = 3;
+      this.$router.push("/systemSettings");
     },
     // 去成员页面
     goMembers() {
-      checkPermission(localStorage.companyId).then((res) => {
+      checkPermission(localStorage.companyId).then(res => {
         if (res.result == 1 && res.data == true) {
           this.active = 2;
           this.$router.push("/members");
@@ -102,7 +107,12 @@ export default {
       });
     },
     personal() {
-      this.$router.push("/personal");
+      let routeUrl = this.$router.resolve({
+        path: "/personal"
+        // query: { id: 96 }
+      });
+      window.open(routeUrl.href, "_blank");
+      // this.$router.push("/personal");
       this.popVisible = "none";
     },
     goout() {
@@ -115,8 +125,14 @@ export default {
       } else {
         this.popVisible = "none";
       }
-    },
+    }
   },
+  watch: {
+    $route(to, from) {
+      console.log(to);
+      // if()
+    }
+  }
 };
 </script>
 <style scoped lang="less"></style>

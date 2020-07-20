@@ -649,7 +649,7 @@
       // 页面初始化
       initMember() {
         // 获取成员信息
-        initOrgMemberNew(localStorage.companyId, 1).then(res => {
+        initOrgMemberNew(localStorage.companyId, 0).then(res => {
           if (res.result == 1) {
             res.data.members.forEach(i => {
               i.isChecked = false;
@@ -702,10 +702,10 @@
         this.loading = true;
         switch (item) {
           case "外部成员":
-            this.flag = 0;
+            this.flag = 5;
             break;
           case "所有成员":
-            this.flag = 1;
+            this.flag = 0;
             break;
         }
         initOrgMemberNew(localStorage.companyId, this.flag).then(res => {
@@ -726,7 +726,7 @@
           if (res.result == 1) {
             // this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
             // 获取成员信息
-            initOrgMemberNew(localStorage.companyId, 1).then(res => {
+            initOrgMemberNew(localStorage.companyId, 0).then(res => {
               if (res.result == 1) {
                 res.data.members.forEach(i => {
                   i.isChecked = false;
@@ -995,7 +995,7 @@
         removeOrgUser(userId, localStorage.companyId, memberId).then(res => {
           if (res.result === 1) {
             // wjwjwj
-            initOrgMemberNew(localStorage.companyId, 1).then(res => {
+            initOrgMemberNew(localStorage.companyId, 0).then(res => {
               if (res.result == 1) {
                 res.data.members.forEach(i => {
                   i.isChecked = false;
@@ -1109,7 +1109,7 @@
       successInv() {
         this.showAddPeople = false
         // 获取成员信息
-        initOrgMemberNew(localStorage.companyId, 1).then(res => {
+        initOrgMemberNew(localStorage.companyId, 0).then(res => {
           if (res.result == 1) {
             res.data.members.forEach(i => {
               i.isChecked = false;
