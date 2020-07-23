@@ -15,7 +15,7 @@
               <div slot="content" class="popContent">
                 <p @click="showAddModel(true)">添加企业成员</p>
                 <p @click="showAddModel(false)">添加外部成员</p>
-                <!-- <p @click="showAddModel(false)">添加外部成员</p> -->
+                <p @click="showBatchAdd=true">批量添加成员</p>
               </div>
             </Poptip>
           </div>
@@ -290,6 +290,27 @@
       </p>
       <addPeopleCompany :tabOneShow="tabOneShow" @successInv="successInv" v-if="showAddPeople"></addPeopleCompany>
     </Modal>
+    <!-- 批量添加 -->
+    <Modal v-model="showBatchAdd" width="500" class-name="vertical-center-modal" transfer>
+      <p slot="header" class="userInfo-head">批量添加</p>
+      <div class="userInfo-con">
+        <Upload
+          type="drag"
+          :action="actionUrl"
+          :before-upload="beforeUpload"
+          :data="uploadData"
+          :on-success="uploadSuccess"
+        >
+          <div style="padding: 20px 0" class="df ac uploadContent">
+            <Icon type="md-add" />
+            <div>添加Excel表格</div>
+          </div>
+        </Upload>
+      </div>
+      <div slot="footer">
+        <div class="DownloadTem" @click="DownloadTemplate">下载成员模板</div>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -335,11 +356,17 @@ export default {
       memberId: "",
       batchAdd: false, //批量添加弹窗
       batchRemoval: false, // 批量移除
-      model5: ""
+      model5: "",
+      showBatchAdd: false,
+      actionUrl: "", //导入地址
+      uploadData: {}
     };
   },
   computed: {},
   mounted() {
+    this.actionUrl =
+      "/api/organization/members/impUser/" + localStorage.companyId;
+
     this.loading = true;
 
     this.flag = 0;
@@ -389,7 +416,6 @@ export default {
       this.title = "成员菜单";
     },
     showUserInfoModal(item) {
-      console.log("详细");
       this.showUserInfo = true;
       this.userInfoList = item;
     },
@@ -408,7 +434,6 @@ export default {
       this.$router.push("/members");
     },
     mdClose(index) {
-      console.log("xxxxxxx");
       this.$set(this.peopleList[index].userEntity, "visible", false);
     },
     changeMemberType(item) {
@@ -471,14 +496,16 @@ export default {
     // 从企业部门移除成员 确定
     removePP() {
       this.loading = true;
-      removeOrgUser(this.checkAllGroup.join(","), localStorage.companyId).then(res => {
-        if (res.result == 1) {
-          this.batchRemoval=false
-          this.$Message.success("移除成功");
-          this.close();
-          this.getList();
+      removeOrgUser(this.checkAllGroup.join(","), localStorage.companyId).then(
+        res => {
+          if (res.result == 1) {
+            this.batchRemoval = false;
+            this.$Message.success("移除成功");
+            this.close();
+            this.getList();
+          }
         }
-      });
+      );
     },
     // 搜索企业内成员  直接搜索
     searchOrgProple(event) {
@@ -496,18 +523,51 @@ export default {
           }
           this.loading = false;
         });
-      }else {
-        this.getList()
+      } else {
+        this.getList();
       }
     },
     close() {
       this.checkAllGroup = [];
       this.model5 = "";
       this.model4 = "";
+    },
+    DownloadTemplate() {
+      var url = "";
+      if (process.env.NODE_ENV == "test") {
+        url = process.env.VUE_APP_TEST_URL;
+      } else if (process.env.NODE_ENV == "production") {
+        url = process.env.VUE_APP_URL;
+      } else {
+        url = "/api";
+      }
+      window.location.href =
+        url +
+        "/organization/members/expOrgMember?orgId=" +
+        localStorage.companyId;
+    },
+    beforeUpload(file) {
+      this.actionUrl =
+        "/organization/members/impUser/" + localStorage.companyId;
+    },
+    uploadSuccess(response) {
+      if (response.result == 1) {
+        this.$Message.success(response.data);
+      } else {
+        this.$Message.error("上传失败");
+      }
     }
   }
 };
 </script>
 <style lang="less" scoped>
 @import "../assets/css/managementS";
+.ivu-upload-drag {
+  border-color: #1b9aee;
+}
+.DownloadTem {
+  text-align: left;
+  color: #1b9aee;
+  cursor: pointer;
+}
 </style>

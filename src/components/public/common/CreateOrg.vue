@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="contentPro">
-      <div class="title">创建企业</div>
-      <div class="pic"></div>
-      <p class="myindex">输入企业名称，解锁企业独有功能</p>
+      <!-- <div class="title">创建企业</div> -->
+      <!-- <div class="pic"></div> -->
+      <!-- <p class="myindex">输入企业名称，解锁企业独有功能</p> -->
       <Input class="inputbox" v-model.trim="proName" placeholder="企业名称" />
       <Input class="inputbox" v-model.trim="phone" placeholder="手机号" />
       <Select class="selectBox" v-model="selectmodel1" placeholder="企业规模">
@@ -71,8 +71,8 @@ export default {
           this.btnLoading = false;
           if (res.result == 1) {
             localStorage.companyId = res.data;
-            this.$router.replace("/org/" + res.data);
-            this.$emit("closeCreateOrg");
+            this.$router.replace("/personal");
+            // this.$emit("closeCreateOrg");
           }
         });
       }
@@ -119,9 +119,9 @@ export default {
     font-size: 14px;
   }
   .inputbox {
-    width: 320px;
+    // width: 320px;
     display: block;
-    margin: 15px auto;
+    margin: 15px 0;
   }
   .yanzheng {
     position: relative;
@@ -135,15 +135,15 @@ export default {
   }
   .submitBtn {
     display: block;
-    width: 320px;
-    margin: 20px auto;
+    width: 100%;
+    margin: 20px 0;
   }
 }
 .selectBox {
   display: block;
-  width: 320px;
+  // width: 320px;
 
-  margin: 10px auto;
+  margin: 10px 0;
   /deep/.ivu-select-selection {
     height: 40px;
     .ivu-select-placeholder,

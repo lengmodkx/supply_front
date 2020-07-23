@@ -281,4 +281,7 @@ export default {
 </script>
 <style lang="less" scoped  >
 @import "../assets/css/information";
+.container {
+  background: #f4f3f4;
+}
 </style>

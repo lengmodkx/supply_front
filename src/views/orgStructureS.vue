@@ -4,7 +4,7 @@
       <div class="title">
         <div>组织架构</div>
         <div class="icon-content">
-          <div class="r-jump">
+          <div class="r-jump" @click="goMember">
             <img src="../assets/images/systemSet/chengyuang.png" alt />
             <span>成员</span>
           </div>
@@ -18,9 +18,9 @@
         <div class="org-title">
           <div>
             <img src="../icons/img/qiye-apply-01.png" alt />
-            <span>wj的团队</span>
+            <span>{{organizationName}}</span>
           </div>
-          <Poptip placement="bottom" transfer width="280" v-model="depPop">
+          <Poptip placement="left" transfer width="280" v-model="depPop">
             <a href="javascript:void(0)">
               <div class="addDep">
                 <Icon type="md-add" color="#979797" size="20" />
@@ -28,33 +28,26 @@
             </a>
             <div slot="title" class="member-title">
               <span>新建部门</span>
-              <Icon type="md-close" size="18" class="role-md-close" @click.native="mdClose(index)" />
+              <Icon type="md-close" size="18" class="role-md-close" @click.native="depPop=false" />
             </div>
             <div slot="content">
               <div class="dep-pop">
                 <div class="dep-pop-tit">部门名称</div>
                 <Input prefix="ios-search" placeholder="部门名称" v-model="branchName" />
                 <div class="dep-pop-tit">上级部门</div>
-                <Select v-model="model4">
-                  <Option
-                    v-for="item in cityList"
-                    :value="item.value"
-                    :key="item.value"
-                  >{{ item.label }}</Option>
-                </Select>
+                <Input placeholder="部门名称" v-model="depName" disabled />
               </div>
               <div class="mb10">设置部门负责人</div>
-              <Poptip placement="top" transfer width="280" v-model="personPop">
+              <Poptip placement="left" transfer width="280" v-model="personPop">
                 <a href="javascript:void(0)">
                   <div class="addDep mb10" v-if="!social">
                     <Icon type="md-add" color="#2B85E4" size="20" />
                   </div>
                   <div v-else class="userInfo">
-                    <img
-                      src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/avatar/1594114805738.jpg"
-                      alt
-                    />
-                    <p>wj</p>
+                    <div class="df ac">
+                      <img :src="userImg" />
+                      <p>{{userName}}</p>
+                    </div>
                   </div>
                 </a>
                 <div slot="title" class="member-title">
@@ -68,18 +61,21 @@
                 </div>
                 <div slot="content">
                   <div class="dep-pop">
-                    <Input prefix="ios-search" placeholder="请输入关键字" class="mt10" />
+                    <Input
+                      prefix="ios-search"
+                      placeholder="请输入关键字"
+                      class="mt10"
+                      @on-change="searchOrgProple"
+                    />
                     <ul class="people-ul">
                       <RadioGroup v-model="social" @on-change="peopleCheck">
                         <li v-for="(item, index) in allOrgPeople" :key="index">
-                          <div>
-                            <Radio :label="item.userId" class="df people-check">
-                              <div class="df">
-                                <img :src="item.image" alt />
-                                <p>{{ item.userName }}</p>
-                              </div>
-                            </Radio>
-                          </div>
+                          <Radio :label="item.memberId" class="df people-check ac">
+                            <div class="df">
+                              <img :src="item.image" alt />
+                              <p>{{ item.userName }}</p>
+                            </div>
+                          </Radio>
                         </li>
                       </RadioGroup>
                     </ul>
@@ -93,7 +89,13 @@
                 </Col>
               </Row>
 
-              <Button type="primary" long class="determine" @click="createBranch">确定</Button>
+              <Button
+                type="primary"
+                long
+                class="determine"
+                @click="createBranch"
+                :disabled="!branchName"
+              >确定</Button>
             </div>
           </Poptip>
         </div>
@@ -106,10 +108,10 @@
               <span>{{item.partmentName}}</span>
             </div>
             <div class="right-item">
-              <!-- <Poptip placement="bottom" transfer width="280" v-model="item.visited1">
+              <Poptip placement="left" transfer width="280" v-model="item.visible1">
                 <a href="javascript:void(0)">
                   <Tooltip content="编辑">
-                    <Icon type="md-create" size="20" color="#979797" />
+                    <Icon type="md-create" size="20" color="#979797" @click="editDep(index,item)" />
                   </Tooltip>
                 </a>
                 <div slot="title" class="member-title">
@@ -126,26 +128,17 @@
                     <div class="dep-pop-tit">部门名称</div>
                     <Input prefix="ios-search" placeholder="部门名称" v-model="branchName" />
                     <div class="dep-pop-tit">上级部门</div>
-                    <Select v-model="model4">
-                      <Option
-                        v-for="item in cityList"
-                        :value="item.value"
-                        :key="item.value"
-                      >{{ item.label }}</Option>
-                    </Select>
+                    <Input placeholder="部门名称" v-model="depName" disabled />
                   </div>
                   <div class="mb10">设置部门负责人</div>
-                  <Poptip placement="top" transfer width="280" v-model="personPop">
+                  <Poptip placement="left" width="280" v-model="item.visible2">
                     <a href="javascript:void(0)">
-                      <div class="addDep mb10" v-if="!social">
+                      <div class="addDep mb10" v-if="!social2">
                         <Icon type="md-add" color="#2B85E4" size="20" />
                       </div>
                       <div v-else class="userInfo">
-                        <img
-                          src="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/avatar/1594114805738.jpg"
-                          alt
-                        />
-                        <p>wj</p>
+                        <img :src="userImg" />
+                        <p>{{userName}}</p>
                       </div>
                     </a>
                     <div slot="title" class="member-title">
@@ -154,23 +147,26 @@
                         type="md-close"
                         size="18"
                         class="role-md-close"
-                        @click.stop="personPop=false;"
+                        @click.stop="aditClose(index)"
                       />
                     </div>
                     <div slot="content">
                       <div class="dep-pop">
-                        <Input prefix="ios-search" placeholder="请输入关键字" class="mt10" />
+                        <Input
+                          prefix="ios-search"
+                          placeholder="请输入关键字"
+                          class="mt10"
+                          @on-change="searchOrgProple"
+                        />
                         <ul class="people-ul">
-                          <RadioGroup v-model="social" @on-change="peopleCheck">
+                          <RadioGroup v-model="social2" @on-change="peopleCheck2">
                             <li v-for="(item, index) in allOrgPeople" :key="index">
-                              <div>
-                                <Radio :label="item.userId" class="df people-check">
-                                  <div class="df">
-                                    <img :src="item.image" alt />
-                                    <p>{{ item.userName }}</p>
-                                  </div>
-                                </Radio>
-                              </div>
+                              <Radio :label="item.memberId" class="df people-check ac">
+                                <div class="df">
+                                  <img :src="item.image" alt />
+                                  <p>{{ item.userName }}</p>
+                                </div>
+                              </Radio>
                             </li>
                           </RadioGroup>
                         </ul>
@@ -184,13 +180,19 @@
                     </Col>
                   </Row>
 
-                  <Button type="primary" long class="determine" @click="createBranch">确定</Button>
+                  <Button
+                    type="primary"
+                    long
+                    class="determine"
+                    @click="changeBranchName"
+                    :disabled="!branchName"
+                  >保存</Button>
                 </div>
-              </Poptip> -->
+              </Poptip>
               <!-- <Tooltip content="新建子部门">
                 <Icon type="md-add" size='20' color="#979797"/>
               </Tooltip>-->
-              <Poptip placement="bottom" transfer width="280" v-model="item.visited">
+              <Poptip placement="bottom" transfer width="280" v-model="item.visible">
                 <Tooltip content="删除">
                   <Icon type="ios-trash-outline" size="20" color="#979797" />
                 </Tooltip>
@@ -200,7 +202,7 @@
                     type="md-close"
                     size="18"
                     class="role-md-close"
-                    @click.native="batchAdd=false"
+                    @click.native="mdClose(index)"
                   />
                 </div>
                 <div slot="content">
@@ -223,7 +225,9 @@ import {
   initOrgMemberNew,
   searchDepartment,
   createBranchs,
-  deleteBranch
+  deleteBranch,
+  searchOrgMembers,
+  changeBranchNames
 } from "@/axios/companyApi";
 export default {
   components: {
@@ -257,27 +261,29 @@ export default {
           label: "Canberra"
         }
       ],
-      model4: "",
-      allOrgPeople: [
-        {
-          userId: "7da0fd547ec44aaba0fd51f591a0852e",
-          image:
-            "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/avatar/1594114805738.jpg",
-          phone: "18744401234",
-          userName: "wj"
-        }
-      ],
+      depName: "",
+      allOrgPeople: [],
       social: "",
+      social2: "",
+
       personPop: false,
+      personPop2: false,
       depPop: false,
       departmentTreeNew: [],
       loading: false,
       branchName: "",
-      batchAdd: false
+      batchAdd: false,
+      organizationName: localStorage.organizationName, //当前企业名称
+      userName: "",
+      userImg: "",
+      editIndex: "",
+      allOrgPeopleCopy: [],
+      depId: "" //编辑部门时拿到部门id
     };
   },
   computed: {},
   mounted() {
+    this.depName = localStorage.organizationName;
     this.loading = true;
     this.getList();
   },
@@ -286,13 +292,36 @@ export default {
       initOrgMemberNew(localStorage.companyId, 0).then(res => {
         if (res.result == 1) {
           res.data.partment.forEach(i => {
-            i.visited = false;
-            i.visited1 = false;
+            i.visible = false;
+            i.visible1 = false;
+            i.visible2 = false;
           });
+          this.allOrgPeople = res.data.members;
+          this.allOrgPeopleCopy = res.data.members;
           this.departmentTreeNew = res.data.partment;
         }
         this.loading = false;
       });
+    },
+    // 搜索企业内成员  直接搜索
+    searchOrgProple(event) {
+      this.loading = true;
+      if (event.currentTarget.value != "") {
+        searchOrgMembers(
+          event.currentTarget.value,
+          localStorage.companyId
+        ).then(res => {
+          if (res.result === 1) {
+            this.allOrgPeople = res.data;
+          } else {
+            this.allOrgPeople.length = 0;
+            this.$Message.error("未搜索到成员");
+          }
+          this.loading = false;
+        });
+      } else {
+        this.allOrgPeople = this.allOrgPeopleCopy;
+      }
     },
     searchDep(event) {
       this.loading = true;
@@ -314,15 +343,32 @@ export default {
       }
     },
     peopleCheck() {
-      console.log(this.social);
+      this.allOrgPeople.forEach(i => {
+        if (i.memberId == this.social) {
+          this.userName = i.userName;
+          this.userImg = i.image;
+        }
+      });
       this.personPop = false;
       this.depPop = true;
+    },
+    peopleCheck2() {
+      this.allOrgPeople.forEach(i => {
+        if (i.memberId == this.social2) {
+          this.userName = i.userName;
+          this.userImg = i.image;
+        }
+      });
+      // this.personPop2 = false;
+      this.aditClose(this.editIndex);
+      // this.depPop = true;
     },
     // 创建部门
     createBranch() {
       this.loading = true;
       let data = {
-        partmentName: this.branchName
+        partmentName: this.branchName,
+        memberId: this.social
       };
       createBranchs(localStorage.companyId, data).then(res => {
         if (res.result == 1) {
@@ -332,15 +378,50 @@ export default {
         this.branchName = "";
       });
     },
+    mdClose(index) {
+      this.$set(this.departmentTreeNew[index], "visible", false);
+      this.$set(this.departmentTreeNew[index], "visible1", false);
+    },
+    aditClose(index) {
+      this.$set(this.departmentTreeNew[index], "visible2", false);
+    },
+    editDep(index, item) {
+      this.editIndex = index;
+      this.branchName = item.partmentName;
+      this.depId = item.partmentId;
+      if (item.userEntity) {
+        this.social2 = item.userEntity.userId;
+        this.userName = item.userEntity.userName;
+          this.userImg = item.userEntity.defaultImage;
+      }
+    },
     // 删除部门
     deleteIt(item) {
       this.loading = true;
-      // deleteBranch(item.partmentId).then(res => {
-      //   if (res.result == 1) {
-      //     this.$Message.success("删除成功");
-      //     this.getList();
-      //   }
-      // });
+      deleteBranch(item.partmentId).then(res => {
+        if (res.result == 1) {
+          this.$Message.success("删除成功");
+          this.getList();
+        }
+      });
+    },
+    // 编辑部门后保存
+    changeBranchName() {
+      // this.isCreateBranch = true;
+      let data = {
+        partmentName: this.branchName,
+        memberId: this.social2
+      };
+      changeBranchNames(this.depId, data).then(res => {
+        if (res.result == 1) {
+          // this.isCreateBranch = false;
+          this.$Message.success("修改成功");
+          this.getList();
+        }
+      });
+    },
+    goMember() {
+      this.$router.push("/members");
     }
   }
 };

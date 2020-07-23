@@ -301,7 +301,7 @@ export default {
   margin: 24px;
   overflow-y: auto;
   position: relative;
-
+  background: #ffffff;
   .noList {
     margin-top: 10%;
 

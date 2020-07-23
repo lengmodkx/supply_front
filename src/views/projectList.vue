@@ -44,7 +44,10 @@
         <Icon type="md-arrow-forward" />
       </div>
     </div>
-    <div class="layout-right">
+    <div class="layout-right messageAlert" v-if="messageAlert">
+      <messageAlert :messageType='messageType'></messageAlert>
+    </div>
+    <div class="layout-right" v-else>
       <div class="btnContent df">
         <Icon
           :class="{now:moShi=='liebiao'}"
@@ -244,6 +247,8 @@
 import Clipboard from "clipboard";
 import CreateProject from "./CreateProject.vue";
 import projectSetNew from "./projectSetNew.vue";
+import messageAlert from "./messageAlert.vue";
+
 import InviteMembers from "../components/public/InviteMembers.vue";
 import Loading from "../components/public/common/Loading.vue";
 import { mapActions, mapState, mapMutations } from "vuex";
@@ -264,7 +269,8 @@ export default {
     CreateProject,
     projectSetNew,
     Loading,
-    InviteMembers
+    InviteMembers,
+    messageAlert
   },
   inject: ["reload"],
   data() {
@@ -333,6 +339,15 @@ export default {
           //     { text: "任务", name: "nearThing,1" },
           //     { text: "日程", name: "nearThing,2" }
           // ]
+        },
+        {
+          oneName: "消息提醒",
+          name: "4",
+          icon: "ios-mail-open-outline",
+          childNode: [
+            { text: "项目通知", name: "4,0" },
+            { text: "系统公告", name: "4,1" }
+          ]
         }
       ],
       projectList: [
@@ -371,8 +386,10 @@ export default {
       linkText: "",
       tabValue: "0", //项目列表tab栏选中项
       menuActive: "1,0", //菜单栏选中项
-      linkLoading:false,
-      linkExpireTime:'',//链接有效期
+      linkLoading: false,
+      linkExpireTime: "", //链接有效期
+      messageAlert: false,
+      messageType:'',// 消息提醒
     };
   },
   computed: {
@@ -558,16 +575,16 @@ export default {
     inviteMem(id) {
       this.showInviteMembers = true;
       this.projectId = id;
-      this.linkLoading=true
-      linkInvitation(localStorage.companyId,id).then(res=>{
-            this.linkLoading=false
-            if (res.result === 1) {
-              this.linkExpireTime=res.data.expireTime
-              this.linkText =res.data.shortUrl
-            } else {
-              this.$Message.error(res.msg);
-            }
-      })
+      this.linkLoading = true;
+      linkInvitation(localStorage.companyId, id).then(res => {
+        this.linkLoading = false;
+        if (res.result === 1) {
+          this.linkExpireTime = res.data.expireTime;
+          this.linkText = res.data.shortUrl;
+        } else {
+          this.$Message.error(res.msg);
+        }
+      });
     },
     copyLinks() {
       var clipboard = new Clipboard(".copyBtn");
@@ -587,6 +604,10 @@ export default {
       if (tagName.split(",")[0] == 1) {
         this.tabValue = tagName.split(",")[1];
         this.tabChange(tagName.split(",")[1]);
+        this.messageAlert = false;
+      } else if (tagName.split(",")[0] == 4) {
+        this.messageAlert = true;
+        this.messageType=tagName.split(",")[1];
       }
     },
     //设置中退出当前项目，退出后刷新项目里列表
@@ -1025,6 +1046,9 @@ export default {
       color: #333333;
     }
   }
+}
+.messageAlert {
+  padding: 0;
 }
 .setPro-modal {
   /deep/.ivu-modal {

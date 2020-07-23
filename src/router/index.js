@@ -19,7 +19,8 @@ import Detail from '../views/detail.vue'
 import loginCompany from '../components/public/companyIn' //企业登陆
 import prolist from '../views/projectList.vue' //项目管理
 import systemSettings from '../views/systemSettings.vue' //系统设置
-
+import enterprisesList from '../views/enterprisesList.vue' //切换企业
+import creatEnter from '../views/creatEnter.vue' //创建企业
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -393,6 +394,28 @@ const router = new Router({
       },
       component: systemSettings
     },
+    {
+      path: "/enterprisesList",
+      name: "enterprisesList",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: enterprisesList
+    },
+    {
+      path: "/creatEnter",
+      name: "creatEnter",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: creatEnter
+    },
+
+    
   ]
 });
 router.afterEach((to, from) => {

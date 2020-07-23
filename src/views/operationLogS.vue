@@ -4,7 +4,7 @@
       <div class="title">
         <div>操作日志</div>
         <div class="icon-content">
-          <div class="r-jump" @click="exportBtn">
+          <div class="r-jump" @click="expApplication">
             <Icon type="md-download" size="20" />
             <span>导出</span>
           </div>
@@ -18,14 +18,14 @@
             <DatePicker
               type="daterange"
               placement="bottom-end"
-              :value="timeValue"
+              v-model="timeValue"
               format="yyyy/MM/dd"
               @on-change="screen"
             ></DatePicker>
           </Col>
           <Col span="7">
             <div class="secrch-title">成员</div>
-            <Select v-model="memberValue" multiple @on-change="screen">
+            <Select v-model="memberValue" @on-change="screen">
               <Option
                 v-for="item in peopleList"
                 :value="item.memberId"
@@ -74,9 +74,9 @@
             <Col span="4">{{ item.content }}</Col>
             <Col span="8" class-name="log-content">{{ item.content }}</Col>
             <Col span="4" offset="1">{{ item.projectName }}</Col>
-            <Col span="3">{{ item.createTime }}</Col>
+            <Col span="3">{{ $moment(item.createTime).format("YYYY-MM-DD") }}</Col>
           </Row>
-           <div class="noList" v-if="groupPeople.length == 0 ">
+          <div class="noList" v-if="groupPeople.length == 0 ">
             <img src="../assets/images/noproject-new.png" />
           </div>
         </div>
@@ -86,8 +86,9 @@
 </template>
 <script>
 import Loading from "../components/public/common/Loading.vue";
+import axios from "axios";
 import { initOrgMember } from "@/axios/companyApi";
-import { getLoglist,expUserLog } from "@/axios/api";
+import { getLoglist, ExportApplication } from "@/axios/api";
 export default {
   components: {
     Loading
@@ -100,19 +101,18 @@ export default {
       cityList: [],
       model1: "",
       peopleList: [],
-      memberValue: [] //成员筛选
+      memberValue: "" //成员筛选
     };
   },
   computed: {},
   mounted() {
     this.getUserList();
-    this.screen()
+    this.screen();
   },
   methods: {
     getUserList() {
       initOrgMember(localStorage.companyId).then(res => {
         if (res.result === 1) {
-          console.log(res.data)
           this.peopleList = res.data;
         }
       });
@@ -120,24 +120,29 @@ export default {
     screen() {
       this.loading = true;
       let data = {
-        memberId: this.memberValue.join(","),
-        // startTime: this.timeValue[0].getTime(),
-        // endTime: this.timeValue[1].getTime()
+        memberId: this.memberValue,
+        startTime: this.timeValue[0].getTime(),
+        endTime: this.timeValue[1].getTime()
       };
       getLoglist(localStorage.companyId, data).then(res => {
-        console.log(res.data)
         if (res.result == 1) {
-          console.log(res.data)
           this.groupPeople = res.data;
           this.loading = false;
         }
       });
     },
-    exportBtn(){
-        expUserLog().then(res=>{
-          console.log(res)
-        })
-    }
+    expApplication() {
+      ExportApplication(
+        localStorage.companyId,
+        this.memberValue,
+        this.timeValue[0].getTime(),
+        this.timeValue[1].getTime()
+      ).then(res => {
+        if (res.result == 1) {
+          this.$Message.success("导出请求成功，前往导出申请查看!");
+        }
+      });
+    },
     
   }
 };

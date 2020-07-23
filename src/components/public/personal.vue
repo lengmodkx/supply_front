@@ -469,8 +469,8 @@
         background-color: #F0EFEC;
 
         .personal {
-            width: 980px;
-            padding: 20px;
+            width: 1120px;
+            padding:36px 0 16px;
             height: auto;
             margin: 0px auto;
             display: flex;
@@ -478,7 +478,7 @@
         }
 
         .personal-left {
-            width: 300px;
+            width: 286px;
 
             .titel {
                 width: 100%;
@@ -529,7 +529,7 @@
         }
 
         .personal-right {
-            width: 620px;
+            width: 815px;
             min-height: 120px;
             background: #ffffff;
             /* padding: 20px; */

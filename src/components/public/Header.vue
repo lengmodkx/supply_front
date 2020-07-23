@@ -30,7 +30,7 @@
           </li>
           <li class="tb-navigation-menu-divider"></li>
           <li class="tab-menu-item">
-            <div class="tab-menu-item-content2">
+            <div class="tab-menu-item-content2" @click="checkEnter">
               <div>切换企业</div>
               <div style="font-size:12px;color:#8c8c8c">我的企业</div>
             </div>
@@ -54,7 +54,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import { checkPermission } from "../../axios/api.js";
+import { checkPermission, userIsOwner } from "../../axios/api.js";
 
 export default {
   name: "header-main",
@@ -92,8 +92,19 @@ export default {
       this.$router.push("/prolist/" + localStorage.companyId);
     },
     goSys() {
-      this.active = 3;
-      this.$router.push("/systemSettings");
+      userIsOwner(localStorage.companyId).then(res => {
+        console.log(res);
+        if (res.msg == 1) {
+          this.active = 3;
+          this.$router.push("/systemSettings");
+          localStorage.organizationName = res.data.organizationName;
+        } else {
+          this.$Message.error("没有权限");
+        }
+      });
+    },
+    checkEnter() {
+      this.$router.push("/enterprisesList");
     },
     // 去成员页面
     goMembers() {
