@@ -45,6 +45,9 @@
 </template>
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
+import {
+changeOrganization
+} from "@/axios/api";
 export default {
   data: function() {
     return {};

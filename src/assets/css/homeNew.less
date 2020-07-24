@@ -1,218 +1,266 @@
-.wrap-box{
-     min-height: 100vh;
-     background: #f4f3f4;
-     padding-top: 65px;
-    .page-header{
-      background: #fff;
-      padding:  19px  32px  0;
-      display: flex;
-      flex-flow: column wrap;
-      border-bottom: 1px solid #e8e8e8;
-      .header-title{
-        color: #8c8c8c;
-        padding-bottom: 1em;
-      }
-      .header-contant{
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 1em;
-        .left-contant{
-          display: flex;
-          line-height: 33px;
-          .avatar{
-            width:64px ;
-            height: 64px;
-            margin-right: 14px;
-          }
-          .title{
-            font-size: 20px;
-            color: #2d2d2d;
-          }
-          .team{
-            color: #8c8c8c;
-          }
-  
-        }
-        .right-contant{
-          display: flex;
-          flex-flow: row nowrap;
-          .contant-item{
-            padding:0px 30px;
-            border-right: 1px solid  #e5e4e5;
-            .title{
-              color: #8c8c8c;
-            }
-            .number{
-              color: #2d2d2d;
-              font-size: 35px;
-            }
-          }
-          .contant-item:last-child{
-            border-right: none;
-          }
-          
-        }
-      }
+.wrap-box {
+  min-height: 100vh;
+  background: #f4f3f4;
+  padding-top: 65px;
+
+  .page-header {
+    background: #fff;
+    padding: 19px 32px 0;
+    display: flex;
+    flex-flow: column wrap;
+    border-bottom: 1px solid #e8e8e8;
+
+    .header-title {
+      color: #8c8c8c;
+      padding-bottom: 1em;
     }
-    .page-wrapper{
-      padding: 1.5em 1.5em 0 1.5em;
-      .ivu-card-body{
-        padding: 0px  !important;
-      }
-      //  项目
-      .porject-contant{
+
+    .header-contant {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 1em;
+
+      .left-contant {
         display: flex;
-        flex-flow: row wrap;
-        margin-top: -1px;
-          li{
-            width: 33.33%;
-            padding: 20px;
-            color: #8c8c8c;
-            // border-left: 1px solid
-            box-shadow: 1px 0 0 0 #e8e8e8, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;
-            transition: all .3s;
-            cursor: pointer;
-            .title{
-              i{
-                padding: 0 10px;
-                color: #ffa531;
-              }
-              span{
-                color: #262626;
-                font-weight: 1000px; 
-              }
-            }
-            .datetime{
-              display: flex;
-              justify-content: space-between;
-              font-size: 12px;
-            }
-            .description{
-              padding:10px 0;
-             }
-          }
-          li:nth-child(3n){
-            border-right: none;
-          }
-          li:hover{
-             box-shadow: 0 0 8px  rgba(0, 0, 0, .20);  
-          }
-          .noList {
-            padding: 20px;
-          }
+        line-height: 33px;
+
+        .avatar {
+          width: 64px;
+          height: 64px;
+          margin-right: 14px;
+        }
+
+        .title {
+          font-size: 20px;
+          color: #2d2d2d;
+        }
+
+        .team {
+          color: #8c8c8c;
+        }
+
       }
 
-      // 动态
-      .dynamic-contant{
+      .right-contant {
+        display: flex;
+        flex-flow: row nowrap;
+
+        .contant-item {
+          padding: 0px 30px;
+          border-right: 1px solid #e5e4e5;
+
+          .title {
+            color: #8c8c8c;
+          }
+
+          .number {
+            color: #2d2d2d;
+            font-size: 35px;
+          }
+        }
+
+        .contant-item:last-child {
+          border-right: none;
+        }
+
+      }
+    }
+  }
+
+  .page-wrapper {
+    padding: 1.5em 1.5em 0 1.5em;
+
+    .ivu-card-body {
+      padding: 0px !important;
+    }
+
+    //  项目
+    .porject-contant {
+      display: flex;
+      flex-flow: row wrap;
+      margin-top: -1px;
+
+      li {
+        width: 33.33%;
+        padding: 20px;
+        color: #8c8c8c;
+        // border-left: 1px solid
+        box-shadow: 1px 0 0 0 #e8e8e8, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;
+        transition: all .3s;
+        cursor: pointer;
+
+        .title {
+          i {
+            padding: 0 10px;
+            color: #ffa531;
+          }
+
+          span {
+            color: #262626;
+            font-weight: 1000px;
+          }
+        }
+
+        .datetime {
+          display: flex;
+          justify-content: space-between;
+          font-size: 12px;
+        }
+
+        .description {
+          padding: 10px 0;
+        }
+      }
+
+      li:nth-child(3n) {
+        border-right: none;
+      }
+
+      li:hover {
+        box-shadow: 0 0 8px rgba(0, 0, 0, .20);
+      }
+
+      .noList {
         padding: 20px;
       }
-      // 任务
-      .task-contant-waper{
-        padding: 10px 20px 20px;
-        .task-contant{
-          li{
-            border-bottom: 1px solid #e8e8e8;
+    }
+
+    // 动态
+    .dynamic-contant {
+      padding: 20px;
+    }
+
+    // 任务
+    .task-contant-waper {
+      padding: 10px 20px 20px;
+
+      .task-contant {
+        li {
+          border-bottom: 1px solid #e8e8e8;
+          display: flex;
+          justify-content: space-between;
+          padding: 10px 0px;
+          cursor: pointer;
+
+          .task-item {
+            width: 100%;
+          }
+
+          .task-item-left {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 10px;
             display: flex;
-            justify-content: space-between;
-            padding:10px 0px;
-            cursor: pointer;
-            .task-item {
-              width: 100%;
+
+            .ivu-tooltip {
+              overflow: hidden;
             }
-            .task-item-left {
-              flex: 1;
+
+            .ivu-tooltip-rel {
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              padding-right: 10px;
-              display: flex;
-              .ivu-tooltip {
-                overflow: hidden;
-              }
-              .ivu-tooltip-rel {
-                overflow: hidden;
-                text-overflow:ellipsis;
-                white-space: nowrap;
-                display: block;
-              }
-            }
-            .level{
-              color: #52c41a;
-              background: #f6ffed;
-              border-color: #b7eb8f;
-              // float: left;
-              margin-right: 15px;
-              display: inline-block;
-            }
-            .level:hover{
-              cursor: pointer;
-            }
-            span{
-              color: #2d8cf0;
-              font-weight: bold;
-              overflow: hidden;
-              text-overflow:ellipsis;
-              white-space: nowrap;
-            }
-            span:hover{
-              cursor: pointer;
+              display: block;
             }
           }
-          li:last-child{
-            border-bottom: none;
+
+          .level {
+            color: #52c41a;
+            background: #f6ffed;
+            border-color: #b7eb8f;
+            // float: left;
+            margin-right: 15px;
+            display: inline-block;
           }
-        } 
-        .task-page{
-          display: flex;
-          justify-content:  flex-end ;
-          margin-top:10px; 
+
+          .level:hover {
+            cursor: pointer;
+          }
+
+          span {
+            color: #2d8cf0;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          span:hover {
+            cursor: pointer;
+          }
         }
-        
-      }
-      // 团队
-      .team-contant{
-        display: flex;
-        flex-flow: row wrap;
-          padding-top: 20px;
-          li{
-            width: 33.33%;
-            padding: 0 20px 20px 20px;
-            .avatar{
-              width: 24px;
-              height: 24px;
-              margin-right: 6px;
-            }
-          }
-          li{
-            span:hover{
-              cursor: pointer;
-              color: #2d8cf0;
-            }
-          } 
-      }
-    }
-    .noList {
-      // margin-top: 10%;
-      margin: auto;
-      img {
-          display: block;
-          width: 135px;
-          height: 90px;
-          margin: 8px auto 16px;
+
+        li:last-child {
+          border-bottom: none;
+        }
       }
 
-      p {
-          text-align: center;
-          color: #333333;
+      .task-page {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
       }
+
+    }
+
+    // 团队
+    .team-contant {
+      display: flex;
+      flex-flow: row wrap;
+      padding-top: 20px;
+
+      li {
+        width: 33.33%;
+        padding: 0 20px 20px 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .avatar {
+          width: 24px;
+          height: 24px;
+          margin-right: 6px;
+          border-radius: 50%;
+          vertical-align: bottom;
+        }
+      }
+
+      li {
+        span:hover {
+          cursor: pointer;
+          color: #2d8cf0;
+        }
+      }
+    }
   }
-    
-   
-    
+
+  .noList {
+    // margin-top: 10%;
+    margin: auto;
+
+    img {
+      display: block;
+      width: 135px;
+      height: 90px;
+      margin: 8px auto 16px;
+    }
+
+    p {
+      text-align: center;
+      color: #333333;
+    }
+  }
+
+
+
 }
+
 .df {
   display: flex;
 }
+
 .jsb {
   justify-content: space-between;
 }

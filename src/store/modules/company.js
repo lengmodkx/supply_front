@@ -6,7 +6,7 @@ const  store ={
         companyList: [],
         branchId: '',
         companyId: '',
-        departmentTree:[]
+        departmentTree:[],
     },
     mutations: {
         initCompany(state, data){

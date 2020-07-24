@@ -35,6 +35,7 @@ export default {
               //异步设置
               enable: true,
               type: "post",
+              // url: 'http://192.168.3.254:8091/api/partments/tree',
               url: process.env.VUE_APP_TREE_URL3,
               autoParam: ["id=departmentId"],
               dataType: "JSON",
@@ -46,12 +47,14 @@ export default {
               }
           },
 
-      }
+      },
     };
   },
 
   computed: {
     ...mapState("tree", ["fileTree", "showView"])
+  },
+  mounted(){
   },
   methods: {
     ...mapActions("tree", ["initFolders"]),
