@@ -45,7 +45,7 @@ export default {
     return {
       formValidate: {
         accountName: "",
-        password: ""
+        password: "",
       },
       code: "",
       userInfo: null,
@@ -55,33 +55,38 @@ export default {
           {
             required: true,
             message: "请输入密码",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       key: "",
-      iv: ""
+      iv: "",
     };
   },
   computed: {
     ...mapState("app", ["loading"]),
-    ...mapState("user", ["mineRouter","defaultImage"]),
+    ...mapState("user", ["mineRouter", "defaultImage"]),
   },
   mounted() {
-    if (localStorage.token&&localStorage.companyId) {
+    if (localStorage.token && localStorage.companyId) {
       this.$router.replace("/org/" + localStorage.companyId);
     }
   },
   methods: {
-    ...mapActions("user", ["updateUserInfo", "updateUserId","initSrc"]),
-    
+    ...mapActions("user", ["updateUserInfo", "updateUserId", "initSrc"]),
+    setCookie(cname, cvalue) {
+      var d = new Date();
+      d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+      var expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
+    },
     login: function(name) {
       this.userInfo = this.formValidate;
 
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           //发请求的方法
-          userlogin(this.formValidate).then(res => {
+          userlogin(this.formValidate).then((res) => {
             if (res.result == 0) {
               this.$Message.error(res.msg);
             } else {
@@ -94,6 +99,7 @@ export default {
               localStorage.companyId = res.data.orgId;
               console.log(res.data.orgId);
               this.$Message.success("登录成功!");
+              setCookie("token",res.data.accessToken);
               if (res.data.orgId) {
                 this.$router.replace("/org/" + res.data.orgId);
               } else {
@@ -107,12 +113,12 @@ export default {
       });
     },
     weChatLogin() {
-      weChatLogin("https://www.aldbim.com").then(res => {
+      weChatLogin("https://www.aldbim.com").then((res) => {
         if (res.result === 1) {
           window.location.href = res.data;
         }
       });
-    }
+    },
   },
   beforeRouteEnter(to, from, next) {
     var url = location.search; //获取url中"?"符后的字串
@@ -126,10 +132,10 @@ export default {
     }
     var code = theRequest.code;
     console.log(code);
-    next(vm => {
+    next((vm) => {
       if (code) {
-        getWeChatToken(code).then(res => {
-          console.log(res)
+        getWeChatToken(code).then((res) => {
+          console.log(res);
           if (res.result === 1) {
             if (res.data.bindPhone) {
               vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });
@@ -141,19 +147,20 @@ export default {
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
+              setCookie("token",res.data.accessToken);
               if (res.data.orgId) {
                 vm.$router.replace("/org/" + res.data.orgId);
               } else {
                 vm.$router.replace("/organization-is-empty");
               }
             }
-          }else{
+          } else {
             vm.$Message.error("登录失败");
           }
         });
       }
     });
-  }
+  },
 };
 </script>
 
