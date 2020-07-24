@@ -99,7 +99,7 @@ export default {
               localStorage.companyId = res.data.orgId;
               console.log(res.data.orgId);
               this.$Message.success("登录成功!");
-              setCookie("token",res.data.accessToken);
+              this.setCookie("token",res.data.accessToken);
               if (res.data.orgId) {
                 this.$router.replace("/org/" + res.data.orgId);
               } else {
@@ -147,7 +147,7 @@ export default {
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
-              setCookie("token",res.data.accessToken);
+              this.setCookie("token",res.data.accessToken);
               if (res.data.orgId) {
                 vm.$router.replace("/org/" + res.data.orgId);
               } else {
