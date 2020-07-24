@@ -59,26 +59,6 @@
         <collect v-else-if="mineTag=='collect'" :name="name" :content="content"></collect>
       </Content>
     </div>
-
-    <!-- <ul class="mine-nav">
-      <li :class="hover=='nearThing'?'router-link-active':''" @click="openTag('nearThing')">近期的事</li>
-      <li :class="hover=='task'?'router-link-active':''" @click="openTag('task')">任务</li>
-      <li :class="hover=='schedule'?'router-link-active':''" @click="openTag('schedule')">日程</li>
-      <li :class="hover=='file'?'router-link-active':''" @click="openTag('file')">文件</li>
-    <li :class="hover=='collect'?'router-link-active':''" @click="openTag('collect')">收藏</li>-->
-    <!-- <router-link tag="li" to="nearThing">近期的事</router-link>
-          <router-link tag="li" to="task">任务</router-link>
-          <router-link tag="li" to="schedule">日程</router-link>
-          <router-link tag="li" to="file">文件</router-link>
-    <router-link tag="li" to="collect">收藏</router-link>-->
-    <!-- </ul> -->
-    <!-- <router-view></router-view> -->
-    <!-- <div class="close" @click="closeMine">&times;</div> -->
-    <!-- <nearThing v-if="mineTag=='nearThing'"></nearThing>
-    <task v-else-if="mineTag=='task'"></task>
-    <schedule v-else-if="mineTag=='schedule'"></schedule>
-    <file v-else-if="mineTag=='file'"></file>
-    <collect v-else-if="mineTag=='collect'"></collect>-->
   </div>
 </template>
 <script>

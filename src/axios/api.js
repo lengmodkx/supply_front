@@ -1534,3 +1534,114 @@ export function linkInvitation(orgId,projectId) {
         }
     })
 }
+
+// 设置企业默认角色
+export function enterDefaultRole(orgId, roleId) {
+    return fetch({
+        url: `roles/${orgId}/${roleId}/org_default_role`,
+        method: "put", // 请求方法
+    });
+}
+
+
+//根据条件筛选日志信息
+export function getLoglist(orgId,data) {
+    return fetch({
+        url: `/logs/operatingLog/${orgId}`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+
+//解绑
+export function notBindPhone() {
+    return fetch({
+        url: `/notBindPhone`,
+        method: 'get', // 请求方法
+    })
+}
+
+//判断当前用户是否是企业拥有者
+export function userIsOwner(orgId) {
+    return fetch({
+        url: `/role_user/isOwner/${orgId}`,
+        method: 'get', // 请求方法
+    })
+}
+
+//根据条件筛选用户消息
+export function userMessage(data) {
+    return fetch({
+        url: `/news/userNewsByCondition`,
+        method: 'get', // 请求方法
+        params:data
+    })
+}
+
+//批量标注已读
+export function batchReads(ids) {
+    return fetch({
+        url: `/news/changeIsRead`,
+        method: 'get', // 请求方法
+        params:{
+            ids:ids,
+            isRead:0
+        }
+    })
+}
+
+//批量标注已读
+export function batchDel(ids) {
+    return fetch({
+        url: `/news/removeNewsByIds`,
+        method: 'delete', // 请求方法
+        params:{
+            ids:ids,
+        }
+    })
+}
+
+
+//导出用户日志数据到导出表
+export function ExportApplication(orgId,memberId,startTime,endTime) {
+    return fetch({
+        url: `/logs/expUser/${orgId}`,
+        method: 'get', // 请求方法
+        params:{
+            memberId:memberId,
+            startTime:startTime,
+            endTime:endTime
+        }
+    })
+}
+
+//获取导出详情
+export function getExportInfo() {
+    return fetch({
+        url: `/logs/getExportInfo`,
+        method: 'get', // 请求方法
+    })
+}
+
+
+//删除导出信息
+export function deleteExpLog(id) {
+    return fetch({
+        url: `/logs/deleteLogInfo/${id}`,
+        method: 'get', // 请求方法
+    })
+}
+
+//导出日志信息
+export function expUserLog(orgId,id) {
+    return fetch({
+        url: `/logs/exportLogByExcel`,
+        method: 'get', // 请求方法
+        responseType: 'blob',
+        params:{
+            orgId:orgId,
+            id:id
+        }
+    })
+}

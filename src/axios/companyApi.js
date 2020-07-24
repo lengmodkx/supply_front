@@ -67,12 +67,11 @@ export function initOrgMember(orgId, flag) {
 }
 
 // 初始化企业成员信息  查询信息 新 add2020/6/23
-export function initOrgMemberNew(orgId, flag, memberLabel) {
+export function initOrgMemberNew(orgId, flag) {
     return fetch({
         url: `/organization/members/${orgId}/getOrgPartment`,
         method: "get",
         params: {
-            'memberLabel': memberLabel,
             'flag': flag,
         }
     });
@@ -260,4 +259,15 @@ export function groupRemoval(groupId, memberId) {
             memberId: memberId
         }
     });
+}
+
+//搜索部门
+export function searchDepartment(keyWord,orgId) {
+    return fetch({
+        url: `/partments/searchOrgByKeyWord/${orgId}`,
+        method: 'get', // 请求方法
+        params: {
+            keyWord: keyWord
+        }
+    })
 }
