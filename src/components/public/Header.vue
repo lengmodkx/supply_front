@@ -128,6 +128,7 @@ export default {
     },
     goout() {
       localStorage.clear();
+      this.setCookie("","",0);
       this.$router.push("/");
     },
     showMenu() {
@@ -136,7 +137,13 @@ export default {
       } else {
         this.popVisible = "none";
       }
-    }
+    },
+    setCookie(cname, cvalue) {
+      var d = new Date();
+      d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+      var expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
+    },
   },
   watch: {
     $route(to, from) {
