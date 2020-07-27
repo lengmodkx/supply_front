@@ -129,7 +129,7 @@ export default {
     goout() {
       localStorage.clear();
       this.setCookie("","",0);
-      this.$router.push("/");
+      window.location.href = "https://www.aldbim.com";
     },
     showMenu() {
       if (this.popVisible == "none") {
