@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" ref="content">
     <div class="content">
       <div class="title">
         <div>组织架构</div>
@@ -120,7 +120,7 @@
                     @click="getChilder(item,index)"
                   />
                 </div>
-                <img src="../icons/img/bumen-01.png" alt />
+                <svg-icon :name="item.icon"></svg-icon>
                 <span>{{item.name}}</span>
               </div>
               <div class="right-item">
@@ -211,7 +211,7 @@
                       type="primary"
                       long
                       class="determine"
-                      @click="changeBranchName"
+                      @click="changeBranchName(item)"
                       :disabled="!branchName"
                     >保存</Button>
                   </div>
@@ -331,130 +331,345 @@
                 </Poptip>
               </div>
             </div>
-            <div v-if="item.childen">
-              <div
-                class="content-item-childer content-item"
-                v-for="(v, i) in item.childer"
-                :key="i"
-              >
-                <div class="left-item df ac">
-                  <div class="foldICon">
-                    <Icon type="md-arrow-dropright" size="20" color="#979797" v-show="v.isParent" />
-                  </div>
-                  <img src="../icons/img/bumen-01.png" alt />
-                  <span>{{v.name}}</span>
-                </div>
-                <div class="right-item">
-                  <Poptip placement="left" transfer width="280" v-model="v.visible1">
-                    <a href="javascript:void(0)">
-                      <Tooltip content="编辑">
-                        <Icon type="md-create" size="20" color="#979797" @click="editDep(i,v)" />
-                      </Tooltip>
-                    </a>
-                    <div slot="title" class="member-title">
-                      <span>编辑部门</span>
+            <div v-if="item.childer">
+              <div v-for="(v, i) in item.childer" :key="i">
+                <div class="content-item-childer content-item">
+                  <div class="left-item df ac">
+                    <div class="foldICon">
                       <Icon
-                        type="md-close"
-                        size="18"
-                        class="role-md-close"
-                        @click.native="mdClose(i)"
+                        type="md-arrow-dropright"
+                        size="20"
+                        color="#979797"
+                        v-show="v.isParent"
+                        @click="getSonChilder(index,v,i)"
                       />
                     </div>
-                    <div slot="content">
-                      <div class="dep-pop">
-                        <div class="dep-pop-tit">部门名称</div>
-                        <Input prefix="ios-search" placeholder="部门名称" v-model="branchName" />
-                        <div class="dep-pop-tit">上级部门</div>
-                        <Input placeholder="部门名称" v-model="depName" disabled />
+                    <svg-icon :name="v.icon"></svg-icon>
+                    <span>{{v.name}}</span>
+                  </div>
+                  <div class="right-item">
+                    <Poptip placement="left" transfer width="280" v-model="v.visible1">
+                      <a href="javascript:void(0)">
+                        <Tooltip content="编辑">
+                          <Icon type="md-create" size="20" color="#979797" @click="editDep(i,v)" />
+                        </Tooltip>
+                      </a>
+                      <div slot="title" class="member-title">
+                        <span>编辑部门</span>
+                        <Icon
+                          type="md-close"
+                          size="18"
+                          class="role-md-close"
+                          @click.native="$refs.content.click()"
+                        />
                       </div>
-                      <div class="mb10">设置部门负责人</div>
-                      <Poptip placement="left" width="280" v-model="v.visible2">
+                      <div slot="content">
+                        <div class="dep-pop">
+                          <div class="dep-pop-tit">部门名称</div>
+                          <Input prefix="ios-search" placeholder="部门名称" v-model="branchName" />
+                          <div class="dep-pop-tit">上级部门</div>
+                          <Input placeholder="部门名称" v-model="item.name" disabled />
+                        </div>
+                        <div class="mb10">设置部门负责人</div>
+                        <Poptip placement="left" width="280" v-model="v.visible2">
+                          <a href="javascript:void(0)">
+                            <div class="addDep mb10" v-if="!social2">
+                              <Icon type="md-add" color="#2B85E4" size="20" />
+                            </div>
+                            <div v-else class="userInfo">
+                              <img :src="userImg" />
+                              <p>{{userName}}</p>
+                            </div>
+                          </a>
+                          <div slot="title" class="member-title">
+                            <span>选择负责人</span>
+                            <!-- <Icon type="md-close" size="18" class="role-md-close" @click.stop="aditClose(i)" /> -->
+                          </div>
+                          <div slot="content">
+                            <div class="dep-pop">
+                              <Input
+                                prefix="ios-search"
+                                placeholder="请输入关键字"
+                                class="mt10"
+                                @on-change="searchOrgProple"
+                              />
+                              <ul class="people-ul">
+                                <RadioGroup v-model="social2" @on-change="peopleCheck2">
+                                  <li v-for="(itemp, indexp) in allOrgPeople" :key="indexp">
+                                    <Radio :label="itemp.memberId" class="df people-check ac">
+                                      <div class="df">
+                                        <img :src="itemp.image" alt />
+                                        <p>{{ itemp.userName }}</p>
+                                      </div>
+                                    </Radio>
+                                  </li>
+                                </RadioGroup>
+                              </ul>
+                            </div>
+                          </div>
+                        </Poptip>
+                        <div class="mb10">部门icon</div>
+                        <Row class="iconList">
+                          <Col
+                            span="6"
+                            v-for="(item,index) in 21"
+                            :key="index"
+                            class-name="iconCol"
+                          >
+                            <div
+                              :class="['iconContent',{checked:nowChecked==index}]"
+                              :key="index"
+                              @click.stop="changeTag(index)"
+                            >
+                              <svg-icon :name="'depIcon'+index"></svg-icon>
+                            </div>
+                          </Col>
+                        </Row>
+
+                        <Button
+                          type="primary"
+                          long
+                          class="determine"
+                          @click="changeBranchName(v)"
+                          :disabled="!branchName"
+                        >保存</Button>
+                      </div>
+                    </Poptip>
+                    <Poptip placement="left" transfer width="280" v-model="v.visible3">
+                      <a href="javascript:void(0)">
+                        <Tooltip content="新建子部门">
+                          <Icon type="md-add" size="20" color="#979797" @click="newlyBuild(i,v)" />
+                        </Tooltip>
+                      </a>
+                      <div slot="title" class="member-title">
+                        <span>新建子部门</span>
+                        <Icon
+                          type="md-close"
+                          size="18"
+                          class="role-md-close"
+                          @click.native="$refs.content.click()"
+                        />
+                      </div>
+                      <div slot="content">
+                        <div class="dep-pop">
+                          <div class="dep-pop-tit">部门名称</div>
+                          <Input prefix="ios-search" placeholder="部门名称" v-model="branchName" />
+                          <div class="dep-pop-tit">上级部门</div>
+                          <Input placeholder="部门名称" v-model="v.name" disabled />
+                        </div>
+                        <div class="mb10">设置部门负责人</div>
+                        <Poptip placement="left" width="280" v-model="v.visible4">
+                          <a href="javascript:void(0)">
+                            <div class="addDep mb10" v-if="!social2">
+                              <Icon type="md-add" color="#2B85E4" size="20" />
+                            </div>
+                            <div v-else class="userInfo">
+                              <img :src="userImg" />
+                              <p>{{userName}}</p>
+                            </div>
+                          </a>
+                          <div slot="title" class="member-title">
+                            <span>选择负责人</span>
+                            <!-- <Icon type="md-close" size="18" class="role-md-close" @click.stop="aditClose(i)" /> -->
+                          </div>
+                          <div slot="content">
+                            <div class="dep-pop">
+                              <Input
+                                prefix="ios-search"
+                                placeholder="请输入关键字"
+                                class="mt10"
+                                @on-change="searchOrgProple"
+                              />
+                              <ul class="people-ul">
+                                <RadioGroup v-model="social2" @on-change="peopleCheck2">
+                                  <li v-for="(item, index) in allOrgPeople" :key="index">
+                                    <Radio :label="item.memberId" class="df people-check ac">
+                                      <div class="df">
+                                        <img :src="item.image" alt />
+                                        <p>{{ item.userName }}</p>
+                                      </div>
+                                    </Radio>
+                                  </li>
+                                </RadioGroup>
+                              </ul>
+                            </div>
+                          </div>
+                        </Poptip>
+                        <div class="mb10">部门icon</div>
+                        <Row class="iconList">
+                          <Col
+                            span="6"
+                            v-for="(item,index) in 21"
+                            :key="index"
+                            class-name="iconCol"
+                          >
+                            <div
+                              :class="['iconContent',{checked:nowChecked==index}]"
+                              :key="index"
+                              @click.stop="changeTag(index)"
+                            >
+                              <svg-icon :name="'depIcon'+index"></svg-icon>
+                            </div>
+                          </Col>
+                        </Row>
+
+                        <Button
+                          type="primary"
+                          long
+                          class="determine"
+                          @click="createSub(v)"
+                          :disabled="!branchName"
+                        >保存</Button>
+                      </div>
+                    </Poptip>
+                    <Poptip placement="bottom" transfer width="280">
+                      <Tooltip content="删除">
+                        <Icon type="ios-trash-outline" size="20" color="#979797" />
+                      </Tooltip>
+                      <div slot="title" class="member-title">
+                        <span>移除部门</span>
+                        <Icon
+                          type="md-close"
+                          size="18"
+                          class="role-md-close"
+                          @click.native="$refs.content.click()"
+                        />
+                      </div>
+                      <div slot="content">
+                        <div style="margin-top:10px;margin-bottom:10px">
+                          <span>你确定把「{{v.name}}」部门移除吗？移除部门时该部门下的子部门会被同时移除，该部门的成员将会移至未分配部门。</span>
+                        </div>
+                        <Button type="error" long @click="deleteIt(v)">确定</Button>
+                      </div>
+                    </Poptip>
+                  </div>
+                </div>
+                <div v-if="v.grandsonChilden">
+                  <div
+                    v-for="(value, num) in v.grandsonChilden"
+                    :key="num"
+                    class="content-item item-childer-child"
+                  >
+                    <div class="left-item df ac">
+                      <div class="foldICon"></div>
+                    <svg-icon :name="value.icon"></svg-icon>
+                      <span>{{value.name}}</span>
+                    </div>
+                    <div class="right-item">
+                      <Poptip placement="left" transfer width="280" v-model="value.visible1">
                         <a href="javascript:void(0)">
-                          <div class="addDep mb10" v-if="!social2">
-                            <Icon type="md-add" color="#2B85E4" size="20" />
-                          </div>
-                          <div v-else class="userInfo">
-                            <img :src="userImg" />
-                            <p>{{userName}}</p>
-                          </div>
+                          <Tooltip content="编辑">
+                            <Icon
+                              type="md-create"
+                              size="20"
+                              color="#979797"
+                              @click="editDep(num,value)"
+                            />
+                          </Tooltip>
                         </a>
                         <div slot="title" class="member-title">
-                          <span>选择负责人</span>
+                          <span>编辑部门</span>
                           <Icon
                             type="md-close"
                             size="18"
                             class="role-md-close"
-                            @click.stop="aditClose(i)"
+                            @click.native="$refs.content.click()"
                           />
                         </div>
                         <div slot="content">
                           <div class="dep-pop">
-                            <Input
-                              prefix="ios-search"
-                              placeholder="请输入关键字"
-                              class="mt10"
-                              @on-change="searchOrgProple"
-                            />
-                            <ul class="people-ul">
-                              <RadioGroup v-model="social2" @on-change="peopleCheck2">
-                                <li v-for="(itemp, indexp) in allOrgPeople" :key="indexp">
-                                  <Radio :label="itemp.memberId" class="df people-check ac">
-                                    <div class="df">
-                                      <img :src="itemp.image" alt />
-                                      <p>{{ itemp.userName }}</p>
-                                    </div>
-                                  </Radio>
-                                </li>
-                              </RadioGroup>
-                            </ul>
+                            <div class="dep-pop-tit">部门名称</div>
+                            <Input prefix="ios-search" placeholder="部门名称" v-model="branchName" />
+                            <div class="dep-pop-tit">上级部门</div>
+                            <Input placeholder="部门名称" v-model="v.name" disabled />
                           </div>
+                          <div class="mb10">设置部门负责人</div>
+                          <Poptip placement="left" width="280" v-model="value.visible2">
+                            <a href="javascript:void(0)">
+                              <div class="addDep mb10" v-if="!social2">
+                                <Icon type="md-add" color="#2B85E4" size="20" />
+                              </div>
+                              <div v-else class="userInfo">
+                                <img :src="userImg" />
+                                <p>{{userName}}</p>
+                              </div>
+                            </a>
+                            <div slot="title" class="member-title">
+                              <span>选择负责人</span>
+                              <!-- <Icon type="md-close" size="18" class="role-md-close"
+                              @click.stop="aditCloseGrandson(index,i,num)" />-->
+                            </div>
+                            <div slot="content">
+                              <div class="dep-pop">
+                                <Input
+                                  prefix="ios-search"
+                                  placeholder="请输入关键字"
+                                  class="mt10"
+                                  @on-change="searchOrgProple"
+                                />
+                                <ul class="people-ul">
+                                  <RadioGroup v-model="social2" @on-change="peopleCheck2">
+                                    <li v-for="(itemp, indexp) in allOrgPeople" :key="indexp">
+                                      <Radio :label="itemp.memberId" class="df people-check ac">
+                                        <div class="df">
+                                          <img :src="itemp.image" alt />
+                                          <p>{{ itemp.userName }}</p>
+                                        </div>
+                                      </Radio>
+                                    </li>
+                                  </RadioGroup>
+                                </ul>
+                              </div>
+                            </div>
+                          </Poptip>
+                          <div class="mb10">部门icon</div>
+                          <Row class="iconList">
+                            <Col
+                              span="6"
+                              v-for="(item,index) in 21"
+                              :key="index"
+                              class-name="iconCol"
+                            >
+                              <div
+                                :class="['iconContent',{checked:nowChecked==index}]"
+                                :key="index"
+                                @click.stop="changeTag(index)"
+                              >
+                                <svg-icon :name="'depIcon'+index"></svg-icon>
+                              </div>
+                            </Col>
+                          </Row>
+                          <Button
+                            type="primary"
+                            long
+                            class="determine"
+                            @click="changeBranchName(value)"
+                            :disabled="!branchName"
+                          >保存</Button>
                         </div>
                       </Poptip>
-                      <div class="mb10">部门icon</div>
-                      <Row class="iconList">
-                        <Col span="6" v-for="(item,index) in 21" :key="index" class-name="iconCol">
-                          <div
-                            :class="['iconContent',{checked:nowChecked==index}]"
-                            :key="index"
-                            @click.stop="changeTag(index)"
-                          >
-                            <svg-icon :name="'depIcon'+index"></svg-icon>
+                      <Poptip placement="bottom" transfer width="280">
+                        <Tooltip content="删除">
+                          <Icon type="ios-trash-outline" size="20" color="#979797" />
+                        </Tooltip>
+                        <div slot="title" class="member-title">
+                          <span>移除部门</span>
+                          <Icon
+                            type="md-close"
+                            size="18"
+                            class="role-md-close"
+                            @click.native="$refs.content.click()"
+                          />
+                        </div>
+                        <div slot="content">
+                          <div style="margin-top:10px;margin-bottom:10px">
+                            <span>你确定把「{{value.name}}」部门移除吗？移除部门时该部门下的子部门会被同时移除，该部门的成员将会移至未分配部门。</span>
                           </div>
-                        </Col>
-                      </Row>
-
-                      <Button
-                        type="primary"
-                        long
-                        class="determine"
-                        @click="changeBranchName"
-                        :disabled="!branchName"
-                      >保存</Button>
+                          <Button type="error" long @click="deleteIt(value)">确定</Button>
+                        </div>
+                      </Poptip>
                     </div>
-                  </Poptip>
-                  <Tooltip content="新建子部门">
-                    <Icon type="md-add" size="20" color="#979797" />
-                  </Tooltip>
-                  <Poptip placement="bottom" transfer width="280" v-model="v.visible">
-                    <Tooltip content="删除">
-                      <Icon type="ios-trash-outline" size="20" color="#979797" />
-                    </Tooltip>
-                    <div slot="title" class="member-title">
-                      <span>移除部门</span>
-                      <Icon
-                        type="md-close"
-                        size="18"
-                        class="role-md-close"
-                        @click.native="mdClose(i)"
-                      />
-                    </div>
-                    <div slot="content">
-                      <div style="margin-top:10px;margin-bottom:10px">
-                        <span>你确定把「{{v.name}}」部门移除吗？移除部门时该部门下的子部门会被同时移除，该部门的成员将会移至未分配部门。</span>
-                      </div>
-                      <Button type="error" long @click="deleteIt(v)">确定</Button>
-                    </div>
-                  </Poptip>
+                  </div>
                 </div>
               </div>
             </div>
@@ -464,6 +679,8 @@
     </div>
   </div>
 </template>
+
+
 <script>
 import Loading from "../components/public/common/Loading.vue";
 import {
@@ -481,37 +698,10 @@ export default {
   },
   data() {
     return {
-      cityList: [
-        {
-          value: "New York",
-          label: "New York"
-        },
-        {
-          value: "London",
-          label: "London"
-        },
-        {
-          value: "Sydney",
-          label: "Sydney"
-        },
-        {
-          value: "Ottawa",
-          label: "Ottawa"
-        },
-        {
-          value: "Paris",
-          label: "Paris"
-        },
-        {
-          value: "Canberra",
-          label: "Canberra"
-        }
-      ],
       depName: "",
       allOrgPeople: [],
       social: "",
       social2: "",
-
       personPop: false,
       personPop2: false,
       depPop: false,
@@ -551,7 +741,6 @@ export default {
           i.visible1 = false;
           i.visible2 = false;
           i.visible3 = false;
-          i.visible4 = false;
         });
         this.departmentTreeNew = res.data;
         this.departmentTreeNewCopy = res.data;
@@ -651,11 +840,44 @@ export default {
       this.$set(this.departmentTreeNew[index], "visible1", false);
       this.$set(this.departmentTreeNew[index], "visible3", false);
     },
+    //孙节点编辑和删除弹窗关闭
+    mdCloseGrandson(indexOne, indexTwo, indexThree) {
+      console.log(indexOne, indexTwo, indexThree);
+      this.$set(
+        this.departmentTreeNew[indexOne].childer[indexTwo].grandsonChilden[
+          indexThree
+        ],
+        "visible",
+        false
+      );
+      this.$set(
+        this.departmentTreeNew[indexOne].childer[indexTwo].grandsonChilden[
+          indexThree
+        ],
+        "visible1",
+        false
+      );
+      console.log(
+        this.departmentTreeNew[indexOne].childer[indexTwo].grandsonChilden[
+          indexThree
+        ]
+      );
+    },
     aditClose(index) {
       this.$set(this.departmentTreeNew[index], "visible2", false);
       this.$set(this.departmentTreeNew[index], "visible4", false);
     },
+    aditCloseGrandson(indexOne, indexTwo, indexThree) {
+      this.$set(
+        this.departmentTreeNew[indexOne].childer[indexTwo].indexThree[
+          indexThree
+        ],
+        "visible2",
+        false
+      );
+    },
     editDep(index, item) {
+      console.log(item);
       this.editIndex = index;
       this.branchName = item.name;
       this.depId = item.id;
@@ -686,14 +908,14 @@ export default {
       });
     },
     // 编辑部门后保存
-    changeBranchName() {
+    changeBranchName(item) {
       // this.isCreateBranch = true;
       let data = {
         partmentName: this.branchName,
         memberId: this.social2,
         partmentLogo: this.nowIconName
       };
-      changeBranchNames(this.depId, data).then(res => {
+      changeBranchNames(item.id, data).then(res => {
         if (res.result == 1) {
           // this.isCreateBranch = false;
           this.$Message.success("修改成功");
@@ -706,24 +928,54 @@ export default {
     },
     // 获取子部门
     getChilder(item, index) {
-      getDepartmentTree("", item.id).then(res => {
-        this.departmentTreeNewCopy[index].childer = res.data;
-        this.departmentTreeNewCopy[index].childen = true;
+      if (this.departmentTreeNewCopy[index].childer) {
+        // console.log('收起')
+        delete this.departmentTreeNewCopy[index].childer;
         this.departmentTreeNew = [];
         this.departmentTreeNew = this.departmentTreeNewCopy;
-        console.log(this.departmentTreeNew);
-      });
+      } else {
+        getDepartmentTree("", item.id).then(res => {
+          res.data.forEach(value => {
+            value.visible = false; //删除
+            value.visible1 = false; //编辑
+            value.visible2 = false; //负责人
+          });
+          this.departmentTreeNewCopy[index].childer = res.data;
+          this.departmentTreeNew = [];
+          this.departmentTreeNew = this.departmentTreeNewCopy;
+        });
+      }
+    },
+    getSonChilder(index, v, i) {
+      if (this.departmentTreeNewCopy[index].childer[i].grandsonChilden) {
+        // console.log('收起')
+        delete this.departmentTreeNewCopy[index].childer[i].grandsonChilden;
+        this.departmentTreeNew = [];
+        this.departmentTreeNew = this.departmentTreeNewCopy;
+      } else {
+        getDepartmentTree("", v.id).then(res => {
+          res.data.forEach(item => {
+            item.visible = false; //删除
+            item.visible1 = false; //编辑
+            item.visible2 = false; //负责人
+          });
+          this.departmentTreeNewCopy[index].childer[i].grandsonChilden =
+            res.data;
+          this.departmentTreeNew = [];
+          this.departmentTreeNew = this.departmentTreeNewCopy;
+        });
+      }
     },
     changeTag(index) {
       this.nowChecked = index;
       this.nowIconName = "depIcon" + index;
-      // console.log(tag)
     }
   }
 };
 </script>
 <style lang="less" scoped>
 @import "../assets/css/managementS";
+
 .line {
   width: 56px !important;
 }
