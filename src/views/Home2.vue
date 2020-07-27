@@ -12,7 +12,7 @@
               <div class="title">下午好，{{userInfo.userName}}，祝你开心每一天！</div>
               <div class="team">
                 {{userInfo.job}}|
-                <span v-for="i in userInfo.partmemt" :key="i.partmentId">{{i.partmentName}}</span>
+                <span v-for="i in userInfo.partmemt" :key="i.partmentId">{{i.partmentName?i.partmentName:'--'}}</span>
               </div>
             </div>
           </div>

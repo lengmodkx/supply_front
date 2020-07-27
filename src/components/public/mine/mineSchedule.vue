@@ -66,7 +66,7 @@
           </div>
         </div>-->
         <div>
-          <Row class="schedule-content" v-if="scheduleList.length" :gutter="20">
+          <Row class="schedule-content" v-if="scheduleList.length" :gutter="15">
             <Col
               :xs="12"
               :sm="8"

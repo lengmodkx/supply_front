@@ -57,7 +57,7 @@
           <div class="rw-xm">
             <div v-if="!task.level" class="rw">
               <p class="taskName">{{task.taskName}}</p>
-              <span class="xm">{{task.project.projectName}}</span>
+              <span class="xm">{{task.projectName}}</span>
             </div>
             <div v-else class="zrw">
               <span>{{task.taskName}}</span>
@@ -130,13 +130,13 @@ export default {
     getMeTask() {
       this.loading = true;
       getMeTask(this.isDone, this.order, this.type).then(res => {
-        if (res.result === 1) {
+        // if (res.result === 1) {
           this.loading = false;
-          this.taskList = res.data;
+          this.taskList = res.data.list;
           this.taskList.map(p => {
             p.taskList = false;
           });
-        }
+        // }
       });
     },
     // 显示任务详情、

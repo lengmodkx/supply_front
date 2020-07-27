@@ -83,7 +83,7 @@ export default {
               },
               tooltip: {},
               action: "copy",
-              actionValue: "https://www.aldbim.com/detail/?code=" + code,
+              actionValue: "https://work.aldbim.com/detail/?code=" + code,
               actionLabel: {
                 en: "Copy Meeting Link",
                 "zh-cn": "复制会议链接",

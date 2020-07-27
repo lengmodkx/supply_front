@@ -11,7 +11,7 @@
         <li :class="{ hover: active == 1 }" @click="projectList">项目管理</li>
         <li :class="{ hover: active == 2 }" @click="goMembers">团队成员</li>
         <li :class="{ hover: active == 3 }" @click="goSys">系统设置</li>
-        <li :class="{ hover: active == 4 }">我的</li>
+        <li :class="{ hover: active == 4 }" @click="myPage">我的</li>
       </ul>
     </div>
     <div>
@@ -20,7 +20,7 @@
           :src="headeImg"
           class="avatar"
           @click.native="showMenu"
-          v-click-outside="popVisible=='none'"
+          v-click-outside="hideContent"
         />
       </div>
       <div class="userInfo" :style="{ display: popVisible }">
@@ -78,6 +78,10 @@ export default {
       this.active = 1;
     } else if (this.$route.name == "members") {
       this.active = 2;
+    }else if (this.$route.name == "systemSettings") {
+      this.active = 3;
+    }else if (this.$route.name == "Mine") {
+      this.active = 4;
     }
   },
   methods: {
@@ -93,7 +97,6 @@ export default {
     },
     goSys() {
       userIsOwner(localStorage.companyId).then(res => {
-        console.log(res);
         if (res.msg == 1) {
           this.active = 3;
           this.$router.push("/systemSettings");
@@ -136,12 +139,18 @@ export default {
       } else {
         this.popVisible = "none";
       }
+    },
+    myPage() {
+          this.active = 4;
+      this.$router.push("/mine");
+    },
+    hideContent() {
+      this.popVisible = "none";
     }
   },
   watch: {
     $route(to, from) {
       console.log(to);
-      // if()
     }
   }
 };

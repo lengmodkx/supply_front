@@ -3,7 +3,7 @@
     <Form ref="formValidate" @keyup.native.enter="login('formValidate')" :model="formValidate" :rules="ruleValidate" class="login-box">
       <div class="login-title">阿拉丁BIM云平台</div>
       <!-- <div class="weChat" id="wx_qrcode">
-        <wxlogin  :appid="'wxb7b91f87460a9d90'" :response_type="'code'" :scope="'snsapi_login'"  :redirect_uri="'https://www.aldbim.com'"></wxlogin>
+        <wxlogin  :appid="'wxb7b91f87460a9d90'" :response_type="'code'" :scope="'snsapi_login'"  :redirect_uri="'https://work.aldbim.com'"></wxlogin>
       </div> -->
       <FormItem prop="accountName">
         <Input type="text" size="large" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
@@ -113,7 +113,7 @@ export default {
       });
     },
     weChatLogin() {
-      weChatLogin("https://www.aldbim.com").then((res) => {
+      weChatLogin("https://work.aldbim.com").then((res) => {
         if (res.result === 1) {
           window.location.href = res.data;
         }

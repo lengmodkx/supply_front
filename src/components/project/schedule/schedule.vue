@@ -94,13 +94,13 @@ export default {
       createUser(localStorage.userId, localStorage.companyId).then((res) => {
         if (res.result == 1) {
           createMeeting(localStorage.userId, "会议", scheduleId, this.$route.params.id).then((res) => {
-            window.open("https://www.aldbim.com/detail?code=" + res.meeting.meetingCode + "&userId=" + localStorage.userId);
+            window.open("https://work.aldbim.com/detail?code=" + res.meeting.meetingCode + "&userId=" + localStorage.userId);
           });
         }
       });
     },
     enterZoom(meetingCode) {
-      window.open("https://www.aldbim.com/detail?code=" + meetingCode + "&userId=" + localStorage.userId);
+      window.open("https://work.aldbim.com/detail?code=" + meetingCode + "&userId=" + localStorage.userId);
     },
   },
   mounted() {

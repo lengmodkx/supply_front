@@ -4,7 +4,7 @@
       <Menu
         theme="dark"
         accordion
-        width="200px"
+        width="240px"
         :class="fold?'':'foldMenuWidth'"
         @on-select="openTag"
         active-name="nearThing,1" 
@@ -166,9 +166,11 @@ export default {
     foldMenu() {
       this.fold = false;
       this.showFold = false;
+      this.$store.commit("app/changeHeader", false);
     },
     //收起菜单
     openMenu() {
+      this.$store.commit("app/changeHeader", true);
       this.fold = true;
       setTimeout(() => {
         this.showFold = true;

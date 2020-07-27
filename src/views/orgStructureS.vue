@@ -84,8 +84,14 @@
               </Poptip>
               <div class="mb10">部门icon</div>
               <Row class="iconList">
-                <Col span="6">
-                  <img src="../icons/img/bumen-01.png" alt />
+                <Col span="6" v-for="(item,index) in 21" :key="index" class-name="iconCol">
+                  <div
+                    :class="['iconContent',{checked:nowChecked==index}]"
+                    :key="index"
+                    @click.stop="changeTag(index)"
+                  >
+                    <svg-icon :name="'depIcon'+index"></svg-icon>
+                  </div>
                 </Col>
               </Row>
 
@@ -118,7 +124,7 @@
                 <span>{{item.name}}</span>
               </div>
               <div class="right-item">
-                <!-- <Poptip placement="left" transfer width="280" v-model="item.visible1">
+                <Poptip placement="left" transfer width="280" v-model="item.visible1">
                   <a href="javascript:void(0)">
                     <Tooltip content="编辑">
                       <Icon
@@ -190,8 +196,14 @@
                     </Poptip>
                     <div class="mb10">部门icon</div>
                     <Row class="iconList">
-                      <Col span="6">
-                        <img src="../icons/img/bumen-01.png" alt />
+                      <Col span="6" v-for="(item,index) in 21" :key="index" class-name="iconCol">
+                        <div
+                          :class="['iconContent',{checked:nowChecked==index}]"
+                          :key="index"
+                          @click.stop="changeTag(index)"
+                        >
+                          <svg-icon :name="'depIcon'+index"></svg-icon>
+                        </div>
                       </Col>
                     </Row>
 
@@ -203,11 +215,16 @@
                       :disabled="!branchName"
                     >保存</Button>
                   </div>
-                </Poptip>-->
+                </Poptip>
                 <Poptip placement="left" transfer width="280" v-model="item.visible3">
                   <a href="javascript:void(0)">
                     <Tooltip content="新建子部门">
-                      <Icon type="md-add" size="20" color="#979797" @click="newlyBuild(index,item)" />
+                      <Icon
+                        type="md-add"
+                        size="20"
+                        color="#979797"
+                        @click="newlyBuild(index,item)"
+                      />
                     </Tooltip>
                   </a>
                   <div slot="title" class="member-title">
@@ -271,8 +288,14 @@
                     </Poptip>
                     <div class="mb10">部门icon</div>
                     <Row class="iconList">
-                      <Col span="6">
-                        <img src="../icons/img/bumen-01.png" alt />
+                      <Col span="6" v-for="(item,index) in 21" :key="index" class-name="iconCol">
+                        <div
+                          :class="['iconContent',{checked:nowChecked==index}]"
+                          :key="index"
+                          @click.stop="changeTag(index)"
+                        >
+                          <svg-icon :name="'depIcon'+index"></svg-icon>
+                        </div>
                       </Col>
                     </Row>
 
@@ -286,7 +309,7 @@
                   </div>
                 </Poptip>
 
-                <!-- <Poptip placement="bottom" transfer width="280" v-model="item.visible">
+                <Poptip placement="bottom" transfer width="280" v-model="item.visible">
                   <Tooltip content="删除">
                     <Icon type="ios-trash-outline" size="20" color="#979797" />
                   </Tooltip>
@@ -305,7 +328,7 @@
                     </div>
                     <Button type="error" long @click="deleteIt(item)">确定</Button>
                   </div>
-                </Poptip>-->
+                </Poptip>
               </div>
             </div>
             <div v-if="item.childen">
@@ -389,8 +412,14 @@
                       </Poptip>
                       <div class="mb10">部门icon</div>
                       <Row class="iconList">
-                        <Col span="6">
-                          <img src="../icons/img/bumen-01.png" alt />
+                        <Col span="6" v-for="(item,index) in 21" :key="index" class-name="iconCol">
+                          <div
+                            :class="['iconContent',{checked:nowChecked==index}]"
+                            :key="index"
+                            @click.stop="changeTag(index)"
+                          >
+                            <svg-icon :name="'depIcon'+index"></svg-icon>
+                          </div>
                         </Col>
                       </Row>
 
@@ -496,7 +525,9 @@ export default {
       editIndex: "",
       allOrgPeopleCopy: [],
       depId: "", //编辑部门时拿到部门id
-      departmentTreeNewCopy: []
+      departmentTreeNewCopy: [],
+      nowChecked: 0,
+      nowIconName: "depIcon0"
     };
   },
   computed: {},
@@ -525,7 +556,7 @@ export default {
         this.departmentTreeNew = res.data;
         this.departmentTreeNewCopy = res.data;
       });
-      this.branchName=''
+      this.branchName = "";
     },
     // 搜索企业内成员  直接搜索
     searchOrgProple(event) {
@@ -590,7 +621,8 @@ export default {
       this.loading = true;
       let data = {
         partmentName: this.branchName,
-        memberId: this.social
+        memberId: this.social,
+        partmentLogo: this.nowIconName
       };
       createBranchs(localStorage.companyId, data).then(res => {
         if (res.result == 1) {
@@ -604,7 +636,8 @@ export default {
       this.loading = true;
       let data = {
         partmentName: this.branchName,
-        parentId: item.id
+        parentId: item.id,
+        partmentLogo: this.nowIconName
       };
       createBranchs(localStorage.companyId, data).then(res => {
         if (res.result == 1) {
@@ -657,7 +690,8 @@ export default {
       // this.isCreateBranch = true;
       let data = {
         partmentName: this.branchName,
-        memberId: this.social2
+        memberId: this.social2,
+        partmentLogo: this.nowIconName
       };
       changeBranchNames(this.depId, data).then(res => {
         if (res.result == 1) {
@@ -679,6 +713,11 @@ export default {
         this.departmentTreeNew = this.departmentTreeNewCopy;
         console.log(this.departmentTreeNew);
       });
+    },
+    changeTag(index) {
+      this.nowChecked = index;
+      this.nowIconName = "depIcon" + index;
+      // console.log(tag)
     }
   }
 };
