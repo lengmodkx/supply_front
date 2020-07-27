@@ -4,9 +4,10 @@
       <Menu
         :class=" isCollapsed?'big':'small'"
         :active-name="menuActive"
-        :open-names="['1']"
+        :open-names="openNames"
         :theme="'dark'"
         v-if="isCollapsed"
+        accordion
         @on-select="openTag"
       >
         <Submenu v-for="(item,index) in MenuList" :key="index" :name="item.name">
@@ -120,7 +121,8 @@ export default {
       isCollapsed: true,
       tabValue: "0", //项目列表tab栏选中项
       menuActive: "1,0", //菜单栏选中项
-      mineTag: "1,0"
+      mineTag: "1,0",
+      openNames: ["1"]
     };
   },
   computed: {
@@ -128,6 +130,13 @@ export default {
   },
   mounted() {
     this.companyId = localStorage.companyId;
+  },
+  created() {
+    if (this.$route.query.from == "members") {
+      this.openNames = ["2"];
+      this.menuActive = "2,0";
+      this.mineTag = "2,0";
+    }
   },
   methods: {
     openTag(tagName) {

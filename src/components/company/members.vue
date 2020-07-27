@@ -101,7 +101,7 @@
                 </div>
               </Poptip>
 
-              <div class="branch">
+              <div class="branch" @click="management">
                 <Icon type="ios-settings" />成员管理
               </div>
             </div>
@@ -242,9 +242,9 @@
               <Row class="branch-list" v-for="(i, n) in peopleList" :key="n">
                 <Col span="5" class-name="member-name">
                   <div class="df">
-                    <img :src="i.organizationMember.image" alt />
+                    <img :src="i.organizationMember.userEntity.image" alt />
                     <!-- <div> -->
-                    <div class="one-member-name">{{i.organizationMember.userName }}</div>
+                    <div class="one-member-name">{{i.organizationMember.userEntity.userName }}</div>
                     <!-- <div class="member-phone">{{item.accountName}}</div> -->
                     <!-- </div> -->
                   </div>
@@ -1276,6 +1276,10 @@ export default {
         }
       });
     },
+    //成员管理
+    management(){
+        this.$router.push({ name: "systemSettings", query: { from:'members' } });
+    }
   },
   created() {
     this.initMember();

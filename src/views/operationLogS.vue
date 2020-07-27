@@ -28,9 +28,9 @@
             <Select v-model="memberValue" @on-change="screen">
               <Option
                 v-for="item in peopleList"
-                :value="item.memberId"
-                :key="item.memberId"
-              >{{ item.userName }}</Option>
+                :value="item.userEntity.userId"
+                :key="item.userEntity.userId"
+              >{{ item.userEntity.userName }}</Option>
             </Select>
           </Col>
           <!-- <Col span="7">
