@@ -97,7 +97,6 @@ export default {
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
-              console.log(res.data.orgId);
               this.$Message.success("登录成功!");
               this.setCookie("token",res.data.accessToken);
               if (res.data.orgId) {
@@ -131,11 +130,9 @@ export default {
       }
     }
     var code = theRequest.code;
-    console.log(code);
     next((vm) => {
       if (code) {
         getWeChatToken(code).then((res) => {
-          console.log(res);
           if (res.result === 1) {
             if (res.data.bindPhone) {
               vm.$router.push({ name: "bind", query: { name: res.data.userName, userId: res.data.userId } });

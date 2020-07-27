@@ -78,9 +78,9 @@ export default {
       this.active = 1;
     } else if (this.$route.name == "members") {
       this.active = 2;
-    }else if (this.$route.name == "systemSettings") {
+    } else if (this.$route.name == "systemSettings") {
       this.active = 3;
-    }else if (this.$route.name == "Mine") {
+    } else if (this.$route.name == "Mine") {
       this.active = 4;
     }
   },
@@ -131,7 +131,8 @@ export default {
     },
     goout() {
       localStorage.clear();
-      this.$router.push("/");
+      this.setCookie("token", "", 0);
+      window.location.href = "https://www.aldbim.com";
     },
     showMenu() {
       if (this.popVisible == "none") {
@@ -141,16 +142,18 @@ export default {
       }
     },
     myPage() {
-          this.active = 4;
+      this.active = 4;
       this.$router.push("/mine");
     },
     hideContent() {
       this.popVisible = "none";
-    }
-  },
-  watch: {
-    $route(to, from) {
-      console.log(to);
+    },
+    setCookie(cname, cvalue) {
+      var d = new Date();
+      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
+      var expires = "expires=" + d.toUTCString();
+      document.cookie =
+        cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
     }
   }
 };

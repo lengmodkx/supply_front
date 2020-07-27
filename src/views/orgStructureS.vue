@@ -552,7 +552,7 @@
                   >
                     <div class="left-item df ac">
                       <div class="foldICon"></div>
-                    <svg-icon :name="value.icon"></svg-icon>
+                      <svg-icon :name="value.icon"></svg-icon>
                       <span>{{value.name}}</span>
                     </div>
                     <div class="right-item">
@@ -840,29 +840,6 @@ export default {
       this.$set(this.departmentTreeNew[index], "visible1", false);
       this.$set(this.departmentTreeNew[index], "visible3", false);
     },
-    //孙节点编辑和删除弹窗关闭
-    mdCloseGrandson(indexOne, indexTwo, indexThree) {
-      console.log(indexOne, indexTwo, indexThree);
-      this.$set(
-        this.departmentTreeNew[indexOne].childer[indexTwo].grandsonChilden[
-          indexThree
-        ],
-        "visible",
-        false
-      );
-      this.$set(
-        this.departmentTreeNew[indexOne].childer[indexTwo].grandsonChilden[
-          indexThree
-        ],
-        "visible1",
-        false
-      );
-      console.log(
-        this.departmentTreeNew[indexOne].childer[indexTwo].grandsonChilden[
-          indexThree
-        ]
-      );
-    },
     aditClose(index) {
       this.$set(this.departmentTreeNew[index], "visible2", false);
       this.$set(this.departmentTreeNew[index], "visible4", false);
@@ -877,7 +854,6 @@ export default {
       );
     },
     editDep(index, item) {
-      console.log(item);
       this.editIndex = index;
       this.branchName = item.name;
       this.depId = item.id;
