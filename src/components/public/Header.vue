@@ -128,7 +128,7 @@ export default {
     },
     goout() {
       localStorage.clear();
-      this.setCookie("","",0);
+      this.setCookie("token","",0);
       window.location.href = "https://www.aldbim.com";
     },
     showMenu() {
