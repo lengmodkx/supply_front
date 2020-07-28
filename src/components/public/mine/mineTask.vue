@@ -55,7 +55,7 @@
             alt
           />
           <div class="rw-xm">
-            <div v-if="!task.level" class="rw">
+            <div v-if="!task.level && task.parentTask ==null " class="rw">
               <p class="taskName">{{task.taskName}}</p>
               <span class="xm">{{task.projectName}}</span>
             </div>
