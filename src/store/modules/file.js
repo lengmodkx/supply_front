@@ -1,5 +1,6 @@
 import { files, allTags } from "../../axios/api.js";
 import { getTSFile, filePrivacy, getFolders, searchFile, getFileDetails } from "../../axios/fileApi";
+import iView from 'view-design';
 const store = {
   namespaced: true,
   state: {
@@ -246,6 +247,10 @@ const store = {
           if (res.result == 1) {
             commit("initFile", res.data);
             resolve(res.data);
+          }else{
+            iView.Notice.error({
+              title: res.msg
+            })
           }
         });
       });
