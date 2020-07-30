@@ -35,7 +35,7 @@ export default {
       this.$router.go(-1);
     },
     closeBtn(){
-        this.$router.push("/systemSettings");
+        this.$router.push("/org/" + localStorage.companyId);
     },
   }
 };

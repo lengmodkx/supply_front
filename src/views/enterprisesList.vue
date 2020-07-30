@@ -63,6 +63,7 @@ export default {
     ...mapActions("company", ["initCompany"]),
     goBackstage(item) {
       localStorage.companyId = item.organizationId;
+      localStorage.orgName = item.organizationName;
       changeOrganization(item.organizationId).then(res => {
         if (res.result == 1) {
           this.$router.push("/prolist/" + item.organizationId);
@@ -70,7 +71,7 @@ export default {
       });
     },
     back() {
-      this.$router.push("/systemSettings");
+      this.$router.go(-1);
     }
   }
 };

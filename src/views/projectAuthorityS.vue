@@ -144,6 +144,12 @@ export default {
         });
         return false;
       }
+      if (this.roleKey == "admin" || this.roleKey == "administrator") {
+        this.$Notice.warning({
+          title: "角色标识不可用"
+        });
+        return false;
+      }
       if (this.roleDes == "" || this.roleDes == null) {
         this.$Notice.warning({
           title: "请输入角色描述"

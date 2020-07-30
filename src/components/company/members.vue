@@ -175,25 +175,6 @@
                 <Col span="4">
                   <span v-if="i.organizationMember.organizationLable == 1">拥有者</span>
                   <span v-else>{{i.organizationMember.memberLabel}}</span>
-                  <!-- <div class="operation">
-                    <Poptip placement="bottom"  v-model="i.userEntity.visible">
-                      <div class="operation-title">
-                        <Icon type="ios-arrow-down" size="20" />
-                      </div>
-                      <div slot="content">
-                        <div class="operation-body-title">
-                          部门成员菜单
-                          <Icon type="md-close" @click="mdClose(n)" />
-                        </div>
-                        <div class="operation-list" @click="removePP(i.userEntity.userId)">从部门移除成员</div>
-                        <div class="operation-list">
-                          <Poptip class="delete-alert" confirm title="确定从企业中移除成员？" @on-ok="remove(i.userEntity.userId)">
-                            <div style="color: #ff4f3e">从企业移除成员</div>
-                          </Poptip>
-                        </div>
-                      </div>
-                    </Poptip>
-                  </div>-->
                 </Col>
               </Row>
             </div>
@@ -497,7 +478,8 @@ import Tree from "@/components/company/Tree.vue";
 import {
   userOrgRoles,
   updateOrgUserRole,
-  removeOrgUser
+  removeOrgUser,
+  userIsOwner
 } from "../../axios/api.js";
 import {
   initOrgMember,
@@ -657,12 +639,12 @@ export default {
           this.peopleList = res.data.members;
           this.allOrgPeople = res.data.members;
           this.departmentTreeNew = res.data.partment;
-          if(this.$route.query.from=='home'){
-               this.peopleList.forEach(i => {
-                  if(i.memberId==this.$route.query.id){
-                    this.showUserInfo(i)
-                  }
-                })
+          if (this.$route.query.from == "home") {
+            this.peopleList.forEach(i => {
+              if (i.memberId == this.$route.query.id) {
+                this.showUserInfo(i);
+              }
+            });
           }
         }
         this.loading = false;
@@ -1207,8 +1189,17 @@ export default {
     },
     //成员管理
     management() {
-      this.$router.push({ name: "systemSettings", query: { from: "members" } });
-      this.$store.commit("app/changeHeaderTag", 3);
+      userIsOwner(localStorage.companyId).then(res => {
+        if (res.msg == 1) {
+          this.$router.push({
+            name: "systemSettings",
+            query: { from: "members" }
+          });
+          this.$store.commit("app/changeHeaderTag", 3);
+        } else {
+          this.$Message.error("没有权限");
+        }
+      });
     }
   },
   created() {
@@ -1273,5 +1264,15 @@ export default {
 
 /deep/.member-left .ivu-tabs-ink-bar {
   background-color: #0d253f;
+}
+
+</style>
+<style lang="less" >
+.member-left .ztree li a {
+  width: 100%;
+  // background: blue;
+}
+.member-left .ztree .node_name {
+  width: 100%;
 }
 </style>

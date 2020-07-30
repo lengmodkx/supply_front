@@ -3,8 +3,6 @@
     <div class="left-header">
       <div class="logo" :class="header ? 'logo-big' : 'logo-small'">
         <img src="../../assets/images/download.png" alt />
-
-        <!-- <span :class="header ? 'big' : 'small'">Ald Bim</span> -->
       </div>
       <ul>
         <li :class="{ hover: activeHeaderTag == 0 }" @click="goOrg">工作台</li>
@@ -14,7 +12,24 @@
         <li :class="{ hover: activeHeaderTag == 4 }" @click="myPage">我的</li>
       </ul>
     </div>
-    <div>
+    <div class="df ac">
+      <div class="menu">
+        <a @click="showHeaderTag(5)">
+          <span class="texttag">设计</span>
+        </a>
+        <a @click="goProList">
+          <span class="texttag" style="border-right:none;">
+            <Badge
+              :count="newsCount ? newsCount : 0"
+              overflow-count="99"
+              type="info"
+              :offset="[10, 0]"
+            >
+              <Icon type="ios-notifications-outline" size="22" />
+            </Badge>
+          </span>
+        </a>
+      </div>
       <div class="right-header">
         <Avatar
           :src="headeImg"
@@ -61,14 +76,15 @@ export default {
   components: {},
   computed: {
     ...mapState("app", ["header"]),
-    ...mapState("app", ["activeHeaderTag"])
+    ...mapState("app", ["activeHeaderTag"]),
+    ...mapState("news", ["newsCount"])
   },
   data() {
     return {
       // active: 0,
       popVisible: "none",
       headeImg: localStorage.userImg,
-      orgName:localStorage.orgName
+      orgName: localStorage.orgName
     };
   },
 
@@ -85,6 +101,7 @@ export default {
     } else if (this.$route.name == "Mine") {
       this.$store.commit("app/changeHeaderTag", 4);
     }
+    this.getNewsCount();
   },
   methods: {
     ...mapActions("company", ["initCompany"]),
@@ -92,7 +109,6 @@ export default {
     goOrg() {
       this.$router.push("/org/" + localStorage.companyId);
       this.$store.commit("app/changeHeaderTag", 0);
-
     },
     projectList() {
       this.$router.push("/prolist/" + localStorage.companyId);
@@ -126,7 +142,6 @@ export default {
     personal() {
       let routeUrl = this.$router.resolve({
         path: "/personal"
-        // query: { id: 96 }
       });
       window.open(routeUrl.href, "_blank");
       // this.$router.push("/personal");
@@ -157,7 +172,59 @@ export default {
       var expires = "expires=" + d.toUTCString();
       document.cookie =
         cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
+    },
+    getNewsCount() {
+      this.$store.dispatch("news/getNewsCount");
+    },
+    goProList() {
+      this.$router.push({
+        path: "/prolist/" + localStorage.companyId,
+        query: { from: "tips" }
+      });
+      this.$store.commit("app/changeHeaderTag", 1);
+    },
+    showHeaderTag(id) {
+      // if (id === 1) {
+      //   //我的
+      //   this.tagHeader = true;
+      //   this.showtag = "Mine";
+      //   this.title = '我的'
+      // } else if (id === 2) {
+      //   //日历
+      //   this.tagHeader = true;
+      //   this.showtag = "canlender";
+      //   this.title = '日历'
+      // } else if (id === 3) {
+      //   //素材
+      //   this.tagHeader = true;
+      //   this.showtag = "message";
+
+      // } else if (id === 6) {
+      //   //素材
+      //   this.tagHeader = true;
+      //   this.showtag = "sucai";
+      //   this.title = '素材'
+      // } else if (id === 4) {
+      //   //下载
+      //   this.tagHeader = true;
+      //   this.showtag = "down";
+      //   this.title = '下载'
+      // } else
+      if (id === 5) {
+        if (runPlatform == "browse") {
+          this.$Message.error("设计系统必须在阿拉丁BIM云平台客户端打开");
+        } else {
+          ALDObj.RunALDCAD();
+        }
+      }
+    },
+    getPath() {
+            this.$store.commit("app/changeHeader", true);
+
     }
+  },
+  watch: {
+    $route: "getPath"
   }
 };
 </script>

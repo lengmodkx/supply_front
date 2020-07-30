@@ -4,7 +4,7 @@
       <Menu
         :class=" isCollapsed?'big':'small'"
         :active-name="menuActive"
-        :open-names="['1']"
+        :open-names="openNames"
         :theme="'dark'"
         v-if="isCollapsed"
         @on-select="openTag"
@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="layout-right messageAlert" v-if="messageAlert">
-      <messageAlert :messageType='messageType'></messageAlert>
+      <messageAlert :messageType="messageType"></messageAlert>
     </div>
     <div class="layout-right" v-else>
       <div class="btnContent df">
@@ -323,7 +323,7 @@ export default {
             { text: "回收站", name: "1,5" }
           ]
         },
-       
+
         {
           oneName: "消息提醒",
           name: "4",
@@ -370,10 +370,11 @@ export default {
       linkText: "",
       tabValue: "0", //项目列表tab栏选中项
       menuActive: "1,0", //菜单栏选中项
+      openNames: ["1"],
       linkLoading: false,
       linkExpireTime: "", //链接有效期
       messageAlert: false,
-      messageType:'',// 消息提醒
+      messageType: "" // 消息提醒
     };
   },
   computed: {
@@ -385,6 +386,14 @@ export default {
     this.$store.state.project.loading = true;
     this.companyId = localStorage.companyId;
     this.orgProjectInit({ id: localStorage.companyId, type: "全部项目" });
+  },
+  created() {
+    if (this.$route.query.from == "tips") {
+      this.messageAlert = true;
+      this.messageType = 0;
+      this.menuActive = "4,0";
+      this.openNames = ["4"];
+    }
   },
   methods: {
     ...mapActions("project", [
@@ -405,7 +414,6 @@ export default {
       this.projectList = this.projectList[1];
     },
     path(item) {
-      // console.log(item);
       this.setName(item.projectName);
       localStorage.projectName = item.projectName;
       this.$router.push(
@@ -458,7 +466,6 @@ export default {
     },
     // 搜索项目
     searchProject(name) {
-      // console.log(name);
       let arr = {
         全部项目: "all",
         我创建的: "created",
@@ -584,14 +591,13 @@ export default {
       });
     },
     openTag(tagName) {
-      // console.log(tagName);
       if (tagName.split(",")[0] == 1) {
         this.tabValue = tagName.split(",")[1];
         this.tabChange(tagName.split(",")[1]);
         this.messageAlert = false;
       } else if (tagName.split(",")[0] == 4) {
         this.messageAlert = true;
-        this.messageType=tagName.split(",")[1];
+        this.messageType = tagName.split(",")[1];
       }
     },
     //设置中退出当前项目，退出后刷新项目里列表

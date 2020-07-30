@@ -9,11 +9,11 @@
         </div>
         <div class="icon-content">
           <div class="r-jump" @click="addRole" v-if="!checkFlag">
-            <Icon type="md-add" size="20"/>
+            <Icon type="md-add" size="20" />
             <span>添加角色</span>
           </div>
           <div class="r-jump r-jump-two" v-else>
-            <Icon type="md-refresh" color="#BFBFBF" size="20"/>
+            <Icon type="md-refresh" color="#BFBFBF" size="20" />
             <span>回复默认</span>
           </div>
         </div>
@@ -143,6 +143,12 @@ export default {
       if (this.roleKey == "" || this.roleKey == null) {
         this.$Notice.warning({
           title: "请输入角色标识"
+        });
+        return false;
+      }
+      if (this.roleKey == "admin" || this.roleKey == "administrator") {
+        this.$Notice.warning({
+          title: "角色标识不可用"
         });
         return false;
       }
