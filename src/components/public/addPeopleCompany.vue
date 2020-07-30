@@ -148,7 +148,8 @@ export default {
       }
       let data = {
         phone: this.phoneList.join(","),
-        memberEmail: this.emailList.join(",")
+        memberEmail: this.emailList.join(","),
+        param:this.tabOneShow?'0':'1'
       };
       invitation(localStorage.companyId, data).then(res => {
         if (res.result == 1) {

@@ -7,11 +7,11 @@
         <!-- <span :class="header ? 'big' : 'small'">Ald Bim</span> -->
       </div>
       <ul>
-        <li :class="{ hover: active == 0 }" @click="goOrg">工作台</li>
-        <li :class="{ hover: active == 1 }" @click="projectList">项目管理</li>
-        <li :class="{ hover: active == 2 }" @click="goMembers">团队成员</li>
-        <li :class="{ hover: active == 3 }" @click="goSys">系统设置</li>
-        <li :class="{ hover: active == 4 }" @click="myPage">我的</li>
+        <li :class="{ hover: activeHeaderTag == 0 }" @click="goOrg">工作台</li>
+        <li :class="{ hover: activeHeaderTag == 1 }" @click="projectList">项目管理</li>
+        <li :class="{ hover: activeHeaderTag == 2 }" @click="goMembers">企业成员</li>
+        <li :class="{ hover: activeHeaderTag == 3 }" @click="goSys">系统设置</li>
+        <li :class="{ hover: activeHeaderTag == 4 }" @click="myPage">我的</li>
       </ul>
     </div>
     <div>
@@ -32,7 +32,7 @@
           <li class="tab-menu-item">
             <div class="tab-menu-item-content2" @click="checkEnter">
               <div>切换企业</div>
-              <div style="font-size:12px;color:#8c8c8c">我的企业</div>
+              <div style="font-size:12px;color:#8c8c8c">{{orgName}}</div>
             </div>
           </li>
           <li class="tb-navigation-menu-divider"></li>
@@ -60,46 +60,49 @@ export default {
   name: "header-main",
   components: {},
   computed: {
-    ...mapState("app", ["header"])
+    ...mapState("app", ["header"]),
+    ...mapState("app", ["activeHeaderTag"])
   },
   data() {
     return {
-      active: 0,
+      // active: 0,
       popVisible: "none",
-      headeImg: localStorage.userImg
+      headeImg: localStorage.userImg,
+      orgName:localStorage.orgName
     };
   },
 
   mounted() {
     //切换路由页面刷新时用
     if (this.$route.name == "organization") {
-      this.active = 0;
+      this.$store.commit("app/changeHeaderTag", 0);
     } else if (this.$route.name == "prolist") {
-      this.active = 1;
+      this.$store.commit("app/changeHeaderTag", 1);
     } else if (this.$route.name == "members") {
-      this.active = 2;
+      this.$store.commit("app/changeHeaderTag", 2);
     } else if (this.$route.name == "systemSettings") {
-      this.active = 3;
+      this.$store.commit("app/changeHeaderTag", 3);
     } else if (this.$route.name == "Mine") {
-      this.active = 4;
+      this.$store.commit("app/changeHeaderTag", 4);
     }
   },
   methods: {
     ...mapActions("company", ["initCompany"]),
     //去首页
     goOrg() {
-      this.active = 0;
       this.$router.push("/org/" + localStorage.companyId);
+      this.$store.commit("app/changeHeaderTag", 0);
+
     },
     projectList() {
-      this.active = 1;
       this.$router.push("/prolist/" + localStorage.companyId);
+      this.$store.commit("app/changeHeaderTag", 1);
     },
     goSys() {
       userIsOwner(localStorage.companyId).then(res => {
         if (res.msg == 1) {
-          this.active = 3;
           this.$router.push("/systemSettings");
+          this.$store.commit("app/changeHeaderTag", 3);
           localStorage.organizationName = res.data.organizationName;
         } else {
           this.$Message.error("没有权限");
@@ -113,8 +116,8 @@ export default {
     goMembers() {
       checkPermission(localStorage.companyId).then(res => {
         if (res.result == 1 && res.data == true) {
-          this.active = 2;
           this.$router.push("/members");
+          this.$store.commit("app/changeHeaderTag", 2);
         } else {
           this.$Message.error("没有权限");
         }
@@ -142,8 +145,8 @@ export default {
       }
     },
     myPage() {
-      this.active = 4;
       this.$router.push("/mine");
+      this.$store.commit("app/changeHeaderTag", 4);
     },
     hideContent() {
       this.popVisible = "none";

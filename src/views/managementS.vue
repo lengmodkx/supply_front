@@ -4,9 +4,6 @@
       <div class="title">
         <div>成员</div>
         <div class="icon-content">
-          <!-- <div>
-            <img src="../assets/images/systemSet/piliang.png" alt />
-          </div>-->
           <div>
             <Poptip v-model="memModal" placement="bottom">
               <div class="branch">
@@ -32,7 +29,7 @@
       <div class="table-title">
         <Dropdown trigger="click" @on-click="changeMemberType">
           <div>
-            企业成员·{{peopleList.length}}
+            {{changeName}}·{{peopleList.length}}
             <Icon type="ios-arrow-down" color="#999999"></Icon>
           </div>
           <DropdownMenu slot="list">
@@ -50,7 +47,15 @@
             >&nbsp;&nbsp;姓名</Checkbox>
           </Col>
           <Col span="5">部门</Col>
-          <Col span="5">角色</Col>
+          <Col span="5" style="cursor: pointer;">
+            <Dropdown @on-click="screenEnterRole" trigger="click">
+                角色
+                <Icon type="ios-funnel-outline" />
+              <DropdownMenu slot="list">
+                <DropdownItem :name="item.roleId" v-for="item in roles" :key="item.roleId">{{item.roleName}}</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </Col>
           <Col span="4">操作</Col>
         </Row>
         <Row class="titleRow" v-else>
@@ -124,23 +129,45 @@
               class-name="group-people"
               v-for="(item, index) in peopleList"
               :key="index"
-              @click="showUserInfoModal(item)"
+              @click.self.native="showUserInfoModal(item)"
             >
               <Col span="9">
                 <div class="group-people-con">
                   <Checkbox :label="item.memberId" :disabled="item.organizationLable==1">
                     <img :src="item.userEntity.image" alt />
-                    <div>
-                      <p class="userName">{{ item.userEntity.userName }}</p>
-                      <div class="userPhone">{{item.userEntity.accountName}}</div>
-                    </div>
                   </Checkbox>
+                  <div @click="showUserInfoModal(item)" style="width:100%;">
+                    <p class="userName">{{ item.userEntity.userName }}</p>
+                    <div class="userPhone">{{item.userEntity.accountName}}</div>
+                  </div>
+                  <!-- </Checkbox> -->
                 </div>
               </Col>
               <Col span="5">{{ item.deptName }}</Col>
-              <Col span="5">{{ item.memberLabel }}</Col>
+              <Col span="5">
+                <div v-if="item.memberLabel=='拥有者'">{{ item.memberLabel }}</div>
+                <div v-else @click="getUserId(item)">
+                  <Dropdown @on-click="screenRole" trigger="click">
+                    {{ item.memberLabel }}
+                    <Icon type="ios-arrow-down" v-if="item.memberLabel!=='拥有者'" />
+                    <DropdownMenu slot="list">
+                      <DropdownItem
+                        v-for="item in roles"
+                        :key="item.roleId"
+                        :name="item.roleId"
+                      >{{item.roleName}}</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+              </Col>
               <Col span="5" class-name="operation">
-                <Poptip placement="bottom" transfer width="280" v-model="item.userEntity.visible">
+                <Poptip
+                  placement="bottom"
+                  transfer
+                  width="280"
+                  v-model="item.userEntity.visible"
+                  popper-class="operationBubble"
+                >
                   <a href="javascript:void(0)">
                     <Icon type="ios-more" size="30" color="#BFBFBF" />
                   </a>
@@ -150,7 +177,7 @@
                       size="18"
                       class="role-arrow-back"
                       @click.native="returnBack"
-                      v-show="visible"
+                      v-show="visible || visible2||visible1||visible3"
                     />
                     <span>{{ title }}</span>
                     <Icon
@@ -160,20 +187,30 @@
                       @click.native="mdClose(index)"
                     />
                   </div>
-                  <div slot="content" v-show="!visible">
+                  <div slot="content" v-show="!visible&& !visible2&&!visible1&&!visible3">
                     <ul class="org-role">
-                      <!-- <li style="cursor:pointer">
-                        <span>批量任务交接</span>
-                      </li>-->
+                      <li @click.stop="visible = true;title = '添加至';memberId=item.memberId">
+                        <span>添加至</span>
+                      </li>
+                      <li
+                        @click="visible1 = true;title = '停用账号';"
+                        v-if="item.memberLabel!='拥有者'&&item.memberLock==1"
+                      >
+                        <span>停用账号</span>
+                      </li>
                       <li
                         style="cursor:pointer"
-                        @click.stop="visible = true;title = '添加至';memberId=item.memberId"
+                        @click="visible3 = true;title = '启用账号';"
+                        v-if="item.memberLabel!='拥有者'&&item.memberLock!=1"
                       >
-                        <span>添加至</span>
+                        <span>启用账号</span>
+                      </li>
+                      <li @click="visible2 = true;title = '移除成员';" v-if="item.memberLabel!='拥有者'">
+                        <span style="color:red">移除成员</span>
                       </li>
                     </ul>
                   </div>
-                  <div slot="content" v-show="visible">
+                  <div slot="content" v-show=" visible " style="padding:8px 16px;">
                     <div style="margin-top:10px;margin-bottom:10px">
                       <span>
                         添加至
@@ -189,6 +226,40 @@
                     </div>
                     <Button type="primary" long @click="addToDep(item,index)">确定</Button>
                   </div>
+                  <div slot="content" v-show="visible2" style="padding:8px 16px;">
+                    <div style="margin-top:10px;margin-bottom:10px">
+                      <span>确认移除企业成员吗？</span>
+                    </div>
+                    <Button
+                      type="error"
+                      long
+                      @click="remove(item.userEntity.userId,item.memberId)"
+                    >确定</Button>
+                  </div>
+                  <div slot="content" v-show="visible1" style="padding:8px 16px;">
+                    <div style="margin-top:10px;margin-bottom:10px">
+                      <span>
+                        您确定要停用当前帐号吗？
+                        <br />
+                      </span>
+                      <span>
+                        • 被停用的帐号将无法访问该企业
+                        <br />• 帐号信息仍保留，方便工作交接和管理
+                        <br />• 支持帐号恢复
+                      </span>
+                    </div>
+                    <Button type="error" long @click="lock(item.userEntity.userId,0)">确定</Button>
+                  </div>
+                  <div slot="content" v-show="visible3" style="padding:8px 16px;">
+                    <div style="margin-top:10px;margin-bottom:10px">
+                      <span>
+                        被启用的帐号将重新加入该企业，您确定要启用吗？
+                        <br />
+                      </span>
+                      <span>该帐号的角色将恢复之前的角色</span>
+                    </div>
+                    <Button type="primary" long @click="lock(item.userEntity.userId,1)">确定</Button>
+                  </div>
                 </Poptip>
               </Col>
             </Row>
@@ -197,8 +268,14 @@
       </div>
     </div>
     <!-- 成员详细信息 -->
-    <Modal v-model="showUserInfo" width="500" class-name="vertical-center-modal" footer-hide>
-      <p slot="header" class="userInfo-head">张三详细信息</p>
+    <Modal
+      v-model="showUserInfo"
+      width="500"
+      class-name="vertical-center-modal"
+      :ok-text="textBtn"
+      @on-ok="saveUserInfo"
+    >
+      <p slot="header" class="userInfo-head">{{userInfoList.userName}}详细信息</p>
       <div class="userInfo-con">
         <Row :gutter="16" class-name="userInfo-item">
           <Col span="12">
@@ -217,25 +294,12 @@
           <Col span="24">
             <div class="inpTit">联系电话</div>
             <Input placeholder="联系电话" v-model="userInfoList.phone" />
-
-            <!-- <Select>
-              <Option
-                v-for="item in cityList"
-                :value="item.value"
-                :key="item.value"
-              >{{ item.label }}</Option>
-            </Select>-->
           </Col>
-          <!-- <Col span="16">
-            <Input>
-              <span slot="prepend">+86</span>
-            </Input>
-          </Col>-->
         </Row>
         <Row :gutter="16" class-name="userInfo-item">
           <Col span="12">
             <div class="inpTit">生日</div>
-            <DatePicker type="date" placeholder="请选择生日" :value="userInfoList.birthday"></DatePicker>
+            <DatePicker type="date" placeholder="请选择生日" v-model="userInfoList.birthday"></DatePicker>
           </Col>
         </Row>
         <div class="dividing">
@@ -245,17 +309,34 @@
         <Row :gutter="16" class-name="userInfo-item">
           <Col span="12">
             <div class="inpTit">员工类型</div>
-            <Input placeholder="请选择员工类型" v-model="userInfoList.memberLabel" />
+            <Select v-model="userInfoList.memberLabel">
+              <Option
+                v-for="item in roles"
+                :value="item.roleName"
+                :key="item.roleName"
+              >{{ item.roleName }}</Option>
+            </Select>
           </Col>
           <Col span="12">
             <div class="inpTit">入职时间</div>
-            <DatePicker type="date" placeholder="请选择入职时间" :value="userInfoList.createTime"></DatePicker>
+            <DatePicker type="date" placeholder="请选择入职时间" v-model="userInfoList.createTime"></DatePicker>
           </Col>
         </Row>
         <Row :gutter="16" class-name="userInfo-item">
           <Col span="24">
             <div class="inpTit">部门</div>
-            <Input placeholder="请选择" v-model="userInfoList.partment" />
+            <Poptip placement="bottom" transfer>
+              <Input placeholder="部门" v-model="userInfoList.partment" />
+              <div slot="content" style="width:438px;padding:8px 16px;">
+                <div>
+                  <Tree
+                    :data="departmentTree"
+                    ref="tree"
+                    @changePartment="changePartment"
+                  ></Tree>
+                </div>
+              </div>
+            </Poptip>
           </Col>
         </Row>
         <Row :gutter="16" class-name="userInfo-item">
@@ -265,7 +346,7 @@
           </Col>
           <Col span="12">
             <div class="inpTit">上级</div>
-            <Input placeholder="上级" v-model="userInfoList.partment" />
+            <Input placeholder="上级" v-model="userInfoList.parentName" disabled />
           </Col>
         </Row>
         <Row :gutter="16" class-name="userInfo-item" type="flex" align="bottom">
@@ -273,12 +354,6 @@
             <div class="inpTit">办公地点</div>
             <Input placeholder="办公地点" v-model="userInfoList.address" />
           </Col>
-          <!-- <Col span="8">
-            <Input placeholder="省份(直辖市)" v-model="userInfoList.phone"/>
-          </Col>
-          <Col span="8">
-            <Input placeholder="省份(直辖市)" />
-          </Col>-->
         </Row>
       </div>
     </Modal>
@@ -316,23 +391,34 @@
 <script>
 import Loading from "../components/public/common/Loading.vue";
 import addPeopleCompany from "@/components/public/addPeopleCompany";
+import { mapActions, mapState, mapMutations } from "vuex";
+import { changeUser } from "@/axios/api2.js";
 import {
   initOrgMemberNew,
   addBranchPeople,
   removeBranchPeople,
-  searchOrgMembers
+  searchOrgMembers,
+  lockUser
 } from "@/axios/companyApi";
-import { removeOrgUser } from "@/axios/api";
-
+import { removeOrgUser, updateOrgUserRole, userOrgRoles } from "@/axios/api";
+import Tree from "./checkTree.vue";
 export default {
   components: {
     Loading,
-    addPeopleCompany
+    addPeopleCompany,
+    Tree
+  },
+  computed: {
+    ...mapState("company", ["departmentTree"]),
+    ...mapState("app", ["activeHeaderTag"])
   },
   data() {
     return {
       peopleList: [],
       visible: false,
+      visible2: false,
+      visible1: false,
+      visible3: false,
       title: "更多菜单",
       model4: "",
       indeterminate: true,
@@ -351,6 +437,7 @@ export default {
         "停用的成员",
         "外部成员"
       ],
+      changeName: "企业成员",
       flag: "",
       userInfoList: {},
       memberId: "",
@@ -359,22 +446,27 @@ export default {
       model5: "",
       showBatchAdd: false,
       actionUrl: "", //导入地址
-      uploadData: {}
+      uploadData: {},
+      roles: [],
+      roleMemberId: "",
+      textBtn: "保存"
     };
   },
-  computed: {},
-  mounted() {
+  created() {
+    this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
+    console.log(this.departmentTree);
     this.actionUrl =
       "/api/organization/members/impUser/" + localStorage.companyId;
-
     this.loading = true;
-
     this.flag = 0;
     this.getList();
+    this.visibleChange();
   },
   methods: {
-    getList() {
-      initOrgMemberNew(localStorage.companyId, this.flag).then(res => {
+    ...mapActions("company", ["getDepartmentTree"]),
+    ...mapMutations("company", ["initTree"]),
+    getList(memberLabel) {
+      initOrgMemberNew(localStorage.companyId, this.flag,memberLabel).then(res => {
         if (res.result == 1) {
           this.peopleList = res.data.members;
           this.departmentTreeNew = res.data.partment;
@@ -413,10 +505,15 @@ export default {
     },
     returnBack() {
       this.visible = false;
-      this.title = "成员菜单";
+      this.visible2 = false;
+      this.visible1 = false;
+      this.visible3 = false;
+      this.title = "更多菜单";
     },
     showUserInfoModal(item) {
       this.showUserInfo = true;
+      item.birthday == "null" ? item.birthday : "";
+      item.createTime = this.$moment(item.createTime).format("YYYY-MM-DD");
       this.userInfoList = item;
     },
     // 显示添加人员匡
@@ -432,14 +529,24 @@ export default {
     },
     goMember() {
       this.$router.push("/members");
+      this.$store.commit("app/changeHeaderTag", 2);
     },
     mdClose(index) {
       this.$set(this.peopleList[index].userEntity, "visible", false);
+      this.visible = false;
+      this.visible2 = false;
+      this.visible1 = false;
+      this.visible3 = false;
     },
     changeMemberType(item) {
       this.loading = true;
+      this.visible = false;
+      this.visible2 = false;
+      this.visible1 = false;
+      this.visible3 = false;
+      this.changeName = item;
       switch (item) {
-        case "所有成员":
+        case "企业成员":
           this.flag = 0;
           break;
         case "未分配部门的成员":
@@ -556,6 +663,87 @@ export default {
       } else {
         this.$Message.error("上传失败");
       }
+    },
+    visibleChange() {
+      userOrgRoles(localStorage.userId, localStorage.companyId).then(res => {
+        if (res.result == 1) {
+          this.roles = res.data;
+        }
+      });
+    },
+    getUserId(item) {
+      this.roleMemberId = item.memberId;
+    },
+    screenRole(roleId) {
+      updateOrgUserRole(roleId, this.roleMemberId, localStorage.companyId).then(
+        res => {
+          if (res.result == 1) {
+            this.$Message.success("设置成功");
+            this.getList();
+          } else {
+            this.$Message.success("设置失败");
+          }
+        }
+      );
+    },
+    saveUserInfo() {
+      let data = {
+        memberId: this.userInfoList.memberId,
+        orgId: localStorage.companyId,
+        userName: this.userInfoList.userName,
+        entryTime: this.$moment(this.userInfoList.createTime).format(
+          "YYYY-MM-DD"
+        ),
+        job: this.userInfoList.job,
+        memberLabel: this.userInfoList.memberLabel,
+        address: this.userInfoList.address,
+        memberEmail: this.userInfoList.memberEmail,
+        phone: this.userInfoList.phone,
+        birthday: this.$moment(this.userInfoList.birthday).format("YYYY-MM-DD"),
+        deptId: this.userInfoList.pId
+      };
+      changeUser(data).then(res => {
+        if (res.result == 1) {
+          this.$Message.success(res.message);
+          this.getList();
+        }
+      });
+    },
+    //停用账号
+    lock(userId, lock) {
+      this.visible1 = false;
+      this.title = "成员菜单";
+      lockUser(localStorage.companyId, userId, lock).then(res => {
+        if (res.result == 1) {
+          this.$Message.success("停用成功");
+          this.getList();
+        }
+      });
+    },
+    //移除项目成员
+    remove(userId, memberId) {
+      this.visible2 = false;
+      this.title = "成员菜单";
+      removeOrgUser(userId, localStorage.companyId, memberId).then(res => {
+        if (res.result === 1) {
+          this.$Message.success("移除成功");
+          this.getList();
+        } else {
+          this.$Notice.warning({
+            title: "移除失败"
+          });
+        }
+      });
+    },
+    // 获取某个部门下成员
+    changePartment(partmentId, partmentName) {
+      console.log(partmentId, partmentName);
+      this.userInfoList.partment = partmentName;
+      this.userInfoList.pId = partmentId;
+    },
+    screenEnterRole(name){
+      this.loading=true
+        this.getList(name)
     }
   }
 };
@@ -569,5 +757,10 @@ export default {
   text-align: left;
   color: #1b9aee;
   cursor: pointer;
+}
+</style>
+<style lang="less" >
+.operationBubble .ivu-poptip-body {
+  padding: 0 !important;
 }
 </style>

@@ -29,19 +29,17 @@
                 <h3 style="margin-top: 15px;color:#000">部门</h3>
 
                 <div>
-                  <div class="organization-title" v-if="departmentTreeNew.length>0">
+                  <div
+                    class="organization-title"
+                    v-if="departmentTreeNew.length>0"
+                    @click="changeMemberType('所有成员')"
+                  >
                     <img src="../../icons/img/qiye-apply-01.png" alt />
-
                     <span
                       class="organization-name"
                     >{{departmentTreeNew.length>0?departmentTreeNew[0].organizationName:''}}</span>
                   </div>
                   <div class="department-content">
-                    <!-- <div class="department-name" v-for="(item, index) in departmentTreeNew" :key="index"
-                      @click="DepMembers(item,index)" :class="{ checked: checkId == item.partmentId }">
-                      <img src="../../icons/img/bumen-01.png" alt="">
-                      <span>{{item.partmentName}}</span>
-                    </div>-->
                     <Tree
                       :data="departmentTree"
                       ref="tree"
@@ -156,84 +154,6 @@
                 <Col span="5">
                   <span v-if="item.organizationLable == 1">拥有者</span>
                   <span v-else>{{item.memberLabel}}</span>
-                  <!-- <Poptip v-if="item.memberLock==1" placement="bottom" transfer width="280"
-                  @on-popper-show="visibleChange(item.userEntity)" v-model="item.userEntity.visible">
-                  <a href="javascript:void(0)" v-if="item.organizationLable != 1">
-                    <Icon type="ios-arrow-down"></Icon>
-                  </a>
-                  <div slot="title" class="member-title">
-                    <Icon type="ios-arrow-back" size="18" class="role-arrow-back" @click.native="returnBack"
-                      v-show="visible||visible1" />
-                    <span>{{ title }}</span>
-                    <Icon type="md-close" size="18" class="role-md-close" @click="mdClose(index)" />
-                  </div>
-                  <div slot="content" class="content" v-show="!visible&&!visible1">
-                    <ul class="org-role">
-                      <li style="cursor:pointer" v-for="(role, index) in roles" :key="role.roleId"
-                        @click="changeRole(role.roleId)">
-                        <span>{{ role.roleName }}</span>
-                        <Icon type="md-checkmark" v-if="role.currentCheck" />
-                      </li>
-                      <li style="cursor:pointer;border-top:1px solid #e5e5e5" @click="visible1 = true;title = '停用账号';">
-                        <span>停用账号</span>
-                      </li>
-                      <li style="cursor:pointer" @click="visible = true;title = '移除成员';">
-                        <span style="color:red">删除成员</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div slot="content" v-show="visible">
-                    <div style="margin-top:10px;margin-bottom:10px">
-                      <span>确认移除项目成员吗？</span>
-                    </div>
-                    <Button type="error" long @click="remove(item.userEntity.userId,item.memberId)">确定</Button>
-                  </div>
-
-                  <div slot="content" v-show="visible1">
-                    <div style="margin-top:10px;margin-bottom:10px">
-                      <span>您确定要停用当前帐号吗？<br></span>
-                      <span>• 被停用的帐号将无法访问该企业<br>
-                        • 帐号信息仍保留，方便工作交接和管理<br>
-                        • 支持帐号恢复</span>
-                    </div>
-                    <Button type="error" long @click="lock(item.userEntity.userId,0)">确定</Button>
-                  </div>
-                </Poptip>
-                <Poptip v-else placement="bottom" transfer width="280" v-model="item.userEntity.visible">
-                  <a href="javascript:void(0)" v-if="item.organizationLable != 1">
-                    <Icon type="ios-arrow-down"></Icon>
-                  </a>
-                  <div slot="title" class="member-title">
-                    <Icon type="ios-arrow-back" size="18" class="role-arrow-back" @click.native="returnBack"
-                      v-show="visible||visible1" />
-                    <span>{{ title }}</span>
-                    <Icon type="md-close" size="18" class="role-md-close" @click.native="mdClose(index)" />
-                  </div>
-                  <div slot="content" class="content" v-show="!visible&&!visible1">
-                    <ul class="org-role">
-                      <li style="cursor:pointer" @click="visible1 = true;title = '启用账号';">
-                        <span>启用账号</span>
-                      </li>
-                      <li style="cursor:pointer" @click="visible = true;title = '移除成员';">
-                        <span style="color:red">删除成员</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div slot="content" v-show="visible">
-                    <div style="margin-top:10px;margin-bottom:10px">
-                      <span>确认移除企业成员吗？</span>
-                    </div>
-                    <Button type="error" long @click="remove(item.userEntity.userId,item.memberId)">确定</Button>
-                  </div>
-
-                  <div slot="content" v-show="visible1">
-                    <div style="margin-top:10px;margin-bottom:10px">
-                      <span>被启用的帐号将重新加入该企业，您确定要启用吗？<br></span>
-                      <span>该帐号的角色将恢复之前的角色</span>
-                    </div>
-                    <Button type="primary" long @click="lock(item.userEntity.userId,1)">确定</Button>
-                  </div>
-                  </Poptip>-->
                 </Col>
               </Row>
             </div>
@@ -376,10 +296,10 @@
               </Col>
               <Col span="5">
                 <Poptip placement="bottom" transfer width="280" v-model="item.userEntity.visible">
-                  <span v-if="isOwnerCom">{{ item.isOwner ? "退出" : "移除" }}</span>
+                  <span v-if="isOwnerCom">{{ item.isOwner ? "退出" : "移除企业" }}</span>
                   <span v-else-if="item.memberId==userId">退出</span>
                   <div slot="title" class="member-title">
-                    <span>{{ item.isOwner ? "退出群组" : "移除成员" }}</span>
+                    <span>{{ item.isOwner ? "退出群组" : "移除企业" }}</span>
                     <Icon
                       type="md-close"
                       size="18"
@@ -497,7 +417,7 @@
     </Modal>
     <!-- 成员详细信息 -->
     <Modal v-model="groupStepInfo" width="500" class-name="vertical-center-modal" footer-hide>
-      <p slot="header" class="craete-group-head">成员名称详细信息</p>
+      <p slot="header" class="craete-group-head">成员详细信息</p>
       <div class="craete-group-con">
         <div class="df con-content">
           <img src="../../icons/img/jichuxinxi-01.png" class="iconImg" />
@@ -602,7 +522,10 @@ import {
 
 export default {
   name: "members",
-  computed: { ...mapState("company", ["departmentTree"]) },
+  computed: {
+    ...mapState("company", ["departmentTree"]),
+    ...mapState("app", ["activeHeaderTag"])
+  },
   data() {
     return {
       branch: false,
@@ -686,8 +609,7 @@ export default {
       isOwnerCom: false
     };
   },
-  mounted() {
-  },
+  mounted() {},
   components: { Tree, addPeople, branch, addPeopleCompany },
   methods: {
     ...mapActions("company", ["getDepartmentTree"]),
@@ -735,6 +657,13 @@ export default {
           this.peopleList = res.data.members;
           this.allOrgPeople = res.data.members;
           this.departmentTreeNew = res.data.partment;
+          if(this.$route.query.from=='home'){
+               this.peopleList.forEach(i => {
+                  if(i.memberId==this.$route.query.id){
+                    this.showUserInfo(i)
+                  }
+                })
+          }
         }
         this.loading = false;
       });
@@ -1265,11 +1194,11 @@ export default {
     closeExit(index) {
       this.$set(this.groupPeople[index].userEntity, "visible", false);
     },
-    reSetPartment(){
-        this.memberType='所有成员';
-        this.loading = true;
-        this.nowType = '成员';
-        initOrgMember(localStorage.companyId, this.flag).then(res => {
+    reSetPartment() {
+      this.memberType = "所有成员";
+      this.loading = true;
+      this.nowType = "成员";
+      initOrgMember(localStorage.companyId, this.flag).then(res => {
         this.loading = false;
         if (res.result === 1) {
           this.peopleList = res.data;
@@ -1277,8 +1206,9 @@ export default {
       });
     },
     //成员管理
-    management(){
-        this.$router.push({ name: "systemSettings", query: { from:'members' } });
+    management() {
+      this.$router.push({ name: "systemSettings", query: { from: "members" } });
+      this.$store.commit("app/changeHeaderTag", 3);
     }
   },
   created() {

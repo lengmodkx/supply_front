@@ -323,23 +323,7 @@ export default {
             { text: "回收站", name: "1,5" }
           ]
         },
-        {
-          oneName: "基础设置",
-          name: "2",
-          icon: "ios-settings-outline"
-          // childNode: [
-          //     { text: "任务", name: "nearThing,1" },
-          // ]
-        },
-        {
-          oneName: "项目模板",
-          name: "3",
-          icon: "ios-albums-outline"
-          // childNode: [
-          //     { text: "任务", name: "nearThing,1" },
-          //     { text: "日程", name: "nearThing,2" }
-          // ]
-        },
+       
         {
           oneName: "消息提醒",
           name: "4",

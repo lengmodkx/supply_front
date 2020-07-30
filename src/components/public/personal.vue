@@ -51,6 +51,9 @@
                         <FormItem label="邮箱">
                             <Input v-model="message.email" placeholder="请输入邮箱" /></Input>
                         </FormItem>
+                        <FormItem label="个性签名">
+                            <Input v-model="message.signature" placeholder="请输入签名" /></Input>
+                        </FormItem>
                         <FormItem>
                             <Button type="primary" @click="handleSubmit()" class="saveBtn">保存</Button>
                         </FormItem>
@@ -339,6 +342,7 @@
                     birthday: birthDay,
                     address: this.message.address,
                     email: this.message.email,
+                    signature:this.message.signature
                 }
                 //保存
                 updateUserNews(data).then(res => {
