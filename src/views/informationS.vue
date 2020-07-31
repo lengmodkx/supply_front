@@ -229,7 +229,7 @@ export default {
             this.$Message.success("移交成功");
             this.$router.push("/");
           } else {
-            this.$Message.error("移交失败");
+            this.$Message.error(res.msg);
           }
         }
       );
