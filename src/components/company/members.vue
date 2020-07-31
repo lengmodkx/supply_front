@@ -735,7 +735,6 @@ export default {
     // 获取某个部门下成员
     changePartment(partmentId, partmentName) {
       // this.flag = -1;
-      this.nowType = "部门";
       this.partmentId = partmentId;
       this.memberType = partmentName;
       this.nowBranch.id = partmentId;
@@ -745,6 +744,7 @@ export default {
       getBranchpeople(partmentId).then(res => {
         if (res.result == 1) {
           this.peopleList = res.data;
+          this.nowType = "部门";
           this.loading = false;
         }
       });
