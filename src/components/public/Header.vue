@@ -17,6 +17,9 @@
         <a @click="showHeaderTag(5)">
           <span class="texttag">设计</span>
         </a>
+        <a @click="showHeaderTag(6)">
+          <span class="texttag">素材</span>
+        </a>
         <a @click="goProList">
           <span class="texttag" style="border-right:none;">
             <Badge
@@ -64,16 +67,34 @@
         </ul>
       </div>
     </div>
+    <Modal
+      v-model="tagHeader"
+      :mask="false"
+      fullscreen
+      :title="title"
+      footer-hide
+      @on-cancel="closeTag"
+      :styles="{ top: '50px' }"
+      class="tab-content"
+    >
+      <!-- <calendar v-if="showtag == 'canlender'"></calendar> -->
+      <suCai v-if="showtag == 'sucai'"></suCai>
+      <!-- <down v-else-if="showtag == 'down'"></down> -->
+      <div slot="footer"></div>
+    </Modal>
   </header>
 </template>
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
 import { checkPermission, userIsOwner } from "../../axios/api.js";
+import suCai from "./sucai"; //素材
 
 export default {
   name: "header-main",
-  components: {},
+  components: {
+    suCai, //素材库
+    },
   computed: {
     ...mapState("app", ["header"]),
     ...mapState("app", ["activeHeaderTag"]),
@@ -84,7 +105,11 @@ export default {
       // active: 0,
       popVisible: "none",
       headeImg: localStorage.userImg,
-      orgName: localStorage.orgName
+      orgName: localStorage.orgName,
+      tagHeader: false, //显示日历
+      showtag: "",
+      title:''
+
     };
   },
 
@@ -199,18 +224,18 @@ export default {
       //   this.tagHeader = true;
       //   this.showtag = "message";
 
-      // } else if (id === 6) {
-      //   //素材
-      //   this.tagHeader = true;
-      //   this.showtag = "sucai";
-      //   this.title = '素材'
-      // } else if (id === 4) {
-      //   //下载
-      //   this.tagHeader = true;
-      //   this.showtag = "down";
-      //   this.title = '下载'
       // } else
-      if (id === 5) {
+      if (id === 6) {
+        //素材
+        this.tagHeader = true;
+        this.showtag = "sucai";
+        this.title = "素材";
+        // } else if (id === 4) {
+        //   //下载
+        //   this.tagHeader = true;
+        //   this.showtag = "down";
+        //   this.title = '下载'
+      } else if (id === 5) {
         if (runPlatform == "browse") {
           this.$Message.error("设计系统必须在阿拉丁BIM云平台客户端打开");
         } else {
@@ -218,9 +243,12 @@ export default {
         }
       }
     },
+    closeTag() {
+      this.tagHeader = false;
+      this.showtag = "";
+    },
     getPath() {
-            this.$store.commit("app/changeHeader", true);
-
+      this.$store.commit("app/changeHeader", true);
     }
   },
   watch: {

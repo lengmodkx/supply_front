@@ -111,13 +111,6 @@
       </div>
       <div class="rule-item" v-if="resultSelect==2">
         <div class="rule-title">自动跳转到</div>
-        <!-- <Select v-model="ruleData.automaticJump" size="large" clearable>
-          <Option
-            v-for="item in listList"
-            :value="item.relationId"
-            :key="item.relationId"
-          >{{item.relationName}}</Option>
-        </Select>-->
         <Poptip placement="bottom" transfer v-model="taskPopShow2">
           <Input v-model="automaticName" size="large" />
           <div slot="content" style="width:500px;height:200px;padding:8px 16px;">
@@ -139,7 +132,7 @@
 </template>
 
 <script>
-import { enterTask, projectMembers } from "@/axios/api";
+import { enterTaskNew, projectMembers } from "@/axios/api";
 import { saveRule } from "@/axios/ruleApi";
 export default {
   name: "createRule",
@@ -235,7 +228,7 @@ export default {
   methods: {
     // 获取列表数据
     getSelList() {
-      enterTask(this.projectId).then(res => {
+      enterTaskNew(this.projectId).then(res => {
         if (res.result) {
           this.listList = res.menus;
         }
