@@ -159,7 +159,7 @@ import {
 export default {
   data: function() {
     return {
-      orgid: this.$route.params.orgid,
+      orgid: this.$route.query.companyId,
       iphone: "",
       showLogin: false,
       fromType: "", //从哪个页面跳转过来
@@ -320,10 +320,8 @@ export default {
       );
     },
     forget(name) {
-      console.log(name);
       this.$refs[name].validate(valid => {
         if (valid) {
-          console.log(this.formValidate);
           if (this.formValidate.password !== this.formValidate.passwordMore) {
             this.$Message.error("两次密码输入不一致，请修改！");
             return;
@@ -379,8 +377,8 @@ export default {
           localStorage.userImg = res.data.image;
           localStorage.userName = res.data.userName;
           localStorage.token = res.data.accessToken;
-          // localStorage.companyId = res.data.orgId;
-          console.log(res.data.orgId);
+          localStorage.companyId = res.data.orgId;
+              localStorage.orgName = res.data.orgName;
           this.$Message.success("登录成功!");
           if (this.fromType == "project") {
             this.joinProject();
