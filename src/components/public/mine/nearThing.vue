@@ -9,12 +9,10 @@
           <div class="task-mod left-color urgent">
             <div class="check" @click="showTaskDetail(task.taskId)">
               <Checkbox v-model="todayThing"></Checkbox>
-              <!-- <img src="https://striker.teambition.net/thumbnail/110t1838b6ce486c4fa137b0a4b08ad4104e/w/200/h/200" alt="" class="ava"> -->
               <div class="cont" v-if="task.level === 0">
                 {{ task.taskName }}
                 <span class="taskgroup">{{ task.project.projectName }}</span>
                 <span :class="[{'past-time':new Date().getTime() >task.endTime}, 'deadline','red' , 'fr']">
-                  <!-- <Time :time="task.startTime"/> - <Time :time="task.endTime"/> -->
                   <div>{{$moment(task.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
                   </span>
               </div>
@@ -22,7 +20,6 @@
                 {{ task.taskName }}
                 <span class="taskgroup">所属任务:{{ task.parentTask.taskName }}</span>
                 <span :class="[{'past-time':new Date().getTime() >task.endTime}, 'deadline','red' , 'fr']">
-                  <!-- <Time :time="task.startTime"/> - <Time :time="task.endTime"/> -->
                   <div>{{$moment(task.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
                 </span>
               </div>
