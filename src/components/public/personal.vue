@@ -71,42 +71,28 @@
                     <Button type="error" ghost v-else @click="notBind()">解除绑定</Button>
                 </div>
             </div>
-            <div class="personal-right" v-show="activeItem=='账号密码'">
-                <div class="title">
+            <div class="personal-right" v-show="activeItem=='账号密码'" style="background:#F0EFEC; ">
+                <div class="title" style="background: #ffffff;">
                     <div>账号密码</div>
                     <div class="titTips">所有登录帐号都可用于登录，主邮箱帐号可收取通知。</div>
                     <div class="line"></div>
                 </div>
-                <div class="information">
+                <div class="information" style="background: #ffffff;">
                     <div class="account-content">
-                        <div>邮箱账号</div>
+                        <div class="textContent">邮箱账号</div>
                         <Input v-model="emailAddress" placeholder="请输入邮箱地址"></Input>
                         <Button type="primary" class="saveBtn" @click="bindMailbox">确认绑定</Button>
                     </div>
                     <div class="account-content">
-                        <div>手机账号</div>
+                        <div class="textContent">手机账号</div>
                         <div class="userPhone">{{message.telephone}}</div>
                         <Button type="error" ghost @click="unbundling" v-if='message.telephone'>解除绑定</Button>
                         <div class="userPhone" v-else>暂未绑定</div>
                     </div>
 
                 </div>
-            </div>
-            <div class="personal-right" v-show="activeItem=='加入企业'">
-                <div class="title">
-                    <div>加入企业</div>
-                    <div class="line"></div>
-                </div>
-                <div class="divide" v-for="(item, index) in companyList" :key="index">
-                    <div> {{ item.organizationName }}</div>
-                    <Button type="primary" ghost @click="goBackstage(item)"
-                        v-if="item.organizationLabel==1">前往后台</Button>
-                    <Button type="error" ghost v-else @click="modal3=true,companyId=item.organizationId">退出企业</Button>
-                </div>
-            </div>
-            <!-- <div class="personal-right" v-show="activeItem=='更改密码'">
-                <div class="title">更改密码</div>
-                <div class="information">
+                <div class="title2" style="background: #ffffff;">更改密码</div>
+                <div class="information" style="background: #ffffff;">
                     <Form :model="password" ref="password" :rules="rulesPassword" :label-width="80">
                         <FormItem label="原密码" prop="old">
                             <Input v-model="password.old" type="password" placeholder="请输入原密码"></Input>
@@ -122,7 +108,20 @@
                         </FormItem>
                     </Form>
                 </div>
-            </div> -->
+            </div>
+            <div class="personal-right" v-show="activeItem=='加入企业'">
+                <div class="title">
+                    <div>加入企业</div>
+                    <div class="line"></div>
+                </div>
+                <div class="divide" v-for="(item, index) in companyList" :key="index">
+                    <div> {{ item.organizationName }}</div>
+                    <Button type="primary" ghost @click="goBackstage(item)"
+                        v-if="item.organizationLabel==1">前往后台</Button>
+                    <Button type="error" ghost v-else @click="modal3=true,companyId=item.organizationId">退出企业</Button>
+                </div>
+            </div>
+
         </div>
         <Modal class="confirmModal" v-model="modal3" title="退出企业" footer-hide>
             <p style="padding:10px;font-size:15px;">
@@ -135,7 +134,7 @@
     </div>
 </template>
 <script>
-    import { findUserInfo, updateUserNews, weChatLogin, bindWx, notBindWx, changePassword, changeOrganization, removeOrgUser,notBindPhone } from '@/axios/api';
+    import { findUserInfo, updateUserNews, weChatLogin, bindWx, notBindWx, changePassword, changeOrganization, removeOrgUser, notBindPhone } from '@/axios/api';
     import { getAllOrg } from '@/axios/companyApi'
     import { mapState, mapActions, mapMutations } from "vuex";
     import OSS from "ali-oss";
@@ -194,7 +193,7 @@
                 },
                 emailAddress: '',  //邮箱地址    
                 modal3: false,
-                companyId:''
+                companyId: ''
             }
         },
         computed: {
@@ -220,6 +219,10 @@
                 changePassword(this.password.old, this.password.new).then(res => {
                     if (res.result == 1) {
                         this.$Message.success("修改密码成功");
+                        this.password.old=''
+                        this.password.new=''
+                        this.password.moreNew=''
+
                     }
                 })
             },
@@ -342,7 +345,7 @@
                     birthday: birthDay,
                     address: this.message.address,
                     email: this.message.email,
-                    signature:this.message.signature
+                    signature: this.message.signature
                 }
                 //保存
                 updateUserNews(data).then(res => {
@@ -415,7 +418,7 @@
             signOut() {
                 removeOrgUser(localStorage.userId, this.companyId, localStorage.userId).then(res => {
                     if (res.result === 1) {
-                        this.modal3=false
+                        this.modal3 = false
                         this.$Message.success('退出成功');
                         this.initCompany();
                     } else {
@@ -425,10 +428,10 @@
                     }
                 });
             },
-            unbundling(){
-                notBindPhone().then(res=>{
+            unbundling() {
+                notBindPhone().then(res => {
                     console.log(res)
-                    if(res.result==1){
+                    if (res.result == 1) {
                         this.$Message.success('解绑成功');
                         this.info();
                     }
@@ -474,7 +477,7 @@
 
         .personal {
             width: 1120px;
-            padding:36px 0 16px;
+            padding: 36px 0 16px;
             height: auto;
             margin: 0px auto;
             display: flex;
@@ -561,6 +564,15 @@
                     margin-left: 24px;
                 }
 
+            }
+
+            .title2 {
+                margin-top: 20px;
+                padding: 0 30px;
+                position: relative;
+                display: flex;
+                height: 60px;
+                align-items: center;
             }
 
             .information {
@@ -651,17 +663,30 @@
                     align-items: center;
                     margin-bottom: 30px;
 
+                    .textContent {
+                        text-align: right;
+                        vertical-align: middle;
+                        /* float: left; */
+                        font-size: 14px;
+                        color: #515a6e;
+                        line-height: 1;
+                        padding: 10px 12px 10px 0;
+                        box-sizing: border-box;
+                        width: 80px;
+                    }
+
                     .userPhone {
-                        margin: 0 20px;
+                        margin-right: 20px;
 
                     }
 
                     .ivu-input-wrapper {
                         width: 300px;
-                        margin: 0 20px;
+                        margin-right: 20px;
                     }
                 }
             }
+
 
         }
 
