@@ -223,11 +223,17 @@ export default {
     }
   },
   mounted() {
-    if (this.unlock) {
-      this.data.privacyPattern = 0;
-    } else {
-      this.data.privacyPattern = 1;
+    // if (this.unlock) {
+    //   this.data.privacyPattern = 0;
+    // } else {
+    //   this.data.privacyPattern = 1;
+    // }
+    if(this.data.privacyPattern == 0){
+      this.unlock=true
+    }else{
+      this.unlock=false
     }
+    // console.log( this.data)
   },
   methods: {
     copylink() {
