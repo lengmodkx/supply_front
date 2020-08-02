@@ -360,9 +360,9 @@
         this.$emit("close");
       },
       reset(flag) {
-        let result=this.unlock
+        let result = this.unlock
         Object.assign(this.$data, this.$options.data());
-        this.unlock=result
+        this.unlock = result
         this.visible = flag;
         this.title = this.data.title;
       },
@@ -370,6 +370,17 @@
         setTimeout(_ => {
           this.reset();
         }, 300);
+      }
+    },
+    watch: {
+      'data.privacyPattern': {
+        handler: function (val) {
+          if (val == 0) {
+            this.unlock = true
+          } else {
+            this.unlock = false
+          }
+        },
       }
     }
   };
