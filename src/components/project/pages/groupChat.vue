@@ -71,25 +71,19 @@
                 @keyup.enter="sendChat"
                 @keyup="SymbolBox($event)"
               ></div>
-              <ul class="updata-box" >
+              <ul class="updata-box">
                 <li v-for="(item, index) in uploadList" :key="index">
-                   <p class="group-chat-file">
-                      <span> {{ item.name }} &nbsp; {{ renderSize(item.size) }} KB</span>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" :stroke-width="5" hide-info/>
-                    </p>
-                   <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
+                  <p class="group-chat-file">
+                    <span> {{ item.name }} &nbsp; {{ renderSize(item.size) }} KB</span>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" :stroke-width="5" hide-info />
+                  </p>
+                  <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                 </li>
               </ul>
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-                <Upload ref="upload" :show-upload-list="false" 
-                :before-upload="handleBeforeUpload" 
-                multiple 
-                :action="host"
-                :data="uploadData"
-                :headers="headers"
-                >
+                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple :action="host" :data="uploadData" :headers="headers">
                   <Icon class="up-file" type="md-attach" />
                 </Upload>
 
@@ -119,7 +113,7 @@
 import Emoji from "@/components/public/common/emoji/Emoji";
 import insertText from "@/utils/insertText";
 import upFile from "./index/chatUpFile";
-import { sendChat, getChat, recall} from "../../../axios/api";
+import { sendChat, getChat, recall } from "../../../axios/api";
 import { mapActions, mapState } from "vuex";
 // 上传
 import OSS from "ali-oss";
@@ -127,7 +121,7 @@ let client = new OSS({
   region: "oss-cn-beijing",
   accessKeyId: "LTAIP4MyTAbONGJx",
   accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
+  bucket: "art1001-bim-5d",
 });
 import { oss } from "../../../axios/ossweb";
 export default {
@@ -148,11 +142,11 @@ export default {
       uploadList: [],
       percentage: [],
       charFiles: [],
-      uploadData:{},
-      host:'',
-      headers:{
-        'x-auth-token':localStorage.token
-      }
+      uploadData: {},
+      host: "",
+      headers: {
+        "x-auth-token": localStorage.token,
+      },
     };
   },
   mounted() {
@@ -165,10 +159,10 @@ export default {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
       });
-    }
+    },
   },
   computed: {
-    ...mapState("chat", ["chatData", "images"])
+    ...mapState("chat", ["chatData", "images"]),
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
@@ -205,7 +199,14 @@ export default {
     },
     //下载附件
     downLoad(id) {
-      var url = process.env.NODE_ENV === "development" ? process.env.VUE_APP_URL : process.env.VUE_APP_URL;
+      var url = "";
+      if (process.env.NODE_ENV == "test") {
+        url = process.env.VUE_APP_TEST_URL;
+      } else if (process.env.NODE_ENV == "production") {
+        url = process.env.VUE_APP_URL;
+      } else {
+        url = "/api";
+      }
       window.location.href = url + "/groupchat/" + id;
     },
     chooseEmoji(name) {
@@ -223,33 +224,33 @@ export default {
 
     // 上传
     handleBeforeUpload(file) {
-      return oss(file.name).then(res=>{
+      return oss(file.name).then((res) => {
         this.host = res.host;
         this.uploadData = res;
-        var object={};
+        var object = {};
         object.size = this.renderSize(file.size);
         object.url = res.key;
-        object.name = file.name.substring(0,file.name.lastIndexOf('.'));
-        object.ext = file.name.substring(file.name.lastIndexOf('.'))
+        object.name = file.name.substring(0, file.name.lastIndexOf("."));
+        object.ext = file.name.substring(file.name.lastIndexOf("."));
         this.charFiles.push(object);
-      })
+      });
     },
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
       let data = {
-          'projectId':this.$route.params.id,
-          'content':con,
-          'files':JSON.stringify(this.charFiles)
-      }
+        projectId: this.$route.params.id,
+        content: con,
+        files: JSON.stringify(this.charFiles),
+      };
       // console.log(JSON.stringify(this.charFiles))
-      sendChat(data).then(res => {
+      sendChat(data).then((res) => {
         this.$refs.textarea.innerHTML = "";
         this.$nextTick(() => {
           var div = document.getElementById("data-list-content");
           div.scrollTop = div.scrollHeight + 1;
         });
-        this.charFiles=[];
+        this.charFiles = [];
         this.uploadList.splice(0, this.uploadList.length);
         this.$refs.upload.clearFiles();
       });
@@ -262,7 +263,7 @@ export default {
           .multipartUpload(fileName, file, {
             progress: function(p) {
               that.percentage.splice(index, 1, Math.floor(p * 100));
-            }
+            },
           })
           .then(function(result) {
             var myfile = {};
@@ -294,8 +295,8 @@ export default {
         suffix = filename.substring(pos);
       }
       return suffix;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -489,7 +490,7 @@ export default {
       .updata-box {
         max-height: 164px;
         overflow-y: auto;
-        
+
         li {
           width: 99%;
           padding: 0px 10px;
@@ -497,18 +498,18 @@ export default {
           background: #f0f0f0;
           display: flex;
           flex-direction: row;
-         align-items:center;
-          .group-chat-file{
+          align-items: center;
+          .group-chat-file {
             text-align: left;
             flex: 1;
             display: flex;
             flex-flow: column nowrap;
             justify-content: space-between;
             position: relative;
-            padding:5px 0px;
+            padding: 5px 0px;
           }
-         
-          .progress{
+
+          .progress {
             width: 98%;
           }
         }
@@ -610,9 +611,8 @@ export default {
   }
 }
 
-.group-chat-file{
+.group-chat-file {
   display: flex;
   flex-direction: column;
 }
-
 </style>
