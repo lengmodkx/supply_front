@@ -62,11 +62,11 @@
         <div class="item-left">企业状态</div>
         <div>正常使用</div>
       </div>
-      <div class="btn-container">
+      <!-- <div class="btn-container">
         <Button type="primary" ghost>试用旗舰版</Button>
         <Button type="primary" ghost>立即购买</Button>
         <Button type="primary" ghost>查看订单</Button>
-      </div>
+      </div> -->
     </div>
     <div class="content">
       <div class="title">
@@ -229,7 +229,7 @@ export default {
             this.$Message.success("移交成功");
             this.$router.push("/");
           } else {
-            this.$Message.error("移交失败");
+            this.$Message.error(res.msg);
           }
         }
       );

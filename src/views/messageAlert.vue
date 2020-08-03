@@ -70,6 +70,9 @@
               <Col span="10">{{ item.newsContent }}</Col>
             </Row>
           </CheckboxGroup>
+          <div class="pagingContent" v-if="dataList.length !=0">
+            <Page :total="total" show-total @on-change="changePage" />
+          </div>
         </div>
       </div>
     </div>
@@ -94,7 +97,8 @@ export default {
       checkAllGroup: [],
       indeterminate: true,
       checkAll: false,
-      loading: false
+      loading: false,
+      total: 0
     };
   },
   computed: {},
@@ -103,16 +107,16 @@ export default {
     this.getList(this.keyword, new Date().getTime(), new Date().getTime());
   },
   methods: {
-    getList(keyword, startTime, endTime) {
+    getList(keyword, startTime, endTime, pageNum) {
       let data = {
         keyword: keyword,
+        pageNum:pageNum,
         startTime: startTime,
         endTime: endTime
       };
       userMessage(data).then(res => {
-        if (res.result == 1) {
-          this.dataList = res.data;
-        }
+        this.dataList = res.data.list;
+        this.total = res.data.total;
         this.loading = false;
       });
     },
@@ -146,7 +150,7 @@ export default {
     },
     searchOrgProple(event) {
       this.loading = true;
-      if (this.value2.length == 0) {
+      if (this.value2[0] == "" && this.value2[1] == "") {
         this.getList(this.keyword);
       } else {
         this.getList(
@@ -187,6 +191,18 @@ export default {
       this.checkAllGroup = [];
       this.indeterminate = true;
       this.checkAll = false;
+    },
+    changePage(num) {
+      if (this.value2[0] == "" && this.value2[1] == "") {
+        this.getList(this.keyword, "", "", num);
+      } else {
+        this.getList(
+          this.keyword,
+          this.value2[0].getTime(),
+          this.value2[1].getTime(),
+          num
+        );
+      }
     }
   }
 };

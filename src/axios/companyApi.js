@@ -14,6 +14,7 @@ export function getAllProject(orgId) {
         method: "get",
     });
 }
+
 // 创建企业
 export function createCompany(data) {
     return fetch({
@@ -67,12 +68,13 @@ export function initOrgMember(orgId, flag) {
 }
 
 // 初始化企业成员信息  查询信息 新 add2020/6/23
-export function initOrgMemberNew(orgId, flag) {
+export function initOrgMemberNew(orgId, flag,memberLabel) {
     return fetch({
         url: `/organization/members/${orgId}/getOrgPartment`,
         method: "get",
         params: {
             'flag': flag,
+            memberLabel:memberLabel
         }
     });
 }

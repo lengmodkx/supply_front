@@ -440,7 +440,7 @@ export default {
 
           userRegister(this.formValidate).then(res => {
             if (res.result == 0) {
-              this.$Message.error("注册失败");
+              this.$Message.error(res.msg);
             } else {
               this.$Message.success("注册成功!");
               this.$router.push("/");

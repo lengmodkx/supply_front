@@ -384,6 +384,14 @@ export function enterTask(projectId) {
         method: "get" // 请求方法
     });
 }
+
+//任务流转任务列表
+export function enterTaskNew(projectId) {
+    return fetch({
+        url: `projects/${projectId}/taskIndex2`,
+        method: "get" // 请求方法
+    });
+}
 // 添加任务
 export function addTask(data) {
     return fetch({
@@ -1645,3 +1653,4 @@ export function expUserLog(orgId,id) {
         }
     })
 }
+

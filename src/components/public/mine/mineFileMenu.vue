@@ -254,7 +254,6 @@
             },
             // 移动日程
             removeRc(){
-                console.log(this.data.scheduleId,this.currProjectId)
                 removeRc(this.data.scheduleId,this.currProjectId).then(res => {
                     if (res.result){
                         this.$Message.success('移动成功')
@@ -278,7 +277,6 @@
                 } else {
                     this.data.privacyPattern=1
                 }
-                console.log(this.data)
                 privacy(this.data.scheduleId,this.unlock).then(res => {
                     console.log(res)
                 })

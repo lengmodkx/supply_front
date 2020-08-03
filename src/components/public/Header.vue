@@ -3,18 +3,36 @@
     <div class="left-header">
       <div class="logo" :class="header ? 'logo-big' : 'logo-small'">
         <img src="../../assets/images/download.png" alt />
-
-        <!-- <span :class="header ? 'big' : 'small'">Ald Bim</span> -->
       </div>
       <ul>
-        <li :class="{ hover: active == 0 }" @click="goOrg">工作台</li>
-        <li :class="{ hover: active == 1 }" @click="projectList">项目管理</li>
-        <li :class="{ hover: active == 2 }" @click="goMembers">团队成员</li>
-        <li :class="{ hover: active == 3 }" @click="goSys">系统设置</li>
-        <li :class="{ hover: active == 4 }" @click="myPage">我的</li>
+        <li :class="{ hover: activeHeaderTag == 0 }" @click="goOrg">工作台</li>
+        <li :class="{ hover: activeHeaderTag == 1 }" @click="projectList">项目管理</li>
+        <li :class="{ hover: activeHeaderTag == 2 }" @click="goMembers">企业成员</li>
+        <li :class="{ hover: activeHeaderTag == 3 }" @click="goSys">系统设置</li>
+        <li :class="{ hover: activeHeaderTag == 4 }" @click="myPage">我的</li>
       </ul>
     </div>
-    <div>
+    <div class="df ac">
+      <div class="menu">
+        <a @click="showHeaderTag(5)">
+          <span class="texttag">设计</span>
+        </a>
+        <a @click="showHeaderTag(6)">
+          <span class="texttag">素材</span>
+        </a>
+        <a @click="goProList">
+          <span class="texttag" style="border-right:none;">
+            <Badge
+              :count="newsCount ? newsCount : 0"
+              overflow-count="99"
+              type="info"
+              :offset="[10, 0]"
+            >
+              <Icon type="ios-notifications-outline" size="22" />
+            </Badge>
+          </span>
+        </a>
+      </div>
       <div class="right-header">
         <Avatar
           :src="headeImg"
@@ -32,7 +50,7 @@
           <li class="tab-menu-item">
             <div class="tab-menu-item-content2" @click="checkEnter">
               <div>切换企业</div>
-              <div style="font-size:12px;color:#8c8c8c">我的企业</div>
+              <div style="font-size:12px;color:#8c8c8c">{{orgName}}</div>
             </div>
           </li>
           <li class="tb-navigation-menu-divider"></li>
@@ -49,57 +67,83 @@
         </ul>
       </div>
     </div>
+    <Modal
+      v-model="tagHeader"
+      :mask="false"
+      fullscreen
+      :title="title"
+      footer-hide
+      @on-cancel="closeTag"
+      :styles="{ top: '50px' }"
+      class="tab-content"
+    >
+      <!-- <calendar v-if="showtag == 'canlender'"></calendar> -->
+      <suCai v-if="showtag == 'sucai'"></suCai>
+      <!-- <down v-else-if="showtag == 'down'"></down> -->
+      <div slot="footer"></div>
+    </Modal>
   </header>
 </template>
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
 import { checkPermission, userIsOwner } from "../../axios/api.js";
+import suCai from "./sucai"; //素材
 
 export default {
   name: "header-main",
-  components: {},
+  components: {
+    suCai, //素材库
+    },
   computed: {
-    ...mapState("app", ["header"])
+    ...mapState("app", ["header"]),
+    ...mapState("app", ["activeHeaderTag"]),
+    ...mapState("news", ["newsCount"])
   },
   data() {
     return {
-      active: 0,
+      // active: 0,
       popVisible: "none",
-      headeImg: localStorage.userImg
+      headeImg: localStorage.userImg,
+      orgName: localStorage.orgName,
+      tagHeader: false, //显示日历
+      showtag: "",
+      title:''
+
     };
   },
 
   mounted() {
     //切换路由页面刷新时用
     if (this.$route.name == "organization") {
-      this.active = 0;
+      this.$store.commit("app/changeHeaderTag", 0);
     } else if (this.$route.name == "prolist") {
-      this.active = 1;
+      this.$store.commit("app/changeHeaderTag", 1);
     } else if (this.$route.name == "members") {
-      this.active = 2;
+      this.$store.commit("app/changeHeaderTag", 2);
     } else if (this.$route.name == "systemSettings") {
-      this.active = 3;
+      this.$store.commit("app/changeHeaderTag", 3);
     } else if (this.$route.name == "Mine") {
-      this.active = 4;
+      this.$store.commit("app/changeHeaderTag", 4);
     }
+    this.getNewsCount();
   },
   methods: {
     ...mapActions("company", ["initCompany"]),
     //去首页
     goOrg() {
-      this.active = 0;
       this.$router.push("/org/" + localStorage.companyId);
+      this.$store.commit("app/changeHeaderTag", 0);
     },
     projectList() {
-      this.active = 1;
       this.$router.push("/prolist/" + localStorage.companyId);
+      this.$store.commit("app/changeHeaderTag", 1);
     },
     goSys() {
       userIsOwner(localStorage.companyId).then(res => {
         if (res.msg == 1) {
-          this.active = 3;
           this.$router.push("/systemSettings");
+          this.$store.commit("app/changeHeaderTag", 3);
           localStorage.organizationName = res.data.organizationName;
         } else {
           this.$Message.error("没有权限");
@@ -113,8 +157,8 @@ export default {
     goMembers() {
       checkPermission(localStorage.companyId).then(res => {
         if (res.result == 1 && res.data == true) {
-          this.active = 2;
           this.$router.push("/members");
+          this.$store.commit("app/changeHeaderTag", 2);
         } else {
           this.$Message.error("没有权限");
         }
@@ -123,7 +167,6 @@ export default {
     personal() {
       let routeUrl = this.$router.resolve({
         path: "/personal"
-        // query: { id: 96 }
       });
       window.open(routeUrl.href, "_blank");
       // this.$router.push("/personal");
@@ -142,8 +185,8 @@ export default {
       }
     },
     myPage() {
-      this.active = 4;
       this.$router.push("/mine");
+      this.$store.commit("app/changeHeaderTag", 4);
     },
     hideContent() {
       this.popVisible = "none";
@@ -154,7 +197,62 @@ export default {
       var expires = "expires=" + d.toUTCString();
       document.cookie =
         cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
+    },
+    getNewsCount() {
+      this.$store.dispatch("news/getNewsCount");
+    },
+    goProList() {
+      this.$router.push({
+        path: "/prolist/" + localStorage.companyId,
+        query: { from: "tips" }
+      });
+      this.$store.commit("app/changeHeaderTag", 1);
+    },
+    showHeaderTag(id) {
+      // if (id === 1) {
+      //   //我的
+      //   this.tagHeader = true;
+      //   this.showtag = "Mine";
+      //   this.title = '我的'
+      // } else if (id === 2) {
+      //   //日历
+      //   this.tagHeader = true;
+      //   this.showtag = "canlender";
+      //   this.title = '日历'
+      // } else if (id === 3) {
+      //   //素材
+      //   this.tagHeader = true;
+      //   this.showtag = "message";
+
+      // } else
+      if (id === 6) {
+        //素材
+        this.tagHeader = true;
+        this.showtag = "sucai";
+        this.title = "素材";
+        // } else if (id === 4) {
+        //   //下载
+        //   this.tagHeader = true;
+        //   this.showtag = "down";
+        //   this.title = '下载'
+      } else if (id === 5) {
+        if (runPlatform == "browse") {
+          this.$Message.error("设计系统必须在阿拉丁BIM云平台客户端打开");
+        } else {
+          ALDObj.RunALDCAD();
+        }
+      }
+    },
+    closeTag() {
+      this.tagHeader = false;
+      this.showtag = "";
+    },
+    getPath() {
+      this.$store.commit("app/changeHeader", true);
     }
+  },
+  watch: {
+    $route: "getPath"
   }
 };
 </script>

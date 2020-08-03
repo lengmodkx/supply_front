@@ -148,7 +148,6 @@ export default {
     },
     //切换TAG
     openTag(tagName) {
-      console.log(tagName)
       if (tagName == "foldMenu") {
         this.foldMenu();
       } else if (tagName == "openMenu") {

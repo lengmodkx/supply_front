@@ -280,7 +280,6 @@
             ...mapState("project", ["project"])
         },
         mounted() {
-            console.log(this.project)
         },
         methods: {
             ...mapMutations("project", ["updatePro"]),
@@ -378,7 +377,6 @@
                         projectStatus: this.project.projectStatus,
                         projectSchedule: this.project.projectSchedule
                     };
-                    console.log(data);
                     updateProject(data).then(res => {
                         this.$Message.destroy();
                         if (res.result == 1) {
@@ -449,7 +447,6 @@
                 getAllRule(this.project.projectId).then(res => {
                     if (res.result) {
                         this.ruleList = res.data;
-                        console.log();
                         this.ruleList.map(v => {
                             this.$set(v, "isEdit", false);
                         });
@@ -472,7 +469,6 @@
             // 点击规则进入 编辑规则页面
             clickRule(item) {
                 editRule(item.id).then(res => {
-                    console.log(res);
                     this.ruleData = res.data;
                     this.createRule = true;
                 });

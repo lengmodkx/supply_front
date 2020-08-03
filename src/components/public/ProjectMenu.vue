@@ -33,7 +33,7 @@
       </li>
     </ul>
     <!-- 项目设置 -->
-    <Modal v-model="projectSet" class="setPro-modal">
+    <Modal v-model="projectSet" class="setPro-modal" width="790" footer-hide>
       <projectsetting></projectsetting>
     </Modal>
     <!--标签-->
@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-import ProjectSettings from "../../views/projectSettings.vue";
+import ProjectSettings from "../../views/projectSetNew.vue";
 import TagSettings from "./tagsettings.vue";
 import recycleBin from "./recycleBin.vue";
 import { mapActions } from "vuex";

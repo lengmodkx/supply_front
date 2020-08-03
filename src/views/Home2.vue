@@ -2,17 +2,20 @@
   <div class="wrap-box">
     <Row class-name="page-header">
       <Col span="24">
-        <div class="header-title">『 为遇一人而入红尘，人去我亦去，此生不留尘。』 —— 《魔道祖师》</div>
+        <div class="header-title" v-if="userInfo.signature">『 {{userInfo.signature}}』</div>
         <div class="header-contant">
           <div class="left-contant">
             <div>
-              <img :src="userInfo.image" class="avatar" v-if='userInfo.image'/>
+              <img :src="userInfo.image" class="avatar" v-if="userInfo.image" />
             </div>
             <div>
               <div class="title">下午好，{{userInfo.userName}}，祝你开心每一天！</div>
               <div class="team">
                 {{userInfo.job}}|
-                <span v-for="i in userInfo.partmemt" :key="i.partmentId">{{i.partmentName?i.partmentName:'--'}}</span>
+                <span
+                  v-for="i in userInfo.partmemt"
+                  :key="i.partmentId"
+                >{{i.partmentName?i.partmentName:'--'}}</span>
               </div>
             </div>
           </div>
@@ -141,12 +144,10 @@
               <div class="noList" v-if="teamList.length == 0 ">
                 <img src="../assets/images/noproject-new.png" />
               </div>
-              <!-- <div> -->
-                <li v-for="(item,index) in teamList" :key="index">
-                  <img :src="item.image" class="avatar" v-if='item.image'/>
-                  <span>{{item.userName}}</span>
-                </li>
-              <!-- </div> -->
+              <li v-for="(item,index) in teamList" :key="index" @click="goMembers(item)">
+                <img :src="item.image" class="avatar" v-if="item.image" />
+                <span>{{item.userName}}</span>
+              </li>
             </ul>
           </Card>
         </Col>
@@ -221,7 +222,9 @@ export default {
     };
   },
   computed: {
-    ...mapState("project", ["projects", "loading", "project"])
+    // ...mapState("project", ["projects", "loading", "project"])
+
+    ...mapState("project", ["projects", "loading", "project", "header"], "app")
   },
   mounted() {
     document.cookie = "orgId" + "=" + localStorage.companyId + ";" + "path=/";
@@ -285,12 +288,8 @@ export default {
         this.pageSize,
         this.pageNum
       ).then(res => {
-        // if (res.result === 1) {
-        // this.loading = false;
-        // this.taskList = res.data;
         this.taskList = res.data.list;
         this.tasktotal = res.data.total;
-        // }
       });
     },
     changePages(num) {
@@ -303,7 +302,6 @@ export default {
     },
     getUser() {
       getUserInfo(localStorage.companyId).then(res => {
-        console.log(res);
         if (res.result === 1) {
           this.userInfo = res.data;
           this.getTeam();
@@ -314,7 +312,6 @@ export default {
       getTeamInfo(localStorage.companyId).then(res => {
         if (res.result == 1) {
           this.teamList = res.data;
-          console.log(res.data);
         }
       });
     },
@@ -324,6 +321,20 @@ export default {
           this.dynamicList = res.data;
         }
       });
+    },
+    changeLimit() {
+      this.$router.push("/prolist/" + localStorage.companyId);
+      this.$store.commit("app/changeHeaderTag", 1);
+    },
+    goMembers(item) {
+      this.$router.push({
+        path: "/members",
+        query: {
+          from: 'home',
+          id:item.userId
+        }
+      });
+      this.$store.commit("app/changeHeaderTag", 2);
     }
   }
 };

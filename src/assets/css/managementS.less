@@ -76,6 +76,7 @@
         .table-title {
             padding-left: 32px;
             margin-bottom: 13px;
+            cursor: pointer;
         }
 
         .table-content {
@@ -117,6 +118,8 @@
                     }
 
                     .group-people-con {
+                        display: flex;
+                        align-items: center;
 
                         .ivu-checkbox-group-item {
                             display: flex;
@@ -178,6 +181,7 @@
                 padding-left: 20px;
                 margin-top: 18px;
                 overflow: hidden;
+
                 .content-item {
                     // width: 100%;
                     height: 44px;
@@ -212,6 +216,7 @@
 
                     .right-item {
                         padding-right: 10px;
+
                         i {
                             display: none;
 
@@ -231,6 +236,7 @@
                 .content-item-childer {
                     margin-left: 20px;
                 }
+
                 .item-childer-child {
                     margin-left: 40px;
                 }
@@ -322,6 +328,14 @@
         .ivu-date-picker {
             width: 100%;
         }
+
+        .ivu-poptip {
+            width: 100%;
+
+            /deep/.ivu-poptip-rel {
+                width: 100%;
+            }
+        }
     }
 
     .dividing {
@@ -355,6 +369,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 8px 16px;
+        cursor: pointer;
 
         &:hover {
             background-color: #e5e5e5;
@@ -383,6 +399,7 @@
         justify-content: center;
         margin-bottom: 12px;
     }
+
     .iconContent {
         width: 28px;
         height: 28px;
@@ -391,18 +408,27 @@
         justify-content: center;
         cursor: pointer;
         border-radius: 4px;
+
         svg {
             width: 17px;
             height: 17px;
         }
 
     }
+
     .checked {
-        background: rgba(27,154,238,.1);
+        background: rgba(27, 154, 238, .1);
     }
 
 }
-
+.pagingContent {
+    // position: absolute;
+    // right: 40px;
+    text-align: right;
+    // bottom: 5px;
+    margin-top: 10px;
+    width: 100%;
+}
 .determine {
     display: block;
 }
