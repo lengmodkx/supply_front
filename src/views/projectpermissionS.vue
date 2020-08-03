@@ -6,7 +6,7 @@
         <Checkbox
           :disabled="disabled"
           :indeterminate="permission.indeterminate"
-          :value="permission.checkAll"
+          v-model="permission.checkAll"
           @click.prevent.native="handleCheckAll(permission)"
         >{{ permission.group }}</Checkbox>
       </div>
@@ -65,15 +65,13 @@ export default {
   },
   methods: {
     handleCheckAll(permission) {
+      console.log(permission)
       if (permission.indeterminate) {
         permission.checkAll = false;
       } else {
         permission.checkAll = !permission.checkAll;
       }
       permission.indeterminate = false;
-
-      console.log(permission.checkAll);
-
       if (permission.checkAll) {
         permission.indeterminate = false;
         permission.resources.forEach(p => {
@@ -84,6 +82,10 @@ export default {
         permission.indeterminate = false;
         (permission.checkAllGroup = []), (this.resources = []);
       }
+       setTimeout(()=>{
+          this.savePower()
+       },0)
+
     },
     checkAllGroupChange(permission) {
       if (permission.checkAllGroup.length === permission.resources.length) {
@@ -110,7 +112,6 @@ export default {
         }
       });
       console.log(resourcesArr);
-
       if (this.flag) {
         changeOrgPower(this.role.roleId, resourcesArr.join(",")).then(res => {
           if (res.result === 1) {

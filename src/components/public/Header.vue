@@ -58,7 +58,7 @@
             <div class="tab-menu-item-content3" @click="personal">账号设置</div>
           </li>
           <li class="tab-menu-item">
-            <div class="tab-menu-item-content3">下载ALDCAD</div>
+            <div class="tab-menu-item-content3" @click="getDown">下载ALDCAD</div>
           </li>
           <li class="tb-navigation-menu-divider"></li>
           <li class="tab-menu-item">
@@ -249,6 +249,9 @@ export default {
     },
     getPath() {
       this.$store.commit("app/changeHeader", true);
+    },
+    getDown(){
+       window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe"  
     }
   },
   watch: {
