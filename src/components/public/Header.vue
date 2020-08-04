@@ -89,12 +89,13 @@
 import { mapActions, mapState, mapMutations } from "vuex";
 import { checkPermission, userIsOwner } from "../../axios/api.js";
 import suCai from "./sucai"; //素材
+import SockJS from "sockjs-client";
 
 export default {
   name: "header-main",
   components: {
-    suCai, //素材库
-    },
+    suCai //素材库
+  },
   computed: {
     ...mapState("app", ["header"]),
     ...mapState("app", ["activeHeaderTag"]),
@@ -108,8 +109,7 @@ export default {
       orgName: localStorage.orgName,
       tagHeader: false, //显示日历
       showtag: "",
-      title:''
-
+      title: ""
     };
   },
 
@@ -127,9 +127,41 @@ export default {
       this.$store.commit("app/changeHeaderTag", 4);
     }
     this.getNewsCount();
+    this.initSocket(localStorage.userId);
   },
   methods: {
     ...mapActions("company", ["initCompany"]),
+    initSocket(id) {
+      // 建立连接对象
+      var url = "";
+      if (process.env.NODE_ENV == "test") {
+        url = process.env.VUE_APP_TEST_SOCKET;
+      } else if (process.env.NODE_ENV == "production") {
+        url = process.env.VUE_APP_SOCKET;
+      } else {
+        url = process.env.VUE_APP_SOCKET;
+      }
+      var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket);
+      this.stompClient.connect(
+        {},
+        frame => {
+          this.stompClient.subscribe(`/user/${id}/message`, msg => {
+            var result = JSON.parse(msg.body);
+            switch (result.type) {
+              case "I1":
+                this.$store.commit("project/deleteProject", result.object);
+                break;
+              default:
+                this.$store.commit("news/addNews", result.message);
+                break;
+            }
+          });
+        },
+        err => {}
+      );
+    },
     //去首页
     goOrg() {
       this.$router.push("/org/" + localStorage.companyId);
@@ -250,8 +282,9 @@ export default {
     getPath() {
       this.$store.commit("app/changeHeader", true);
     },
-    getDown(){
-       window.location.href ="https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe"  
+    getDown() {
+      window.location.href =
+        "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe";
     }
   },
   watch: {

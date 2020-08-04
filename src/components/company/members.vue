@@ -495,7 +495,6 @@ import {
   changeGroupsname,
   deleteGroup,
   lockUser,
-  removeBranchPeople,
   searchOrgMembers,
   initOrgMemberNew,
   getOrgPartmentByMemberLebel,
@@ -779,15 +778,6 @@ export default {
           this.branchMenu = false;
           this.branchMenuTitle = "部门菜单";
           this.$refs.tree.removeNode(this.nowBranch.id);
-        }
-      });
-    },
-    // 从企业部门移除成员 确定
-    removePP(userId) {
-      var data = { orgId: localStorage.companyId, memberId: userId };
-      removeBranchPeople(this.partmentId, data).then(res => {
-        if (res.result == 1) {
-          this.changePartment(res.data.partmentId, res.data.partmentName);
         }
       });
     },
