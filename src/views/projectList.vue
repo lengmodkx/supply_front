@@ -821,7 +821,7 @@ export default {
 .layout-right {
   flex: 1;
   margin: 24px;
-  padding: 24px;
+  padding: 15px 24px;
   background: #fff;
   overflow-y: auto;
   position: relative;
@@ -837,13 +837,13 @@ export default {
     }
 
     .create {
-      width: 114px;
-      line-height: 38px;
+      width: 110px;
+      line-height: 32px;
       border-radius: 3px;
       border: 1px solid #0077ff;
       text-align: center;
       color: #0077ff;
-      margin-top: -10px;
+      margin-top: -6px;
       cursor: pointer;
 
       i {

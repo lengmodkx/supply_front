@@ -59,7 +59,7 @@
       @end="dragBox"
     >
       <div class="column" :key="k" v-for="(i, k) in allTask">
-        <div style="max-height: 85vh;position:relative;" :data-index="k">
+        <div style="max-height:calc(100vh - 145px);position:relative;" :data-index="k">
           <div class="add-Box">
             <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId"> -->
             <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)">
