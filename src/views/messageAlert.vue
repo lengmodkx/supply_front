@@ -7,13 +7,13 @@
       </div>
       <div class="searchContent">
         <Row :gutter="10">
-          <Col span="7">
+          <Col span="5">
             <div class="df ac">
               <div class="wsn">关键字：</div>
               <Input prefix="ios-search" placeholder="搜索" v-model="keyword" />
             </div>
           </Col>
-          <Col span="8">
+          <Col span="6">
             <div class="df ac">
               <div class="wsn">日期：</div>
               <DatePicker
@@ -24,6 +24,15 @@
                 placeholder="开始时间 - 结束时间"
                 style="width:100%;"
               ></DatePicker>
+            </div>
+          </Col>
+          <Col span="4">
+            <div class="df ac">
+              <div class="wsn">类型：</div>
+              <Select v-model="messageTypes">
+                <Option :value="1">已读</Option>
+                <Option :value="0">未读</Option>
+              </Select>
             </div>
           </Col>
           <Col span="9">
@@ -82,6 +91,7 @@
 import Loading from "../components/public/common/Loading.vue";
 import {} from "@/axios/companyApi";
 import { userMessage, batchReads, batchDel } from "@/axios/api";
+import { mapActions, mapState, mapMutations } from "vuex";
 
 export default {
   props: ["messageType"],
@@ -92,27 +102,29 @@ export default {
     return {
       dataList: [],
       visible: false,
-      value2: [new Date(), new Date()],
+      value2: ["", ""],
       keyword: "",
       checkAllGroup: [],
       indeterminate: true,
       checkAll: false,
       loading: false,
-      total: 0
+      total: 0,
+      messageTypes: 0
     };
   },
   computed: {},
   mounted() {
     this.loading = true;
-    this.getList(this.keyword, new Date().getTime(), new Date().getTime());
+    this.getList(this.keyword);
   },
   methods: {
-    getList(keyword, startTime, endTime, pageNum) {
+    getList(keyword, startTime, endTime, pageNum, messageTypes) {
       let data = {
         keyword: keyword,
-        pageNum:pageNum,
+        pageNum: pageNum,
         startTime: startTime,
-        endTime: endTime
+        endTime: endTime,
+        param: messageTypes
       };
       userMessage(data).then(res => {
         this.dataList = res.data.list;
@@ -151,26 +163,23 @@ export default {
     searchOrgProple(event) {
       this.loading = true;
       if (this.value2[0] == "" && this.value2[1] == "") {
-        this.getList(this.keyword);
+        this.getList(this.keyword, "", "", "", this.messageTypes);
       } else {
         this.getList(
           this.keyword,
           this.value2[0].getTime(),
-          this.value2[1].getTime()
+          this.value2[1].getTime(),
+          this.messageTypes
         );
       }
     },
     batchRead() {
       batchReads(this.checkAllGroup.join(",")).then(res => {
-        console.log(res);
         if (res.result == 1) {
           this.$Message.success("批量已读成功!");
           this.close();
-          this.getList(
-            this.keyword,
-            new Date().getTime(),
-            new Date().getTime()
-          );
+          this.$store.commit("news/getNewsCount", res.data);
+          this.getList(this.keyword);
         }
       });
     },
@@ -194,13 +203,13 @@ export default {
     },
     changePage(num) {
       if (this.value2[0] == "" && this.value2[1] == "") {
-        this.getList(this.keyword, "", "", num);
+        this.getList(this.keyword, "", "", num, this.messageTypes);
       } else {
         this.getList(
           this.keyword,
           this.value2[0].getTime(),
           this.value2[1].getTime(),
-          num
+          this.messageTypes
         );
       }
     }
