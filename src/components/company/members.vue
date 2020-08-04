@@ -651,16 +651,18 @@ export default {
       //获取群组信息
       getGroups(localStorage.companyId).then(res => {
         this.groupData = res.data;
-        this.nowGroup.name = this.groupData[0].groupName;
-        this.nowGroup.id = this.groupData[0].groupId;
-        getGroupPeople(this.groupData[0].groupId).then(res => {
-          this.groupPeople = res.data;
-          this.groupPeople.map(p => {
-            if (p.isOwner && p.memberId == this.userId) {
-              this.isOwnerCom = true;
-            }
+        if (this.groupData.length != 0) {
+          this.nowGroup.name = this.groupData[0].groupName;
+          this.nowGroup.id = this.groupData[0].groupId;
+          getGroupPeople(this.groupData[0].groupId).then(res => {
+            this.groupPeople = res.data;
+            this.groupPeople.map(p => {
+              if (p.isOwner && p.memberId == this.userId) {
+                this.isOwnerCom = true;
+              }
+            });
           });
-        });
+        }
       });
     },
     // 显示添加人员匡
@@ -1255,7 +1257,6 @@ export default {
 /deep/.member-left .ivu-tabs-ink-bar {
   background-color: #0d253f;
 }
-
 </style>
 <style lang="less" >
 .member-left .ztree li a {

@@ -1313,7 +1313,7 @@ export default {
         orgId: localStorage.companyId,
         memberId: item.organizationMember.memberId
       };
-      removeBranchPeople(item.organizationMember.partmentId, data).then(res => {
+      removeBranchPeople(this.partmentId, data).then(res => {
         if (res.result == 1) {
           this.$Message.success("移除成功");
           this.changePartment(res.data.partmentId, res.data.partmentName);
