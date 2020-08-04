@@ -30,7 +30,7 @@
               class="default-seeting"
               v-else-if="!item.isSystemInit||item.roleKey == 'member'"
               @click.stop="setDefault(item)"
-            >设置企业默认角色</div>
+            >设置项目默认角色</div>
             <Icon type="ios-arrow-forward" color="#999999" size="15" />
           </div>
         </div>
