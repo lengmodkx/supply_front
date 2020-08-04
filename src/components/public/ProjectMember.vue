@@ -70,9 +70,9 @@
       <p slot="header" style="color:#000;text-align:center">
         <span>邀请新成员</span>
       </p>
-      <span>
+      <!-- <span>
         请先将用户加入企业，再邀请进项目
-      </span>
+      </span> -->
       <div style="text-align:center;height:400px;padding-top:10px">
         <div>
           <Input search enter-button placeholder="请输入手机号" @on-search="searchUser" v-model="keyword2" />
