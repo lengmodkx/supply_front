@@ -90,6 +90,7 @@ import { mapActions, mapState, mapMutations } from "vuex";
 import { checkPermission, userIsOwner } from "../../axios/api.js";
 import suCai from "./sucai"; //素材
 import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
 export default {
   name: "header-main",
