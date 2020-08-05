@@ -16,7 +16,7 @@
 .object-field__left {
     display: flex;
     align-items: center;
-    width: 132px;
+    width: 160px;
     height: 36;
     padding: 0 12px 0 0;
 
@@ -35,21 +35,96 @@
 }
 
 .object-field__right {
+    .executor-handler {
+        padding: 4px;
+        display: flex;
+        align-items: center;
+
+        .name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin: 0 8px;
+        }
+    }
+
     .task-img {
         width: 24px;
         height: 24px;
     }
+
     .task-status-title_01 {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-    .task-executor_01{
+
+    .task-executor_01 {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        .name{
+
+        .name {
             margin-left: 10px;
+        }
+    }
+
+    .task-date-wrapper {
+        display: flex;
+        align-items: center;
+
+        .init {
+            cursor: pointer;
+
+            &:hover {
+                color: #2d8cf0;
+            }
+        }
+
+        .setTime {
+            padding: 2px 8px;
+            position: relative;
+            cursor: pointer;
+
+            &:hover {
+                border-radius: 20px;
+                background-color: #eee;
+                color: #2d8cf0;
+
+                span {
+                    display: block;
+                }
+            }
+
+            span {
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                color: #fff;
+                line-height: 16px;
+                font-size: 20px;
+                top: -5px;
+                right: 0;
+                background-color: gray;
+                text-align: center;
+                display: none;
+            }
+        }
+
+        .dividingLine {
+            margin: 0 8px;
+        }
+
+        .icon-content {
+            margin-left: 20px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+
+            i {
+                margin-right: 16px;
+            }
         }
     }
 }
@@ -102,4 +177,241 @@
         margin-left: 5px;
     }
 
+}
+
+.detail-infos-wrapper.scenario-infos-view {
+    padding: 0 60px 0 10px;
+}
+
+.detail-infos-wrapper {
+    >section.no-border-wrapper {
+        margin: 12px 0;
+        position: relative;
+    }
+
+    .detail-infos-aside>i+span {
+        padding-left: 8px;
+        word-break: break-word;
+    }
+
+    .detail-infos-aside {
+        position: relative;
+        width: 160px;
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        align-self: flex-start;
+        flex-shrink: 0;
+        color: #8c8c8c;
+
+        i {
+            font-size: 20px;
+        }
+    }
+
+    .flex-space {
+        min-height: 1px;
+        min-width: 1px;
+        flex: 1;
+    }
+
+    .note-adder-set {
+        margin: 0 -8px;
+
+        .add-note-handler {
+            word-break: break-word;
+            cursor: pointer;
+            color: #8c8c8c;
+            display: block;
+            line-height: 24px;
+            padding: 6px 8px;
+
+            &:hover {
+                background: rgba(38, 38, 38, 0.05);
+
+            }
+        }
+
+        .editor-wrap {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-right: 20px;
+        }
+    }
+
+    .detail-infos-priority-view,
+    .detail-infos-worktime-view {
+        .detail-infos-content {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+}
+
+.detail-infos-subtask-view {
+    padding: 0 60px 0 10px;
+
+    .detail-subitem-common-header {
+        display: flex;
+        margin: 12px 0;
+        padding: 8px 8px 8px 0px;
+        color: #8c8c8c;
+
+        i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+    }
+
+    .subtask-card-main {
+        margin: 24px 0 16px;
+        padding: 8px 0;
+        border-radius: 4px;
+        border: 1px solid #e5e5e5;
+
+        .subtasks-list>li {
+            padding: 2px 12px 2px 16px;
+
+            .subtask-wrap {
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        .sontask_list {
+            /deep/.ivu-checkbox-wrapper {
+                margin-right: 0px;
+            }
+
+            /deep/.ivu-tooltip-rel {
+                vertical-align: middle;
+            }
+
+            /deep/.ivu-tooltip-inner {
+                white-space: nowrap;
+            }
+
+            .btns {
+                text-align: right;
+
+                button {
+                    margin: 10px 8px;
+                }
+            }
+
+            .addicon {
+                color: #a6a6a6;
+                font-size: 16px;
+                margin-right: 15px;
+                flex: 0 0 auto;
+            }
+
+            .sonInput {
+                flex: 1 1;
+
+                /deep/.ivu-tooltip {
+                    width: 100%;
+                }
+
+                /deep/.ivu-tooltip-rel {
+                    width: 100%;
+                }
+
+                .sonCon {
+                    width: 100%;
+                }
+            }
+
+            .sonDate {
+                color: #a6a6a6;
+                font-size: 12px;
+                margin: 0 10px;
+                cursor: pointer;
+                flex: 0 0 auto;
+
+                /deep/.ivu-poptip-rel {
+                    .icon {
+                        vertical-align: middle;
+                    }
+                }
+            }
+
+            .sonManager {
+                cursor: pointer;
+
+                .svg-people {
+                    vertical-align: middle;
+                }
+
+                .ava {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+
+                    img {
+                        display: block;
+                        border-radius: 50%;
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+
+            }
+
+            .enterDetail {
+                cursor: pointer;
+                font-size: 20px;
+                margin: 3px 10px;
+                color: #a6a6a6;
+
+                &:hover {
+                    color: #2d8cf0;
+                }
+            }
+
+            .sonCon {
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #eee;
+                }
+            }
+
+            /deep/.ivu-input {
+                font-size: 14px;
+            }
+        }
+
+        .addChildTask {
+            color: #1b9aee;
+            cursor: pointer;
+            font-size: 14px;
+            padding-left: 16px;
+            padding-right: 12px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+
+            i {
+                font-size: 16px;
+                margin-right: 10px;
+            }
+
+
+        }
+    }
+}
+
+
+.flex-horiz {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex {
+    display: flex;
 }

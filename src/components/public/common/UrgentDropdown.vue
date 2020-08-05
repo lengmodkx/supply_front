@@ -61,8 +61,8 @@ export default {
   }
 }
 .normal {
-  border: 1px solid #a6a6a6;
-  color: #a6a6a6;
+  border: 1px solid #87d2ff;
+  color: #1b9aee;
 }
 .high {
   border: 1px solid #ffaf38;
