@@ -276,6 +276,7 @@ export default {
   width: 100%;
   display: flex;
   position: relative;
+  height: calc(100vh - 220px);
 }
 @media screen and (max-width: 1440px) {
   .main-content {
@@ -438,7 +439,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   overflow-y: auto;
-  height: 430px;
+  // height: 430px;
   .cur {
     cursor: pointer;
   }
