@@ -108,7 +108,7 @@
             <div class="component-mount task-date-range">
               <div class="object-field__1cNl">
                 <div class="object-field__left">
-                  <svg-icon name="task-executor" class="task-img"></svg-icon>
+                  <Icon type="ios-calendar-outline" size="18"></Icon>
                   <span class="object-field__name">时间</span>
                 </div>
                 <div class="object-field__right">
@@ -234,6 +234,46 @@
               </div>
             </div>
           </section>
+          <section class="detail-infos-worktime-view no-border-wrapper">
+            <div class="task-worktime-container flex">
+              <div class="worktime-aside detail-infos-aside">
+                <Icon type="ios-pulse" />
+                <span class="worktime-title">进度</span>
+              </div>
+              <div class="task-worktime-wrap progress-infos-content flex-fill">
+                <Input-number
+                  class="scheduleTop"
+                  :max="100"
+                  :min="0"
+                  v-model="task.progress"
+                  @on-change="scheduleChange"
+                ></Input-number>
+                <div class="scheduleBottom" v-show="showSchedule">
+                  <Button style="padding:6px 20px;" @click="scheduleCancel">取消</Button>
+                  <Button type="primary" style="padding:6px 20px;" @click="scheduleSave">保存</Button>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="detail-infos-priority-view no-border-wrapper">
+            <div class="priority-container flex flex-vcenter">
+              <div class="priority-aside detail-infos-aside">
+                <Icon type="ios-pricetags-outline" />
+                <span class="priority-title">标签</span>
+              </div>
+              <div class="priority-wrap detail-infos-content">
+                <Tags
+                  class="fl"
+                  :taglist="task.tagList"
+                  :publicId="task.taskId"
+                  :publicType="publicType"
+                  :projectId="task.projectId"
+                  v-if="task.tagList"
+                  ref="tags"
+                ></Tags>
+              </div>
+            </div>
+          </section>
         </div>
         <div class="detail-infos-subtask-view detail-infos-wrapper">
           <div class="subtask-card">
@@ -328,9 +368,218 @@
             </div>
           </div>
         </div>
-
+        <div class="detail-infos-subtask-view detail-infos-wrapper">
+          <div class="subtask-card">
+            <div class="detail-subitem-common-header subtask-header">
+              <Icon type="ios-link-outline" />
+              <span class="flex">关联内容</span>
+            </div>
+            <div class="subtask-card-main">
+              <div class="addLink" @click="relationModal = true">
+                <Icon type="md-add" />添加关联
+              </div>
+              <Modal v-model="relationModal" footer-hide class="relationModal" id="relationModal">
+                <AddRelation
+                  :publicId="task.taskId"
+                  :fromType="publicType"
+                  @close="relationModal=false"
+                ></AddRelation>
+              </Modal>
+            </div>
+          </div>
+        </div>
+        <div class="has-relevance">
+          <ul v-if="task.bindTasks.length != 0">
+            <div class="what-title">关联的任务</div>
+            <li class="gl-task-list" v-for="(b, i) in task.bindTasks" :key="i">
+              <div class="gl-task-list-con" @click.stop="showaa(b.taskId)">
+                <Icon type="md-checkbox-outline" size="22" />
+                <img v-if="b.userImage" :src="b.userImage" alt="执行者" />
+                <Icon type="md-contact" v-else size="26" />
+                <div class="gl-con">
+                  <div class="gl-con-top">
+                    <span>{{ b.taskName }}</span>
+                    <span>{{ b.projectName }}</span>
+                  </div>
+                  <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                </div>
+              </div>
+              <Poptip @click.stop>
+                <Icon class="glpop" type="ios-arrow-down" size="20" />
+                <div slot="content">
+                  <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
+                  <div class="glpop-list" @click.stop="cancle(b.taskId)">
+                    <Icon type="md-link" size="20" />
+                    <span>取消关联</span>
+                  </div>
+                </div>
+              </Poptip>
+            </li>
+          </ul>
+          <ul v-if="task.bindFiles.length != 0">
+            <div class="what-title">关联的文件</div>
+            <li class="gl-task-list" v-for="(b, i) in task.bindFiles" :key="i">
+              <div class="gl-task-list-con" @click="getFileDetail(b.fileId)">
+                <!--<Icon type="md-checkbox-outline" size="22" />-->
+                <Icon type="ios-document-outline" size="22" />
+                <div class="gl-con">
+                  <div class="gl-con-top">
+                    <span>{{ b.fileName }}</span>
+                    <span>{{ b.projectName }}</span>
+                  </div>
+                  <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                </div>
+              </div>
+              <Poptip>
+                <Icon class="glpop" type="ios-arrow-down" size="20" />
+                <div slot="content">
+                  <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
+                  <div class="glpop-list" @click.stop="cancle(b.fileId)">
+                    <Icon type="md-link" size="20" />
+                    <span>取消关联</span>
+                  </div>
+                </div>
+              </Poptip>
+            </li>
+          </ul>
+          <ul v-if="task.bindSchedules.length != 0">
+            <div class="what-title">关联的日程</div>
+            <li class="gl-task-list" v-for="(b, i) in task.bindSchedules" :key="i">
+              <div class="gl-task-list-con" @click="editSchedule(b.scheduleId)">
+                <!--<Icon type="md-checkbox-outline" size="22" />-->
+                <Icon type="ios-calendar-outline" size="22" />
+                <div class="gl-con">
+                  <div class="gl-con-top">
+                    <span>{{ b.scheduleName }}</span>
+                    <span>{{ b.projectName }}</span>
+                  </div>
+                  <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                </div>
+              </div>
+              <Poptip>
+                <Icon class="glpop" type="ios-arrow-down" size="20" />
+                <div slot="content">
+                  <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
+                  <div class="glpop-list" @click.stop="cancle(b.scheduleId)">
+                    <Icon type="md-link" size="20" />
+                    <span>取消关联</span>
+                  </div>
+                </div>
+              </Poptip>
+            </li>
+          </ul>
+          <ul v-if="task.bindShares.length != 0">
+            <div class="what-title">关联的分享</div>
+            <li class="gl-task-list" v-for="(b, i) in task.bindShares" :key="i">
+              <div class="gl-task-list-con" @click="goShareDetail(b.shareId)">
+                <Icon type="ios-open-outline" size="22" />
+                <div class="gl-con">
+                  <div class="gl-con-top">
+                    <span>{{ b.shareName }}</span>
+                    <span>{{ b.projectName }}</span>
+                  </div>
+                  <!--<div class="gl-con-bottom">2018-12-12 12:00</div>-->
+                </div>
+              </div>
+              <Poptip>
+                <Icon class="glpop" type="ios-arrow-down" size="20" />
+                <div slot="content">
+                  <!-- <div class="glpop-list" @click.stop="clone(b.taskId)"><Icon type="ios-link" size="20" /><span>复制链接</span></div> -->
+                  <div class="glpop-list" @click.stop="cancle(b.shareId)">
+                    <Icon type="md-link" size="20" />
+                    <span>取消关联</span>
+                  </div>
+                </div>
+              </Poptip>
+            </li>
+          </ul>
+        </div>
+        <div class="detail-infos-subtask-view detail-infos-wrapper">
+          <div class="subtask-card">
+            <div class="detail-subitem-common-header subtask-header">
+              <Icon type="ios-folder-outline" />
+              <span class="flex">添加附件</span>
+            </div>
+            <div class="subtask-card-main">
+              <div class="addfile" v-if="task.fileList">
+                <div class="file-lsit" v-for="(f, i) in task.fileList" :key="i">
+                  <div class="file-img">
+                    <img
+                      v-if="images_suffix.indexOf(f.ext) > -1"
+                      :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl"
+                      alt
+                    />
+                    <img v-else src="@/icons/img/moren.png" alt="文件" />
+                    <div class="zhezhao">
+                      <Icon type="md-cloud-download" @click="downLoad(f.fileId)" />
+                      <Icon type="md-search" @click="getFileDetail(f.fileId)" />
+                    </div>
+                  </div>
+                  <Tooltip :content="f.fileName" max-width="250">
+                    <p class="file-name">{{ f.fileName }}</p>
+                  </Tooltip>
+                  <p class="file-time">{{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}</p>
+                </div>
+                <div
+                  style="width: 117px;height:117px;line-height: 117px;border: 1px solid #e5e5e5;display: flex;align-items: center;justify-content: center"
+                  @click="showCommon = true"
+                >
+                  <Icon type="md-add" size="40" style="margin-right: 0px"></Icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="task-content-right"></div>
+      <div class="task-content-right">
+        <div class="task-right-inner">
+          <!-- 设置参与者 -->
+          <div class="participator">
+            <div class="subscribers">
+              <div class="subscribers-header">
+                参与者 · {{ task.joinInfo != null ? task.joinInfo.length : 0 }}
+                <Tooltip content="参与者将会收到评论和任务更新通知" placement="right" transfer>
+                  <Icon type="ios-help"></Icon>
+                </Tooltip>
+              </div>
+              <div class="involve-list clearfix">
+                <div class="member-avatar fl" v-for="(item, index) in task.joinInfo" :key="index">
+                  <Tooltip :content="item.userName" placement="top" transfer>
+                    <div class="ava">
+                      <!-- 删除需要加在关闭按钮上 -->
+                      <img v-if="item.image" :src="item.image" alt />
+                      <svg-icon
+                        v-else
+                        style="width:24px;height:24px;display:block;"
+                        name="allMember"
+                      ></svg-icon>
+                      <span class="close" @click="deleteInvolve(item.userId)">×</span>
+                    </div>
+                  </Tooltip>
+                </div>
+                <div class="addButton fl">
+                  <InvolveMember
+                    ref="involveMember"
+                    :checkedList="joinInfoIds"
+                    :projectId="task.projectId"
+                    @save="saveInvolveMember"
+                  ></InvolveMember>
+                </div>
+              </div>
+            </div>
+
+            <log :logs="task.logs" :publicId="task.taskId" :unReadMsg="task.unReadMsg"></log>
+          </div>
+        </div>
+        <div class="footer">
+          <publick
+            @scroll="scrollToBottom"
+            :publicId="task.taskId"
+            :projectId="task.projectId"
+            :publicType="publicType"
+          ></publick>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -482,7 +731,7 @@ export default {
       };
     },
     scrollToBottom() {
-      this.$refs.scrollbox.scrollTop = this.$refs.heightbox.clientHeight;
+      // this.$refs.scrollbox.scrollTop = this.$refs.heightbox.clientHeight;
     },
     //返回
     back() {
@@ -790,12 +1039,12 @@ export default {
 .task-content {
   display: flex;
   .task-content-left {
+    height: calc(100vh - 130px);
     flex: 6;
     overflow-y: auto;
     overflow-x: hidden;
     padding-left: 20px;
     padding-top: 20px;
-    height: 500px;
     .task-title {
       width: 655px;
       .task-title-input {
@@ -805,7 +1054,7 @@ export default {
         color: #262626;
         position: relative;
         word-break: break-word;
-        font-size: 16px;
+        font-size: 20px;
         &:not(.readonly):not(.disabled):focus {
           background-color: #f7f7f7;
           width: 655px;
@@ -816,10 +1065,6 @@ export default {
         }
       }
     }
-  }
-  .task-content-right {
-    flex: 4;
-    border-left: 1px solid #e5e5e5;
   }
 }
 </style>
