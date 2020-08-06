@@ -242,6 +242,7 @@ export default {
               // 更改 文件隐私模式
               case "C8":
                 this.$store.dispatch("file/putMimi", result.object);
+                this.$store.dispatch("tree/initTree",result.object);
                 break;
               // 改变文件参与者
               case "C9":
