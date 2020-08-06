@@ -330,6 +330,7 @@
                   <div class="zhezhao">
                     <Icon type="md-cloud-download" @click="downLoad(f.fileId)" />
                     <Icon type="md-search" @click="getFileDetail(f.fileId)" />
+                    <Icon type="ios-trash" @click="deleteFiles(f.fileId)" />
                   </div>
                 </div>
                 <Tooltip :content="f.fileName" max-width="250"  >
@@ -413,7 +414,7 @@ import commonFile from "./commonfile.vue";
 import Loading from "@/components/public/common/Loading.vue";
 import { updateTaskName, updatePriority, cancelcompleteTask, completeTask, updateRepeat, updateTaskJoin, fabulous, cancelFabulous, updateTaskRemarks, taskExecutor, cancle,progress } from "@/axios/api";
 import { setSysClip } from "@/axios/api2.js";
-import { downloadFile, getFileDetails } from "@/axios/fileApi";
+import { downloadFile, getFileDetails,deleteFile } from "@/axios/fileApi";
 export default {
   components: {
     fileDetail,
@@ -555,6 +556,14 @@ export default {
         if (res.result == 1) {
           this.showFileDetail = true;
           this.file = res.data;
+        }
+      });
+    },
+    deleteFiles(fileId){
+        deleteFile(fileId).then(res => {
+        if (res.result == 1) {
+           this.$Message.success("删除成功");
+          this.editTask(this.taskId);
         }
       });
     },

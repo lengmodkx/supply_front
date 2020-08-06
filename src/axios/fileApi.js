@@ -126,7 +126,16 @@ export function getTSFile(fileId) {
         method: "get"
     });
 }
-
+// 加载项目下的文件信息
+export function deleteFile(fileId) {
+    return fetch({
+        url: `/files/deletefile`,
+        method: "delete",
+        params:{
+            fileId:fileId
+        }
+    });
+}
 //更新普通文件版本
 export function updateFileVersion(fileId,fileObj) {
     return fetch({
