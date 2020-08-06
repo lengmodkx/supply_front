@@ -380,7 +380,7 @@ export default {
       this.showVisibilityModal = true;
       this.rublish = false;
       this.fileMenu = false;
-      // console.log('<<<<<<<<<<<<<<',this.mFile)
+      console.log('<<<<<<<<<<<<<<',this.mFile)
       this.setSFile(this.mFile);
     },
     

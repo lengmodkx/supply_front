@@ -27,7 +27,7 @@
               <p style="margin-left:15px">{{user.userName}}</p>
             </div>
             <Icon type="ios-trash-outline" v-if="user.userId!=userId" @click.native.stop="remove(user)"/>
-            <span v-if="user.userId==userId">拥有者</span>
+            <!-- <span v-if="user.userId==userId">拥有者</span> -->
           </li>
         </ul>
       </div>
@@ -71,8 +71,8 @@ export default {
   methods:{
     onchange(value){
         filePrivacy(this.sFile.fileId, value,this.projectId,this.sFile.parentId).then(res => {
-            if(res.result==0){
-                this.$Message.success(res.msg)
+            if(res.result==1){
+              this.$Message.success(res.msg);
             }
         });
     },
