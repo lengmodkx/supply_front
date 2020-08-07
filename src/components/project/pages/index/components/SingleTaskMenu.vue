@@ -1,6 +1,7 @@
 <template>
   <Poptip class="task-menuwrapper" placement="bottom" transfer v-model="visible" @on-popper-hide="popHide">
-    <Icon type="ios-arrow-down" size="20" />
+    <!-- <Icon type="ios-arrow-down" size="20" /> -->
+    <Icon type="ios-more" size="31" style="margin-right:10px" />
     <!-- <Icon type="ios-arrow-down"
           size="20"></Icon> -->
     <div slot="content" class="task-menuwrapper-content" v-if="initCom">

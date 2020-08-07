@@ -16,7 +16,10 @@
             <DropdownItem>加入ID</DropdownItem>
           </DropdownMenu>
         </Dropdown>
-        <Icon type="ios-more" size="31" style="margin-right:10px" />
+        <!-- <Icon type="ios-more" size="31" style="margin-right:10px" /> -->
+        <span class="down">
+          <SingleTaskMenu :data="task" @close="closeThisModal"></SingleTaskMenu>
+        </span>
         <Icon type="ios-close" size="31" @click.native="closeModal" />
       </div>
     </div>
@@ -675,7 +678,7 @@ export default {
       file: {}
     };
   },
-  created() {
+  mounted() {
     this.editTask(this.taskId);
   },
   computed: {

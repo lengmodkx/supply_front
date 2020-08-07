@@ -164,6 +164,7 @@ export default {
   position: relative;
   border: 1px solid #e5e5e5;
   border-left: none;
+  width: 100%;
   .talkinner {
     position: relative;
     min-height: 40px;
