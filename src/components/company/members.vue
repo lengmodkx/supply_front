@@ -466,12 +466,16 @@
         @click="createBranch"
       >创建</Button>
     </Modal>
+    <!-- 聊天 -->
+    <Modal v-model="showGroupChat" width="900" footer-hide class-name="chat-modal">
+      <instantChat  v-if="showGroupChat"></instantChat>
+    </Modal>
   </div>
 </template>
-
 <script>
 import addPeople from "@/components/public/addPeople";
 import addPeopleCompany from "@/components/public/addPeopleCompany";
+import instantChat from '@/components/public/instantChat'
 import branch from "./branch";
 import { mapState, mapActions, mapMutations } from "vuex";
 import Tree from "@/components/company/Tree.vue";
@@ -587,11 +591,12 @@ export default {
       more: require("../../icons/img/gengduo-01.png"),
       moreA: require("../../icons/img/gengduoA.png"),
       userId: localStorage.userId,
-      isOwnerCom: false
+      isOwnerCom: false,
+      showGroupChat:false,
     };
   },
   mounted() {},
-  components: { Tree, addPeople, branch, addPeopleCompany },
+  components: { Tree, addPeople, branch, addPeopleCompany,instantChat },
   methods: {
     ...mapActions("company", ["getDepartmentTree"]),
     ...mapMutations("company", ["initTree"]),
@@ -1265,5 +1270,10 @@ export default {
 }
 .member-left .ztree .node_name {
   width: 100%;
+}
+.chat-modal {
+  /deep/.ivu-modal-body {
+    padding:  0;
+}
 }
 </style>
