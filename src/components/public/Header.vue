@@ -208,7 +208,17 @@ export default {
     goout() {
       localStorage.clear();
       this.setCookie("token", "", 0);
-      window.location.href = "https://www.aldbim.com";
+      // window.location.href = "https://www.aldbim.com";
+      var url = "";
+          if (process.env.NODE_ENV == "test") {
+            url = 'http://test.art1001.com';
+          } else if (process.env.NODE_ENV == "production") {
+            url =  "https://www.aldbim.com";
+          } else {
+            url = "/";
+          }
+          window.location.href = url;
+
     },
     showMenu() {
       if (this.popVisible == "none") {

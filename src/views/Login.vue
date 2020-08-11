@@ -98,6 +98,7 @@ export default {
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
               localStorage.orgName = res.data.orgName;
+              localStorage.accountName=res.data.accountName
               this.$Message.success("登录成功!");
               this.setCookie("token",res.data.accessToken);
               if (res.data.orgId) {

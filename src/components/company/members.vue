@@ -468,14 +468,14 @@
     </Modal>
     <!-- 聊天 -->
     <Modal v-model="showGroupChat" width="900" footer-hide class-name="chat-modal">
-      <instantChat  v-if="showGroupChat"></instantChat>
+      <instantChat v-if="showGroupChat"></instantChat>
     </Modal>
   </div>
 </template>
 <script>
 import addPeople from "@/components/public/addPeople";
 import addPeopleCompany from "@/components/public/addPeopleCompany";
-import instantChat from '@/components/public/instantChat'
+import instantChat from "@/components/public/instantChat";
 import branch from "./branch";
 import { mapState, mapActions, mapMutations } from "vuex";
 import Tree from "@/components/company/Tree.vue";
@@ -592,14 +592,15 @@ export default {
       moreA: require("../../icons/img/gengduoA.png"),
       userId: localStorage.userId,
       isOwnerCom: false,
-      showGroupChat:false,
+      showGroupChat: false
     };
   },
   mounted() {},
-  components: { Tree, addPeople, branch, addPeopleCompany,instantChat },
+  components: { Tree, addPeople, branch, addPeopleCompany, instantChat },
   methods: {
     ...mapActions("company", ["getDepartmentTree"]),
     ...mapMutations("company", ["initTree"]),
+    ...mapActions(["onLogin"]),
     mdClose(index) {
       this.$set(this.peopleList[index].userEntity, "visible", false);
     },
@@ -1144,6 +1145,14 @@ export default {
     peopleCheck() {},
     checkIcon(type) {
       this.checkIconType = type;
+      if (type == "message") {
+        this.onLogin({
+          username: localStorage.accountName,
+          password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
+        });
+      }
+      this.showGroupChat=true
+
     },
     leaveIcon() {
       this.checkIconType = "";
@@ -1273,7 +1282,7 @@ export default {
 }
 .chat-modal {
   /deep/.ivu-modal-body {
-    padding:  0;
-}
+    padding: 0;
+  }
 }
 </style>

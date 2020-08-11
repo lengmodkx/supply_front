@@ -16,6 +16,11 @@ import company from './modules/company'
 import relation from './modules/relation'
 import tree from './modules/tree'
 //import gantt from './modules/gantt'
+
+import Login from "./webim/login";
+import Chats from "./webim/chats";
+import Group from "./webim/group";
+import Emedia from "./webim/emedia";
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -34,7 +39,11 @@ const store = new Vuex.Store({
         company,
         relation,
         tree,
-        materialfile
+        materialfile,
+        login: Login,
+		chats: Chats,
+		group: Group,
+		emedia: Emedia
        // gantt
     }
 })

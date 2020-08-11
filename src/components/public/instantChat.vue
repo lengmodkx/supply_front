@@ -1,25 +1,41 @@
 <template>
   <div class="chat-content">
     <div class="chat-content-left">
-      <Tabs value="name1">
-        <TabPane label="私信" name="name1">
+      <Tabs value="contact" @on-click="changeTab">
+        <TabPane label="私信" name="contact">
           <ul class="chat-list">
-            <li class="chat-list-item df" v-for="item in 3">
+            <li class="chat-list-item df" v-for="item in userList['contact']" :key="item.name">
               <img
-                src="https://c-ssl.duitang.com/uploads/item/201810/26/20181026235337_vxvvx.thumb.1000_0.png"
+                src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4008032110,1843662736&fm=26&gp=0.jpg"
                 alt
               />
               <div class="text-content">
                 <div>
-                  <div class="chat-user">阿拉丁BIM管理员</div>
+                  <div class="chat-user">{{item.name}}</div>
                   <div class="message">把icon发我一下</div>
                 </div>
-                <div class="date-time">2020/08/05</div>
+                <div class="date-time"></div>
               </div>
             </li>
           </ul>
         </TabPane>
-        <TabPane label="群聊" name="name2">标签二的内容</TabPane>
+        <TabPane label="群聊" name="group">
+          <ul class="chat-list">
+            <li class="chat-list-item df" v-for="item in userList['group']" :key="item.groupid">
+              <img
+                src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4008032110,1843662736&fm=26&gp=0.jpg"
+                alt
+              />
+              <div class="text-content">
+                <div>
+                  <div class="chat-user">{{item.name}}</div>
+                  <div class="message">把icon发我一下</div>
+                </div>
+                <div class="date-time"></div>
+              </div>
+            </li>
+          </ul>
+        </TabPane>
       </Tabs>
     </div>
     <div class="chat-content-right">
@@ -40,12 +56,12 @@
                     </div>
                     <div class="file-box" v-if="item.fileList.length">
                       <div class="one-file" v-for="(f, i) in item.fileList" :key="i">
-                        <img
+                        <!-- <img
                           v-if="images.indexOf(f.ext) > -1"
                           :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl"
                           alt
                         />
-                        <img v-else src="@/icons/img/moren.png" alt />
+                        <img v-else src="@/icons/img/moren.png" alt />-->
                         <p>{{ f.fileName }}</p>
                         <span>{{ f.size }}</span>
                       </div>
@@ -147,7 +163,7 @@
               </div>
               <div class="talkDown">
                 <div class="send fr">
-                  <Button type="primary" @click="sendChat">发送</Button>
+                  <Button type="primary" @click="sendMsg">发送</Button>
                 </div>
               </div>
             </div>
@@ -161,9 +177,8 @@
 import Emoji from "@/components/public/common/emoji/Emoji";
 import insertText from "@/utils/insertText";
 import upFile from "../project/pages/index/chatUpFile";
-
 import { sendChat, getChat, recall } from "../../axios/api";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 // 上传
 import OSS from "ali-oss";
 let client = new OSS({
@@ -195,12 +210,16 @@ export default {
       host: "",
       headers: {
         "x-auth-token": localStorage.token
-      }
+      },
+      changeName:'contact'
     };
   },
   mounted() {
-    this.getChat();
-    this.uploadList = this.$refs.upload.fileList;
+    // this.getChat();
+    // this.uploadList = this.$refs.upload.fileList;
+    // this.aa();
+    this.onGetContactUserList();
+    console.log(this.$store.state.chat.msgList)
   },
   watch: {
     chatData() {
@@ -211,19 +230,33 @@ export default {
     }
   },
   computed: {
-    ...mapState("chat", ["chatData", "images"])
+    ...mapState("chat", ["chatData", "images"]),
+    ...mapGetters({
+      contact: "onGetContactUserList",
+      group: "onGetGroupUserList",
+      msgList: "onGetCurrentChatObjMsg"
+    }),
+    userList() {
+      return {
+        contact: this.contact.filter(item => {
+          // if (item && !this.blackList.includes(item.name)) {
+            return item;
+          // }
+        }),
+        group: this.group,
+      };
+    },
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
+    ...mapActions(["onGetGroupUserList","onGetContactUserList",'onGetCurrentChatObjMsg']),
+
     // 获取消息e
     SymbolBox(e) {
       const inner = this.$refs.textarea.innerHTML.split("");
       if (inner[inner.length - 1] === "@") {
         this.showSymbol = true;
         const width = this.$refs.textarea.innerHTML.length * 17;
-
-        console.log(width);
-
         if (width < 1200) {
           this.offsetLeft = width + "px";
         } else {
@@ -345,7 +378,95 @@ export default {
         suffix = filename.substring(pos);
       }
       return suffix;
-    }
+    },
+    // 发送文本信息
+    sendMsg() {
+      let _this = this;
+      // 生成本地消息id
+      var id = WebIM.conn.getUniqueId();
+      var msg = new WebIM.message("txt", id);
+      var time = +new Date();
+      let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
+      // 设置body
+      msg.set({
+        msg: con, // 发送的消息内容（content是与input输入框双向绑定的变量）
+        to: "wangji000", // 接收消息对象，这里可以先写死是admin，代表发给控制台
+        roomType: false,
+        // ext表示拓展对象，这个会随着你发送而发送过去，你接收时同样可以拿到这个数据
+        ext: {
+          time
+        },
+        success: function(id, serverMsgId) {
+          console.log(msg); // 自己去打印出来看看是啥
+          //把发送者的头像和文本数据push到数组中在页面上展示
+          // let value = {
+          //   type: "text",
+          //   avatar: require("../../assets/defult-avatar.jpg"),
+          //   content: msg.value,
+          //   to: "admin", // 先写死admin
+          //   from: "cwlojako", // 这里写上你控制台创建的测试IM用户ID(我这里是cwlojako,见上图)
+          //   time: msg.body.ext.time // 获取发送时间
+          // };
+          // _this.chatContent.push(value);
+        },
+        fail: function(e) {
+          console.log("消息发送失败");
+        }
+      });
+      msg.body.chatType = "singleChat";
+      WebIM.conn.send(msg.body);
+      // 发送后将输入框清空
+      this.$refs.textarea.innerHTML = "";
+    },
+    chatList() {
+      return this.$store.state.chat.msgList;
+    },
+    //tab切换群组还是好友
+    changeTab(name){
+      this.changeName=name
+        if(name=='contact'){
+          this.onGetContactUserList();
+        }else {
+          this.onGetGroupUserList();
+        }
+    },
+    getLastMsg(item) {
+      let name=this.changeName
+      const chatList = this.chatList[name];
+      console.log(this.$store.state.chat)
+      let userId = "";
+      if (name == "contact") {
+        userId = item.name;
+      } else if (name == "group") {
+        userId = item.groupid;
+      } else {
+        userId = item.id;
+      }
+      const currentMsgs = chatList[userId] || [];
+      let lastMsg = "";
+      let lastType =
+        currentMsgs.length && currentMsgs[currentMsgs.length - 1].type;
+      if (currentMsgs.length) {
+        if (lastType === "img") {
+          lastMsg = "[image]";
+        } else if (lastType === "file") {
+          lastMsg = currentMsgs[currentMsgs.length - 1].filename;
+        } else if (lastType === "audio") {
+          lastMsg = "[audio]";
+        } else if (lastType === "vidio") {
+          lastMsg = "[vidio]";
+        } else {
+          lastMsg = currentMsgs[currentMsgs.length - 1].msg;
+        }
+      }
+      const msgTime = currentMsgs.length
+        ? this.renderTime(currentMsgs[currentMsgs.length - 1].time)
+        : "";
+      return {
+        lastMsg,
+        msgTime
+      };
+    },
   }
 };
 </script>
