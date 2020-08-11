@@ -4,7 +4,7 @@
       <div class="title">
         <div v-if="!checkFlag">项目权限</div>
         <div v-else class="routerNav">
-          <span class="backBtn" @click="checkFlag=false">项目权限 ></span>
+          <span class="backBtn" @click="checkFlag=false;permissionAssign=false">项目权限 ></span>
           <span>{{nowRole.roleName}}</span>
         </div>
         <div class="icon-content" v-if="!checkFlag">
