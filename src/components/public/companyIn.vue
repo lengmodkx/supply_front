@@ -8,7 +8,7 @@
         <span
           class="field"
           v-if="!showLogin"
-        >登录并接受 {{inviteesInfo.userName}} 邀请，加入{{showText}} {{fromType=='project'?inviteesInfo.projectName:inviteesInfo.organizationName}}</span>
+        >登录并接受 {{inviteesInfo.userName}} 邀请，加入{{showText}} <div>{{fromType=='project'?inviteesInfo.projectName:inviteesInfo.organizationName}}</div></span>
         <span
           class="field"
           v-else
