@@ -220,7 +220,7 @@
           <div class="relevance">
             <p class="name" style="float: none;"><Icon type="ios-link-outline" />关联内容</p>
             <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-            <Modal v-model="relationModal" footer-hide class="relationModal" id="relationModal">
+            <Modal v-model="relationModal" footer-hide class="relationModal" id="relationModal" width="850">
               <AddRelation :publicId="task.taskId" :fromType="publicType" @close="relationModal=false"></AddRelation>
             </Modal>
           </div>

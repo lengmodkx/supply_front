@@ -1150,8 +1150,11 @@ export default {
           username: localStorage.accountName,
           password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
         });
+        setTimeout(()=>{
+          this.showGroupChat=true
+        },500)
       }
-      this.showGroupChat=true
+      
 
     },
     leaveIcon() {
