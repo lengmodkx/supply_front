@@ -86,7 +86,7 @@
             <loading v-if="!file.modelUrl"></loading>
             <iframe v-if="file.modelUrl" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.modelUrl" frameborder="1" width="100%" height="100%"></iframe>
         </div>
-
+        <pdf v-else-if="'.pdf'.indexOf(file.ext)>-1"  :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl" ></pdf>
         <div v-else class="cant-read-file">
           <span>{{ file.fileName + file.ext }}</span>
           <Button long size="large" type="primary" @click="downLoad(file.fileId)">
@@ -291,7 +291,7 @@ import Tags from "../public/Tags.vue";
 import AddRelation from "@/components/public/common/AddRelation"; //关联
 import log from "@/components/public/log"; //标签
 import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
-
+import pdf from 'vue-pdf'
 export default {
   props: ["type"],
   data() {
@@ -304,10 +304,10 @@ export default {
       publicType: "文件",
       imgSize: 1,
       imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
-      officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx"]
+      officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx", ".ppt"],
     };
   },
-  components: { Tags, AddRelation, log, Emoji },
+  components: { Tags, AddRelation, log, Emoji,pdf },
   computed: {
     ...mapState("file", ["joinInfoIds", "file"])
   },
@@ -436,7 +436,7 @@ export default {
       this.footerTxt = `跨项目${caozuo}时，部分信息不会被保留。`;
 
       folderChild(this.projectId).then(res => {});
-    }
+    },
   }
 };
 </script>
