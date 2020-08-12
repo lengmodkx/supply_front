@@ -119,7 +119,7 @@
           <div class="relevance">
             <p class="name"><Icon type="ios-link-outline" />关联内容</p>
             <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-            <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
+            <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true" width="850">
               <AddRelation v-if="relationModal" @binkCallback="binkCallback" :publicId="file.fileId" :fromType="publicType"></AddRelation>
             </Modal>
           </div>
