@@ -48,6 +48,7 @@ export default {
         return;
       }
       this.$store.commit("file/crumbsForward");
+      this.$store.commit("file/changeCreateFileId", this.createFileId);
       //刷新页面
       let params = { fileId: this.createFileId };
       this.initFile(params);
@@ -60,6 +61,7 @@ export default {
         return;
       }
       this.$store.commit("file/crumbsBack");
+      this.$store.commit("file/changeCreateFileId", this.createFileId);
       //刷新页面
       let params = { fileId: this.createFileId };
       this.initFile(params);
@@ -68,6 +70,7 @@ export default {
     home() {
       this.$emit("recovery");
       this.$store.commit("file/crumbsHome");
+      this.$store.commit("file/changeCreateFileId", this.fileId);
       //请求数据
       let params = { fileId: this.fileId };
       this.initFile(params);
@@ -80,6 +83,7 @@ export default {
         index: index
       };
       this.$store.commit("file/crumbsClick", data);
+      this.$store.commit("file/changeCreateFileId", item.id);
       const params = { fileId: item.id };
       this.initFile(params);
     },
