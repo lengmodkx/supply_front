@@ -675,10 +675,10 @@ export default {
       this.roleMemberId = item.memberId;
     },
     screenRole(roleId) {
+      this.loading=true
       updateOrgUserRole(roleId, this.roleMemberId, localStorage.companyId).then(
         res => {
           if (res.result == 1) {
-            this.peopleList=[]
             this.$Message.success("设置成功");
             this.getList();
           } else {
