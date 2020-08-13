@@ -82,12 +82,14 @@
                 align-items: center;
                 padding: 10px 12px;
                 // background-color: #e5f6fb;
+                background-color: #eeeeee;
+
                 border-radius: 5px;
-                margin: 0px 0px 5px 5px;
+                margin: 0px 0px 5px 0px;
 
                 img {
                     width: 32px;
-                    height: 40px;
+                    height: 32px;
                     margin-right: 8px;
                     flex: none;
                 }
@@ -100,7 +102,7 @@
                 }
 
                 span {
-                    width: 40px;
+                    width: 80px;
                     margin-left: 12px;
                     flex: none;
                     text-align: right;
@@ -124,7 +126,18 @@
                 float: right;
             }
         }
+        .other-msg {
+            .one-file {
+                background-color: #eeeeee;
 
+            }
+        }
+        .me-msg,.other-msg {
+            .img-style {
+                max-width: 100px;
+                margin: 5px 15px 0;
+            }
+        }
         #input {
             width: 100%;
             height: 40px;
@@ -142,14 +155,15 @@
 
         .time {
             font-size: 11px;
-            padding: 0 15px 0 62px;
+            padding: 0 15px 0 20px;
             margin-top: 5px;
             display: flex;
             align-items: center;
 
-            span {
+            a {
                 cursor: pointer;
                 margin: 0 5px;
+                color:#515a6e ;
             }
 
             &.me-time {
@@ -194,7 +208,8 @@
             .content {
                 float: right;
                 text-align: right;
-                background-color: #e5f6fb;
+                background-color: #eeeeee;
+
             }
         }
 
@@ -354,6 +369,17 @@
                     line-height: 40px;
                     height: 40px;
                     background-color: rgba(249, 249, 249, 1);
+                    .hide {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        min-width: 100%;
+                        min-height: 100%;
+                        filter: alpha(opacity=0);
+                        opacity: 0;
+                        cursor: inherit;
+                        display: none;
+                      }
                 }
 
                 .talkDown {

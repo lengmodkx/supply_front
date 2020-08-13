@@ -210,6 +210,7 @@ export default {
       this.setCookie("token", "", 0);
       // window.location.href = "https://www.aldbim.com";
       var url = "";
+      console.log(process.env.NODE_ENV )
           if (process.env.NODE_ENV == "test") {
             url = 'http://test.art1001.com';
           } else if (process.env.NODE_ENV == "production") {

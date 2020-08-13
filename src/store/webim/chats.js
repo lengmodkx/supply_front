@@ -45,23 +45,24 @@ const Chat = {
 			// 	state.userList[type] = newUserList;
 			// }
 			// else{
-			// 	state.userList[type] = userList;
+				state.userList[type] = userList;
 			// }
 			state.userList[type] = userList;
 		},
 		updateMsgList(state, payload){
-			const { chatType, chatId, msg, bySelf, type, id } = payload;
+			console.log(payload)
+			const { chatType, chatId, msg, bySelf, type, id} = payload;
 			const { params } = router;
 			let status = "unread";
 			if(payload.chatType == "contact"){
-				if(params.id == payload.from){
-					status = "read";
-				}
+				// if(params.id == payload.from){
+				// 	status = "read";
+				// }
 			}
 			else if(payload.chatType == "group"){
-				if(params.id == payload.chatId){
-					status = "read";
-				}
+				// if(params.id == payload.chatId){
+				// 	status = "read";
+				// }
 			}
 
 			if(!state.msgList[chatType][chatId]){
@@ -89,13 +90,14 @@ const Chat = {
 				// state.msgList[chatType][chatId] = _unique(state.msgList[chatType][chatId])
 			}
 
-			if(chatType === "chatroom" && !bySelf){ // 聊天室消息去重处理
-				state.currentMsgs = _.uniqBy(state.msgList[chatType][chatId], "mid");
-			}
-			else{
-				state.currentMsgs = Object.assign({}, state.msgList[chatType][params.id || chatId]); // 这里params.id在路由跳转的时候会undefind，取chatId兼容
-			}
+			// if(chatType === "chatroom" && !bySelf){ // 聊天室消息去重处理
+			// 	state.currentMsgs = _.uniqBy(state.msgList[chatType][chatId], "mid");
+			// }
+			// else{
+			// 	state.currentMsgs = Object.assign({}, state.msgList[chatType][params.id || chatId]); // 这里params.id在路由跳转的时候会undefind，取chatId兼容
+			// }
 			state.msgList = Object.assign({}, state.msgList);
+			console.log(state.msgList)
 		},
 		updateCurrentMsgList(state, messages){
 			state.currentMsgs = messages;
@@ -122,42 +124,37 @@ const Chat = {
 		updateMessageStatus(state, message){
 			const { id, mid, action, readUser } = message;
 			const { name, params } = router;
-			Object.keys(state.msgList[name]).forEach((user) => {
-				// console.log(state.msgList[name][user]);
+			// Object.keys(state.msgList[name]).forEach((user) => {
+			// 	// console.log(state.msgList[name][user]);
                 
-				if(action == "oneUserReadMsgs"){
-					if(state.msgList[name][readUser]){
-						state.msgList[name][readUser].forEach((msg) => {
-							if(msg.status != "recall"){
-								msg.status = "read";
-							}
-						});
-					}
-				}
-				else if(state.msgList[name][user].length){
-					state.msgList[name][user].forEach((msg) => {
-						if(action === "readMsgs" && !msg.bySelf){
-							if(msg.status != "recall"){
-								msg.status = "read";
-							}
-						}
-						else if(msg.mid == id || msg.mid == mid){
-							msg.status = message.status;
-							if(message.msg){
-								msg.msg = message.msg;
-							}
-						}
-					});
-				}
-			});
+			// 	if(action == "oneUserReadMsgs"){
+			// 		if(state.msgList[name][readUser]){
+			// 			state.msgList[name][readUser].forEach((msg) => {
+			// 				if(msg.status != "recall"){
+			// 					msg.status = "read";
+			// 				}
+			// 			});
+			// 		}
+			// 	}
+			// 	else if(state.msgList[name][user].length){
+			// 		state.msgList[name][user].forEach((msg) => {
+			// 			if(action === "readMsgs" && !msg.bySelf){
+			// 				if(msg.status != "recall"){
+			// 					msg.status = "read";
+			// 				}
+			// 			}
+			// 			else if(msg.mid == id || msg.mid == mid){
+			// 				msg.status = message.status;
+			// 				if(message.msg){
+			// 					msg.msg = message.msg;
+			// 				}
+			// 			}
+			// 		});
+			// 	}
+			// });
 		},
 		// 黑名单筛选用户列表
 		changeUserList(state, payload){
-			let ary = [];
-			_.forIn(payload, function(value, key){
-				ary.push({ name: key });
-			});
-			state.userList.contactUserList = _.pullAllBy(state.userList.contactUserList, ary, "name");
 		}
 	},
 	actions: {
@@ -196,46 +193,29 @@ const Chat = {
 			};
 			WebIM.conn.getGroup(options);
 		},
-		onGetChatroomUserList: function(context, payload){
-			var option = {
-				apiUrl: "https://a1.easemob.com",
-				pagenum: 1,                                 // 页数
-				pagesize: 20,                               // 每页个数
-				success: function(list){
-					context.commit("updateUserList", {
-						userList: list.data,
-						type: "chatroomUserList"
-					});
-				},
-				error: function(){
-					console.log("List chat room error");
-				}
-			};
-			WebIM.conn.getChatRooms(option);
-		},
 		// 获取当前聊天对象的记录 @payload： {key, type}
 		onGetCurrentChatObjMsg: function(context, payload){
 			const { id, type } = payload;
 			context.commit("updateCurrentMsgList", context.state.msgList[type][id]);
+			console.log(payload)
 		},
 		onSendText: function(context, payload){
 			const { chatType, chatId, message } = payload;
 			const id = WebIM.conn.getUniqueId();
 			const time = +new Date();
-			const chatroom = chatType === "chatroom";
 			const type = chatType === "contact" ? "singleChat" : "groupChat";
 			const jid = {
 				contact: "name",
 				group: "groupid",
-				chatroom: "id"
 			};
 			const msgObj = new WebIM.message("txt", id);
 			msgObj.set({
 				msg: message,
 				to: chatId[jid[chatType]],
 				chatType: type,
-				roomType: chatroom,
+				roomType: false,
 				success: function(){
+					console.log(msgObj);
 					context.commit("updateMsgList", {
 						chatType,
 						chatId: chatId[jid[chatType]],
@@ -427,6 +407,7 @@ const Chat = {
 				isGroup: payload.isGroup,
 				count: 10, // 每次获取消息条数
 				success: function(msgs){
+					console.log(msgs)
 					try{
 						payload.success && payload.success(msgs);
 						if(msgs.length){
@@ -523,8 +504,9 @@ const Chat = {
 								}
 								msg.isHistory = true;
 								context.commit("updateMsgList", msg);
+								console.log(msg)
 							});
-							context.commit("updateMessageStatus", { action: "readMsgs" });
+							// context.commit("updateMessageStatus", { action: "readMsgs" });
 						}
 					}
 					catch(e){
@@ -568,10 +550,8 @@ const Chat = {
 		onGetGroupUserList(state){
 			return state.userList.groupUserList;
 		},
-		onGetChatroomUserList(state){
-			return state.userList.chatroomUserList;
-		},
 		onGetCurrentChatObjMsg(state){
+			console.log(state)
 			return state.currentMsgs;
 		},
 		fetchHistoryMessages(state){
