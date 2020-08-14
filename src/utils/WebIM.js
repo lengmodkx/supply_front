@@ -43,10 +43,6 @@ WebIM.conn.listen({
 		console.log(message)
 		// 登录或注册成功后 跳转到好友页面
 		console.log("用户已上线");
-		// const username = store.state.login.username || localStorage.getItem("userInfo") && JSON.parse(localStorage.getItem("userInfo")).userId;
-		// const path = location.pathname.indexOf("login") !== -1 || location.pathname.indexOf("register") !== -1 ? "/contact" : location.pathname;
-		// const redirectUrl = `${path}?username=${username}`;
-		// Vue.$router.push({ path: redirectUrl });
 	},
 	onClosed: function (message) {
 		// Vue.$router.push({ path: "/login" });
@@ -62,25 +58,26 @@ WebIM.conn.listen({
 			groupchat: "group",
 			chatroom: "chatroom"
 		};
+		console.log(message)
 		store.commit("updateMsgList", {
 			chatType: typeMap[message.type],
 			chatId: chatId,
 			msg: message.data,
 			bySelf: false,
 			from: message.from,
-			mid: message.id
+			mid: message.id,
 		});
-		type === 'chat' && ack(message);
-		if (WebIM && WebIM.call && message && message.ext && message.ext.msg_extension) {
-			var msgExtension = message.ext.msg_extension && JSON.parse(message.ext.msg_extension);
-			var options = {
-				confrId: message.ext.conferenceId,
-				password: message.ext.password || "",
-				gid: msgExtension.group_id,
-				inviter: msgExtension.inviter
-			};
-			WebIM.call.listener.onInvite(message.from, options);
-		}
+		// type === 'chat' && ack(message);
+		// if (WebIM && WebIM.call && message && message.ext && message.ext.msg_extension) {
+		// 	var msgExtension = message.ext.msg_extension && JSON.parse(message.ext.msg_extension);
+		// 	var options = {
+		// 		confrId: message.ext.conferenceId,
+		// 		password: message.ext.password || "",
+		// 		gid: msgExtension.group_id,
+		// 		inviter: msgExtension.inviter
+		// 	};
+		// 	WebIM.call.listener.onInvite(message.from, options);
+		// }
 	}, // 收到文本消息
 	onEmojiMessage: function (message) {
 		console.log("onEmojiMessage", message);
@@ -138,9 +135,10 @@ WebIM.conn.listen({
 	}, // 收到音频消息
 	onLocationMessage: function (message) {
 		console.log("onLocationMessage", message);
-		message.type === 'chat' && 	ack(message);
+		// message.type === 'chat' && 	ack(message);
 	}, // 收到位置消息
 	onFileMessage: function (message) {
+		console.log(message)
 		const { from, to, type } = message;
 		const chatId = type !== "chat" ? to : from;
 		const typeMap = {

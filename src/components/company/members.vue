@@ -601,6 +601,7 @@ export default {
     ...mapActions("company", ["getDepartmentTree"]),
     ...mapMutations("company", ["initTree"]),
     ...mapActions(["onLogin"]),
+    ...mapActions(["onLogout"]),
     mdClose(index) {
       this.$set(this.peopleList[index].userEntity, "visible", false);
     },
@@ -1214,6 +1215,13 @@ export default {
   created() {
     this.initMember();
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
+  },
+  watch:{
+    'showGroupChat'(val){
+      if(!val){
+          this.onLogout();
+      }
+    }
   }
 };
 </script>
