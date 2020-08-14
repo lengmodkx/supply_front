@@ -4,7 +4,8 @@
       <div class="title">
         <div v-if="!checkFlag">企业权限</div>
         <div v-else class="routerNav">
-          <span class="backBtn" @click="checkFlag=false;permissionAssign=false">企业权限 ></span>
+          <Icon type="md-arrow-back" color="#2B85E4" size="20" style="margin-right:10px;cursor: pointer;" @click="checkFlag=false;permissionAssign=false"/>
+          <span class="backBtn" >企业权限 ></span>
           <span>{{nowRole.roleName}}</span>
         </div>
         <div class="icon-content">
@@ -17,7 +18,8 @@
             <span>回复默认</span>
           </div>
         </div>
-        <div class="line"></div>
+        <div class="line" v-if="!checkFlag"></div>
+        <div class="lines" v-else></div>
       </div>
       <Loading v-if="loading"></Loading>
       <div class="jur-content" v-if="!checkFlag">
