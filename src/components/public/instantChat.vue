@@ -1,8 +1,8 @@
 <template>
   <div class="chat-content">
-    <div class="chat-content-left">
-      <Tabs value="contact" @on-click="changeTab">
-        <TabPane label="私信" name="contact">
+    <div class="chat-content-left" v-if="changeName=='group'">
+      <Tabs :value="changeName" @on-click="changeTab">
+        <!-- <TabPane label="私信" name="contact">
           <ul class="chat-list">
             <li
               class="chat-list-item df"
@@ -10,10 +10,7 @@
               :key="item.name"
               @click="select2(item, item.name)"
             >
-              <img
-                src="../../assets/images/headUser.png"
-                alt
-              />
+              <img src="../../assets/images/headUser.png" alt />
               <div class="text-content">
                 <div>
                   <div class="chat-user">{{item.name}}</div>
@@ -23,28 +20,31 @@
               </div>
             </li>
           </ul>
-        </TabPane>
+        </TabPane>-->
         <TabPane label="群聊" name="group">
-          <ul class="chat-list">
-            <li
-              class="chat-list-item df"
-              v-for="item in userList['group']"
-              :key="item.groupid"
-              @click="select2(item, item.groupid)"
-            >
-              <img
-                src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4008032110,1843662736&fm=26&gp=0.jpg"
-                alt
-              />
-              <div class="text-content">
-                <div>
-                  <div class="chat-user">{{item.name}}</div>
-                  <div class="message">把icon发我一下</div>
+          <div>
+            <ul class="chat-list">
+              <li
+                class="chat-list-item df"
+                :class="{ check: index ==listIndex }"
+                v-for="(item,index) in userList['group']"
+                :key="item.groupid"
+                @click="select2(item, item.groupid,index)"
+              >
+                <img
+                  src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4008032110,1843662736&fm=26&gp=0.jpg"
+                  alt
+                />
+                <div class="text-content">
+                  <div>
+                    <div class="chat-user">{{item.name}}</div>
+                    <div class="message"></div>
+                  </div>
+                  <div class="date-time"></div>
                 </div>
-                <div class="date-time"></div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </TabPane>
       </Tabs>
     </div>
@@ -100,8 +100,11 @@
                       v-else-if="item.type === 'img'"
                       class="img-style"
                     />
-                    <div class="other" v-else>
-                      <div class="content" v-html="item.msg"></div>
+                    <div v-else>
+                      <div class="otherName" v-if="changeName=='group'">{{item.from}}</div>
+                      <div class="other">
+                        <div class="content" v-html="item.msg"></div>
+                      </div>
                     </div>
 
                     <div class="time">
@@ -171,7 +174,7 @@
                     </p>
                     <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                   </li>
-                </ul> -->
+                </ul>-->
               </div>
               <div class="talkDown">
                 <div class="send fr">
@@ -205,12 +208,13 @@ import moment from "moment";
 export default {
   name: "App",
   components: { Emoji, upFile },
+  props: ["changeName", "userInfoList"],
   data() {
     return {
       files: [],
       talkvalue: "",
       showCommon: false,
-      projectName: '',
+      projectName: "",
       symbolData: [],
       offsetLeft: 0,
       showSymbol: false,
@@ -225,25 +229,42 @@ export default {
       headers: {
         "x-auth-token": localStorage.token
       },
-      changeName: "contact",
+      // changeName: "contact",
       activedKey: {
         contact: "",
         group: ""
-      }
+      },
+      listIndex:''
     };
   },
   mounted() {
-    this.onGetContactUserList();
-    setTimeout(() => {
-      this.onGetCurrentChatObjMsg({
-        type: "contact",
-        id: this.userList["contact"][0].name
+    if (this.changeName == "group") {
+      this.onGetGroupUserList().then(val => {
+        setTimeout(() => {
+          this.onGetCurrentChatObjMsg({
+            type: this.changeName,
+            id: this.userList["group"][0].groupid
+          });
+          this.select2(
+            this.userList[this.changeName][0],
+            this.userList[this.changeName][0].groupid,0
+          );
+        }, 500);
       });
-      this.select2(
-        this.userList["contact"][0],
-        this.userList["contact"][0].name
-      );
-    }, 1000);
+    } else {
+      this.onGetContactUserList().then(val => {
+        this.projectName = this.userInfoList.userEntity.userName;
+        this.userList["contact"].map(p => {
+          if (p.name == this.userInfoList.userEntity.accountName) {
+            this.onGetCurrentChatObjMsg({
+              type: this.changeName,
+              id: p.name
+            });
+            this.select2(p, p.name);
+          }
+        });
+      });
+    }
   },
   watch: {
     msgList() {
@@ -262,9 +283,7 @@ export default {
     userList() {
       return {
         contact: this.contact.filter(item => {
-          // if (item && !this.blackList.includes(item.name)) {
           return item;
-          // }
         }),
         group: this.group
       };
@@ -278,9 +297,10 @@ export default {
       "onGetContactUserList",
       "onGetCurrentChatObjMsg",
       "onSendText",
-      "getHistoryMessage",
-
+      "getHistoryMessage"
     ]),
+    ...mapActions(["addfirend"]),
+    ...mapActions(["acceptSubscribe"]),
 
     // 获取消息e
     SymbolBox(e) {
@@ -345,10 +365,13 @@ export default {
       this.$nextTick(() => {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
-        if(this.msgList==undefined){
-          setTimeout(()=>{
-            this.select2(this.$data.activedKey[this.changeName],this.projectName)
-          },500)
+        if (this.msgList == undefined) {
+          setTimeout(() => {
+            this.select2(
+              this.$data.activedKey[this.changeName],
+              this.projectName
+            );
+          }, 500);
         }
       });
     },
@@ -442,19 +465,21 @@ export default {
         msgTime
       };
     },
-    select2(key, index) {
-      this.projectName = index;
+    select2(key, index,listIndex) {
+      if (this.changeName == "group") {
+        this.projectName = key.name;
+        this.listIndex=listIndex
+      }
       this.$data.selectedKeys = [index];
       this.select(key);
       this.$data.activedKey[this.changeName] = key;
-      console.log(this.msgList)
     },
     select(key) {
       if (this.changeName === "group") {
         this.onGetCurrentChatObjMsg({ type: this.changeName, id: key.groupid });
       } else if (this.changeName === "contact") {
         this.onGetCurrentChatObjMsg({ type: this.changeName, id: key.name });
-      } 
+      }
     },
     selectedKeys() {
       return [this.getKey(this.activedKey[this.changeName]) || ""];

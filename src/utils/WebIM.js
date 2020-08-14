@@ -40,7 +40,7 @@ if (!WebIM.conn.apiUrl) {
 // 注册监听回调
 WebIM.conn.listen({
 	onOpened: function (message) { // 连接成功回调
-		console.log(message)
+		// console.log(message)
 		// 登录或注册成功后 跳转到好友页面
 		console.log("用户已上线");
 	},
@@ -193,7 +193,7 @@ WebIM.conn.listen({
 		type === 'chat' && 	ack(message);
 	}, // 收到视频消息
 	onPresence: function (message) {
-		console.log("onPresence", message);
+		// console.log("onPresence", message);
 		let select_id = store.state.group.groupInfo.gid; // 群组相关操作，更新数据时需要
 		switch (message.type) {
 			case "subscribe":
@@ -205,10 +205,9 @@ WebIM.conn.listen({
 				break;
 			case "subscribed":
 				store.dispatch("onGetContactUserList");
-				Message.success({
-					// type: "success",
-					content: message.from + " " + "已订阅"
-				});
+				// Message.success({
+				// 	content: message.from + " " + "已订阅"
+				// });
 				break;
 			case "unsubscribed":
 				store.dispatch("onGetContactUserList");
@@ -217,19 +216,18 @@ WebIM.conn.listen({
 					alert(message.from + " " + "请求被拒绝");
 				}
 				else {
-					Message.success({
-						// type: "success",
-						content: message.from + " " + "已退订"
-					});
+					// Message.success({
+					// 	content: message.from + " " + "已退订"
+					// });
 				}
 				break;
 
 			case "direct_joined": // 被拉进群--不需要同意
 				store.dispatch("onGetGroupUserList")
-				Message.success({
-					// type: "success",
-					content: `${message.from}邀请您加入群：${message.gid}`
-				})
+				// Message.success({
+				// 	// type: "success",
+				// 	content: `${message.from}邀请您加入群：${message.gid}`
+				// })
 				break;
 			case "invite": //收到邀请进群的通知
 				let groupInviteOptions = {
@@ -247,27 +245,27 @@ WebIM.conn.listen({
 				break;
 			case "memberJoinPublicGroupSuccess": // 成员加入聊天室成功回调
 				store.dispatch("onGetGroupinfo", { select_id });
-				Message.success({
-					// type: "success",
-					content: `${message.from}已加入群组`
-				})
+				// Message.success({
+				// 	// type: "success",
+				// 	content: `${message.from}已加入群组`
+				// })
 				break;
 			case "joinPublicGroupSuccess":  //申请加入群组成功回调
 				store.dispatch("onGetGroupUserList");
 				break;
 			case "deleteGroupChat": // 解散群组
 				store.dispatch("onGetGroupUserList")
-				Message.error({
-					// type: "error",
-					content: `${message.from}将群：${message.gid} 已解散`
-				})
+				// Message.error({
+				// 	// type: "error",
+				// 	content: `${message.from}将群：${message.gid} 已解散`
+				// })
 				break
 			case "removedFromGroup": //移除
 				store.dispatch("onGetGroupUserList")
-				Message.success({
-					// type: "success",
-					content: "已被" + message.from + "移除群：" + message.gid
-				})
+				// Message.success({
+				// 	// type: "success",
+				// 	content: "已被" + message.from + "移除群：" + message.gid
+				// })
 				break;
 			case "leaveGroup":
 				store.dispatch("onGetGroupinfo", { select_id });

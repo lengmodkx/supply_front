@@ -21,6 +21,8 @@ import Login from "./webim/login";
 import Chats from "./webim/chats";
 import Group from "./webim/group";
 import Emedia from "./webim/emedia";
+import FriendModule from "./webim/friendModule";
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -43,7 +45,8 @@ const store = new Vuex.Store({
         login: Login,
 		chats: Chats,
 		group: Group,
-		emedia: Emedia
+        emedia: Emedia,
+        friendModule: FriendModule,
        // gantt
     }
 })

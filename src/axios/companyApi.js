@@ -176,30 +176,35 @@ export function getGroupPeople(groupId) {
     });
 }
 // 添加群组成员
-export function addGroupPeople(groupId, memberId) {
+export function addGroupPeople(groupId, memberId,chatGroupId) {
     return fetch({
         url: `/organization_group_member/${groupId}`,
         method: "post",
         data: {
-            memberId: memberId
+            memberId: memberId,
+            chatGroupId:chatGroupId
         }
     });
 }
 // 改变群组名称
-export function changeGroupsname(groupId, groupName) {
+export function changeGroupsname(groupId, groupName,chatGroupId) {
     return fetch({
         url: `/organization_group/${groupId}`,
         method: "put",
         params: {
-            groupName: groupName
+            groupName: groupName,
+            chatGroupId:chatGroupId
         }
     });
 }
 // 删除群组
-export function deleteGroup(groupId) {
+export function deleteGroup(groupId,chatGroupId) {
     return fetch({
         url: `/organization_group/${groupId}`,
         method: "delete",
+        params: {
+            chatGroupId:chatGroupId
+        }
     });
 }
 
@@ -270,6 +275,18 @@ export function searchDepartment(keyWord,orgId) {
         method: 'get', // 请求方法
         params: {
             keyWord: keyWord
+        }
+    })
+}
+
+//聊天添加好友  环信
+export function addFriend(accountName,buddyAccountName) {
+    return fetch({
+        url: `/addBuddyByAccountName`,
+        method: 'get', // 请求方法
+        params: {
+            accountName:accountName,
+            buddyAccountName:buddyAccountName
         }
     })
 }
