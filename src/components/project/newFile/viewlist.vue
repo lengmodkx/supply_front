@@ -333,7 +333,7 @@ export default {
 
     mounted() {
     // 设置表格高度
-    this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 200
+    this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 220
   },
   created() {
     let params = { fileId: this.createFileId };
@@ -610,12 +610,16 @@ export default {
   color: #1b9aee !important;
 }
 .file-contant {
-  height: calc(100vh - 87px);
+  height: calc(100vh - 220px);
   overflow: hidden;
-  overflow-y: auto;
+  // overflow-y: auto;
   padding-left: 10px;
-  padding-top: 10px;
+  // padding-top: 10px;
+  margin-top: 10px;
   padding-right: 10px;
+  .file-view-wrap {
+    height: calc(100vh - 220px);
+  }
   .file-list {
     .file-list-col {
       margin-bottom: 10px;
