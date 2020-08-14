@@ -12,9 +12,8 @@
         <div class="file-hinted" @click.stop>
           <Tooltip :content="file.fileName + (file.catalog == 0 ? file.ext : '')" placement="top" transfer max-width="250" v-if="isactive != index">
             <div class="file-name" @click.stop="changeView(file, index)">
-              <span class="file-name-obj"  v-if="file.catalog == 0">{{ file.fileNameHead }}</span>
-              <span class="file-name-obj" v-else>{{ file.fileName }}</span>
-              <span v-if="file.catalog == 0" class="file-name-foot">{{ file.fileNameFoot }}</span>
+              <span class="file-name-obj">{{ file.fileName }}</span>
+              <span v-if="file.catalog == 0">{{ file.ext }}</span>
               <Icon type="ios-lock-outline" size="18" v-if="file.catalog==0&&file.filePrivacy==1" class="file-lock"/>
             </div>
           </Tooltip>
