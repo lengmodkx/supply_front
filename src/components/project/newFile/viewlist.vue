@@ -1,7 +1,7 @@
 <template>
   <div class="file-contant" v-if="files != null">
     <Row class="file-list" v-if="files.length > 0 && showView == 'view'" type="flex" :gutter="10" justify="start">
-      <Col class="file-list-col" v-for="(file, index) in filesContent" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)">
+      <Col class="file-list-col" v-for="(file, index) in files" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)">
         <div class="img-box" :class="{ checked: fileArr.includes(file.fileId) }">
           <Icon type="ios-checkbox" class="ios-check" size="28"  :class="{ showIcon: fileArr.includes(file.fileId) }" @click.native.stop="iosCheck(file, index)" />
           <Button icon="ios-arrow-down" class="file-more_opt" :class="{ showIcon: isactive2 == index }" @click.stop="getFileid($event,file, index)"></Button>
@@ -338,19 +338,6 @@ export default {
   created() {
     let params = { fileId: this.createFileId };
     this.initFile(params).then(res => {
-      this.filesContent=this.files
-        this.filesContent.map(p=>{
-        if(p.catalog == 0){
-          if(p.fileName.length>6){
-              let fileName=p.fileName+p.ext
-              p.fileNameHead=fileName.substring(0,fileName.length - 6);
-              p.fileNameFoot=fileName.substring(fileName.length - 6);
-          }else {
-            p.fileNameHead=p.fileName+p.ext
-          }
-        }
-      })
-
       this.loading = false;
     });
   },
