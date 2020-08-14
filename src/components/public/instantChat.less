@@ -26,6 +26,16 @@
 
         .chat-list {
             width: 100%;
+            height: calc(100vh - 210px);
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 6px;
+                height: 8px;
+                background-color: #e5e5e5;
+              }
+              &::-webkit-scrollbar-thumb {
+                background-color: #cecece;
+              }
         }
 
         .chat-list-item {
