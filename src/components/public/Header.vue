@@ -91,7 +91,7 @@ import { checkPermission, userIsOwner } from "../../axios/api.js";
 import suCai from "./sucai"; //素材
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-
+import Cookies from 'js-cookie';
 export default {
   name: "header-main",
   components: {
@@ -207,8 +207,7 @@ export default {
     },
     goout() {
       localStorage.clear();
-      this.setCookie("token", "", 0);
-      // window.location.href = "https://www.aldbim.com";
+      Cookies.remove('token', { path: '/', domain: 'aldbim.com' });
       var url = "";
       console.log(process.env.NODE_ENV )
           if (process.env.NODE_ENV == "test") {
@@ -234,13 +233,6 @@ export default {
     },
     hideContent() {
       this.popVisible = "none";
-    },
-    setCookie(cname, cvalue) {
-      var d = new Date();
-      d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
-      var expires = "expires=" + d.toUTCString();
-      document.cookie =
-        cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
     },
     getNewsCount() {
       this.$store.dispatch("news/getNewsCount");

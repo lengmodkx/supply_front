@@ -30,7 +30,7 @@ import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "../axios/a
 import { mapState, mapActions } from "vuex";
 import { Encrypt } from "@/utils/cryptoUtils";
 import wxlogin from "vue-wxlogin";
-
+import Cookies from 'js-cookie';
 export default {
   components: { wxlogin },
   data() {
@@ -74,12 +74,6 @@ export default {
   },
   methods: {
     ...mapActions("user", ["updateUserInfo", "updateUserId", "initSrc"]),
-    setCookie(cname, cvalue) {
-      var d = new Date();
-      d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-      var expires = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + "; " + expires + ";path=/;domain=aldbim.com";
-    },
     login: function(name) {
       this.userInfo = this.formValidate;
 
@@ -100,7 +94,7 @@ export default {
               localStorage.orgName = res.data.orgName;
               localStorage.accountName=res.data.accountName
               this.$Message.success("登录成功!");
-              this.setCookie("token",res.data.accessToken);
+              Cookies.set('token',res.data.accessToken,{expires:365,path:'/',domain:'aldbim.com'});
               if (res.data.orgId) {
                 this.$router.replace("/org/" + res.data.orgId);
               } else {
@@ -146,7 +140,7 @@ export default {
               localStorage.userName = res.data.userName;
               localStorage.token = res.data.accessToken;
               localStorage.companyId = res.data.orgId;
-              this.setCookie("token",res.data.accessToken);
+              Cookies.set('token',res.data.accessToken,{expires:365,path:'/',domain:'aldbim.com'});
               if (res.data.orgId) {
                 vm.$router.replace("/org/" + res.data.orgId);
               } else {
