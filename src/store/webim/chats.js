@@ -197,7 +197,7 @@ const Chat = {
 			const { id, type } = payload;
 			context.commit("updateCurrentMsgList", context.state.msgList[type][id]);
 		},
-		onSendText: function(context, payload){
+		onSendText: function(context, payload){ 
 			const { chatType, chatId, message } = payload;
 			const id = WebIM.conn.getUniqueId();
 			const time = +new Date();
@@ -209,43 +209,13 @@ const Chat = {
 			const msgObj = new WebIM.message("txt", id);
 			msgObj.set({
 				msg: message,
-				to: chatId[jid[chatType]],
+				to: chatType === "contact" ?chatId:chatId[jid[chatType]],
 				chatType: type,
 				roomType: false,
 				success: function(){
 					context.commit("updateMsgList", {
 						chatType,
-						chatId: chatId[jid[chatType]],
-						msg: message,
-						bySelf: true,
-						time: time,
-						mid: id,
-						status: "sending"
-					});
-				},
-				fail: function(e){
-					console.log("Send private text error", e);
-				}
-			});
-			if(chatType === "group" || chatType === "chatroom"){
-				msgObj.setGroup("groupchat");
-			}
-			WebIM.conn.send(msgObj.body);
-		},
-		onSendText2: function(context, payload){
-			const { chatType, chatId, message } = payload;
-			const id = WebIM.conn.getUniqueId();
-			const time = +new Date();
-			const msgObj = new WebIM.message("txt", id);
-			msgObj.set({
-				msg: message,
-				to: chatId,
-				chatType: type,
-				roomType: false,
-				success: function(){
-					context.commit("updateMsgList", {
-						chatType,
-						chatId: chatId,
+						chatId: chatType === "contact" ?chatId:chatId[jid[chatType]],
 						msg: message,
 						bySelf: true,
 						time: time,

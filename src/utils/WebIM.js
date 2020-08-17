@@ -67,17 +67,7 @@ WebIM.conn.listen({
 			from: message.from,
 			mid: message.id,
 		});
-		// type === 'chat' && ack(message);
-		// if (WebIM && WebIM.call && message && message.ext && message.ext.msg_extension) {
-		// 	var msgExtension = message.ext.msg_extension && JSON.parse(message.ext.msg_extension);
-		// 	var options = {
-		// 		confrId: message.ext.conferenceId,
-		// 		password: message.ext.password || "",
-		// 		gid: msgExtension.group_id,
-		// 		inviter: msgExtension.inviter
-		// 	};
-		// 	WebIM.call.listener.onInvite(message.from, options);
-		// }
+		
 	}, // 收到文本消息
 	onEmojiMessage: function (message) {
 		console.log("onEmojiMessage", message);
@@ -205,9 +195,6 @@ WebIM.conn.listen({
 				break;
 			case "subscribed":
 				store.dispatch("onGetContactUserList");
-				// Message.success({
-				// 	content: message.from + " " + "已订阅"
-				// });
 				break;
 			case "unsubscribed":
 				store.dispatch("onGetContactUserList");
@@ -224,10 +211,6 @@ WebIM.conn.listen({
 
 			case "direct_joined": // 被拉进群--不需要同意
 				store.dispatch("onGetGroupUserList")
-				// Message.success({
-				// 	// type: "success",
-				// 	content: `${message.from}邀请您加入群：${message.gid}`
-				// })
 				break;
 			case "invite": //收到邀请进群的通知
 				let groupInviteOptions = {
@@ -245,27 +228,15 @@ WebIM.conn.listen({
 				break;
 			case "memberJoinPublicGroupSuccess": // 成员加入聊天室成功回调
 				store.dispatch("onGetGroupinfo", { select_id });
-				// Message.success({
-				// 	// type: "success",
-				// 	content: `${message.from}已加入群组`
-				// })
 				break;
 			case "joinPublicGroupSuccess":  //申请加入群组成功回调
 				store.dispatch("onGetGroupUserList");
 				break;
 			case "deleteGroupChat": // 解散群组
 				store.dispatch("onGetGroupUserList")
-				// Message.error({
-				// 	// type: "error",
-				// 	content: `${message.from}将群：${message.gid} 已解散`
-				// })
 				break
 			case "removedFromGroup": //移除
 				store.dispatch("onGetGroupUserList")
-				// Message.success({
-				// 	// type: "success",
-				// 	content: "已被" + message.from + "移除群：" + message.gid
-				// })
 				break;
 			case "leaveGroup":
 				store.dispatch("onGetGroupinfo", { select_id });
@@ -287,19 +258,21 @@ WebIM.conn.listen({
 	}, // 本机网络掉线
 	onError: function (message) {
 		console.log(message)
-		if (message.type == 0) {
-			console.log('请输入账号密码')
-		} else if (message.type == 28) {
-			console.log("未登陆")
-		} else if (JSON.parse(message.data.data).error_description == "user not found") {
-			Message.error("用户名不存在！")
-		} else if (JSON.parse(message.data.data).error_description == "invalid password") {
-			console.log('密码无效！')
-		} else if (JSON.parse(message.data.data).error_description == "user not activated") {
-			Message.error("用户已被封禁！")
-		} else if (message.type == "504") {
-			Message.info("消息撤回失败");
-		}
+		// if (message.type == 0) {
+		// 	console.log('请输入账号密码')
+		// } else if (message.type == 28) {
+		// 	console.log("未登陆")
+		// } else if (JSON.parse(message.data.data).error_description == "user not found") {
+		// 	Message.error("用户名不存在！")
+		// } else if (JSON.parse(message.data.data).error_description == "invalid password") {
+		// 	console.log('密码无效！')
+		// } else 
+		// if (JSON.parse(message.data.data).error_description == "user not activated") {
+		// 	Message.error("用户已被封禁！")
+		// } 
+		// else if (message.type == "504") {
+		// 	Message.info("消息撤回失败");
+		// }
 		// 报错返回到登录页面
 		// Vue.$router.push({ path: '/login' });
 	}, // 失败回调
@@ -307,7 +280,7 @@ WebIM.conn.listen({
 		console.log("撤回消息", message);
 		message.status = "recall";
 		message.msg = "对方撤回了一条消息";
-		store.commit("updateMessageStatus", message);
+		// store.commit("updateMessageStatus", message);
 	},
 	onReceivedMessage: function (message) {
 		// console.log("onReceivedMessage", message);
@@ -324,7 +297,7 @@ WebIM.conn.listen({
 	onReadMessage: function (message) {
 		console.log("onReadMessage", message);
 		message.status = "read";
-		store.commit("updateMessageStatus", message);
+		// store.commit("updateMessageStatus", message);
 	}, // 收到消息已读回执
 
 	onCreateGroup: function (message) {
