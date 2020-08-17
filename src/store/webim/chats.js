@@ -162,7 +162,7 @@ const Chat = {
 			try{
 				WebIM.conn.getRoster({
 					success: function(roster){
-						// console.log("roster", roster);
+						console.log("roster", roster);
 						const userList = roster.filter(user => ["both", "to"].includes(user.subscription));
 						context.commit("updateUserList", {
 							userList,
@@ -180,7 +180,6 @@ const Chat = {
 			var options = {
 				success: function(resp){
 					let userList = resp.data;
-					console.log(userList)
 					userList.forEach((user, index) => {
 						userList[index].name = user.groupname;
 					});
@@ -197,7 +196,6 @@ const Chat = {
 		onGetCurrentChatObjMsg: function(context, payload){
 			const { id, type } = payload;
 			context.commit("updateCurrentMsgList", context.state.msgList[type][id]);
-			console.log(payload)
 		},
 		onSendText: function(context, payload){
 			const { chatType, chatId, message } = payload;
@@ -215,10 +213,39 @@ const Chat = {
 				chatType: type,
 				roomType: false,
 				success: function(){
-					console.log(msgObj);
 					context.commit("updateMsgList", {
 						chatType,
 						chatId: chatId[jid[chatType]],
+						msg: message,
+						bySelf: true,
+						time: time,
+						mid: id,
+						status: "sending"
+					});
+				},
+				fail: function(e){
+					console.log("Send private text error", e);
+				}
+			});
+			if(chatType === "group" || chatType === "chatroom"){
+				msgObj.setGroup("groupchat");
+			}
+			WebIM.conn.send(msgObj.body);
+		},
+		onSendText2: function(context, payload){
+			const { chatType, chatId, message } = payload;
+			const id = WebIM.conn.getUniqueId();
+			const time = +new Date();
+			const msgObj = new WebIM.message("txt", id);
+			msgObj.set({
+				msg: message,
+				to: chatId,
+				chatType: type,
+				roomType: false,
+				success: function(){
+					context.commit("updateMsgList", {
+						chatType,
+						chatId: chatId,
 						msg: message,
 						bySelf: true,
 						time: time,
@@ -407,7 +434,6 @@ const Chat = {
 				isGroup: payload.isGroup,
 				count: 10, // 每次获取消息条数
 				success: function(msgs){
-					console.log(msgs)
 					try{
 						payload.success && payload.success(msgs);
 						if(msgs.length){
@@ -504,7 +530,6 @@ const Chat = {
 								}
 								msg.isHistory = true;
 								context.commit("updateMsgList", msg);
-								console.log(msg)
 							});
 							// context.commit("updateMessageStatus", { action: "readMsgs" });
 						}

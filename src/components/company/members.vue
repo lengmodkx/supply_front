@@ -198,7 +198,7 @@
               <div class="more-bumen-opearte">
                 <img
                   :src="checkIconType=='message'?messageA:message"
-                  @mouseover="checkIcon('message')"
+                  @click="checkIcon('message')"
                   @mouseleave="leaveIcon"
                 />
 
@@ -277,10 +277,10 @@
               </Col>
               <Col span="5">
                 <Poptip placement="bottom" transfer width="280" v-model="item.userEntity.visible">
-                  <span v-if="isOwnerCom">{{ item.isOwner ? "退出" : "移除企业" }}</span>
+                  <span v-if="isOwnerCom">{{ item.isOwner ? "退出" : "移除群组" }}</span>
                   <span v-else-if="item.memberId==userId">退出</span>
                   <div slot="title" class="member-title">
-                    <span>{{ item.isOwner ? "退出群组" : "移除企业" }}</span>
+                    <span>{{ item.isOwner ? "退出群组" : "移除群组" }}</span>
                     <Icon
                       type="md-close"
                       size="18"
@@ -450,6 +450,9 @@
           <div class="content-title">办公地点</div>
           <div>{{userInfoList.address==null?'----':userInfoList.address}}</div>
         </div>
+        <div class="btn">
+          <Button type="primary" long @click="startChat" v-if="userId !=userInfoList.memberId">发起聊天</Button>
+        </div>
       </div>
     </Modal>
     <!-- 创建部门 -->
@@ -468,7 +471,7 @@
     </Modal>
     <!-- 聊天 -->
     <Modal v-model="showGroupChat" width="900" footer-hide class-name="chat-modal">
-      <instantChat v-if="showGroupChat"></instantChat>
+      <instantChat v-if="showGroupChat" :changeName="changeName" :userInfoList="userInfoList"></instantChat>
     </Modal>
   </div>
 </template>
@@ -502,7 +505,8 @@ import {
   searchOrgMembers,
   initOrgMemberNew,
   getOrgPartmentByMemberLebel,
-  groupRemoval
+  groupRemoval,
+  addFriend
 } from "@/axios/companyApi";
 
 export default {
@@ -592,7 +596,9 @@ export default {
       moreA: require("../../icons/img/gengduoA.png"),
       userId: localStorage.userId,
       isOwnerCom: false,
-      showGroupChat: false
+      showGroupChat: false,
+      changeName: "",
+      webIMgroupId: ""
     };
   },
   mounted() {},
@@ -602,6 +608,8 @@ export default {
     ...mapMutations("company", ["initTree"]),
     ...mapActions(["onLogin"]),
     ...mapActions(["onLogout"]),
+    ...mapActions(["addfirend"]),
+
     mdClose(index) {
       this.$set(this.peopleList[index].userEntity, "visible", false);
     },
@@ -661,6 +669,10 @@ export default {
         if (this.groupData.length != 0) {
           this.nowGroup.name = this.groupData[0].groupName;
           this.nowGroup.id = this.groupData[0].groupId;
+          this.webIMgroupId = JSON.parse(
+            this.groupData[0].consulGroup
+          ).data.groupid;
+          console.log(this.webIMgroupId);
           getGroupPeople(this.groupData[0].groupId).then(res => {
             this.groupPeople = res.data;
             this.groupPeople.map(p => {
@@ -807,7 +819,11 @@ export default {
           }
         });
       } else {
-        addGroupPeople(this.nowGroup.id, this.social.join(",")).then(res => {
+        addGroupPeople(
+          this.nowGroup.id,
+          this.social.join(","),
+          this.webIMgroupId
+        ).then(res => {
           if (res.result) {
             this.isCreateBranch = false;
             this.groupStep1 = false;
@@ -903,6 +919,7 @@ export default {
     changeNowGroup(item) {
       this.nowGroup.name = item.groupName;
       this.nowGroup.id = item.groupId;
+      this.webIMgroupId = JSON.parse(item.consulGroup).data.groupid;
       getGroupPeople(item.groupId).then(res => {
         this.groupPeople = res.data;
         this.groupPeople.map(p => {
@@ -928,7 +945,7 @@ export default {
     // 改变群组名称
     changeGroupName() {
       this.isCreateBranch = true;
-      changeGroupsname(this.nowGroup.id, this.nowGroup.name).then(res => {
+      changeGroupsname(this.nowGroup.id, this.nowGroup.name,this.webIMgroupId).then(res => {
         this.groupData.forEach(i => {
           if (i.groupId === this.nowGroup.id) {
             i.groupName = this.nowGroup.name;
@@ -942,7 +959,7 @@ export default {
     // 删除群组
     deleteGroupOk() {
       this.isCreateBranch = true;
-      deleteGroup(this.nowGroup.id).then(res => {
+      deleteGroup(this.nowGroup.id,this.webIMgroupId).then(res => {
         this.branchMenu = false;
         this.$Message.success("删除成功");
         this.isCreateBranch = false;
@@ -1146,17 +1163,19 @@ export default {
     peopleCheck() {},
     checkIcon(type) {
       this.checkIconType = type;
-      // if (type == "message") {
-      //   this.onLogin({
-      //     username: localStorage.accountName,
-      //     password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
-      //   });
-      //   setTimeout(()=>{
-      //     this.showGroupChat=true
-      //   },500)
-      // }
-      
-
+      if (type == "message") {
+        this.onLogin({
+          username: localStorage.accountName,
+          password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
+        }).then(res=>{
+              this.showGroupChat = true;
+          this.changeName = "group";
+        });
+        // setTimeout(() => {
+        //   this.showGroupChat = true;
+        //   this.changeName = "group";
+        // }, 500);
+      }
     },
     leaveIcon() {
       this.checkIconType = "";
@@ -1210,16 +1229,34 @@ export default {
           this.$Message.error("没有权限");
         }
       });
+    },
+    //单聊
+    startChat() {
+      this.onLogin({
+        username: localStorage.accountName,
+        password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
+      });
+
+      addFriend(
+        localStorage.accountName,
+        this.userInfoList.userEntity.accountName
+      ).then(res => {
+        setTimeout(() => {
+          this.groupStepInfo = false;
+          this.showGroupChat = true;
+          this.changeName = "contact";
+        }, 500);
+      });
     }
   },
   created() {
     this.initMember();
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
   },
-  watch:{
-    'showGroupChat'(val){
-      if(!val){
-          this.onLogout();
+  watch: {
+    showGroupChat(val) {
+      if (!val) {
+        this.onLogout();
       }
     }
   }

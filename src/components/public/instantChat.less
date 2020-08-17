@@ -3,7 +3,8 @@
     color: #333333;
     font-size: 14px;
     height: calc(100vh - 150px);
-
+    border-radius: 5px;
+    overflow: hidden;
     .chat-content-left {
         width: 300px;
 
@@ -25,6 +26,16 @@
 
         .chat-list {
             width: 100%;
+            height: calc(100vh - 210px);
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 6px;
+                height: 8px;
+                background-color: #e5e5e5;
+              }
+              &::-webkit-scrollbar-thumb {
+                background-color: #cecece;
+              }
         }
 
         .chat-list-item {
@@ -181,8 +192,7 @@
             width: 100%;
             display: flex;
             padding: 0 15px;
-            margin-top: 25px;
-
+            margin-top: 20px;
             img {
                 width: 26px;
                 height: 26px;
@@ -212,7 +222,12 @@
 
             }
         }
-
+        .otherName {
+            margin-left: 15px;
+            margin-top: 25px;
+            margin-bottom: -15px;
+            font-size: 12px;
+        }
         .title {
             padding: 19px 16px;
             border-bottom: 1px solid #dcdee2;
@@ -461,7 +476,9 @@
         }
     }
 }
-
+.check {
+    background: #f2fbff;
+}
 .df {
     display: flex;
 }

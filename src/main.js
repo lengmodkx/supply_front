@@ -9,7 +9,7 @@ import "./icons";
 import "./components/public/common"; //挂载common下组件到全局
 import moment from "moment";
 import gobal from "./global";
-// import WebIM from './utils/WebIM';
+import WebIM from './utils/WebIM';
 
 moment.updateLocale("zh-cn", {
     weekdaysShort: '周日_周一_周二_周三_周四_周五_周六'.split('_'),
@@ -53,7 +53,7 @@ Vue.use(FullCalendar)
 new Vue({
     router,
     store,
-    // WebIM,
+    WebIM,
     render: h => h(App)
 }).$mount("#app");
 Vue.filter('timeFilter', function (value) {

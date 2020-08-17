@@ -145,11 +145,11 @@
               </Col>
               <Col span="5">{{ item.deptName }}</Col>
               <Col span="5">
-                <div v-if="item.memberLabel=='拥有者'">{{ item.memberLabel }}</div>
+                <div v-if="item.memberLabel=='拥有者' ||item.memberLabel=='管理员' ">{{ item.memberLabel }}</div>
                 <div v-else @click="getUserId(item)">
                   <Dropdown @on-click="screenRole" trigger="click">
                     {{ item.memberLabel }}
-                    <Icon type="ios-arrow-down" v-if="item.memberLabel!=='拥有者'" />
+                    <Icon type="ios-arrow-down" v-if="item.memberLabel!=='拥有者'||item.memberLabel=='管理员'" />
                     <DropdownMenu slot="list">
                       <DropdownItem
                         v-for="item in roles"
