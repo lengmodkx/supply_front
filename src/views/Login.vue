@@ -28,7 +28,6 @@
 <script>
 import { userlogin, getEncrypStr, weChatLogin, getWeChatToken } from "../axios/api";
 import { mapState, mapActions } from "vuex";
-import { Encrypt } from "@/utils/cryptoUtils";
 import wxlogin from "vue-wxlogin";
 import Cookies from 'js-cookie';
 export default {
