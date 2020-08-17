@@ -255,6 +255,9 @@ export default {
     getGroupUserList() {
       return new Promise(resolve => {
         this.onGetGroupUserList();
+        setTimeout(()=>{
+        resolve()
+        },500)
       });
     },
     // 获取消息e
