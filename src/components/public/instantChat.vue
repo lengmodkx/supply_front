@@ -229,30 +229,31 @@ export default {
       headers: {
         "x-auth-token": localStorage.token
       },
-      // changeName: "contact",
       activedKey: {
         contact: "",
         group: ""
       },
-      listIndex:''
+      listIndex: ""
     };
   },
   mounted() {
     if (this.changeName == "group") {
-      this.onGetGroupUserList().then(val => {
-        setTimeout(() => {
-          this.onGetCurrentChatObjMsg({
-            type: this.changeName,
-            id: this.userList["group"][0].groupid
-          });
-          this.select2(
-            this.userList[this.changeName][0],
-            this.userList[this.changeName][0].groupid,0
-          );
-        }, 500);
+      this.getGroupUserList().then(res => {
+        this.onGetCurrentChatObjMsg({
+          type: this.changeName,
+          id: this.userList["group"][0].groupid
+        });
+        this.select2(
+          this.userList[this.changeName][0],
+          this.userList[this.changeName][0].groupid,
+          0
+        );
       });
     } else {
-      this.onGetContactUserList().then(val => {
+      new Promise(resolve => {
+        this.onGetContactUserList();
+        resolve();
+      }).then(val => {
         this.projectName = this.userInfoList.userEntity.userName;
         this.userList["contact"].map(p => {
           if (p.name == this.userInfoList.userEntity.accountName) {
@@ -301,7 +302,11 @@ export default {
     ]),
     ...mapActions(["addfirend"]),
     ...mapActions(["acceptSubscribe"]),
-
+    getGroupUserList() {
+      return new Promise(resolve => {
+        this.onGetGroupUserList();
+      });
+    },
     // 获取消息e
     SymbolBox(e) {
       const inner = this.$refs.textarea.innerHTML.split("");
@@ -356,6 +361,7 @@ export default {
         this.$refs.textarea.innerHTML = "";
         return;
       }
+      console.log(this.$data.activedKey[this.changeName])
       this.onSendText({
         chatType: this.changeName,
         chatId: this.$data.activedKey[this.changeName],
@@ -465,10 +471,10 @@ export default {
         msgTime
       };
     },
-    select2(key, index,listIndex) {
+    select2(key, index, listIndex) {
       if (this.changeName == "group") {
         this.projectName = key.name;
-        this.listIndex=listIndex
+        this.listIndex = listIndex;
       }
       this.$data.selectedKeys = [index];
       this.select(key);

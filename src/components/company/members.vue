@@ -8,7 +8,7 @@
             prefix="ios-search"
             class="search"
             @on-change="searchOrgProple"
-            placeholder="搜索成员和部门"
+            placeholder="搜索成员"
           />
           <Tabs value="成员和部门" @on-click="clickTabs">
             <TabPane label="成员和部门" name="成员和部门">
@@ -669,10 +669,7 @@ export default {
         if (this.groupData.length != 0) {
           this.nowGroup.name = this.groupData[0].groupName;
           this.nowGroup.id = this.groupData[0].groupId;
-          this.webIMgroupId = JSON.parse(
-            this.groupData[0].consulGroup
-          ).data.groupid;
-          console.log(this.webIMgroupId);
+          this.webIMgroupId = this.groupData[0].consulGroup;
           getGroupPeople(this.groupData[0].groupId).then(res => {
             this.groupPeople = res.data;
             this.groupPeople.map(p => {
@@ -919,7 +916,7 @@ export default {
     changeNowGroup(item) {
       this.nowGroup.name = item.groupName;
       this.nowGroup.id = item.groupId;
-      this.webIMgroupId = JSON.parse(item.consulGroup).data.groupid;
+      this.webIMgroupId = item.consulGroup;
       getGroupPeople(item.groupId).then(res => {
         this.groupPeople = res.data;
         this.groupPeople.map(p => {
@@ -945,7 +942,11 @@ export default {
     // 改变群组名称
     changeGroupName() {
       this.isCreateBranch = true;
-      changeGroupsname(this.nowGroup.id, this.nowGroup.name,this.webIMgroupId).then(res => {
+      changeGroupsname(
+        this.nowGroup.id,
+        this.nowGroup.name,
+        this.webIMgroupId
+      ).then(res => {
         this.groupData.forEach(i => {
           if (i.groupId === this.nowGroup.id) {
             i.groupName = this.nowGroup.name;
@@ -959,7 +960,7 @@ export default {
     // 删除群组
     deleteGroupOk() {
       this.isCreateBranch = true;
-      deleteGroup(this.nowGroup.id,this.webIMgroupId).then(res => {
+      deleteGroup(this.nowGroup.id, this.webIMgroupId).then(res => {
         this.branchMenu = false;
         this.$Message.success("删除成功");
         this.isCreateBranch = false;
@@ -1164,17 +1165,10 @@ export default {
     checkIcon(type) {
       this.checkIconType = type;
       if (type == "message") {
-        this.onLogin({
-          username: localStorage.accountName,
-          password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
-        }).then(res=>{
-              this.showGroupChat = true;
-          this.changeName = "group";
-        });
-        // setTimeout(() => {
-        //   this.showGroupChat = true;
-        //   this.changeName = "group";
-        // }, 500);
+        // this.loginWebIm().then(res => {
+        this.showGroupChat = true;
+        this.changeName = "group";
+        // });
       }
     },
     leaveIcon() {
@@ -1232,33 +1226,31 @@ export default {
     },
     //单聊
     startChat() {
-      this.onLogin({
-        username: localStorage.accountName,
-        password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
-      });
-
       addFriend(
         localStorage.accountName,
         this.userInfoList.userEntity.accountName
-      ).then(res => {
-        setTimeout(() => {
-          this.groupStepInfo = false;
+      ).then(val => {
+        if (val.uri) {
           this.showGroupChat = true;
+          this.groupStepInfo = false;
           this.changeName = "contact";
-        }, 500);
+        }
+      });
+    },
+    loginWebIm() {
+      return new Promise(resolve => {
+        this.onLogin({
+          username: localStorage.accountName,
+          password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
+        });
+        resolve();
       });
     }
   },
   created() {
     this.initMember();
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
-  },
-  watch: {
-    showGroupChat(val) {
-      if (!val) {
-        this.onLogout();
-      }
-    }
+    this.loginWebIm();
   }
 };
 </script>
