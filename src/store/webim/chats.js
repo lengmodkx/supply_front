@@ -45,7 +45,7 @@ const Chat = {
 			// 	state.userList[type] = newUserList;
 			// }
 			// else{
-				state.userList[type] = userList;
+				// state.userList[type] = userList;
 			// }
 			state.userList[type] = userList;
 		},
@@ -54,17 +54,6 @@ const Chat = {
 			const { chatType, chatId, msg, bySelf, type, id} = payload;
 			const { params } = router;
 			let status = "unread";
-			if(payload.chatType == "contact"){
-				// if(params.id == payload.from){
-				// 	status = "read";
-				// }
-			}
-			else if(payload.chatType == "group"){
-				// if(params.id == payload.chatId){
-				// 	status = "read";
-				// }
-			}
-
 			if(!state.msgList[chatType][chatId]){
 				state.msgList[chatType][chatId] = [{
 					msg,
@@ -89,13 +78,6 @@ const Chat = {
 				});
 				// state.msgList[chatType][chatId] = _unique(state.msgList[chatType][chatId])
 			}
-
-			// if(chatType === "chatroom" && !bySelf){ // 聊天室消息去重处理
-			// 	state.currentMsgs = _.uniqBy(state.msgList[chatType][chatId], "mid");
-			// }
-			// else{
-			// 	state.currentMsgs = Object.assign({}, state.msgList[chatType][params.id || chatId]); // 这里params.id在路由跳转的时候会undefind，取chatId兼容
-			// }
 			state.msgList = Object.assign({}, state.msgList);
 			console.log(state.msgList)
 		},
@@ -404,6 +386,8 @@ const Chat = {
 				isGroup: payload.isGroup,
 				count: 10, // 每次获取消息条数
 				success: function(msgs){
+					console.log(msgs)
+					console.log(payload)
 					try{
 						payload.success && payload.success(msgs);
 						if(msgs.length){
@@ -500,6 +484,7 @@ const Chat = {
 								}
 								msg.isHistory = true;
 								context.commit("updateMsgList", msg);
+								console.log(msg)
 							});
 							// context.commit("updateMessageStatus", { action: "readMsgs" });
 						}

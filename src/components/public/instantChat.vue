@@ -202,10 +202,6 @@ export default {
   mounted() {
     if (this.changeName == "group") {
       this.getGroupUserList().then(res => {
-        this.onGetCurrentChatObjMsg({
-          type: this.changeName,
-          id: this.userList["group"][0].groupid
-        });
         this.select2(
           this.userList[this.changeName][0],
           this.userList[this.changeName][0].groupid,
@@ -214,10 +210,8 @@ export default {
       });
     } else {
       this.projectName = this.userInfoList.userEntity.userName;
-      this.onGetCurrentChatObjMsg({
-        type: this.changeName,
-        id: this.userInfoList.userEntity.accountName
-      });
+      this.select();
+
     }
   },
   watch: {
@@ -255,9 +249,9 @@ export default {
     getGroupUserList() {
       return new Promise(resolve => {
         this.onGetGroupUserList();
-        setTimeout(()=>{
-        resolve()
-        },500)
+        setTimeout(() => {
+          resolve();
+        }, 500);
       });
     },
     // 获取消息e
@@ -413,8 +407,13 @@ export default {
     select(key) {
       if (this.changeName === "group") {
         this.onGetCurrentChatObjMsg({ type: this.changeName, id: key.groupid });
+          // this.getHistoryMessage({ name: key.groupid, isGroup: true });
       } else if (this.changeName === "contact") {
-        this.onGetCurrentChatObjMsg({ type: this.changeName, id: key.name });
+        this.onGetCurrentChatObjMsg({
+          type: this.changeName,
+          id: this.userInfoList.userEntity.accountName
+        });
+          // this.getHistoryMessage({ name: this.userInfoList.userEntity.accountName, isGroup: false });
       }
     },
     renderTime(time) {
