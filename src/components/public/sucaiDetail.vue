@@ -86,7 +86,8 @@
             <loading v-if="!file.modelUrl"></loading>
             <iframe v-if="file.modelUrl" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.modelUrl" frameborder="1" width="100%" height="100%"></iframe>
         </div>
-        <pdf v-else-if="'.pdf'.indexOf(file.ext)>-1"  :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl" ></pdf>
+        <!-- <iframe id="previewpdf" v-else-if="'.pdf'.indexOf(file.ext)>-1" :src="'../../pdf/web/viewer.html?file=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.fileUrl" width="100%" height="100%" frameborder="0"></iframe> -->
+        <iframe id="previewpdf" v-else-if="'.pdf'.indexOf(file.ext)>-1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.fileUrl" width="100%" height="100%" frameborder="0"></iframe>
         <div v-else class="cant-read-file">
           <span>{{ file.fileName + file.ext }}</span>
           <Button long size="large" type="primary" @click="downLoad(file.fileId)">
@@ -312,9 +313,11 @@ export default {
     ...mapState("file", ["joinInfoIds", "file"])
   },
   mounted() {
-    console.log(this.file);
+    // console.log(this.file);
+    //     console.log('xxxxxxxxxxxxxxxxxxxxx')
+    // console.log('https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+this.file.fileUrl)
     if(this.file.ext==".dwg"){
-        console.log('xxxxxxxxxxxxxxxxxxxxx')
+        // console.log('xxxxxxxxxxxxxxxxxxxxx')
         modelChange(this.file.fileId);
     }
   },
