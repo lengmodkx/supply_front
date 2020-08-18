@@ -126,7 +126,7 @@
               <div class="right-item">
                 <Poptip placement="left" transfer width="280" v-model="item.visible1">
                   <a href="javascript:void(0)">
-                    <Tooltip content="编辑">
+                    <Tooltip content="编辑" transfer>
                       <Icon
                         type="md-create"
                         size="20"
@@ -218,7 +218,7 @@
                 </Poptip>
                 <Poptip placement="left" transfer width="280" v-model="item.visible3">
                   <a href="javascript:void(0)">
-                    <Tooltip content="新建子部门">
+                    <Tooltip content="新建子部门" transfer>
                       <Icon
                         type="md-add"
                         size="20"
@@ -310,7 +310,7 @@
                 </Poptip>
 
                 <Poptip placement="bottom" transfer width="280" v-model="item.visible">
-                  <Tooltip content="删除">
+                  <Tooltip content="删除" transfer>
                     <Icon type="ios-trash-outline" size="20" color="#979797" />
                   </Tooltip>
                   <div slot="title" class="member-title">
@@ -353,7 +353,7 @@
                   <div class="right-item">
                     <Poptip placement="left" transfer width="280" v-model="v.visible1">
                       <a href="javascript:void(0)">
-                        <Tooltip content="编辑">
+                        <Tooltip content="编辑" transfer>
                           <Icon type="md-create" size="20" color="#979797" @click="editDep(i,v)" />
                         </Tooltip>
                       </a>
@@ -440,7 +440,7 @@
                     </Poptip>
                     <Poptip placement="left" transfer width="280" v-model="v.visible3">
                       <a href="javascript:void(0)">
-                        <Tooltip content="新建子部门">
+                        <Tooltip content="新建子部门" transfer>
                           <Icon type="md-add" size="20" color="#979797" @click="newlyBuild(i,v)" />
                         </Tooltip>
                       </a>
@@ -526,7 +526,7 @@
                       </div>
                     </Poptip>
                     <Poptip placement="bottom" transfer width="280">
-                      <Tooltip content="删除">
+                      <Tooltip content="删除" transfer>
                         <Icon type="ios-trash-outline" size="20" color="#979797" />
                       </Tooltip>
                       <div slot="title" class="member-title">
@@ -562,7 +562,7 @@
                     <div class="right-item">
                       <Poptip placement="left" transfer width="280" v-model="value.visible1">
                         <a href="javascript:void(0)">
-                          <Tooltip content="编辑">
+                          <Tooltip content="编辑" transfer>
                             <Icon
                               type="md-create"
                               size="20"
@@ -653,7 +653,7 @@
                         </div>
                       </Poptip>
                       <Poptip placement="bottom" transfer width="280">
-                        <Tooltip content="删除">
+                        <Tooltip content="删除" transfer>
                           <Icon type="ios-trash-outline" size="20" color="#979797" />
                         </Tooltip>
                         <div slot="title" class="member-title">

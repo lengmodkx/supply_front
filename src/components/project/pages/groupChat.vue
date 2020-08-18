@@ -17,8 +17,12 @@
                   </div>
                   <div class="file-box" v-if="item.fileList.length">
                     <div class="one-file" v-for="(f, i) in item.fileList" :key="i">
-                      <img v-if="images.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt="" />
-                      <img v-else src="@/icons/img/moren.png" alt="" />
+                      <img
+                        v-if="images.indexOf(f.ext) > -1"
+                        :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl"
+                        alt
+                      />
+                      <img v-else src="@/icons/img/moren.png" alt />
                       <p>{{ f.fileName }}</p>
                       <span>{{ f.size }}</span>
                     </div>
@@ -26,25 +30,42 @@
                   <div class="time me-time">
                     <Time :time="item.createTime" />
                     <span v-if="item.fileList.length" @click="downLoad(item.chatId)">下载附件</span>
-                    <span class="chehui-btn" @click="chehui(item.chatId)" v-if="new Date().getTime() - item.createTime < 1000 * 60 * 2">撤回</span>
+                    <span
+                      class="chehui-btn"
+                      @click="chehui(item.chatId)"
+                      v-if="new Date().getTime() - item.createTime < 1000 * 60 * 2"
+                    >撤回</span>
                   </div>
                 </div>
                 <div v-else-if="item.chatDel == 1" class="chehui">“{{ item.user.userName }}”撤回了一条消息</div>
                 <div v-else>
                   <div class="other">
-                    <img :src="item.user.image" alt="" />
-                    <div class="content" v-html="item.content"></div>
+                    <img :src="item.user.image" alt />
+                    <div class="content" v-html="item.content" v-if="item.content"></div>
+                    <div class="file-box" v-if="item.fileList.length">
+                      <div class="one-file" v-for="(f, i) in item.fileList" :key="i">
+                        <img
+                          v-if="images.indexOf(f.ext) > -1"
+                          :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl"
+                          alt
+                        />
+                        <img v-else src="@/icons/img/moren.png" alt />
+                        <p>{{ f.fileName }}</p>
+                        <span>{{ f.size }}</span>
+                      </div>
+                    </div>
                   </div>
+
                   <div class="time">
                     <Time :time="item.createTime" />
-                    <span v-if="item.fileList.length">下载附件</span>
+                    <span v-if="item.fileList.length" @click="downLoad(item.chatId)">下载附件</span>
                   </div>
                 </div>
               </div>
             </div>
             <!--无消息-->
             <div class="no-msg" v-else>
-              <img src="@/icons/img/no-msg.png" alt="" />
+              <img src="@/icons/img/no-msg.png" alt />
               <p>还没有项目群聊消息</p>
               <span>项目中的成员都可以在这里参与群聊</span>
             </div>
@@ -56,9 +77,14 @@
             <div class="talkUp">
               <div class="talkSymbol" v-if="showSymbol" :style="{ left: offsetLeft }">
                 <ul>
-                  <li v-for="(item, index) in symbolData" :key="index" @click="choseSymbol(item.name)">
-                    <img src="../../../assets/images/headUser.png" alt="" />
-                    {{ item.name }} <span v-if="index == 0">・{{ symbolData.length - 1 }}</span>
+                  <li
+                    v-for="(item, index) in symbolData"
+                    :key="index"
+                    @click="choseSymbol(item.name)"
+                  >
+                    <img src="../../../assets/images/headUser.png" alt />
+                    {{ item.name }}
+                    <span v-if="index == 0">・{{ symbolData.length - 1 }}</span>
                   </li>
                 </ul>
               </div>
@@ -74,8 +100,13 @@
               <ul class="updata-box">
                 <li v-for="(item, index) in uploadList" :key="index">
                   <p class="group-chat-file">
-                    <span> {{ item.name }} &nbsp; {{ renderSize(item.size) }} KB</span>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" :stroke-width="5" hide-info />
+                    <span>{{ item.name }} &nbsp; {{ renderSize(item.size) }} KB</span>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      :stroke-width="5"
+                      hide-info
+                    />
                   </p>
                   <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
                 </li>
@@ -83,7 +114,15 @@
             </div>
             <div class="talkDown clearfix">
               <Tooltip content="添加附件" class="fl" transfer>
-                <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" multiple :action="host" :data="uploadData" :headers="headers">
+                <Upload
+                  ref="upload"
+                  :show-upload-list="false"
+                  :before-upload="handleBeforeUpload"
+                  multiple
+                  :action="host"
+                  :data="uploadData"
+                  :headers="headers"
+                >
                   <Icon class="up-file" type="md-attach" />
                 </Upload>
 
@@ -105,7 +144,7 @@
 
     <!-- <Modal v-model="showCommon" title="上传附件" class-name="file-vertical-center-modal" :mask-closable="false" footer-hide transfer :width="500">
       <up-file @close="showCommon=false" :projectId="this.$route.params.id" @saveFileInfo="getFiles"></up-file>
-    </Modal> -->
+    </Modal>-->
   </div>
 </template>
 
@@ -121,7 +160,7 @@ let client = new OSS({
   region: "oss-cn-beijing",
   accessKeyId: "LTAIP4MyTAbONGJx",
   accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d",
+  bucket: "art1001-bim-5d"
 });
 import { oss } from "../../../axios/ossweb";
 export default {
@@ -145,8 +184,8 @@ export default {
       uploadData: {},
       host: "",
       headers: {
-        "x-auth-token": localStorage.token,
-      },
+        "x-auth-token": localStorage.token
+      }
     };
   },
   mounted() {
@@ -159,10 +198,10 @@ export default {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
       });
-    },
+    }
   },
   computed: {
-    ...mapState("chat", ["chatData", "images"]),
+    ...mapState("chat", ["chatData", "images"])
   },
   methods: {
     ...mapActions("chat", ["initChat"]),
@@ -173,7 +212,6 @@ export default {
         this.showSymbol = true;
         const width = this.$refs.textarea.innerHTML.length * 17;
 
-        console.log(width);
 
         if (width < 1200) {
           this.offsetLeft = width + "px";
@@ -195,7 +233,6 @@ export default {
     getFiles(files) {
       this.files = files;
       this.showCommon = false;
-      console.log(files);
     },
     //下载附件
     downLoad(id) {
@@ -224,7 +261,7 @@ export default {
 
     // 上传
     handleBeforeUpload(file) {
-      return oss(file.name).then((res) => {
+      return oss(file.name).then(res => {
         this.host = res.host;
         this.uploadData = res;
         var object = {};
@@ -238,32 +275,38 @@ export default {
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-      let data = {
-        projectId: this.$route.params.id,
-        content: con,
-        files: JSON.stringify(this.charFiles),
-      };
-      // console.log(JSON.stringify(this.charFiles))
-      sendChat(data).then((res) => {
-        this.$refs.textarea.innerHTML = "";
-        this.$nextTick(() => {
-          var div = document.getElementById("data-list-content");
-          div.scrollTop = div.scrollHeight + 1;
+      if(con !=''){
+        let data = {
+          projectId: this.$route.params.id,
+          content: con,
+          files: JSON.stringify(this.charFiles)
+        };
+        // console.log(JSON.stringify(this.charFiles))
+        sendChat(data).then(res => {
+          this.$refs.textarea.innerHTML = "";
+          this.$nextTick(() => {
+            var div = document.getElementById("data-list-content");
+            div.scrollTop = div.scrollHeight + 1;
+          });
+          this.charFiles = [];
+          this.uploadList.splice(0, this.uploadList.length);
+          this.$refs.upload.clearFiles();
         });
-        this.charFiles = [];
-        this.uploadList.splice(0, this.uploadList.length);
-        this.$refs.upload.clearFiles();
-      });
+      }else{
+        this.$Message.error("请输入内容");
+      }
+
     },
 
     uploadFile() {
       this.uploadList.forEach((file, index) => {
-        var fileName = this.dirName + this.random_string(10) + this.get_suffix(file.name);
+        var fileName =
+          this.dirName + this.random_string(10) + this.get_suffix(file.name);
         client
           .multipartUpload(fileName, file, {
             progress: function(p) {
               that.percentage.splice(index, 1, Math.floor(p * 100));
-            },
+            }
           })
           .then(function(result) {
             var myfile = {};
@@ -295,8 +338,8 @@ export default {
         suffix = filename.substring(pos);
       }
       return suffix;
-    },
-  },
+    }
+  }
 };
 </script>
 
