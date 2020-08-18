@@ -3,6 +3,7 @@
     <div class="left-header">
       <div class="logo" :class="header ? 'logo-big' : 'logo-small'">
         <img src="../../assets/images/download.png" alt />
+        <span class="header-text" v-if="header">数字化设计院</span>
       </div>
       <ul>
         <li :class="{ hover: activeHeaderTag == 0 }" @click="goOrg">工作台</li>
