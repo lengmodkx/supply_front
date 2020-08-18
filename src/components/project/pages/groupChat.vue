@@ -270,6 +270,7 @@ export default {
         object.name = file.name.substring(0, file.name.lastIndexOf("."));
         object.ext = file.name.substring(file.name.lastIndexOf("."));
         this.charFiles.push(object);
+        // console.log(this.uploadList)
       });
     },
     // 发送消息
@@ -341,8 +342,8 @@ export default {
 <style lang="less">
 .file-box {
   width: 100%;
-  height: 60px;
-  padding: 0 15px;
+  min-height: 60px;
+  padding: 0 15px 0 0;
 
   .one-file {
     width: 400px;
@@ -422,7 +423,7 @@ export default {
     }
   }
   .other .one-file {
-    float: left;
+    // float: left;
   }
   .other,
   .me {
