@@ -275,7 +275,6 @@ export default {
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-      if(con !=''){
         let data = {
           projectId: this.$route.params.id,
           content: con,
@@ -292,10 +291,6 @@ export default {
           this.uploadList.splice(0, this.uploadList.length);
           this.$refs.upload.clearFiles();
         });
-      }else{
-        this.$Message.error("请输入内容");
-      }
-
     },
 
     uploadFile() {
