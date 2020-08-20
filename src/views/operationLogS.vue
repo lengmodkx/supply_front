@@ -21,6 +21,7 @@
               v-model="timeValue"
               format="yyyy/MM/dd"
               @on-change="screen"
+              placeholder="选择开始日期和结束日期"
             ></DatePicker>
           </Col>
           <Col span="7">
@@ -97,7 +98,7 @@ export default {
     return {
       loading: false,
       groupPeople: [],
-      timeValue: [new Date(), new Date()],
+      timeValue: [new Date(),new Date()],
       cityList: [],
       model1: "",
       peopleList: [],
@@ -121,8 +122,8 @@ export default {
       this.loading = true;
       let data = {
         memberId: this.memberValue,
-        startTime: this.timeValue[0].getTime(),
-        endTime: this.timeValue[1].getTime()
+        startTime: this.timeValue[0]?this.timeValue[0].getTime():'',
+        endTime: this.timeValue[1]?this.timeValue[1].getTime():''
       };
       getLoglist(localStorage.companyId, data).then(res => {
         if (res.result == 1) {

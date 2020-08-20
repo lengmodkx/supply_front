@@ -32,15 +32,15 @@
                 @click="select2(item, item.groupid,index)"
               >
                 <img
-                  src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4008032110,1843662736&fm=26&gp=0.jpg"
+                  src="../../assets/images/instantChat.png"
                   alt
                 />
                 <div class="text-content">
                   <div>
                     <div class="chat-user">{{item.name}}</div>
-                    <div class="message"></div>
+                    <!-- <div class="message"></div> -->
                   </div>
-                  <div class="date-time"></div>
+                  <!-- <div class="date-time"></div> -->
                 </div>
               </li>
             </ul>
