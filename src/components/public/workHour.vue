@@ -26,7 +26,7 @@
             <span v-if="task.totalWorkHours">{{ task.totalWorkHours }}小时</span>
             <span v-else>0小时</span>
           </div>
-          <div class="middle">
+          <div class="middle" v-if="task.executor != null && task.executor != '0' && task.executor != ''">
             <div class="data">
               <Date-picker :open="opendata" :value="dataValue" confirm type="date" @on-change="handleChange" @on-clear="handleClear" @on-ok="handleOk">
                 <div href="javascript:void(0)" @click="handleClick">
@@ -50,7 +50,7 @@
             <input type="text" v-model="hour" />
             <span class="sure" @click="setHour">确定</span>
           </div>
-
+          <div class="work-tip" v-else>任务执行者可提交实际工时</div>
           <div class="bottom">
             <ul v-if="hourList.length > 0">
               <li v-for="(item, index) in hourList" :key="index">
@@ -308,6 +308,12 @@ export default {
       color: #2d8cf0;
       cursor: pointer;
     }
+  }
+  .work-tip {
+    text-align: center;
+    padding: 12px 16px;
+    background-color: #f7f7f7;
+    color: #595959;
   }
   .bottom {
     .clockBox {
