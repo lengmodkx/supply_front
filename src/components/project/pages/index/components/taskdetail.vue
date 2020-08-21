@@ -88,8 +88,6 @@
                       <div class="content__3gKP circle">
                         <div class="executor__2pBD">
                           <div class="executor-handler not-assigned">
-                            <!-- <svg-icon name="task-executor-avatar" class="task-img"></svg-icon>
-                            <span class="name">待认领</span> -->
                             <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor" :task="task" v-model="task.executor"> </SetExecutor>
                           </div>
                         </div>
@@ -639,6 +637,7 @@ export default {
       this.showSchedule = true;
     },
     scheduleCancel() {
+      this.editTask(this.taskId);
       this.showSchedule = false;
     },
     scheduleSave() {
