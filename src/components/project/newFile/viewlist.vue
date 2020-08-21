@@ -322,7 +322,6 @@ export default {
       fileArr: [],
       showInput: false,
       tableHeight:490,
-      filesContent:[]
     };
   },
   computed: {
