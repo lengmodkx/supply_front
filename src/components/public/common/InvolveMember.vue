@@ -1,43 +1,34 @@
 <template>
-
-  <Poptip v-model="visible"
-          class="involvelistBox"
-          @on-popper-show="popShow"
-          transfer>
+  <Poptip v-model="visible" class="involvelistBox" @on-popper-show="popShow" transfer>
     <span class="button">
-      <Icon type="md-add-circle" @click="addMembers" class="fl" size="28" style="color: #1B8BEE;cursor: pointer;margin-top: 0"/>
+      <Icon type="md-add-circle" @click="addMembers" class="fl" size="28" style="color: #1B8BEE;cursor: pointer;margin-top: 0" />
     </span>
 
-    <div slot="content"
-         style="height:320px;position: relative">
+    <div slot="content" style="height:320px;position: relative">
       <div class="loading" v-if="!memberList.length">
-        <Icon  type="ios-loading" size="28" />
+        <Icon type="ios-loading" size="28" />
       </div>
-      <Input v-model="searchvalue"
-             placeholder="搜索"
-             style="width:220px;margin-top:10px;height:36px;" />
+      <Input v-model="searchvalue" placeholder="搜索" @on-change="FUser(searchvalue)" style="width:220px;margin-top:10px;height:36px;" />
       <div class="selectable">
         <ul>
-          <li class="select-option-group"
-              v-if="!searchvalue">
+          <li class="select-option-group" v-if="!searchvalue">
             <div class="option-group-label">参与者</div>
             <ul>
-              <li class="member-menu-item clearfix"
-                  :class="curUserId==item.userId?'disable':''"
-                  v-for="(item, index) in memberList"
-                  :key="item.userId"
-                  v-if="checkedList.indexOf(item.userId)>=0"
-                  @click="checkUser(index)">
+              <li
+                class="member-menu-item clearfix"
+                :class="curUserId == item.memberId ? 'disable' : ''"
+                v-for="(item, index) in memberList"
+                :key="item.memberId"
+                v-if="checkedList.indexOf(item.memberId) >= 0"
+                @click="checkUser(index)"
+              >
                 <div class="img fl">
-                  <img :src="item.image" v-if="item.image" />
-                  <svg-icon v-else
-                            style="margin-top:3px;"
-                            name="allMember"></svg-icon>
+                  <img :src="item.memberImg" v-if="item.memberImg" />
+                  <svg-icon v-else style="margin-top:3px;" name="allMember"></svg-icon>
                 </div>
-                <div class="membername fl">{{item.userName}}</div>
+                <div class="membername fl">{{ item.memberName }}</div>
                 <div class="tick fr">
-                  <Icon type="md-checkmark" class="right"
-                        v-show="item.checked"/>
+                  <Icon type="md-checkmark" class="right" v-show="item.checked" />
                 </div>
               </li>
             </ul>
@@ -46,142 +37,143 @@
           <li class="select-option-group">
             <div class="option-group-label">推荐</div>
             <ul>
-              <li class="member-menu-item clearfix"
-                  v-for="(item, index) in memberList"
-                  :key="item.userId"
-                  v-if="checkedList.indexOf(item.userId)<0"
-                  @click="checkUser(index)">
+              <li class="member-menu-item clearfix" v-for="(item, index) in memberList" :key="item.memberId" v-if="checkedList.indexOf(item.memberId) < 0" @click="checkUser(index)">
                 <div class="img fl">
-                  <img v-if="item.image" :src="item.image" alt="">
-                  <svg-icon v-else
-                            style="margin-top:3px;"
-                            name="allMember"></svg-icon>
+                  <img v-if="item.memberImg" :src="item.memberImg" alt="" />
+                  <svg-icon v-else style="margin-top:3px;" name="allMember"></svg-icon>
                 </div>
-                <div class="membername fl">{{item.userName}}</div>
+                <div class="membername fl">{{ item.memberName }}</div>
                 <div class="tick fr">
-                  <Icon type="md-checkmark" class="right"
-                        v-show="item.checked"/>
+                  <Icon type="md-checkmark" class="right" v-show="item.checked" />
                 </div>
               </li>
             </ul>
           </li>
         </ul>
-
       </div>
 
       <div class="confirmBtn">
-        <Button type="primary"
-                long
-                @click="save">确定</Button>
+        <Button type="primary" long @click="save">确定</Button>
       </div>
     </div>
-
   </Poptip>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
-import { getmemberList,members } from '@/axios/api'
+import { mapState, mapActions } from "vuex";
+import { getmemberList, members, projectMembersSerach, projectMembers } from "@/axios/api";
 export default {
-  props: ['checkedList', 'projectId'],
-  data () {
+  props: ["checkedList", "projectId"],
+  data() {
     return {
       visible: false,
-      aaa:false,
-      searchvalue: '',
-      memberList: []
-    }
+      aaa: false,
+      searchvalue: "",
+      memberList: [],
+    };
   },
   computed: {
-    ...mapState('user', ['user']),
+    ...mapState("user", ["user"]),
     // ...mapState('task', ['members']),
-    curUserId () {
+    curUserId() {
       //从vuex取当前登录用户id
-      // return this.user.userId
-      return localStorage.userId
+      return localStorage.userId;
     },
-    computedMemberList () {
-      return 1
-    }
+    computedMemberList() {
+      return 1;
+    },
     // return this.memberList.filter(v => this.$containStr(this.searchvalue, v.userName))
   },
   methods: {
-    ...mapActions('task', ['initMemberList']),
+    ...mapActions("task", ["initMemberList"]),
     // 获取项目成员
-    addMembers () {
-      members(this.projectId).then(res => {
-        this.memberList=res.data
-        this.popShow()
-      })
+    addMembers() {
+      // members(this.projectId).then((res) => {
+      //   this.memberList = res.data;
+      //   this.popShow();
+      // });
+      projectMembers(this.projectId).then((res) => {
+        this.memberList = res.data;
+        this.popShow();
+      });
     },
-    
-    checkUser (index) {
-      //if (this.memberList[index].userId == this.curUserId) return//当前用户不可点击
-      this.memberList[index].checked=!this.memberList[index].checked
-    },
-    save () {
 
-      let list =this.memberList.filter(v => {
-        return v.checked==true
-      })
-     let list1=list.map(item => {
-        return item.userId
-      })
-      let detailList=list1.join(',')
+    checkUser(index) {
+      //if (this.memberList[index].userId == this.curUserId) return//当前用户不可点击
+      this.memberList[index].checked = !this.memberList[index].checked;
+    },
+    save() {
+      let list = this.memberList.filter((v) => {
+        return v.checked == true;
+      });
+      let list1 = list.map((item) => {
+        return item.memberId;
+      });
+      let arr=list1.map((item) => {
+        this.checkedList.map((i) => {
+          if(item!=i){
+            list1.push(i)
+          }
+        });
+      });
+      let detailList = list1.join(",");
 
       // this.$emit('save', detailList)
-      this.visible=false
-      let peopleData=this.memberList.filter(v => {
+      this.visible = false;
+      let peopleData = this.memberList.filter((v) => {
         if (v.checked) {
-          return v
+          return v;
         }
-      })
-      this.$nextTick(_ => {
-        this.visible = false
-        this.$emit('save', detailList, peopleData)
-        this.searchvalue = ''
+      });
+      this.$nextTick((_) => {
+        this.visible = false;
+        this.$emit("save", detailList, peopleData);
+        this.searchvalue = "";
         // Object.assign(this.$data, this.$options.data())
-      })
+      });
     },
-    popShow () {
-      this.memberList.forEach(v => {
+    popShow() {
+      this.memberList.forEach((v) => {
         // v.checked = this.checkedList.indexOf(v.id) >= 0
-        this.$set(v, 'checked', this.checkedList.indexOf(v.userId) >= 0?true:false)
-      })
-      console.log(this.memberList)
-    }
+        this.$set(v, "checked", this.checkedList.indexOf(v.memberId) >= 0 ? true : false);
+      });
+    },
+    //筛选用户
+    FUser(keyword) {
+      if (keyword != "") {
+        projectMembersSerach(this.projectId, keyword).then((res) => {
+          this.memberList = res.data;
+          this.popShow();
+        });
+      } else {
+        this.addMembers();
+      }
+    },
   },
-  mounted () {
-    // this.initMemberList(() => {
-    //   this.popShow()
-    //   this.memberList = this.members.filter(v => v.userId != this.user.userId)
-    //   this.memberList.unshift({
-    //     userId: -1,
-    //     userName: '所有项目成员'
-    //   })
-    //   this.memberList.unshift(JSON.parse(JSON.stringify(this.user)))
-    // })
-  }
-}
+};
 </script>
 <style scoped lang="less">
-  .loading{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    i{
-      animation: zhuan 1s infinite;
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  i {
+    animation: zhuan 1s infinite;
+  }
+  @keyframes zhuan {
+    from {
+      transform: rotate(0deg);
     }
-    @keyframes zhuan{
-      from {transform:rotate(0deg);}
-      to {transform:rotate(360deg)}
+    to {
+      transform: rotate(360deg);
     }
   }
+}
 .involvelistBox {
   .button {
     cursor: pointer;
@@ -254,4 +246,3 @@ export default {
   margin-right: 4px;
 }
 </style>
-

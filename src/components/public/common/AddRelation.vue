@@ -192,7 +192,7 @@
 
     </div>
     <div class="footer">
-      <Button type="primary" size="large" style="padding:6px 20px;" @click="relation">
+      <Button type="primary" size="large" style="padding:6px 20px;" @click="relation" :disabled="btnDisabled"> 
           <span v-if="relationing">loading...</span><span v-else>确定</span>
       </Button>
     </div>
@@ -282,7 +282,8 @@
             'publicType':'',
             'projectId':this.$route.params.id
         },
-        orgId: localStorage.companyId
+        orgId: localStorage.companyId,
+        btnDisabled:true
       }
       
     },
@@ -310,9 +311,11 @@
         this.checkedAfterSchedule=[]
         this.checkedBeforeSchedule=[]
         this.checkedFile=-1
+        this.btnDisabled=true
     },
   // 点击具体任务 显示子任务
       showChild(n,nn,taskId){
+          this.btnDisabled=false
           this.taskLoading=true
           this.checkedOneTask.n=n
           this.checkedOneTask.nn=nn
@@ -369,7 +372,6 @@
                   this.scheduleI=index
                   this.loading=true
                   getSchedule(projectId).then(res => {
-                      console.log(res)
                       if (res.result){
                           this.shceduleBeforData=res.data.before
                           this.shceduleAfterData=res.data.after
@@ -383,7 +385,6 @@
                                   this.checkedBeforeSchedule[j].push({'ok':false})
                               }
                           }
-                          console.log(this.checkedAfterSchedule)
                           this.loading=false
                           this.showSchedule=true
                       }
@@ -400,7 +401,6 @@
                          this.fileData.forEach(i => {
                              this.$set(i,'ok',false)
                          })
-                         console.log(this.fileData)
                      }
                   })
                   break;
@@ -409,6 +409,7 @@
       },
         // 点击子文件夹
         showZiwenjian(index, type, fileId,n){
+            this.btnDisabled=true
           if (type){
               // 是文件夹
               this.loading=true
@@ -436,6 +437,7 @@
                   this.ziwenjain[n][index].ok=!this.ziwenjain[n][index].ok
               }
               this.getBindId(this.fileIdArr,fileId)
+              this.btnDisabled=false
           }
       },
         // 点击任务分组
@@ -461,16 +463,19 @@
       },
         // 选中 具体 分享
       checkShare (n, i) {
+          this.btnDisabled=false
           this.checkedShare[n].FXok=!this.checkedShare[n].FXok
           this.getBindId(this.shareIdArr,i.id)
       },
         // 选中 过去 日程
       checkSchedule(n,nn,id){
+          this.btnDisabled=false
           this.checkedBeforeSchedule[n][nn].ok=!this.checkedBeforeSchedule[n][nn].ok
           this.getBindId(this.scheduleIdArr,id)
       },
       // 选中未来 日程
       weilaiRc(n,id){
+          this.btnDisabled=false
           this.checkedAfterSchedule[n].ok=!this.checkedAfterSchedule[n].ok
           this.getBindId(this.scheduleIdArr,id)
       },
@@ -508,8 +513,6 @@
         getProjectList(this.orgId).then(res => {
             
            this.projectData=res.data
-            console.log(res.data)
-            console.log("企业id:"+this.orgId)
         })
         
     }
