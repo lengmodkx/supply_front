@@ -52,7 +52,7 @@
           </div>
 
           <div class="bottom">
-            <ul v-if="hourList.hourList > 0">
+            <ul v-if="hourList.length > 0">
               <li v-for="(item, index) in hourList" :key="index">
                 <div class="name">
                   <Icon type="ios-trash-outline" @click="delTimeList(item.id)" />
@@ -169,7 +169,7 @@ export default {
     setHour() {
       const data = {
         taskId: this.task.taskId,
-        hours: this.hour,
+        hours: this.hour==''?'0':this.hour,
         hoursDate: new Date(this.dataValue).getTime(),
       };
 
@@ -185,6 +185,7 @@ export default {
 
       getTaskWorkingHours(data).then((res) => {
         this.hourList = res.data;
+        this.hour=''
       });
     },
     delTimeList(id) {

@@ -1,18 +1,18 @@
 <template>
-  <div class="log-wrap">
+  <div class="log-wrap" id="log-wrap">
     <div style="height: 50px;line-height: 50px;width: 100%;font-size: 16px">所有动态</div>
     <div class="more-msg" v-if="unReadMsg">
-      <span v-if="!restData.length" @click="loadMore">查看剩余{{unReadMsg}}条消息...</span>
+      <span v-if="!restData.length" @click="loadMore">查看剩余{{ unReadMsg }}条消息...</span>
       <span v-else @click="shouqi" style="color: #3da8f5">收起</span>
     </div>
     <div class="log-content">
       <div class="log-list" v-for="(item, index) in logs" :key="index">
         <img :src="item.memberImg" alt />
         <div class="things">
-          <span>{{item.memberName}}</span>
+          <span>{{ item.memberName }}</span>
           <span v-html="item.content"></span>
         </div>
-        <p class="time">{{item.createTime | timeFilter3}}</p>
+        <p class="time">{{ item.createTime | timeFilter3 }}</p>
       </div>
     </div>
 
@@ -20,10 +20,10 @@
       <div class="log-list" v-for="(item, index) in restData" :key="index">
         <img :src="item.memberImg" alt />
         <div class="things">
-          <span>{{item.memberName}}</span>
+          <span>{{ item.memberName }}</span>
           <span v-html="item.content"></span>
         </div>
-        <p class="time">{{item.createTime | timeFilter3}}</p>
+        <p class="time">{{ item.createTime | timeFilter3 }}</p>
       </div>
     </div>
   </div>
@@ -36,13 +36,13 @@ export default {
   data() {
     return {
       jiazai: false,
-      restData: []
+      restData: [],
     };
   },
   mounted() {},
   methods: {
     loadMore() {
-      restMsg(this.publicId, this.unReadMsg).then(res => {
+      restMsg(this.publicId, this.unReadMsg).then((res) => {
         if (res.result) {
           this.restData = res.data;
         }
@@ -50,11 +50,16 @@ export default {
     },
     shouqi() {
       this.restData = [];
-    }
+    },
   },
-  created() {
-    console.log(this.logs);
-  }
+  watch: {
+    logs(val) {
+      this.$nextTick(() => {
+        var div = document.getElementById("log-wrap");
+        div.scrollTop = div.scrollHeight + 1;
+      });
+    },
+  },
 };
 </script>
 <style scoped lang="less">
@@ -104,7 +109,5 @@ export default {
   color: #3da8f5;
 }
 .log-content {
-    
 }
 </style>
-
