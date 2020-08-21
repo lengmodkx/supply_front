@@ -102,22 +102,29 @@ export default {
       this.memberList[index].checked = !this.memberList[index].checked;
     },
     save() {
+      let arr=[]
+      this.memberList.map(item=>{
+        this.checkedList.map((i) => {
+          if(item==i &&item.checked==true ){
+            arr.push(i)
+          }
+        });
+      })
       let list = this.memberList.filter((v) => {
         return v.checked == true;
       });
       let list1 = list.map((item) => {
         return item.memberId;
       });
-      let arr=list1.map((item) => {
-        this.checkedList.map((i) => {
+
+      list1.map((item) => {
+        arr.map((i) => {
           if(item!=i){
             list1.push(i)
           }
         });
       });
       let detailList = list1.join(",");
-
-      // this.$emit('save', detailList)
       this.visible = false;
       let peopleData = this.memberList.filter((v) => {
         if (v.checked) {
@@ -128,7 +135,6 @@ export default {
         this.visible = false;
         this.$emit("save", detailList, peopleData);
         this.searchvalue = "";
-        // Object.assign(this.$data, this.$options.data())
       });
     },
     popShow() {
@@ -233,7 +239,7 @@ export default {
       }
     }
     .disable {
-      cursor: not-allowed;
+      // cursor: not-allowed;
     }
   }
 }

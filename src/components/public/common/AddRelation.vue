@@ -12,7 +12,7 @@
     </div>
 
     <div class="Con clearfix">
-        <div class="div1 fl">
+        <div class="div1">
           <ul class="type">
             <li :class="{on:active=='a'}" @click="firstClick('a')">
                 <Icon type="ios-open-outline" />任务
@@ -28,10 +28,10 @@
             </li>
           </ul>
         </div>
-        <div class="complex-div fl" ref="scrollX">
+        <div class="complex-div" ref="scrollX">
             <!--点击任务，显示的-->
             <div class="renwu-div" v-show="active=='a'">
-                <div class="div2 fl">
+                <div class="div2">
                     <h4>个人项目</h4>
                     <ul class="project">
                         <li @click="showTask(index, item.projectId, '任务')" :class="{checked:projectI==index}" v-for="(item, index) in projectData" :key="index">{{item.projectName}}</li>
@@ -543,6 +543,7 @@
     height:calc(100% - 51px - 69px);
     font-size: 14px;
     color:gray;
+    display: flex;
     .div1,.div2{
       width: 180px;
       height:100%;
@@ -608,7 +609,7 @@
 
   .complex-div{
     width:calc(100% - 180px);
-    height:100%;
+    // height:100%;
     overflow-x: auto;
     overflow-y: hidden;
     transition: all 0.3s;

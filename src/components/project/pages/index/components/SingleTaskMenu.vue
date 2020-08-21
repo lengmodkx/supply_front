@@ -1,9 +1,6 @@
 <template>
   <Poptip class="task-menuwrapper" placement="bottom" transfer v-model="visible" @on-popper-hide="popHide">
-    <!-- <Icon type="ios-arrow-down" size="20" /> -->
-    <Icon type="ios-more" size="31" style="margin-right:10px" />
-    <!-- <Icon type="ios-arrow-down"
-          size="20"></Icon> -->
+    <Icon type="ios-more" size="31" style="margin-right:10px" class="more-icon"/>
     <div slot="content" class="task-menuwrapper-content" v-if="initCom">
       <div class="dropdownTitle">
         <span class="back">
@@ -388,7 +385,13 @@
 </script>
 <style lang="less">
   @import "./poptipMenu";
-
+  .more-icon {
+    &:hover {
+      background-color: #ecf6fe;
+        color: #1b9aee;
+        border-radius: 4px;
+    }
+  }
   .menuItem {
     i {
       font-size: 20px;

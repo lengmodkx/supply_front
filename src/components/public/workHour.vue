@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="list" ref="addIcon">
-      <span
-        class="text-content"
-        @click="open"
-        v-if="task.planWorkHours||task.totalWorkHours"
-      >计划工时{{task.planWorkHours}}小时，实际已用工时{{task.totalWorkHours === null?0 :task.totalWorkHours}}小时</span>
+      <span class="text-content" @click="open" v-if="task.planWorkHours || task.totalWorkHours"
+        >计划工时{{ task.planWorkHours }}小时，实际已用工时{{ task.totalWorkHours === null ? 0 : task.totalWorkHours }}小时</span
+      >
       <Button v-else icon="ios-add" type="dashed" size="small" @click="open">待添加</Button>
     </div>
     <Modal v-model="showTag" :footer-hide="true" :width="300" @on-cancel="cancel">
@@ -13,7 +11,7 @@
         <span class="work-title">计划工时</span>
         <span class="work-input">
           <Tooltip content="点击即可编辑" placement="top" v-if="showplanWorkHours">
-            <div class="planWork-hours" @click="showplanWorkHours=false">{{task.planWorkHours}} 小时</div>
+            <div class="planWork-hours" @click="showplanWorkHours = false">{{ task.planWorkHours?task.planWorkHours+'小时':'待添加' }}</div>
           </Tooltip>
           <div class="input-content" v-else>
             <Input @on-change="change" v-model="planHour" size="small" enter-button="确定" />
@@ -25,29 +23,24 @@
         <div class="work-box">
           <div class="top">
             <span class="top-title">实际工时</span>
-            <span v-if="task.totalWorkHours">{{task.totalWorkHours}}小时</span>
+            <span v-if="task.totalWorkHours">{{ task.totalWorkHours }}小时</span>
             <span v-else>0小时</span>
           </div>
           <div class="middle">
             <div class="data">
-              <Date-picker
-                :open="opendata"
-                :value="dataValue"
-                confirm
-                type="date"
-                @on-change="handleChange"
-                @on-clear="handleClear"
-                @on-ok="handleOk"
-              >
+              <Date-picker :open="opendata" :value="dataValue" confirm type="date" @on-change="handleChange" @on-clear="handleClear" @on-ok="handleOk">
                 <div href="javascript:void(0)" @click="handleClick">
-                  <template v-if="dataValue === ''">今天</template>
+                  <template v-if="dataValue === ''"
+                    >今天</template
+                  >
                   <template v-else>
-                    {{ $moment(dataValue).calendar(null, {
-                    sameDay: '[今天]',
-                    nextDay: '[明天]',
-                    lastDay: '[昨天]',
-                    sameElse: 'M月D日'
-                    })
+                    {{
+                      $moment(dataValue).calendar(null, {
+                        sameDay: "[今天]",
+                        nextDay: "[明天]",
+                        lastDay: "[昨天]",
+                        sameElse: "M月D日",
+                      })
                     }}
                   </template>
                 </div>
@@ -59,30 +52,31 @@
           </div>
 
           <div class="bottom">
-            <ul v-if="hourList">
+            <ul v-if="hourList.hourList > 0">
               <li v-for="(item, index) in hourList" :key="index">
                 <div class="name">
                   <Icon type="ios-trash-outline" @click="delTimeList(item.id)" />
                   <div>
-                    <span>{{item.createName}}</span>
+                    <span>{{ item.createName }}</span>
                     <br />
                     <span>
-                      {{ $moment(item.hoursDate).calendar(null, {
-                      sameDay: '[今天]',
-                      nextDay: '[明天]',
-                      lastDay: '[昨天]',
-                      sameElse: 'M月D日'
-                      })
+                      {{
+                        $moment(item.hoursDate).calendar(null, {
+                          sameDay: "[今天]",
+                          nextDay: "[明天]",
+                          lastDay: "[昨天]",
+                          sameElse: "M月D日",
+                        })
                       }}
                     </span>
                   </div>
                 </div>
-                <span class="time">{{item.hours}} 小时</span>
+                <span class="time">{{ item.hours }} 小时</span>
               </li>
             </ul>
-
             <div v-else class="clockBox">
-              <div class="clock"></div>暂无工时记录
+              <div class="clock"></div>
+              暂无工时记录
             </div>
           </div>
         </div>
@@ -92,20 +86,7 @@
 </template>
 <script>
 import { mapState, mapMutations } from "vuex";
-import {
-  allTags,
-  addnewTag,
-  addTagAndBind,
-  modifyTag,
-  searchTags,
-  delTag,
-  removeInfoTag,
-  bindingTag,
-  workHour,
-  additionHour,
-  getTaskWorkingHours,
-  removeTaskWorkingHours
-} from "../../axios/api";
+import { allTags, addnewTag, addTagAndBind, modifyTag, searchTags, delTag, removeInfoTag, bindingTag, workHour, additionHour, getTaskWorkingHours, removeTaskWorkingHours } from "../../axios/api";
 export default {
   props: ["task"],
   data() {
@@ -125,14 +106,7 @@ export default {
       Popvisible: false,
       totalTag: [],
       isEdit: true,
-      colorList: [
-        "#3da8f5",
-        "#75c940",
-        "#2fbdb3",
-        "#797ec9",
-        "#ffaf38",
-        "#ff4f3e"
-      ],
+      colorList: ["#3da8f5", "#75c940", "#2fbdb3", "#797ec9", "#ffaf38", "#ff4f3e"],
       checkedColor: "#3da8f5",
       tagAdd: false,
       loading: false,
@@ -141,10 +115,12 @@ export default {
       tag: null, //编辑标签时使用
       tagTilte: "标签",
       btnName: "创建标签",
-      showplanWorkHours: true
+      showplanWorkHours: true,
     };
   },
-  mounted() {},
+  mounted() {
+    this.showplanWorkHours=true
+  },
   methods: {
     handleClick() {
       this.opendata = !this.opendata;
@@ -171,58 +147,59 @@ export default {
       this.hour = "";
       this.planHour = "";
       this.dataValue = new Date();
+      this.showplanWorkHours=true
     },
     change() {},
     //修改计划工时
     setPlanHour() {
-      console.log(this.planHour);
       const data = {
         taskId: this.task.taskId,
-        workingHours: this.planHour
+        workingHours: this.planHour,
       };
-      workHour(data).then(res => {
+      workHour(data).then((res) => {
         if (res.result == 1) {
           this.showplanWorkHours = true;
           this.task.planWorkHours = this.planHour;
+        }else{
+            this.$Message.error(res.msg);
         }
       });
     },
     //修改实际工时
     setHour() {
-      console.log(new Date(this.dataValue).getTime());
       const data = {
         taskId: this.task.taskId,
         hours: this.hour,
-        hoursDate: new Date(this.dataValue).getTime()
+        hoursDate: new Date(this.dataValue).getTime(),
       };
 
-      additionHour(data).then(res => {
+      additionHour(data).then((res) => {
         this.getTimeLise();
       });
     },
     //获取工时列表
     getTimeLise() {
       const data = {
-        taskId: this.task.taskId
+        taskId: this.task.taskId,
       };
 
-      getTaskWorkingHours(data).then(res => {
+      getTaskWorkingHours(data).then((res) => {
         this.hourList = res.data;
       });
     },
     delTimeList(id) {
       const data = {
-        id: id
+        id: id,
       };
 
-      removeTaskWorkingHours(data).then(res => {
+      removeTaskWorkingHours(data).then((res) => {
         this.getTimeLise();
       });
-    }
-  }
+    },
+  },
 };
 </script>
-<style lang="less" >
+<style lang="less">
 [contenteditable]:focus {
   outline: none;
 }
@@ -322,6 +299,7 @@ export default {
       flex: 1 auto;
       border: none;
       text-indent: 10px;
+      outline: none;
     }
     .sure {
       width: 60px;

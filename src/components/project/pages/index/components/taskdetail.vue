@@ -15,7 +15,7 @@
         </div>
 
         <div class="task-header-handle">
-          <Dropdown trigger="click" placement="bottom-end">
+          <!-- <Dropdown trigger="click" placement="bottom-end">
             <Tooltip content="视频讨论" placement="top" transfer>
               <Icon type="ios-videocam-outline" size="26" style="margin-right:10px" />
             </Tooltip>
@@ -25,7 +25,7 @@
               <DropdownItem>预约</DropdownItem>
               <DropdownItem>加入ID</DropdownItem>
             </DropdownMenu>
-          </Dropdown>
+          </Dropdown> -->
           <!-- <Icon type="ios-more" size="31" style="margin-right:10px" /> -->
           <span class="down">
             <SingleTaskMenu :data="task" @close="closeThisModal"></SingleTaskMenu>
@@ -170,7 +170,7 @@
                       </DateTimePicker>
                       <div class="icon-content">
                         <SetRepeat :repeat="task.repeat" v-on:updateRepeat="updateRepeat"></SetRepeat>
-                        <Icon type="md-alarm" size="20" color="#8c8c8c" />
+                        <!-- <Icon type="md-alarm" size="20" color="#8c8c8c" /> -->
                       </div>
                     </div>
                   </div>
@@ -464,6 +464,7 @@
                       <div class="zhezhao">
                         <Icon type="md-cloud-download" @click="downLoad(f.fileId)" />
                         <Icon type="md-search" @click="getFileDetail(f.fileId)" />
+                        <Icon type="ios-trash" @click="deleteFiles(f.fileId)" />
                       </div>
                     </div>
                     <Tooltip :content="f.fileName" max-width="250">
@@ -518,6 +519,16 @@
           </div>
         </div>
       </div>
+      <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
+        <common-file @close="showCommon = false" :projectId="task.projectId" :publicId="task.taskId"></common-file>
+      </Modal>
+      <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
+        <fileDetail v-if="showFileDetail" :file="file"></fileDetail>
+      </Modal>
+      <!-- 编辑日程模态框 -->
+      <Modal v-model="showRCModal" class="myModal myRcModal">
+        <rc-modal></rc-modal>
+      </Modal>
     </div>
   </div>
 </template>
@@ -555,7 +566,7 @@ import {
   progress,
 } from "@/axios/api";
 import { setSysClip } from "@/axios/api2.js";
-import { downloadFile, getFileDetails } from "@/axios/fileApi";
+import { downloadFile, getFileDetails,deleteFile } from "@/axios/fileApi";
 export default {
   components: {
     fileDetail,
@@ -690,6 +701,14 @@ export default {
         if (res.result == 1) {
           this.showFileDetail = true;
           this.file = res.data;
+        }
+      });
+    },
+    deleteFiles(fileId){
+        deleteFile(fileId).then(res => {
+        if (res.result == 1) {
+           this.$Message.success("删除成功");
+          this.editTask(this.taskId);
         }
       });
     },
