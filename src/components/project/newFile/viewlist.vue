@@ -1,7 +1,7 @@
 <template>
   <div class="file-contant" v-if="files != null">
     <Row class="file-list" v-if="files.length > 0 && showView == 'view'" type="flex" :gutter="10" justify="start">
-      <Col class="file-list-col" v-for="(file, index) in filesContent" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)">
+      <Col class="file-list-col" v-for="(file, index) in files" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)">
         <div class="img-box" :class="{ checked: fileArr.includes(file.fileId) }">
           <Icon type="ios-checkbox" class="ios-check" size="28"  :class="{ showIcon: fileArr.includes(file.fileId) }" @click.native.stop="iosCheck(file, index)" />
           <Button icon="ios-arrow-down" class="file-more_opt" :class="{ showIcon: isactive2 == index }" @click.stop="getFileid($event,file, index)"></Button>
@@ -12,9 +12,8 @@
         <div class="file-hinted" >
           <Tooltip :content="file.fileName + (file.catalog == 0 ? file.ext : '')" placement="top" transfer max-width="250" v-if="isactive != index">
             <div class="file-name" @click.stop="changeView(file, index)">
-              <span class="file-name-obj"  v-if="file.catalog == 0">{{ file.fileNameHead }}</span>
+              <span v-if="file.catalog == 0">{{ (file.fileName+file.ext).length>12?(file.fileName+file.ext).substring(0,5)+'...'+(file.fileName+file.ext).substring((file.fileName+file.ext).length-5,(file.fileName+file.ext).length):file.fileName+file.ext }}</span>
               <span class="file-name-obj" v-else>{{ file.fileName }}</span>
-              <span v-if="file.catalog == 0" class="file-name-foot">{{ file.fileNameFoot }}</span>
               <Icon type="ios-lock-outline" size="18" v-if="file.catalog==0&&file.filePrivacy==1" class="file-lock"/>
             </div>
           </Tooltip>
@@ -338,14 +337,6 @@ export default {
   created() {
     let params = { fileId: this.createFileId };
     this.initFile(params).then(res => {
-      this.filesContent=this.files
-        this.filesContent.map(p=>{
-        if(p.catalog == 0){
-          let fileName=p.fileName+p.ext
-          p.fileNameHead=fileName.substring(0,fileName.length - 6);
-          p.fileNameFoot=fileName.substring(fileName.length - 6);
-        }
-      })
       this.loading = false;
     });
     
