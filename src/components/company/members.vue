@@ -1238,13 +1238,10 @@ export default {
       });
     },
     loginWebIm() {
-      return new Promise(resolve => {
-        this.onLogin({
+      this.onLogin({
           username: localStorage.accountName,
           password: "AAF9A7ADE8AD853549F9CE5D53E8D645"
         });
-        resolve();
-      });
     }
   },
   created() {
