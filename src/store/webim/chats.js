@@ -45,7 +45,7 @@ const Chat = {
 			// 	state.userList[type] = newUserList;
 			// }
 			// else{
-				state.userList[type] = userList;
+				// state.userList[type] = userList;
 			// }
 			state.userList[type] = userList;
 		},
@@ -54,17 +54,6 @@ const Chat = {
 			const { chatType, chatId, msg, bySelf, type, id} = payload;
 			const { params } = router;
 			let status = "unread";
-			if(payload.chatType == "contact"){
-				// if(params.id == payload.from){
-				// 	status = "read";
-				// }
-			}
-			else if(payload.chatType == "group"){
-				// if(params.id == payload.chatId){
-				// 	status = "read";
-				// }
-			}
-
 			if(!state.msgList[chatType][chatId]){
 				state.msgList[chatType][chatId] = [{
 					msg,
@@ -89,13 +78,6 @@ const Chat = {
 				});
 				// state.msgList[chatType][chatId] = _unique(state.msgList[chatType][chatId])
 			}
-
-			// if(chatType === "chatroom" && !bySelf){ // 聊天室消息去重处理
-			// 	state.currentMsgs = _.uniqBy(state.msgList[chatType][chatId], "mid");
-			// }
-			// else{
-			// 	state.currentMsgs = Object.assign({}, state.msgList[chatType][params.id || chatId]); // 这里params.id在路由跳转的时候会undefind，取chatId兼容
-			// }
 			state.msgList = Object.assign({}, state.msgList);
 			console.log(state.msgList)
 		},
@@ -197,7 +179,7 @@ const Chat = {
 			const { id, type } = payload;
 			context.commit("updateCurrentMsgList", context.state.msgList[type][id]);
 		},
-		onSendText: function(context, payload){
+		onSendText: function(context, payload){ 
 			const { chatType, chatId, message } = payload;
 			const id = WebIM.conn.getUniqueId();
 			const time = +new Date();
@@ -209,43 +191,13 @@ const Chat = {
 			const msgObj = new WebIM.message("txt", id);
 			msgObj.set({
 				msg: message,
-				to: chatId[jid[chatType]],
+				to: chatType === "contact" ?chatId:chatId[jid[chatType]],
 				chatType: type,
 				roomType: false,
 				success: function(){
 					context.commit("updateMsgList", {
 						chatType,
-						chatId: chatId[jid[chatType]],
-						msg: message,
-						bySelf: true,
-						time: time,
-						mid: id,
-						status: "sending"
-					});
-				},
-				fail: function(e){
-					console.log("Send private text error", e);
-				}
-			});
-			if(chatType === "group" || chatType === "chatroom"){
-				msgObj.setGroup("groupchat");
-			}
-			WebIM.conn.send(msgObj.body);
-		},
-		onSendText2: function(context, payload){
-			const { chatType, chatId, message } = payload;
-			const id = WebIM.conn.getUniqueId();
-			const time = +new Date();
-			const msgObj = new WebIM.message("txt", id);
-			msgObj.set({
-				msg: message,
-				to: chatId,
-				chatType: type,
-				roomType: false,
-				success: function(){
-					context.commit("updateMsgList", {
-						chatType,
-						chatId: chatId,
+						chatId: chatType === "contact" ?chatId:chatId[jid[chatType]],
 						msg: message,
 						bySelf: true,
 						time: time,
@@ -434,6 +386,8 @@ const Chat = {
 				isGroup: payload.isGroup,
 				count: 10, // 每次获取消息条数
 				success: function(msgs){
+					console.log(msgs)
+					console.log(payload)
 					try{
 						payload.success && payload.success(msgs);
 						if(msgs.length){
@@ -530,6 +484,7 @@ const Chat = {
 								}
 								msg.isHistory = true;
 								context.commit("updateMsgList", msg);
+								console.log(msg)
 							});
 							// context.commit("updateMessageStatus", { action: "readMsgs" });
 						}

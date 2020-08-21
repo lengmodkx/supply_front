@@ -1,7 +1,7 @@
 <template>
   <div class="chat-content">
     <div class="chat-content-left" v-if="changeName=='group'">
-      <Tabs :value="changeName" @on-click="changeTab">
+      <Tabs :value="changeName">
         <!-- <TabPane label="私信" name="contact">
           <ul class="chat-list">
             <li
@@ -32,15 +32,15 @@
                 @click="select2(item, item.groupid,index)"
               >
                 <img
-                  src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4008032110,1843662736&fm=26&gp=0.jpg"
+                  src="../../assets/images/instantChat.png"
                   alt
                 />
                 <div class="text-content">
                   <div>
                     <div class="chat-user">{{item.name}}</div>
-                    <div class="message"></div>
+                    <!-- <div class="message"></div> -->
                   </div>
-                  <div class="date-time"></div>
+                  <!-- <div class="date-time"></div> -->
                 </div>
               </li>
             </ul>
@@ -160,21 +160,6 @@
                   @keyup="SymbolBox($event)"
                   @keyup.enter="sendChat"
                 ></div>
-
-                <!-- <ul class="updata-box">
-                  <li v-for="(item, index) in uploadList" :key="index">
-                    <p class="group-chat-file">
-                      <span>{{ item.name }} &nbsp; {{ renderSize(item.size) }} KB</span>
-                      <Progress
-                        v-if="item.showProgress"
-                        :percent="item.percentage"
-                        :stroke-width="5"
-                        hide-info
-                      />
-                    </p>
-                    <Icon @click="delFile(index)" class="ivu-icon ivu-icon-ios-close" size="24" />
-                  </li>
-                </ul>-->
               </div>
               <div class="talkDown">
                 <div class="send fr">
@@ -194,15 +179,6 @@ import insertText from "@/utils/insertText";
 import upFile from "../project/pages/index/chatUpFile";
 import { sendChat, getChat, recall } from "../../axios/api";
 import { mapActions, mapState, mapGetters } from "vuex";
-// 上传
-import OSS from "ali-oss";
-let client = new OSS({
-  region: "oss-cn-beijing",
-  accessKeyId: "LTAIP4MyTAbONGJx",
-  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
-});
-import { oss } from "../../axios/ossweb";
 import moment from "moment";
 
 export default {
@@ -211,24 +187,11 @@ export default {
   props: ["changeName", "userInfoList"],
   data() {
     return {
-      files: [],
-      talkvalue: "",
-      showCommon: false,
       projectName: "",
       symbolData: [],
       offsetLeft: 0,
       showSymbol: false,
-      showupload: true,
-      showProgress: false,
-      dirName: "upload/chat/",
       uploadList: [],
-      percentage: [],
-      charFiles: [],
-      uploadData: {},
-      host: "",
-      headers: {
-        "x-auth-token": localStorage.token
-      },
       activedKey: {
         contact: "",
         group: ""
@@ -239,10 +202,6 @@ export default {
   mounted() {
     if (this.changeName == "group") {
       this.getGroupUserList().then(res => {
-        this.onGetCurrentChatObjMsg({
-          type: this.changeName,
-          id: this.userList["group"][0].groupid
-        });
         this.select2(
           this.userList[this.changeName][0],
           this.userList[this.changeName][0].groupid,
@@ -250,21 +209,9 @@ export default {
         );
       });
     } else {
-      new Promise(resolve => {
-        this.onGetContactUserList();
-        resolve();
-      }).then(val => {
-        this.projectName = this.userInfoList.userEntity.userName;
-        this.userList["contact"].map(p => {
-          if (p.name == this.userInfoList.userEntity.accountName) {
-            this.onGetCurrentChatObjMsg({
-              type: this.changeName,
-              id: p.name
-            });
-            this.select2(p, p.name);
-          }
-        });
-      });
+      this.projectName = this.userInfoList.userEntity.userName;
+      this.select();
+
     }
   },
   watch: {
@@ -291,20 +238,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions("chat", ["initChat"]),
     ...mapActions(["sendFileMessage"]),
     ...mapActions([
       "onGetGroupUserList",
-      "onGetContactUserList",
       "onGetCurrentChatObjMsg",
       "onSendText",
       "getHistoryMessage"
     ]),
-    ...mapActions(["addfirend"]),
     ...mapActions(["acceptSubscribe"]),
     getGroupUserList() {
       return new Promise(resolve => {
         this.onGetGroupUserList();
+        setTimeout(() => {
+          resolve();
+        }, 500);
       });
     },
     // 获取消息e
@@ -347,11 +294,6 @@ export default {
     chehui(chatId) {
       recall(chatId, this.$route.params.id);
     },
-    delFile(index) {
-      this.uploadList.splice(index, 1);
-      this.charFiles.splice(index, 1);
-    },
-
     // 发送消息
     sendChat() {
       if (
@@ -361,50 +303,42 @@ export default {
         this.$refs.textarea.innerHTML = "";
         return;
       }
-      console.log(this.$data.activedKey[this.changeName])
-      this.onSendText({
-        chatType: this.changeName,
-        chatId: this.$data.activedKey[this.changeName],
-        message: this.$refs.textarea.innerHTML
-      });
+      if (this.changeName == "contact") {
+        this.onSendText({
+          chatType: this.changeName,
+          chatId: this.userInfoList.userEntity.accountName,
+          message: this.$refs.textarea.innerHTML
+        });
+      } else {
+        this.onSendText({
+          chatType: this.changeName,
+          chatId: this.$data.activedKey[this.changeName],
+          message: this.$refs.textarea.innerHTML
+        });
+      }
       this.$refs.textarea.innerHTML = "";
       this.$nextTick(() => {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
-        if (this.msgList == undefined) {
+        if (this.msgList == undefined && this.changeName == "group") {
           setTimeout(() => {
             this.select2(
               this.$data.activedKey[this.changeName],
-              this.projectName
+              this.projectName,
+              this.listIndex
             );
+          }, 500);
+        }
+        if (this.changeName == "contact") {
+          setTimeout(() => {
+            this.onGetCurrentChatObjMsg({
+              type: this.changeName,
+              id: this.userInfoList.userEntity.accountName
+            });
           }, 500);
         }
       });
     },
-
-    uploadFile() {
-      this.uploadList.forEach((file, index) => {
-        var fileName =
-          this.dirName + this.random_string(10) + this.get_suffix(file.name);
-        client
-          .multipartUpload(fileName, file, {
-            progress: function(p) {
-              that.percentage.splice(index, 1, Math.floor(p * 100));
-            }
-          })
-          .then(function(result) {
-            var myfile = {};
-            myfile.fileName = file.name;
-            myfile.fileUrl = result.name;
-            myfile.size = that.renderSize(file.size);
-            that.charFiles.push(myfile);
-          })
-          .catch(function(err) {
-            console.log(err);
-          });
-      });
-    },
-
     random_string(len) {
       len = len || 32;
       var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
@@ -425,15 +359,6 @@ export default {
     },
     chatList() {
       return this.$store.state.chat.msgList;
-    },
-    //tab切换群组还是好友
-    changeTab(name) {
-      this.changeName = name;
-      if (name == "contact") {
-        this.onGetContactUserList();
-      } else {
-        this.onGetGroupUserList();
-      }
     },
     getLastMsg(item) {
       let name = this.changeName;
@@ -476,19 +401,20 @@ export default {
         this.projectName = key.name;
         this.listIndex = listIndex;
       }
-      this.$data.selectedKeys = [index];
       this.select(key);
       this.$data.activedKey[this.changeName] = key;
     },
     select(key) {
       if (this.changeName === "group") {
         this.onGetCurrentChatObjMsg({ type: this.changeName, id: key.groupid });
+          // this.getHistoryMessage({ name: key.groupid, isGroup: true });
       } else if (this.changeName === "contact") {
-        this.onGetCurrentChatObjMsg({ type: this.changeName, id: key.name });
+        this.onGetCurrentChatObjMsg({
+          type: this.changeName,
+          id: this.userInfoList.userEntity.accountName
+        });
+          // this.getHistoryMessage({ name: this.userInfoList.userEntity.accountName, isGroup: false });
       }
-    },
-    selectedKeys() {
-      return [this.getKey(this.activedKey[this.changeName]) || ""];
     },
     renderTime(time) {
       const nowStr = new Date();
