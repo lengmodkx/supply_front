@@ -286,6 +286,7 @@ export default {
       window.location.href = url + "/groupchat/" + id;
     },
     chooseEmoji(name) {
+      console.log(name)
       this.$refs.textarea.innerHTML +=
         '<img src="' + name + '" style="width: 26px;height: 26px;"/>';
       // insertText(this.$refs.textarea.$el.children[1], name)
@@ -296,48 +297,47 @@ export default {
     },
     // 发送消息
     sendChat() {
-      if (
-        this.$refs.textarea.innerHTML == "" ||
-        this.$refs.textarea.innerHTML == "\n"
-      ) {
-        this.$refs.textarea.innerHTML = "";
-        return;
-      }
-      if (this.changeName == "contact") {
-        this.onSendText({
-          chatType: this.changeName,
-          chatId: this.userInfoList.userEntity.accountName,
-          message: this.$refs.textarea.innerHTML
-        });
-      } else {
-        this.onSendText({
-          chatType: this.changeName,
-          chatId: this.$data.activedKey[this.changeName],
-          message: this.$refs.textarea.innerHTML
-        });
-      }
-      this.$refs.textarea.innerHTML = "";
-      this.$nextTick(() => {
-        var div = document.getElementById("data-list-content");
-        div.scrollTop = div.scrollHeight + 1;
-        if (this.msgList == undefined && this.changeName == "group") {
-          setTimeout(() => {
-            this.select2(
-              this.$data.activedKey[this.changeName],
-              this.projectName,
-              this.listIndex
-            );
-          }, 500);
-        }
+      let con = this.$refs.textarea.innerText.replace(/(^\s+)|(\s+$)/g, "");
+      if(con==''&&this.$refs.textarea.innerHTML.indexOf("img")=='-1'){
+        this.$Message.error('不能发送空白消息');
+      }else{
         if (this.changeName == "contact") {
-          setTimeout(() => {
-            this.onGetCurrentChatObjMsg({
-              type: this.changeName,
-              id: this.userInfoList.userEntity.accountName
-            });
-          }, 500);
+          this.onSendText({
+            chatType: this.changeName,
+            chatId: this.userInfoList.userEntity.accountName,
+            message: this.$refs.textarea.innerHTML
+          });
+        } else {
+          this.onSendText({
+            chatType: this.changeName,
+            chatId: this.$data.activedKey[this.changeName],
+            message: this.$refs.textarea.innerHTML
+          });
         }
-      });
+        this.$refs.textarea.innerHTML = "";
+        this.$nextTick(() => {
+          var div = document.getElementById("data-list-content");
+          div.scrollTop = div.scrollHeight + 1;
+          if (this.msgList == undefined && this.changeName == "group") {
+            setTimeout(() => {
+              this.select2(
+                this.$data.activedKey[this.changeName],
+                this.projectName,
+                this.listIndex
+              );
+            }, 500);
+          }
+          if (this.changeName == "contact") {
+            setTimeout(() => {
+              this.onGetCurrentChatObjMsg({
+                type: this.changeName,
+                id: this.userInfoList.userEntity.accountName
+              });
+            }, 500);
+          }
+        });
+      }
+
     },
     random_string(len) {
       len = len || 32;
