@@ -256,7 +256,7 @@ const Chat = {
 			WebIM.conn.send(msgObj.body);
 		},
 		sendFileMessage: function(context, payload){
-			const { chatType, chatId, roomType, file, callback } = payload;
+			const { chatType, chatId, roomType, file, callback,success,error } = payload;
 			const id = WebIM.conn.getUniqueId();
 			const jid = {
 				contact: "name",
@@ -275,7 +275,7 @@ const Chat = {
 				roomType: roomType,
 				onFileUploadError: function(error){
 					console.log("文件上传失败", error);
-					callback();
+					error();
 				},
 				onFileUploadComplete: function(data){
 					let url = data.uri + "/" + data.entities[0].uuid;
@@ -295,6 +295,7 @@ const Chat = {
 				},
 				success: function(){
 					console.log("文件发送成功");
+					success()
 				}
 			});
 			if(chatType === "group" || chatType === "chatroom"){

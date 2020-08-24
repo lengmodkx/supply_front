@@ -285,7 +285,12 @@
             -ms-flex-direction: column;
             flex-direction: column;
         }
-
+        .file-tip {
+            font-style: 12px;
+            // background: rgba(0, 0, 0, 0.7);
+            color: #2d8cf0;
+            padding-left: 10px;
+        }
         .talk {
             position: relative;
             border: 1px solid #e5e5e5;
@@ -481,6 +486,9 @@
 }
 .df {
     display: flex;
+}
+/deep/.ivu-progress-active,.ivu-progress {
+    margin-bottom: -6px !important;
 }
 [contenteditable]:focus {
     outline: none;

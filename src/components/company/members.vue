@@ -1244,10 +1244,12 @@ export default {
         });
     }
   },
+  mounted(){
+    this.loginWebIm();
+  },
   created() {
     this.initMember();
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
-    this.loginWebIm();
   }
 };
 </script>
