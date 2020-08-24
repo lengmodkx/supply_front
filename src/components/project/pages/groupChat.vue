@@ -355,8 +355,8 @@ export default {
     border-radius: 5px;
     margin: 0px 0px 5px 5px;
     img {
-      width: 32px;
-      height: 40px;
+      width: 26px;
+      height: 26px;
       margin-right: 8px;
       flex: none;
     }
@@ -385,10 +385,8 @@ export default {
     }
   }
   .file-box {
-    position: relative;
     .one-file {
-    position: absolute;
-    right: 15px;
+    margin-left: 680px;
   }
   }
   
@@ -439,7 +437,7 @@ export default {
     img {
       width: 26px;
       height: 26px;
-      border-radius: 50%;
+      // border-radius: 50%;
       margin-right: 10px;
       margin-top: 5px;
     }
