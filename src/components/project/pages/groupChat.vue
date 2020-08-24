@@ -384,9 +384,14 @@ export default {
       display: block;
     }
   }
-  .one-file {
-    float: right;
+  .file-box {
+    position: relative;
+    .one-file {
+    position: absolute;
+    right: 15px;
   }
+  }
+  
 }
 #input {
   width: 100%;
