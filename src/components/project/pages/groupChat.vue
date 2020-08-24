@@ -281,17 +281,21 @@ export default {
           content: con,
           files: JSON.stringify(this.charFiles)
         };
-        // console.log(JSON.stringify(this.charFiles))
-        sendChat(data).then(res => {
-          this.$refs.textarea.innerHTML = "";
-          this.$nextTick(() => {
-            var div = document.getElementById("data-list-content");
-            div.scrollTop = div.scrollHeight + 1;
+        if(con=='' && JSON.stringify(this.charFiles)=='[]'){
+          this.$Message.error('不能发送空白消息');
+        }else{
+          sendChat(data).then(res => {
+            this.$refs.textarea.innerHTML = "";
+            this.$nextTick(() => {
+              var div = document.getElementById("data-list-content");
+              div.scrollTop = div.scrollHeight + 1;
+            });
+            this.charFiles = [];
+            this.uploadList.splice(0, this.uploadList.length);
+            this.$refs.upload.clearFiles();
           });
-          this.charFiles = [];
-          this.uploadList.splice(0, this.uploadList.length);
-          this.$refs.upload.clearFiles();
-        });
+        }
+
     },
 
     uploadFile() {
