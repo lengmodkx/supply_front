@@ -270,7 +270,7 @@ export default {
         object.name = file.name.substring(0, file.name.lastIndexOf("."));
         object.ext = file.name.substring(file.name.lastIndexOf("."));
         this.charFiles.push(object);
-        // console.log(this.uploadList)
+        this.uploadList = this.$refs.upload.fileList;
       });
     },
     // 发送消息
