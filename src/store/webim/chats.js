@@ -270,7 +270,7 @@ const Chat = {
 				ext: {
 					file_length: file.data.size
 				},
-				to: chatId[jid[chatType]],
+				to: chatType === "contact" ?chatId:chatId[jid[chatType]],
 				roomType: roomType,
 				onFileUploadError: function(error){
 					console.log("文件上传失败", error);
@@ -281,7 +281,7 @@ const Chat = {
 					context.commit("updateMsgList", {
 						msg: url,
 						chatType,
-						chatId: chatId[jid[chatType]],
+						chatId: chatType === "contact" ?chatId:chatId[jid[chatType]],
 						bySelf: true,
 						type: "file",
 						filename: file.data.name,

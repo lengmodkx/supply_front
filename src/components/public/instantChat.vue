@@ -436,7 +436,7 @@ export default {
     // TODO 当前username、及type不是从pams里取
     fileChange(e) {
       let isRoom =
-        this.changeName == "chatroom" || this.changeName == "groupchat";
+        this.changeName == "chatroom" || this.changeName == "group";
       let file = WebIM.utils.getFileUrl(e.target);
       if (!file.filename) {
         this.$refs.imgDom.value = null;
@@ -444,7 +444,7 @@ export default {
       }
       let obj = {
         chatType: this.changeName,
-        chatId: this.$data.activedKey[this.changeName], // TODO 这里在群里面应该取的是ID，后期跟进
+        chatId: this.changeName == "group"?this.$data.activedKey[this.changeName]:this.userInfoList.userEntity.accountName, // TODO 这里在群里面应该取的是ID，后期跟进
         file: file,
         roomType: isRoom,
         callback: () => {
