@@ -455,6 +455,15 @@ export default {
       this.$nextTick(() => {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
+        if (this.msgList == undefined && this.changeName == "group") {
+            setTimeout(() => {
+              this.select2(
+                this.$data.activedKey[this.changeName],
+                this.projectName,
+                this.listIndex
+              );
+            }, 500);
+          }
         if (this.changeName == "contact") {
           setTimeout(() => {
             this.onGetCurrentChatObjMsg({
