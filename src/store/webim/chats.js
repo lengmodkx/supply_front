@@ -263,6 +263,7 @@ const Chat = {
 				group: "groupid",
 				chatroom: "id"
 			};
+			console.log(payload)
 			const msgObj = new WebIM.message("file", id);
 			msgObj.set({
 				apiUrl: WebIM.config.apiURL,

@@ -452,6 +452,18 @@ export default {
         }
       };
       this.sendFileMessage(obj);
+      this.$nextTick(() => {
+        var div = document.getElementById("data-list-content");
+        div.scrollTop = div.scrollHeight + 1;
+        if (this.changeName == "contact") {
+          setTimeout(() => {
+            this.onGetCurrentChatObjMsg({
+              type: this.changeName,
+              id: this.userInfoList.userEntity.accountName
+            });
+          }, 500);
+        }
+      });
     }
   }
 };
