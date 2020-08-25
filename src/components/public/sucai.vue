@@ -277,6 +277,7 @@ export default {
   display: flex;
   position: relative;
   height: calc(100vh - 220px);
+  overflow: auto;
 }
 @media screen and (max-width: 1440px) {
   .main-content {
