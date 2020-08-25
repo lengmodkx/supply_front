@@ -395,8 +395,6 @@ export default {
     // TODO 当前username、及type不是从pams里取
     fileChange(e) {
       this.filetip = true;
-
-      let isRoom = this.changeName == "chatroom" || this.changeName == "group";
       let file = WebIM.utils.getFileUrl(e.target);
       if (!file.filename) {
         this.$refs.imgDom.value = null;
@@ -413,7 +411,7 @@ export default {
         chatType: this.changeName,
         chatId: this.changeName == "group" ? this.$data.activedKey[this.changeName] : this.userInfoList.userEntity.accountName, // TODO 这里在群里面应该取的是ID，后期跟进
         file: file,
-        roomType: isRoom,
+        roomType: false,
         callback: () => {
           this.$refs.imgDom.value = null;
         },
@@ -430,7 +428,7 @@ export default {
       this.$nextTick(() => {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
-        if (this.msgList == undefined && this.changeName == "group") {
+        if (this.changeName == "group") {
           setTimeout(() => {
             this.select2(this.$data.activedKey[this.changeName], this.projectName, this.listIndex);
           }, 500);

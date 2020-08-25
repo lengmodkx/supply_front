@@ -97,7 +97,7 @@
               </div>
               <div class="list-file-part">{{ file.size }}</div>
               <div class="list-file-part">平台</div>
-              <div class="list-file-part">{{ file.updateTime | timeFilter }}</div>
+              <div class="list-file-part">{{ file.createTime | timeFilter }}</div>
               <div class="list-file-part opeart-icon" @click.stop="downLoad(file.fileId)" v-if="file.catalog==0">
                 <Icon type="md-arrow-down" />
               </div>
