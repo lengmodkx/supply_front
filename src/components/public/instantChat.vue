@@ -176,14 +176,9 @@ export default {
   },
   mounted() {
     if (this.changeName == "group") {
-      // if( this.userList[this.changeName][0]== undefined ||this.userList[this.changeName][0]== 'undefined'){
-      //     this.$Message.error('系统异常，请刷新！');
-      // }else{
           this.getGroupUserList().then((res) => {
             this.select2(this.userList[this.changeName][0], this.userList[this.changeName][0].groupid, 0);
           });
-      // }
-      
     } else {
       this.projectName = this.userInfoList.userEntity.userName;
       this.select();
@@ -430,11 +425,13 @@ export default {
         div.scrollTop = div.scrollHeight + 1;
         if (this.changeName == "group") {
           setTimeout(() => {
+            console.log('进入群组回调')
             this.select2(this.$data.activedKey[this.changeName], this.projectName, this.listIndex);
           }, 500);
         }
         if (this.changeName == "contact") {
           setTimeout(() => {
+            console.log('进入单聊回调')
             this.onGetCurrentChatObjMsg({
               type: this.changeName,
               id: this.userInfoList.userEntity.accountName,
