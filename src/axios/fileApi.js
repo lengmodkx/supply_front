@@ -221,13 +221,13 @@ export function getMaterialTree() {
 
 
 // 获取素材库 搜索
-export function getSucaiSearch(fileName,page) {
+export function getSucaiSearch(fileName,page,pageSize) {
     return fetch({
         url: `/files/${fileName}/material_base_search`,
         method: "get",
         params: {
             page:page,
-            size: 999999
+            size: pageSize
         }
     });
 }

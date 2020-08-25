@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="main-content">
-          <ul v-if="view === 'view'" class="view-file-box">
+          <ul v-if="view === 'view' &&allFile.length != 0" class="view-file-box">
             <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
               <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
               <div class="top-img" :data-id="file.fileId" v-if="file.catalog">
@@ -63,7 +63,7 @@
             </li>
           </ul>
           <!--列表模式-->
-          <ul v-if="view === 'list'" class="list-file-box">
+          <ul v-if="view === 'list'&&allFile.length != 0" class="list-file-box">
             <div class="list-file-title">
               <span>名称</span>
               <span>大小</span>
@@ -110,6 +110,9 @@
             </div>
           </div>
         </div>
+        <div class="page-content" v-show="searched!='' && total>0">
+          <Page :total="total" show-total :page-size="pageSize" @on-change="changePage"/>
+        </div>
       </div>
     </div>
     <Modal v-model="showModelDetai" fullscreen :footer-hide="true" class-name="model-detail">
@@ -154,6 +157,7 @@ export default {
       page: 0,
       curFile: {},
       fileTree: [],
+      pageSize:30,
     };
   },
   components: {
@@ -173,6 +177,10 @@ export default {
   },
   methods: {
     ...mapActions("file", ["putOneFile"]),
+    changePage(num){
+        this.pageNum=num
+        this.search(this.searched)
+    },
     back() {
       if (this.crumbsIndex == 1) {
         console.log("后退终止");
@@ -228,10 +236,11 @@ export default {
     search(value) {
       if (value !== "") {
         this.loading = true;
-        getSucaiSearch(value, this.pageNum).then((res) => {
+        getSucaiSearch(value, this.pageNum,this.pageSize).then((res) => {
           if (res.result == 1) {
             this.loading = false;
             this.allFile = res.data;
+            this.total=res.totle
           }
         });
       } else {
@@ -276,12 +285,34 @@ export default {
   width: 100%;
   display: flex;
   position: relative;
-  height: calc(100vh - 220px);
+  height: calc(100vh - 255px);
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
+  }
 }
+
+
+/deep/.ivu-page {
+      text-align: right !important;
+      margin-right: 50px;
+    }
 @media screen and (max-width: 1440px) {
   .main-content {
     min-height: calc(100vh - 480px);
+    &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
+  }
   }
 }
 
