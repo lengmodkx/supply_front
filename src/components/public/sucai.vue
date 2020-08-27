@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="main-content">
-          <ul v-if="view === 'view' &&allFile.length != 0" class="view-file-box">
+          <ul v-if="view === 'view' && allFile.length != 0" class="view-file-box">
             <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
               <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
               <div class="top-img" :data-id="file.fileId" v-if="file.catalog">
@@ -63,7 +63,7 @@
             </li>
           </ul>
           <!--列表模式-->
-          <ul v-if="view === 'list'&&allFile.length != 0" class="list-file-box">
+          <ul v-if="view === 'list' && allFile.length != 0" class="list-file-box">
             <div class="list-file-title">
               <span>名称</span>
               <span>大小</span>
@@ -98,7 +98,7 @@
               <div class="list-file-part">{{ file.size }}</div>
               <div class="list-file-part">平台</div>
               <div class="list-file-part">{{ file.createTime | timeFilter }}</div>
-              <div class="list-file-part opeart-icon" @click.stop="downLoad(file.fileId)" v-if="file.catalog==0">
+              <div class="list-file-part opeart-icon" @click.stop="downLoad(file.fileId)" v-if="file.catalog == 0">
                 <Icon type="md-arrow-down" />
               </div>
             </li>
@@ -110,8 +110,8 @@
             </div>
           </div>
         </div>
-        <div class="page-content" v-show="searched!='' && total>0">
-          <Page :total="total" show-total :page-size="pageSize" @on-change="changePage"/>
+        <div class="page-content" v-show="searched != '' && total > 0">
+          <Page :total="total" show-total :page-size="pageSize" @on-change="changePage" />
         </div>
       </div>
     </div>
@@ -157,7 +157,8 @@ export default {
       page: 0,
       curFile: {},
       fileTree: [],
-      pageSize:30,
+      pageSize: 30,
+      allFileList:[]
     };
   },
   components: {
@@ -177,9 +178,10 @@ export default {
   },
   methods: {
     ...mapActions("file", ["putOneFile"]),
-    changePage(num){
-        this.pageNum=num
-        this.search(this.searched)
+    changePage(num) {
+      this.pageNum = num;
+      // this.search(this.searched);
+      this.setCurrentPageData()
     },
     back() {
       if (this.crumbsIndex == 1) {
@@ -236,16 +238,22 @@ export default {
     search(value) {
       if (value !== "") {
         this.loading = true;
-        getSucaiSearch(value, this.pageNum,this.pageSize).then((res) => {
+        getSucaiSearch(value, this.pageNum, this.pageSize).then((res) => {
           if (res.result == 1) {
             this.loading = false;
-            this.allFile = res.data;
-            this.total=res.totle
+            this.allFileList = res.data;
+            this.total = res.totle;
+            this.setCurrentPageData()
           }
         });
       } else {
-       this.init(this.fileId);
+        this.init(this.fileId);
       }
+    },
+    setCurrentPageData() {
+      let begin = (this.pageNum - 1) * this.pageSize;
+      let end = this.pageNum * this.pageSize;
+      this.allFile = this.allFileList.slice(begin, end);
     },
 
     // 点击的是文件夹
@@ -297,22 +305,21 @@ export default {
   }
 }
 
-
 /deep/.ivu-page {
-      text-align: right !important;
-      margin-right: 50px;
-    }
+  text-align: right !important;
+  margin-right: 50px;
+}
 @media screen and (max-width: 1440px) {
   .main-content {
     min-height: calc(100vh - 480px);
     &::-webkit-scrollbar {
-    width: 6px;
-    height: 8px;
-    background-color: #e5e5e5;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #cecece;
-  }
+      width: 6px;
+      height: 8px;
+      background-color: #e5e5e5;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #cecece;
+    }
   }
 }
 

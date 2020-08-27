@@ -223,12 +223,12 @@ export function getMaterialTree() {
 // 获取素材库 搜索
 export function getSucaiSearch(fileName,page,pageSize) {
     return fetch({
-        url: `/files/${fileName}/material_base_search`,
+        url: `/fileEs/${fileName}/material_base_search`,
         method: "get",
-        params: {
-            page:page,
-            size: pageSize
-        }
+        // params: {
+        //     pageNumber:page,
+        //     pageSize: pageSize
+        // }
     });
 }
 
