@@ -87,7 +87,7 @@
               align="middle"
               v-for="(item, index) in projects"
               :key="index"
-              @click.stop="path(item)"
+              @click.prevent.native="path(item)"
             >
               <Col span="12" class="info-title">
                 <img
