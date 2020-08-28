@@ -168,10 +168,12 @@ export default {
     goOrg() {
       this.$router.push("/org/" + localStorage.companyId);
       this.$store.commit("app/changeHeaderTag", 0);
+      this.tagHeader = false;
     },
     projectList() {
       this.$router.push("/prolist/" + localStorage.companyId);
       this.$store.commit("app/changeHeaderTag", 1);
+      this.tagHeader = false;
     },
     goSys() {
       userIsOwner(localStorage.companyId).then(res => {
@@ -179,6 +181,7 @@ export default {
           this.$router.push("/systemSettings");
           this.$store.commit("app/changeHeaderTag", 3);
           localStorage.organizationName = res.data.organizationName;
+          this.tagHeader = false;
         } else {
           this.$Message.error("没有权限");
         }
@@ -193,6 +196,7 @@ export default {
         if (res.result == 1 && res.data == true) {
           this.$router.push("/members");
           this.$store.commit("app/changeHeaderTag", 2);
+          this.tagHeader = false;
         } else {
           this.$Message.error("没有权限");
         }
@@ -231,6 +235,7 @@ export default {
     myPage() {
       this.$router.push("/mine");
       this.$store.commit("app/changeHeaderTag", 4);
+      this.tagHeader = false;
     },
     hideContent() {
       this.popVisible = "none";
