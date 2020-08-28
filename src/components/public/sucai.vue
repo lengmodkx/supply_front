@@ -32,7 +32,7 @@
             <Icon type="md-list" @click="view = 'list'" />
           </div>
         </div>
-        <div class="main-content">
+        <div class="main-content" :class="{'not-search':searched == ''}">
           <ul v-if="view === 'view' && allFile.length != 0" class="view-file-box">
             <li v-for="(file, index) in allFile" :key="index" @click="goNext(file.catalog, file.fileId, file)" :class="{ cur: file.catalog }">
               <Icon class="xiazai" v-if="!file.catalog" @click.stop="downLoad(file.fileId)" type="md-cloud-download" />
@@ -110,7 +110,7 @@
             </div>
           </div>
         </div>
-        <div class="page-content" v-show="searched != '' && total > 0">
+        <div class="page-content" v-if="searched != '' && total > 0">
           <Page :total="total" show-total :page-size="pageSize" @on-change="changePage" />
         </div>
       </div>
@@ -261,6 +261,8 @@ export default {
       if (type == 1) {
         this.init(fileId);
         this.flagTree = false;
+        this.$store.commit("materialfile/crumbsAdd", file);
+
       } else {
         this.showModelDetai = true;
         this.putOneFile(fileId);
@@ -295,16 +297,10 @@ export default {
   position: relative;
   height: calc(100vh - 255px);
   overflow: auto;
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 8px;
-    background-color: #e5e5e5;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #cecece;
-  }
 }
-
+.not-search {
+  height: calc(100vh - 220px);
+}
 /deep/.ivu-page {
   text-align: right !important;
   margin-right: 50px;
@@ -312,14 +308,6 @@ export default {
 @media screen and (max-width: 1440px) {
   .main-content {
     min-height: calc(100vh - 480px);
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 8px;
-      background-color: #e5e5e5;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #cecece;
-    }
   }
 }
 
@@ -353,10 +341,8 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   .list-file-title {
-    width: 90%;
-    // height: 50px;
+    padding-left: 10px;
     display: flex;
     span {
       height: 100%;
@@ -371,9 +357,10 @@ export default {
     }
   }
   li {
-    width: 90%;
     height: 60px;
     border-bottom: 1px solid #e5e5e5;
+    padding: 10px 0;
+    padding-left: 10px;
     list-style: none;
     cursor: pointer;
     display: flex;
@@ -393,12 +380,12 @@ export default {
       .list-file-img {
         position: relative;
         width: 55px;
-        height: 55px;
+        height: 35px;
         margin-right: 10px;
         flex: none;
         img {
-          width: 64px;
-          height: 52px;
+          width: 40px;
+          height: 32px;
         }
 
         .down-img span {
@@ -463,6 +450,14 @@ export default {
         }
       }
     }
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
   }
 }
 
@@ -616,6 +611,14 @@ export default {
         white-space: nowrap;
       }
     }
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
   }
 }
 
