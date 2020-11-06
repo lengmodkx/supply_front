@@ -90,7 +90,8 @@ import {
   delRCProject,
   delWJProject,
   delFZProject,
-  delBQProject
+  delBQProject,
+  delWJProjectNew
 } from "../../axios/api.js";
 import { recycle } from "../../axios/recycleBinApi";
 import { getRecycle } from "../../axios/setAndTag";
@@ -189,9 +190,24 @@ data: function() {
                       }
                   });
               }
-              if (this.nowChecked === "file" || this.nowChecked ==='folder') {
+              if (this.nowChecked === "file") {
                   console.log("文件");
                   delWJProject(id, this.projectId).then(res => {
+                      if (res.result === 1) {
+                          this.$Message.success("彻底删除成功");
+                          this.dataList.forEach((i, n) => {
+                              if (i.id === id) {
+                                  this.dataList.splice(n, 1);
+                              }
+                          });
+                      } else {
+                          this.$Message.error(res.msg);
+                      }
+                  });
+              }
+              if (this.nowChecked ==='folder') {
+                  console.log("文件夹");
+                  delWJProjectNew(id).then(res => {
                       if (res.result === 1) {
                           this.$Message.success("彻底删除成功");
                           this.dataList.forEach((i, n) => {

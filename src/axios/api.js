@@ -350,6 +350,17 @@ export function delWJProject(id, projectId) {
     });
 }
 
+//删除文件夹新
+export function delWJProjectNew(fileId) {
+    return fetch({
+        url: `files/deleteFileFolder`,
+        method: "delete", // 请求方法
+        params: {
+            fileId: fileId
+        }
+    });
+}
+
 
 // 分组删除
 
@@ -1654,3 +1665,11 @@ export function expUserLog(orgId,id) {
     })
 }
 
+//保存环信消息消息通知数量
+export function saveWebIM(data) {
+    return fetch({
+        url: `/groupchat/save/ChatCount`,
+        method: 'post', // 请求方法
+        params: data
+    })
+}
