@@ -9,7 +9,7 @@
       <div class="tab_container">
         <div class="task-group">
           <p>任务分组</p>
-          <Icon type="md-add" color="#2db7f5" size="20" @click.native="showAddGroup = true" style="cursor:pointer" />
+          <Icon type="md-add" color="#2db7f5" size="20" @click.native="showAddGroup = true" style="cursor: pointer" />
         </div>
         <ul>
           <li v-for="(g, index) in groups" :key="index" :class="{ groupActive: taskGroupId == g.groupId }" class="group-li" @click="changeGroup(g.groupId)">
@@ -33,8 +33,19 @@
             </div>
           </li>
         </ul>
+        <div class="separator"><li class="line"></li></div>
+        <div class="task-group">
+          <p>视图</p>
+        </div>
+        <ul>
+          <li class="custom-view-wrapper" @click="checkView(item.id)" v-for="(item, index) in viewList" :class="{ groupActive: viewId == item.id }">
+            <div class="custom-view">
+              <Icon :type="item.icon" size="20" color="#595959" class="icon-list" />
+              <div>{{ item.viewName }}</div>
+            </div>
+          </li>
+        </ul>
       </div>
-
       <div class="board-left-panel-indicator">
         <div class="root__3UYM" @click="getGroup" :class="show ? 'left' : 'right'">
           <i class="left__1DdF"></i>
@@ -59,8 +70,8 @@
       @end="dragBox"
     >
       <div class="column" :key="k" v-for="(i, k) in allTask">
-        <div style="max-height:calc(100vh - 145px);position:relative;" :data-index="k">
-          <div class="add-Box">
+        <div style="max-height: calc(100vh - 145px); position: relative" :data-index="k">
+          <div class="add-Box" v-if="addBtns">
             <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId"> -->
             <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)">
               <Icon type="android-add-circle"></Icon>
@@ -129,20 +140,20 @@
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
                       <!--</span>-->
-                      <span class="label" v-if="a.remarks" style="margin-top:-5px">
+                      <span class="label" v-if="a.remarks" style="margin-top: -5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
                       <span class="label" style="margin-bottom: 3px" v-if="a.taskList.length">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                        <span class="sonTask" style="line-height: 10px; padding-left: 5px">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
-                      <span class="label" v-if="a.fileId" style="margin-bottom:2px">
+                      <span class="label" v-if="a.fileId" style="margin-bottom: 2px">
                         <Icon type="md-paper" size="16" />
                       </span>
-                      <div class="tag-box" v-if="a.tagList" style="margin-bottom:5px">
+                      <div class="tag-box" v-if="a.tagList" style="margin-bottom: 5px">
                         <div class="tag-list" v-for="tag in a.tagList" :key="tag.tagId">
                           <i :style="{ backgroundColor: tag.bgColor }"></i><span>{{ tag.tagName }}</span>
                         </div>
@@ -179,25 +190,32 @@
                     <div class="task-infos">
                       <span class="label time-label" v-if="a.endTime"
                         >{{
-                          $moment(a.endTime).calendar(null, { sameDay: "[今天]LT", nextDay: "[明天]LT", nextWeek: "[下]dddLT", lastDay: "[昨天]LT", lastWeek: "[上]dddLT", sameElse: "Y年M月D日LT" })
+                          $moment(a.endTime).calendar(null, {
+                            sameDay: "[今天]LT",
+                            nextDay: "[明天]LT",
+                            nextWeek: "[下]dddLT",
+                            lastDay: "[昨天]LT",
+                            lastWeek: "[上]dddLT",
+                            sameElse: "Y年M月D日LT",
+                          })
                         }}截止</span
                       >
                       <span class="label repeat-label" v-if="a.repeat !== '不重复'">{{ a.repeat }}</span>
                       <!--<span class="label">-->
                       <!--<Icon class="icon" type="ios-alarm-outline" size="16"></Icon>-->
                       <!--</span>-->
-                      <span class="label" v-if="a.remarks" style="margin-top:-5px">
+                      <span class="label" v-if="a.remarks" style="margin-top: -5px">
                         <Icon type="ios-create-outline" size="18" />
                       </span>
                       <span class="label" style="margin-bottom: 3px" v-if="a.taskList.length">
                         <Icon type="ios-list" size="22" />
-                        <span class="sonTask" style="line-height:10px;padding-left:5px;">{{ a.completeCount }}/{{ a.taskList.length }}</span>
+                        <span class="sonTask" style="line-height: 10px; padding-left: 5px">{{ a.completeCount }}/{{ a.taskList.length }}</span>
                       </span>
 
                       <span class="label" v-if="a.bindId" style="margin-bottom: 3px">
                         <Icon type="ios-link" size="14" />
                       </span>
-                      <span class="label" v-if="a.fileId" style="margin-bottom:2px">
+                      <span class="label" v-if="a.fileId" style="margin-bottom: 2px">
                         <Icon type="md-paper" size="16" />
                       </span>
                       <div class="tag-box" v-if="a.tagList">
@@ -210,7 +228,7 @@
                 </div>
               </div>
             </draggable>
-            <div class="add" style="height:45px"></div>
+            <div class="add" style="height: 45px" v-if="addBtns"></div>
 
             <!-- <span class="add" @click.stop="addCurTask(i.parentId, i.relationId, i.taskList, k)" v-if="currentEditId != i.relationId">
               <Icon type="android-add-circle"></Icon>
@@ -220,14 +238,14 @@
         </div>
       </div>
       <!-- 新建任务列表 -->
-      <draggable class="column addList" :options="{ sort: false }">
+      <draggable class="column addList" :options="{ sort: false }" v-if="addBtns">
         <div class="title" v-if="showAdd" @click="showAdd = false">
           <Icon type="plus-round"></Icon>
           新建任务列表...
         </div>
         <div class="newTask" v-if="!showAdd">
-          <Input v-model="newProTitle" placeholder="新建任务列表..." style="width:268px" />
-          <div style="margin-top:12px;text-align:right;">
+          <Input v-model="newProTitle" placeholder="新建任务列表..." style="width: 268px" />
+          <div style="margin-top: 12px; text-align: right">
             <Button
               @click="
                 showAdd = true;
@@ -242,7 +260,7 @@
     </draggable>
     <!--列表视图-->
     <div v-if="view === '列表视图'" class="column-main" style="padding: 0">
-      <listView></listView>
+      <listView :viewId="viewId" :taskGroupId="taskGroupId"></listView>
     </div>
     <!--时间视图-->
     <div v-if="view === '时间视图'" class="column-main" style="padding: 0">
@@ -272,7 +290,7 @@
 
     <Modal v-model="showDelGroupItem" :footer-hide="true" title="删除分组名称" :width="350">
       <span>是否确定删除任务分组?</span>
-      <div style="margin-top:15px">
+      <div style="margin-top: 15px">
         <Button type="error" long @click="handleDelItem">确定</Button>
       </div>
     </Modal>
@@ -318,6 +336,7 @@ import {
   getIsGroupPower,
   changRelationName,
   delRelationName,
+  selectTaskByExamples,
 } from "@/axios/api";
 export default {
   name: "",
@@ -374,34 +393,50 @@ export default {
       allTask: [],
       showGroupPower: "",
       taskId: "",
+      viewList: [
+        { viewName: "所有任务", icon: "md-list", id: "1" },
+        { viewName: "我执行的任务", icon: "md-contact", id: "3" },
+        { viewName: "今天的任务", icon: "md-calendar", id: "2" },
+        { viewName: "未完成的任务", icon: "md-alert", id: "6" },
+        { viewName: "待认领的任务", icon: "md-person-add", id: "5" },
+        { viewName: "已完成的任务", icon: "md-checkbox", id: "4" },
+      ],
+      addBtns: true,
+      viewId: null,
     };
   },
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
     this.initTasks();
+      this.updateView(null)
   },
   watch: {
     allTasks(newName, oldName) {
       this.allTask = newName;
     },
     deep: true,
-    view() {
-      this.init(this.projectId).then((res) => {
-        this.loading = false;
-        this.allTask = this.allTasks;
-      });
+    view(val) {
+      if (this.viewId == null||val=='时间视图'||val=="成员视图") {
+        this.init(this.projectId).then((res) => {
+          this.loading = false;
+          this.allTask = this.allTasks;
+        });
+        this.viewId=null
+      } else {
+          this.checkView(this.viewId);
+      }
     },
   },
   methods: {
     ...mapActions("task", ["init", "editTask"]),
     ...mapMutations("task", ["changeTask", "setTaskId"]),
-
+    ...mapMutations('view', ["updateView"]),
     initTasks() {
       this.init(this.projectId).then((res) => {
         this.loading = false;
         this.allTask = this.allTasks;
-        if(localStorage.taskId !='undefined'&&localStorage.taskId !=undefined){
-          this.initTask(localStorage.taskId)
+        if (localStorage.taskId != "undefined" && localStorage.taskId != undefined) {
+          this.initTask(localStorage.taskId);
         }
       });
       window.onscroll = () => {
@@ -416,7 +451,6 @@ export default {
     groupEdit(id) {
       this.showAddGroupItem = true;
       this.curGroupItemId = id;
-      console.log(this.curGroupItemId);
     },
     //删除任务
     groupEditdel(id) {
@@ -426,6 +460,9 @@ export default {
     changeGroup(groupId) {
       this.taskGroupId = groupId;
       this.loading = true;
+      this.addBtns = true;
+      this.viewId = null;
+      this.updateView(null)
       changeGroup(groupId, this.projectId).then((res) => {
         if (res.result == 1) {
           this.$router.replace(`/project/${this.projectId}/tasks/group/${groupId}`);
@@ -501,7 +538,7 @@ export default {
 
     //打开任务详情
     initTask(taskId) {
-      console.log(taskId)
+      console.log(taskId);
       this.showModal = true;
       this.taskId = taskId;
       this.setTaskId(taskId);
@@ -559,8 +596,8 @@ export default {
       };
       dragTask(finalObj).then((res) => {
         console.log(res);
-        if(res.result==2){
-          this.initTasks()
+        if (res.result == 2) {
+          this.initTasks();
         }
       });
     },
@@ -636,6 +673,20 @@ export default {
       }
       return priority;
       // return priority=='普通'?'':(priority=='紧急'?'warning':'urgent')
+    },
+    checkView(id) {
+      this.viewId = id;
+      this.updateView(id)
+      if(this.view =="看板视图"){
+        selectTaskByExamples(id, this.taskGroupId, this.projectId).then((res) => {
+          this.allTask = [];
+          let obj = new Object();
+          obj.taskList = res.data;
+          obj.relationName = "任务";
+          this.allTask.push(obj);
+          this.addBtns = false;
+        });
+      }
     },
   },
 };

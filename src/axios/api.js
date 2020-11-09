@@ -1673,3 +1673,16 @@ export function saveWebIM(data) {
         params: data
     })
 }
+
+//删除导出信息
+export function selectTaskByExamples(example,groupId,projectId) {
+    return fetch({
+        url: `/tasks/selectTaskByExample`,
+        method: 'get', // 请求方法
+        params:{
+            example:example,
+            groupId:groupId,
+            projectId:projectId
+        }
+    })
+}

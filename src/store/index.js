@@ -15,6 +15,8 @@ import news from './modules/news'
 import company from './modules/company'
 import relation from './modules/relation'
 import tree from './modules/tree'
+import view from './modules/view'
+
 //import gantt from './modules/gantt'
 
 import Login from "./webim/login";
@@ -47,6 +49,7 @@ const store = new Vuex.Store({
 		group: Group,
         emedia: Emedia,
         friendModule: FriendModule,
+        view
        // gantt
     }
 })

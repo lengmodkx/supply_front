@@ -14,14 +14,17 @@
     <Select v-model="model" style="width:320px;margin-left:15px" transfer size="large" @on-change="viewChange">
       <Option value="看板视图">看板视图</Option>
       <Option value="列表视图">列表视图</Option>
-      <Option value="时间视图">时间视图</Option>
-      <Option value="成员视图">成员视图</Option>
+      <Option value="时间视图" v-if="viewId==null">时间视图</Option>
+      <Option value="成员视图" v-if="viewId==null">成员视图</Option>
     </Select>
   </div>
 </template>
 <script>
-  import {mapMutations,mapActions} from 'vuex'
+  import {mapState,mapMutations,mapActions} from 'vuex'
 export default {
+  computed: {
+    ...mapState("view", ["viewId"]),
+  },
   data() {
     return {
       model: '看板视图',
