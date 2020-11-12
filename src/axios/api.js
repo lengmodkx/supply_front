@@ -569,7 +569,6 @@ export function bindingTag(tagId, publicId, publicType) {
 export function searchTags(params) {
     return $get(`/tags/search`, params)
 }
-
 //修改进度
 
 export function progress(params) {
@@ -1683,6 +1682,18 @@ export function selectTaskByExamples(example,groupId,projectId) {
             example:example,
             groupId:groupId,
             projectId:projectId
+        }
+    })
+}
+
+//根据条件筛选任务
+export function searchTaskByExamples(param) {
+    return fetch({
+        url: `/tasks/searchTaskByExample`,
+        method: 'post', // 请求方法
+        data:param,
+        headers: {
+            'Content-Type': 'application/json'
         }
     })
 }
