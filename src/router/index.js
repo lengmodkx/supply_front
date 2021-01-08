@@ -26,7 +26,7 @@ import creatEnter from '../views/creatEnter.vue' //创建企业
 import postArticles from '../views/postArticles.vue' //发布文章
 import articleDetails from '../views/articleDetails.vue' //文章详情
 import articleCenter from '../views/articleCenter.vue' //个人中心
-import contentManagement from '../views/messageAlert.vue' //内容管理
+import contentManagement from '../views/contentManagement.vue' //内容管理
 
 
 //后台管理的路由建的单独的js: management.js
