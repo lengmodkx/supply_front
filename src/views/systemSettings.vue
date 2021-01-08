@@ -64,16 +64,6 @@
       openTag(tagName) {
         this.mineTag = tagName;
       },
-    },
-    watch: {
-      $route: {
-          handler() {
-            console.log(this.$route.query)
-              this.openTag(this.$route.query.checkTagName)
-              //深度监听，同时也可监听到param参数变化
-        },
-        deep: true,
-    }
     }
   };
 </script>
