@@ -18,13 +18,15 @@ import delOrg from '../views/delOrg.vue'
 import Detail from '../views/detail.vue'
 import loginCompany from '../components/public/companyIn' //企业登陆
 import prolist from '../views/projectList.vue' //项目管理
+import messageAlert from '../views/messageAlert.vue' //内容管理
+
 import systemSettings from '../views/systemSettings.vue' //系统设置
 import enterprisesList from '../views/enterprisesList.vue' //切换企业
 import creatEnter from '../views/creatEnter.vue' //创建企业
 import postArticles from '../views/postArticles.vue' //发布文章
 import articleDetails from '../views/articleDetails.vue' //文章详情
 import articleCenter from '../views/articleCenter.vue' //个人中心
-import contentManagement from '../views/contentManagement.vue' //内容管理
+import contentManagement from '../views/messageAlert.vue' //内容管理
 
 
 //后台管理的路由建的单独的js: management.js
@@ -467,6 +469,17 @@ const router = new Router({
       },
       component: contentManagement
     },
+    {
+      path: "/messageAlert",
+      name: "messageAlert",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+      },
+      component: messageAlert
+    },
+    
     
   ]
 });
