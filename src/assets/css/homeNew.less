@@ -125,7 +125,7 @@
   }
 
   .page-wrapper {
-    padding: 15px 0;
+    padding: 15px 0 0;
 
     .ivu-card-body {
       padding: 0px !important;
@@ -266,29 +266,17 @@
       transition: all .2s ease-in-out;
       border: 1px solid #dcdee2;
       border-color: #e8eaec;
-      .isFixed{
-        position:fixed;
-        background-color:#Fff;
-        top:50px;
-        z-index:9999;
-      }
-      .article-card-header {
-        border-bottom: 1px solid #e8eaec;
-        padding: 14px 16px;
-        line-height: 1;
-        p {
-          display: inline-block;
-          width: 100%;
-          height: 20px;
-          line-height: 20px;
-          font-size: 16px;
-          color: #17233d;
-          font-weight: 500;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+      width: 100%;
+      position: relative;
+ 
+      /deep/.ivu-tabs-nav-scroll {
+        padding-left: 20px;
+
+        .ivu-tabs-nav {
+          padding: 6px 0;
         }
       }
+
     }
 
     //文章
@@ -464,4 +452,37 @@
 
 .ac {
   align-items: center;
+}
+
+.article-card-header {
+  border-bottom: 1px solid #e8eaec;
+  background: red;
+  padding: 14px 16px;
+  line-height: 1;
+  position: absolute;
+  top: -1px;
+  width: 100%;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  display: none;
+
+  p {
+    display: block;
+    // width: 100%;
+    height: 20px;
+    line-height: 20px;
+    font-size: 16px;
+    color: #17233d;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.isFixed {
+  position: absolute;
+  background-color: #Fff;
+  top: 50px;
+  z-index: 9999;
+  display: block;
 }

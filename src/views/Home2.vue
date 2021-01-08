@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-right">
+  <div class="layout-right" id="layout-right" style="position:relative;">
     <Row class-name="page-header" :gutter="15">
       <Col span="16">
       <Card class="col-item">
@@ -22,8 +22,7 @@
                 </div>
               </div>
               <div class="btn-content">
-                <Button icon="ios-create-outline">修改信息</Button>
-                <Button icon="ios-lock-outline">修改密码</Button>
+                <Button icon="ios-create-outline" @click="personal">修改信息</Button>
                 <Button icon="ios-contact-outline" @click="goArticleCenter">个人中心</Button>
                 <Button type="primary" icon="ios-paper-plane-outline">发布需求</Button>
               </div>
@@ -96,42 +95,53 @@
             </div>
           </ul>
         </Card>
-        <div style="width:100%;margin:15px 0" class="article-card">
-          <div class="article-card-header" id="aa" :class="searchBarFixed == true ? 'isFixed' :''">
-            <p>今日头条</p>
-          </div>
-          <div class="article-list">
-            <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
-              <img :src="item.acId==1?item.coverImages:item.acId==2?item.headlineImages.split(',')[0]:item.videoCover"
-                alt="" class="coverImg" v-if="item.coverImages ||item.headlineImages || item.videoCover">
-              <div class="text-content">
-                <div class="content-box">
-                  <div class="article-tit" v-if="item.acId !=2">{{item.acId==1?item.articleTitle:item.videoName}}
-                  </div>
-                  <div class="article-tip" v-text="item.acId==1?item.articlePureContent:item.headlineContent"></div>
-                  <div class="icon-content df">
-                    <div class="df ac">
-                      <img :src="item.acId==1?iconList.videoIcon:item.acId==2?iconList.ttIcon:iconList.textIcon" alt=""
-                        class="createImg">
-                      <span class="createText">{{item.acId==1?'文章':item.acId==2?'微头条':'视频'}}</span>
-                      <img :src="item.memberImage" alt="" class="createImg b50">
-                      <span class="createText">{{item.userName}}</span>
-                    </div>
-                    <span class="createText">{{item.createTime}}</span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <div class="noList" v-if="articleList.length == 0 ">
-              <img src="../assets/images/noproject-new.png" />
-              <p>暂无数据</p>
-            </div>
-          </div>
-        </div>
         </Col>
       </Row>
     </div>
+    <div class="page-wrapper">
+        <div class="article-card" id="aa">
+          <Tabs value="name1">
+            <TabPane label="动态" name="name1">
+              <div class="article-list">
+                <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
+                  <img
+                    :src="item.acId==1?item.coverImages:item.acId==2?item.headlineImages.split(',')[0]:item.videoCover"
+                    alt="" class="coverImg" v-if="item.coverImages ||item.headlineImages || item.videoCover">
+                  <div class="text-content">
+                    <div class="content-box">
+                      <div class="article-tit" v-if="item.acId !=2">{{item.acId==1?item.articleTitle:item.videoName}}
+                      </div>
+                      <div class="article-tip" v-text="item.acId==1?item.articlePureContent:item.headlineContent"></div>
+                      <div class="icon-content df">
+                        <div class="df ac">
+                          <img :src="item.acId==1?iconList.videoIcon:item.acId==2?iconList.ttIcon:iconList.textIcon"
+                            alt="" class="createImg">
+                          <span class="createText">{{item.acId==1?'文章':item.acId==2?'微头条':'视频'}}</span>
+                          <img :src="item.memberImage" alt="" class="createImg b50">
+                          <span class="createText">{{item.userName}}</span>
+                        </div>
+                        <span class="createText">{{item.createTime}}</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="noList" v-if="articleList.length == 0 ">
+                  <img src="../assets/images/noproject-new.png" />
+                  <p>暂无数据</p>
+                </div>
+              </div>
+            </TabPane>
+            <!-- <TabPane label="需求" name="name2">标签二的内容</TabPane>
+            <TabPane label="问答" name="name3">标签三的内容</TabPane> -->
+          </Tabs>
+          
+
+        </div>
+    </div>
+    <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''">
+            <p>今日头条</p>
+          </div>
   </div>
 </template>
 
@@ -224,10 +234,10 @@
     mounted() {
       this.mountedMethods()
       let _this = this
-      window.onscroll = function () {
-        _this.handleScroll
-      }
-      // document.querySelector('#bb').addEventListener('scroll', this.handleScroll)
+      // window.onscroll = function () {
+      //   _this.handleScroll
+      // }
+      // document.querySelector('#layout-right').addEventListener('scroll', this.handleScroll)
     },
     methods: {
       ...mapActions("project", [
@@ -238,14 +248,14 @@
       ]),
       ...mapMutations("project", ["setName"]),
       handleScroll() {
-        var scrollTop = document.querySelector('#bb').pageYOffset || document.querySelector('#bb').scrollTop
+        var scrollTop = document.querySelector('#layout-right').pageYOffset || document.querySelector('#layout-right').scrollTop
         var offsetTop = document.querySelector('#aa').offsetTop
         console.log(scrollTop)
         console.log(offsetTop)
         if (scrollTop > offsetTop) {
-          // this.searchBarFixed = true
+          this.searchBarFixed = true
         } else {
-          // this.searchBarFixed = false
+          this.searchBarFixed = false
         }
       },
       mountedMethods() {
@@ -327,7 +337,7 @@
         this.$router.push({
           name: "articleDetails",
           params: {
-            articleInfoList:item
+            articleInfoList: item
           }
         });
       },
@@ -339,7 +349,12 @@
             'userInfo': this.userInfo
           }
         });
-      }
+      },
+      //修改信息
+      personal() {
+        this.$router.push("/personal");
+        this.popVisible = "none";
+      },
     }
   };
 </script>
