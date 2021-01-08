@@ -1697,3 +1697,77 @@ export function searchTaskByExamples(param) {
         }
     })
 }
+
+//工作台个人信息
+export function workBenchInfo(orgId) {
+    return fetch({
+        url: `/workBenchInfo`,
+        method: 'get', // 请求方法
+        params:{
+            orgId:orgId,
+        }
+    })
+}
+
+//发布文章
+export function article(data) {
+    return fetch({
+        url: `/article/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//文章列表
+export function allArtile(data) {
+    return fetch({
+        url: `/article/allArtile`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//粉丝和关注的人列表
+export function allConnectionUser(data) {
+    return fetch({
+        url: `/article/allConnectionUser`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//分类列表
+export function articleClass(data) {
+    return fetch({
+        url: `/articleClass/list`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//关注/取关
+export function attentionUserStatus(data) {
+    return fetch({
+        url: `/article/attentionUserStatus`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//我的文章列表
+export function myArticle(data) {
+    return fetch({
+        url: `/article/myArticle`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//删除我的文章
+export function deleteArticle(data) {
+    return fetch({
+        url: `/article/deleteArticle`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
