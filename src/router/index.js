@@ -21,6 +21,12 @@ import prolist from '../views/projectList.vue' //项目管理
 import systemSettings from '../views/systemSettings.vue' //系统设置
 import enterprisesList from '../views/enterprisesList.vue' //切换企业
 import creatEnter from '../views/creatEnter.vue' //创建企业
+import postArticles from '../views/postArticles.vue' //发布文章
+import articleDetails from '../views/articleDetails.vue' //文章详情
+import articleCenter from '../views/articleCenter.vue' //个人中心
+import contentManagement from '../views/contentManagement.vue' //内容管理
+
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -35,7 +41,8 @@ const router = new Router({
       path: "/material", // 素材裤
       component: Material,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        name:'网盘'
       }
     },
    
@@ -66,7 +73,8 @@ const router = new Router({
       name: 'members',
       component: members,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        name:"团队"
       }
     },
     {
@@ -164,6 +172,7 @@ const router = new Router({
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
         keepAlive: false,
+        name:'首页'
       }
     },
     {
@@ -380,7 +389,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:'项目管理'
       },
       component: prolist
     },
@@ -390,7 +400,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:'设置'
       },
       component: systemSettings
     },
@@ -414,7 +425,48 @@ const router = new Router({
       },
       component: creatEnter
     },
-
+    {
+      path: "/postArticles",
+      name: "postArticles",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: postArticles
+    },
+    {
+      path: "/articleDetails",
+      name: "articleDetails",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: articleDetails
+    },
+    {
+      path: "/articleCenter",
+      name: "articleCenter",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:''
+      },
+      component: articleCenter
+    },
+    {
+      path: "/contentMan",
+      name: "contentMan",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"内容管理"
+      },
+      component: contentManagement
+    },
     
   ]
 });
