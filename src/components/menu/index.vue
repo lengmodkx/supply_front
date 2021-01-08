@@ -54,9 +54,11 @@
                             <DropdownMenu slot="list" class="drop">
                                 <template v-for="(children, indexs) in item.childNode">
                                     <template v-if="children.childNode">
-                                        <Dropdown placement="right-start"   class="menu-dropdown" transfer>
-                                            <MenuItem :name="children.name">{{ children.text }}<Icon type="ios-arrow-forward" class="downIcon"></Icon></MenuItem>
-                                            
+                                        <Dropdown placement="right-start" class="menu-dropdown" transfer>
+                                            <MenuItem :name="children.name">{{ children.text }}<Icon
+                                                type="ios-arrow-forward" class="downIcon"></Icon>
+                                            </MenuItem>
+
                                             <DropdownMenu slot="list" class="drops">
                                                 <DropdownItem v-for="(sonItem, sonIndex) in children.childNode"
                                                     :key="sonIndex">
@@ -66,7 +68,7 @@
                                         </Dropdown>
                                     </template>
                                     <template v-else>
-                                        <DropdownItem  :key="indexs">
+                                        <DropdownItem :key="indexs">
                                             <MenuItem :name="children.name">{{ children.text }}</MenuItem>
                                         </DropdownItem>
                                     </template>
@@ -160,39 +162,6 @@
                         oneName: "团队",
                         name: "7",
                         icon: "tuanduiguanli",
-                    },
-                    {
-                        oneName: "设置",
-                        name: "8",
-                        icon: "shezhi1",
-                        childNode: [{
-                                text: "基础信息",
-                                name: "8,0"
-                            },
-                            {
-                                text: "成员",
-                                name: "8,1"
-                            },
-                            {
-                                text: "组织架构",
-                                name: "8,2"
-                            },
-                            {
-                                text: "企业权限",
-                                name: "8,3"
-                            },
-                            {
-                                text: "项目权限",
-                                name: "8,4"
-                            }, {
-                                text: "操作日志",
-                                name: "8,5"
-                            },
-                            {
-                                text: "导出申请",
-                                name: "8,6"
-                            }
-                        ]
                     },
                     {
                         oneName: "我的",
@@ -298,6 +267,39 @@
                                 text: "评价管理",
                                 name: "14"
                             },
+                        ]
+                    },
+                    {
+                        oneName: "设置",
+                        name: "8",
+                        icon: "shezhi1",
+                        childNode: [{
+                                text: "基础信息",
+                                name: "8,0"
+                            },
+                            {
+                                text: "成员",
+                                name: "8,1"
+                            },
+                            {
+                                text: "组织架构",
+                                name: "8,2"
+                            },
+                            {
+                                text: "企业权限",
+                                name: "8,3"
+                            },
+                            {
+                                text: "项目权限",
+                                name: "8,4"
+                            }, {
+                                text: "操作日志",
+                                name: "8,5"
+                            },
+                            {
+                                text: "导出申请",
+                                name: "8,6"
+                            }
                         ]
                     },
                 ],
