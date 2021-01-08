@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-right" id="layout-right" style="position:relative;">
+  <div class="layout-right" id="layout-right" style="position:relative;" ref="father">
     <Row class-name="page-header" :gutter="15">
       <Col span="16">
       <Card class="col-item">
@@ -99,49 +99,50 @@
       </Row>
     </div>
     <div class="page-wrapper">
-        <div class="article-card" id="aa">
-          <Tabs value="name1">
-            <TabPane label="动态" name="name1">
-              <div class="article-list">
-                <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
-                  <img
-                    :src="item.acId==1?item.coverImages:item.acId==2?item.headlineImages.split(',')[0]:item.videoCover"
-                    alt="" class="coverImg" v-if="item.coverImages ||item.headlineImages || item.videoCover">
-                  <div class="text-content">
-                    <div class="content-box">
-                      <div class="article-tit" v-if="item.acId !=2">{{item.acId==1?item.articleTitle:item.videoName}}
-                      </div>
-                      <div class="article-tip" v-text="item.acId==1?item.articlePureContent:item.headlineContent"></div>
-                      <div class="icon-content df">
-                        <div class="df ac">
-                          <img :src="item.acId==1?iconList.videoIcon:item.acId==2?iconList.ttIcon:iconList.textIcon"
-                            alt="" class="createImg">
-                          <span class="createText">{{item.acId==1?'文章':item.acId==2?'微头条':'视频'}}</span>
-                          <img :src="item.memberImage" alt="" class="createImg b50">
-                          <span class="createText">{{item.userName}}</span>
-                        </div>
-                        <span class="createText">{{item.createTime}}</span>
-                      </div>
+      <div class="article-card" id="aa">
+        <Tabs :value="tabName" @on-click="checkTab">
+          <TabPane label="动态" name="dt">
+            <div class="article-list">
+              <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
+                <img :src="item.acId==1?item.coverImages:item.acId==2?item.headlineImages.split(',')[0]:item.videoCover"
+                  alt="" class="coverImg" v-if="item.coverImages ||item.headlineImages || item.videoCover">
+                <div class="text-content">
+                  <div class="content-box">
+                    <div class="article-tit" v-if="item.acId !=2">{{item.acId==1?item.articleTitle:item.videoName}}
                     </div>
-
+                    <div class="article-tip" v-text="item.acId==1?item.articlePureContent:item.headlineContent"></div>
+                    <div class="icon-content df">
+                      <div class="df ac">
+                        <img :src="item.acId==1?iconList.videoIcon:item.acId==2?iconList.ttIcon:iconList.textIcon"
+                          alt="" class="createImg">
+                        <span class="createText">{{item.acId==1?'文章':item.acId==2?'微头条':'视频'}}</span>
+                        <img :src="item.memberImage" alt="" class="createImg b50">
+                        <span class="createText">{{item.userName}}</span>
+                      </div>
+                      <span class="createText">{{item.createTime}}</span>
+                    </div>
                   </div>
-                </div>
-                <div class="noList" v-if="articleList.length == 0 ">
-                  <img src="../assets/images/noproject-new.png" />
-                  <p>暂无数据</p>
+
                 </div>
               </div>
-            </TabPane>
-            <!-- <TabPane label="需求" name="name2">标签二的内容</TabPane>
-            <TabPane label="问答" name="name3">标签三的内容</TabPane> -->
-          </Tabs>
-          
-
-        </div>
+              <div class="noList" v-if="articleList.length == 0 ">
+                <img src="../assets/images/noproject-new.png" />
+                <p>暂无数据</p>
+              </div>
+            </div>
+          </TabPane>
+           <!-- <TabPane label="需求" name="name2">标签二的内容</TabPane> -->
+            <!-- <TabPane label="问答" name="name3">标签三的内容</TabPane> -->
+        </Tabs>
+      </div>
     </div>
-    <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''">
-            <p>今日头条</p>
-          </div>
+    <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''" :style="{width:fatherWidth}">
+      <Tabs :value="tabName" @on-click="checkTab">
+        <TabPane label="动态" name="dt"></TabPane>
+        <!-- <TabPane label="需求" name="name2"></TabPane> -->
+        <!-- <TabPane label="问答" name="name3"></TabPane> -->
+      </Tabs>
+    </div>
   </div>
 </template>
 
@@ -223,7 +224,9 @@
           textIcon: require('../assets/images/articles/text.png'),
         },
         articleInfoList: {},
-        searchBarFixed: false
+        searchBarFixed: false,
+        fatherWidth: '0px',
+        tabName:'dt'
       };
     },
     computed: {
@@ -234,10 +237,11 @@
     mounted() {
       this.mountedMethods()
       let _this = this
-      // window.onscroll = function () {
-      //   _this.handleScroll
-      // }
-      // document.querySelector('#layout-right').addEventListener('scroll', this.handleScroll)
+      this.fatherWidth = this.$refs.father.offsetWidth + 'px'
+      window.onresize = () => {
+        this.fatherWidth = this.$refs.father.offsetWidth + 'px'
+      }
+      document.querySelector('#layout-right').addEventListener('scroll', this.handleScroll)
     },
     methods: {
       ...mapActions("project", [
@@ -248,10 +252,9 @@
       ]),
       ...mapMutations("project", ["setName"]),
       handleScroll() {
-        var scrollTop = document.querySelector('#layout-right').pageYOffset || document.querySelector('#layout-right').scrollTop
+        var scrollTop = document.querySelector('#layout-right').pageYOffset || document.querySelector('#layout-right')
+          .scrollTop
         var offsetTop = document.querySelector('#aa').offsetTop
-        console.log(scrollTop)
-        console.log(offsetTop)
         if (scrollTop > offsetTop) {
           this.searchBarFixed = true
         } else {
@@ -355,8 +358,11 @@
         this.$router.push("/personal");
         this.popVisible = "none";
       },
-      moreMessage(){
+      moreMessage() {
         this.$router.push("/messageAlert");
+      },
+      checkTab(name){
+          this.tabName=name
       }
     }
   };
