@@ -7,7 +7,7 @@ const store = {
     token: null,
     view: '看板视图',
     activeHeaderTag: -1,
-    header:true,
+    header:false,
   },
   mutations: {
     updateLoading (state, data) {
