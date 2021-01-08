@@ -245,13 +245,7 @@
         this.$store.dispatch("news/getNewsCount");
       },
       goProList() {
-        this.$router.push({
-          path: "/prolist/" + localStorage.companyId,
-          query: {
-            from: "tips"
-          }
-        });
-        this.$store.commit("app/changeHeaderTag", 1);
+        this.$router.push("/messageAlert");
       },
       showHeaderTag(id) {
         if (id === 6) {

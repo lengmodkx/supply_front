@@ -35,7 +35,7 @@
       <Card class="col-item">
         <div class="tit df jsb">
           <span>消息通知</span>
-          <span class="more">更多</span>
+          <span class="more" @click="moreMessage">更多</span>
         </div>
         <div class="mess-content">
           <div class="df jsb mess-item" v-for="item in messageList">
@@ -322,7 +322,7 @@
           param: 0
         };
         userMessage(data).then(res => {
-          this.messageList = res.data.list;
+          this.messageList = res.data.records;
           this.$Loading.finish();
         });
       },
@@ -355,6 +355,9 @@
         this.$router.push("/personal");
         this.popVisible = "none";
       },
+      moreMessage(){
+        this.$router.push("/messageAlert");
+      }
     }
   };
 </script>
