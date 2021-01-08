@@ -11,11 +11,25 @@
                             </i>
                             <span>{{ item.oneName }}</span>
                         </template>
-
                         <template v-for="(value, i) in item.childNode">
-                            <menu-item :name="value.name" :key="i">
-                                <span>{{ value.text }}</span>
-                            </menu-item>
+                            <template v-if="value.childNode">
+                                <Submenu :key="i" :name="value.name">
+                                    <template slot="title">
+                                        <span>{{ value.text }}</span>
+                                    </template>
+
+                                    <template v-for="(sonItem,sonIndex) in value.childNode">
+                                        <menu-item :name="sonItem.name" :key="sonIndex">
+                                            <span>{{ sonItem.text }}</span>
+                                        </menu-item>
+                                    </template>
+                                </Submenu>
+                            </template>
+                            <template v-else>
+                                <menu-item :name="value.name" :key="i">
+                                    <span>{{ value.text }}</span>
+                                </menu-item>
+                            </template>
                         </template>
                     </Submenu>
                 </template>
@@ -35,14 +49,28 @@
                     <template v-if="item.childNode">
                         <Dropdown :key="index" placement="right-start" class="menu-dropdown" transfer>
                             <MenuItem :name="item.name">
-                            <!-- <i> -->
                             <svg-icon :name="item.icon" class="svgIcon"></svg-icon>
-                            <!-- </i> -->
                             </MenuItem>
                             <DropdownMenu slot="list" class="drop">
-                                <DropdownItem v-for="(children, index) in item.childNode" :key="index">
-                                    <MenuItem :name="children.name">{{ children.text }}</MenuItem>
-                                </DropdownItem>
+                                <template v-for="(children, indexs) in item.childNode">
+                                    <template v-if="children.childNode">
+                                        <Dropdown placement="right-start"   class="menu-dropdown" transfer>
+                                            <MenuItem :name="children.name">{{ children.text }}<Icon type="ios-arrow-forward" class="downIcon"></Icon></MenuItem>
+                                            
+                                            <DropdownMenu slot="list" class="drops">
+                                                <DropdownItem v-for="(sonItem, sonIndex) in children.childNode"
+                                                    :key="sonIndex">
+                                                    <MenuItem :name="sonItem.name">{{ sonItem.text }}</MenuItem>
+                                                </DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </template>
+                                    <template v-else>
+                                        <DropdownItem  :key="indexs">
+                                            <MenuItem :name="children.name">{{ children.text }}</MenuItem>
+                                        </DropdownItem>
+                                    </template>
+                                </template>
                             </DropdownMenu>
                         </Dropdown>
                     </template>
@@ -170,13 +198,95 @@
                         oneName: "我的",
                         name: "10",
                         icon: "content",
+                        childNode: [{
+                                text: "近期的事",
+                                name: "15",
+                                childNode: [{
+                                        text: "任务",
+                                        name: "nearThing,1"
+                                    },
+                                    {
+                                        text: "日程",
+                                        name: "nearThing,2"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "任务",
+                                name: "16",
+                                childNode: [{
+                                        text: "我执行的",
+                                        name: "task,1"
+                                    },
+                                    {
+                                        text: "我创建的",
+                                        name: "task,2"
+                                    },
+                                    {
+                                        text: "我参与的",
+                                        name: "task,3"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "日程",
+                                name: "17",
+                                childNode: [{
+                                        text: "未来的日程",
+                                        name: "schedule,1"
+                                    },
+                                    {
+                                        text: "过去的日程",
+                                        name: "schedule,2"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "文件",
+                                name: "18",
+                                childNode: [{
+                                        text: "我创建的",
+                                        name: "file,1"
+                                    },
+                                    {
+                                        text: "我参与的",
+                                        name: "file,2"
+                                    },
+                                    {
+                                        text: "我下载的",
+                                        name: "file,3"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "收藏",
+                                name: "19",
+                                childNode: [{
+                                        text: "任务",
+                                        name: "collect,2,任务"
+                                    },
+                                    {
+                                        text: "分享",
+                                        name: "collect,3,分享"
+                                    },
+                                    {
+                                        text: "文件",
+                                        name: "collect,4,文件"
+                                    },
+                                    {
+                                        text: "日程",
+                                        name: "collect,5,日程"
+                                    }
+                                ]
+                            },
+
+                        ]
                     },
                     {
                         oneName: "内容管理",
                         name: "11",
                         icon: "content",
-                        childNode:[
-                            {
+                        childNode: [{
                                 text: "发布",
                                 name: "12"
                             },
@@ -206,6 +316,7 @@
             },
             goto(tagName) {
                 let name = tagName.split(",")[0]
+                console.log(tagName)
                 if (name == 1) {
                     this.$router.push("/org/" + localStorage.companyId);
                 } else if (name == 2) {
@@ -250,11 +361,20 @@
                     });
                 } else if (name == 9) {
                     this.$router.push("/postArticles");
-                } else if (name == 10) {}
-                else if (name == 12) {
+                } else if (name == 10) {} else if (name == 12) {
                     this.$router.push("/postArticles");
-                }else if (name == 13) {
+                } else if (name == 13) {
                     this.$router.push("/contentMan");
+                } else if (name == 14) {
+                    //评价管理
+                } else {
+                    //我的页面
+                    this.$router.push({
+                        path: "/mine",
+                        query: {
+                            'checkTagName': tagName,
+                        }
+                    });
                 }
             },
         },

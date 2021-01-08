@@ -59,10 +59,10 @@
 }
 
 
-  
+
 .ivu-select-dropdown {
     padding: 0 !important;
-    top:0;
+    top: 0;
     max-height: none !important;
 }
 
@@ -79,6 +79,7 @@
     margin-top: -48px;
     z-index: 101;
     overflow-x: scroll;
+
     .menuImg {
         width: 20px;
         height: 20px;
@@ -117,9 +118,11 @@
             color: #ffffff;
         }
     }
+
     .big-Menu {
         transition: all 0.3s;
         min-height: 100%;
+
         .ivu-menu-item {
             display: flex;
             align-items: center;
@@ -161,6 +164,8 @@
                 background: #f5f5f5;
                 color: #000000;
             }
+           
+            
         }
 
         li {
@@ -193,4 +198,26 @@
     padding: 15px;
     flex: 1;
     overflow: auto;
+}
+
+
+
+.menu-dropdown {
+    width: 100%;
+}
+
+.ivu-menu-item {
+    display: flex;
+    // justify-content: center;
+}
+
+.drop {
+    /deep/.ivu-dropdown {
+        display: block;
+        .ivu-dropdown-rel {
+            display: flex;
+            justify-content: space-between;
+padding: 7px 16px;
+        }
+    }
 }
