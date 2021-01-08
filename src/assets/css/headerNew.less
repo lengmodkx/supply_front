@@ -10,71 +10,18 @@
 
   .left-header {
     display: flex;
-
-    .logo-big {
-      width: 240px;
+    align-items: center;
+    transition: all 0.3s;
+    .svgIcon {
+      margin:  0 15px;
+      width: 20px;
     }
-
-    .logo-small {
-      width: 80px;
-    }
-
-    .logo {
-      background: #002140;
-      border-bottom: 1px solid #002140;
-      color: #fff;
-      font-size: 20px;
-      box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      transition: all 0.3s;
-      align-items: center;
-      img {
-        width: 16px;
-        height: 30px;
-      }
-      .header-text {
-        font-size: 20px;
-        margin-left: 10px;
-        transition: all 1s;
-      }
-      .small {
-        display: none;
-      }
-
-      .big {
-        display: block;
-        line-height: 48px;
-      }
-    }
-
-    ul {
-      display: flex;
-
-      li {
-        cursor: pointer;
-        padding: 0 1.2em;
-        line-height: 48px;
-
-        i {
-          font-size: 14px;
-          padding-right: 3px;
-        }
-      }
-
-      li:hover {
-        color: #2d8cf0;
-        border-bottom: 2px solid #2d8cf0;
-      }
-
-      .hover {
-        color: #2d8cf0;
-        border-bottom: 2px solid #2d8cf0;
-      }
-    }
-
-
+  }
+  .padding-small {
+    padding-left: 80px;
+  }
+  .padding-big {
+    padding-left: 210px;
   }
   .menu {
     line-height: 48px;
