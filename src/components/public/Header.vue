@@ -274,9 +274,6 @@
         this.tagHeader = false;
         this.showtag = "";
       },
-      getPath(val) {
-        this.$store.commit("app/changeHeader", true);
-      },
       getDown() {
         window.location.href =
           "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/ALDBIM2020.exe";
@@ -289,7 +286,6 @@
     },
     watch: {
       $route(newRoute) {
-        this.getPath()
       this.setBreadCrumb(newRoute)
     }
     }
