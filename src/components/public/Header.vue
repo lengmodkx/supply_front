@@ -202,11 +202,11 @@
         });
       },
       personal() {
-        let routeUrl = this.$router.resolve({
-          path: "/personal"
-        });
-        window.open(routeUrl.href, "_blank");
-        // this.$router.push("/personal");
+        // let routeUrl = this.$router.resolve({
+        //   path: "/personal"
+        // });
+        // window.open(routeUrl.href, "_blank");
+        this.$router.push("/personal");
         this.popVisible = "none";
       },
       goout() {
