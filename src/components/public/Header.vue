@@ -2,10 +2,7 @@
   <div>
     <header class="header" id="header">
       <div class="left-header" :class="header?'padding-big':'padding-small'">
-        <!-- 
-          <li :class="{ hover: activeHeaderTag == 4 }" @click="myPage">我的</li>
-        -->
-        <svg-icon :name="header ? 'push' : 'pull'" class="svgIcon" @click="collapsedSider"></svg-icon>
+        <svg-icon :name="header ? 'push' : 'pull'" class="svgIcon" @click="collapsedSider" v-if="showLeftMenu"></svg-icon>
         <!-- <Breadcrumbs :list="breadCrumbList"></Breadcrumbs> -->
       </div>
       <div class="df ac">
@@ -108,7 +105,7 @@
         title: "",
       };
     },
-
+    props: ["showLeftMenu"],
     mounted() {
       this.setBreadCrumb(this.$route)
       this.setHomeRoute(this.$router.options.routes)

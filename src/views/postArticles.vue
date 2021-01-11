@@ -59,7 +59,7 @@
                     <div class="video-upload">
                         <Upload type="drag" :action="host" :format="['mp4', 'avi']" accept="video/mp4,video/avi"
                             :show-upload-list="true" :before-upload="videoBeforeUpload" ref="videoUpload"
-                            :max-size="5120" :on-exceeded-size="videoMaxSize">
+                            :max-size="10240" :on-exceeded-size="videoMaxSize">
                             <div style="padding: 20px 0">
                                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                                 <p>点击上传或将文件拖入此区域</p>
@@ -114,7 +114,8 @@
                                 <div v-for="(item, index) in headlinesImg" class="headlines-upload-item">
                                     <img :src="item" />
                                     <div class="demo-upload-list-cover">
-                                        <Icon type="ios-trash-outline" @click.native="handleRemove(item, index)"></Icon>
+                                        <Icon type="ios-trash-outline" @click.native="handleRemoveVideo(item, index)">
+                                        </Icon>
                                     </div>
                                 </div>
                             </div>
@@ -231,21 +232,24 @@
             videoMaxSize(file) {
                 this.$Notice.warning({
                     title: "超过文件大小限制",
-                    desc: "文件  " + file.name + " 过大, 超过4M.",
+                    desc: "文件  " + file.name + " 过大, 超过10M.",
                 });
             },
             handleBeforeUpload(file) {
                 console.log(file);
+                let fileName = ''
+                fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
                 var _this = this;
                 client
-                    .multipartUpload(file.name, file)
+                    .multipartUpload(fileName, file)
                     .then(function (result) {
                         console.log(result);
                         if (_this.clickTypeAcName == "文章") {
                             let Img1 = _this.getCaption(result.res.requestUrls[0]);
                             _this.uploadList.push(Img1);
                         } else if (_this.clickTypeAcName == "视频") {
-                            _this.videoCover.push(result.res.requestUrls[0]);
+                            let Img3 = _this.getCaption(result.res.requestUrls[0]);
+                            _this.videoCover.push(Img3);
                         } else if (_this.clickTypeAcName == "微头条") {
                             let Img2 = _this.getCaption(result.res.requestUrls[0]);
                             _this.headlinesImg.push(Img2);
@@ -263,8 +267,10 @@
                     fileName: file.name,
                 };
                 _this.videoList.push(obj);
+                let fileName = ''
+                fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
                 client
-                    .multipartUpload(file.name, file)
+                    .multipartUpload(fileName, file)
                     .then(function (result) {
                         let videoLink = _this.getCaption(result.res.requestUrls[0]);
                         _this.videoAddress.push(videoLink);
@@ -326,6 +332,8 @@
             },
             editMethod() {
                 let item = this.$route.params.item;
+                console.log(item)
+
                 if (item.acId == 1) {
                     this.clickTypeAcName = "文章";
                     this.param.articleId = item.articleId;
@@ -345,6 +353,16 @@
                     this.videoParam.videoName = item.videoName;
                     this.videoCover.push(item.videoCover);
                     this.videoAddress = item.videoAddress.split(",");
+                    let obj = {
+                        percentage: 100,
+                        showProgress: false,
+                        fileName: '',
+                    };
+                    for(let i of this.videoAddress){
+                        obj.fileName=i
+                        this.videoList.push(obj)
+                    }
+                    console.log(item.videoAddress.split(","))
                 }
             },
             saveAxios(param) {
@@ -363,7 +381,25 @@
                         }
                     });
                 }
-            }
+            },
+            random_string(len) {
+                len = len || 32;
+                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+                var maxPos = chars.length;
+                var pwd = "";
+                for (var i = 0; i < len; i++) {
+                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+                }
+                return pwd;
+            },
+            get_suffix(filename) {
+                var pos = filename.lastIndexOf(".");
+                var suffix = "";
+                if (pos !== -1) {
+                    suffix = filename.substring(pos);
+                }
+                return suffix;
+            },
         },
     };
 </script>
@@ -489,13 +525,14 @@
     .video-upload {
         margin-left: 120px;
         margin-top: 20px;
-        width: 400px;
-
+        width: 600px;
+        .ivu-upload {
+            width: 400px;
+        }
         .video-list {
             display: flex;
             justify-content: space-between;
-
-            .video-list-cover {}
+            margin-bottom: 5px;
         }
     }
 
@@ -507,6 +544,22 @@
             width: 100px;
             display: inline-block;
             margin-right: 10px;
+            position: relative;
+
+            &:hover {
+                .demo-upload-list-cover {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+
+            i {
+                color: #fff;
+                font-size: 30px;
+                cursor: pointer;
+                margin: 0 2px;
+            }
 
             img {
                 width: 100%;

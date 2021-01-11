@@ -263,7 +263,7 @@
       },
       mountedMethods() {
         this.loadings = true
-        this.$Loading.start();
+        this.$Spin.show();
         document.cookie = "orgId" + "=" + localStorage.companyId + ";" + "path=/";
         document.cookie = "userId" + "=" + localStorage.userId + ";" + "path=/";
         this.$store.state.project.loading = true;
@@ -326,32 +326,26 @@
         };
         userMessage(data).then(res => {
           this.messageList = res.data.records;
-          this.$Loading.finish();
         });
       },
       //文章列表
       getattentionList() {
         allArtile(this.articleParam).then(response => {
           this.articleList = response.data.records
+          console.log(this.articleList)
+          this.$Spin.hide();
         })
       },
       //文章详情
       goArticleInfo(item) {
-        this.$router.push({
-          name: "articleDetails",
-          params: {
-            articleInfoList: item
-          }
-        });
+        console.log(item)
+        this.$router.push("/articleDetails")
+        localStorage.setItem('articleInfoList',JSON.stringify(item))
       },
       //去个人中心
       goArticleCenter() {
-        this.$router.push({
-          name: "articleCenter",
-          params: {
-            'userInfo': this.userInfo
-          }
-        });
+        this.$router.push("/articleCenter")
+        localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
       },
       //修改信息
       personal() {

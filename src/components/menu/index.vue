@@ -43,7 +43,7 @@
                 </template>
             </template>
         </Menu>
-        <Menu width="80px" v-else class="small-Menu" :theme="isSubMenuTheme()" @on-select="goto">
+        <Menu width="60px" v-else class="small-Menu" :theme="isSubMenuTheme()" @on-select="goto">
             <div>
                 <template v-for="(item, index) in MenuList">
                     <template v-if="item.childNode">

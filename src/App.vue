@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-main v-if="hasHeader" :companyId="companyId" :avatar="avatar"></header-main>
+    <header-main v-if="hasHeader" :showLeftMenu="showLeftMenu"></header-main>
     <div class="content-main">
       <div class="wrap-box layout df">
         <Left-Menu v-if="showLeftMenu"></Left-Menu>
@@ -70,7 +70,9 @@
           this.$route.path.indexOf("/detail") < 0 &&
           this.$route.path !== "/loginCompany" &&
           this.$route.path !== "/enterprisesList" &&
-          this.$route.path !== "/creatEnter";
+          this.$route.path !== "/creatEnter" &&
+          this.$route.path.indexOf("/project")
+          ;
       },
       reload() {
         this.isRouterAlive = false;

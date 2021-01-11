@@ -148,6 +148,7 @@
         mounted() {
             this.loading = true
             this.userInfo = this.$route.params.userInfo
+            this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             this.getMyArticle()
             let _this = this;
             window.onscroll = function () {
