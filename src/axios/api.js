@@ -1771,3 +1771,13 @@ export function deleteArticle(data) {
         params: data
     })
 }
+
+
+//编辑我的文章
+export function editArticle(data) {
+    return fetch({
+        url: `/article/edit`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}

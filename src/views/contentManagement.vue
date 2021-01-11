@@ -12,7 +12,8 @@
                                 <DatePicker :value="dateValue" type="daterange" placeholder="开始日期 ~ 结束日期"
                                     style="width: 200px"></DatePicker>
                                 <div class="search-input">
-                                    <Input search enter-button placeholder="搜索关键词" @on-search="searchData" v-model="articleParam.keyword"/>
+                                    <Input search enter-button placeholder="搜索关键词" @on-search="searchData"
+                                        v-model="articleParam.keyword" />
                                 </div>
                             </div>
                             <div class="totalSize">共{{totalSize}}条内容</div>
@@ -37,8 +38,8 @@
                                 <div class="list-item-right">
                                     <div>{{item.createTime}}</div>
                                     <div class="btn-content">
-                                        <Button type="text">查看评论</Button>
-                                        <Button type="text">修改</Button>
+                                        <!-- <Button type="text">查看评论</Button> -->
+                                        <Button type="text" @click="editArticle(item)">修改</Button>
                                         <Button type="text" @click="deleteArticle(item)">删除</Button>
 
                                     </div>
@@ -89,9 +90,9 @@
                 articleParam: {
                     pageNum: 1,
                     acId: '',
-                    keyword:'',
-                    startTime:'',
-                    endTime:''
+                    keyword: '',
+                    startTime: '',
+                    endTime: ''
                 },
                 dateValue: []
             };
@@ -108,10 +109,10 @@
                     this.totalSize = response.data.total
                 })
             },
-            searchData(){
-                if(this.dateValue.length !=0){
-                    this.articleParam.startTime=new Date(this.dateValue[0]).getTime()
-                    this.articleParam.endTime=new Date(this.dateValue[1]).getTime()
+            searchData() {
+                if (this.dateValue.length != 0) {
+                    this.articleParam.startTime = new Date(this.dateValue[0]).getTime()
+                    this.articleParam.endTime = new Date(this.dateValue[1]).getTime()
                 }
                 this.getMyArticle()
             },
@@ -139,6 +140,15 @@
                     this.getMyArticle()
                 })
             },
+            editArticle(item) {
+                this.$router.push({
+                    name: "postArticles",
+                    params: {
+                        type: 'edit',
+                        item: item
+                    }
+                });
+            }
         }
     };
 </script>
