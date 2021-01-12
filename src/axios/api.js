@@ -1699,13 +1699,11 @@ export function searchTaskByExamples(param) {
 }
 
 //工作台个人信息
-export function workBenchInfo(orgId) {
+export function workBenchInfo(data) {
     return fetch({
         url: `/workBenchInfo`,
         method: 'get', // 请求方法
-        params:{
-            orgId:orgId,
-        }
+        params:data
     })
 }
 
@@ -1726,6 +1724,16 @@ export function allArtile(data) {
         params: data
     })
 }
+
+//我关注人的文章列表
+export function attentionListArticle(data) {
+    return fetch({
+        url: `/article/attentionListArticle`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
 
 //粉丝和关注的人列表
 export function allConnectionUser(data) {
@@ -1796,6 +1804,15 @@ export function commentList(data) {
 export function commentAdd(data) {
     return fetch({
         url: `/comment/add`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//根据文章id查询评论列表
+export function commentListByArticleId(data) {
+    return fetch({
+        url: `/comment/commentListByArticleId`,
         method: 'get', // 请求方法
         params: data
     })

@@ -27,6 +27,7 @@ import postArticles from '../views/postArticles.vue' //发布文章
 import articleDetails from '../views/articleDetails.vue' //文章详情
 import articleCenter from '../views/articleCenter.vue' //个人中心
 import contentManagement from '../views/contentManagement.vue' //内容管理
+import commentManagement from '../views/commentManagement.vue' //评价管理
 
 
 //后台管理的路由建的单独的js: management.js
@@ -479,7 +480,17 @@ const router = new Router({
       },
       component: messageAlert
     },
-    
+    {
+      path: "/commentMan",
+      name: "commentMan",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"评价管理"
+      },
+      component: commentManagement
+    },
     
   ]
 });

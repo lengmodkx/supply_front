@@ -369,6 +369,7 @@
                     this.$router.push("/contentMan");
                 } else if (name == 14) {
                     //评价管理
+                    this.$router.push("/commentMan");
                 } else {
                     //我的页面
                     this.$router.push({

@@ -101,7 +101,7 @@
     <div class="page-wrapper">
       <div class="article-card" id="aa">
         <Tabs :value="tabName" @on-click="checkTab">
-          <TabPane label="动态" name="dt">
+          <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tabList" :key="index">
             <div class="article-list">
               <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
                 <img :src="item.acId==1?item.coverImages:item.acId==2?item.headlineImages.split(',')[0]:item.videoCover"
@@ -131,14 +131,13 @@
               </div>
             </div>
           </TabPane>
-           <!-- <TabPane label="需求" name="name2">标签二的内容</TabPane> -->
-            <!-- <TabPane label="问答" name="name3">标签三的内容</TabPane> -->
+          <!-- <TabPane label="问答" name="name3">标签三的内容</TabPane> -->
         </Tabs>
       </div>
     </div>
     <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''" :style="{width:fatherWidth}">
       <Tabs :value="tabName" @on-click="checkTab">
-        <TabPane label="动态" name="dt"></TabPane>
+        <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tabList" :key="index"></TabPane>
         <!-- <TabPane label="需求" name="name2"></TabPane> -->
         <!-- <TabPane label="问答" name="name3"></TabPane> -->
       </Tabs>
@@ -157,7 +156,8 @@
     getUserInfo,
     workBenchInfo,
     userMessage,
-    allArtile
+    allArtile,
+    attentionListArticle
   } from "@/axios/api";
   import HomeVue from './Home.vue';
   export default {
@@ -226,7 +226,16 @@
         articleInfoList: {},
         searchBarFixed: false,
         fatherWidth: '0px',
-        tabName:'dt'
+        tabName: 'dt',
+        tabList: [{
+            label: '动态',
+            name: 'dt'
+          },
+          {
+            label: '关注',
+            name: 'gz'
+          },
+        ]
       };
     },
     computed: {
@@ -242,6 +251,22 @@
         this.fatherWidth = this.$refs.father.offsetWidth + 'px'
       }
       document.querySelector('#layout-right').addEventListener('scroll', this.handleScroll)
+      // document.querySelector('#layout-right').onscroll = function () {
+      //   let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      //   let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      //   let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      //   if (scrollTop + windowHeight == scrollHeight && _this.flag == true) {
+      //     _this.articleParam.pageNum++;
+      //     console.log('下拉')
+      //     if (_this.tabName == 'dt') {
+      //       _this.getattentionList()
+      //     } else if (_this.tabName == 'gz') {
+      //       attentionListArticle(_this.articleParam).then(response => {
+      //         _this.articleList = response.data.records
+      //       })
+      //     }
+      //   }
+      // }
     },
     methods: {
       ...mapActions("project", [
@@ -284,7 +309,11 @@
         );
       },
       getUser() {
-        workBenchInfo(localStorage.companyId).then(res => {
+        let param = {
+          orgId: localStorage.companyId,
+          memberId: localStorage.userId
+        }
+        workBenchInfo(param).then(res => {
           if (res.result == 1) {
             this.userInfo = res.data;
           }
@@ -332,7 +361,6 @@
       getattentionList() {
         allArtile(this.articleParam).then(response => {
           this.articleList = response.data.records
-          console.log(this.articleList)
           this.$Spin.hide();
         })
       },
@@ -340,12 +368,12 @@
       goArticleInfo(item) {
         console.log(item)
         this.$router.push("/articleDetails")
-        localStorage.setItem('articleInfoList',JSON.stringify(item))
+        localStorage.setItem('articleInfoList', JSON.stringify(item))
       },
       //去个人中心
       goArticleCenter() {
         this.$router.push("/articleCenter")
-        localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
+        localStorage.setItem('userInfo', JSON.stringify(this.userInfo))
       },
       //修改信息
       personal() {
@@ -355,8 +383,16 @@
       moreMessage() {
         this.$router.push("/messageAlert");
       },
-      checkTab(name){
-          this.tabName=name
+      checkTab(name) {
+        this.tabName = name
+        this.articleParam.pageNum = 1
+        if (name == 'dt') {
+          this.getattentionList()
+        } else if (name == 'gz') {
+          attentionListArticle(this.articleParam).then(response => {
+            this.articleList = response.data.records
+          })
+        }
       }
     }
   };

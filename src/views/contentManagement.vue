@@ -92,7 +92,8 @@
                     acId: '',
                     keyword: '',
                     startTime: '',
-                    endTime: ''
+                    endTime: '',
+                    memberId:localStorage.userId
                 },
                 dateValue: []
             };

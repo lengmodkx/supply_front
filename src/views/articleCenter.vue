@@ -1,5 +1,5 @@
 <template>
-    <div class="center-box">
+    <div class="center-box" id="center-box">
         <div class="center-content">
             <Row :gutter="18">
                 <Col span="18">
@@ -37,7 +37,8 @@
                                             <div class="article-tit">{{item.headlineContent}}</div>
                                             <img :src="item.headlineImages.split(',')[0]" alt="">
                                         </div>
-                                        <div class="deleteBtns" @click="deleteArticle(item)">删除</div>
+                                        <div class="deleteBtns" @click="deleteArticle(item)" v-if="pageType != 'other'">
+                                            删除</div>
                                     </div>
                                 </div>
                             </TabPane>
@@ -54,7 +55,7 @@
                                             <img :src="item.image" alt="">
                                             <div>{{item.userName}}</div>
                                         </div>
-                                        <div class="btns" :class="item.isAttention==0?'no':'yes'"
+                                        <div class="btns" :class="item.isAttention==0?'no':'yes'" v-if="pageType != 'other'"
                                             @click="operation(item,index)">{{item.isAttention==0?'未关注':'已关注'}}</div>
                                     </div>
                                     <div class="no-more" v-if="!flag">没有更多了</div>
@@ -93,7 +94,8 @@
         allConnectionUser,
         attentionUserStatus,
         myArticle,
-        deleteArticle
+        deleteArticle,
+        workBenchInfo
     } from '@/axios/api'
     export default {
         data() {
@@ -103,6 +105,7 @@
                 param: {
                     type: '2',
                     pageNum: 1,
+                    memberId: ''
                 },
                 tabList: [{
                         name: '2',
@@ -113,7 +116,7 @@
                         label: '粉丝'
                     }
                 ],
-                typeShow:'2',
+                typeShow: '2',
                 // 分类id 1文章 2微头条 3视频
                 tabTypeList: [{
                         acId: '0',
@@ -139,7 +142,9 @@
                 articleParam: {
                     pageNum: 1,
                     acId: '',
+                    memberId: ''
                 },
+                pageType: ''
             }
         },
         components: {
@@ -147,15 +152,22 @@
         },
         mounted() {
             this.loading = true
-            this.userInfo = this.$route.params.userInfo
-            this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            this.pageType = this.$route.query.type
+            if (this.pageType == 'other') {
+                this.param.memberId = this.$route.query.id
+                this.articleParam.memberId = this.$route.query.id
+                this.getUser()
+            } else {
+                this.userInfo = this.$route.params.userInfo
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
             this.getMyArticle()
             let _this = this;
-            window.onscroll = function () {
-                let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            document.querySelector('#center-box').onscroll = function () {
+                let scrollTop = document.querySelector('#center-box').scrollTop || document.body.scrollTop;
                 let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-                let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-                if (scrollTop + windowHeight == scrollHeight && _this.flag == true) {
+                let scrollHeight = document.querySelector('#center-box').scrollHeight || document.body.scrollHeight;
+                if (scrollTop + windowHeight==scrollHeight + 48 && _this.flag == true) { 
                     if (_this.center) {
                         _this.articleParam.pageNum++;
                         _this.getMyArticle()
@@ -182,6 +194,8 @@
                 myArticle(this.articleParam).then(response => {
                     if (response.data.records.length < 20) {
                         this.flag = false
+                    }else {
+                        this.flag = true
                     }
                     response.data.records.forEach((item) => {
                         this.listData.push(item)
@@ -227,12 +241,23 @@
                     this.getMyArticle()
                 })
             },
-            showfollow(num){
-                    this.listData = []
-                this.typeShow=num
-                this.center=false
-                this.loading=true
+            showfollow(num) {
+                this.listData = []
+                this.typeShow = num
+                this.center = false
+                this.loading = true
                 this.getList()
+            },
+            getUser() {
+                let param = {
+                    orgId: localStorage.companyId,
+                    memberId:this.param.memberId
+                }
+                workBenchInfo(param).then(res => {
+                    if (res.result == 1) {
+                        this.userInfo = res.data;
+                    }
+                });
             },
         },
 
@@ -246,8 +271,9 @@
         background-color: #F0EFEC;
         color: #333333;
         width: 100%;
-        min-height: 100vh;
+        min-height: 100%;
         box-sizing: border-box;
+        overflow: auto;
 
         .center-left {
             .profile-header {
@@ -365,6 +391,7 @@
                             display: none;
                             cursor: pointer;
                         }
+
                         .list-item-two {
                             img {
                                 width: 86px;

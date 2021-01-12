@@ -37,13 +37,13 @@
                     <Button type="primary" @click="saveComment" class="saveBtn">评论</Button>
                     <div class="comment-list">
                         <div class="comment-item" v-for="item in commentList">
-                            <img :src="item.memberImage" alt="">
+                            <a  :href="'/articleCenter?type=other&id='+item.memberId" target="_blank"
+                                rel="noopener noreferrer"><img :src="item.memberImage" alt=""></a>
+
                             <div class="comment-info">
                                 <div>
-                                    <!-- {{item.memberName}} -->
-                                    <!-- <a class="name" href="/articleCenter" target="_blank"
-                                        rel="noopener noreferrer">啊啊啊</a> -->
-                                    <span class="name">啊啊啊</span>
+                                    <a class="name" :href="'/articleCenter?type=other&id='+item.memberId"
+                                        target="_blank" rel="noopener noreferrer">{{item.memberName}}</a>
                                     <Time :time="item.createTime" />
                                 </div>
                                 <p class="content">{{item.commentName}}</p>
@@ -92,9 +92,9 @@
                 let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                 let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-                if (scrollTop + windowHeight == scrollHeight&& _this.flag == true) {
-                        _this.commentParam.pageNum++;
-                        _this.getCommentList()
+                if (scrollTop + windowHeight == scrollHeight && _this.flag == true) {
+                    _this.commentParam.pageNum++;
+                    _this.getCommentList()
                 }
             }
         },
@@ -110,7 +110,7 @@
             },
             saveComment() {
                 commentAdd(this.param).then(response => {
-                    this.$Message.success("发布评论成功！");
+                    this.$Message.success("发布评论成功！审核中");
                     this.param.commentName = ''
                     this.getCommentList()
                 })

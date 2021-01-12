@@ -1,8 +1,7 @@
 <template>
   <Poptip v-model="visible2" placement="left-start">
     <!-- <Input placeholder="待选择" class="searcher-unit-body" :clearable="closeBtn" v-model="checkMemberName"  /> -->
-    <div class="searcher-unit-body">{{ checkMemberName ? checkMemberName : placeholder }}</div>
-    <Icon type="ios-close-circle" @click.stop="emptyCom" class="close-btn" size="16" color="#808695" />
+    <div class="searcher-unit-body">{{ checkMemberName ? checkMemberName : placeholder }}<Icon type="ios-close-circle" @click.stop="emptyCom" class="close-btn" size="16" color="#808695" /></div>
     <div slot="content">
       <div class="dep-pop">
         <Input prefix="ios-search" placeholder="搜索成员" class="mt10" @on-change="searchOrgProple(searchvalue)" v-model="searchvalue" />
@@ -96,3 +95,11 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.searcher-unit-body {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 7px;
+}
+</style>
