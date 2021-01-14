@@ -1817,3 +1817,12 @@ export function commentListByArticleId(data) {
         params: data
     })
 }
+
+//移除评论
+export function removeComment(data) {
+    return fetch({
+        url: `/comment/remove`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}

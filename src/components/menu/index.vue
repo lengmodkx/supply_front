@@ -166,7 +166,7 @@
                     {
                         oneName: "我的",
                         name: "10",
-                        icon: "content",
+                        icon: "wode",
                         childNode: [{
                                 text: "近期的事",
                                 name: "15",
