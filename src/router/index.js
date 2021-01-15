@@ -28,6 +28,10 @@ import articleDetails from '../views/articleDetails.vue' //文章详情
 import articleCenter from '../views/articleCenter.vue' //个人中心
 import contentManagement from '../views/contentManagement.vue' //内容管理
 import commentManagement from '../views/commentManagement.vue' //评价管理
+import requirements from '../views/requirements.vue' //发布需求
+import ipostedit from '../views/ipostedit.vue' //我发布的需求
+import demandDetails from '../views/demandDetails.vue' //需求详情
+
 
 
 //后台管理的路由建的单独的js: management.js
@@ -491,7 +495,39 @@ const router = new Router({
       },
       component: commentManagement
     },
-    
+    {
+      path: "/requirements",
+      name: "requirements",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"发布需求"
+      },
+      component: requirements
+    },
+    {
+      path: "/ipostedit",
+      name: "ipostedit",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"我发布的"
+      },
+      component: ipostedit
+    },
+    {
+      path: "/demandDetails",
+      name: "demandDetails",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"需求详情"
+      },
+      component: demandDetails
+    },
   ]
 });
 router.afterEach((to, from) => {
