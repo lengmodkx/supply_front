@@ -1,7 +1,7 @@
 <template>
-    <div class="layout-right">
+    <div class="layout-right" id="layout-right">
         <div class="tabContent">
-            <Tabs value="0" @on-click="chenckTab">
+            <Tabs value="0" @on-click="chenckTab" :animated="false">
                 <TabPane :label="item.name" :name="item.acId" v-for="(item,index) in tabTypeList" :key="index">
                     <div class="loading" v-if="loading">
                         <Loading></Loading>
@@ -73,6 +73,10 @@
                                         </div>
                                     </div>
                                 </div> -->
+                            </div>
+                            <div class="noList" v-if="commentList.length == 0 ">
+                                <img src="../assets/images/noproject-new.png" />
+                                <p>暂无数据</p>
                             </div>
                         </div>
                         </Col>
@@ -157,13 +161,33 @@
                 },
                 modal_loading: false,
                 replyText: "",
-                replyIndex:'',
-
+                replyIndex: '',
+                flag: false,
+                commenrFlag: false,
             }
         },
         mounted() {
             this.loading = true
-            this.getMyArticle()
+            this.getMyArticle().then(res => {
+                return this.checkItem(0, this.listData[0]);
+            })
+            document.querySelector('#layout-right').onscroll = function () {
+                let scrollTop = document.querySelector('#layout-right').scrollTop || document.body.scrollTop;
+                let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                let scrollHeight = document.querySelector('#layout-right').scrollHeight || document.body
+                    .scrollHeight;
+                if (scrollTop + windowHeight == scrollHeight + 48) {
+                    if (_this.false) {
+                        _this.articleParam.pageNum++;
+                        _this.getMyArticle()
+                    }
+                    if (_this.commenrFlag) {
+                        _this.param.pageNum++;
+                        _this.getCommentList()
+                    }
+
+                }
+            }
         },
         methods: {
             chenckTab(name) {
@@ -178,24 +202,37 @@
                 this.getMyArticle()
             },
             getMyArticle() {
-                myArticle(this.articleParam).then(response => {
-                    if (response.data.records.length < 20) {
-                        this.flag = false
-                    } else {
-                        this.flag = true
-                    }
-                    response.data.records.forEach((item) => {
-                        this.listData.push(item)
+                return new Promise((resolve, reject) => {
+                    myArticle(this.articleParam).then(response => {
+                        if (response.data.records.length < 20) {
+                            this.flag = false
+                        } else {
+                            this.flag = true
+                        }
+                        response.data.records.forEach((item) => {
+                            this.listData.push(item)
+                        })
+                        this.loading = false
+                        this.leftLoading = false
+                        resolve();
                     })
-                    this.loading = false
-                    this.leftLoading = false
                 })
             },
             checkItem(index, item) {
                 this.check = index
                 this.param.articleId = item.articleId
+                this.getCommentList()
+            },
+            getCommentList() {
                 commentListByArticleId(this.param).then(response => {
-                    this.commentList = response.data.records
+                    if (response.data.records.length < 20) {
+                        this.commenrFlag = false
+                    } else {
+                        this.commenrFlag = true
+                    }
+                    response.data.records.forEach((item) => {
+                        this.commentList.push(item)
+                    })
                 })
             },
             showdelModal(item, index) {
@@ -216,14 +253,14 @@
                         .commentCount - 1)
                 })
             },
-            reply(index){
+            reply(index) {
                 console.log(index)
-                this.replyIndex=index
+                this.replyIndex = index
             },
             chooseEmoji(name) {
                 console.log(this.replyIndex)
-                console.log(this.$refs['textarea'+this.replyIndex])
-                this.$refs['textarea'+this.replyIndex][0].innerHTML += '<img src="' + name + '" />';
+                console.log(this.$refs['textarea' + this.replyIndex])
+                this.$refs['textarea' + this.replyIndex][0].innerHTML += '<img src="' + name + '" />';
             },
         }
     }
@@ -390,6 +427,21 @@
                             }
                         }
                     }
+                }
+            }
+
+            .noList {
+                margin-top: 10%;
+                img {
+                    display: block;
+                    width: 135px;
+                    height: 90px;
+                    margin: 8px auto 16px;
+                }
+
+                p {
+                    text-align: center;
+                    color: #333333;
                 }
             }
         }

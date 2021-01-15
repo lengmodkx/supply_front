@@ -270,6 +270,24 @@
                         ]
                     },
                     {
+                        oneName: "需求管理",
+                        name: "20",
+                        icon: "xq",
+                        childNode: [{
+                                text: "我发布的",
+                                name: "21"
+                            },
+                            {
+                                text: "我接受的",
+                                name: "22"
+                            },
+                            {
+                                text: "发布需求",
+                                name: "23"
+                            },
+                        ]
+                    },
+                    {
                         oneName: "设置",
                         name: "8",
                         icon: "shezhi1",
@@ -370,7 +388,9 @@
                 } else if (name == 14) {
                     //评价管理
                     this.$router.push("/commentMan");
-                } else {
+                } else if (name == 21) {
+                    this.$router.push("/ipostedit");
+                }else {
                     //我的页面
                     this.$router.push({
                         path: "/mine",
