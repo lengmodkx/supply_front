@@ -51,7 +51,7 @@
                             </Upload>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="save">发布</Button>
+                            <Button type="primary" @click="save" :loading="btn_loading">发布</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -100,7 +100,7 @@
                             </Upload>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="saveVideo">发布</Button>
+                            <Button type="primary" @click="saveVideo" :loading="btn_loading">发布</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -129,7 +129,43 @@
                             </Upload>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="saveHeadlines">发布</Button>
+                            <Button type="primary" @click="saveHeadlines" :loading="btn_loading">发布</Button>
+                        </FormItem>
+                    </Form>
+                </div>
+                <div class="qa-content" v-if="clickTypeAcName == '问答'">
+                    <div class="text-content">
+                        <Input v-model="qaParam.questionContent" placeholder="请输入问题（最多30个字）" maxlength="30"
+                            show-word-limit size="large" />
+                        <div class="line"></div>
+                        <Input v-model="qaParam.questionDepict" type="textarea" :rows="5" placeholder="请输入描述（选填）" />
+                        <div class="line"></div>
+                    </div>
+                    <Form :model="qaParam" :label-width="120">
+                        <FormItem label="图片">
+                            <div class="headlines-upload-list" v-if="qaImgList.length > 0">
+                                <div v-for="(item, index) in qaImgList" class="headlines-upload-item">
+                                    <img :src="item" />
+                                    <div class="demo-upload-list-cover">
+                                        <Icon type="ios-trash-outline" @click.native="handleRemoveVideo(item, index)">
+                                        </Icon>
+                                    </div>
+                                </div>
+                            </div>
+                            <Upload ref="upload" :show-upload-list="false" :max-size="2048"
+                                :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
+                                multiple style="display: inline-block; width: 100px; margin-top: 10px" type="drag"
+                                v-if="qaImgList.length != 3">
+                                <div style="width: 100px; height: 100px; line-height: 100px">
+                                    <Icon type="ios-add" size="20" />
+                                </div>
+                            </Upload>
+                        </FormItem>
+                        <FormItem label="是否匿名">
+                            <Checkbox v-model="qaParam.isIncognito" :true-value="1" :false-value="0"></Checkbox>
+                        </FormItem>
+                        <FormItem>
+                            <Button type="primary" @click="saveQa" :loading="btn_loading">提问</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -142,7 +178,8 @@
     import {
         article,
         articleClass,
-        editArticle
+        editArticle,
+        questionAdd
     } from "@/axios/api";
     import OSS from "ali-oss";
     import {
@@ -158,6 +195,7 @@
     export default {
         data() {
             return {
+                btn_loading: false,
                 param: {
                     articleTitle: "",
                     articleContent: "",
@@ -188,6 +226,14 @@
                     headlineImages: "",
                 },
                 headlinesImg: [],
+                qaParam: {
+                    questionContent: "", //提出的问题
+                    questionDepict: "", //问题描述
+                    questionDepictImages: "", // 问题描述图片
+                    isIncognito: '0', // 是否匿名（0否 1是）
+                    isDraft: '0', // 是否草稿（0否1是）
+                },
+                qaImgList: []
             };
         },
         mounted() {
@@ -219,8 +265,10 @@
                 if (this.clickTypeAcName == "视频") {
                     this.videoList.splice(this.videoList.indexOf(item), 1);
                     this.videoAddress.splice(index, 1);
-                } else {
+                } else if (this.clickTypeAcName == "微头条") {
                     this.headlinesImg.splice(index, 1);
+                } else if (this.clickTypeAcName == "问答") {
+                    this.qaImgList.splice(index, 1);
                 }
             },
             handleMaxSize(file) {
@@ -253,6 +301,9 @@
                         } else if (_this.clickTypeAcName == "微头条") {
                             let Img2 = _this.getCaption(result.res.requestUrls[0]);
                             _this.headlinesImg.push(Img2);
+                        } else if (_this.clickTypeAcName == "问答") {
+                            let Img4 = _this.getCaption(result.res.requestUrls[0]);
+                            _this.qaImgList.push(Img4);
                         }
                     })
                     .catch(function (err) {
@@ -358,18 +409,20 @@
                         showProgress: false,
                         fileName: '',
                     };
-                    for(let i of this.videoAddress){
-                        obj.fileName=i
+                    for (let i of this.videoAddress) {
+                        obj.fileName = i
                         this.videoList.push(obj)
                     }
                     console.log(item.videoAddress.split(","))
                 }
             },
             saveAxios(param) {
+                this.btn_loading = true
                 if (this.$route.params.type == "edit") {
                     editArticle(param).then((response) => {
                         if (response.result == 1) {
                             this.$Message.success("发布成功");
+                            this.btn_loading = true
                             this.$router.push("/contentMan");
                         }
                     });
@@ -377,6 +430,7 @@
                     article(param).then((response) => {
                         if (response.result == 1) {
                             this.$Message.success("发布成功");
+                            this.btn_loading = true
                             this.$router.push("/contentMan");
                         }
                     });
@@ -400,6 +454,21 @@
                 }
                 return suffix;
             },
+            saveQa() {
+                if (this.qaImgList.length != 0) {
+                    this.qaParam.questionDepictImages = this.qaImgList.join(",");
+                }
+                if (this.qaParam.questionContent == "") {
+                    this.$Message.warning("问题不能为空");
+                } else {
+                    this.btn_loading = true
+                    questionAdd(this.qaParam).then(response => {
+                        this.$Message.success("提问成功");
+                        this.btn_loading = false
+                        this.$router.push("/org/" + localStorage.companyId);
+                    })
+                }
+            }
         },
     };
 </script>
@@ -526,9 +595,11 @@
         margin-left: 120px;
         margin-top: 20px;
         width: 600px;
+
         .ivu-upload {
             width: 400px;
         }
+
         .video-list {
             display: flex;
             justify-content: space-between;
@@ -565,6 +636,35 @@
                 width: 100%;
                 height: 100%;
             }
+        }
+    }
+
+    .qa-content {
+        .text-content {
+            padding: 0 30px;
+
+            .line {
+                border-bottom: 1px solid #d5d5d5;
+            }
+
+            /deep/.ivu-input {
+                border: none;
+                margin: 10px 0;
+
+                &:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 2px transparent;
+                }
+
+                &:hover {
+                    border-color: #ffffff;
+                }
+            }
+
+            /deep/ .ivu-input-word-count {
+                bottom: 11px;
+            }
+
         }
     }
 </style>

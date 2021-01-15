@@ -24,7 +24,7 @@
               <div class="btn-content">
                 <Button icon="ios-create-outline" @click="personal">修改信息</Button>
                 <Button icon="ios-contact-outline" @click="goArticleCenter">个人中心</Button>
-                <Button type="primary" icon="ios-paper-plane-outline">发布需求</Button>
+                <Button type="primary" icon="ios-paper-plane-outline" @click="goRequire">发布需求</Button>
               </div>
             </div>
           </div>
@@ -99,8 +99,8 @@
       </Row>
     </div>
     <div class="page-wrapper">
-      <div class="article-card" id="aa">
-        <Tabs :value="tabName" @on-click="checkTab">
+      <div class="article-card" id="article-card">
+        <Tabs :value="tabName" @on-click="checkTab" :animated="false">
           <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tabList" :key="index">
             <div class="article-list">
               <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
@@ -131,15 +131,66 @@
               </div>
             </div>
           </TabPane>
-          <!-- <TabPane label="问答" name="name3">标签三的内容</TabPane> -->
+          <TabPane label="需求" name="xq">
+            <Table :columns="columnsList" :data="requirementsList" class="reuqire-table" style="padding-bottom:15px;">
+              <template slot-scope="{ row }" slot="demandName">
+                <div>{{ row.demandName }}</div>
+              </template>
+              <template slot-scope="{ row }" slot="createTime">
+                <div>{{ row.createTime }}</div>
+              </template>
+              <template slot-scope="{ row }" slot="demandBudget">
+                <div>{{ row.demandBudget }}</div>
+              </template>
+              <template slot-scope="{ row, index }" slot="action">
+                <Button type="primary" ghost>查看</Button>
+              </template>
+            </Table>
+          </TabPane>
+          <TabPane label="问答" name="wd">
+            <div class="article-list">
+              <div class="article-item df ac" v-for="(item,index) in qaList" @click="goArticleInfo(item)">
+                <div class="text-content">
+                  <div class="content-box">
+                    <div class="article-tit">{{item.questionContent}}
+                    </div>
+                    <div class="article-tip" v-if="item.questionDepict">{{item.questionDepict}}</div>
+                    <div class="img-content" v-if="item.questionDepictImages">
+                      <img v-for="(item,index) in item.questionDepictImages.split(',')[0]"
+                        :src="item" :key="index">
+                    </div>
+                    <div class="icon-content df">
+                      <div class="df ac">
+                        <img :src="iconList.wdIcon" alt="" class="createImg">
+                        <span class="createText">问答 {{item.replyCount}}</span>
+                        <img :src="item.questionMemberImage" alt="" class="createImg b50">
+                        <span class="createText">{{item.questionMemberName}}</span>
+                      </div>
+                      <span class="right-icon-content">
+                        <div class="icon-content">
+                            <svg-icon name="bi"></svg-icon><span>写问答</span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="noList" v-if="qaList.length == 0 ">
+                <img src="../assets/images/noproject-new.png" />
+                <p>暂无数据</p>
+              </div>
+            </div>
+          </TabPane>
+
         </Tabs>
       </div>
     </div>
     <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''" :style="{width:fatherWidth}">
       <Tabs :value="tabName" @on-click="checkTab">
         <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tabList" :key="index"></TabPane>
-        <!-- <TabPane label="需求" name="name2"></TabPane> -->
-        <!-- <TabPane label="问答" name="name3"></TabPane> -->
+        <TabPane label="需求" name="xq"></TabPane>
+        <TabPane label="问答" name="wd"></TabPane>
       </Tabs>
     </div>
   </div>
@@ -157,7 +208,9 @@
     workBenchInfo,
     userMessage,
     allArtile,
-    attentionListArticle
+    attentionListArticle,
+    demandList,
+    questionList
   } from "@/axios/api";
   import HomeVue from './Home.vue';
   export default {
@@ -204,7 +257,7 @@
           },
           {
             title: "内容分享",
-            msg: "设计头条、文章、视频分享",
+            msg: "设计头条、文章、视频分享以及问答",
             icon: "gzt-fx",
             bg: "#FEBB50",
             iconColor: "#FDC566",
@@ -222,6 +275,7 @@
           videoIcon: require('../assets/images/articles/video.png'),
           ttIcon: require('../assets/images/articles/tt.png'),
           textIcon: require('../assets/images/articles/text.png'),
+          wdIcon: require('../assets/images/articles/wd.png'),
         },
         articleInfoList: {},
         searchBarFixed: false,
@@ -235,7 +289,35 @@
             label: '关注',
             name: 'gz'
           },
-        ]
+        ],
+        columnsList: [{
+            title: '需求标题',
+            slot: 'demandName'
+          }, {
+            title: '发布时间',
+            slot: 'createTime'
+          },
+          {
+            title: '金额',
+            slot: 'demandBudget'
+          },
+          {
+            title: '操作',
+            slot: 'action',
+            width: 150,
+            align: 'center'
+          }
+        ],
+        requirementsList: [],
+        demandParam: {
+          pageNum: 1,
+          type: 1,
+        },
+        flag: false, //下拉加载开关
+        qaParam: {
+          pageNum: 1,
+        },
+        qaList: []
       };
     },
     computed: {
@@ -251,22 +333,6 @@
         this.fatherWidth = this.$refs.father.offsetWidth + 'px'
       }
       document.querySelector('#layout-right').addEventListener('scroll', this.handleScroll)
-      // document.querySelector('#layout-right').onscroll = function () {
-      //   let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      //   let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      //   let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-      //   if (scrollTop + windowHeight == scrollHeight && _this.flag == true) {
-      //     _this.articleParam.pageNum++;
-      //     console.log('下拉')
-      //     if (_this.tabName == 'dt') {
-      //       _this.getattentionList()
-      //     } else if (_this.tabName == 'gz') {
-      //       attentionListArticle(_this.articleParam).then(response => {
-      //         _this.articleList = response.data.records
-      //       })
-      //     }
-      //   }
-      // }
     },
     methods: {
       ...mapActions("project", [
@@ -279,11 +345,30 @@
       handleScroll() {
         var scrollTop = document.querySelector('#layout-right').pageYOffset || document.querySelector('#layout-right')
           .scrollTop
-        var offsetTop = document.querySelector('#aa').offsetTop
+        var offsetTop = document.querySelector('#article-card').offsetTop
         if (scrollTop > offsetTop) {
           this.searchBarFixed = true
         } else {
           this.searchBarFixed = false
+        }
+
+
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        let scrollHeight = document.querySelector('#layout-right').scrollHeight || document.body.scrollHeight;
+        if (scrollTop + windowHeight == scrollHeight + 48 && this.flag) {
+          if (this.tabName == 'dt') {
+            this.articleParam.pageNum++;
+            this.getattentionList()
+          } else if (this.tabName == 'gz') {
+            this.articleParam.pageNum++;
+            this.getMyattention()
+          } else if (this.tabName == 'xq') {
+            this.demandParam.pageNum++;
+            this.demandList()
+          } else if (this.tabName == 'wd') {
+            this.qaParam.pageNum++;
+            this.getQAlist()
+          }
         }
       },
       mountedMethods() {
@@ -360,7 +445,14 @@
       //文章列表
       getattentionList() {
         allArtile(this.articleParam).then(response => {
-          this.articleList = response.data.records
+          if (response.data.records.length < 20) {
+            this.flag = false
+          } else {
+            this.flag = true
+          }
+          response.data.records.forEach((item) => {
+            this.articleList.push(item)
+          })
           this.$Spin.hide();
         })
       },
@@ -389,10 +481,51 @@
         if (name == 'dt') {
           this.getattentionList()
         } else if (name == 'gz') {
-          attentionListArticle(this.articleParam).then(response => {
-            this.articleList = response.data.records
-          })
+          this.getMyattention()
+        } else if (name == 'xq') {
+          this.demandList()
+        } else if (name == 'wd') {
+          this.getQAlist()
         }
+      },
+      getMyattention() {
+        attentionListArticle(this.articleParam).then(response => {
+          if (response.data.records.length < 20) {
+            this.flag = false
+          } else {
+            this.flag = true
+          }
+          response.data.records.forEach((item) => {
+            this.articleList.push(item)
+          })
+        })
+      },
+      demandList() {
+        demandList(this.demandParam).then(response => {
+          if (response.data.records.length < 20) {
+            this.flag = false
+          } else {
+            this.flag = true
+          }
+          response.data.records.forEach((item) => {
+            this.requirementsList.push(item)
+          })
+        })
+      },
+      getQAlist() {
+        questionList(this.qaParam).then(response => {
+          if (response.data.records.length < 20) {
+            this.flag = false
+          } else {
+            this.flag = true
+          }
+          response.data.records.forEach((item) => {
+            this.qaList.push(item)
+          })
+        })
+      },
+      goRequire() {
+        this.$router.push("/requirements");
       }
     }
   };

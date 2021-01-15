@@ -269,12 +269,23 @@
       border-color: #e8eaec;
       width: 100%;
       position: relative;
- 
+
       /deep/.ivu-tabs-nav-scroll {
         padding-left: 20px;
 
         .ivu-tabs-nav {
           padding: 6px 0;
+        }
+      }
+
+      /deep/.ivu-tabs-bar {
+        margin-bottom: 0px;
+      }
+
+      .reuqire-table {
+        .ivu-table th {
+          height: 68px;
+          background-color: #ffffff;
         }
       }
 
@@ -332,6 +343,16 @@
           /** 隐藏超出的内容 **/
         }
 
+        .img-content {
+          display: flex;
+          img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 10px;
+          }
+        }
+
         .icon-content {
           justify-content: space-between;
           color: #808080;
@@ -348,6 +369,18 @@
 
           .createText {
             margin: 0 15px 0 10px;
+          }
+
+          .right-icon-content {
+            svg {
+              width: 16px;
+              height: 16px;
+              margin-right: 5px;
+            }
+            .icon-content {
+              display: flex;
+              align-items: center;
+            }
           }
         }
       }
@@ -464,10 +497,11 @@
   top: -1px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   display: none;
+
   .ivu-tabs-bar {
-    border-bottom: 0px solid #dcdee2; 
+    border-bottom: 0px solid #dcdee2;
     margin-bottom: 2px;
-}
+  }
 }
 
 .isFixed {
