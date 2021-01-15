@@ -1826,3 +1826,67 @@ export function removeComment(data) {
         params: data
     })
 }
+
+//需求分类列表
+export function demandClass(data) {
+    return fetch({
+        url: `/demandClass/list`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//发布需求
+export function demandAdd(data) {
+    return fetch({
+        url: `/demand/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//需求列表
+export function demandList(data) {
+    return fetch({
+        url: `/demand/list`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+
+//编辑需求
+export function demandEdit(data) {
+    return fetch({
+        url: `/demand/edit`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//删除需求
+export function demandRemove(data) {
+    return fetch({
+        url: `/demand/remove`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//保存问答
+export function questionAdd(data) {
+    return fetch({
+        url: `/question/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//分页查询所有提问列表
+export function questionList(data) {
+    return fetch({
+        url: `/question/listAll`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
