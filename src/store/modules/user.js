@@ -7,9 +7,6 @@ try{
 }catch(err){
   userData = localStorage.userInfo
 }
-
-console.log(localStorage.userImg)
-
 const store = {
   namespaced: true,
   state: {

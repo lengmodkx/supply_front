@@ -40,8 +40,8 @@ const store = {
   },
   mutations: {
     setBreadCrumb (state, route) {
-      console.log(route)
-      console.log(state.homeRoute)
+      // console.log(route)
+      // console.log(state.homeRoute)
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
     },
     setHomeRoute (state, routes) {

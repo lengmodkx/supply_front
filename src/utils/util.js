@@ -53,8 +53,8 @@ export const getMenuByRouter = (list, access) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
-  console.log(route)
-  console.log(homeRoute)
+  // console.log(route)
+  // console.log(homeRoute)
 
   let homeItem = { ...homeRoute }
   let routeMetched = route.matched
@@ -102,7 +102,7 @@ export const showTitle = (item, vm) => {
     else if (__titleIsFunction__) title = item.meta.title
     else title = vm.$t(item.name)
   } else title = (item.meta && item.meta.title) || item.name
-  console.log(title)
+  // console.log(title)
   return title
 }
 
@@ -137,7 +137,7 @@ export const getHomeRoute = (routers, homeName = 'organization') => {
       if (item.name === homeName) homeRoute = item
     }
   }
-  console.log(homeRoute)
+  // console.log(homeRoute)
   return homeRoute
 }
 
