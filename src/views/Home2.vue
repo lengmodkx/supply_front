@@ -156,8 +156,7 @@
                     </div>
                     <div class="article-tip" v-if="item.questionDepict">{{item.questionDepict}}</div>
                     <div class="img-content" v-if="item.questionDepictImages">
-                      <img v-for="(item,index) in item.questionDepictImages.split(',')[0]"
-                        :src="item" :key="index">
+                      <img v-for="(item,index) in item.questionDepictImages.split(',')[0]" :src="item" :key="index">
                     </div>
                     <div class="icon-content df">
                       <div class="df ac">
@@ -168,7 +167,7 @@
                       </div>
                       <span class="right-icon-content">
                         <div class="icon-content">
-                            <svg-icon name="bi"></svg-icon><span>写问答</span>
+                          <svg-icon name="bi"></svg-icon><span>写问答</span>
                         </div>
                       </span>
                     </div>
@@ -351,8 +350,6 @@
         } else {
           this.searchBarFixed = false
         }
-
-
         let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
         let scrollHeight = document.querySelector('#layout-right').scrollHeight || document.body.scrollHeight;
         if (scrollTop + windowHeight == scrollHeight + 48 && this.flag) {

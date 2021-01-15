@@ -5,6 +5,9 @@
         <svg-icon :name="header ? 'push' : 'pull'" class="svgIcon" @click="collapsedSider" v-if="showLeftMenu"></svg-icon>
         <!-- <Breadcrumbs :list="breadCrumbList"></Breadcrumbs> -->
       </div>
+        <div class="logo-content">
+            <svg-icon name="header-logo"></svg-icon>
+        </div>
       <div class="df ac">
         <div class="menu">
           <a @click="showHeaderTag(7)">
