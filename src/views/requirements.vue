@@ -110,13 +110,13 @@
                         required: true,
                         message: '必填项',
                         trigger: 'blur',
-                        type:'number'
+                        type: 'number'
                     }],
                     demandBudget: [{
                         required: true,
                         message: '必填项',
                         trigger: 'blur',
-                        type:'number'
+                        type: 'number'
 
                     }],
 
@@ -236,7 +236,7 @@
 
             .title {
                 border-bottom: 1px solid #d5d5d5;
-                padding: 15px 30px;
+                padding: 0 0 15px 30px;
                 position: relative;
                 display: flex;
                 justify-content: space-between;

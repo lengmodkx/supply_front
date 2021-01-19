@@ -101,6 +101,7 @@
     <div class="page-wrapper">
       <div class="article-card" id="article-card">
         <Tabs :value="tabName" @on-click="checkTab" :animated="false">
+          <Loading v-if="tabloading"></Loading>
           <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tabList" :key="index">
             <div class="article-list">
               <div class="article-item df ac" v-for="(item,index) in articleList" @click="goArticleInfo(item)">
@@ -156,7 +157,7 @@
                     </div>
                     <div class="article-tip" v-if="item.questionDepict">{{item.questionDepict}}</div>
                     <div class="img-content" v-if="item.questionDepictImages">
-                      <img v-for="(item,index) in item.questionDepictImages.split(',')[0]" :src="item" :key="index">
+                      <img v-for="(item,index) in item.questionDepictImages" :src="item" :key="index">
                     </div>
                     <div class="icon-content df">
                       <div class="df ac">
@@ -175,10 +176,10 @@
 
                 </div>
               </div>
-              <div class="noList" v-if="qaList.length == 0 ">
+              <!-- <div class="noList" v-if="qaList.length == 0 ">
                 <img src="../assets/images/noproject-new.png" />
                 <p>暂无数据</p>
-              </div>
+              </div> -->
             </div>
           </TabPane>
 
@@ -316,7 +317,8 @@
         qaParam: {
           pageNum: 1,
         },
-        qaList: []
+        qaList: [],
+        tabloading:false
       };
     },
     computed: {
@@ -450,6 +452,7 @@
           response.data.records.forEach((item) => {
             this.articleList.push(item)
           })
+          this.tabloading=false
           this.$Spin.hide();
         })
       },
@@ -473,6 +476,7 @@
         this.$router.push("/messageAlert");
       },
       checkTab(name) {
+        this.tabloading=true
         this.tabName = name
         this.articleParam.pageNum = 1
         if (name == 'dt') {
@@ -495,6 +499,7 @@
           response.data.records.forEach((item) => {
             this.articleList.push(item)
           })
+          this.tabloading=false
         })
       },
       demandList() {
@@ -507,6 +512,7 @@
           response.data.records.forEach((item) => {
             this.requirementsList.push(item)
           })
+          this.tabloading=false
         })
       },
       getQAlist() {
@@ -519,6 +525,7 @@
           response.data.records.forEach((item) => {
             this.qaList.push(item)
           })
+          this.tabloading=false
         })
       },
       goRequire() {

@@ -171,7 +171,7 @@
 
             .title {
                 border-bottom: 1px solid #d5d5d5;
-                padding: 15px 30px;
+                padding: 0 0 15px 30px;
                 position: relative;
                 display: flex;
                 justify-content: space-between;
