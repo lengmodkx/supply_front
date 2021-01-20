@@ -144,7 +144,7 @@
                 <div>{{ row.demandBudget }}</div>
               </template>
               <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" ghost>查看</Button>
+                <Button type="primary" ghost @click="goDemand(row, index)">查看</Button>
               </template>
             </Table>
           </TabPane>
@@ -532,10 +532,15 @@
       goRequire() {
         this.$router.push("/requirements");
       },
+      //问答详情
       goReplyInfo(item) {
-        console.log('问答详情')
         this.$router.push("/qaDetails")
         localStorage.setItem('replyInfoList', JSON.stringify(item))
+      },
+      //需求详情
+      goDemand(row,index){
+        this.$router.push("/demandDetails")
+        localStorage.setItem('demandInfoList', JSON.stringify(row))
       }
     }
   };

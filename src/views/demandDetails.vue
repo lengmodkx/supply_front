@@ -87,12 +87,12 @@
                     slidesPerView: 'auto',
                     touchRatio: 0.2,
                     slideToClickedSlide: true
-                }
+                },
+                demandInfo:{}
             }
         },
         mounted() {
-            console.log(this.$refs.swiperTop)
-
+            this.demandInfo = JSON.parse(localStorage.getItem("demandInfoList"));
             this.$nextTick(() => {
                 console.log(this.$refs.swiperTop)
                 const swiperTop = this.$refs.swiperTop.$swiper
