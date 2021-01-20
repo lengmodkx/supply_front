@@ -1793,7 +1793,7 @@ export function editArticle(data) {
 //文章评论列表
 export function commentList(data) {
     return fetch({
-        url: `/comment/list`,
+        url: `/comment/commentListByArticleId`,
         method: 'get', // 请求方法
         params: data
     })
@@ -1886,6 +1886,24 @@ export function questionAdd(data) {
 export function questionList(data) {
     return fetch({
         url: `/question/listAll`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//回答问题保存接口
+export function replyAdd(data) {
+    return fetch({
+        url: `/reply/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//问答回答列表
+export function getReplyListByQuetionId(data) {
+    return fetch({
+        url: `/reply/getReplyListByQuetionId`,
         method: 'get', // 请求方法
         params: data
     })
