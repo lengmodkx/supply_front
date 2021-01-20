@@ -37,10 +37,7 @@
     inject: ["reload"],
     data() {
       return {
-        tabValue: "0", //项目列表tab栏选中项
-        menuActive: "1,0", //菜单栏选中项
-        mineTag: "1,0",
-        openNames: ["1"]
+        mineTag: "8,0",
       };
     },
     computed: {
@@ -52,9 +49,7 @@
     },
     created() {
       if (this.$route.query.from == "members") {
-        this.openNames = ["2"];
-        this.menuActive = "2,0";
-        this.mineTag = "2,0";
+        this.mineTag = "8,1";
       }else {
               this.openTag(this.$route.query.checkTagName)
 

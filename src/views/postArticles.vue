@@ -422,7 +422,7 @@
                     editArticle(param).then((response) => {
                         if (response.result == 1) {
                             this.$Message.success("发布成功");
-                            this.btn_loading = true
+                            this.btn_loading = false
                             this.$router.push("/contentMan");
                         }
                     });
@@ -430,7 +430,7 @@
                     article(param).then((response) => {
                         if (response.result == 1) {
                             this.$Message.success("发布成功");
-                            this.btn_loading = true
+                            this.btn_loading = false
                             this.$router.push("/contentMan");
                         }
                     });

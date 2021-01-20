@@ -177,7 +177,7 @@
                 let scrollHeight = document.querySelector('#layout-right').scrollHeight || document.body
                     .scrollHeight;
                 if (scrollTop + windowHeight == scrollHeight + 48) {
-                    if (_this.false) {
+                    if (_this.flag) {
                         _this.articleParam.pageNum++;
                         _this.getMyArticle()
                     }

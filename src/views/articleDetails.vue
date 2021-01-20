@@ -77,6 +77,7 @@
                 commentParam: {
                     pageNum: 1,
                     commentState: 1,
+                    articleId:""
                 },
                 commentList: [],
                 total: '',
@@ -86,6 +87,7 @@
         mounted() {
             this.infoList = JSON.parse(localStorage.getItem('articleInfoList'))
             this.param.articleId = this.infoList.articleId
+            this.commentParam.articleId = this.infoList.articleId
             this.getCommentList()
             let _this = this;
             window.onscroll = function () {
