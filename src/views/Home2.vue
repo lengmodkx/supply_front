@@ -111,7 +111,7 @@
                   <div class="content-box">
                     <div class="article-tit" v-if="item.acId !=2">{{item.acId==1?item.articleTitle:item.videoName}}
                     </div>
-                    <div class="article-tip" v-text="item.acId==1?item.articlePureContent:item.headlineContent"></div>
+                    <div class="article-tip" v-html="item.acId==1?item.articlePureContent:item.headlineContent"></div>
                     <div class="icon-content df">
                       <div class="df ac">
                         <img :src="item.acId==1?iconList.videoIcon:item.acId==2?iconList.ttIcon:iconList.textIcon"

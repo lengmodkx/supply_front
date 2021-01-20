@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                                 <div class="list-item-two" v-if="item.acId == 2">
-                                    <div class="article-tit">{{ item.headlineContent }}</div>
+                                    <div class="article-tit" v-html="item.headlineContent"></div>
                                     <img :src="item.headlineImages.split(',')[0]" alt="" />
                                 </div>
                                 <div class="list-item-right">
