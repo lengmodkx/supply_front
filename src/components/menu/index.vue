@@ -379,9 +379,7 @@
                             this.$Message.error("没有权限");
                         }
                     });
-                } else if (name == 9) {
-                    this.$router.push("/postArticles");
-                } else if (name == 10) {} else if (name == 12) {
+                } else if (name == 12) {
                     this.$router.push("/postArticles");
                 } else if (name == 13) {
                     this.$router.push("/contentMan");
@@ -390,7 +388,11 @@
                     this.$router.push("/commentMan");
                 } else if (name == 21) {
                     this.$router.push("/ipostedit");
-                }else {
+                } else if (name == 22) {
+                    this.$router.push("/ipostedit");
+                } else if (name == 23) {
+                    this.$router.push("/requirements");
+                }else if(name==15 ||name==16||name==17||name==18||name==19){
                     //我的页面
                     this.$router.push({
                         path: "/mine",
