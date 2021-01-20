@@ -3,7 +3,7 @@
     <header class="header" id="header">
       <div class="left-header" :class="header?'padding-big':'padding-small'">
         <svg-icon :name="header ? 'push' : 'pull'" class="svgIcon" @click="collapsedSider" v-if="showLeftMenu"></svg-icon>
-        <!-- <Breadcrumbs :list="breadCrumbList"></Breadcrumbs> -->
+        <Breadcrumbs></Breadcrumbs>
       </div>
         <div class="logo-content">
             <svg-icon name="header-logo"></svg-icon>

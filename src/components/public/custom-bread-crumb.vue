@@ -1,51 +1,31 @@
 <template>
   <div class="custom-bread-crumb">
     <Breadcrumb :style="{fontSize: `${fontSize}px`}">
-      <BreadcrumbItem v-for="item in list" :to="item.to" :key="`bread-crumb-${item.name}`">
-        {{ item.meta.name }}
-      </BreadcrumbItem>
+      <BreadcrumbItem :to="{ path: '/org/'+ companyId }">首页</BreadcrumbItem>
+      <BreadcrumbItem v-if="this.$route.meta.name">{{ this.$route.meta.name }}</BreadcrumbItem>
     </Breadcrumb>
   </div>
 </template>
 <script>
-import { showTitle } from '@/utils/util.js'
-export default {
-  name: 'customBreadCrumb',
-  components: {
-  },
-  props: {
-    list: {
-      type: Array,
-      default: () => []
+  export default {
+    name: 'customBreadCrumb',
+    props: {
+      fontSize: {
+        type: Number,
+        default: 14
+      },
     },
-    fontSize: {
-      type: Number,
-      default: 14
+    data() {
+      return {
+        companyId: localStorage.companyId
+      }
     },
-    showIcon: {
-      type: Boolean,
-      default: false
-    }
-  },
-  methods: {
-    showTitle (item) {
-      console.log(item)
-      return showTitle(item, this)
-    },
-    isCustomIcon (iconName) {
-      return iconName.indexOf('_') === 0
-    },
-    getCustomIconName (iconName) {
-      return iconName.slice(1)
-    }
   }
-}
 </script>
 
 <style lang="less" scoped>
-.custom-bread-crumb{
-  display: inline-block;
-  vertical-align: top;
-}
-
+  .custom-bread-crumb {
+    display: inline-block;
+    vertical-align: top;
+  }
 </style>

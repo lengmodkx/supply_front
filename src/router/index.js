@@ -31,6 +31,8 @@ import commentManagement from '../views/commentManagement.vue' //评价管理
 import requirements from '../views/requirements.vue' //发布需求
 import ipostedit from '../views/ipostedit.vue' //我发布的需求
 import demandDetails from '../views/demandDetails.vue' //需求详情
+import qaDetails from '../views/qaDetails.vue' //问答详情
+
 
 
 
@@ -179,7 +181,6 @@ const router = new Router({
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
         keepAlive: false,
-        name:'首页'
       }
     },
     {
@@ -198,7 +199,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:"我的"
       },
       children: [{
           path: "nearThing",
@@ -438,7 +440,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:'发布'
       },
       component: postArticles
     },
@@ -513,7 +516,7 @@ const router = new Router({
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
         keepAlive: false,
-        name:"我发布的"
+        name:"我发布的需求"
       },
       component: ipostedit
     },
@@ -528,6 +531,18 @@ const router = new Router({
       },
       component: demandDetails
     },
+    {
+      path: "/qaDetails",
+      name: "qaDetails",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"问答详情"
+      },
+      component: qaDetails
+    },
+    
   ]
 });
 router.afterEach((to, from) => {
