@@ -107,7 +107,18 @@
                 <div class="headlines-content" v-if="clickTypeAcName == '微头条'">
                     <Form :model="headlinesParam" :label-width="120">
                         <FormItem label="内容">
-                            <Input v-model="headlinesParam.headlineContent" type="textarea" style="width: 400px" />
+                            <!-- <Input v-model="headlinesParam.headlineContent" type="textarea" style="width: 400px" /> -->
+                            <div class="talk">
+                                <div class="talkinner">
+                                    <div class="talkUp">
+                                        <div id="inputs" style="width: 100%;height: 80px;padding: 5px 10px"
+                                            ref="textarea" contenteditable="true"></div>
+                                    </div>
+                                    <div class="talkDown clearfix">
+                                        <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
+                                    </div>
+                                </div>
+                            </div>
                         </FormItem>
                         <FormItem label="图片">
                             <div class="headlines-upload-list" v-if="headlinesImg.length > 0">
@@ -175,6 +186,7 @@
 </template>
 <script>
     import Editor from "wangeditor";
+    import Emoji from "@/components/public/common/emoji/Emoji";
     import {
         article,
         articleClass,
@@ -193,6 +205,9 @@
         bucket: "art1001-bim-5d",
     });
     export default {
+        components: {
+            Emoji
+        },
         data() {
             return {
                 btn_loading: false,
@@ -372,6 +387,7 @@
                 }
             },
             saveHeadlines() {
+                this.headlinesParam.headlineContent=this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
                 this.headlinesParam.headlineImages = this.headlinesImg.join(",");
                 if (this.headlinesParam.headlineContent == "") {
                     this.$Message.warning("内容不能为空");
@@ -468,7 +484,10 @@
                         this.$router.push("/org/" + localStorage.companyId);
                     })
                 }
-            }
+            },
+            chooseEmoji(name) {
+                this.$refs.textarea.innerHTML += '<img src="' + name + '" style="width: 26px;height: 26px;"/>';
+            },
         },
     };
 </script>
@@ -665,6 +684,41 @@
                 bottom: 11px;
             }
 
+        }
+    }
+
+    .talk {
+        flex: none;
+        position: relative;
+        border: 0 none;
+        .talkinner {
+            position: relative;
+            min-height: 40px;
+            margin: 0 20px 13px 0;
+            background-color: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+
+            .talkUp {
+                position: relative;
+                z-index: 1;
+                max-height: 290px;
+                background-color: #fff;
+                // border-bottom: 1px solid #e8e8e8;
+
+                #inputs {
+                    input:hover {
+                        border-color: #dddee1;
+                    }
+                }
+            }
+
+            .talkDown {
+                line-height: 40px;
+                height: 40px;
+
+
+            }
         }
     }
 </style>
