@@ -150,7 +150,7 @@
           </TabPane>
           <TabPane label="问答" name="wd">
             <div class="article-list">
-              <div class="article-item df ac" v-for="(item,index) in qaList" @click="goArticleInfo(item)">
+              <div class="article-item df ac" v-for="(item,index) in qaList" @click="goReplyInfo(item)">
                 <div class="text-content">
                   <div class="content-box">
                     <div class="article-tit">{{item.questionContent}}
@@ -318,7 +318,7 @@
           pageNum: 1,
         },
         qaList: [],
-        tabloading:false
+        tabloading: false
       };
     },
     computed: {
@@ -372,7 +372,8 @@
       },
       mountedMethods() {
         this.loadings = true
-        this.$Spin.show();
+        // this.$Spin.show();
+        this.$Loading.start();
         document.cookie = "orgId" + "=" + localStorage.companyId + ";" + "path=/";
         document.cookie = "userId" + "=" + localStorage.userId + ";" + "path=/";
         this.$store.state.project.loading = true;
@@ -452,13 +453,13 @@
           response.data.records.forEach((item) => {
             this.articleList.push(item)
           })
-          this.tabloading=false
-          this.$Spin.hide();
+          this.tabloading = false
+          // this.$Spin.hide();
+          this.$Loading.finish();
         })
       },
       //文章详情
       goArticleInfo(item) {
-        console.log(item)
         this.$router.push("/articleDetails")
         localStorage.setItem('articleInfoList', JSON.stringify(item))
       },
@@ -476,7 +477,7 @@
         this.$router.push("/messageAlert");
       },
       checkTab(name) {
-        this.tabloading=true
+        this.tabloading = true
         this.tabName = name
         this.articleParam.pageNum = 1
         if (name == 'dt') {
@@ -499,7 +500,7 @@
           response.data.records.forEach((item) => {
             this.articleList.push(item)
           })
-          this.tabloading=false
+          this.tabloading = false
         })
       },
       demandList() {
@@ -512,7 +513,7 @@
           response.data.records.forEach((item) => {
             this.requirementsList.push(item)
           })
-          this.tabloading=false
+          this.tabloading = false
         })
       },
       getQAlist() {
@@ -525,11 +526,16 @@
           response.data.records.forEach((item) => {
             this.qaList.push(item)
           })
-          this.tabloading=false
+          this.tabloading = false
         })
       },
       goRequire() {
         this.$router.push("/requirements");
+      },
+      goReplyInfo(item) {
+        console.log('问答详情')
+        this.$router.push("/qaDetails")
+        localStorage.setItem('replyInfoList', JSON.stringify(item))
       }
     }
   };
