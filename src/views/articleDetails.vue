@@ -20,7 +20,7 @@
                         <div v-html="infoList.articleContent"></div>
                     </div>
                     <div class="article-text" v-if="infoList.acId==2">
-                        <div class="article-text-content">{{infoList.headlineContent}}</div>
+                        <div class="article-text-content" v-html="infoList.headlineContent"></div>
                         <div v-for="item in infoList.headlineImages.split(',')">
                             <img :src="item" alt="">
                         </div>
