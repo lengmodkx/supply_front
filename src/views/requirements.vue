@@ -35,22 +35,8 @@
                                 </div>
                             </Upload>
                         </FormItem>
-                        <FormItem label="解决方式" prop="solveWay">
-                            <Select v-model="param.solveWay">
-                                <Option :value="1">招标</Option>
-                                <Option :value="2">比稿</Option>
-                            </Select>
-                        </FormItem>
-                        <!-- <FormItem label="需求分类" prop="dcId">
-                            <Select v-model="param.dcId">
-                                <Option value="beijing" v-for="(item,index) in classList" :key="index">New York</Option>
-                            </Select>
-                        </FormItem> -->
-                        <FormItem label="发布人电话" prop="memberTel">
-                            <Input v-model="param.memberTel"></Input>
-                        </FormItem>
                         <FormItem label="出价" prop="demandBudget">
-                            <Input v-model="param.demandBudget">
+                            <Input v-model="param.demandBudget" type="number" class="priceInput">
                             <span slot="append">元</span>
                             </Input>
                         </FormItem>
@@ -85,39 +71,18 @@
             return {
                 param: {
                     demandName: '',
-                    // dcId: '',
                     demandDetails: '',
                     demandFiles: '',
-                    demandBudget: '',
-                    solveWay: '',
-                    memberTel: '',
+                    demandBudget:'',
                 },
                 headlinesImg: [],
                 host: '',
                 classList: [],
                 ruleValidate: {
-                    memberTel: [{
-                        required: true,
-                        message: '必填项',
-                        trigger: 'blur'
-                    }],
-                    // dcId: [{
-                    //     required: true,
-                    //     message: '必填项',
-                    //     trigger: 'change'
-                    // }],
-                    solveWay: [{
-                        required: true,
-                        message: '必填项',
-                        trigger: 'blur',
-                        type: 'number'
-                    }],
                     demandBudget: [{
                         required: true,
                         message: '必填项',
                         trigger: 'blur',
-                        type: 'number'
-
                     }],
 
                 }
@@ -133,12 +98,6 @@
             }
         },
         methods: {
-            //需求分类 暂时注释
-            getDemandClass() {
-                demandClass().then(response => {
-                    this.classList = response.data
-                })
-            },
             handleBeforeUpload(file) {
                 let fileName = ''
                 fileName = "upload/requirements/" + this.random_string(10) + this.get_suffix(file.name);
@@ -373,6 +332,11 @@
                 width: 100%;
                 height: 100%;
             }
+        }
+    }
+    .priceInput {
+        /deep/.ivu-input {
+            color: #FF2020;
         }
     }
 </style>
