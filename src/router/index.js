@@ -32,6 +32,8 @@ import requirements from '../views/requirements.vue' //发布需求
 import ipostedit from '../views/ipostedit.vue' //我发布的需求
 import demandDetails from '../views/demandDetails.vue' //需求详情
 import qaDetails from '../views/qaDetails.vue' //问答详情
+import demandList from '../views/demandList.vue' //我的需求
+import bidding from '../views/bidding.vue' //发布竞标
 
 
 
@@ -516,7 +518,7 @@ const router = new Router({
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
         keepAlive: false,
-        name:"我发布的需求"
+        name:"我的需求"
       },
       component: ipostedit
     },
@@ -542,7 +544,28 @@ const router = new Router({
       },
       component: qaDetails
     },
-    
+    {
+      path: "/demandList",
+      name: "demandList",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"需求列表"
+      },
+      component: demandList
+    },
+    {
+      path: "/bidding",
+      name: "bidding",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"发布竞标"
+      },
+      component: bidding
+    },
   ]
 });
 router.afterEach((to, from) => {

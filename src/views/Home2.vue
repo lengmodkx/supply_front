@@ -140,8 +140,8 @@
               <template slot-scope="{ row }" slot="createTime">
                 <div>{{ row.createTime }}</div>
               </template>
-              <template slot-scope="{ row }" slot="demandBudget">
-                <div>{{ row.demandBudget }}</div>
+              <template slot-scope="{ row }" slot="bid">
+                <div>{{ row.bid }}</div>
               </template>
               <template slot-scope="{ row, index }" slot="action">
                 <Button type="primary" ghost @click="goDemand(row, index)">查看</Button>
@@ -299,7 +299,7 @@
           },
           {
             title: '金额',
-            slot: 'demandBudget'
+            slot: 'bid'
           },
           {
             title: '操作',
@@ -311,7 +311,7 @@
         requirementsList: [],
         demandParam: {
           pageNum: 1,
-          type: 1,
+          type: 4,
         },
         flag: false, //下拉加载开关
         qaParam: {

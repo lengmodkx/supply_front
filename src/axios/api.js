@@ -1908,3 +1908,12 @@ export function getReplyListByQuetionId(data) {
         params: data
     })
 }
+
+//发布竞标
+export function joinBidding(data) {
+    return fetch({
+        url: `/demandBid/joinBidding`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}

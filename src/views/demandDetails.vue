@@ -8,25 +8,22 @@
                 </div>
                 <div class="details-content df">
                     <div class="thumb-example">
-                        <!-- swiper1 -->
-                        <swiper class="swiper gallery-top" :options="swiperOptionTop" ref="swiperTop">
-                            <swiper-slide class="slide-1"></swiper-slide>
-                            <swiper-slide class="slide-2"></swiper-slide>
-                            <swiper-slide class="slide-3"></swiper-slide>
-                            <swiper-slide class="slide-4"></swiper-slide>
-                            <swiper-slide class="slide-5"></swiper-slide>
-                        </swiper>
-                        <!-- swiper2 Thumbs -->
-                        <swiper class="swiper gallery-thumbs" :options="swiperOptionThumbs" ref="swiperThumbs">
-                            <swiper-slide class="slide-1"></swiper-slide>
-                            <swiper-slide class="slide-2"></swiper-slide>
-                            <swiper-slide class="slide-3"></swiper-slide>
-                            <swiper-slide class="slide-4"></swiper-slide>
-                            <swiper-slide class="slide-5"></swiper-slide>
+                        <swiper class="swiper" :options="swiperOption">
+                            <swiper-slide>Slide 1</swiper-slide>
+                            <swiper-slide>Slide 2</swiper-slide>
+                            <swiper-slide>Slide 3</swiper-slide>
+                            <swiper-slide>Slide 4</swiper-slide>
+                            <swiper-slide>Slide 5</swiper-slide>
+                            <div class="swiper-pagination" slot="pagination"></div>
+                            <div class="swiper-button-prev swiper-button-white" slot="button-prev"></div>
+                            <div class="swiper-button-next swiper-button-white" slot="button-next"></div>
                         </swiper>
                     </div>
                     <div class="details-info">
-                        <div class="titles">一图来看全面深化改革取得历史性伟大成就</div>
+                        <div class="df jsb ac">
+                            <div class="titles">一图来看全面深化改革取得历史性伟大成就</div>
+                            <Button type="primary" @click="goBid">竞标</Button>
+                        </div>
                         <div class="text-muted">出价：<span class="red">2000</span><span class="tips">元</span></div>
                         <div class="text-muted">发布人电话：<span class="tips">元</span></div>
                         <!-- <div class="text-muted">需求分类：<span class="tips">元</span></div> -->
@@ -50,7 +47,10 @@
                             <div class="compy-name">壹仟零壹艺网络科技（北京）有限公司</div>
                             <div class="text-muted">主营业务：xxxxxx</div>
                             <div class="text-muted">报价：2000</div>
-                            <div class="text-muted">联系电话：1870000000</div>
+                            <div class="df ac jsb">
+                                <div class="text-muted">联系电话：1870000000</div>
+                                <Button type="primary" size="small">达成合作</Button>
+                            </div>
 
                         </div>
                     </div>
@@ -74,32 +74,35 @@
         name: '',
         data() {
             return {
-                swiperOptionTop: {
+                swiperOption: {
+                    slidesPerView: 1,
+                    spaceBetween: 0,
                     loop: true,
-                    loopedSlides: 5, // looped slides should be the same
-                    spaceBetween: 10,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev'
+                    }
                 },
-                swiperOptionThumbs: {
-                    loop: true,
-                    loopedSlides: 5, // looped slides should be the same
-                    spaceBetween: 10,
-                    centeredSlides: true,
-                    slidesPerView: 'auto',
-                    touchRatio: 0.2,
-                    slideToClickedSlide: true
-                },
-                demandInfo:{}
+                demandInfo: {}
             }
         },
         mounted() {
             this.demandInfo = JSON.parse(localStorage.getItem("demandInfoList"));
-            this.$nextTick(() => {
-                console.log(this.$refs.swiperTop)
-                const swiperTop = this.$refs.swiperTop.$swiper
-                const swiperThumbs = this.$refs.swiperThumbs.$swiper
-                swiperTop.controller.control = swiperThumbs
-                swiperThumbs.controller.control = swiperTop
+            console.log(this.demandInfo)
+        },
+        methods:{
+            goBid(){
+            this.$router.push({
+                path:'/bidding',
+                query:{
+                    'demandId':this.demandInfo.demandId
+                }
             })
+        }
         }
     }
 </script>
@@ -165,65 +168,42 @@
     }
 
     .thumb-example {
-        width: 500px;
-        height: 380px;
+        width: 550px;
+        height: 330px;
         margin-right: 36px;
-    }
 
-    .swiper {
-        .slide-1 {
-            background-image: url('../assets/images/login-bg.jpg');
+        .swiper {
+            height: 100%;
+            width: 100%;
+
+            .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-weight: bold;
+                background-color: #dcdcdc;
+            }
         }
-
-        .slide-2 {
-            background-image: url('../assets/images/login-bg.jpg');
-        }
-
-        .slide-3 {
-            background-image: url('../assets/images/login-bg.jpg');
-        }
-
-        .slide-4 {
-            background-image: url('../assets/images/login-bg.jpg');
-        }
-
-        .slide-5 {
-            background-image: url('../assets/images/login-bg.jpg');
-        }
-
     }
 
-    .gallery-top {
-        height: 80%;
-        width: 100%;
-    }
 
-    .gallery-thumbs {
-        height: 20%;
-        box-sizing: border-box;
-        padding: 10px 0;
-    }
 
-    .gallery-thumbs .swiper-wrapper {
-        width: 24%;
-        height: 100%;
-        opacity: 0.4;
-    }
 
-    .gallery-thumbs .swiper-slide-active {
-        opacity: 1;
-    }
 
     .mt10 {
         margin-top: 10px;
     }
+
     .compy-content {
         flex-wrap: wrap;
     }
+
     .compy-item {
         width: 33.33%;
-            align-items: center;
+        align-items: center;
         margin-top: 20px;
+
         img {
             width: 90px;
             height: 90px;

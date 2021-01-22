@@ -17,11 +17,7 @@
                                     <div>{{ row.bid }}</div>
                                 </template>
                                 <template slot-scope="{ row, index }" slot="action">
-                                    <Button type="primary" ghost style="margin-right:10px">查看</Button>
-                                    <Button type="primary" ghost style="margin-right:10px" @click="editRequire(row)"
-                                        v-if="showValue==1">编辑</Button>
-                                    <Button type="error" style="margin-right: 10px" @click="showDel(row,index)"
-                                        v-if="showValue==1">删除</Button>
+                                    <Button type="primary" ghost>查看</Button>
                                 </template>
                             </Table>
                         </div>
@@ -64,19 +60,9 @@
             return {
                 loading: false,
                 tabList: [{
-                        label: '我发布的',
-                        name: "1"
-                    },
-                    {
-                        label: '我竞标的',
-                        name: "2"
-                    },
-                    {
-                        label: '我中标的',
-                        name: "3"
-                    },
-
-                ],
+                    label: '需求列表',
+                    name: "1"
+                }, ],
                 columnsList: [{
                         title: "需求标题",
                         slot: "demandName",
@@ -109,7 +95,7 @@
                 requirementsList: [],
                 demandParam: {
                     pageNum: 1,
-                    type: 1,
+                    type: 4,
                 },
                 delModal: false,
                 modal_loading: false,
@@ -121,29 +107,10 @@
         mounted() {
             this.loading = true;
             this.getList();
-            // document.querySelector('#layout-right').onscroll = function () {
-            //     let scrollTop = document.querySelector('#layout-right').scrollTop || document.body.scrollTop;
-            //     let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-            //     let scrollHeight = document.querySelector('#layout-right').scrollHeight || document.body
-            //         .scrollHeight;
-            //     if (scrollTop + windowHeight == scrollHeight + 48 && _this.flag == true) {
-            //         _this.demandParam.pageNum++;
-            //         _this.getList()
-
-            //     }
-            // }
         },
         methods: {
             getList() {
                 demandList(this.demandParam).then((response) => {
-                    // if (response.data.records.length < 20) {
-                    //     this.flag = false
-                    // } else {
-                    //     this.flag = true
-                    // }
-                    // response.data.records.forEach((item) => {
-                    //     this.requirementsList.push(item)
-                    // })
                     this.requirementsList = response.data.records
                     this.total = response.data.total
                     this.loading = false

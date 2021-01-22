@@ -3,20 +3,16 @@
         <div class="container">
             <div class="content">
                 <div class="title">
-                    <span>发布需求</span>
+                    <span>发布竞标</span>
                     <div class="line"></div>
                 </div>
                 <div class="editor-content">
                     <div class="text-content">
-                        <Input v-model="param.demandName" placeholder="请输入需求标题（最多30个字）" maxlength="30" show-word-limit
-                            size="large" />
+                        <Input v-model="param.details" type="textarea" :rows="5" placeholder="请输入服务详情" />
                         <div class="line"></div>
-                        <Input v-model="param.demandDetails" type="textarea" :rows="5" placeholder="请输入说明" />
-                        <div class="line"></div>
-
                     </div>
-                    <Form :model="param" :label-width="120" ref="formValidate" :rules="ruleValidate">
-                        <FormItem label="文件附件">
+                    <Form :model="param" :label-width="100" ref="formValidate" :rules="ruleValidate">
+                        <FormItem label="作品展示">
                             <div class="headlines-upload-list" v-if="headlinesImg.length > 0">
                                 <div v-for="(item, index) in headlinesImg" class="headlines-upload-item">
                                     <img :src="item" />
@@ -41,7 +37,8 @@
                             </Input>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="save('formValidate')">发布</Button>
+                            <Button type="primary" @click="save('formValidate')">确认报价</Button>
+                            <div class="tips">在您确认报价之后系统需要您支付一定费用用于担保您不是恶意报价，在竞标结束之后此费用将直接返还到您的账户中。</div>
                         </FormItem>
                     </Form>
                 </div>
@@ -51,9 +48,7 @@
 </template>
 <script>
     import {
-        demandClass,
-        demandAdd,
-        demandEdit
+        joinBidding
     } from "@/axios/api";
     import OSS from "ali-oss";
     import {
@@ -70,10 +65,11 @@
         data() {
             return {
                 param: {
-                    demandName: '',
-                    demandDetails: '',
-                    demandFiles: '',
-                    bid:'',
+                    demandId: '',
+                    orgId: '',
+                    details: '',
+                    detailImages: '',
+                    bid: ""
                 },
                 headlinesImg: [],
                 host: '',
@@ -89,23 +85,17 @@
             };
         },
         mounted() {
-            if (this.$route.query.type == 'edit') {
-                this.param = JSON.parse(localStorage.getItem("editRequire"))
-                console.log(this.param)
-                if (this.param.demandFiles != '') {
-                    this.headlinesImg = this.param.demandFiles.split(',')
-                }
-            }
+            this.param.demandId = this.$route.query.demandId
+            this.param.orgId = localStorage.companyId
         },
         methods: {
             handleBeforeUpload(file) {
                 let fileName = ''
-                fileName = "upload/requirements/" + this.random_string(10) + this.get_suffix(file.name);
+                fileName = "upload/exhibition/" + this.random_string(10) + this.get_suffix(file.name);
                 var _this = this;
                 client
                     .multipartUpload(fileName, file)
                     .then(function (result) {
-                        console.log(result);
                         let Img2 = _this.getCaption(result.res.requestUrls[0]);
                         _this.headlinesImg.push(Img2);
                     })
@@ -148,10 +138,8 @@
                 return suffix;
             },
             save(name) {
-                if (this.param.demandName == '') {
-                    this.$Message.error('需求标题不能为空');
-                } else if (this.param.demandDetails == '') {
-                    this.$Message.error('需求描述不能为空!');
+                if (this.param.demandDetails == '') {
+                    this.$Message.error('服务详情不能为空!');
                 } else {
                     this.$refs[name].validate((valid) => {
                         if (valid) {
@@ -163,19 +151,14 @@
             },
             release() {
                 if (this.headlinesImg.length != 0) {
-                    this.param.demandFiles = this.headlinesImg.join(',')
+                    this.param.detailImages = this.headlinesImg.join(',')
                 }
-                if (this.$route.query.type == 'edit') {
-                    demandEdit(this.param).then(response => {
-                        this.$Message.success('发布成功!');
-                        this.$router.push("/ipostedit");
-                    })
-                } else {
-                    demandAdd(this.param).then(response => {
-                        this.$Message.success('发布成功!');
-                        this.$router.push("/org/" + localStorage.companyId);
-                    })
-                }
+
+                joinBidding(this.param).then(response => {
+                    this.$Message.success('参与竞标成功!');
+                    //跳支付
+                    // this.$router.push("/org/" + localStorage.companyId);
+                })
 
             }
 
@@ -334,9 +317,17 @@
             }
         }
     }
+
     .priceInput {
         /deep/.ivu-input {
             color: #FF2020;
         }
+    }
+
+    .tips {
+
+        font-size: 12px;
+
+        color: #999999;
     }
 </style>

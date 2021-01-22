@@ -274,16 +274,16 @@
                         name: "20",
                         icon: "xq",
                         childNode: [{
-                                text: "我发布的",
+                                text: "我的需求",
                                 name: "21"
-                            },
-                            {
-                                text: "我接受的",
-                                name: "22"
                             },
                             {
                                 text: "发布需求",
                                 name: "23"
+                            },
+                            {
+                                text: "需求列表",
+                                name: "22"
                             },
                         ]
                     },
@@ -389,7 +389,7 @@
                 } else if (name == 21) {
                     this.$router.push("/ipostedit");
                 } else if (name == 22) {
-                    this.$router.push("/ipostedit");
+                    this.$router.push("/demandList");
                 } else if (name == 23) {
                     this.$router.push("/requirements");
                 }else if(name==15 ||name==16||name==17||name==18||name==19){
