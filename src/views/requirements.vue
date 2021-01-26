@@ -74,6 +74,7 @@
                     demandDetails: '',
                     demandFiles: '',
                     bid:'',
+                    orgId:localStorage.companyId
                 },
                 headlinesImg: [],
                 host: '',
