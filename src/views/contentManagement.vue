@@ -27,7 +27,7 @@
                                             {{ item.acId == 1 ? item.articleTitle : item.videoName }}
                                         </div>
                                         <div class="article-tip">
-                                            评论 {{ item.commentCount }}
+                                            评论 {{ item.commentCount?item.commentCount:0 }}
                                         </div>
                                     </div>
                                 </div>
