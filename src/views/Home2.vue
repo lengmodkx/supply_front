@@ -480,6 +480,9 @@
         this.tabloading = true
         this.tabName = name
         this.articleParam.pageNum = 1
+        this.articleList=[]
+        this.requirementsList=[]
+        this.qaList=[]
         if (name == 'dt') {
           this.getattentionList()
         } else if (name == 'gz') {
