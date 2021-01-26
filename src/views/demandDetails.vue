@@ -10,10 +10,11 @@
                     <div class="thumb-example">
                         <swiper class="swiper" :options="swiperOption">
                             <swiper-slide v-if="demandInfo.demandFiles==null">
-                                <img src='../assets/images/articles/wutu.png' class="wutu"></swiper-slide>
-                            <swiper-slide v-else v-for="(item,index) in demandInfo.demandFiles.split(',')" :key="index">
-                                <img :src='item' alt=""></swiper-slide>
-
+                                <img src='../assets/images/articles/wutu.png' class="wutu">
+                            </swiper-slide>
+                            <swiper-slide v-for="(item,index) in demandInfo.demandFiles.split(',')" :key="index" v-else>
+                                <img :src='item' alt="">
+                            </swiper-slide>
                             <div class="swiper-pagination" slot="pagination"></div>
                             <div class="swiper-button-prev swiper-button-white" slot="button-prev"></div>
                             <div class="swiper-button-next swiper-button-white" slot="button-next"></div>
@@ -94,12 +95,14 @@
                 },
                 demandInfo: {},
                 bidingList: [],
-                loading: false
+                loading: false,
+                wutu: require('../assets/images/articles/wutu.png')
             }
         },
-        mounted() {
+        created() {
             this.loading = true
             this.demandInfo = JSON.parse(localStorage.getItem("demandInfoList"));
+            console.log(this.demandInfo)
             this.getBidding()
         },
         methods: {
