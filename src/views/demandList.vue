@@ -17,7 +17,7 @@
                                     <div>{{ row.bid }}</div>
                                 </template>
                                 <template slot-scope="{ row, index }" slot="action">
-                                    <Button type="primary" ghost>查看</Button>
+                                    <Button type="primary" ghost @click="goDemand(row, index)">查看</Button>
                                 </template>
                             </Table>
                         </div>
@@ -150,6 +150,11 @@
             changePage(num) {
                 this.demandParam.pageNum = num
                 this.getList()
+            },
+            //需求详情
+            goDemand(row, index) {
+                this.$router.push("/demandDetails")
+                localStorage.setItem('demandInfoList', JSON.stringify(row))
             }
 
         },

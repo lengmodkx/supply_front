@@ -1827,10 +1827,10 @@ export function removeComment(data) {
     })
 }
 
-//需求分类列表
-export function demandClass(data) {
+//需求详情
+export function demandInfos(data) {
     return fetch({
-        url: `/demandClass/list`,
+        url: `/demand/demandInfo`,
         method: 'get', // 请求方法
         params: data
     })
