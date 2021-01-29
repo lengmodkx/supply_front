@@ -65,6 +65,9 @@
     } from '@/axios/api'
     export default {
         name: "",
+        components: {
+            Loading,
+        },
         data() {
             return {
                 loading: false,

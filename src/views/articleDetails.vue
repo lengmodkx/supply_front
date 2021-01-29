@@ -33,17 +33,20 @@
                     </div>
                 </div>
                 <div class="comment-content">
-                    <Input v-model="param.commentName" type="textarea" placeholder="写下您的评论……" :rows="5" />
-                    <Button type="primary" @click="saveComment" class="saveBtn">评论</Button>
+                    <div v-if="from!='adminPage'">
+                        <Input v-model="param.commentName" type="textarea" placeholder="写下您的评论……" :rows="5" />
+                        <Button type="primary" @click="saveComment" class="saveBtn">评论</Button>
+                    </div>
                     <div class="comment-list">
                         <div class="comment-item" v-for="item in commentList">
-                            <a  :href="'/articleCenter?type=other&id='+item.memberId" target="_blank"
-                                rel="noopener noreferrer"><img :src="item.memberImage" alt=""></a>
-
+                            <a :href="'/articleCenter?type=other&id='+item.memberId" target="_blank" v-if="from!='adminPage'"
+                                rel="noopener noreferrer"><img :src="item.memberImage" alt="" ></a>
+                            <img :src="item.memberImage" alt="" v-else>
                             <div class="comment-info">
                                 <div>
-                                    <a class="name" :href="'/articleCenter?type=other&id='+item.memberId"
+                                    <a class="name" :href="'/articleCenter?type=other&id='+item.memberId" v-if="from!='adminPage'"
                                         target="_blank" rel="noopener noreferrer">{{item.memberName}}</a>
+                                        <span class="name" v-else>{{item.memberName}}</span>
                                     <Time :time="item.createTime" />
                                 </div>
                                 <p class="content">{{item.commentName}}</p>
@@ -58,10 +61,11 @@
 
 <script>
     import {
-        commentList,
+        commentListByArticleId,
         commentAdd
     } from '@/axios/api'
     export default {
+        props: ['from'],
         data() {
             return {
                 iconList: {
@@ -77,7 +81,7 @@
                 commentParam: {
                     pageNum: 1,
                     commentState: 1,
-                    articleId:""
+                    articleId: ""
                 },
                 commentList: [],
                 total: '',
@@ -102,7 +106,7 @@
         },
         methods: {
             getCommentList() {
-                commentList(this.commentParam).then(response => {
+                commentListByArticleId(this.commentParam).then(response => {
                     this.commentList = response.data.records
                     this.total = response.data.total
                     if (response.data.records.length < 20) {

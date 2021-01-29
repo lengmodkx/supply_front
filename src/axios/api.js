@@ -1790,16 +1790,6 @@ export function editArticle(data) {
     })
 }
 
-//文章评论列表
-export function commentList(data) {
-    return fetch({
-        url: `/comment/commentListByArticleId`,
-        method: 'get', // 请求方法
-        params: data
-    })
-}
-
-
 //发表评论
 export function commentAdd(data) {
     return fetch({

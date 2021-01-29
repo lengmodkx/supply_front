@@ -13,6 +13,10 @@ module.exports = {
         company: {
             entry: 'src/company/main.js',
             template: 'public/company.html',
+        },
+        admin: {
+            entry: 'src/admin/main.js',
+            template: 'public/admin.html',
         }
     },
     chainWebpack: config => {
@@ -44,8 +48,9 @@ module.exports = {
         // proxy: 'http://localhost:4000'// 配置跨域处理,只有一个代理
         proxy: {
             "/api": {
-             target: "http://192.168.31.120:8080",
-              //target: "http://test.art1001.com/api/",
+                //  target: "http://192.168.31.120:8080",
+                //target: "http://test.art1001.com/api/",
+                target: "http://192.168.31.26:8080",
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
@@ -55,6 +60,18 @@ module.exports = {
             "/foo": {
                 target: "<other_url>"
             }
-        } // 配置多个代理
+        },// 配置多个代理
+        historyApiFallback: {
+            rewrites: [
+              { from: /\/admin/, to: '/admin.html' },
+            ]
+          }
+    },
+    css:{
+        loaderOptions:{
+            less:{
+                javascriptEnabled:true
+            }
+        }
     }
 };

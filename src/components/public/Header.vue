@@ -66,7 +66,6 @@
 <script>
   import TagsView from './TagsView/index'
   import DropdownDrawer from "./dropdownDrawer";
-  // import Breadcrumbs from './breadcrumb'
   import Breadcrumbs from './custom-bread-crumb'
   import {
     mapActions,
@@ -112,18 +111,6 @@
     mounted() {
       this.setBreadCrumb(this.$route)
       this.setHomeRoute(this.$router.options.routes)
-      //切换路由页面刷新时用
-      if (this.$route.name == "organization") {
-        this.$store.commit("app/changeHeaderTag", 0);
-      } else if (this.$route.name == "prolist") {
-        this.$store.commit("app/changeHeaderTag", 1);
-      } else if (this.$route.name == "members") {
-        this.$store.commit("app/changeHeaderTag", 2);
-      } else if (this.$route.name == "systemSettings") {
-        this.$store.commit("app/changeHeaderTag", 3);
-      } else if (this.$route.name == "Mine") {
-        this.$store.commit("app/changeHeaderTag", 4);
-      }
       this.getNewsCount();
       this.initSocket(localStorage.userId);
     },
@@ -163,43 +150,8 @@
           err => {}
         );
       },
-      //去首页
-      goOrg() {
-        this.$router.push("/org/" + localStorage.companyId);
-        this.$store.commit("app/changeHeaderTag", 0);
-        this.tagHeader = false;
-      },
-      projectList() {
-        this.$router.push("/prolist/" + localStorage.companyId);
-        this.$store.commit("app/changeHeaderTag", 1);
-        this.tagHeader = false;
-      },
-      goSys() {
-        userIsOwner(localStorage.companyId).then(res => {
-          if (res.msg == 1) {
-            this.$router.push("/systemSettings");
-            this.$store.commit("app/changeHeaderTag", 3);
-            localStorage.organizationName = res.data.organizationName;
-            this.tagHeader = false;
-          } else {
-            this.$Message.error("没有权限");
-          }
-        });
-      },
       checkEnter() {
         this.$router.push("/enterprisesList");
-      },
-      // 去成员页面
-      goMembers() {
-        checkPermission(localStorage.companyId).then(res => {
-          if (res.result == 1 && res.data == true) {
-            this.$router.push("/members");
-            this.$store.commit("app/changeHeaderTag", 2);
-            this.tagHeader = false;
-          } else {
-            this.$Message.error("没有权限");
-          }
-        });
       },
       personal() {
         // let routeUrl = this.$router.resolve({
@@ -232,11 +184,6 @@
         } else {
           this.popVisible = "none";
         }
-      },
-      myPage() {
-        this.$router.push("/mine");
-        this.$store.commit("app/changeHeaderTag", 4);
-        this.tagHeader = false;
       },
       hideContent() {
         this.popVisible = "none";

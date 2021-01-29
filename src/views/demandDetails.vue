@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="title mt30">
-                    <span>竞标企业</span>
+                    <span>竞标人</span>
                     <div class="line"></div>
                 </div>
                 <div class="compy-content df jsb">
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tips" v-if="bidingList==null&&demandInfo.memberId !=userId">暂无法查看其它竞标企业</div>
+                    <div class="tips" v-if="bidingList==null&&demandInfo.memberId !=userId">暂无法查看其它竞标人</div>
                 </div>
             </div>
         </div>

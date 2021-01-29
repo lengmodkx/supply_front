@@ -17,10 +17,10 @@
                                             alt="" class="coverImg"
                                             v-if="item.coverImages ||item.headlineImages || item.videoCover">
                                         <div>
-                                            <div class="article-tit">
-                                                {{item.acId==1?item.articleTitle:item.acId==2?item.headlineContent:item.videoName}}
+                                            <div class="article-tit"
+                                                v-html="item.acId==1?item.articleTitle:item.acId==2?item.headlineContent:item.videoName">
                                             </div>
-                                            <div class="article-tip">评论 {{item.commentCount?item.commentCount:0}}
+                                            <div class="article-tip">评论 {{item.commentIsCheckCount?item.commentIsCheckCount:0}}
                                             </div>
                                         </div>
                                     </div>
@@ -171,7 +171,7 @@
             this.getMyArticle().then(res => {
                 return this.checkItem(0, this.listData[0]);
             })
-            let _this=this
+            let _this = this
             document.querySelector('#layout-right').onscroll = function () {
                 let scrollTop = document.querySelector('#layout-right').scrollTop || document.body.scrollTop;
                 let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -433,6 +433,7 @@
 
             .noList {
                 margin-top: 10%;
+
                 img {
                     display: block;
                     width: 135px;
