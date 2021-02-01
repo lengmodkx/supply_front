@@ -74,7 +74,8 @@
   } from "vuex";
   import {
     checkPermission,
-    userIsOwner
+    userIsOwner,
+    userlogout
   } from "../../axios/api.js";
   import suCai from "./sucai"; //素材
   import SockJS from "sockjs-client";
@@ -162,20 +163,22 @@
         this.popVisible = "none";
       },
       goout() {
-        localStorage.clear();
-        Cookies.remove('token', {
-          path: '/',
-          domain: 'aldbim.com'
-        });
-        var url = "";
-        if (process.env.NODE_ENV == "test") {
-          url = 'http://test.art1001.com';
-        } else if (process.env.NODE_ENV == "production") {
-          url = "https://www.aldbim.com";
-        } else {
-          url = "/";
-        }
-        window.location.href = url;
+        userlogout().then(response=>{
+          localStorage.clear();
+          Cookies.remove('token', {
+            path: '/',
+            domain: 'aldbim.com'
+          });
+          var url = "";
+          if (process.env.NODE_ENV == "test") {
+            url = 'http://test.art1001.com';
+          } else if (process.env.NODE_ENV == "production") {
+            url = "https://www.aldbim.com";
+          } else {
+            url = "/";
+          }
+          window.location.href = url;
+        })
 
       },
       showMenu() {

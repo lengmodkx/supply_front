@@ -62,6 +62,15 @@ export function restMsg(publicId, surpluscount) {
         }
     });
 }
+
+//用户登出
+export function userlogout() {
+    return fetch({
+        url: api.logout,
+        method: "get",
+    });
+}
+
 //用户登录：
 export function userlogin(data) {
     // userName,password是参数
