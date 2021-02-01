@@ -1,5 +1,8 @@
 import axios from 'axios'
 import store from '../store'
+import qs from "qs";
+//引入getToken 
+import { getToken } from '../libs/util'
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -21,7 +24,8 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
-        //
+        'Content-Type': 'application/x-www-form-urlencoded',
+          'x-auth-token': getToken()
       }
     }
     return config
@@ -40,6 +44,13 @@ class HttpRequest {
         // Spin.show() // 不建议开启，因为界面不友好
       }
       this.queue[url] = true
+      if (config.specialPost) {
+        console.log("specialPost");
+      } else {
+        config.data = qs.stringify({
+          ...config.data,
+        });
+      }
       return config
     }, error => {
       return Promise.reject(error)

@@ -50,7 +50,8 @@ export default [{
     name: 'demand',
     meta: {
       icon: 'md-cloud-upload',
-      title: '需求管理'
+      title: '需求管理',
+      showAlways:true
     },
     component: Main,
     children: [{

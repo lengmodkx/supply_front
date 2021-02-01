@@ -13,7 +13,7 @@ import { setToken, getToken } from '../../libs/util'
 
 export default {
   state: {
-    userName: '',
+    accountName: '',
     userId: '',
     avatorImgPath: '',
     token: getToken(),
@@ -33,7 +33,7 @@ export default {
       state.userId = id
     },
     setUserName (state, name) {
-      state.userName = name
+      state.accountName = name
     },
     setAccess (state, access) {
       state.access = access
@@ -74,15 +74,20 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { userName, password }) {
-      userName = userName.trim()
+    handleLogin ({ commit }, { accountName, password }) {
+      accountName = accountName.trim()
       return new Promise((resolve, reject) => {
         login({
-          userName,
+          accountName,
           password
         }).then(res => {
           const data = res.data
-          commit('setToken', data.token)
+          commit('setToken', data.accessToken)
+          commit('setAvator', data.userInfo.image)
+          commit('setUserName', data.userInfo.userName)
+          // commit('setUserId', data.userInfo.userId)
+          commit('setAccess', ['super_admin'])
+          commit('setHasGetInfo', true)
           resolve()
         }).catch(err => {
           reject(err)
@@ -92,7 +97,7 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout().then(() => {
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
@@ -109,12 +114,12 @@ export default {
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
         try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
+          getUserInfo().then(res => {
+            const data = res.data.data
+            commit('setAvator', data.image)
+            commit('setUserName', data.userName)
+            // commit('setUserId', data.user_id)
+            commit('setAccess', ['super_admin'])
             commit('setHasGetInfo', true)
             resolve(data)
           }).catch(err => {
