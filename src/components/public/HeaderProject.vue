@@ -25,7 +25,7 @@
       <Poptip v-model="visible" placement="bottom-end" width="400">
         <!-- <a class="last screenPop" v-if="$route.meta.active == '/tasks'">筛选<Icon type="md-arrow-dropdown" size="16"/></a> -->
         <div slot="content">
-          <Input prefix="ios-search" placeholder="搜索项目内任务" v-model="param.keyword" :clearable="closeBtn" @on-blur="searchTask"/>
+          <Input prefix="ios-search" placeholder="搜索项目内任务" v-model="keyword" :clearable="closeBtn" />
           <div class="df ac searcher-unit">
             <div class="searcher-unit-title">执行者</div>
             <searchProMem :projectId="id" @ZzzUserId="ZzzUserId" :type="'zzz'"></searchProMem>
@@ -38,11 +38,17 @@
                 <div slot="content">
                   <div class="dep-pop">
                     <Input prefix="ios-search" placeholder="搜索" class="mt10" @on-change="search" v-model="searchTag" />
-                    <CheckboxGroup v-model="param.tagId">
-                        <Checkbox v-for="(item, index) in totalTag" :key="index" :label="item.tagId" class="df people-check ac">
-                          {{ item.tagName }}
-                        </Checkbox>
-                    </CheckboxGroup>
+                    <ul class="people-ul">
+                      <CheckboxGroup v-model="tagId">
+                        <li v-for="(item, index) in totalTag" :key="index">
+                          <Checkbox :label="item.tagId" class="df people-check ac">
+                            <div class="df">
+                              <p>&nbsp; &nbsp;{{ item.tagName }}</p>
+                            </div>
+                          </Checkbox>
+                        </li>
+                      </CheckboxGroup>
+                    </ul>
                     <div class="btn-content">
                       <div class="btns" @click="sureTagBtn">确定</div>
                     </div>
@@ -116,18 +122,20 @@ export default {
       visible1: false,
       searchTag: "",
       closeBtn: true,
+      tagId: [],
       tagName: "",
+      keyword: "",
       param: {
         keyword: "",
         projectId: this.$route.params.id, //项目id
         executor: "", //执行者id
-        tagId: [], //标签id
+        tagId: "", //标签id
         startTime: "", //截止时间-开始时间
         endTime: "", //截止时间-结束时间
         memberId: "", //创建者id
-        taskUid: [], //参与者id
+        taskUid: "", //参与者id
         taskStatus: "", //是否完成 0未完成 1已完成
-        priority: [], //优先级 普通 紧急 非常紧急
+        priority: "", //优先级 普通 紧急 非常紧急
       },
     };
   },
@@ -169,7 +177,7 @@ export default {
     });
     console.log(this.menus);
     this.getTagsList();
-    //this.searchTask()
+    this.searchTask()
   },
   methods: {
     push(u) {
@@ -177,11 +185,16 @@ export default {
       this.$router.push(this.path);
     },
     searchTask() {
-      console.log(this.param)
-     
-      // searchTaskByExamples(param).then((res) => {
+      // searchTaskByExamples(this.param).then((res) => {
       //   console.log(res);
       // });
+      let param = {
+        groupId: this.$route.params.groupId,
+        tagId: JSON.stringify([1, 2, 3]),
+      };
+      searchTaskByExamples(param).then((res) => {
+        console.log(res);
+      });
     },
     search() {
       if (this.searchTag) {
@@ -198,14 +211,10 @@ export default {
       allTags(this.id, {}).then((res) => {
         if (res.result === 1) {
           this.totalTag = res.data;
+          console.log(this.totalTag);
         }
       });
     },
-    changeTag(data){
-
-    },
-
-
     ZzzUserId(data) {
       this.param.executor = data;
       this.searchTask();
@@ -231,7 +240,7 @@ export default {
     sureTagBtn() {
       let tagNameList = [];
       this.totalTag.forEach((i) => {
-        this.param.tagId.forEach((v) => {
+        this.tagId.forEach((v) => {
           if (i.tagId == v) {
             tagNameList.push(i.tagName);
           }
@@ -239,6 +248,7 @@ export default {
       });
       this.tagName = tagNameList.join(",");
       this.visible1 = false;
+      this.param.tagId = this.tagId.join(",");
     },
     emptyCom() {
       this.completed = "";
@@ -470,9 +480,5 @@ export default {
 }
 .screenPop {
   border-left: 1px solid #a6a6a6;
-}
-.dep-pop .ivu-checkbox-group{
-  display: flex;
-  flex-direction: column;
 }
 </style>

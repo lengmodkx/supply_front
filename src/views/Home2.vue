@@ -186,7 +186,7 @@
         </Tabs>
       </div>
     </div>
-    <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''" :style="{width:fatherWidth}">
+    <div class="article-card-header" :class="searchBarFixed == true ? 'isFixed' :''" >
       <Tabs :value="tabName" @on-click="checkTab">
         <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tabList" :key="index"></TabPane>
         <TabPane label="需求" name="xq"></TabPane>
@@ -550,4 +550,6 @@
 </script>
 <style lang="less">
   @import "../assets/css/menu.less";
+  @import "../assets/css/deepBug.less";
+
 </style>
