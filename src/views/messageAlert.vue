@@ -1,8 +1,9 @@
 <template>
-  <div class="container">
+  <div class="layout-right">
     <div class="content">
       <div class="title">
-        <div>{{messageType==0?'全部项目':'系统公告'}}</div>
+        <!-- <div>{{messageType==0?'全部项目':'系统公告'}}</div> -->
+        <div>项目通知</div>
         <div class="line"></div>
       </div>
       <div class="searchContent">
@@ -94,7 +95,7 @@ import { userMessage, batchReads, batchDel } from "@/axios/api";
 import { mapActions, mapState, mapMutations } from "vuex";
 
 export default {
-  props: ["messageType"],
+  // props: ["messageType"],
   components: {
     Loading
   },
@@ -127,7 +128,7 @@ export default {
         param: messageTypes
       };
       userMessage(data).then(res => {
-        this.dataList = res.data.list;
+        this.dataList = res.data.records;
         this.total = res.data.total;
         this.loading = false;
       });

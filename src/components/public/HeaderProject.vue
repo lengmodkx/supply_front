@@ -23,7 +23,7 @@
       <a :class="{ activeHeaderTag: show == 2 }" @click="$emit('showBox', 2)" class="last">菜单 </a>
 
       <Poptip v-model="visible" placement="bottom-end" width="400">
-        <a class="last screenPop" v-if="$route.meta.active == '/tasks'">筛选<Icon type="md-arrow-dropdown" size="16"/></a>
+        <!-- <a class="last screenPop" v-if="$route.meta.active == '/tasks'">筛选<Icon type="md-arrow-dropdown" size="16"/></a> -->
         <div slot="content">
           <Input prefix="ios-search" placeholder="搜索项目内任务" v-model="param.keyword" :clearable="closeBtn" @on-blur="searchTask"/>
           <div class="df ac searcher-unit">
@@ -108,7 +108,7 @@ export default {
       projectName: "",
       companyId: localStorage.companyId,
       toto: "/org/" + localStorage.companyId,
-      visible: true,
+      visible: false,
       value2: [],
       completed: "",
       priority: [],

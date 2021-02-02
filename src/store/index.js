@@ -16,7 +16,9 @@ import company from './modules/company'
 import relation from './modules/relation'
 import tree from './modules/tree'
 import view from './modules/view'
-
+import tagsView from "./modules/tagsView"
+import drawer from './modules/drawer'
+import breadCrumb from './modules/breadCrumb'
 //import gantt from './modules/gantt'
 
 import Login from "./webim/login";
@@ -24,7 +26,6 @@ import Chats from "./webim/chats";
 import Group from "./webim/group";
 import Emedia from "./webim/emedia";
 import FriendModule from "./webim/friendModule";
-
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -49,8 +50,10 @@ const store = new Vuex.Store({
 		group: Group,
         emedia: Emedia,
         friendModule: FriendModule,
-        view
-       // gantt
+        view,
+        tagsView,
+        drawer,
+        breadCrumb
     }
 })
 

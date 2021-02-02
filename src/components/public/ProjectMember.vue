@@ -431,7 +431,15 @@ export default {
   padding-top: 5px;
   margin: 0px auto;
   overflow-y: auto;
-  height: 80%;
+  height: 68%;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    background-color: #e5e5e5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cecece;
+  }
   ul li {
     height: 50px;
     border-bottom: 1px solid #e5e5e5;

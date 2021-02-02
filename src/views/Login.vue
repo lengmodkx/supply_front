@@ -188,6 +188,7 @@ export default {
   height: 100vh;
   background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg2.jpg") no-repeat center/cover;
   position: relative;
+  margin-top: -48px;
 }
 
 .login-box {

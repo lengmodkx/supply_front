@@ -104,7 +104,7 @@
                             <Input v-model="password.moreNew" type="password" placeholder="请输入新密码"></Input>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="submitPassword('password')">确认</Button>
+                            <Button type="primary" @click="submitPassword('password')" style="background-color: rgba(44, 183, 245, 1);border-color: #2CB7F5;">确认</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -134,9 +134,25 @@
     </div>
 </template>
 <script>
-    import { findUserInfo, updateUserNews, weChatLogin, bindWx, notBindWx, changePassword, changeOrganization, removeOrgUser, notBindPhone } from '@/axios/api';
-    import { getAllOrg } from '@/axios/companyApi'
-    import { mapState, mapActions, mapMutations } from "vuex";
+    import {
+        findUserInfo,
+        updateUserNews,
+        weChatLogin,
+        bindWx,
+        notBindWx,
+        changePassword,
+        changeOrganization,
+        removeOrgUser,
+        notBindPhone
+    } from '@/axios/api';
+    import {
+        getAllOrg
+    } from '@/axios/companyApi'
+    import {
+        mapState,
+        mapActions,
+        mapMutations
+    } from "vuex";
     import OSS from "ali-oss";
     let client = new OSS({
         region: "oss-cn-beijing",
@@ -154,9 +170,21 @@
                 },
                 //验证
                 rulesPassword: {
-                    old: [{ required: true, message: "请输入旧密码", trigger: "blur" }],
-                    new: [{ required: true, message: "请输入新密码", trigger: "blur" }],
-                    moreNew: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+                    old: [{
+                        required: true,
+                        message: "请输入旧密码",
+                        trigger: "blur"
+                    }],
+                    new: [{
+                        required: true,
+                        message: "请输入新密码",
+                        trigger: "blur"
+                    }],
+                    moreNew: [{
+                        required: true,
+                        message: "请输入新密码",
+                        trigger: "blur"
+                    }],
                 },
                 loading: true,
                 imageUrl: "",
@@ -184,14 +212,18 @@
                 dayList: [],
                 //验证
                 rules: {
-                    accountName: [
-                        { required: false, validator: validatePhone, trigger: 'blur' }
-                    ],
-                    email: [
-                        { required: false, validator: validateEmail, trigger: 'blur' }
-                    ],
+                    accountName: [{
+                        required: false,
+                        validator: validatePhone,
+                        trigger: 'blur'
+                    }],
+                    email: [{
+                        required: false,
+                        validator: validateEmail,
+                        trigger: 'blur'
+                    }],
                 },
-                emailAddress: '',  //邮箱地址    
+                emailAddress: '', //邮箱地址    
                 modal3: false,
                 companyId: ''
             }
@@ -219,9 +251,9 @@
                 changePassword(this.password.old, this.password.new).then(res => {
                     if (res.result == 1) {
                         this.$Message.success("修改密码成功");
-                        this.password.old=''
-                        this.password.new=''
-                        this.password.moreNew=''
+                        this.password.old = ''
+                        this.password.new = ''
+                        this.password.moreNew = ''
 
                     }
                 })
@@ -241,7 +273,7 @@
                 })
             },
             getItem(index, item) {
-                this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
+                this.activeClass = index; // 把当前点击元素的index，赋值给activeClass
                 this.activeItem = item
             },
             random_string(len) {
@@ -271,11 +303,11 @@
             getFile(event) {
                 var that = this;
                 const files = event.target.files
-                this.filename = files[0].name          //只有一个文件
+                this.filename = files[0].name //只有一个文件
                 if (this.filename.lastIndexOf('.') <= 0) {
-                    return alert("Please add a valid image!")        //判断图片是否有效
+                    return alert("Please add a valid image!") //判断图片是否有效
                 }
-                const fileReader = new FileReader()                //内置方法new FileReader()   读取文件
+                const fileReader = new FileReader() //内置方法new FileReader()   读取文件
                 fileReader.addEventListener('load', () => {
                     this.pic_show = false,
                         this.pic_hide = true,
@@ -291,8 +323,7 @@
                 if (this.filename) {
                     this.message.defaultImage = "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/" + this.fileName
                     client.multipartUpload(this.fileName, this.image, {
-                        progress: function (p) {
-                        }
+                        progress: function (p) {}
                     }).then(function (result) {
                         console.log(result)
                         let data = {
@@ -333,7 +364,8 @@
                 if (this.message.birthday != null && this.message.birthday != "") {
                     console.log(this.message.birthday)
                     var dataEE = new Date(this.message.birthday).toJSON();
-                    var birthDay = new Date(new Date(dataEE).getTime() + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
+                    var birthDay = new Date(new Date(dataEE).getTime() + 8 * 3600 * 1000).toISOString().replace(/T/g,
+                        ' ').replace(/\.[\d]{3}Z/, '');
                 }
 
                 let data = {
@@ -461,23 +493,22 @@
             callback();
         }
     }
-
 </script>
 <style scoped lang="less">
     .personal-box {
+        padding: 15px;
+
         .ivu-input-icon {
             margin-top: -5px;
         }
 
         color: #333333;
-        width: 100%;
-        min-height: 100vh;
-        padding-top: 50px;
+        flex:1;
+        min-height: 100%;
         background-color: #F0EFEC;
+        overflow: auto;
 
         .personal {
-            width: 1120px;
-            padding: 36px 0 16px;
             height: auto;
             margin: 0px auto;
             display: flex;
@@ -485,7 +516,9 @@
         }
 
         .personal-left {
-            width: 286px;
+            width: 240px;
+            height: auto;
+            background: #ffffff;
 
             .titel {
                 width: 100%;
@@ -515,9 +548,7 @@
 
                 li {
                     cursor: pointer;
-                    /* padding:20px; */
                     background: #ffffff;
-                    /* border-bottom: 1px solid #F0EFEC; */
                     font-size: 14px;
                     line-height: 38px;
                     padding-left: 26px;
@@ -528,7 +559,6 @@
                 }
 
                 .active {
-                    /* font-weight: bold; */
                     background: #F2FBFF;
                 }
             }
@@ -536,7 +566,7 @@
         }
 
         .personal-right {
-            width: 815px;
+            flex: 1;
             min-height: 120px;
             background: #ffffff;
             /* padding: 20px; */
@@ -691,6 +721,16 @@
         }
 
 
+    }
+
+    .personal-box::-webkit-scrollbar {
+        width: 6px;
+        height: 8px;
+        background-color: #e5e5e5;
+    }
+
+    .personal-box::-webkit-scrollbar-thumb {
+        background-color: #cecece;
     }
 
     .doBtn {

@@ -1,34 +1,23 @@
 .wrap-box {
   min-height: 100vh;
   background: #f4f3f4;
-  padding-top: 48px;
 
   .page-header {
-    background: #fff;
-    padding: 19px 32px 0;
     display: flex;
-    flex-flow: column wrap;
-    border-bottom: 1px solid #e8e8e8;
 
-    .header-title {
-      color: #8c8c8c;
-      padding-bottom: 1em;
-    }
+
 
     .header-contant {
-      display: flex;
-      justify-content: space-between;
-      padding-bottom: 1em;
+      padding: 12px 15px;
 
       .left-contant {
         display: flex;
         line-height: 33px;
 
         .avatar {
-          width: 64px;
-          height: 64px;
+          width: 100px;
+          height: 130px;
           margin-right: 14px;
-          border-radius: 50%;
         }
 
         .title {
@@ -36,8 +25,26 @@
           color: #2d2d2d;
         }
 
-        .team {
-          color: #8c8c8c;
+        .info-content {
+          margin-bottom: 10px;
+
+          .info-item {
+            margin-right: 30px;
+
+            .info-tit {
+              color: gray;
+
+              span {
+                color: #303133;
+              }
+            }
+          }
+        }
+
+        .btn-content {
+          .ivu-btn {
+            margin-right: 10px;
+          }
         }
 
       }
@@ -66,10 +73,59 @@
 
       }
     }
+
+    .mess-content {
+      height: 171px;
+      overflow: auto;
+      padding: 0 15px;
+
+
+      .mess-item {
+        font-size: 13px;
+        color: grey;
+        height: 28px;
+        line-height: 28px;
+        cursor: pointer;
+
+        &:hover {
+          color: #33adff;
+        }
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 8px;
+      background-color: #e5e5e5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #cecece;
+    }
+  }
+
+  .col-item {
+    background: #fff;
+
+    .ivu-card-body {
+      padding: 0;
+
+    }
+  }
+
+  .tit {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ebeef5;
+    box-sizing: border-box;
+
+    .more {
+      color: #33adff;
+      cursor: pointer;
+    }
   }
 
   .page-wrapper {
-    padding: 1.5em 1.5em 0 1.5em;
+    padding: 15px 0 0;
 
     .ivu-card-body {
       padding: 0px !important;
@@ -82,7 +138,7 @@
       margin-top: -1px;
 
       li {
-        width: 33.33%;
+        width: 25%;
         padding: 20px;
         color: #8c8c8c;
         // border-left: 1px solid
@@ -198,40 +254,134 @@
         }
       }
 
-      .task-page {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 10px;
+
+
+    }
+
+    .article-card {
+      display: block;
+      background: #fff;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all .2s ease-in-out;
+      border: 1px solid #dcdee2;
+      border-color: #e8eaec;
+      width: 100%;
+      position: relative;
+
+      /deep/.ivu-tabs-nav-scroll {
+        padding-left: 20px;
+
+        .ivu-tabs-nav {
+          padding: 6px 0;
+        }
+      }
+
+      /deep/.ivu-tabs-bar {
+        margin-bottom: 0px;
+      }
+
+      .reuqire-table {
+        .ivu-table th {
+          height: 68px;
+          background-color: #ffffff;
+        }
       }
 
     }
 
-    // 团队
-    .team-contant {
-      display: flex;
-      flex-flow: row wrap;
-      padding-top: 20px;
+    //文章
+    .article-list {
+      padding: 0 15px;
+      padding-bottom: 15px;
+    }
 
-      li {
-        width: 33.33%;
-        padding: 0 20px 20px 20px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .article-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #E8E8E8;
+      cursor: pointer;
 
-        .avatar {
-          width: 24px;
-          height: 24px;
-          margin-right: 6px;
-          border-radius: 50%;
-          vertical-align: bottom;
-        }
+      .coverImg {
+        width: 132px;
+        height: 102px;
       }
 
-      li {
-        span:hover {
-          cursor: pointer;
-          color: #2d8cf0;
+      .text-content {
+        margin-left: 15px;
+        flex: 1;
+        height: 100%;
+
+        .content-box {
+          display: inline-block;
+          width: 100%;
+          vertical-align: middle;
+        }
+
+        .article-tit {
+          font-size: 16px;
+          color: #000000;
+
+          &:hover {
+            color: #57a3f3;
+          }
+        }
+
+        .article-tip {
+          margin: 10px 0;
+          font-size: 14px;
+          color: #808080;
+          word-break: break-all;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          /** 对象作为伸缩盒子模型显示 **/
+          -webkit-box-orient: vertical;
+          /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+          -webkit-line-clamp: 2;
+          /** 显示的行数 **/
+          overflow: hidden;
+          /** 隐藏超出的内容 **/
+        }
+
+        .img-content {
+          display: flex;
+          margin-bottom: 5px;
+          img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 10px;
+          }
+        }
+
+        .icon-content {
+          justify-content: space-between;
+          color: #808080;
+          align-items: center;
+
+          .createImg {
+            width: 16px;
+            height: 16px;
+          }
+
+          .b50 {
+            border-radius: 50%;
+          }
+
+          .createText {
+            margin: 0 15px 0 10px;
+          }
+
+          .right-icon-content {
+            svg {
+              width: 16px;
+              height: 16px;
+              margin-right: 5px;
+            }
+            .icon-content {
+              display: flex;
+              align-items: center;
+            }
+          }
         }
       }
     }
@@ -264,4 +414,101 @@
 
 .jsb {
   justify-content: space-between;
+}
+
+
+.layout-right::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+  background-color: #e5e5e5;
+}
+
+.layout-right::-webkit-scrollbar-thumb {
+  background-color: #cecece;
+}
+
+.btn-content {
+  margin-top: 15px;
+}
+
+.home-recommend-row {
+  padding: 12px 15px;
+
+  .home-recommend {
+    position: relative;
+    height: 100px;
+    color: #ffffff;
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+
+    &:hover {
+      i {
+        right: 5px !important;
+        bottom: 5px !important;
+        transition: all ease 0.3s;
+      }
+    }
+
+    i {
+      position: absolute;
+      right: -10px;
+      bottom: -10px;
+      // font-size: 70px;
+      transform: rotate(-30deg);
+      transition: all ease 0.3s;
+
+      .svg-icon {
+        width: 55px;
+        height: 55px;
+      }
+    }
+
+    .home-recommend-auto {
+      padding: 15px;
+      position: absolute;
+      left: 0;
+      top: 5%;
+
+      .home-recommend-msg {
+        font-size: 12px;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+.task-page {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.ac {
+  align-items: center;
+}
+
+.article-card-header {
+  border-bottom: 1px solid #e8eaec;
+  background: red;
+  padding: 5px 16px;
+  line-height: 1;
+  position: absolute;
+  top: -1px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  display: none;
+
+  .ivu-tabs-bar {
+    border-bottom: 0px solid #dcdee2;
+    margin-bottom: 2px;
+  }
+}
+
+.isFixed {
+  position: fixed;
+  background-color: #Fff;
+  top: 48px;
+  right: 0;
+  z-index: 9999;
+  display: block;
 }

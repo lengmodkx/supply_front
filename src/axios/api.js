@@ -62,6 +62,15 @@ export function restMsg(publicId, surpluscount) {
         }
     });
 }
+
+//用户登出
+export function userlogout() {
+    return fetch({
+        url: api.logout,
+        method: "get",
+    });
+}
+
 //用户登录：
 export function userlogin(data) {
     // userName,password是参数
@@ -1700,5 +1709,215 @@ export function searchTaskByExamples(param) {
             data = JSON.stringify(data)
             return data
           }],
+    })
+}
+
+//工作台个人信息
+export function workBenchInfo(data) {
+    return fetch({
+        url: `/workBenchInfo`,
+        method: 'get', // 请求方法
+        params:data
+    })
+}
+
+//发布文章
+export function article(data) {
+    return fetch({
+        url: `/article/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//文章列表
+export function allArtile(data) {
+    return fetch({
+        url: `/article/allArtile`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//我关注人的文章列表
+export function attentionListArticle(data) {
+    return fetch({
+        url: `/article/attentionListArticle`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+
+//粉丝和关注的人列表
+export function allConnectionUser(data) {
+    return fetch({
+        url: `/article/allConnectionUser`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//分类列表
+export function articleClass(data) {
+    return fetch({
+        url: `/articleClass/list`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//关注/取关
+export function attentionUserStatus(data) {
+    return fetch({
+        url: `/article/attentionUserStatus`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//我的文章列表
+export function myArticle(data) {
+    return fetch({
+        url: `/article/myArticle`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//删除我的文章
+export function deleteArticle(data) {
+    return fetch({
+        url: `/article/deleteArticle`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+
+//编辑我的文章
+export function editArticle(data) {
+    return fetch({
+        url: `/article/edit`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//发表评论
+export function commentAdd(data) {
+    return fetch({
+        url: `/comment/add`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//根据文章id查询评论列表
+export function commentListByArticleId(data) {
+    return fetch({
+        url: `/comment/commentListByArticleId`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//移除评论
+export function removeComment(data) {
+    return fetch({
+        url: `/comment/remove`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//需求详情
+export function demandInfos(data) {
+    return fetch({
+        url: `/demand/demandInfo`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//发布需求
+export function demandAdd(data) {
+    return fetch({
+        url: `/demand/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//需求列表
+export function demandList(data) {
+    return fetch({
+        url: `/demand/list`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+
+//编辑需求
+export function demandEdit(data) {
+    return fetch({
+        url: `/demand/edit`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//删除需求
+export function demandRemove(data) {
+    return fetch({
+        url: `/demand/remove`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//保存问答
+export function questionAdd(data) {
+    return fetch({
+        url: `/question/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//分页查询所有提问列表
+export function questionList(data) {
+    return fetch({
+        url: `/question/listAll`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//回答问题保存接口
+export function replyAdd(data) {
+    return fetch({
+        url: `/reply/add`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}
+
+//问答回答列表
+export function getReplyListByQuetionId(data) {
+    return fetch({
+        url: `/reply/getReplyListByQuetionId`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//发布竞标
+export function joinBidding(data) {
+    return fetch({
+        url: `/demandBid/joinBidding`,
+        method: 'post', // 请求方法
+        data: data
     })
 }

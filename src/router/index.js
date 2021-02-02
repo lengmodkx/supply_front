@@ -18,9 +18,26 @@ import delOrg from '../views/delOrg.vue'
 import Detail from '../views/detail.vue'
 import loginCompany from '../components/public/companyIn' //企业登陆
 import prolist from '../views/projectList.vue' //项目管理
+import messageAlert from '../views/messageAlert.vue' //内容管理
+
 import systemSettings from '../views/systemSettings.vue' //系统设置
 import enterprisesList from '../views/enterprisesList.vue' //切换企业
 import creatEnter from '../views/creatEnter.vue' //创建企业
+import postArticles from '../views/postArticles.vue' //发布文章
+import articleDetails from '../views/articleDetails.vue' //文章详情
+import articleCenter from '../views/articleCenter.vue' //个人中心
+import contentManagement from '../views/contentManagement.vue' //内容管理
+import commentManagement from '../views/commentManagement.vue' //评价管理
+import requirements from '../views/requirements.vue' //发布需求
+import ipostedit from '../views/ipostedit.vue' //我发布的需求
+import demandDetails from '../views/demandDetails.vue' //需求详情
+import qaDetails from '../views/qaDetails.vue' //问答详情
+import demandList from '../views/demandList.vue' //我的需求
+import bidding from '../views/bidding.vue' //发布竞标
+
+
+
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -35,7 +52,8 @@ const router = new Router({
       path: "/material", // 素材裤
       component: Material,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        name:'网盘'
       }
     },
    
@@ -66,7 +84,8 @@ const router = new Router({
       name: 'members',
       component: members,
       meta: {
-        keepAlive: false
+        keepAlive: false,
+        name:"团队"
       }
     },
     {
@@ -182,7 +201,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:"我的"
       },
       children: [{
           path: "nearThing",
@@ -380,7 +400,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:'项目管理'
       },
       component: prolist
     },
@@ -390,7 +411,8 @@ const router = new Router({
       meta: {
         title: "阿拉丁BIM5D云平台",
         requireAuth: true,
-        keepAlive: false
+        keepAlive: false,
+        name:'设置'
       },
       component: systemSettings
     },
@@ -414,8 +436,136 @@ const router = new Router({
       },
       component: creatEnter
     },
-
-    
+    {
+      path: "/postArticles",
+      name: "postArticles",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:'发布'
+      },
+      component: postArticles
+    },
+    {
+      path: "/articleDetails",
+      name: "articleDetails",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false
+      },
+      component: articleDetails
+    },
+    {
+      path: "/articleCenter",
+      name: "articleCenter",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:''
+      },
+      component: articleCenter
+    },
+    {
+      path: "/contentMan",
+      name: "contentMan",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"内容管理"
+      },
+      component: contentManagement
+    },
+    {
+      path: "/messageAlert",
+      name: "messageAlert",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+      },
+      component: messageAlert
+    },
+    {
+      path: "/commentMan",
+      name: "commentMan",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"评价管理"
+      },
+      component: commentManagement
+    },
+    {
+      path: "/requirements",
+      name: "requirements",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"发布需求"
+      },
+      component: requirements
+    },
+    {
+      path: "/ipostedit",
+      name: "ipostedit",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"我的需求"
+      },
+      component: ipostedit
+    },
+    {
+      path: "/demandDetails",
+      name: "demandDetails",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"需求详情"
+      },
+      component: demandDetails
+    },
+    {
+      path: "/qaDetails",
+      name: "qaDetails",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"问答详情"
+      },
+      component: qaDetails
+    },
+    {
+      path: "/demandList",
+      name: "demandList",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"需求列表"
+      },
+      component: demandList
+    },
+    {
+      path: "/bidding",
+      name: "bidding",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"发布竞标"
+      },
+      component: bidding
+    },
   ]
 });
 router.afterEach((to, from) => {
