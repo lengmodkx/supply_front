@@ -1689,11 +1689,16 @@ export function selectTaskByExamples(example,groupId,projectId) {
 //根据条件筛选任务
 export function searchTaskByExamples(param) {
     return fetch({
-        url: `/tasks/searchTaskByExample`,
+        url: '/tasks/searchTaskByExample',
         method: 'post', // 请求方法
         data:param,
+        specialPost:true,
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        transformRequest: [function(data) {
+            data = JSON.stringify(data)
+            return data
+          }],
     })
 }
