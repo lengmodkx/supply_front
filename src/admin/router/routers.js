@@ -16,7 +16,7 @@ import Main from '../components/main'
  */
 
 export default [{
-    path: '/admin/login',
+    path: '/login',
     name: 'login',
     meta: {
       title: 'Login - 登录',
