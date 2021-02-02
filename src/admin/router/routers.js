@@ -16,7 +16,7 @@ import Main from '../components/main'
  */
 
 export default [{
-    path: '/admin/login',
+    path: '/login',
     name: 'login',
     meta: {
       title: 'Login - 登录',
@@ -25,16 +25,16 @@ export default [{
     component: () => import('../view/login/login.vue')
   },
   {
-    path: '/admin',
+    path: '/',
     name: '_home',
-    redirect: '/admin/home',
+    redirect: '/home',
     component: Main,
     meta: {
       hideInMenu: false,
       notCache: true
     },
     children: [{
-      path: '/admin/home',
+      path: '/home',
       name: 'home',
       meta: {
         hideInMenu: false,
@@ -46,7 +46,7 @@ export default [{
     }]
   },
   {
-    path: '/admin/demand',
+    path: '/demand',
     name: 'demand',
     meta: {
       icon: 'md-cloud-upload',
@@ -77,7 +77,7 @@ export default [{
     ]
   },
   {
-    path: '/admin/content',
+    path: '/content',
     name: 'content',
     meta: {
       icon: 'md-cloud-upload',
@@ -105,7 +105,7 @@ export default [{
     ]
   },
   {
-    path: '/admin/message',
+    path: '/message',
     name: 'message',
     component: Main,
     meta: {
@@ -125,7 +125,7 @@ export default [{
     ]
   },
   {
-    path: '/admin/401',
+    path: '/401',
     name: 'error_401',
     meta: {
       hideInMenu: true
@@ -133,7 +133,7 @@ export default [{
     component: () => import('../view/error-page/401.vue')
   },
   {
-    path: '/admin/500',
+    path: '/500',
     name: 'error_500',
     meta: {
       hideInMenu: true

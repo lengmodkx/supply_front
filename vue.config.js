@@ -9,6 +9,7 @@ module.exports = {
         index: {
             entry: 'src/main.js',
             template: 'public/index.html',
+            filename: 'index.html'
         },
         company: {
             entry: 'src/company/main.js',
@@ -17,6 +18,7 @@ module.exports = {
         admin: {
             entry: 'src/admin/main.js',
             template: 'public/admin.html',
+            filename: 'admin/index.html',
         }
     },
     chainWebpack: config => {
@@ -50,7 +52,7 @@ module.exports = {
             "/api": {
                 //  target: "http://192.168.31.120:8080",
                 //target: "http://test.art1001.com/api/",
-                target: "http://192.168.31.26:8080",
+                target: "http://192.168.31.29:8080",
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
