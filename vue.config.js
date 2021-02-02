@@ -9,7 +9,6 @@ module.exports = {
         index: {
             entry: 'src/main.js',
             template: 'public/index.html',
-            filename: 'index.html'
         },
         company: {
             entry: 'src/company/main.js',
@@ -18,7 +17,6 @@ module.exports = {
         admin: {
             entry: 'src/admin/main.js',
             template: 'public/admin.html',
-            filename: 'admin/index.html',
         }
     },
     chainWebpack: config => {
