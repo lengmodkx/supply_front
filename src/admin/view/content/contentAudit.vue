@@ -85,7 +85,8 @@
                 articleParam: {
                     pageNum: '1',
                     pageSize: '20',
-                    state: 0
+                    state: 0,
+                    acId:'1'
                 },
                 columnsList1: [{
                         title: "封面",

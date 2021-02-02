@@ -120,10 +120,10 @@
                         acId: '3',
                         name: '视频'
                     },
-                    {
-                        acId: '4',
-                        name: '问答'
-                    },
+                    // {
+                    //     acId: '4',
+                    //     name: '问答'
+                    // },
                 ],
                 articleParam: {
                     pageNum: 1,
