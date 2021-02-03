@@ -99,7 +99,6 @@
         },
         mounted() {
             this.infoList = JSON.parse(localStorage.getItem('articleInfoList'))
-            console.log(this.infoList)
             this.param.articleId = this.infoList.articleId
             this.commentParam.articleId = this.infoList.articleId
             this.getCommentList()

@@ -102,7 +102,6 @@
         created() {
             this.loading = true
             this.demandInfo = JSON.parse(localStorage.getItem("demandInfoList"));
-            console.log(this.demandInfo)
             this.getBidding()
         },
         methods: {

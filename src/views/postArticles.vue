@@ -548,7 +548,6 @@
                 client
                     .multipartUpload(fileName, file)
                     .then(function (result) {
-                        console.log(result);
                         if (_this.clickTypeAcName == "文章") {
                             let Img1 = _this.getCaption(result.res.requestUrls[0]);
                             _this.uploadList.push(Img1);
@@ -648,8 +647,6 @@
             },
             editMethod() {
                 let item = this.$route.params.item;
-                console.log(item)
-
                 if (item.acId == 1) {
                     this.clickTypeAcName = "文章";
                     this.param.articleId = item.articleId;
@@ -679,7 +676,6 @@
                         obj.fileName = i
                         this.videoList.push(obj)
                     }
-                    // console.log(item.videoAddress.split(","))
                 }
             },
             saveAxios(param) {

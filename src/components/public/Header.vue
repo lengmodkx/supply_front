@@ -17,7 +17,7 @@
           </a>
           <a @click="goProList">
             <span class="texttag" style="border-right:none;">
-              <Badge :count="newsCount ? newsCount : 0" overflow-count="99" type="info" :offset="[10, 0]">
+              <Badge :count="newsCount ? newsCount : 0" overflow-count="99" type="info" :offset="[0, 0]">
                 <Icon type="ios-notifications-outline" size="22" />
               </Badge>
             </span>

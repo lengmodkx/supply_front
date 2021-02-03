@@ -454,7 +454,6 @@ export default {
   },
   created() {
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
-    console.log(this.departmentTree);
     this.actionUrl =
       "/api/organization/members/impUser/" + localStorage.companyId;
     this.loading = true;
@@ -738,7 +737,6 @@ export default {
     },
     // 获取某个部门下成员
     changePartment(partmentId, partmentName) {
-      console.log(partmentId, partmentName);
       this.userInfoList.partment = partmentName;
       this.userInfoList.pId = partmentId;
     },

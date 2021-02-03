@@ -244,7 +244,6 @@
                     commentId: item.commentId
                 }).then(response => {
                     this.$Message.success('审核通过');
-                    console.log(this.listData[this.check])
                     this.$set(this.listData[this.check], 'commentNotCheckCount', this.tobeComment - 1)
                     this.$nextTick(() => {
                         this.commentList.splice(index, 1);

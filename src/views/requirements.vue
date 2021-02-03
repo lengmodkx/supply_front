@@ -92,7 +92,6 @@
         mounted() {
             if (this.$route.query.type == 'edit') {
                 this.param = JSON.parse(localStorage.getItem("editRequire"))
-                console.log(this.param)
                 if (this.param.demandFiles != '') {
                     this.headlinesImg = this.param.demandFiles.split(',')
                 }
@@ -106,7 +105,6 @@
                 client
                     .multipartUpload(fileName, file)
                     .then(function (result) {
-                        console.log(result);
                         let Img2 = _this.getCaption(result.res.requestUrls[0]);
                         _this.headlinesImg.push(Img2);
                     })

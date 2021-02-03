@@ -255,12 +255,9 @@
                 })
             },
             reply(index) {
-                console.log(index)
                 this.replyIndex = index
             },
             chooseEmoji(name) {
-                console.log(this.replyIndex)
-                console.log(this.$refs['textarea' + this.replyIndex])
                 this.$refs['textarea' + this.replyIndex][0].innerHTML += '<img src="' + name + '" />';
             },
         }

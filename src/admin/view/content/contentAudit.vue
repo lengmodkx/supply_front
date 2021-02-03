@@ -142,7 +142,6 @@
                                     },
                                     on: {
                                         'on-change': (value) => {
-                                            console.log(value)
                                             contentAudit({
                                                 articleId: params.row.articleId
                                             }).then(response => {
