@@ -36,6 +36,9 @@
                         <FormItem label="姓名">
                             <Input v-model="message.userName" placeholder="请输入姓名"></Input>
                         </FormItem>
+                         <FormItem label="昵称">
+                            <Input v-model="message.nickName" placeholder="请输入昵称"></Input>
+                        </FormItem>
                         <FormItem label="职位">
                             <Input v-model="message.job" placeholder="请输入职位"></Input>
                         </FormItem>
@@ -205,7 +208,8 @@
                     birthday: '',
                     address: '',
                     email: '',
-                    wxOpenId: ''
+                    wxOpenId: '',
+                    nickName:''
                 },
                 yearList: [],
                 monthList: [],
@@ -357,6 +361,10 @@
                         return;
                     }
                 }
+                if(this.message.nickName.trim()==''){
+                        this.$Message.error('请输入昵称');
+                        return;
+                }
                 this.save();
             },
             save() {
@@ -383,6 +391,8 @@
                 updateUserNews(data).then(res => {
                     if (res.result == 1) {
                         this.$Message.info(res.msg);
+                    }else{
+                        this.$Message.warning(res.msg);
                     }
                 });
 

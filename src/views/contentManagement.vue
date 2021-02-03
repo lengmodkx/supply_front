@@ -9,7 +9,7 @@
                         </div>
                         <div class="listData" v-else>
                             <div class="search-content">
-                                <DatePicker :value="dateValue" type="daterange" placeholder="开始日期 ~ 结束日期"
+                                <DatePicker v-model="dateValue" type="daterange" placeholder="开始日期 ~ 结束日期"
                                     style="width: 200px"></DatePicker>
                                 <div class="search-input">
                                     <Input search enter-button placeholder="搜索关键词" @on-search="searchData"
@@ -33,14 +33,18 @@
                                 </div>
                                 <div class="list-item-two" v-if="item.acId == 2">
                                     <div class="article-tit" v-html="item.headlineContent"></div>
-                                    <img :src="item.headlineImages.split(',')[0]" alt="" />
+                                    <div class="img-content">
+                                        <img v-for="(item,index) in item.headlineImages.split(',')" :src="item"
+                                            alt="" />
+                                    </div>
+                                    <!-- <img :src="item.headlineImages.split(',')[0]" alt="" /> -->
                                 </div>
                                 <div class="list-item-right">
                                     <div>{{item.createTime}}</div>
                                     <div class="btn-content">
-                                        <!-- <Button type="text">查看评论</Button> -->
+                                        <Button type="text" @click="goArticleInfo(item)">查看</Button>
                                         <Button type="text" @click="editArticle(item)">修改</Button>
-                                        <Button type="text" @click="deleteArticle(item)">删除</Button>
+                                        <Button type="text" @click="deleteArticle(item,index)">删除</Button>
 
                                     </div>
                                 </div>
@@ -96,7 +100,7 @@
                     keyword: '',
                     startTime: '',
                     endTime: '',
-                    memberId:localStorage.userId
+                    memberId: localStorage.userId
                 },
                 dateValue: []
             };
@@ -135,13 +139,13 @@
                 this.getMyArticle()
 
             },
-            deleteArticle(item) {
+            deleteArticle(item, index) {
                 deleteArticle({
                     'articleId': item.articleId
                 }).then(response => {
                     this.$Message.success("删除成功");
-                    this.listData = []
-                    this.getMyArticle()
+                    this.listData.splice(index, 1);
+                    this.totalSize -= 1
                 })
             },
             editArticle(item) {
@@ -152,7 +156,12 @@
                         item: item
                     }
                 });
-            }
+            },
+            //文章详情
+            goArticleInfo(item) {
+                this.$router.push("/articleDetails")
+                localStorage.setItem('articleInfoList', JSON.stringify(item))
+            },
         }
     };
 </script>
@@ -190,7 +199,7 @@
                     img {
                         width: 44px;
                         height: 44px;
-                        background: #9b3434;
+                        // background: #9b3434;
                         border-radius: 50%;
                         margin-right: 25px;
                     }
@@ -232,15 +241,23 @@
 
 
                     .list-item-two {
-                        img {
-                            width: 86px;
-                            height: 86px;
-                            border-radius: 0;
+                        .img-content {
+                            display: flex;
+                            flex-wrap: wrap;
+
+                            img {
+                                width: 86px;
+                                height: 86px;
+                                border-radius: 0;
+                                margin-right: 5px;
+                            }
                         }
+
                     }
 
                     .list-item-right {
                         text-align: right;
+                        min-width: 150px;
 
                         .btn-content {
                             margin-right: -15px;
