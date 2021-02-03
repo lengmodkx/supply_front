@@ -10,7 +10,7 @@
               <img :src="userInfo.image" class="avatar" v-if="userInfo.image" />
             </div>
             <div>
-              <div class="title">下午好，{{userInfo.nickName}}，{{userInfo.signature}}</div>
+              <div class="title">{{ $moment(new Date()).format("a") }}好，{{userInfo.nickName}}，{{userInfo.signature}}</div>
               <div class="info-content df">
                 <div class="info-item">
                   <div class="info-tit">昵称：<span>{{userInfo.nickName}}</span></div>

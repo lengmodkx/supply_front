@@ -30,8 +30,8 @@
                     <div id="toolbar-container" class="toolbar"></div>
                     <div id="text-container" class="text"></div>
                     <div class="btns-content">
-                        <Button type="info" ghost style="margin-right:10px;" :loading="btn_loading"
-                            @click="save('0')">存草稿</Button>
+                        <!-- <Button type="info" ghost style="margin-right:10px;" :loading="btn_loading"
+                            @click="save('0')">存草稿</Button> -->
                         <Button type="info" @click="save('1')" :loading="btn_loading">发布</Button>
                     </div>
                 </div>
