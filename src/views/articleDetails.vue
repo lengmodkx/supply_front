@@ -12,9 +12,16 @@
                         <img :src="infoList.acId==1?iconList.videoIcon:infoList.acId==2?iconList.ttIcon:iconList.textIcon"
                             class="createImg">
                         <span class="createText">{{infoList.acId==1?'文章':infoList.acId==2?'微头条':'视频'}}</span>
-                        <img :src="infoList.memberImage" alt="" class="createImg b50">
-                        <span class="createText">{{infoList.userName}}</span>
-                        <div>{{infoList.createTime}}</div>
+
+                        <a :href="'/articleCenter?type=other&id='+infoList.memberId" target="_blank"
+                            v-if="from!='adminPage'" rel="noopener noreferrer" class="art-a"><img
+                                :src="infoList.memberImage" alt="" class="createImg b50"></a>
+                        <img :src="infoList.memberImage" alt="" v-else class="createImg b50">
+                        <a class="art-a" :href="'/articleCenter?type=other&id='+infoList.memberId"
+                                        v-if="from!='adminPage'" target="_blank"
+                                        rel="noopener noreferrer">{{infoList.userName}}</a>
+                                    <span class="createText" v-else>{{infoList.userName}}</span>
+                        <div class="time">{{infoList.createTime}}</div>
                     </div>
                     <div class="article-text" v-if="infoList.acId==1">
                         <div v-html="infoList.articleContent"></div>
@@ -39,14 +46,16 @@
                     </div>
                     <div class="comment-list">
                         <div class="comment-item" v-for="item in commentList">
-                            <a :href="'/articleCenter?type=other&id='+item.memberId" target="_blank" v-if="from!='adminPage'"
-                                rel="noopener noreferrer"><img :src="item.memberImage" alt="" ></a>
+                            <a :href="'/articleCenter?type=other&id='+item.memberId" target="_blank"
+                                v-if="from!='adminPage'" rel="noopener noreferrer"><img :src="item.memberImage"
+                                    alt=""></a>
                             <img :src="item.memberImage" alt="" v-else>
                             <div class="comment-info">
                                 <div>
-                                    <a class="name" :href="'/articleCenter?type=other&id='+item.memberId" v-if="from!='adminPage'"
-                                        target="_blank" rel="noopener noreferrer">{{item.memberName}}</a>
-                                        <span class="name" v-else>{{item.memberName}}</span>
+                                    <a class="name" :href="'/articleCenter?type=other&id='+item.memberId"
+                                        v-if="from!='adminPage'" target="_blank"
+                                        rel="noopener noreferrer">{{item.memberName}}</a>
+                                    <span class="name" v-else>{{item.memberName}}</span>
                                     <Time :time="item.createTime" />
                                 </div>
                                 <p class="content">{{item.commentName}}</p>
@@ -90,6 +99,7 @@
         },
         mounted() {
             this.infoList = JSON.parse(localStorage.getItem('articleInfoList'))
+            console.log(this.infoList)
             this.param.articleId = this.infoList.articleId
             this.commentParam.articleId = this.infoList.articleId
             this.getCommentList()
@@ -164,6 +174,14 @@
 
             .createText {
                 margin: 0 15px 0 10px;
+            }
+
+            .art-a {
+                display: flex;
+                color: #808080;
+            }
+            .time {
+                margin-left: 10px;
             }
         }
 

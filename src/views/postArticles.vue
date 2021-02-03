@@ -70,7 +70,7 @@
                             <template>
                                 <div>{{ item.fileName }}</div>
                                 <div class="pro-content" v-if="item.showProgress">
-                                    <Progress  :percent="item.percentage" hide-info></Progress>
+                                    <Progress :percent="item.percentage" hide-info></Progress>
                                 </div>
                                 <div class="video-list-cover">
                                     <Icon type="ios-trash-outline" @click.native="handleRemoveVideo(item, index)"
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <Form :model="videoParam" :label-width="120">
-                        <FormItem label="标题">
+                        <FormItem label="标题" prop="videoName">
                             <Input v-model="videoParam.videoName" style="width: 400px"></Input>
                         </FormItem>
                         <FormItem label="封面" prop="videoCover">
@@ -114,7 +114,8 @@
                                 <div class="talkinner">
                                     <div class="talkUps">
                                         <div id="inputs" style="width: 100%;height: 80px;padding: 5px 10px"
-                                            ref="textarea" contenteditable="true" v-html="headlinesParam.headlineContent"></div>
+                                            ref="textarea" contenteditable="true"
+                                            v-html="headlinesParam.headlineContent"></div>
                                     </div>
                                     <div class="talkDown clearfix">
                                         <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
@@ -237,11 +238,11 @@
                     videoName: "",
                     videoAddress: "",
                     videoCover: "",
-                    videoLocal:''
+                    videoLocal: ''
                 },
                 videoCover: [],
                 videoAddress: [],
-                videoLocalName:[], //储存上传视频本地的名字（主要是回显时候用）
+                videoLocalName: [], //储存上传视频本地的名字（主要是回显时候用）
                 headlinesParam: {
                     acId: "2",
                     headlineContent: "",
@@ -521,7 +522,7 @@
                 if (this.clickTypeAcName == "视频") {
                     this.videoList.splice(this.videoList.indexOf(item), 1);
                     this.videoAddress.splice(index, 1);
-                     this.videoLocalName.splice(index, 1);
+                    this.videoLocalName.splice(index, 1);
                 } else if (this.clickTypeAcName == "微头条") {
                     this.headlinesImg.splice(index, 1);
                 } else if (this.clickTypeAcName == "问答") {
@@ -541,31 +542,31 @@
                 });
             },
             handleBeforeUpload(file) {
-                    let fileName = ''
-                    fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
-                    var _this = this;
-                    client
-                        .multipartUpload(fileName, file)
-                        .then(function (result) {
-                            console.log(result);
-                            if (_this.clickTypeAcName == "文章") {
-                                let Img1 = _this.getCaption(result.res.requestUrls[0]);
-                                _this.uploadList.push(Img1);
-                            } else if (_this.clickTypeAcName == "视频") {
-                                let Img3 = _this.getCaption(result.res.requestUrls[0]);
-                                _this.videoCover.push(Img3);
-                            } else if (_this.clickTypeAcName == "微头条") {
-                                let Img2 = _this.getCaption(result.res.requestUrls[0]);
-                                _this.headlinesImg.push(Img2);
-                            } else if (_this.clickTypeAcName == "问答") {
-                                let Img4 = _this.getCaption(result.res.requestUrls[0]);
-                                _this.qaImgList.push(Img4);
-                            }
-                        })
-                        .catch(function (err) {
-                            console.log(err);
-                        });
-                
+                let fileName = ''
+                fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
+                var _this = this;
+                client
+                    .multipartUpload(fileName, file)
+                    .then(function (result) {
+                        console.log(result);
+                        if (_this.clickTypeAcName == "文章") {
+                            let Img1 = _this.getCaption(result.res.requestUrls[0]);
+                            _this.uploadList.push(Img1);
+                        } else if (_this.clickTypeAcName == "视频") {
+                            let Img3 = _this.getCaption(result.res.requestUrls[0]);
+                            _this.videoCover.push(Img3);
+                        } else if (_this.clickTypeAcName == "微头条") {
+                            let Img2 = _this.getCaption(result.res.requestUrls[0]);
+                            _this.headlinesImg.push(Img2);
+                        } else if (_this.clickTypeAcName == "问答") {
+                            let Img4 = _this.getCaption(result.res.requestUrls[0]);
+                            _this.qaImgList.push(Img4);
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+
             },
             videoBeforeUpload(file) {
                 var _this = this;
@@ -637,11 +638,11 @@
                     this.$Message.warning("内容不能为空");
                 } else if (this.headlinesParam.headlineImages == "") {
                     this.$Message.warning("请选择图片");
-                }else  if(this.headlinesImg.length>9){
+                } else if (this.headlinesImg.length > 9) {
                     this.$Notice.warning({
                         title: '最多上传九张图片'
                     });
-                }else {
+                } else {
                     this.saveAxios(this.headlinesParam)
                 }
             },
@@ -667,7 +668,7 @@
                     this.videoParam.articleId = item.articleId;
                     this.videoParam.videoName = item.videoName;
                     this.videoCover.push(item.videoCover);
-                    this.videoAddress=item.videoAddress.split(',')
+                    this.videoAddress = item.videoAddress.split(',')
                     this.videoLocalName = item.videoLocal.split(',')
                     let obj = {
                         percentage: 100,
@@ -872,6 +873,7 @@
             display: flex;
             // justify-content: space-between;
             margin-bottom: 5px;
+
             .pro-content {
                 width: 200px;
             }
@@ -909,7 +911,9 @@
             }
         }
     }
-    .qa-content,.editor-content {
+
+    .qa-content,
+    .editor-content {
         .text-content {
             padding: 0 30px;
 
@@ -968,5 +972,15 @@
 
             }
         }
+    }
+
+    /deep/.ivu-form-item .ivu-form-item-label:before {
+        content: "*";
+        display: inline-block;
+        margin-right: 4px;
+        line-height: 1;
+        font-family: SimSun;
+        font-size: 14px;
+        color: #ed4014;
     }
 </style>
