@@ -15,6 +15,9 @@
                             <template v-if="value.childNode">
                                 <Submenu :key="i" :name="value.name">
                                     <template slot="title">
+                                        <i>
+                                            <svg-icon :name="value.icon" class="svgIcon"></svg-icon>
+                                        </i>
                                         <span>{{ value.text }}</span>
                                     </template>
 
@@ -27,6 +30,9 @@
                             </template>
                             <template v-else>
                                 <menu-item :name="value.name" :key="i">
+                                    <i>
+                                        <svg-icon :name="value.icon" class="svgIcon"></svg-icon>
+                                    </i>
                                     <span>{{ value.text }}</span>
                                 </menu-item>
                             </template>
@@ -120,26 +126,36 @@
                         childNode: [{
                                 text: "全部项目",
                                 name: "2,0",
+                                icon: "qbxm",
                             },
                             {
                                 text: "我创建的",
                                 name: "2,1",
+                                icon: "wcjd",
+
                             },
                             {
                                 text: "我参与的",
                                 name: "2,2",
+                                icon: "wcyd",
+
                             },
                             {
                                 text: "我的收藏",
                                 name: "2,3",
+                                icon: "shoucang",
+
                             },
                             {
                                 text: "已归档",
                                 name: "2,4",
+                                icon: "guidang",
+
                             },
                             {
                                 text: "回收站",
                                 name: "2,5",
+                                icon: "huishouzhan",
                             },
                         ],
                     },
@@ -153,11 +169,11 @@
                         name: "4",
                         icon: "sheji",
                     },
-                    {
-                        oneName: "人脉",
-                        name: "6",
-                        icon: "gerencanshu",
-                    },
+                    // {
+                    //     oneName: "人脉",
+                    //     name: "6",
+                    //     icon: "gerencanshu",
+                    // },
                     {
                         oneName: "团队",
                         name: "7",
@@ -170,6 +186,7 @@
                         childNode: [{
                                 text: "近期的事",
                                 name: "15",
+                                icon:'jinqi',
                                 childNode: [{
                                         text: "任务",
                                         name: "nearThing,1"
@@ -183,6 +200,7 @@
                             {
                                 text: "任务",
                                 name: "16",
+                                icon: 'renwu',
                                 childNode: [{
                                         text: "我执行的",
                                         name: "task,1"
@@ -200,6 +218,7 @@
                             {
                                 text: "日程",
                                 name: "17",
+                                icon: 'richeng',
                                 childNode: [{
                                         text: "未来的日程",
                                         name: "schedule,1"
@@ -213,6 +232,7 @@
                             {
                                 text: "文件",
                                 name: "18",
+                                icon: 'wenjian',
                                 childNode: [{
                                         text: "我创建的",
                                         name: "file,1"
@@ -230,9 +250,10 @@
                             {
                                 text: "收藏",
                                 name: "19",
+                                icon:'shoucang1',
                                 childNode: [{
                                         text: "任务",
-                                        name: "collect,2,任务"
+                                        name: "collect,2,任务",
                                     },
                                     {
                                         text: "分享",
@@ -240,11 +261,11 @@
                                     },
                                     {
                                         text: "文件",
-                                        name: "collect,4,文件"
+                                        name: "collect,4,文件",
                                     },
                                     {
                                         text: "日程",
-                                        name: "collect,5,日程"
+                                        name: "collect,5,日程",
                                     }
                                 ]
                             },
@@ -257,15 +278,18 @@
                         icon: "content",
                         childNode: [{
                                 text: "发布",
-                                name: "12"
+                                name: "12",
+                                icon: 'fabu'
                             },
                             {
                                 text: "内容管理",
-                                name: "13"
+                                name: "13",
+                                icon: "nrgl"
                             },
                             {
                                 text: "评价管理",
-                                name: "14"
+                                name: "14",
+                                icon: 'pjgl'
                             },
                         ]
                     },
@@ -275,15 +299,18 @@
                         icon: "xq",
                         childNode: [{
                                 text: "我的需求",
-                                name: "21"
+                                name: "21",
+                                icon: 'wdxq'
                             },
                             {
                                 text: "发布需求",
-                                name: "23"
+                                name: "23",
+                                icon: 'fbxq'
                             },
                             {
                                 text: "需求列表",
-                                name: "22"
+                                name: "22",
+                                icon: 'xqlb'
                             },
                         ]
                     },
@@ -293,30 +320,37 @@
                         icon: "shezhi1",
                         childNode: [{
                                 text: "基础信息",
-                                name: "8,0"
+                                name: "8,0",
+                                icon: 'jichuxinxi'
                             },
                             {
                                 text: "成员",
-                                name: "8,1"
+                                name: "8,1",
+                                icon: 'chengyuan'
                             },
                             {
                                 text: "组织架构",
-                                name: "8,2"
+                                name: "8,2",
+                                icon: 'zzjg'
                             },
                             {
                                 text: "企业权限",
-                                name: "8,3"
+                                name: "8,3",
+                                icon: 'quanxian'
                             },
                             {
                                 text: "项目权限",
-                                name: "8,4"
+                                name: "8,4",
+                                icon: 'quanxian1'
                             }, {
                                 text: "操作日志",
-                                name: "8,5"
+                                name: "8,5",
+                                icon: 'czrz'
                             },
                             {
                                 text: "导出申请",
-                                name: "8,6"
+                                name: "8,6",
+                                icon: 'daochu'
                             }
                         ]
                     },
@@ -336,7 +370,6 @@
             },
             goto(tagName) {
                 let name = tagName.split(",")[0]
-                console.log(tagName)
                 if (name == 1) {
                     this.$router.push("/org/" + localStorage.companyId);
                 } else if (name == 2) {
@@ -392,7 +425,7 @@
                     this.$router.push("/demandList");
                 } else if (name == 23) {
                     this.$router.push("/requirements");
-                }else if(name==15 ||name==16||name==17||name==18||name==19){
+                } else if (name == 15 || name == 16 || name == 17 || name == 18 || name == 19) {
                     //我的页面
                     this.$router.push({
                         path: "/mine",
