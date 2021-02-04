@@ -51,7 +51,7 @@
     import Loading from "../../../components/public/common/Loading.vue";
     import articleDetails from '../../../views/articleDetails.vue'
     import {
-        allArtile,
+        allArtile1,
         deleteArticle
     } from '@/axios/api'
     import {
@@ -179,7 +179,7 @@
         },
         methods: {
             getArticleList() {
-                allArtile(this.articleParam).then(response => {
+                allArtile1(this.articleParam).then(response => {
                     this.loading = false
                     this.listData = response.data.records
                     this.totalSize = response.data.total

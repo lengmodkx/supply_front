@@ -91,7 +91,7 @@
     import Loading from "../../../components/public/common/Loading.vue";
 
     import {
-        allArtile,
+        allArtile1,
         commentListByArticleId,
         removeComment
     } from '@/axios/api'
@@ -186,7 +186,7 @@
             },
             getMyArticle() {
                 return new Promise((resolve, reject) => {
-                    allArtile(this.articleParam).then(response => {
+                    allArtile1(this.articleParam).then(response => {
                         if (response.data.records.length < 20) {
                             this.flag = false
                         } else {

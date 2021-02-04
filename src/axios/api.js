@@ -1739,6 +1739,15 @@ export function allArtile(data) {
     })
 }
 
+//后台文章列表
+export function allArtile1(data) {
+    return fetch({
+        url: `/article/allArtile1`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
 //我关注人的文章列表
 export function attentionListArticle(data) {
     return fetch({
