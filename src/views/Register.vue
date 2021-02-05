@@ -1,7 +1,10 @@
 <template>
   <div class="bj-box">
+    <div class="img-content left-img">
+      <img src="../assets/images/login/left.png" alt="">
+    </div>
     <div class="register-box">
-      <div class="register-title">欢迎注册阿拉丁BIM云平台</div>
+      <div class="register-title"><svg-icon name="header-logo"></svg-icon></div>
       <Form ref="formValidate" @keyup.native.enter="register('formValidate')" :model="formValidate" :rules="rules">
         <FormItem prop="accountName">
           <Input type="text" placeholder="请输入手机号" v-model="formValidate.accountName" clearable />
@@ -23,14 +26,19 @@
         <FormItem prop="job">
           <Input type="text" placeholder="请输入您的职位" v-model="formValidate.job" clearable />
         </FormItem>
-        <FormItem> <Checkbox v-model="single"></Checkbox>我已经阅读并接受<span class="blue" @click="userDeal = true">《用户协议》</span>及<span class="blue" @click="privacyDeal = true">《隐私条款》</span> </FormItem>
+        <FormItem>
+          <Checkbox v-model="single"></Checkbox>我已经阅读并接受<span class="blue" @click="userDeal = true">《用户协议》</span>及<span
+            class="blue" @click="privacyDeal = true">《隐私条款》</span>
+        </FormItem>
         <FormItem>
           <Button type="primary" long size="large" @click="register('formValidate')" :loading="loading">注册</Button>
         </FormItem>
       </Form>
       <router-link class="go-login" to="/">去登录</router-link>
     </div>
-
+    <div class="right-img">
+      <img src="../assets/images/login/right.png" alt="">
+    </div>
     <Modal v-model="userDeal" footer-hide title="用户协议">
       <div class="modelText">
         <p>
@@ -41,7 +49,9 @@
         </p>
         <p>1. 注册与账号</p>
         <p>1.1 一千零一艺账号的所有权归一千零一艺，您完成注册手续后，获得一千零一艺账号的使用权。您应提供及时、详尽及准确的个人资料，并不断更新注册资料，符合及时、详尽准确的要求。</p>
-        <p>1.2 您须对注册信息的真实性、合法性、有效性承担全部责任；不得冒充他人，不得利用他人的名义发布任何信息；不得恶意使用注册账号导致其他用户误认；否则阿拉丁BIM云平台有权立即停止提供服务，由您独自承担由此而产生的一切法律责任。</p>
+        <p>1.2
+          您须对注册信息的真实性、合法性、有效性承担全部责任；不得冒充他人，不得利用他人的名义发布任何信息；不得恶意使用注册账号导致其他用户误认；否则阿拉丁BIM云平台有权立即停止提供服务，由您独自承担由此而产生的一切法律责任。
+        </p>
         <p>
           1.3
           您使用一千零一艺产品、服务的行为必须合法，您必须为自己注册账号下的一切行为负责，包括您所发表的任何内容以及由此产生的任何结果。您应对其中的内容自行加以判断，并承担因使用内容而引起的所有风险，包括因对内容的正确性、完整性或实用性的依赖而产生的风险。一千零一艺无法且不会对因您行为而导致的任何损失或损害承担责任。
@@ -58,8 +68,11 @@
           2.3
           用户不得滥用阿拉丁BIM云平台的服务，阿拉丁BIM云平台在此郑重提请您注意，任何经由本服务以上传、张贴、发送即时信息、电子邮件或任何其他方式传送的资讯、资料、文字、软件、音乐、音讯、照片、图形、视讯、信息、用户的登记资料或其他资料（以下简称“内容”），无论系公开还是私下传送，均由内容提供者、使用者对其上传、使用行为自行承担责任。阿拉丁BIM云平台服务作为信息存储服务平台，无法控制经由本服务传送之内容，也无法对用户的使用行为进行全面控制，因此不能保证内容的合法性、正确性、完整性、真实性或品质；您已预知使用本服务时，可能会接触到令人不快、不适当等内容，并同意将自行加以判断并承担所有风险，而不依赖于阿拉丁BIM云平台服务。
         </p>
-        <p>2.4 为使用本服务，您必须能够自行经有法律资格对您提供互联网接入服务的第三方，进入国际互联网，并应自行支付相关服务费用。此外，您必须自行配备及负责与国际联网连线所需之一切必要装备，包括计算机、数据机或其它存取装置。</p>
-        <p>2.5 鉴于网络服务的特殊性，您同意阿拉丁BIM云平台有权不经事先通知，随时变更、中断或终止部分或全部的网络服务（包括收费网络服务）。阿拉丁BIM云平台不担保网络服务不会中断，对网络服务的及时性、安全性、准确性也都不作担保。</p>
+        <p>2.4 为使用本服务，您必须能够自行经有法律资格对您提供互联网接入服务的第三方，进入国际互联网，并应自行支付相关服务费用。此外，您必须自行配备及负责与国际联网连线所需之一切必要装备，包括计算机、数据机或其它存取装置。
+        </p>
+        <p>2.5
+          鉴于网络服务的特殊性，您同意阿拉丁BIM云平台有权不经事先通知，随时变更、中断或终止部分或全部的网络服务（包括收费网络服务）。阿拉丁BIM云平台不担保网络服务不会中断，对网络服务的及时性、安全性、准确性也都不作担保。
+        </p>
         <p>
           2.6
           阿拉丁BIM云平台需要定期或不定期地对提供网络服务的平台或相关的设备进行检修或者维护，如因此类情况而造成网络服务（包括收费网络服务）在合理时间内的中断，阿拉丁BIM云平台无需为此承担任何责任。阿拉丁BIM云平台保留不经事先通知为维修保养、升级或其它目的暂停本服务任何部分的权利。
@@ -80,7 +93,8 @@
           3.3
           免费服务的使用可能需要满足一定的条件，具体条件以本服务官方网站公布的条件为准。对于免费服务，阿拉丁BIM云平台有权根据实际情况，对免费服务的领取时间、具体服务内容、服务期限及服务标准等进行单方变更，对此您无异议，并接受前述的变更，为此，阿拉丁BIM云平台无需向您承担任何责任。
         </p>
-        <p>3.4 阿拉丁BIM云平台可能根据实际需要对收费服务的收费标准、方式等进行修改和变更，阿拉丁BIM云平台也可能会对部分免费服务开始收费。前述修改、变更或开始收费前，阿拉丁BIM云平台将在相应服务页面进行通知或公告。</p>
+        <p>3.4 阿拉丁BIM云平台可能根据实际需要对收费服务的收费标准、方式等进行修改和变更，阿拉丁BIM云平台也可能会对部分免费服务开始收费。前述修改、变更或开始收费前，阿拉丁BIM云平台将在相应服务页面进行通知或公告。
+        </p>
         <p>3.5 本服务的充值、冻结、结算、发票开具等规则，参照本服务官方网站（work.aldbim.com）公布的相关内容（为保障您的权益请务必提前了解相关内容）。</p>
         <p>4. 第三方产品和服务</p>
         <p>4.1 本服务可能包含第三方提供的产品或服务。当用户使用第三方提供的产品或服务时，可能会另有相关的协议或规则，您同样应当认真阅读并遵守。</p>
@@ -89,7 +103,9 @@
         <p>5. 权利限制</p>
         <p>5.1 您不得对阿拉丁BIM云平台的产品、程序及服务（包括但不限于内容或产品中的广告或赞助内容）进行任何形式的许可、出售、租赁、转让、发行或做其他商业用途。</p>
         <p>5.2 您不得以创建相同或竞争服务为目的访问或使用阿拉丁BIM云平台产品、程序及服务。</p>
-        <p>5.3 除非法律明文规定，否则您不得对阿拉丁BIM云平台产品、程序及服务（包括但不限于内容或产品中的广告或赞助内容）的任何部分以任何形式或方法进行复制、发行、再版、下载、显示、张贴、修改、翻译、合并、利用、分解或反向编译等。</p>
+        <p>5.3
+          除非法律明文规定，否则您不得对阿拉丁BIM云平台产品、程序及服务（包括但不限于内容或产品中的广告或赞助内容）的任何部分以任何形式或方法进行复制、发行、再版、下载、显示、张贴、修改、翻译、合并、利用、分解或反向编译等。
+        </p>
         <p>5.4 您在使用阿拉丁BIM云平台产品和服务时，必须遵守中华人民共和国相关法律法规的规定，您应同意将不会利用本服务进行任何违法或不正当的活动，包括但不限于下列行为∶</p>
         <p>5.4.1 反对宪法所确定的基本原则的；</p>
         <p>5.4.2 危害国家安全，泄露国家秘密，颠覆国家政权，破坏国家统一的；</p>
@@ -149,7 +165,9 @@
         <p>7.2.4 您通过非阿拉丁BIM云平台授权的方式使用本服务；</p>
         <p>7.2.5 其他阿拉丁BIM云平台无法控制或合理预见的情形。</p>
         <p>8. 知识产权</p>
-        <p>8.1 阿拉丁BIM云平台在本服务中提供的内容（包括但不限于应用程序、源代码、应用程序和编程入口（API）、网页、文字、图片、音频、视频、图表等）的知识产权归一千零一艺所有，您在使用本服务中所产生的内容的知识产权归您或相关权利人所有。</p>
+        <p>8.1
+          阿拉丁BIM云平台在本服务中提供的内容（包括但不限于应用程序、源代码、应用程序和编程入口（API）、网页、文字、图片、音频、视频、图表等）的知识产权归一千零一艺所有，您在使用本服务中所产生的内容的知识产权归您或相关权利人所有。
+        </p>
         <p>8.2 除另有特别声明外，阿拉丁BIM云平台提供本服务时所依托软件的著作权、专利权及其他知识产权均归一千零一艺所有。</p>
         <p>8.3阿拉丁BIM云平台在本服务中所使用的“阿拉丁BIM云平台”、“ART1001”、“一千零一艺” 等商业标识，其商标权归一千零一艺所有。</p>
         <p>8.4 上述及其他任何本服务包含的内容的知识产权均受到法律保护，未经阿拉丁BIM云平台、您或相关权利人书面许可，任何人不得以任何形式进行使用或创造相关衍生作品。</p>
@@ -209,7 +227,8 @@
         <p>
           个人信息是指以电子或者其他方式记录的能够单独或者与其他信息结合识别特定自然人身份或者反映特定自然人活动情况的各种信息。 本隐私政策中涉及的个人信息包括：基本信息（包括手机号码）；网络身份标识信息（包括系统账号、密码）；个人常用设备信息（包括设备类型、操作系统版本）。
         </p>
-        <p>个人敏感信息 是指一旦泄露、非法提供或滥用可能危害人身和财产安全，极易导致个人名誉、身心健康受到损害或歧视性待遇等的个人信息， 本隐私政策中涉及的个人敏感信息包括：您的网络身份识别信息（包括系统账号、手机号码）。</p>
+        <p>个人敏感信息 是指一旦泄露、非法提供或滥用可能危害人身和财产安全，极易导致个人名誉、身心健康受到损害或歧视性待遇等的个人信息， 本隐私政策中涉及的个人敏感信息包括：您的网络身份识别信息（包括系统账号、手机号码）。
+        </p>
         <p>我们仅会出于以下目的，收集和使用您的个人信息：</p>
         <p>（一）您须授权我们收集和使用您个人信息的情形</p>
         <p>我们可能会收集、保存和使用下列与您有关的信息，如果您不提供相关信息，您将无法享受我们提供的产品或服务所对应的功能。这些功能包括：</p>
@@ -259,7 +278,9 @@
         <p>5、当我们展示您的个人信息时，我们会采用包括内容替换、匿名处理方式对您的信息进行脱敏，以保护您的信息安全。</p>
         <p>6、当我们要将您的个人信息用于本隐私政策未载明的其它用途时，或基于特定目的收集而来的信息用于其他目的时，会通过您主动做出勾选的形式事先征求您的同意。</p>
         <p>二、我们如何使用Cookie和同类技术</p>
-        <p>1、为了您能获得更轻松的访问体验、向您推荐您可能感兴趣的内容，我们会在您的计算机或移动设备上存储名为Cookie的小数据文件。Cookie通常包含标识符、站点名称以及一些号码和字符。借助于Cookie，我们能够存储您的偏好。</p>
+        <p>
+          1、为了您能获得更轻松的访问体验、向您推荐您可能感兴趣的内容，我们会在您的计算机或移动设备上存储名为Cookie的小数据文件。Cookie通常包含标识符、站点名称以及一些号码和字符。借助于Cookie，我们能够存储您的偏好。
+        </p>
         <p>
           2、我们不会将Cookie用于本隐私政策所述目的之外的任何用途。您可根据自己的偏好管理或删除Cookie。删除方式包含：在浏览器设置选项中找到“清除浏览数据”功能，选中“Cookie及其他网站数据”，并将要清除的“时间范围”设置为全部或不限，即可完全删除Cookie数据。
         </p>
@@ -321,9 +342,12 @@
           为了保障安全，我们可能需要您提供书面请求，或提供您的身份证明文件，我们将在收到您反馈并验证您的身份后的15天内答复您的请求。对于您合理的请求，我们原则上不收取费用，但对多次重复、超出合理限度的请求，我们将视情况收取一定成本费用。对于那些无端重复、需要过多技术手段（例如，需要开发新系统或从根本上改变现行惯例）、给他人合法权益带来风险或者非常不切实际（例如，涉及备份磁带上存放的信息）的请求，我们可能会予以拒绝。
           六、我们针对未成年人的政策
         </p>
-        <p>我们不对18岁以下的未成年人提供服务，并且我们不会故意或在明确知道的情况下收集未成年的个人数据。如果您是未成年人，除非您的父母提供明确同意且该等同意可被证实，否则您将不被允许使用和安装我们的产品或创建属于您的账号。</p>
+        <p>我们不对18岁以下的未成年人提供服务，并且我们不会故意或在明确知道的情况下收集未成年的个人数据。如果您是未成年人，除非您的父母提供明确同意且该等同意可被证实，否则您将不被允许使用和安装我们的产品或创建属于您的账号。
+        </p>
         <p>七、本政策如何更新</p>
-        <p>1、为给您提供更好的服务以及随着业务的发展，本隐私政策也会随之更新。但未经您明确同意，我们不会削减您依据本隐私政策所应享有的权利。我们会通过网站公告或以其他适当方式提醒您相关内容的更新，也请您访问以便及时了解最新的隐私政策。</p>
+        <p>
+          1、为给您提供更好的服务以及随着业务的发展，本隐私政策也会随之更新。但未经您明确同意，我们不会削减您依据本隐私政策所应享有的权利。我们会通过网站公告或以其他适当方式提醒您相关内容的更新，也请您访问以便及时了解最新的隐私政策。
+        </p>
         <p>2、对于重大变更，我们还会提供更为显著的通知（我们会通过包括但不限于邮件、短信或在浏览页面做特别提示等方式，说明隐私政策的具体变更内容）。 本隐私政策所指的重大变更包括但不限于：</p>
         <p>（1）我们的服务模式发生重大变化。如处理个人信息的目的、处理的个人信息类型、个人信息的使用方式等；</p>
         <p>（2）个人信息共享、转让或公开披露的主要对象发生变化；</p>
@@ -348,172 +372,210 @@
   </div>
 </template>
 <script>
-import { userRegister, getCaptcha } from "@/axios/api";
-import { mapState } from "vuex";
+  import {
+    userRegister,
+    getCaptcha
+  } from "@/axios/api";
+  import {
+    mapState
+  } from "vuex";
 
-export default {
-  data() {
-    const validatePhone = (rule, value, callback) => {
-      if (!/^1[3456789]\d{9}$/.test(value)) {
-        return callback(new Error("请输入正确的手机号"));
-      } else {
-        callback();
-      }
-    };
+  export default {
+    data() {
+      const validatePhone = (rule, value, callback) => {
+        if (!/^1[3456789]\d{9}$/.test(value)) {
+          return callback(new Error("请输入正确的手机号"));
+        } else {
+          callback();
+        }
+      };
 
-    return {
-      single: false, //勾选我已阅读
-      userDeal: false,
-      privacyDeal: false,
-      flagPrivacyDeal: false,
-      flaguserDeal: false,
-      formValidate: {
-        accountName: "",
-        password: "",
-        passwordSure: "",
-        captcha: "",
-        userName: "",
-        captchaUrl: "/api/captcha",
-        job: ""
-      },
-      rules: {
-        accountName: [{ validator: validatePhone, trigger: "blur" }],
-        captcha: [
-          {
+      return {
+        single: false, //勾选我已阅读
+        userDeal: false,
+        privacyDeal: false,
+        flagPrivacyDeal: false,
+        flaguserDeal: false,
+        formValidate: {
+          accountName: "",
+          password: "",
+          passwordSure: "",
+          captcha: "",
+          userName: "",
+          captchaUrl: "/api/captcha",
+          job: ""
+        },
+        rules: {
+          accountName: [{
+            validator: validatePhone,
+            trigger: "blur"
+          }],
+          captcha: [{
             required: true,
             message: "请输入验证码",
             trigger: "blur"
-          }
-        ],
-        passwordSure: [
-          {
+          }],
+          passwordSure: [{
             required: true,
             message: "请输入密码",
             trigger: "blur"
-          }
-        ],
-        password: [
-          {
+          }],
+          password: [{
             required: true,
             message: "请输入密码",
             trigger: "blur"
-          }
-        ],
-        userName: [
-          {
+          }],
+          userName: [{
             required: true,
             message: "请输入昵称",
             trigger: "blur"
-          }
-        ],
-        job: [
-          {
+          }],
+          job: [{
             required: true,
             message: "请输入职位",
             trigger: "blur"
-          }
-        ]
-      }
-    };
-  },
-  computed: {
-    ...mapState("app", ["loading"])
-  },
-  methods: {
-    register: function(name) {
-      if (!this.single) {
-        // 校验是否勾选用户协议
-        this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
-        return;
-      }
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (!this.single) {
-            // 校验是否勾选用户协议
-            this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
-            return;
-          }
-          if (this.formValidate.password !== this.formValidate.passwordSure) {
-            this.$Message.error("两次密码输入不一致，请修改！");
-            return;
-          }
-
-          userRegister(this.formValidate).then(res => {
-            if (res.result == 0) {
-              this.$Message.error(res.msg);
-            } else {
-              this.$Message.success("注册成功!");
-              this.$router.push("/");
-            }
-          });
-        } else {
-          this.$Message.error("请填写正确注册信息");
+          }]
         }
-      });
+      };
     },
-    changeImg() {
-      this.formValidate.captchaUrl = "/api/captcha?d=" + Math.random();
+    computed: {
+      ...mapState("app", ["loading"])
+    },
+    methods: {
+      register: function (name) {
+        if (!this.single) {
+          // 校验是否勾选用户协议
+          this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
+          return;
+        }
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            if (!this.single) {
+              // 校验是否勾选用户协议
+              this.$Message.error("请您阅读《用户协议》和《隐私条款》，并勾选确认！");
+              return;
+            }
+            if (this.formValidate.password !== this.formValidate.passwordSure) {
+              this.$Message.error("两次密码输入不一致，请修改！");
+              return;
+            }
+
+            userRegister(this.formValidate).then(res => {
+              if (res.result == 0) {
+                this.$Message.error(res.msg);
+              } else {
+                this.$Message.success("注册成功!");
+                this.$router.push("/");
+              }
+            });
+          } else {
+            this.$Message.error("请填写正确注册信息");
+          }
+        });
+      },
+      changeImg() {
+        this.formValidate.captchaUrl = "/api/captcha?d=" + Math.random();
+      }
     }
-  }
-};
+  };
 </script>
 <style scoped lang="less">
-.blue {
-  color: #3da8f5;
-}
-.modelText {
-  text-indent: 20px;
-  height: 70vh;
-  overflow-y: auto;
-  button {
-    margin: 10px 164px;
+  .blue {
+    color: #0077FF;
   }
-}
-.bj-box {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-  background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg2.jpg") no-repeat center/cover;
-}
-.register-box {
-  width: 362px;
-  padding: 20px;
-  position: absolute;
-  top: 50%;
-  right: 200px;
-  transform: translateY(-50%);
-  background-color: white;
-  opacity: 0.8;
-}
-.register-title {
-  font-size: 20px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-.captcha-input {
-  width: 60%;
-}
-.captcha-img {
-  width: 35%;
-  border-radius: 4px;
-  margin-left: 5%;
-  position: absolute;
-  right: 0;
-  cursor: pointer;
-}
-.changeCaptcha {
-  // color:#2d8cf0;
-  color: #bbb;
-  cursor: pointer;
-  font-size: 12px;
-  position: absolute;
-  bottom: -30px;
-  right: 0;
-}
-.go-login {
-  margin: -10px 0 0 auto;
-  cursor: pointer;
-  color: #3da8f5;
-  float: right;
-}
+
+  .modelText {
+    text-indent: 20px;
+    height: 70vh;
+    overflow-y: auto;
+
+    button {
+      margin: 10px 164px;
+    }
+  }
+
+  .bj-box {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    margin-top: -48px;
+    background-color: white;
+
+    .left-img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 95%;
+
+      img {
+        height: 100%;
+      }
+    }
+
+    .right-img {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 114px;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .register-box {
+    width: 362px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    right: 20%;
+    border-radius: 10px;
+    transform: translateY(-50%);
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    /deep/.ivu-btn-primary {
+      background: #0077FF;
+    }
+    /deep/.ivu-input {
+      color: #333333;
+    }
+  }
+
+  .register-title {
+    margin-bottom: 15px;
+    svg {
+      width: 218px;
+    }
+  }
+
+  .captcha-input {
+    width: 60%;
+  }
+
+  .captcha-img {
+    width: 35%;
+    border-radius: 4px;
+    margin-left: 5%;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+  }
+
+  .changeCaptcha {
+    color: #bbb;
+    cursor: pointer;
+    font-size: 12px;
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+  }
+
+  .go-login {
+    margin: -10px 0 0 auto;
+    cursor: pointer;
+    color: #0077FF;
+    float: right;
+  }
 </style>
