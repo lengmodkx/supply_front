@@ -272,6 +272,7 @@
             notBind() {
                 notBindWx(this.message.userId).then(res => {
                     if (res.result == 1) {
+                        this.message.wxOpenId=''
                         this.$Message.success(res.msg);
                     }
                 })
