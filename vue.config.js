@@ -52,7 +52,7 @@ module.exports = {
             "/api": {
                 //  target: "http://192.168.31.120:8080",
                 //target: "http://test.art1001.com/api/",
-                target: "http://192.168.31.29:8080",
+                target: "https://work.aldbim.com/api",
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {

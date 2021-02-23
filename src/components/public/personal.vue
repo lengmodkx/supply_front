@@ -70,7 +70,7 @@
                 </div>
                 <div class="divide">
                     <img src="../../assets/images/weixin.png" alt="">
-                    <Button type="primary" ghost @click="bind()" v-if="message.wxOpenId">绑定</Button>
+                    <Button type="primary" ghost @click="bind()" v-if="message.wxOpenId==''||message.wxOpenId==null">绑定</Button>
                     <Button type="error" ghost v-else @click="notBind()">解除绑定</Button>
                 </div>
             </div>
