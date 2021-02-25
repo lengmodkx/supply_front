@@ -3,7 +3,7 @@
     <header class="header" id="header">
       <div class="left-header" :class="header?'padding-big':'padding-small'">
         <svg-icon :name="header ? 'push' : 'pull'" class="svgIcon" @click="collapsedSider" v-if="showLeftMenu"></svg-icon>
-        <Breadcrumbs></Breadcrumbs>
+        <Breadcrumbs v-if="showBread"></Breadcrumbs>
       </div>
         <div class="logo-content">
             <svg-icon name="header-logo"></svg-icon>
@@ -108,7 +108,7 @@
         title: "",
       };
     },
-    props: ["showLeftMenu"],
+    props: ["showLeftMenu","showBread"],
     mounted() {
       this.setBreadCrumb(this.$route)
       this.setHomeRoute(this.$router.options.routes)

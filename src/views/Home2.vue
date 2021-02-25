@@ -17,7 +17,7 @@
                   <div class="info-tit">登录ip：<span>{{userInfo.loginIp}}</span></div>
                 </div>
                 <div class="info-item">
-                  <div class="info-tit">身份：<span>{{userInfo.roleName}}</span></div>
+                  <div class="info-tit">职业：<span>{{userInfo.roleName}}</span></div>
                   <div class="info-tit">登录时间：<span>{{userInfo.loginTime}}</span></div>
                 </div>
               </div>
