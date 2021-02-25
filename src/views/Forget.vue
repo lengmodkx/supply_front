@@ -145,6 +145,7 @@ const validatePhone = (rule, value, callback) => {
   height: 100vh;
   position: relative;
   background: url("https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/upload/login-bg2.jpg") no-repeat center/cover;
+  top: -48px;
 }
 .forget-box {
   width: 340px;
