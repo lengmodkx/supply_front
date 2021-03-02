@@ -163,6 +163,7 @@ let client = new OSS({
   bucket: "art1001-bim-5d"
 });
 import { oss } from "../../../axios/ossweb";
+import moment from 'moment';
 export default {
   name: "App",
   components: { Emoji, upFile },
@@ -261,7 +262,8 @@ export default {
 
     // 上传
     handleBeforeUpload(file) {
-      return oss(file.name).then(res => {
+      var dir = "upload/chat/" + moment().format('YYYY-MM-dd') + "/";
+      return oss(dir,file.name).then(res => {
         this.host = res.host;
         this.uploadData = res;
         var object = {};

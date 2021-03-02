@@ -9,7 +9,7 @@ export function getOssSign() {
 
 export function getWebSign(key) {
     return $get('/oss/websign', {
-        "dir": 'upload/chat/'
+        "dir": key
     });
 }
 

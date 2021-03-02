@@ -37,10 +37,10 @@ function set_file_name(filename) {
   return "";
 }
 
-export function oss(filename) {
+export function oss(dir,filename) {
   //调用后端服务器接口获取签名信息，利用axios返回promise，可以链式调用
   return new Promise(resolve => {
-    getWebSign().then(res => {
+    getWebSign(dir).then(res => {
       if (res.result == 1) {
         policyBase64 = res.data.policy;
         accessid = res.data.accessId;
