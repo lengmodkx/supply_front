@@ -302,6 +302,7 @@
                         border-radius: 50%;
                         margin-top: -26px;
                         margin-right: 20px;
+                        background: #ffffff;
                     }
 
                     .userName {

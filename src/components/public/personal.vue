@@ -263,15 +263,16 @@
                 })
             },
             bind() {
-                weChatLogin("https://work.aldbim.com/personal").then(res => {
+                weChatLogin("https://work.aldbim.com").then(res => {
                     if (res.result === 1) {
-                        window.location.href = res.url
+                        window.location.href = res.data
                     }
                 })
             },
             notBind() {
                 notBindWx(this.message.userId).then(res => {
                     if (res.result == 1) {
+                        this.message.wxOpenId=''
                         this.$Message.success(res.msg);
                     }
                 })

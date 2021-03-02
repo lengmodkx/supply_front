@@ -229,7 +229,12 @@
                 visible: false,
                 uploadList: [],
                 host: "",
-                classList: [],
+                classList: [
+                    {acName:"文章",acId:'1'},
+                    {acName:"微头条",acId:'2'},
+                    {acName:"视频",acId:'3'},
+                    {acName:"问答",acId:'4'},
+                ],
                 clickTypeAcName: "文章",
                 videoList: [],
                 percentage: 0,
@@ -497,17 +502,17 @@
                 ]
             }, ]
             this.editor.create();
-            this.getArticleClass();
+            // this.getArticleClass();
             if (this.$route.params.type == "edit") {
                 this.editMethod();
             }
         },
         methods: {
-            getArticleClass() {
-                articleClass().then((response) => {
-                    this.classList = response.data;
-                });
-            },
+            // getArticleClass() {
+            //     articleClass().then((response) => {
+            //         this.classList = response.data;
+            //     });
+            // },
             changType(name) {
                 this.clickTypeAcName = name;
             },

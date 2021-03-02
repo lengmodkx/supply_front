@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <header-main v-if="hasHeader" :showLeftMenu="showLeftMenu"></header-main>
+    <header-main v-if="hasHeader" :showLeftMenu="showLeftMenu" :showBread="showBread"></header-main>
+   
+    <!-- <common-tab></common-tab> -->
     <div class="content-main">
       <div class="wrap-box layout df">
         <Left-Menu v-if="showLeftMenu"></Left-Menu>
@@ -13,12 +15,14 @@
 <script>
   import Header from "./components/public/Header.vue";
   import Menu from "../src/components/menu/index.vue";
+  import CommonTab from "./components/tags-nav/CommonTab";
 
   export default {
     name: "App",
     components: {
       "header-main": Header,
-      "Left-Menu": Menu
+      "Left-Menu": Menu,
+      "common-tab": CommonTab
     },
     provide() {
       return {
@@ -31,7 +35,8 @@
         hasHeader: true,
         companyId: "",
         avatar: "",
-        showLeftMenu:true
+        showLeftMenu: true,
+        showBread:true,
       };
     },
     created() {
@@ -39,8 +44,9 @@
 
     },
     watch: {
-      $route() {
+      $route(newRoute) {
         this.renderHeader();
+        this.$store.commit('tab/selectMenu', newRoute)
       }
     },
     methods: {
@@ -71,8 +77,9 @@
           this.$route.path !== "/loginCompany" &&
           this.$route.path !== "/enterprisesList" &&
           this.$route.path !== "/creatEnter" &&
-          this.$route.path.indexOf("/project")
-          ;
+          this.$route.path.indexOf("/project");
+          this.showBread =this.$route.path.indexOf("/project")== '-1'?true:false;
+          console.log(this.showBread)
       },
       reload() {
         this.isRouterAlive = false;
@@ -88,4 +95,12 @@
 <style lang="less">
   @import "assets/css/font.less";
   @import "assets/css/appNew.less";
+
+  .tag-nav-wrapper {
+    position: fixed;
+    left: 0;
+    top: 48px;
+    width: 100%;
+    z-index: 100;
+  }
 </style>
