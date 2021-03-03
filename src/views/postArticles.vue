@@ -44,8 +44,9 @@
                             </div>
                             <Upload ref="upload" :show-upload-list="false" :max-size="2048"
                                 :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
-                                style="display: inline-block; width: 164px; margin-top: 10px" type="drag"
-                                v-if="param.coverShow == 1 && uploadList.length == 0">
+                                :data="uploadData" :headers="headers" :on-success="handleSuccess"
+                                :on-error="handleError" style="display: inline-block; width: 164px; margin-top: 10px"
+                                type="drag" v-if="param.coverShow == 1 && uploadList.length == 0">
                                 <div style="width: 164px; height: 110px; line-height: 110px">
                                     <Icon type="ios-add" size="20" />
                                 </div>
@@ -203,13 +204,7 @@
     import {
         oss
     } from "../axios/ossweb";
-
-    let client = new OSS({
-        region: "oss-cn-beijing",
-        accessKeyId: "LTAIP4MyTAbONGJx",
-        accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-        bucket: "art1001-bim-5d",
-    });
+    import moment from 'moment';
     export default {
         components: {
             Emoji
@@ -228,12 +223,22 @@
                 imgName: "",
                 visible: false,
                 uploadList: [],
-                host: "",
-                classList: [
-                    {acName:"文章",acId:'1'},
-                    {acName:"微头条",acId:'2'},
-                    {acName:"视频",acId:'3'},
-                    {acName:"问答",acId:'4'},
+                classList: [{
+                        acName: "文章",
+                        acId: '1'
+                    },
+                    {
+                        acName: "微头条",
+                        acId: '2'
+                    },
+                    {
+                        acName: "视频",
+                        acId: '3'
+                    },
+                    {
+                        acName: "问答",
+                        acId: '4'
+                    },
                 ],
                 clickTypeAcName: "文章",
                 videoList: [],
@@ -261,7 +266,12 @@
                     isIncognito: '0', // 是否匿名（0否 1是）
                     isDraft: '0', // 是否草稿（0否1是）
                 },
-                qaImgList: []
+                qaImgList: [],
+                uploadData: {},
+                host: "",
+                headers: {
+                    "x-auth-token": localStorage.token
+                }
             };
         },
         mounted() {
@@ -518,7 +528,7 @@
             },
             handleRemove(file) {
                 if (this.clickTypeAcName == "文章") {
-                    this.uploadList = [];
+                    this.uploadList = []
                 } else if (this.clickTypeAcName == "视频") {
                     this.videoCover = [];
                 }
@@ -547,30 +557,66 @@
                 });
             },
             handleBeforeUpload(file) {
-                let fileName = ''
-                fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
+                // let fileName = ''
+                // fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
+                // var _this = this;
+                // client
+                //     .multipartUpload(fileName, file)
+                //     .then(function (result) {
+                //         if (_this.clickTypeAcName == "文章") {
+                //             let Img1 = _this.getCaption(result.res.requestUrls[0]);
+                //             _this.uploadList.push(Img1);
+                //         } else if (_this.clickTypeAcName == "视频") {
+                //             let Img3 = _this.getCaption(result.res.requestUrls[0]);
+                //             _this.videoCover.push(Img3);
+                //         } else if (_this.clickTypeAcName == "微头条") {
+                //             let Img2 = _this.getCaption(result.res.requestUrls[0]);
+                //             _this.headlinesImg.push(Img2);
+                //         } else if (_this.clickTypeAcName == "问答") {
+                //             let Img4 = _this.getCaption(result.res.requestUrls[0]);
+                //             _this.qaImgList.push(Img4);
+                //         }
+                //     })
+                //     .catch(function (err) {
+                //         console.log(err);
+                //     });
                 var _this = this;
-                client
-                    .multipartUpload(fileName, file)
-                    .then(function (result) {
-                        if (_this.clickTypeAcName == "文章") {
-                            let Img1 = _this.getCaption(result.res.requestUrls[0]);
-                            _this.uploadList.push(Img1);
-                        } else if (_this.clickTypeAcName == "视频") {
-                            let Img3 = _this.getCaption(result.res.requestUrls[0]);
-                            _this.videoCover.push(Img3);
-                        } else if (_this.clickTypeAcName == "微头条") {
-                            let Img2 = _this.getCaption(result.res.requestUrls[0]);
-                            _this.headlinesImg.push(Img2);
-                        } else if (_this.clickTypeAcName == "问答") {
-                            let Img4 = _this.getCaption(result.res.requestUrls[0]);
-                            _this.qaImgList.push(Img4);
-                        }
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                    });
-
+                let dir = ''
+                if (_this.clickTypeAcName == "文章") {
+                    dir = "upload/article/" + this.$moment().format('YYYY-MM-DD') + "/";
+                } else if (_this.clickTypeAcName == "视频") {
+                    dir = "upload/video/" + this.$moment().format('YYYY-MM-DD') + "/";
+                } else if (_this.clickTypeAcName == "微头条") {
+                    dir = "upload/headlines/" + this.$moment().format('YYYY-MM-DD') + "/";
+                } else if (_this.clickTypeAcName == "问答") {
+                    dir = "upload/questions/" + this.$moment().format('YYYY-MM-DD') + "/";
+                }
+                return oss(dir, file.name).then(res => {
+                    console.log(res)
+                    this.host = res.host;
+                    this.uploadData = res;
+                    let name = res.host+ '/' + res.key
+                    console.log(name)
+                    if (this.clickTypeAcName == "文章") {
+                        this.uploadList.push(name);
+                        console.log(this.uploadList)
+                    } 
+                    // else if (_this.clickTypeAcName == "视频") {
+                    //     _this.videoCover.push(name);
+                    // } else if (_this.clickTypeAcName == "微头条") {
+                    //     _this.headlinesImg.push(name);
+                    // } else if (_this.clickTypeAcName == "问答") {
+                    //     _this.qaImgList.push(name);
+                    // }
+                });
+            },
+            handleSuccess(res, file) {
+                console.log(res)
+                console.log(file)
+            },
+            handleError(res, file) {
+                console.log(res)
+                console.log(file)
             },
             videoBeforeUpload(file) {
                 var _this = this;
