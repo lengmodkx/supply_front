@@ -150,18 +150,10 @@
 
 <script>
 import Emoji from "@/components/public/common/emoji/Emoji";
-import insertText from "@/utils/insertText";
 import upFile from "./index/chatUpFile";
 import { sendChat, getChat, recall } from "../../../axios/api";
 import { mapActions, mapState } from "vuex";
 // 上传
-import OSS from "ali-oss";
-let client = new OSS({
-  region: "oss-cn-beijing",
-  accessKeyId: "LTAIP4MyTAbONGJx",
-  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
-});
 import { oss } from "../../../axios/ossweb";
 import moment from 'moment';
 export default {
@@ -212,8 +204,6 @@ export default {
       if (inner[inner.length - 1] === "@") {
         this.showSymbol = true;
         const width = this.$refs.textarea.innerHTML.length * 17;
-
-
         if (width < 1200) {
           this.offsetLeft = width + "px";
         } else {
@@ -230,7 +220,6 @@ export default {
     getChat() {
       this.initChat(this.$route.params.id);
     },
-
     getFiles(files) {
       this.files = files;
       this.showCommon = false;
@@ -262,7 +251,7 @@ export default {
 
     // 上传
     handleBeforeUpload(file) {
-      var dir = "upload/chat/" + moment().format('YYYY-MM-dd') + "/";
+      var dir = "upload/chat/" + moment().format('YYYY-MM-DD') + "/";
       return oss(dir,file.name).then(res => {
         this.host = res.host;
         this.uploadData = res;
@@ -278,68 +267,25 @@ export default {
     // 发送消息
     sendChat() {
       let con = this.$refs.textarea.innerHTML.replace(/(^\s+)|(\s+$)/g, "");
-        let data = {
-          projectId: this.$route.params.id,
-          content: con,
-          files: JSON.stringify(this.charFiles)
-        };
-        if(con=='' && JSON.stringify(this.charFiles)=='[]'){
-          this.$Message.error('不能发送空白消息');
-        }else{
-          sendChat(data).then(res => {
-            this.$refs.textarea.innerHTML = "";
-            this.$nextTick(() => {
-              var div = document.getElementById("data-list-content");
-              div.scrollTop = div.scrollHeight + 1;
-            });
-            this.charFiles = [];
-            this.uploadList.splice(0, this.uploadList.length);
-            this.$refs.upload.clearFiles();
+      let data = {
+        projectId: this.$route.params.id,
+        content: con,
+        files: JSON.stringify(this.charFiles)
+      };
+      if(con=='' && JSON.stringify(this.charFiles)=='[]'){
+        this.$Message.error('不能发送空白消息');
+      }else{
+        sendChat(data).then(res => {
+          this.$refs.textarea.innerHTML = "";
+          this.$nextTick(() => {
+            var div = document.getElementById("data-list-content");
+            div.scrollTop = div.scrollHeight + 1;
           });
-        }
-
-    },
-
-    uploadFile() {
-      this.uploadList.forEach((file, index) => {
-        var fileName =
-          this.dirName + this.random_string(10) + this.get_suffix(file.name);
-        client
-          .multipartUpload(fileName, file, {
-            progress: function(p) {
-              that.percentage.splice(index, 1, Math.floor(p * 100));
-            }
-          })
-          .then(function(result) {
-            var myfile = {};
-            myfile.fileName = file.name;
-            myfile.fileUrl = result.name;
-            myfile.size = that.renderSize(file.size);
-            that.charFiles.push(myfile);
-          })
-          .catch(function(err) {
-            console.log(err);
-          });
-      });
-    },
-
-    random_string(len) {
-      len = len || 32;
-      var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-      var maxPos = chars.length;
-      var pwd = "";
-      for (var i = 0; i < len; i++) {
-        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+          this.charFiles = [];
+          this.uploadList.splice(0, this.uploadList.length);
+          this.$refs.upload.clearFiles();
+        });
       }
-      return pwd;
-    },
-    get_suffix(filename) {
-      var pos = filename.lastIndexOf(".");
-      var suffix = "";
-      if (pos !== -1) {
-        suffix = filename.substring(pos);
-      }
-      return suffix;
     }
   }
 };
@@ -392,10 +338,9 @@ export default {
   }
   .file-box {
     .one-file {
-    margin-left: 680px;
+      margin-left: 680px;
+    }
   }
-  }
-  
 }
 #input {
   width: 100%;
@@ -430,9 +375,6 @@ export default {
       text-align: right;
       flex-direction: row-reverse;
     }
-  }
-  .other .one-file {
-    // float: left;
   }
   .other,
   .me {
