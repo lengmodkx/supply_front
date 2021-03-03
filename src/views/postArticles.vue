@@ -625,13 +625,6 @@
                     this.saveAxios(this.param)
                 }
             },
-            getCaption(obj) {
-                var index = obj.indexOf("?");
-                if (index != "-1") {
-                    obj = obj.substring(0, index + 1);
-                }
-                return obj;
-            },
             saveVideo() {
                 this.videoParam.videoCover = this.videoCover[0];
                 this.videoParam.videoAddress = this.videoAddress.join(",");
@@ -713,24 +706,6 @@
                         }
                     });
                 }
-            },
-            random_string(len) {
-                len = len || 32;
-                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-                var maxPos = chars.length;
-                var pwd = "";
-                for (var i = 0; i < len; i++) {
-                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            },
-            get_suffix(filename) {
-                var pos = filename.lastIndexOf(".");
-                var suffix = "";
-                if (pos !== -1) {
-                    suffix = filename.substring(pos);
-                }
-                return suffix;
             },
             saveQa() {
                 if (this.qaImgList.length != 0) {
