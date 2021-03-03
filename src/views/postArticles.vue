@@ -45,8 +45,8 @@
                             <Upload ref="upload" :show-upload-list="false" :max-size="2048"
                                 :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
                                 :data="uploadData" :headers="headers" :on-success="handleSuccess"
-                                :on-error="handleError" style="display: inline-block; width: 164px; margin-top: 10px"
-                                type="drag" v-if="param.coverShow == 1 && uploadList.length == 0">
+                                style="display: inline-block; width: 164px; margin-top: 10px" type="drag"
+                                v-if="param.coverShow == 1 && uploadList.length == 0">
                                 <div style="width: 164px; height: 110px; line-height: 110px">
                                     <Icon type="ios-add" size="20" />
                                 </div>
@@ -60,7 +60,8 @@
                 <div class="video-content" v-if="clickTypeAcName == '视频'">
                     <div class="video-upload">
                         <Upload type="drag" :action="host" :format="['mp4', 'avi']" accept="video/mp4,video/avi"
-                            :show-upload-list="true" :before-upload="videoBeforeUpload" ref="videoUpload"
+                            :show-upload-list="false" :before-upload="videoBeforeUpload" ref="videoUpload"
+                            :data="uploadData1" :headers="headers" :on-success="videoSuccess"
                             :max-size="10240" :on-exceeded-size="videoMaxSize">
                             <div style="padding: 20px 0">
                                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -96,6 +97,7 @@
                             </div>
                             <Upload ref="upload" :show-upload-list="false" :max-size="2048"
                                 :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
+                                :data="uploadData" :headers="headers" :on-success="handleSuccess"
                                 style="display: inline-block; width: 164px; margin-top: 10px" type="drag"
                                 v-if="videoCover.length == 0">
                                 <div style="width: 164px; height: 110px; line-height: 110px">
@@ -136,7 +138,8 @@
                             </div>
                             <Upload ref="upload" :show-upload-list="false" :max-size="2048"
                                 :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
-                                multiple style="display: inline-block; width: 100px; margin-top: 10px" type="drag"
+                                :data="uploadData" :headers="headers" :on-success="handleSuccess" multiple
+                                style="display: inline-block; width: 100px; margin-top: 10px" type="drag"
                                 v-if="headlinesImg.length<9">
                                 <div style="width: 100px; height: 100px; line-height: 100px">
                                     <Icon type="ios-add" size="20" />
@@ -169,7 +172,8 @@
                             </div>
                             <Upload ref="upload" :show-upload-list="false" :max-size="2048"
                                 :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
-                                multiple style="display: inline-block; width: 100px; margin-top: 10px" type="drag"
+                                :data="uploadData" :headers="headers" :on-success="handleSuccess" multiple
+                                style="display: inline-block; width: 100px; margin-top: 10px" type="drag"
                                 v-if="qaImgList.length != 3">
                                 <div style="width: 100px; height: 100px; line-height: 100px">
                                     <Icon type="ios-add" size="20" />
@@ -200,7 +204,6 @@
         editArticle,
         questionAdd
     } from "@/axios/api";
-    import OSS from "ali-oss";
     import {
         oss
     } from "../axios/ossweb";
@@ -268,10 +271,12 @@
                 },
                 qaImgList: [],
                 uploadData: {},
+                uploadData1:{},
                 host: "",
                 headers: {
                     "x-auth-token": localStorage.token
-                }
+                },
+                name: ""
             };
         },
         mounted() {
@@ -512,17 +517,11 @@
                 ]
             }, ]
             this.editor.create();
-            // this.getArticleClass();
             if (this.$route.params.type == "edit") {
                 this.editMethod();
             }
         },
         methods: {
-            // getArticleClass() {
-            //     articleClass().then((response) => {
-            //         this.classList = response.data;
-            //     });
-            // },
             changType(name) {
                 this.clickTypeAcName = name;
             },
@@ -557,66 +556,33 @@
                 });
             },
             handleBeforeUpload(file) {
-                // let fileName = ''
-                // fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
-                // var _this = this;
-                // client
-                //     .multipartUpload(fileName, file)
-                //     .then(function (result) {
-                //         if (_this.clickTypeAcName == "文章") {
-                //             let Img1 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.uploadList.push(Img1);
-                //         } else if (_this.clickTypeAcName == "视频") {
-                //             let Img3 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.videoCover.push(Img3);
-                //         } else if (_this.clickTypeAcName == "微头条") {
-                //             let Img2 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.headlinesImg.push(Img2);
-                //         } else if (_this.clickTypeAcName == "问答") {
-                //             let Img4 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.qaImgList.push(Img4);
-                //         }
-                //     })
-                //     .catch(function (err) {
-                //         console.log(err);
-                //     });
-                var _this = this;
                 let dir = ''
-                if (_this.clickTypeAcName == "文章") {
+                if (this.clickTypeAcName == "文章") {
                     dir = "upload/article/" + this.$moment().format('YYYY-MM-DD') + "/";
-                } else if (_this.clickTypeAcName == "视频") {
+                } else if (this.clickTypeAcName == "视频") {
                     dir = "upload/video/" + this.$moment().format('YYYY-MM-DD') + "/";
-                } else if (_this.clickTypeAcName == "微头条") {
+                } else if (this.clickTypeAcName == "微头条") {
                     dir = "upload/headlines/" + this.$moment().format('YYYY-MM-DD') + "/";
-                } else if (_this.clickTypeAcName == "问答") {
+                } else if (this.clickTypeAcName == "问答") {
                     dir = "upload/questions/" + this.$moment().format('YYYY-MM-DD') + "/";
                 }
                 return oss(dir, file.name).then(res => {
-                    console.log(res)
                     this.host = res.host;
                     this.uploadData = res;
-                    let name = res.host+ '/' + res.key
-                    console.log(name)
-                    if (this.clickTypeAcName == "文章") {
-                        this.uploadList.push(name);
-                        console.log(this.uploadList)
-                    } 
-                    // else if (_this.clickTypeAcName == "视频") {
-                    //     _this.videoCover.push(name);
-                    // } else if (_this.clickTypeAcName == "微头条") {
-                    //     _this.headlinesImg.push(name);
-                    // } else if (_this.clickTypeAcName == "问答") {
-                    //     _this.qaImgList.push(name);
-                    // }
+                    this.name = res.host + '/' + res.key
                 });
+
             },
             handleSuccess(res, file) {
-                console.log(res)
-                console.log(file)
-            },
-            handleError(res, file) {
-                console.log(res)
-                console.log(file)
+                if (this.clickTypeAcName == "文章") {
+                    this.uploadList.push(this.name);
+                } else if (this.clickTypeAcName == "视频") {
+                    this.videoCover.push(this.name);
+                } else if (this.clickTypeAcName == "微头条") {
+                    this.headlinesImg.push(this.name);
+                } else if (this.clickTypeAcName == "问答") {
+                    this.qaImgList.push(this.name);
+                }
             },
             videoBeforeUpload(file) {
                 var _this = this;
@@ -626,22 +592,21 @@
                     fileName: file.name,
                 };
                 _this.videoList.push(obj);
-                let fileName = ''
-                fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
-                client
-                    .multipartUpload(fileName, file)
-                    .then(function (result) {
-                        let videoLink = _this.getCaption(result.res.requestUrls[0]);
-                        _this.videoAddress.push(videoLink);
-                        _this.videoLocalName.push(file.name)
-                        _this.videoList[_this.videoList.length - 1].percentage = 100;
-                        setTimeout(() => {
-                            _this.videoList[_this.videoList.length - 1].showProgress = false;
-                        }, 500);
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                    });
+                let dir = ''
+                dir = "upload/video/" + this.$moment().format('YYYY-MM-DD') + "/";
+                return oss(dir, file.name).then(res => {
+                    this.host = res.host;
+                    this.uploadData1 = res;
+                    this.name = res.host + '/' + res.key
+                });
+            },
+            videoSuccess(res, file) {
+                this.videoAddress.push(this.name);
+                this.videoLocalName.push(file.name)
+                this.videoList[this.videoList.length - 1].percentage = 100;
+                setTimeout(() => {
+                    this.videoList[this.videoList.length - 1].showProgress = false;
+                }, 500);
             },
             save() {
                 this.param.articleContent = this.editor.txt.html();
@@ -920,7 +885,7 @@
             display: flex;
             // justify-content: space-between;
             margin-bottom: 5px;
-
+            margin-top: 5px;
             .pro-content {
                 width: 200px;
             }
