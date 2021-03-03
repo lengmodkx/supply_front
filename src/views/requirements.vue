@@ -117,31 +117,6 @@
                     desc: "文件  " + file.name + " 过大, 超过2M.",
                 });
             },
-            getCaption(obj) {
-                var index = obj.indexOf("?");
-                if (index != "-1") {
-                    obj = obj.substring(0, index + 1);
-                }
-                return obj;
-            },
-            random_string(len) {
-                len = len || 32;
-                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-                var maxPos = chars.length;
-                var pwd = "";
-                for (var i = 0; i < len; i++) {
-                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            },
-            get_suffix(filename) {
-                var pos = filename.lastIndexOf(".");
-                var suffix = "";
-                if (pos !== -1) {
-                    suffix = filename.substring(pos);
-                }
-                return suffix;
-            },
             save(name) {
                 if (this.param.demandName == '') {
                     this.$Message.error('需求标题不能为空');
