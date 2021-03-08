@@ -206,12 +206,7 @@ import { updateProject, recycleProject } from "@/axios/api";
 import { updataProjectPic } from "@/axios/api2";
 import { getAllRule, ruleName, deleteRule, editRule } from "@/axios/ruleApi";
 import rule from "./createRule";
-let client = new OSS({
-  region: "oss-cn-beijing",
-  accessKeyId: "LTAIP4MyTAbONGJx",
-  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
-});
+
 export default {
   data() {
     return {

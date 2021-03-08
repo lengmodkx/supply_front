@@ -25,18 +25,20 @@
             <div class="content fl">
                 <div class="div1" v-if="active == 1">
                     <div class="div1-box">
-                        <div class="div1-title">项目封面</div>
+                        <div class="div1-title">项目封面1</div>
                         <div class="df">
                             <div class="cover">
-                                <img :src="
-                          `https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${project.projectCover}`
-                        " alt v-if="pic_show" accept="image/*" />
+                                <img :src="project.projectCove" alt v-if="pic_show" accept="image/*" />
                                 <img :src="imageUrl" alt v-if="pic_hide" accept="image/*" />
                             </div>
                             <div class="upload">
-                                <input type="file" ref="inputer" @change="getFile" />
                                 <div>
-                                    <Button class="upLoadButton">上传新封面</Button>
+                                    <!-- <Button class="upLoadButton">上传新封面</Button> -->
+                                    <Upload :show-upload-list="false" :max-size="2048" :on-exceeded-size="handleMaxSize"
+                                        :before-upload="handleBeforeUpload" :action="host" :data="uploadData"
+                                        :headers="headers" :on-success="handleSuccess">
+                                        <Button type="primary" ghost>上传新封面</Button>
+                                    </Upload>
                                     <p class="tips">
                                         最佳图片比例为300*150
                                     </p>
@@ -224,18 +226,28 @@
 </template>
 <script>
     import axios from "axios";
-    import OSS from "ali-oss";
-    import { mapState, mapMutations } from "vuex";
-    import { updateProject, recycleProject } from "@/axios/api";
-    import { updataProjectPic, removeUser } from "@/axios/api2";
-    import { getAllRule, ruleName, deleteRule, editRule } from "@/axios/ruleApi";
+    import {
+        mapState,
+        mapMutations
+    } from "vuex";
+    import {
+        updateProject,
+        recycleProject
+    } from "@/axios/api";
+    import {
+        updataProjectPic,
+        removeUser
+    } from "@/axios/api2";
+    import {
+        getAllRule,
+        ruleName,
+        deleteRule,
+        editRule
+    } from "@/axios/ruleApi";
     import rule from "./createRuleNew";
-    let client = new OSS({
-        region: "oss-cn-beijing",
-        accessKeyId: "LTAIP4MyTAbONGJx",
-        accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-        bucket: "art1001-bim-5d"
-    });
+    import {
+        oss
+    } from "@/axios/ossweb";
     export default {
         data() {
             return {
@@ -255,8 +267,7 @@
                 createRule: false,
                 ruleList: [],
                 ruleData: null,
-                List: [
-                    {
+                List: [{
                         value: "0",
                         label: "公开项目 (所有人都可通过链接访问，仅项目成员可编辑)"
                     },
@@ -271,6 +282,12 @@
                 switch1: false,
                 valueId: '',
                 modal3: false,
+                uploadData: {},
+                host: "",
+                headers: {
+                    "x-auth-token": localStorage.token
+                },
+                name: ""
             };
         },
         components: {
@@ -279,28 +296,8 @@
         computed: {
             ...mapState("project", ["project"])
         },
-        mounted() {
-        },
         methods: {
             ...mapMutations("project", ["updatePro"]),
-            random_string(len) {
-                len = len || 32;
-                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-                var maxPos = chars.length;
-                var pwd = "";
-                for (var i = 0; i < len; i++) {
-                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            },
-            get_suffix(filename) {
-                var pos = filename.lastIndexOf(".");
-                var suffix = "";
-                if (pos !== -1) {
-                    suffix = filename.substring(pos);
-                }
-                return suffix;
-            },
             resetFile() {
                 this.showupload = true;
                 this.showProgress = false;
@@ -325,27 +322,29 @@
                     }
                 };
             },
-            getFile(event) {
-                const files = event.target.files;
-                this.filename = files[0].name; //只有一个文件
-                if (this.filename.lastIndexOf(".") <= 0) {
-                    return alert("Please add a valid image!"); //判断图片是否有效
-                }
-                const fileReader = new FileReader(); //内置方法new FileReader()   读取文件
-                fileReader.addEventListener("load", () => {
-                    (this.pic_show = false),
-                        (this.pic_hide = true),
-                        (this.imageUrl = fileReader.result);
-                });
-                fileReader.readAsDataURL(files[0]);
-                this.image = files[0];
-                //到这里后, 选择图片就可以显示出来了
-                this.fileName =
-                    this.dirName + this.random_string(10) + this.get_suffix(this.filename);
-                this.saveImg();
-                this.project.projectCover = this.fileName;
-            },
+            handleBeforeUpload(file) {
+                let dir = ''
+                dir = this.dirName + this.$moment().format('YYYY-MM-DD') + "/";
+                return oss(dir, file.name).then(res => {
+                    this.host = res.host;
+                    this.uploadData = res;
+                    this.name = res.host + '/' + res.key
+                    this.project.projectCover = res.key;
 
+                });
+
+            },
+            handleSuccess() {
+                this.pic_show = false
+                this.pic_hide = true
+                this.imageUrl = this.name;
+            },
+            handleMaxSize(file) {
+                this.$Notice.warning({
+                    title: "超过文件大小限制",
+                    desc: "文件  " + file.name + " 过大, 超过2M.",
+                });
+            },
             choose(flag) {
                 this.active = flag;
                 if (flag === 4) {
@@ -394,17 +393,9 @@
             priorityChange(data) {
                 this.project.isPublic = data;
             },
-            saveImg() {
-                var that = this;
-                client
-                    .multipartUpload(this.fileName, this.image, {
-                        progress: function (p) { }
-                    })
-                    .then(function (result) { });
-            },
             // 点击保存按钮
             saveSet() {
-                this.publishAxios().then(res => { });
+                this.publishAxios().then(res => {});
             },
             okGuidang() {
                 this.project.projectStatus = 1;
@@ -547,7 +538,8 @@
                     /* padding-left: 15px; */
                     cursor: pointer;
                     box-sizing: border-box;
-                    text-align:center;
+                    text-align: center;
+
                     &:hover {
                         color: #3da8f5;
                     }

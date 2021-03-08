@@ -212,7 +212,6 @@
     demandList,
     questionList
   } from "@/axios/api";
-  import HomeVue from './Home.vue';
   export default {
     name: "index",
     components: {
