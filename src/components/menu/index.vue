@@ -425,7 +425,7 @@
                     this.$router.push("/demandList");
                 } else if (name == 23) {
                     this.$router.push("/requirements");
-                } else if (name == 15 || name == 16 || name == 17 || name == 18 || name == 19) {
+                } else if (name == 'schedule' || name == 'nearThing' || name == 'task' || name == 'file' || name == 'collect') {
                     //我的页面
                     this.$router.push({
                         path: "/mine",
