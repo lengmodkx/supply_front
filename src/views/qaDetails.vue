@@ -66,16 +66,12 @@
         getReplyListByQuetionId
     } from "@/axios/api";
     import Editor from "wangeditor";
-    import OSS from "ali-oss";
+    import moment from 'moment';
+    import axios from 'axios';
+    import Qs from 'qs';
     import {
         oss
     } from "../axios/ossweb";
-    let client = new OSS({
-        region: "oss-cn-beijing",
-        accessKeyId: "LTAIP4MyTAbONGJx",
-        accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-        bucket: "art1001-bim-5d",
-    });
     export default {
         data() {
             return {
@@ -178,43 +174,31 @@
                     // insert 是获取图片 url 后，插入到编辑器的方法
                     that.uploadList = files
                     that.uploadList.forEach((file, index) => {
-                        var fileName = that.dirName + that.random_string(10) + that.get_suffix(file.name);
-                        client.multipartUpload(fileName, file).then(function (result) {
-                                let Img1 = that.getCaption(result.res.requestUrls[0]);
-                                // 上传代码返回结果之后，将图片插入到编辑器中
-                                insert(Img1)
-                            })
-                            .catch(function (err) {
-                                console.log(err);
-                            });
+                        let dir = ''
+                        dir = "upload/question/" + that.$moment().format('YYYY-MM-DD') + "/";
+                        return oss(dir, file.name).then(res => {
+                            //创建一个空对象实例
+                            var formData = new FormData();
+                            formData.append('key', res.key); //存储在oss的文件路径
+                            formData.append('OSSAccessKeyId', res.OSSAccessKeyId); //accessKeyId
+                            formData.append('policy', res.policy); //policy
+                            formData.append('signature', res.signature); //签名
+                            formData.append('success_action_status', '200'); //成功后返回的操作码
+                            // 将文件存入file下面，这个一定要放到最后！！！不然会出错
+                            formData.append("file", file);
+                            var url = res.host
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('post', url, true);
+                            xhr.send(formData)
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState == 4 && xhr.status == 200) {
+                                   insert(res.host + '/' + res.key)
+                                }
+                            }
+                        });
                     });
                 }
                 this.editor.create();
-            },
-            random_string(len) {
-                len = len || 32;
-                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-                var maxPos = chars.length;
-                var pwd = "";
-                for (var i = 0; i < len; i++) {
-                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            },
-            get_suffix(filename) {
-                var pos = filename.lastIndexOf(".");
-                var suffix = "";
-                if (pos !== -1) {
-                    suffix = filename.substring(pos);
-                }
-                return suffix;
-            },
-            getCaption(obj) {
-                var index = obj.indexOf("?");
-                if (index != "-1") {
-                    obj = obj.substring(0, index + 1);
-                }
-                return obj;
             },
         },
     };
