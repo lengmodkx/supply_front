@@ -35,16 +35,8 @@
 </template>
 
 <script>
-import OSS from "ali-oss";
 import JSZip from "jszip";
 import { uploadModel,updateModelVersion} from "../../../axios/api2.js";
-
-let client = new OSS({
-  region: "oss-cn-beijing",
-  accessKeyId: "LTAIP4MyTAbONGJx",
-  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
-});
 export default {
   props: ["fileId",'fileDetail'],
   data() {

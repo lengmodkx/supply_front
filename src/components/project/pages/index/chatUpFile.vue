@@ -20,13 +20,6 @@
 </template>
 <script>
 import { uploadCommonFile } from "../../../../axios/api2.js";
-import OSS from "ali-oss";
-let client = new OSS({
-  region: "oss-cn-beijing",
-  accessKeyId: "LTAIP4MyTAbONGJx",
-  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
-});
 export default {
   props: ["projectId"],
   data() {
@@ -99,25 +92,26 @@ export default {
       var that = this;
       this.uploadList.forEach((file, index) => {
           var fileName =this.dirName + this.random_string(10) + this.get_suffix(file.name);
-          client.multipartUpload(fileName, file, {
-              progress: function(p) {
-                that.percentage.splice(index, 1, Math.floor(p * 100));
-              }
-            }) .then(function(result) {
-              var myfile = {};
-              myfile.fileName = file.name;
-              myfile.fileUrl = result.name;
-              myfile.size = that.renderSize(file.size);
-              that.charFiles.push(myfile);
-              if (that.uploadList.length == that.charFiles.length) {
-                console.log(that.charFiles)
-                that.$emit("saveFileInfo",that.charFiles);
-                that.resetFile();
-              }
-            })
-            .catch(function(err) {
-              console.log(err);
-            });
+          //因为本文件没有用到，所以oss注释未修改
+          // client.multipartUpload(fileName, file, {
+          //     progress: function(p) {
+          //       that.percentage.splice(index, 1, Math.floor(p * 100));
+          //     }
+          //   }) .then(function(result) {
+          //     var myfile = {};
+          //     myfile.fileName = file.name;
+          //     myfile.fileUrl = result.name;
+          //     myfile.size = that.renderSize(file.size);
+          //     that.charFiles.push(myfile);
+          //     if (that.uploadList.length == that.charFiles.length) {
+          //       console.log(that.charFiles)
+          //       that.$emit("saveFileInfo",that.charFiles);
+          //       that.resetFile();
+          //     }
+          //   })
+          //   .catch(function(err) {
+          //     console.log(err);
+          //   });
       });
     },
     // uploadServer() {

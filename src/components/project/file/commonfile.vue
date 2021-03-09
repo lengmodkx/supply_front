@@ -13,13 +13,6 @@ import { uploadCommonFile } from "../../../axios/api2.js";
 import { updateFileVersion } from "@/axios/fileApi";
 import { oss } from "../../../axios/oss.js";
 import { mapState } from "vuex";
-import OSS from "ali-oss";
-let client = new OSS({
-  region: "oss-cn-beijing",
-  accessKeyId: "LTAIP4MyTAbONGJx",
-  accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-  bucket: "art1001-bim-5d"
-});
 export default {
   props: ["fileId", "projectId", "fileDetail"],
   data() {
