@@ -132,7 +132,7 @@ export default {
       getMeTask(this.isDone, this.order, this.type).then(res => {
         // if (res.result === 1) {
           this.loading = false;
-          this.taskList = res.data.list;
+          this.taskList = res.data;
           this.taskList.map(p => {
             p.taskList = false;
           });
