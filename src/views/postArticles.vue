@@ -557,38 +557,14 @@
                 });
             },
             handleBeforeUpload(file) {
-                // let fileName = ''
-                // fileName = "upload/content/" + this.random_string(10) + this.get_suffix(file.name);
-                // var _this = this;
-                // client
-                //     .multipartUpload(fileName, file)
-                //     .then(function (result) {
-                //         if (_this.clickTypeAcName == "文章") {
-                //             let Img1 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.uploadList.push(Img1);
-                //         } else if (_this.clickTypeAcName == "视频") {
-                //             let Img3 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.videoCover.push(Img3);
-                //         } else if (_this.clickTypeAcName == "微头条") {
-                //             let Img2 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.headlinesImg.push(Img2);
-                //         } else if (_this.clickTypeAcName == "问答") {
-                //             let Img4 = _this.getCaption(result.res.requestUrls[0]);
-                //             _this.qaImgList.push(Img4);
-                //         }
-                //     })
-                //     .catch(function (err) {
-                //         console.log(err);
-                //     });
-                var _this = this;
                 let dir = ''
-                if (_this.clickTypeAcName == "文章") {
+                if (this.clickTypeAcName == "文章") {
                     dir = "upload/article/" + this.$moment().format('YYYY-MM-DD') + "/";
-                } else if (_this.clickTypeAcName == "视频") {
+                } else if (this.clickTypeAcName == "视频") {
                     dir = "upload/video/" + this.$moment().format('YYYY-MM-DD') + "/";
-                } else if (_this.clickTypeAcName == "微头条") {
+                } else if (this.clickTypeAcName == "微头条") {
                     dir = "upload/headlines/" + this.$moment().format('YYYY-MM-DD') + "/";
-                } else if (_this.clickTypeAcName == "问答") {
+                } else if (this.clickTypeAcName == "问答") {
                     dir = "upload/questions/" + this.$moment().format('YYYY-MM-DD') + "/";
                 }
                 return oss(dir, file.name).then(res => {
