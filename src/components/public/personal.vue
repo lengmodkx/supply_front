@@ -28,15 +28,20 @@
                                 <img alt="" :src="`${message.defaultImage}`" v-if="pic_show" accept="image/*">
                                 <img :src="imageUrl" alt v-if="pic_hide" accept="image/*">
                                 <div class="chang-head">
-                                    <input type="file" ref="inputer" @change="getFile">
-                                    <Button class="upLoadButton">更换头像</Button>
+                                    <!-- <input type="file" ref="inputer" @change="getFile">
+                                    <Button class="upLoadButton">更换头像</Button> -->
+                                    <Upload :show-upload-list="false" :max-size="2048" :on-exceeded-size="handleMaxSize"
+                                        :before-upload="handleBeforeUpload" :action="host" :data="uploadData"
+                                        :headers="headers" :on-success="handleSuccess">
+                                        <Button type="primary" ghost>更换头像</Button>
+                                    </Upload>
                                 </div>
                             </div>
                         </FormItem>
                         <FormItem label="姓名">
                             <Input v-model="message.userName" placeholder="请输入姓名"></Input>
                         </FormItem>
-                         <FormItem label="昵称">
+                        <FormItem label="昵称">
                             <Input v-model="message.nickName" placeholder="请输入昵称"></Input>
                         </FormItem>
                         <FormItem label="职位">
@@ -70,7 +75,8 @@
                 </div>
                 <div class="divide">
                     <img src="../../assets/images/weixin.png" alt="">
-                    <Button type="primary" ghost @click="bind()" v-if="message.wxOpenId==''||message.wxOpenId==null">绑定</Button>
+                    <Button type="primary" ghost @click="bind()"
+                        v-if="message.wxOpenId==''||message.wxOpenId==null">绑定</Button>
                     <Button type="error" ghost v-else @click="notBind()">解除绑定</Button>
                 </div>
             </div>
@@ -107,7 +113,8 @@
                             <Input v-model="password.moreNew" type="password" placeholder="请输入新密码"></Input>
                         </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="submitPassword('password')" style="background-color: rgba(44, 183, 245, 1);border-color: #2CB7F5;">确认</Button>
+                            <Button type="primary" @click="submitPassword('password')"
+                                style="background-color: rgba(44, 183, 245, 1);border-color: #2CB7F5;">确认</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -156,13 +163,9 @@
         mapActions,
         mapMutations
     } from "vuex";
-    import OSS from "ali-oss";
-    let client = new OSS({
-        region: "oss-cn-beijing",
-        accessKeyId: "LTAIP4MyTAbONGJx",
-        accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-        bucket: "art1001-bim-5d"
-    });
+    import {
+        oss
+    } from "@/axios/ossweb";
     export default {
         data: function () {
             return {
@@ -209,7 +212,7 @@
                     address: '',
                     email: '',
                     wxOpenId: '',
-                    nickName:''
+                    nickName: ''
                 },
                 yearList: [],
                 monthList: [],
@@ -229,7 +232,13 @@
                 },
                 emailAddress: '', //邮箱地址    
                 modal3: false,
-                companyId: ''
+                companyId: '',
+                uploadData: {},
+                host: "",
+                headers: {
+                    "x-auth-token": localStorage.token
+                },
+                name: ""
             }
         },
         computed: {
@@ -241,7 +250,6 @@
 
             // 确认密码
             submitPassword(name) {
-                console.log(name)
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.savePassword();
@@ -272,7 +280,7 @@
             notBind() {
                 notBindWx(this.message.userId).then(res => {
                     if (res.result == 1) {
-                        this.message.wxOpenId=''
+                        this.message.wxOpenId = ''
                         this.$Message.success(res.msg);
                     }
                 })
@@ -281,72 +289,45 @@
                 this.activeClass = index; // 把当前点击元素的index，赋值给activeClass
                 this.activeItem = item
             },
-            random_string(len) {
-                len = len || 32;
-                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-                var maxPos = chars.length;
-                var pwd = "";
-                for (var i = 0; i < len; i++) {
-                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            },
-            get_suffix(filename) {
-                var pos = filename.lastIndexOf(".");
-                var suffix = "";
-                if (pos !== -1) {
-                    suffix = filename.substring(pos);
-                }
-                return suffix;
-            },
             resetFile() {
                 this.showupload = true;
                 this.showProgress = false;
                 this.uploadList = [];
                 this.percentage = [];
             },
-            getFile(event) {
-                var that = this;
-                const files = event.target.files
-                this.filename = files[0].name //只有一个文件
-                if (this.filename.lastIndexOf('.') <= 0) {
-                    return alert("Please add a valid image!") //判断图片是否有效
+            handleBeforeUpload(file) {
+                let dir = ''
+                dir = "upload/personal/" + this.$moment().format('YYYY-MM-DD') + "/";
+                return oss(dir, file.name).then(res => {
+                    this.host = res.host;
+                    this.uploadData = res;
+                    this.name = res.host + '/' + res.key
+                });
+
+            },
+            handleSuccess() {
+                let data = {
+                    userId: localStorage.userId,
+                    image: this.name,
                 }
-                const fileReader = new FileReader() //内置方法new FileReader()   读取文件
-                fileReader.addEventListener('load', () => {
-                    this.pic_show = false,
-                        this.pic_hide = true,
-                        this.imageUrl = fileReader.result
-
-
-                })
-                fileReader.readAsDataURL(files[0])
-                this.image = files[0]
-                //到这里后, 选择图片就可以显示出来了
-                this.fileName = this.dirName + this.random_string(10) + this.get_suffix(this.filename);
-
-                if (this.filename) {
-                    this.message.defaultImage = "https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/" + this.fileName
-                    client.multipartUpload(this.fileName, this.image, {
-                        progress: function (p) {}
-                    }).then(function (result) {
-                        console.log(result)
-                        let data = {
-                            userId: localStorage.userId,
-                            image: that.message.defaultImage,
-                        }
-                        //保存
-                        updateUserNews(data).then(res => {
-                            if (res.result == 1) {
-                                localStorage.userImg = that.message.defaultImage;
-
-                                that.initSrc(that.message.defaultImage);
-                                that.$Message.info(res.msg);
-                            }
-                        });
-                    })
-
-                }
+                //保存
+                updateUserNews(data).then(res => {
+                    if (res.result == 1) {
+                        this.message.defaultImage = this.name
+                        this.imageUrl = this.name
+                        localStorage.userImg = this.message.defaultImage;
+                        this.initSrc(this.message.defaultImage);
+                        this.$Message.success(res.msg);
+                    }else {
+                        this.$Message.error(res.msg);
+                    }
+                });
+            },
+            handleMaxSize(file) {
+                this.$Notice.warning({
+                    title: "超过文件大小限制",
+                    desc: "文件  " + file.name + " 过大, 超过2M.",
+                });
             },
             handleSubmit() {
                 if (this.message.accountName != null && this.message.accountName != "") {
@@ -362,16 +343,15 @@
                         return;
                     }
                 }
-                if(this.message.nickName.trim()==''){
-                        this.$Message.error('请输入昵称');
-                        return;
+                if (this.message.nickName.trim() == '') {
+                    this.$Message.error('请输入昵称');
+                    return;
                 }
                 this.save();
             },
             save() {
                 var that = this;
                 if (this.message.birthday != null && this.message.birthday != "") {
-                    console.log(this.message.birthday)
                     var dataEE = new Date(this.message.birthday).toJSON();
                     var birthDay = new Date(new Date(dataEE).getTime() + 8 * 3600 * 1000).toISOString().replace(/T/g,
                         ' ').replace(/\.[\d]{3}Z/, '');
@@ -392,7 +372,7 @@
                 updateUserNews(data).then(res => {
                     if (res.result == 1) {
                         this.$Message.info(res.msg);
-                    }else{
+                    } else {
                         this.$Message.warning(res.msg);
                     }
                 });
@@ -400,7 +380,6 @@
             },
             info() {
                 findUserInfo(this.message.userId).then(res => {
-                    console.log(res)
                     //获取信息
                     if (res.result == 1) {
                         this.loading = false;
@@ -419,7 +398,6 @@
                     }
                 }
                 var code = theRequest.code
-                console.log(code)
                 next(vm => {
                     bindWx(code, this.message.userId).then(res => {
                         if (res.result == 1) {
@@ -473,7 +451,6 @@
             },
             unbundling() {
                 notBindPhone().then(res => {
-                    console.log(res)
                     if (res.result == 1) {
                         this.$Message.success('解绑成功');
                         this.info();
@@ -514,9 +491,9 @@
         }
 
         color: #333333;
-        flex:1;
+        flex: 1;
         min-height: 100%;
-        background-color: #F0EFEC;
+        background-color: #f0efec;
         overflow: auto;
 
         .personal {
@@ -537,7 +514,7 @@
                 background: #ffffff;
                 display: flex;
                 align-items: center;
-                border-bottom: 1px solid #D5D5D5;
+                border-bottom: 1px solid #d5d5d5;
                 padding-left: 26px;
 
                 img {
@@ -566,14 +543,13 @@
                 }
 
                 :hover {
-                    background: #F2FBFF;
+                    background: #f2fbff;
                 }
 
                 .active {
-                    background: #F2FBFF;
+                    background: #f2fbff;
                 }
             }
-
         }
 
         .personal-right {
@@ -583,7 +559,7 @@
             /* padding: 20px; */
 
             .title {
-                border-bottom: 1px solid #D5D5D5;
+                border-bottom: 1px solid #d5d5d5;
                 padding: 0 30px;
                 position: relative;
                 /* margin-bottom: 34px; */
@@ -594,7 +570,7 @@
                 .line {
                     width: 56px;
                     height: 2px;
-                    background: #2B85E4;
+                    background: #2b85e4;
                     position: absolute;
                     bottom: 0;
                 }
@@ -604,7 +580,6 @@
                     color: #999999;
                     margin-left: 24px;
                 }
-
             }
 
             .title2 {
@@ -663,14 +638,13 @@
                         }
 
                         .upLoadButton {
-                            color: #3DA8F5;
+                            color: #3da8f5;
                             width: 88px;
                             height: 30px;
                             background: #ffffff;
                             border-radius: 4px;
                             border: none;
-                            border: 1px solid #3DA8F5;
-
+                            border: 1px solid #3da8f5;
                         }
 
                         input {
@@ -679,7 +653,7 @@
                             top: 0;
                             width: 88px;
                             height: 32px;
-                            opacity: 0
+                            opacity: 0;
                         }
                     }
                 }
@@ -696,7 +670,7 @@
                 .saveBtn {
                     width: 148px;
                     background-color: rgba(44, 183, 245, 1);
-                    border-color: #2CB7F5;
+                    border-color: #2cb7f5;
                 }
 
                 .account-content {
@@ -718,7 +692,6 @@
 
                     .userPhone {
                         margin-right: 20px;
-
                     }
 
                     .ivu-input-wrapper {
@@ -727,11 +700,7 @@
                     }
                 }
             }
-
-
         }
-
-
     }
 
     .personal-box::-webkit-scrollbar {
@@ -756,7 +725,7 @@
     }
 
     .divide {
-        border-bottom: 1px solid #D5D5D5;
+        border-bottom: 1px solid #d5d5d5;
         margin: 0 25px;
         padding: 14px 0;
 

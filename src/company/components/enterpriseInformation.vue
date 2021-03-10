@@ -67,13 +67,7 @@
 
 <script>
 import { orgInfo , updateOrg, delOrg,getAllTransfer,postTransfer} from '../axios/api'
-import OSS from "ali-oss";
-let client = new OSS({
-    region: "oss-cn-beijing",
-    accessKeyId: "LTAIP4MyTAbONGJx",
-    accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-    bucket: "art1001-bim-5d"
-});
+
 export default {
     name: "enterpriseInformation",
     data () {

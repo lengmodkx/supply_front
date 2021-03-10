@@ -28,6 +28,7 @@
                             </div>
                             <Upload ref="upload" :show-upload-list="false" :max-size="2048"
                                 :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" :action="host"
+                                :data="uploadData" :headers="headers" :on-success="handleSuccess"
                                 multiple style="display: inline-block; width: 100px; margin-top: 10px" type="drag"
                                 v-if="headlinesImg.length != 9">
                                 <div style="width: 100px; height: 100px; line-height: 100px">
@@ -55,17 +56,9 @@
         demandAdd,
         demandEdit
     } from "@/axios/api";
-    import OSS from "ali-oss";
     import {
         oss
     } from "../axios/ossweb";
-
-    let client = new OSS({
-        region: "oss-cn-beijing",
-        accessKeyId: "LTAIP4MyTAbONGJx",
-        accessKeySecret: "coCyCStZwTPbfu93a3Ax0WiVg3D4EW",
-        bucket: "art1001-bim-5d",
-    });
     export default {
         data() {
             return {
@@ -77,7 +70,6 @@
                     orgId:localStorage.companyId
                 },
                 headlinesImg: [],
-                host: '',
                 classList: [],
                 ruleValidate: {
                     bid: [{
@@ -86,7 +78,13 @@
                         trigger: 'blur',
                     }],
 
-                }
+                },
+                uploadData: {},
+                host: "",
+                headers: {
+                    "x-auth-token": localStorage.token
+                },
+                name:""
             };
         },
         mounted() {
@@ -99,18 +97,16 @@
         },
         methods: {
             handleBeforeUpload(file) {
-                let fileName = ''
-                fileName = "upload/requirements/" + this.random_string(10) + this.get_suffix(file.name);
-                var _this = this;
-                client
-                    .multipartUpload(fileName, file)
-                    .then(function (result) {
-                        let Img2 = _this.getCaption(result.res.requestUrls[0]);
-                        _this.headlinesImg.push(Img2);
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                    });
+                let dir = ''
+                dir = "upload/demand/" + this.$moment().format('YYYY-MM-DD') + "/";
+                return oss(dir, file.name).then(res => {
+                    this.host = res.host;
+                    this.uploadData = res;
+                    this.name = res.host + '/' + res.key
+                });
+            },
+            handleSuccess(res, file) {
+                    this.headlinesImg.push(this.name);
             },
             handleRemoveVideo(item, index) {
                 this.headlinesImg.splice(index, 1);
@@ -120,31 +116,6 @@
                     title: "超过文件大小限制",
                     desc: "文件  " + file.name + " 过大, 超过2M.",
                 });
-            },
-            getCaption(obj) {
-                var index = obj.indexOf("?");
-                if (index != "-1") {
-                    obj = obj.substring(0, index + 1);
-                }
-                return obj;
-            },
-            random_string(len) {
-                len = len || 32;
-                var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-                var maxPos = chars.length;
-                var pwd = "";
-                for (var i = 0; i < len; i++) {
-                    pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-                }
-                return pwd;
-            },
-            get_suffix(filename) {
-                var pos = filename.lastIndexOf(".");
-                var suffix = "";
-                if (pos !== -1) {
-                    suffix = filename.substring(pos);
-                }
-                return suffix;
             },
             save(name) {
                 if (this.param.demandName == '') {
