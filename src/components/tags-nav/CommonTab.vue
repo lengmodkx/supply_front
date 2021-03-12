@@ -1,5 +1,5 @@
 <template>
-    <div class="tabs">
+    <div class="tabs" :class="header?'left-big':'left-small'">
         <!--closable这里说明home是不能关闭的-->
         <Tag type="dot" :key="tag.name" v-for="(tag, index) in tags" :closable="tag.name !== 'organization'"
             @on-close="handleClose(tag, index)" @click.native="changeMenu(tag)"
@@ -20,6 +20,8 @@
     } from "@/utils/util";
     export default {
         computed: {
+            ...mapState("app", ["header"]),
+
             ...mapState({
                 tags: (state) => state.tab.tabsList,
             }),
@@ -54,10 +56,9 @@
             changeMenu(item) {
                 if (item.name == "organization") {
                     this.$router.push('/org/' + localStorage.companyId);
-                } else if(item.name == "prolist") {
+                } else if (item.name == "prolist") {
                     this.$router.push('/prolist/' + localStorage.companyId);
-                }
-                else {
+                } else {
                     this.$router.push({
                         name: item.name,
                     });
@@ -67,7 +68,7 @@
             },
         },
         mounted() {
-            if (getTagNavListFromLocalstorage().length !=0) {
+            if (getTagNavListFromLocalstorage().length != 0) {
                 this.$store.commit("tab/setLocalTag", getTagNavListFromLocalstorage());
             }
         },
@@ -86,9 +87,8 @@
 
 <style lang="less" scoped>
     .tabs {
-        padding:3px 20px;
+        padding: 3px 20px;
         position: fixed;
-        left: 60px;
         top: 48px;
         width: 100%;
         z-index: 100;
@@ -96,21 +96,29 @@
         padding-right: 80px;
         overflow-y: hidden;
         overflow-x: auto;
-        white-space: nowrap; 
-
-        
+        white-space: nowrap;
+        transition: all 0.3s;
 
         .ivu-tag {
             cursor: pointer;
         }
     }
-    ::-webkit-scrollbar {
-            width: 6px;
-            height: 8px;
-            background-color: #e5e5e5;
-        }
 
-        ::-webkit-scrollbar-thumb {
-            background-color: #cecece;
-        }
+    .left-big {
+        left: 210px;
+    }
+
+    .left-small {
+        left: 60px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 8px;
+        background-color: #e5e5e5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #cecece;
+    }
 </style>
