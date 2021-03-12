@@ -2,7 +2,7 @@
   <div id="app">
     <header-main v-if="hasHeader" :showLeftMenu="showLeftMenu" :showBread="showBread"></header-main>
    
-    <!-- <common-tab></common-tab> -->
+    <common-tab v-if="showLeftMenu"></common-tab>
     <div class="content-main">
       <div class="wrap-box layout df">
         <Left-Menu v-if="showLeftMenu"></Left-Menu>
@@ -79,7 +79,6 @@
           this.$route.path !== "/creatEnter" &&
           this.$route.path.indexOf("/project");
           this.showBread =this.$route.path.indexOf("/project")== '-1'?true:false;
-          console.log(this.showBread)
       },
       reload() {
         this.isRouterAlive = false;

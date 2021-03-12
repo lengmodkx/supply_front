@@ -20,12 +20,16 @@ import tagsView from "./modules/tagsView"
 import drawer from './modules/drawer'
 import breadCrumb from './modules/breadCrumb'
 //import gantt from './modules/gantt'
+import tab from './modules/tab'
 
 import Login from "./webim/login";
 import Chats from "./webim/chats";
 import Group from "./webim/group";
 import Emedia from "./webim/emedia";
 import FriendModule from "./webim/friendModule";
+
+
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -53,7 +57,8 @@ const store = new Vuex.Store({
         view,
         tagsView,
         drawer,
-        breadCrumb
+        breadCrumb,
+        tab
     }
 })
 

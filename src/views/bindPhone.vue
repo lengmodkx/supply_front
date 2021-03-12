@@ -179,7 +179,7 @@
       height: 100vh;
       position: relative;
       background: white;
-      margin-top: -48px;
+      margin-top: -90px;
       //    background: url("../assets/images/login-bg2.jpg") no-repeat center/cover;
    }
 

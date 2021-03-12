@@ -186,7 +186,7 @@
                         childNode: [{
                                 text: "近期的事",
                                 name: "15",
-                                icon:'jinqi',
+                                icon: 'jinqi',
                                 childNode: [{
                                         text: "任务",
                                         name: "nearThing,1"
@@ -250,7 +250,7 @@
                             {
                                 text: "收藏",
                                 name: "19",
-                                icon:'shoucang1',
+                                icon: 'shoucang1',
                                 childNode: [{
                                         text: "任务",
                                         name: "collect,2,任务",
@@ -425,7 +425,8 @@
                     this.$router.push("/demandList");
                 } else if (name == 23) {
                     this.$router.push("/requirements");
-                } else if (name == 'schedule' || name == 'nearThing' || name == 'task' || name == 'file' || name == 'collect') {
+                } else if (name == 'schedule' || name == 'nearThing' || name == 'task' || name == 'file' || name ==
+                    'collect') {
                     //我的页面
                     this.$router.push({
                         path: "/mine",

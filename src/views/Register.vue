@@ -498,7 +498,7 @@
     width: 100vw;
     height: 100vh;
     position: relative;
-    margin-top: -48px;
+    margin-top: -90px;
     background-color: white;
 
     .left-img {
