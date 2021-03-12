@@ -50,9 +50,7 @@ module.exports = {
         // proxy: 'http://localhost:4000'// 配置跨域处理,只有一个代理
         proxy: {
             "/api": {
-                //  target: "http://192.168.31.120:8080",
-                //target: "http://test.art1001.com/api/",
-                target: "https://work.aldbim.com/api",
+                target: "http://192.168.50.218:8080",
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
