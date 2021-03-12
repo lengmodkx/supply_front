@@ -15,14 +15,14 @@
 <script>
   import Header from "./components/public/Header.vue";
   import Menu from "../src/components/menu/index.vue";
-  // import CommonTab from "./components/tags-nav/CommonTab";
+  import CommonTab from "./components/tags-nav/CommonTab";
 
   export default {
     name: "App",
     components: {
       "header-main": Header,
       "Left-Menu": Menu,
-      // "common-tab": CommonTab
+      "common-tab": CommonTab
     },
     provide() {
       return {
