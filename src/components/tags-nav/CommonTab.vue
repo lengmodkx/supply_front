@@ -41,9 +41,15 @@
                 }
                 // 关闭的标签是最右边的话，往左边跳转一个
                 if (index === length) {
-                    this.$router.push({
-                        name: this.tags[index - 1].name,
-                    });
+                    if (this.tags[index - 1].name == "organization") {
+                        this.$router.push('/org/' + localStorage.companyId);
+                    } else if (this.tags[index - 1].name == "prolist") {
+                        this.$router.push('/prolist/' + localStorage.companyId);
+                    } else {
+                        this.$router.push({
+                            name: this.tags[index - 1].name,
+                        });
+                    }
                 } else {
                     // 否则往右边跳转
                     this.$router.push({
