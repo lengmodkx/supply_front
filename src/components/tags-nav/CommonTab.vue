@@ -97,7 +97,7 @@
         position: fixed;
         top: 48px;
         width: 100%;
-        z-index: 100;
+        z-index: 99;
         background: #ffffff;
         padding-right: 80px;
         overflow-y: hidden;
