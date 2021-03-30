@@ -96,7 +96,7 @@
                 <p>确定删除此条评论吗？</p>
             </div>
             <div slot="footer">
-                <Button type="error" size="large" long :loading="modal_loading" @click="deleteComment">Delete</Button>
+                <Button type="error" size="large" long :loading="modal_loading" @click="deleteComment">删除</Button>
             </div>
         </Modal>
     </div>
@@ -244,7 +244,8 @@
             deleteComment() {
                 this.modal_loading = true
                 removeComment({
-                    commentIds: this.delItem.item.commentId
+                    commentIds: this.delItem.item.commentId,
+                    articleId:this.param.articleId
                 }).then(response => {
                     this.deleteModal = false
                     this.$Message.success('删除评论成功！');

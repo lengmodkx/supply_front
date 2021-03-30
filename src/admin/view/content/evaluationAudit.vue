@@ -228,7 +228,8 @@
             deleteComment() {
                 this.modal_loading = true
                 removeComment({
-                    commentIds: this.delItem.item.commentId
+                    commentIds: this.delItem.item.commentId,
+                    articleId:this.param.articleId
                 }).then(response => {
                     this.deleteModal = false
                     this.$Message.success('删除评论成功！');
@@ -241,7 +242,8 @@
             toExamine(item, index) {
                 this.checkCommentIndex = index
                 updateCommentState({
-                    commentId: item.commentId
+                    commentId: item.commentId,
+                    articleId:this.param.articleId
                 }).then(response => {
                     this.$Message.success('审核通过');
                     this.$set(this.listData[this.check], 'commentNotCheckCount', this.tobeComment - 1)
