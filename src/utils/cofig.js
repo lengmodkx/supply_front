@@ -18,7 +18,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://192.168.31.26:8080/api/',
-    pro: 'https://work.aldbim.com/api/'
+    pro: 'https://supply.aldbim.com/api/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
