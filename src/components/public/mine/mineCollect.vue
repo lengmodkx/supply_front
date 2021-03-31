@@ -3,92 +3,41 @@
   <div>
     <div class="inner collect">
       <!-- 头部 -->
-      <!--<div class="header1">
-               <div class="h1_title">
-                    <ul class="selectlistBox">
-                      <li @click="chooseCollectType(1, '所有收藏')">
-                        <span class="myiconBox"><Icon type="ios-heart-outline"></Icon></span>所有收藏
-                      </li>
-                      <li @click="chooseCollectType(2, '任务')">
-                        <span class="myiconBox"><Icon type="md-checkbox-outline"/></span>任务
-                      </li>
-                      <li @click="chooseCollectType(3, '分享')">
-                        <span class="myiconBox"><Icon class="shareIcon" type="ios-paper-outline"></Icon></span>分享
-                      </li>
-                      <li @click="chooseCollectType(4, '文件')">
-                        <span class="myiconBox"><Icon type="ios-document-outline"/></span>文件
-                      </li>
-                      <li @click="chooseCollectType(5, '日程')">
-                        <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>日程
-                      </li>
-                    </ul>
-              </div> -->
-
-        <!-- <div class="h1_title">
-          <Poptip placement="bottom-start" v-model="collectVisible" @on-popper-hide="getCollect">
-            <span class="showchoose">{{ collectType }}<Icon type="ios-arrow-down" style="margin-left:6px;"></Icon></span>
-            <div slot="content">
-              <ul class="selectlist">
-                <li @click="chooseCollectType(1, '所有收藏')">
-                  <span class="myiconBox"><Icon type="ios-heart-outline"></Icon></span>所有收藏<Icon class="gou" type="md-checkmark" v-if="activeCollect == 1" />
-                </li>
-                <li @click="chooseCollectType(2, '任务')">
-                  <span class="myiconBox"><Icon type="md-checkbox-outline"/></span>任务<Icon class="gou" type="md-checkmark" v-if="activeCollect == 2" />
-                </li>
-                <li @click="chooseCollectType(3, '分享')">
-                  <span class="myiconBox"><Icon class="shareIcon" type="ios-paper-outline"></Icon></span>分享<Icon class="gou" type="md-checkmark" v-if="activeCollect == 3" />
-                </li>
-                <li @click="chooseCollectType(4, '文件')">
-                  <span class="myiconBox"><Icon type="ios-document-outline"/></span>文件<Icon class="gou" type="md-checkmark" v-if="activeCollect == 4" />
-                </li>
-                <li @click="chooseCollectType(5, '日程')">
-                  <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>日程<Icon class="gou" type="md-checkmark" v-if="activeCollect == 5" />
-                </li>
-              </ul>
-            </div>
-          </Poptip>
-        </div> 
-      </div>-->
-      <div class="h1_title">收藏</div>
-      <!-- <div class="collect-head">
-                <div class="collect-head-left">
-                      <span :class="{now: activeCollect==1}" @click="chooseCollectType(1, '所有收藏')">所有收藏</span>
-                      <span :class="{now: activeCollect==2}" @click="chooseCollectType(2, '任务')">任务</span>
-                      <span :class="{now: activeCollect==3}" @click="chooseCollectType(3, '分享')">分享</span>
-                      <span :class="{now: activeCollect==4}" @click="chooseCollectType(4, '文件')">文件</span>
-                      <span :class="{now: activeCollect==5}" @click="chooseCollectType(5, '日程')">日程</span>
+      <Tabs value="任务" @on-click="chooseCollectType">
+        <TabPane :label="item.label" :name="item.name" v-for="(item,index) in tablist" :key="index">
+          <Loading v-if="loading"></Loading>
+          <!-- 内容 -->
+          <div class="favoriteList">
+            <ul class="favoriteItem" v-if="collectList.length">
+              <li v-for="(c, i) in collectList" :key="i">
+                <div class="item-header">
+                  <div class="create-time"><Time :time="c.createTime" /></div>
+                  <div class="unfavorite" @click="cancleCollect(c.publicId)">取消收藏</div>
                 </div>
-                
-            </div> -->
-      <Loading v-if="loading"></Loading>
-      <!-- 内容 -->
-      <div class="favoriteList">
-        <ul class="favoriteItem" v-if="collectList.length">
-          <li v-for="(c, i) in collectList" :key="i">
-            <div class="item-header">
-              <div class="create-time"><Time :time="c.createTime" /></div>
-              <div class="unfavorite" @click="cancleCollect(c.publicId)">取消收藏</div>
+                <div class="item-title clearfix">
+                  <span class="myiconBox">
+                    <Icon class="dayIcon" type="ios-calendar-outline"></Icon>
+                  </span>
+                  <span class="img" v-if="c.item.userImage"><img v-if="c.collectType !== '日程'"
+                      :src="c.item.userImage" /></span>
+                  <span class="img" v-else><img src="../../../assets/images/headUser.png" alt="" /></span>
+                  <span
+                    class="title">{{ c.item.taskName }}{{ c.item.shareName }}{{ c.item.fileName }}{{ c.item.title }}{{ c.item.scheduleName }}</span>
+                  <div :class="[{'past-time':new Date().getTime() > c.item.endTime}, 'collect-time' , 'fr']"
+                    v-if="c.item.endTime">
+                    <div>{{$moment(c.item.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
+                  </div>
+                </div>
+                <div class="bottom-line"></div>
+              </li>
+            </ul>
+            <div v-else class="wu">
+              <img src="../../../icons/img/no-list.png" alt="" />
+              <!-- <p>还没有收藏内容</p> -->
             </div>
-            <div class="item-title clearfix">
-              <span class="myiconBox"><Icon class="dayIcon" type="ios-calendar-outline"></Icon></span>
-              <span class="img" v-if="c.item.userImage"><img v-if="c.collectType !== '日程'" :src="c.item.userImage"/></span>
-              <span class="img" v-else><img src="../../../assets/images/headUser.png" alt=""/></span>
-              <span class="title">{{ c.item.taskName }}{{ c.item.shareName }}{{ c.item.fileName }}{{ c.item.title }}{{ c.item.scheduleName }}</span>
-              <!-- <span class="collect-time fr">已更新</span> -->
-              <!-- <div :class="{new Date().getTime()>c.item.endTime?'past-time':'', 'collect-time' , 'fr'}" v-if="c.item.endTime"> -->
-              <div :class="[{'past-time':new Date().getTime() > c.item.endTime}, 'collect-time' , 'fr']" v-if="c.item.endTime">
-
-                <div>{{$moment(c.item.endTime).format("YYYY年MM月DD日")}}&nbsp;&nbsp;截止</div>
-              </div>
-            </div>
-            <div class="bottom-line"></div>
-          </li>
-        </ul>
-        <div v-else class="wu">
-          <img src="../../../icons/img/no-list.png" alt="" />
-          <!-- <p>还没有收藏内容</p> -->
-        </div>
-      </div>
+          </div>
+        </TabPane>
+      </Tabs>
     </div>
     <!-- 编辑任务模态框 -->
     <Modal v-model="showTaskModal" class="myModal">
@@ -110,78 +59,83 @@
 </template>
 
 <script>
-import { collectList, cancelCollect } from "@/axios/api";
-import myModal from "@/components/project/pages/index/components/EditList";
-import editRicheng from "@/components/project/schedule/EditRicheng";
-import fileDetail from "@/components/project/file/fileDetail";
-import modelFileDetail from "@/components/project/file/modelFileDetail";
-export default {
-  data() {
-    return {
-      collectType: "所有收藏",
-      activeCollect: 1,
-      collectVisible: false,
-      collectList: [],
-      loading: false,
-      showTaskModal: false,
-      editrc: false,
-      showModelDetai: false,
-      showModelFileDetail: false,
-      svfUrl: ""
-    };
-  },
-  props: ["name","content"],
-  components: {
-    myModal,
-    editRicheng,
-    fileDetail,
-    modelFileDetail
-  },
-  methods: {
-    chooseCollectType(i, name) {
-      this.activeCollect = i;
-      this.collectType = name;
-      this.collectVisible = false;
-      this.getCollect()
+  import {
+    collectList,
+    cancelCollect
+  } from "@/axios/api";
+  import myModal from "@/components/project/pages/index/components/EditList";
+  import editRicheng from "@/components/project/schedule/EditRicheng";
+  import fileDetail from "@/components/project/file/fileDetail";
+  import modelFileDetail from "@/components/project/file/modelFileDetail";
+  export default {
+    data() {
+      return {
+        collectType: "任务",
+        collectList: [],
+        loading: false,
+        showTaskModal: false,
+        editrc: false,
+        showModelDetai: false,
+        showModelFileDetail: false,
+        svfUrl: "",
+        tablist: [{
+            label: '任务',
+            name: '任务'
+          },
+          {
+            label: '分享',
+            name: '分享'
+          },
+          {
+            label: '文件',
+            name: '文件'
+          },
+          {
+            label: '日程',
+            name: '日程'
+          },
+        ]
+      };
     },
-    cancleCollect(id) {
-      cancelCollect(id).then(res => {
-        this.$Message.message("成功");
-      });
+    props: ["name", "content"],
+    components: {
+      myModal,
+      editRicheng,
+      fileDetail,
+      modelFileDetail
     },
-    getCollect() {
-      
-      this.loading = true;
-      let type = null;
-      if (this.collectType !== "所有收藏") {
-        type = this.collectType;
+    methods: {
+      chooseCollectType(name) {
+        this.collectType = name;
+        this.getCollect()
+      },
+      cancleCollect(id) {
+        cancelCollect(id).then(res => {
+          this.$Message.message("成功");
+        });
+      },
+      getCollect() {
+        this.loading = true;
+        collectList(this.collectType).then(res => {
+          if (res.result === 1) {
+            this.loading = false;
+            this.collectList = res.data;
+          }
+        });
+      },
+      closeModal() {
+        this.editrc = false;
+      },
+      closeDetail() {
+        this.showModelDetai = false;
       }
-      collectList(type).then(res => {
-        if (res.result === 1) {
-          this.loading = false;
-          this.collectList = res.data;
-        }
-      });
     },
-    closeModal() {
-      this.editrc = false;
-    },
-    closeDetail() {
-      this.showModelDetai = false;
+    mounted() {
+      this.getCollect('任务');
     }
-  },
-  mounted() {
-    this.collectType = this.content;
-    this.getCollect();
-  },
-  watch:{
-    'name':function(val){
-      this.chooseCollectType(val,this.content);
-    }
-  }
-};
+  };
 </script>
 
 <style scoped lang="less">
-@import "../Mine";
+  @import "../Mine";
 </style>

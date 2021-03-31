@@ -37,7 +37,6 @@ import bidding from '../views/bidding.vue' //发布竞标
 
 
 
-
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -211,7 +210,8 @@ const router = new Router({
           meta: {
             title: "阿拉丁BIM5D云平台",
             requireAuth: true,
-            keepAlive: false
+            keepAlive: false,
+            name:'近期的事'
           }
         },
         {
@@ -221,7 +221,8 @@ const router = new Router({
           meta: {
             title: "阿拉丁BIM5D云平台",
             requireAuth: true,
-            keepAlive: false
+            keepAlive: false,
+            name:'文件'
           }
         },
         {
@@ -231,7 +232,8 @@ const router = new Router({
           meta: {
             title: "阿拉丁BIM5D云平台",
             requireAuth: true,
-            keepAlive: false
+            keepAlive: false,
+            name:'任务'
           }
         },
         {
@@ -241,7 +243,8 @@ const router = new Router({
           meta: {
             title: "阿拉丁BIM5D云平台",
             requireAuth: true,
-            keepAlive: false
+            keepAlive: false,
+            name:'日程'
           }
         },
         {
@@ -251,7 +254,8 @@ const router = new Router({
           meta: {
             title: "阿拉丁BIM5D云平台",
             requireAuth: true,
-            keepAlive: false
+            keepAlive: false,
+            name:'收藏'
           }
         }
 

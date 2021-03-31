@@ -274,7 +274,7 @@
         min-height: 100%;
         box-sizing: border-box;
         overflow: auto;
-
+        flex: 1;
         .center-left {
             .profile-header {
                 position: relative;

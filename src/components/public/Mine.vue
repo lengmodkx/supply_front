@@ -3,9 +3,9 @@
   <div class="mine">
     <div class="content">
       <Content class="mainContent">
-        <nearThing v-if="mineTag=='nearThing'" :name="name?name:1"></nearThing>
-        <task v-if="mineTag=='task'" :name="name"></task>
-        <schedule v-if="mineTag=='schedule'" :name="name"></schedule>
+        <nearThing v-if="mineTag=='nearThing'"></nearThing>
+        <task v-if="mineTag=='task'"></task>
+        <schedule v-if="mineTag=='schedule'"></schedule>
         <file v-if="mineTag=='file'" :name="name"></file>
         <collect v-if="mineTag=='collect'" :name="name" :content="content"></collect>
       </Content>
@@ -35,8 +35,7 @@
     },
     data() {
       return {
-        hover: "nearThing",
-        mineTag: "nearThing",
+        mineTag: "",
         name: "",
         content: "" // 收藏需要传的值
       };
@@ -49,11 +48,8 @@
       ...mapState("user", ["projectRouter"]),
       //切换TAG
       openTag(tagName) {
-        this.name = tagName.split(",")[1];
-        this.mineTag = tagName.split(",")[0];
-        console.log(this.name,this.mineTag)
-
-        this.hover = tagName.split(",")[0];
+        this.mineTag = tagName;
+        console.log(this.mineTag)
         if (this.mineTag == "collect") {
           this.content = tagName.split(",")[2];
         }

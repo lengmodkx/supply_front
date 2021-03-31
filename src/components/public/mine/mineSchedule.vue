@@ -2,210 +2,153 @@
   <!-- 日程 -->
   <div>
     <div class="inner richeng">
-      <div class="h1_title">
-        <div>
-          日程&nbsp;&nbsp;&nbsp;
-          <span class="list-number">{{ this.scheduleList.length}}</span>
-        </div>
-      </div>
       <!-- <div class="rc-head">
         <div class="rc-head-left">
           <span :class="{ now: scheduleType == 1 }" @click="changeType(1)">未来的日程</span>
           <span :class="{ now: scheduleType == 2 }" @click="changeType(2)">过去的日程</span>
         </div>
       </div>-->
-      <Loading v-if="loading"></Loading>
-      <div class="rc-con">
-        <!-- <div class="weilai-rc" v-if="name == 1">
-          <div v-if="scheduleList.length" class="weilai-rc">
-            <div class="weilai-rc" v-for="(s, n) in scheduleList" :key="n">
-              <ul>
-                <div class="waht-day">
-                  <span>{{ s.date }}</span
-                  ><span>&nbsp;·&nbsp;{{ s.scheduleList.length }}</span>
-                </div>
-                <li @click="showEditRC(schedule)" class="weilai-rc-list" v-for="schedule in s.scheduleList" :key="schedule.scheduleId">
-                  <div class="rc-time" v-if="schedule.startTime && schedule.endTime"><Time :time="schedule.startTime" /> - <Time :time="schedule.endTime" /></div>
-                  <div class="rc-xm">
-                    <p>{{ schedule.scheduleName }}   {{$moment(s.scheduleList.endTime).format("YYYY年MM月DD日 dddd h:mm a")}}</p>
-                    <span>{{ schedule.project.projectName }}</span>
+
+      <Tabs value="1" @on-click="changeType">
+        <TabPane v-for="(item,index) in tabList" :key="index" :label="item.label" :name="item.name">
+          <Loading v-if="loading"></Loading>
+          <div class="rc-con">
+            <div>
+              <Row class="schedule-content" v-if="scheduleList.length" :gutter="15">
+                <Col :xs="12" :sm="8" :md="8" :lg="8" :xl="6" :xxl="4" v-for="(s, n) in scheduleList" :key="n">
+                <div class="schedule-item" @click="showEditRC(s)">
+                  <div class="schedule-header df jsb">
+                    <div class="schedule-time">{{$moment(s.startTime).format("MM月DD日 dddd")}}</div>
+                    <Tooltip :content="s.userName" placement="bottom">
+                      <img :src="s.img" alt />
+                    </Tooltip>
                   </div>
-                </li>
-              </ul>
+                  <div class="schedule-bottom">
+                    <div class="schedule-bl df jsb">
+                      <div>{{$moment(s.startTime).format("ah:mm")}}</div>
+                      <div>{{$moment(s.endTime).format("ah:mm")}}</div>
+                    </div>
+                    <div class="schedule-br df jsb">
+                      <div class="schedule-name">{{s.scheduleName}}</div>
+                      <span class="project-name">{{s.project.projectName}}</span>
+                    </div>
+                  </div>
+                </div>
+                </Col>
+              </Row>
+              <div v-else class="wu">
+                <img src="../../../icons/img/no-list.png" alt />
+              </div>
             </div>
           </div>
+        </TabPane>
+      </Tabs>
 
-          <div v-else class="wu">
-            <img src="../../../icons/img/no-list.png" alt="" />
-          </div>
-        </div>-->
 
-        <!-- <div v-if="name == 2" class="guoqu-rc">
-          <div v-if="month.length">
-            <Collapse v-model="guoquRC" @on-change="getScheduleByMonth()" :accordion="accordion" simple>
-              <Panel v-for="m in month" :name="m.date" :key="m.date">
-                {{ m.date }}
-                <ul slot="content">
-                  <li @click="showEditRC(s)" class="weilai-rc-list" v-for="s in monthSchedule" :key="s.scheduleId">
-                    <div class="rc-time" v-if="s.startTime && s.endTime">
-                      {{ s.date }}
-                    </div>
-                    <div class="rc-xm">
-                      <p>{{ s.scheduleName }}</p>
-                      <span>{{ s.project.projectName }}</span>
-                    </div>
-                  </li>
-                </ul>
-              </Panel>
-            </Collapse>
-          </div>
 
-          <div v-else class="wu">
-            <img src="../../../icons/img/no-list.png" alt="" />
-            <p>还没有过去的日程</p>
-          </div>
-        </div>-->
-        <div>
-          <Row class="schedule-content" v-if="scheduleList.length" :gutter="15">
-            <Col
-              :xs="12"
-              :sm="8"
-              :md="8"
-              :lg="8"
-              :xl="6"
-              :xxl="4"
-              v-for="(s, n) in scheduleList"
-              :key="n"
-            >
-              <div class="schedule-item" @click="showEditRC(s)">
-                <div class="schedule-header df jsb">
-                  <div class="schedule-time">{{$moment(s.startTime).format("MM月DD日 dddd")}}</div>
-                  <Tooltip :content="s.userName" placement="bottom">
-                    <img :src="s.img" alt />
-                  </Tooltip>
-                </div>
-                <div class="schedule-bottom">
-                  <div class="schedule-bl df jsb">
-                    <div>{{$moment(s.startTime).format("ah:mm")}}</div>
-                    <div>{{$moment(s.endTime).format("ah:mm")}}</div>
-                  </div>
-                  <div class="schedule-br df jsb">
-                    <div class="schedule-name">{{s.scheduleName}}</div>
-                    <span class="project-name">{{s.project.projectName}}</span>
-                  </div>
-                </div>
-              </div>
-            </Col>
-          </Row>
-          <div v-else class="wu">
-            <img src="../../../icons/img/no-list.png" alt />
-          </div>
-        </div>
-      </div>
+
+
+
     </div>
     <!-- 编辑日程模态框 -->
-    <Modal
-      class="nopadding"
-      class-name="vertical-center-modal"
-      v-model="editrc"
-      :footer-hide="true"
-    >
+    <Modal class="nopadding" class-name="vertical-center-modal" v-model="editrc" :footer-hide="true">
       <editRicheng @close="closeModal"></editRicheng>
     </Modal>
   </div>
 </template>
 
 <script>
-import editRicheng from "@/components/project/schedule/EditRicheng";
-import { getMeAfterSchedule, getScheduleByMonth, getMonth } from "@/axios/api";
-import { mapActions } from "vuex";
-export default {
-  data() {
-    return {
-      guoquRC: "",
-      showRCModal: false,
-      richengModalData: "",
-      scheduleList: [],
-      month: [],
-      accordion: true,
-      monthSchedule: [],
-      scheduleType: 1,
-      loading: true,
-      editrc: false,
-      timeoutNum: 0
-    };
-  },
-  props: ["name"],
-  methods: {
-    ...mapActions("schedule", ["getScheduleById"]),
-    changeType(n) {
-      this.scheduleType = n;
-      if (n == 1) {
-        this.getMeAfterSchedule();
-      }
-      if (n == 2) {
-        this.getMonth();
-      }
+  import editRicheng from "@/components/project/schedule/EditRicheng";
+  import {
+    getMeAfterSchedule,
+    getScheduleByMonth,
+    getMonth
+  } from "@/axios/api";
+  import {
+    mapActions
+  } from "vuex";
+  export default {
+    data() {
+      return {
+        guoquRC: "",
+        showRCModal: false,
+        richengModalData: "",
+        scheduleList: [],
+        month: [],
+        accordion: true,
+        monthSchedule: [],
+        scheduleType: 1,
+        loading: true,
+        editrc: false,
+        timeoutNum: 0,
+        tabList: [{
+            label: '未来的日程',
+            name: '1'
+          },
+          {
+            label: '过去的日程',
+            name: '2'
+          },
+        ]
+      };
     },
-    getMeAfterSchedule() {
-      getMeAfterSchedule().then(res => {
-        if (res.result === 1) {
-          this.scheduleList = res.data;
-          this.loading = false;
+    methods: {
+      ...mapActions("schedule", ["getScheduleById"]),
+      changeType(n) {
+        this.scheduleType = n;
+        if (n == 1) {
+          this.getMeAfterSchedule();
         }
-      });
-    },
-    getMonth() {
-      getMonth().then(res => {
-        if (res.result === 1) {
-          this.scheduleList = res.data;
-          this.loading = false;
-          // this.timeoutNum=0
-          // this.month.map(p => {
-          //   this.timeoutNum+=parseInt(p.timeoutNum)
-          // });
+        if (n == 2) {
+          this.getMonth();
         }
-      });
-    },
-    getScheduleByMonth(key) {
-      if (!this.guoquRC[0]) {
-        return false;
-      } else {
-        getScheduleByMonth(this.guoquRC).then(res => {
+      },
+      getMeAfterSchedule() {
+        getMeAfterSchedule().then(res => {
           if (res.result === 1) {
-            this.monthSchedule = res.data;
+            this.scheduleList = res.data;
             this.loading = false;
           }
         });
+      },
+      getMonth() {
+        getMonth().then(res => {
+          if (res.result === 1) {
+            this.scheduleList = res.data;
+            this.loading = false;
+          }
+        });
+      },
+      getScheduleByMonth(key) {
+        if (!this.guoquRC[0]) {
+          return false;
+        } else {
+          getScheduleByMonth(this.guoquRC).then(res => {
+            if (res.result === 1) {
+              this.monthSchedule = res.data;
+              this.loading = false;
+            }
+          });
+        }
+      },
+      // 编辑日程
+      showEditRC(item) {
+        this.editrc = true;
+        this.getScheduleById(item.scheduleId);
+      },
+      closeModal() {
+        this.editrc = false;
       }
     },
-    // 编辑日程
-    showEditRC(item) {
-      this.editrc = true;
-      this.getScheduleById(item.scheduleId);
+    created() {
+        this.getMeAfterSchedule();
     },
-    closeModal() {
-      this.editrc = false;
-    }
-  },
-  created() {
-    if (this.name == 1) {
-      this.getMeAfterSchedule();
-    } else {
-      this.getMonth();
-    }
-  },
-  components: {
-    editRicheng
-  },
-  watch: {
-    name: function(val) {
-      this.changeType(val);
-    }
-  }
-};
+    components: {
+      editRicheng
+    },
+  };
 </script>
 
 <style scoped lang="less">
-@import "../Mine";
+  @import "../Mine";
 </style>

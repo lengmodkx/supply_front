@@ -159,115 +159,35 @@
                             },
                         ],
                     },
-                    {
-                        oneName: "网盘",
-                        name: "3",
-                        icon: "wangpanjihuo",
-                    },
-                    {
-                        oneName: "设计",
-                        name: "4",
-                        icon: "sheji",
-                    },
-                    // {
-                    //     oneName: "人脉",
-                    //     name: "6",
-                    //     icon: "gerencanshu",
-                    // },
-                    {
-                        oneName: "团队",
-                        name: "7",
-                        icon: "tuanduiguanli",
-                    },
+
                     {
                         oneName: "我的",
                         name: "10",
                         icon: "wode",
                         childNode: [{
                                 text: "近期的事",
-                                name: "15",
+                                name: "nearThing",
                                 icon: 'jinqi',
-                                childNode: [{
-                                        text: "任务",
-                                        name: "nearThing,1"
-                                    },
-                                    {
-                                        text: "日程",
-                                        name: "nearThing,2"
-                                    }
-                                ]
                             },
                             {
                                 text: "任务",
-                                name: "16",
+                                name: "task",
                                 icon: 'renwu',
-                                childNode: [{
-                                        text: "我执行的",
-                                        name: "task,1"
-                                    },
-                                    {
-                                        text: "我创建的",
-                                        name: "task,2"
-                                    },
-                                    {
-                                        text: "我参与的",
-                                        name: "task,3"
-                                    }
-                                ]
                             },
                             {
                                 text: "日程",
-                                name: "17",
+                                name: "schedule",
                                 icon: 'richeng',
-                                childNode: [{
-                                        text: "未来的日程",
-                                        name: "schedule,1"
-                                    },
-                                    {
-                                        text: "过去的日程",
-                                        name: "schedule,2"
-                                    }
-                                ]
                             },
                             {
                                 text: "文件",
-                                name: "18",
+                                name: "file",
                                 icon: 'wenjian',
-                                childNode: [{
-                                        text: "我创建的",
-                                        name: "file,1"
-                                    },
-                                    {
-                                        text: "我参与的",
-                                        name: "file,2"
-                                    },
-                                    {
-                                        text: "我下载的",
-                                        name: "file,3"
-                                    }
-                                ]
                             },
                             {
                                 text: "收藏",
-                                name: "19",
-                                icon: 'shoucang1',
-                                childNode: [{
-                                        text: "任务",
-                                        name: "collect,2,任务",
-                                    },
-                                    {
-                                        text: "分享",
-                                        name: "collect,3,分享"
-                                    },
-                                    {
-                                        text: "文件",
-                                        name: "collect,4,文件",
-                                    },
-                                    {
-                                        text: "日程",
-                                        name: "collect,5,日程",
-                                    }
-                                ]
+                                name: "collect",
+                                icon: 'shoucang',
                             },
 
                         ]
@@ -319,12 +239,28 @@
                         name: "8",
                         icon: "shezhi1",
                         childNode: [{
-                                text: "基础信息",
+                                text: "操作日志",
+                                name: "8,5",
+                                icon: 'czrz'
+                            },
+                            {
+                                text: "导出申请",
+                                name: "8,6",
+                                icon: 'daochu'
+                            }
+                        ]
+                    },
+                    {
+                        oneName: "企业管理",
+                        name: "9",
+                        icon: "qiyeguanli",
+                        childNode: [{
+                                text: "企业信息",
                                 name: "8,0",
                                 icon: 'jichuxinxi'
                             },
                             {
-                                text: "成员",
+                                text: "团队成员",
                                 name: "8,1",
                                 icon: 'chengyuan'
                             },
@@ -342,17 +278,28 @@
                                 text: "项目权限",
                                 name: "8,4",
                                 icon: 'quanxian1'
-                            }, {
-                                text: "操作日志",
-                                name: "8,5",
-                                icon: 'czrz'
-                            },
-                            {
-                                text: "导出申请",
-                                name: "8,6",
-                                icon: 'daochu'
                             }
                         ]
+                    },
+                    {
+                        oneName: "网盘",
+                        name: "3",
+                        icon: "wangpanjihuo",
+                    },
+                    {
+                        oneName: "设计",
+                        name: "4",
+                        icon: "sheji",
+                    },
+                    // {
+                    //     oneName: "人脉",
+                    //     name: "6",
+                    //     icon: "gerencanshu",
+                    // },
+                    {
+                        oneName: "团队",
+                        name: "7",
+                        icon: "tuanduiguanli",
                     },
                 ],
             };
@@ -425,13 +372,12 @@
                     this.$router.push("/demandList");
                 } else if (name == 23) {
                     this.$router.push("/requirements");
-                } else if (name == 'schedule' || name == 'nearThing' || name == 'task' || name == 'file' || name ==
-                    'collect') {
+                } else if (name == 'nearThing' || name == 'task' || name == 'schedule' ||name == 'file' || name == 'collect') {
                     //我的页面
                     this.$router.push({
-                        path: "/mine",
+                        path: "/mine/" + name,
                         query: {
-                            'checkTagName': tagName,
+                            'checkTagName': name,
                         }
                     });
                 }
