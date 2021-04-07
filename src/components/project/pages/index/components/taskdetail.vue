@@ -310,7 +310,7 @@
                       <Input v-model="son" placeholder="输入子任务内容..." autofocus @keyup.enter.native="submitSontask" />
                     </div>
                   </div>
-                  <div class="btns">
+                  <div class="btnss">
                     <Button
                       type="text"
                       @click="
