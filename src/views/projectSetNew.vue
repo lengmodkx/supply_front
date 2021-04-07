@@ -25,10 +25,10 @@
             <div class="content fl">
                 <div class="div1" v-if="active == 1">
                     <div class="div1-box">
-                        <div class="div1-title">项目封面1</div>
+                        <div class="div1-title">项目封面</div>
                         <div class="df">
                             <div class="cover">
-                                <img :src="project.projectCove" alt v-if="pic_show" accept="image/*" />
+                                <img :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+project.projectCover" alt v-if="pic_show"  />
                                 <img :src="imageUrl" alt v-if="pic_hide" accept="image/*" />
                             </div>
                             <div class="upload">
@@ -380,7 +380,9 @@
                         this.$Message.destroy();
                         if (res.result == 1) {
                             this.$Message.success("保存成功!");
-                            this.updatePro(res.data);
+                            let obj=res.data
+                            obj.projectId=this.project.projectId
+                            this.updatePro(obj);
                         } else {
                             this.$Message.error("保存失败!");
                         }

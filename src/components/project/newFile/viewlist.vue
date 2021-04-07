@@ -137,7 +137,7 @@
     <Modal v-model="showVisibilityModal" title="文件夹可见性设置" :footer-hide="true" class-name="vertical-center-modal" width="600" class="can-see-modal">
       <fileCanSee v-if="showVisibilityModal"></fileCanSee>
     </Modal>
-    <Modal v-model="fileMenu" :styles="{ left: left, top: top }" width="200" :footer-hide="true" :mask-closable="true" v-if="mFile" class="mf0">
+    <Modal v-model="fileMenu" :styles="{ left: left, top: top ,margin:0 }" width="200" :footer-hide="true" :mask-closable="true" v-if="mFile" class="mf0" :mask="false">
       <div slot="header" class="file-menu-header">
         <Icon
           @click="rublish = false"
@@ -163,7 +163,7 @@
           </section>
           <section v-else class="file-folder-opt">
             <ul>
-              <li @click="downLoad(mFile.fileId)"><a style="color: #333" :download="mFile.fileName">下载文件</a></li>
+              <li @click="downLoad(mFile.fileId)"><a style="color: #333" :download="mFile.fileName">下载文件啊</a></li>
               <li @click="removeClone('移动')">移动文件</li>
               <li @click="removeClone('复制')">复制文件</li>
               <!-- <li>复制文件链接</li> -->
@@ -362,7 +362,7 @@ export default {
     getFileid(e, file) {
       this.mFile = file;
       this.top = e.clientY + "px";
-      this.left = e.clientX - 180 + "px";
+      this.left = e.clientX -180 + "px";
       this.fileMenu = true;
       this.rublish = false;
     },
