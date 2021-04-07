@@ -288,13 +288,13 @@ const store = {
     searchFile({ commit }, data) {
       if (data.tag) {
         //tag搜索
-        searchFile(data.tag, data.projectId).then((res) => {
-          commit("searchFile", res.data);
-        });
+        // searchFile(data.tag, data.projectId).then((res) => {
+        //   commit("searchFile", res.data);
+        // });
       } else {
         //搜索条
         searchFile(data.fileName, data.projectId).then((res) => {
-          commit("searchFile", res.data);
+          commit("searchFile", res.data.records);
         });
       }
     },

@@ -174,9 +174,12 @@ export function filePrivacy(id, privacy,projectId,parentId) {
 
 export function searchFile(fileName, projectId) {
     return fetch({
-        url: `/files/${fileName}/search_file`,
+        url: `/files/search_file`,
         method: "get",
-        params: {projectId: projectId}
+        params: {
+            fileName:fileName,
+            projectId: projectId
+        }
     });
 }
 
