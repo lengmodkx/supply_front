@@ -29,6 +29,7 @@ export function sendMsg(str) {
     return fetch({
         url: '/logs/chat',
         method: "post",
+        specialPost:true,
         data: str,
         headers: {
             'Content-Type': 'application/json'
