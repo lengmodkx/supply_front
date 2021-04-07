@@ -120,8 +120,8 @@
                         icon: "xiazai44",
                     },
                     {
-                        oneName: "项目",
-                        name: "2",
+                        oneName: "全部项目",
+                        name: "2,0",
                         icon: "xiangmu1",
                         childNode: [{
                                 text: "全部项目",
@@ -160,38 +160,7 @@
                         ],
                     },
 
-                    {
-                        oneName: "我的",
-                        name: "10",
-                        icon: "wode",
-                        childNode: [{
-                                text: "近期的事",
-                                name: "nearThing",
-                                icon: 'jinqi',
-                            },
-                            {
-                                text: "任务",
-                                name: "task",
-                                icon: 'renwu',
-                            },
-                            {
-                                text: "日程",
-                                name: "schedule",
-                                icon: 'richeng',
-                            },
-                            {
-                                text: "文件",
-                                name: "file",
-                                icon: 'wenjian',
-                            },
-                            {
-                                text: "收藏",
-                                name: "collect",
-                                icon: 'shoucang',
-                            },
-
-                        ]
-                    },
+                   
                     {
                         oneName: "内容管理",
                         name: "11",
@@ -234,22 +203,7 @@
                             },
                         ]
                     },
-                    {
-                        oneName: "设置",
-                        name: "8",
-                        icon: "shezhi1",
-                        childNode: [{
-                                text: "操作日志",
-                                name: "8,5",
-                                icon: 'czrz'
-                            },
-                            {
-                                text: "导出申请",
-                                name: "8,6",
-                                icon: 'daochu'
-                            }
-                        ]
-                    },
+                   
                     {
                         oneName: "企业管理",
                         name: "9",
@@ -278,6 +232,54 @@
                                 text: "项目权限",
                                 name: "8,4",
                                 icon: 'quanxian1'
+                            }
+                        ]
+                    },
+                     {
+                        oneName: "我的",
+                        name: "10",
+                        icon: "wode",
+                        childNode: [{
+                                text: "近期的事",
+                                name: "nearThing",
+                                icon: 'jinqi',
+                            },
+                            {
+                                text: "任务",
+                                name: "task",
+                                icon: 'renwu',
+                            },
+                            {
+                                text: "日程",
+                                name: "schedule",
+                                icon: 'richeng',
+                            },
+                            {
+                                text: "文件",
+                                name: "file",
+                                icon: 'wenjian',
+                            },
+                            {
+                                text: "收藏",
+                                name: "collect",
+                                icon: 'shoucang',
+                            },
+
+                        ]
+                    },
+                     {
+                        oneName: "设置",
+                        name: "8,5",
+                        icon: "shezhi1",
+                        childNode: [{
+                                text: "操作日志",
+                                name: "8,5",
+                                icon: 'czrz'
+                            },
+                            {
+                                text: "导出申请",
+                                name: "8,6",
+                                icon: 'daochu'
                             }
                         ]
                     },
