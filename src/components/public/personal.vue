@@ -343,7 +343,7 @@
                         return;
                     }
                 }
-                if (this.message.nickName.trim() == '') {
+                if (this.message.nickName == '') {
                     this.$Message.error('请输入昵称');
                     return;
                 }
@@ -366,7 +366,8 @@
                     birthday: birthDay,
                     address: this.message.address,
                     email: this.message.email,
-                    signature: this.message.signature
+                    signature: this.message.signature,
+                    nickname:this.message.nickName
                 }
                 //保存
                 updateUserNews(data).then(res => {
