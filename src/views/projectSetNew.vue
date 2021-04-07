@@ -380,9 +380,7 @@
                         this.$Message.destroy();
                         if (res.result == 1) {
                             this.$Message.success("保存成功!");
-                            let obj=res.data
-                            obj.projectId=this.project.projectId
-                            this.updatePro(obj);
+                            this.updatePro(res.data);
                         } else {
                             this.$Message.error("保存失败!");
                         }
