@@ -66,7 +66,7 @@
                 <div class="zzc">
                   <div class="projectName">{{ item.projectName }}</div>
                   <p>{{ item.projectDes }}</p>
-                  <div class="iconPic" v-if="projectType != '回收站'">
+                  <div class="iconPic" v-if="projectType != '回收站的项目'">
                     <Tooltip class="iconpic2" :class="{ showStar: item.collect }" content="星标" placement="top">
                       <span @click.stop="setStar(item.projectId)">
                         <Icon type="md-star" size="18" :class="{ starOn: item.collect }"></Icon>
@@ -86,14 +86,6 @@
                     </Tooltip>
                   </div>
                 </div>
-              </div>
-            </iCol>
-            <iCol span="6" v-show="projectType == '我创建的'">
-              <div class="col add-project" @click="showproject = true">
-                <h1 class="center">
-                  <Icon type="md-add-circle" />
-                </h1>
-                <h2 class="center">创建新项目</h2>
               </div>
             </iCol>
           </Row>
@@ -218,52 +210,6 @@
         projectType: "全部项目",
         selectView: "卡片视图",
         treeData: [],
-        MenuList: [{
-            oneName: "项目列表",
-            name: "1",
-            icon: "ios-list-box-outline",
-            childNode: [{
-                text: "全部项目",
-                name: "1,0"
-              },
-              {
-                text: "我创建的",
-                name: "1,1"
-              },
-              {
-                text: "我参与的",
-                name: "1,2"
-              },
-              {
-                text: "我的收藏",
-                name: "1,3"
-              },
-              {
-                text: "已归档",
-                name: "1,4"
-              },
-              {
-                text: "回收站",
-                name: "1,5"
-              }
-            ]
-          },
-
-          {
-            oneName: "消息提醒",
-            name: "4",
-            icon: "ios-mail-open-outline",
-            childNode: [{
-                text: "项目通知",
-                name: "4,0"
-              },
-              {
-                text: "系统公告",
-                name: "4,1"
-              }
-            ]
-          }
-        ],
         projectList: [{
             value: "0",
             label: "全部项目"
@@ -491,6 +437,7 @@
       },
       tabChange(name) {
         this.menuActive = "1," + name;
+
         this.searchLoading = true;
         let arr = [
           "全部项目",
@@ -501,6 +448,7 @@
           "回收站的项目"
         ];
         console.log(arr[name])
+        this.projectType=arr[name]
         this.orgProjectInit({
           id: localStorage.companyId,
           type: arr[name]
