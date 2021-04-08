@@ -41,13 +41,37 @@
                 }
                 // 关闭的标签是最右边的话，往左边跳转一个
                 if (index === length) {
-                    if (this.tags[index - 1].name == "organization") {
+                    if (this.tags[index - 1].name) {
+                        let name = this.tags[index - 1].name
+                    }
+                    if (name == "organization") {
                         this.$router.push('/org/' + localStorage.companyId);
-                    } else if (this.tags[index - 1].name == "prolist") {
-                        this.$router.push('/prolist/' + localStorage.companyId);
+                    } else if (name == "prolist") {
+                        this.$router.push({
+                            path: "/prolist/" + localStorage.companyId,
+                            query: {
+                                'checkTagName': '2,0',
+                            }
+                        });
+                    } else if (name == "systemSettings") {
+                        this.$router.push({
+                            path: "/systemSettings/",
+                            query: {
+                                'checkTagName': '8,5',
+                            }
+                        });
+                    } else if (name == 'nearThing' || name == 'task' || name == 'schedule' || name == 'file' || name ==
+                        'collect') {
+                        //我的页面
+                        this.$router.push({
+                            path: "/mine/" + name,
+                            query: {
+                                'checkTagName': name,
+                            }
+                        });
                     } else {
                         this.$router.push({
-                            name: this.tags[index - 1].name,
+                            name: name
                         });
                     }
                 } else {
@@ -63,14 +87,35 @@
                 if (item.name == "organization") {
                     this.$router.push('/org/' + localStorage.companyId);
                 } else if (item.name == "prolist") {
-                    this.$router.push('/prolist/' + localStorage.companyId);
+                    this.$router.push({
+                        path: "/prolist/" + localStorage.companyId,
+                        query: {
+                            'checkTagName': '2,0',
+                        }
+                    });
+                } else if (item.name == 'nearThing' || item.name == 'task' || item.name == 'schedule' || item.name ==
+                    'file' || item.name == 'collect') {
+                    //我的页面
+                    this.$router.push({
+                        path: "/mine/" + item.name,
+                        query: {
+                            'checkTagName': item.name,
+                        }
+                    });
+                } else if (item.name == "systemSettings") {
+                    this.$router.push({
+                        path: item.name,
+                        query: {
+                            'checkTagName': '8,5',
+                        }
+                    });
                 } else {
                     this.$router.push({
                         name: item.name,
                     });
                 }
 
-                this.$store.commit("tab/selectMenu", item);
+                // this.$store.commit("tab/selectMenu", item);
             },
         },
         mounted() {

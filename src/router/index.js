@@ -216,7 +216,7 @@ const router = new Router({
         },
         {
           path: "file",
-          name: "mineFile",
+          name: "file",
           component: _import("public/mine/mineFile"),
           meta: {
             title: "阿拉丁BIM5D云平台",
@@ -227,7 +227,7 @@ const router = new Router({
         },
         {
           path: "task",
-          name: "mineTask",
+          name: "task",
           component: _import("public/mine/mineTask"),
           meta: {
             title: "阿拉丁BIM5D云平台",
@@ -238,7 +238,7 @@ const router = new Router({
         },
         {
           path: "schedule",
-          name: "mineSchedule",
+          name: "schedule",
           component: _import("public/mine/mineSchedule"),
           meta: {
             title: "阿拉丁BIM5D云平台",
@@ -249,7 +249,7 @@ const router = new Router({
         },
         {
           path: "collect",
-          name: "mineCollect",
+          name: "collect",
           component: _import("public/mine/mineCollect"),
           meta: {
             title: "阿拉丁BIM5D云平台",
