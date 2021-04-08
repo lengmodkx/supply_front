@@ -134,7 +134,7 @@ export default {
     position: relative;
     /deep/ .ivu-select-dropdown {
       position: absolute !important;
-      top: 10px !important;
+      top: 0 !important;
     }
     /deep/ .ivu-picker-confirm {
       display: flex !important;
@@ -143,7 +143,6 @@ export default {
   /deep/ .ivu-select-dropdown {
     position: relative !important;
     top: 0 !important;
-    left: 0 !important;
     background-color: white;
   }
   .footer {
@@ -157,6 +156,9 @@ export default {
     box-shadow: 0 0 0 0;
     width: auto !important;
     height: auto !important;
+    top: 40px !important;
+    left: auto !important;
+
   }
   .picker-input {
     border: 1px solid #e5e5e5;
