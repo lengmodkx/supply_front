@@ -77,7 +77,8 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div>   
+             
             <!--点击分享 显示的-->
             <div class="fenxiang-div scrolly" v-show="active=='b'">
                 <div class="div2 fl">
