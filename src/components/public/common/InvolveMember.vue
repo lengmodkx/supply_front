@@ -16,7 +16,6 @@
             <ul>
               <li
                 class="member-menu-item clearfix"
-                :class="curUserId == item.memberId ? 'disable' : ''"
                 v-for="(item, index) in memberList"
                 :key="item.memberId"
                 v-if="checkedList.indexOf(item.memberId) >= 0"
@@ -60,7 +59,7 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import { getmemberList, members, projectMembersSerach, projectMembers } from "@/axios/api";
+import { projectMembersSerach, projectMembers } from "@/axios/api";
 export default {
   props: ["checkedList", "projectId"],
   data() {
@@ -73,7 +72,6 @@ export default {
   },
   computed: {
     ...mapState("user", ["user"]),
-    // ...mapState('task', ['members']),
     curUserId() {
       //从vuex取当前登录用户id
       return localStorage.userId;
@@ -103,8 +101,10 @@ export default {
     },
     save() {
       let arr=[]
+      var that = this;
+      console.log(this.memberList) 
       this.memberList.map(item=>{
-        this.checkedList.map((i) => {
+        that.checkedList.map((i) => {
           if(item==i &&item.checked==true ){
             arr.push(i)
           }
@@ -237,9 +237,6 @@ export default {
       .tick {
         line-height: 32px;
       }
-    }
-    .disable {
-      // cursor: not-allowed;
     }
   }
 }

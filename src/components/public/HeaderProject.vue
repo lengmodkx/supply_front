@@ -177,7 +177,7 @@ export default {
     });
     console.log(this.menus);
     this.getTagsList();
-    this.searchTask()
+    //this.searchTask()
   },
   methods: {
     push(u) {

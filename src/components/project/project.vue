@@ -102,10 +102,7 @@ export default {
         frame => {
           this.stompClient.subscribe(`/topic/${id}`, msg => {
             var result = JSON.parse(msg.body);
-        
             console.log(result.type);
-            
-            
             switch (result.type) {
               case "A1": //创建任务
                 this.$store.dispatch("task/init", result.object);
@@ -313,16 +310,14 @@ export default {
                 break;
               // 添加标签
               case "D14":
-                // this.$store.dispatch("schedule/init", {
-                //   projectId: result.object
-                // });
-                  console.log(result)
-                  this.$store.dispatch("file/initFile", {
-                      fileId: result.object
-                  });
+                if (result.object.publicType === "task") {
+                  this.$store.dispatch("task/init", result.object.projectId);
+                } else{
+                   window.location.reload();
+                }
+                
                 break;
               case "D15":
-                console.log("xxxxxxxxx")
                 this.$store.dispatch("schedule/init", {
                   projectId: result.object
                 });
