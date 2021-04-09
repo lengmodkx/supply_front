@@ -265,6 +265,7 @@ import { upRichengName, beginDate, endDate, changeRepeat, changeRemind, changeAd
 import { getFileDetails } from "@/axios/fileApi";
 import fileDetail from "@/components/project/pages/index/components/fileDetail";
 
+
 export default {
   components: {
     SetRepeat,
