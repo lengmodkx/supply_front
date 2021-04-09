@@ -163,7 +163,7 @@
           </section>
           <section v-else class="file-folder-opt">
             <ul>
-              <li @click="downLoad(mFile.fileId)"><a style="color: #333" :download="mFile.fileName">下载文件啊</a></li>
+              <li @click="downLoad(mFile.fileId)"><a style="color: #333" :download="mFile.fileName">下载文件</a></li>
               <li @click="removeClone('移动')">移动文件</li>
               <li @click="removeClone('复制')">复制文件</li>
               <!-- <li>复制文件链接</li> -->
