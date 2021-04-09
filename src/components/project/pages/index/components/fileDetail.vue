@@ -14,7 +14,7 @@
           </div>
           <img :style="{ transform: 'scale(' + imgSize + ')' }" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl" alt="" />
         </div>
-
+<iframe id="previewpdf" v-else-if="'.pdf'.indexOf(file.ext)>-1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/'+file.fileUrl" width="100%" height="100%" frameborder="0"></iframe>
         <iframe
           v-else-if="
             file.ext.includes('doc') ||
