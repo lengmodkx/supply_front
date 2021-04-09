@@ -41,8 +41,7 @@ export default {
   },
   data() {
     return {
-      disabled:
-        this.role.roleKey === "administrator" || this.role.roleKey === "admin",
+      disabled:false,
       pers: this.permissions.map(p => {
         if (p.checkAllGroup.length == p.resources.length) {
           p.indeterminate = false;
