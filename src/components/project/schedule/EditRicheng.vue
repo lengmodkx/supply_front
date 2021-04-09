@@ -231,7 +231,7 @@
               </Tooltip>
             </div>
             <div class="addButton fl">
-              <InvolveMember ref="involveMember" :checkedList="schedule.memberIds ? schedule.memberIds : []" :projectId="schedule.projectId" @save="saveInvolveMember"></InvolveMember>
+              <InvolveMember ref="involveMember" :checkedList="schedule.memberIds ? schedule.memberIds.split(",") : []" :projectId="schedule.projectId" @save="saveInvolveMember"></InvolveMember>
             </div>
           </div>
           <log :logs="schedule.logs" :unReadMsg="schedule.unReadMsg" :publicId="schedule.scheduleId"></log>
