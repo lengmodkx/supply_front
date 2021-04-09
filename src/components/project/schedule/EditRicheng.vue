@@ -111,7 +111,7 @@
         <div class="relevance">
           <p class="name" style="float: none;"><Icon type="ios-link-outline"></Icon>关联内容</p>
           <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-          <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
+          <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true"  width="850">
             <AddRelation :publicId="schedule.scheduleId" :fromType="publicType"></AddRelation>
           </Modal>
         </div>
@@ -240,6 +240,9 @@
       <footer>
         <publick :publicId="schedule.scheduleId" :projectId="schedule.projectId" :publicType="publicType"></publick>
       </footer>
+      <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
+        <fileDetail v-if="showFileDetail" :file="file"></fileDetail>
+      </Modal>
     </div>
   </div>
 </template>
@@ -259,6 +262,8 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { sendMsg, cancle } from "@/axios/api";
 import { setSysClip } from "@/axios/api2.js";
 import { upRichengName, beginDate, endDate, changeRepeat, changeRemind, changeAddress, changeRemarks, playPeople } from "@/axios/scheduleApi";
+import { getFileDetails } from "@/axios/fileApi";
+import fileDetail from "@/components/project/pages/index/components/fileDetail";
 
 export default {
   components: {
@@ -271,7 +276,8 @@ export default {
     editor,
     SetExecutor,
     AddRelation,
-    publick
+    publick,
+    fileDetail
   },
   data() {
     return {
@@ -293,7 +299,10 @@ export default {
       projectName: localStorage.projectName,
       newCon: "",
       ept: "",
-      involveDataList: []
+      involveDataList: [],
+      showFileDetail:false,
+      file: {},
+
     };
   },
   computed: {
@@ -457,7 +466,15 @@ export default {
     },
     showwaitAdd() {
       this.showEditor = true;
-    }
+    },
+    getFileDetail(fileId) {
+      getFileDetails(fileId).then((res) => {
+        if (res.result == 1) {
+          this.showFileDetail = true;
+          this.file = res.data;
+        }
+      });
+    },
   },
   mounted() {
     // document.getElementById("editCon").parentNode.style.width = '100%';
