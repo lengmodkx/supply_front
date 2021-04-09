@@ -208,8 +208,7 @@
       ...mapActions("file", ["putOneFile"]),
       changePage(num) {
         this.pageNum = num;
-        // this.search(this.searched);
-        this.setCurrentPageData()
+        this.search(this.searched);
       },
       back() {
         if (this.crumbsIndex == 1) {
@@ -266,24 +265,17 @@
       search(value) {
         if (value !== "") {
           this.loading = true;
-          getSucaiSearch(value, this.pageNum, this.pageSize).then((res) => {
+          getSucaiSearch(value, this.pageNum).then((res) => {
             if (res.result == 1) {
               this.loading = false;
-              this.allFileList = res.data;
-              this.total = res.totle;
-              this.setCurrentPageData()
+              this.allFile = res.data.records;
+              this.total = res.data.total;
             }
           });
         } else {
           this.init(this.fileId);
         }
       },
-      setCurrentPageData() {
-        let begin = (this.pageNum - 1) * this.pageSize;
-        let end = this.pageNum * this.pageSize;
-        this.allFile = this.allFileList.slice(begin, end);
-      },
-
       // 点击的是文件夹
       goNext(type, fileId, file) {
         if (type == 1) {
