@@ -44,10 +44,10 @@
                 <img v-else-if="row.catalog == 1 && row.filePrivacy == 1" src="../../../assets/images/folder_privacy.png" />
                 <suffix v-else class="fileThumbnail-box" :file="row"></suffix>
                 <div @click.stop>
-                  <span v-if="isactive1 != index">{{ row.fileName }}</span>
+                  <span v-if="isactive1 != index" @click="fileDetail(row)" style="cursor:pointer">{{ row.fileName }}</span>
                   <Input autofocus
                     style="text-align:center;width: 320px"
-                    v-model.trim="editFileName"
+                    v-model="editFileName=row.fileName"
                     @on-enter="updateFileName(row.fileId)"
                     v-if="isactive1 == index"
                     :element-id="row.fileId"
@@ -69,8 +69,8 @@
           </template>
           <template slot-scope="{ row, index }" slot="action" >
             <div style="height: 30px;line-height: 30px;">
-              <span class="info"  @click.stop="downLoad(row.fileId)">下载</span>
-              <span class="info"  @click.stop="reFileName(row, index)" ref="btnName">{{isactive1 != index?'重命名':'保存'}}</span>
+              <span  class="info"  @click.stop="downLoad(row.fileId)">下载</span>
+              <span class="info"  @click.stop="reFileName($event,row, index)" ref="btnName">{{isactive1 != index?'重命名':'保存'}}</span>
               <span class="info"  @click.stop="getFileid($event,row, index)">更多</span>
             </div>
           </template>
@@ -539,8 +539,8 @@ export default {
     },
     //点击 移动、复制文件
     removeClone(caozuo) {
-     this.fileMenu = false;
-     this.caozuo = caozuo;
+      this.fileMenu = false;
+      this.caozuo = caozuo;
       this.initItem([this.mFile.fileId]);
       this.$emit('removeClone',caozuo);
     },
@@ -549,6 +549,8 @@ export default {
       if (this.editFileName == "") {
         this.$Message.info("请输入名称");
       }
+
+      console.log(this.editFileName)
       changeName(id, this.editFileName).then(res => {
         this.$emit("updateNodeName", id, this.editFileName);
         this.$Message.info("修改名称成功");
@@ -562,6 +564,7 @@ export default {
     },
     reset1() {
       this.updateFileName(this.$refs.mFileName.elementId);
+      this.$refs.btnName.innerHTML="重命名"
     },
     changeView(file, index) {
       this.isactive = index;
@@ -570,17 +573,14 @@ export default {
         this.$refs.mFileName[0].focus();
       });
     },
-    reFileName(row,index){
-     var btnName = this.$refs.btnName.innerHTML;
+    reFileName(e,row,index){
+      var btnName = e.target.innerHTML;
       if(btnName=='重命名'){
         this.isactive1 = index;
-        this.editFileName = row.fileName;
-        this.$refs.btnName.innerHTML="保存"
         this.$nextTick(() => {
           this.$refs.mFileName.focus();
         });
       }else{
-        this.$refs.btnName.innerHTML="重命名"
         this.updateFileName(row.fileId)
       }
     }

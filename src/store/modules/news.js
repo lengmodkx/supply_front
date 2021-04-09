@@ -7,6 +7,7 @@ const store = {
     },
     mutations: {
         getNewsCount(state,data){
+            console.log(data)
             state.newsCount = data
         },
         getNewsList(state, data) {
