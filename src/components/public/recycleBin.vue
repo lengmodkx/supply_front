@@ -356,7 +356,7 @@ data: function() {
 }
 .recycle-con {
   width: 100%;
-  height: 100%;
+  height: 400px;
   display: flex;
   .recycle-left {
     width: 180px;

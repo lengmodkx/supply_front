@@ -41,9 +41,7 @@
                 }
                 // 关闭的标签是最右边的话，往左边跳转一个
                 if (index === length) {
-                    if (this.tags[index - 1].name) {
-                        let name = this.tags[index - 1].name
-                    }
+                    let name = this.tags[index - 1].name
                     if (name == "organization") {
                         this.$router.push('/org/' + localStorage.companyId);
                     } else if (name == "prolist") {

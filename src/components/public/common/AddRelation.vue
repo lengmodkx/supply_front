@@ -175,14 +175,18 @@
                              v-for="(item,index) in fileData" :key="index"
                              @click="showZiwenjian(index,item.catalog, item.fileId, -1)">
                             <img v-if="item.catalog" src="@/icons/img/wjj.png" alt=""><img v-else src="@/icons/img/moren.png" alt="">
-                            <span>{{item.fileName}}</span>
+                            <Tooltip placement="top" :content="item.fileName" transfer>
+                                <span>{{item.fileName}}</span>
+                            </Tooltip>
                         </div>
                     </div>
                     <!--子文件，文件夹-->
                     <div class="zi-files scrolly" v-for="(item,index) in ziwenjain" :key="index">
                         <div :class="{checked:i.ok}" class="folder" v-for="(i,n) in item" :key="n" @click="showZiwenjian(n,item.catalog, i.fileId, index)">
                             <img v-if="i.catalog" src="@/icons/img/wjj.png" alt=""><img v-else src="@/icons/img/moren.png" alt="">
-                            <span>{{i.fileName}}</span>
+                            <Tooltip placement="top" :content="i.fileName" transfer>
+                                <span>{{i.fileName}}</span>
+                            </Tooltip>
                         </div>
                     </div>
 
