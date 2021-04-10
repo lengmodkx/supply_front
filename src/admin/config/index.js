@@ -18,7 +18,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://localhost:8091/api/',
-    pro: 'https://supply.aldbim.com/api/'
+    pro: 'https://work.aldbim.com/api/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
