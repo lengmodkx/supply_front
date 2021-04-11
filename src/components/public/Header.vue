@@ -163,7 +163,9 @@
         this.popVisible = "none";
       },
       goout() {
-        userlogout().then(response=>{
+        // userlogout().then(response=>{
+          
+        // })
           localStorage.clear();
           Cookies.remove('token', {
             path: '/',
@@ -178,8 +180,6 @@
             url = "/";
           }
           window.location.href = url;
-        })
-
       },
       showMenu() {
         if (this.popVisible == "none") {
