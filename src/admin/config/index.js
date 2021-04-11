@@ -1,3 +1,11 @@
+var url = "";
+if (process.env.NODE_ENV == "test") {
+  url = 'http://test.art1001.com';
+} else if (process.env.NODE_ENV == "production") {
+  url = "https://supply.aldbim.com";
+} else {
+  url = "/";
+}
 export default {
   /**
    * @description 配置显示在浏览器标签的title
@@ -18,7 +26,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://localhost:8091/api/',
-    pro: 'http://test.art1001.com/api/'
+    pro: url
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
