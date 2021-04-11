@@ -177,10 +177,11 @@ export default {
     batchRead() {
       batchReads(this.checkAllGroup.join(",")).then(res => {
         if (res.result == 1) {
-          this.$Message.success("批量已读成功!");
-          this.close();
+          console.log(">>>>>>",res.data)
           this.$store.commit("news/getNewsCount", res.data);
           this.getList(this.keyword);
+          this.$Message.success("批量已读成功!");
+          this.close();
         }
       });
     },
