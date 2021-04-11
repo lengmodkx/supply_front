@@ -2,7 +2,7 @@ var url = "";
 if (process.env.NODE_ENV == "test") {
   url = 'http://test.art1001.com';
 } else if (process.env.NODE_ENV == "production") {
-  url = "https://supply.aldbim.com";
+  url = "http://supply.aldbim.com";
 } else {
   url = "/";
 }
