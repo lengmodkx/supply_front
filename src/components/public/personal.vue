@@ -286,13 +286,6 @@
                     }
                 })
             },
-            bindWx(code){
-                bindWx(code, this.userId).then(res => {
-                    if (res.result == 1) {
-                        this.$Message.success(res.msg);
-                    }
-                })
-            },
             getItem(index, item) {
                 this.activeClass = index; // 把当前点击元素的index，赋值给activeClass
                 this.activeItem = item
@@ -463,7 +456,11 @@
             var code = theRequest.code
             next(vm => {
                 if(code){
-                    vm.bindWx(code);
+                    bindWx(code, vm.userId).then(res => {
+                        if (res.result == 1) {
+                            vm.$Message.success(res.msg);
+                        }
+                    })
                 }
             })
         },
