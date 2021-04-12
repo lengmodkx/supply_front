@@ -399,6 +399,7 @@
                     }
                 }
                 var code = theRequest.code
+                console.log("code=========",code);
                 next(vm => {
                     bindWx(code, this.message.userId).then(res => {
                         if (res.result == 1) {
