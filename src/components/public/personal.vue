@@ -456,6 +456,7 @@
             var code = theRequest.code
             next(vm => {
                 if(code){
+                    console.log(vm)
                     bindWx(code, vm.userId).then(res => {
                         if (res.result == 1) {
                             vm.$Message.success(res.msg);
