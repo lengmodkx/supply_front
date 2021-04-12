@@ -224,14 +224,14 @@ export function getMaterialTree() {
 
 
 // 获取素材库 搜索
-export function getSucaiSearch(fileName,page,pageSize) {
+export function getSucaiSearch(fileName, pageNum) {
     return fetch({
-        url: `/fileEs/${fileName}/material_base_search`,
+        url: `/files/material_base_search`,
         method: "get",
-        // params: {
-        //     pageNumber:page,
-        //     pageSize: pageSize
-        // }
+        params: {
+            fileName:fileName,
+            pageNum: pageNum
+        }
     });
 }
 
