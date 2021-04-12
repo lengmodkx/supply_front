@@ -177,6 +177,7 @@
                 localStorage.userName = res.data.userName;
                 localStorage.token = res.data.accessToken;
                 localStorage.companyId = res.data.orgId;
+                localStorage.orgName = res.data.orgName;
                 Cookies.set('token', res.data.accessToken, {
                   expires: 365,
                   path: '/',

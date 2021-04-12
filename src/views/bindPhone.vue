@@ -49,10 +49,8 @@
    import {
       bindPhone,
       getPhoneCode,
-        bindWx,
    } from "../axios/api";
    import {
-      mapState,
       mapActions
    } from "vuex";
    export default {
@@ -106,45 +104,26 @@
          bind: function (name) {
             this.$refs[name].validate(valid => {
                if (valid) {
-                  // bindPhone(this.formValidate).then(res => {
-                  //    if (res.result == 0) {
-                  //       this.$Message.error('绑定失败');
-                  //    } else {
-                  //       this.updateUserId(res.data); //存储、更新用户信息
-                  //       this.initSrc(res.data.image);
-                  //       localStorage.userId = res.data.userId;
-                  //       localStorage.userImg = res.data.image;
-                  //       localStorage.userName = res.data.userName;
-                  //       localStorage.token = res.data.accessToken;
-                  //       localStorage.companyId = res.data.orgId;
-                  //       if (res.data.orgId) {
-                  //          this.$router.replace("/org/" + res.data.orgId);
-                  //       } else {
-                  //          this.$router.replace("/organization-is-empty");
-                  //       }
-                  //    }
-                  // });
-                  var url = location.search; //获取url中"?"符后的字串
-                  var theRequest = new Object();
-                  if (url.indexOf("?") != -1) {
-                     var str = url.substr(1);
-                     var strs = str.split("&");
-                     for (var i = 0; i < strs.length; i++) {
-                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-                     }
-                  }
-                  var code = theRequest.code
-                  console.log(code)
-                  bindWx(code, localStorage.userId).then(res => {
-                     if (res.result == 1) {
-                        this.$Message.success(res.msg);
+                  bindPhone(this.formValidate).then(res => {
+                     if (res.result == 0) {
+                        this.$Message.error('绑定失败');
+                     } else {
+                        this.updateUserId(res.data); //存储、更新用户信息
+                        this.initSrc(res.data.image);
+                        localStorage.userId = res.data.userId;
+                        localStorage.userImg = res.data.image;
+                        localStorage.userName = res.data.userName;
+                        localStorage.token = res.data.accessToken;
+                        localStorage.companyId = res.data.orgId;
+                        localStorage.orgName = res.data.orgName;
                         if (res.data.orgId) {
                            this.$router.replace("/org/" + res.data.orgId);
                         } else {
                            this.$router.replace("/organization-is-empty");
                         }
                      }
-                  })
+                  });
+                 
                } else {
                   this.$Message.error("Fail!");
                }

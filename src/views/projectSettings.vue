@@ -119,7 +119,7 @@
           <div class="div3-box">
             <div class="div1-title">项目操作</div>
             <p>您可以执行以下操作</p>
-            <div class="btns">
+            <div class="btnss">
               <Button @click="modal1 = true">归档项目</Button>
               <Button type="error" @click="modal2 = true">移至回收站</Button>
             </div>
@@ -604,7 +604,7 @@ export default {
     font-size: 14px;
     color: #a6a6a6;
   }
-  .btns {
+  .btnss {
     button {
       font-size: 14px;
       margin-right: 20px;
