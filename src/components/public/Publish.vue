@@ -29,7 +29,7 @@
         <!-- 表情包组件 -->
         <Emoji @choose="chooseEmoji" ref="emoji"></Emoji>
         <div class="send fr">
-          <Button type="primary" @click="sendMsg">发布</Button>
+          <Button type="primary" @click="sendMsg">评论</Button>
         </div>
       </div>
     </div>

@@ -298,11 +298,11 @@
                     //     name: "6",
                     //     icon: "gerencanshu",
                     // },
-                    {
-                        oneName: "团队",
-                        name: "7",
-                        icon: "tuanduiguanli",
-                    },
+                    // {
+                    //     oneName: "团队",
+                    //     name: "7",
+                    //     icon: "tuanduiguanli",
+                    // },
                 ],
             };
         },

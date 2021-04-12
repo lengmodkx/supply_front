@@ -224,7 +224,8 @@
                   <span class="worktime-title">进度</span>
                 </div>
                 <div class="task-worktime-wrap progress-infos-content flex-fill">
-                  <Input-number class="scheduleTop" :max="100" :min="0" v-model="task.progress" @on-change="scheduleChange"></Input-number>
+                  <Input-number class="scheduleTop" :max="100" :min="0" v-model="task.progress" @on-change="scheduleChange"  :formatter="value => `${value}%`"
+            :parser="value => value.replace('%', '')" placeholder="请填写进度，0至100"></Input-number>
                   <div class="scheduleBottom" v-show="showSchedule">
                     <Button style="padding:6px 20px;" @click="scheduleCancel">取消</Button>
                     <Button type="primary" style="padding:6px 20px;" @click="scheduleSave">保存</Button>
