@@ -38,7 +38,7 @@ export default {
           //异步设置
           enable: true,
           type: "post",
-          url: "http://192.168.31.66:8091/api/partments/tree",
+          url: process.env.VUE_APP_TREE_URL3,
           //   url: process.env.VUE_APP_TREE_URL3,
           autoParam: ["id=departmentId"],
           dataType: "JSON",
