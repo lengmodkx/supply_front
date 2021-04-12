@@ -454,11 +454,13 @@
             }
             var code = theRequest.code
             next(vm => {
-                bindWx(code, localStorage.userId).then(res => {
-                    if (res.result == 1) {
-                        this.$Message.success(res.msg);
-                    }
-                })
+                if(code){
+                    bindWx(code, localStorage.userId).then(res => {
+                        if (res.result == 1) {
+                            this.$Message.success(res.msg);
+                        }
+                    })
+                }
             })
         },
         created() {
