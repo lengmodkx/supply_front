@@ -271,7 +271,7 @@
                 })
             },
             bind() {
-                weChatLogin("https://work.aldbim.com").then(res => {
+                weChatLogin("https://work.aldbim.com/personal").then(res => {
                     if (res.result === 1) {
                         window.location.href = res.data
                     }
