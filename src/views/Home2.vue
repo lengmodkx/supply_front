@@ -77,8 +77,8 @@
               <div class="title">
                 <Avatar :src="`https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${item.projectCover}`"
                   class="avatar" />
-                <Icon type="md-star" size="15"></Icon>
-                <span>{{item.projectName}}</span>
+                <!-- <Icon type="md-star" size="15"></Icon> -->
+                <span style="margin-left:10px;">{{item.projectName}}</span>
               </div>
               <div class="description">
                 <span>{{item.projectDes}}</span>
