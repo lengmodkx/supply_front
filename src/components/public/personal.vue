@@ -454,7 +454,7 @@
             }
             var code = theRequest.code
             next(vm => {
-                bindWx(code, this.message.userId).then(res => {
+                bindWx(code, localStorage.userId).then(res => {
                     if (res.result == 1) {
                         this.$Message.success(res.msg);
                     }
