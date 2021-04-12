@@ -105,14 +105,13 @@ export default {
             console.log(result.type);
             switch (result.type) {
               case "A1": //创建任务
+              case "A27":
                 this.$store.dispatch("task/init", result.object);
                 break;
               case "A2":
                 this.$store.dispatch("task/deleteTask", result.object);
                 break;
               case "A3":
-                this.$store.dispatch("task/updateStatus", result.object);
-                break;
               case "A4":
                 this.$store.dispatch("task/updateStatus", result.object);
                 break;
@@ -123,31 +122,21 @@ export default {
               case "A9":
               case "A11":
               case "A12":
+              case "A14":
+              case "A17":
+              case "A20":
+              case "A30":
+              case "A31":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A13":
                 this.$store.dispatch("task/editTask", result.object.taskId);
                 this.$store.dispatch("task/init", result.object.projectId);
                 break;
-              case "A14":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A15":
-                this.$store.dispatch("task/loadIndex", result.object);
-                break;
               case "A16":
-                this.$store.dispatch("task/loadIndex", result.object);
-                break;
-              case "A17":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
               case "A18":
                 this.$store.dispatch("task/loadIndex", result.object);
-                break;
-              case "A20":
-                this.$store.dispatch("task/changeTask", result.object);
-              case "A27":
-                this.$store.dispatch("task/init", result.object);
                 break;
               // 关联
               case "A28":
@@ -173,14 +162,7 @@ export default {
                   this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
-              case "A30":
-                this.$store.dispatch("task/changeTask", result.object);
-                break;
-              // 修改工时
-               case "A31":
-
-                this.$store.dispatch("task/changeTask", result.object);
-               break;
+              
               // 添加分享
               case "B1":
                 this.$store.dispatch("share/init", result.object);

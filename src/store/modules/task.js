@@ -87,15 +87,14 @@ const store = {
         },
 
         editTask(state, data) {
-            state.task = data
-            console.log(data)
-            if (data.joinInfo) {
-                state.joinInfoIds = data.joinInfo.map((v) => {
-                    return v.userId
-                })
-            } else {
-                state.joinInfoIds = []
-            }
+            if (state.taskId === data.taskId){
+                state.task = data
+                if (data.joinInfo) {
+                    state.joinInfoIds = data.joinInfo.map(v=>v.userId)
+                } else {
+                    state.joinInfoIds = []
+                }
+            }    
         },
         changeRemarks(state, data) {
             if (state.task) {
@@ -441,9 +440,7 @@ const store = {
                 }
             })
         },
-        editTask({
-            commit
-        }, data) {
+        editTask({commit}, data) {
             initEditTask(data).then(res => {
                 if (res.result === 1) {
                     commit('editTask', res.data)
@@ -454,27 +451,19 @@ const store = {
         updateStartTime({
             commit
         }, value) {
-            upStartTime(value.taskId, value.date).then(res => {
-                if (res.result == 1) {}
-            })
+            upStartTime(value.taskId, value.date);
         },
         // 更新任务结束时间
         updateEndTime({
             commit
         }, value) {
-            upEndTime(value.taskId, value.date).then(res => {
-                if (res.result == 1) {
-
-                }
-            })
+            upEndTime(value.taskId, value.date);
         },
         // 添加子任务
         addChildrenTask({
             commit
         }, value) {
-            addChildTask(value.taskId, value.taskName).then(res => {
-                console.log(res)
-            })
+            addChildTask(value.taskId, value.taskName,value.projectId);
         },
         changeTask({
             dispatch,

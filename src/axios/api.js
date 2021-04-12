@@ -867,9 +867,10 @@ export function upEndTime(taskId, endtime) {
     })
 }
 // 添加子任务
-export function addChildTask(taskId, params) {
+export function addChildTask(taskId, taskName,projectId) {
     return $post(`tasks/${taskId}/addchild`, {
-        taskName: params
+        taskName: taskName,
+        projectId:projectId
     })
 }
 

@@ -582,7 +582,7 @@ export default {
     log,
     commonFile: (resolve) => require(["./commonfile.vue"], resolve),
     Loading,
-    rcModal,
+    rcModal
   },
   data() {
     return {
@@ -619,6 +619,7 @@ export default {
       beizhuContent: "",
       backButton: false, //是否显示返回按钮
       file: {},
+      projectId: this.$route.params.id
     };
   },
   mounted() {
@@ -747,7 +748,7 @@ export default {
     },
     //取消关联
     cancle(id) {
-      cancle(id, this.task.projectId, this.publicType, this.task.taskId).then((res) => {
+      cancle(id, this.projectId, this.publicType, this.task.taskId).then((res) => {
         if (res.result === 1) {
           this.$Message.success("已取消");
         }
@@ -784,13 +785,13 @@ export default {
         label = 1;
       }
       if (!taskStatus) {
-        completeTask(this.$route.params.id, taskId, label).then((res) => {
+        completeTask(this.projectId, taskId, label).then((res) => {
           if (res.result !== 1) {
             this.$Message.error(res.msg);
           }
         });
       } else {
-        cancelcompleteTask(this.$route.params.id, taskId, label).then((res) => {
+        cancelcompleteTask(this.projectId, taskId, label).then((res) => {
           if (res.result !== 1) {
             this.$Message.error(res.msg);
           }
@@ -803,7 +804,7 @@ export default {
         this.$Message.error("请输入子任务内容");
         return;
       }
-      this.addChildrenTask({ taskId: this.task.taskId, taskName: this.son });
+      this.addChildrenTask({ taskId: this.task.taskId, taskName: this.son,projectId:this.projectId });
       this.showSontask = false;
       this.son = "";
       this.$Message.success("保存成功");
