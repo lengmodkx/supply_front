@@ -1058,16 +1058,24 @@ export function getWeChatToken(code) {
 }
 
 export function bindWx(code, userId) {
-    return $post(`/bind/wechat`, {
-        code: code,
-        userId: userId
-    })
+    return fetch({
+        url: `/bind/wechat`,
+        method: "post", // 请求方法
+        params: {
+            code: code,
+            userId: userId
+        }
+    });
 }
 
 export function notBindWx(userId) {
-    return $post(`/notbind/wechat`, {
-        userId: userId
-    })
+    return fetch({
+        url: `/notbind/wechat`,
+        method: "post", // 请求方法
+        params: {
+            userId: userId
+        }
+    });
 }
 // 修改任务分组名称
 export function changRelationName(data) {
