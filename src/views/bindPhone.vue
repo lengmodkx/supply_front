@@ -115,6 +115,7 @@
                         localStorage.userName = res.data.userName;
                         localStorage.token = res.data.accessToken;
                         localStorage.companyId = res.data.orgId;
+                        localStorage.orgName = res.data.orgName;
                         if (res.data.orgId) {
                            this.$router.replace("/org/" + res.data.orgId);
                         } else {
