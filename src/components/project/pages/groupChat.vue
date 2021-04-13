@@ -417,6 +417,7 @@ export default {
       float: right;
       text-align: right;
       background-color: #e5f6fb;
+      font-size: 15px !important;
     }
   }
   .title {
