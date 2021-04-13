@@ -21,7 +21,7 @@
           <li class="select-option-group">
             <div class="option-group-label">执行者</div>
             <ul>
-              <li class="member-menu-item clearfix" @click="visible = false" v-if="task.executor == 0">
+              <li class="member-menu-item clearfix" @click="visible = false" v-if="task.executor == 0 || task.executor == undefined">
                 <div class="img fl">
                   <Icon style="margin-top: 5px" type="ios-contact" size="24" />
                 </div>
@@ -121,7 +121,6 @@ export default {
     },
   },
   mounted() {
-    // console.log("xxxxxxxxxxxxxxxxxxx", this.task);
   },
 };
 </script>
