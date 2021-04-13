@@ -33,7 +33,7 @@
                     <span
                       class="chehui-btn"
                       @click="chehui(item.chatId)"
-                      v-if="new Date().getTime() - item.createTime < 1000 * 60 * 2"
+                      v-if="currentTime - item.createTime < 1000 * 60 * 2"
                     >撤回</span>
                   </div>
                 </div>
@@ -178,12 +178,24 @@ export default {
       host: "",
       headers: {
         "x-auth-token": localStorage.token
-      }
+      },
+      timer: "",//定义一个定时器的变量
+      currentTime: new Date().getTime(), // 获取当前时间
     };
+  },
+  created() {
+    var _this = this; //声明一个变量指向Vue实例this，保证作用域一致
+    this.timer = setInterval(function() {
+      _this.currentTime = //修改数据date
+        new Date().getTime() 
+    }, 1000);
   },
   mounted() {
     this.getChat();
     this.uploadList = this.$refs.upload.fileList;
+  },
+  beforeDestroy(){
+    clearInterval(this.timer);
   },
   watch: {
     chatData() {
@@ -191,7 +203,7 @@ export default {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
       });
-    }
+    },
   },
   computed: {
     ...mapState("chat", ["chatData", "images"])
