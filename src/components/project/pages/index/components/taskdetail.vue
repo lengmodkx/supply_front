@@ -37,7 +37,7 @@
         <div class="task-content-left">
           <Tooltip content="点击即可编辑" placement="top">
             <div class="task-title">
-              <input class="task-title-input" v-model="task.taskName" @blur="updateTaskName()" type="text" />
+              <div  class="task-title-input"  @blur="updateTaskName()" ref="taskName" spellcheck="false" contenteditable="true">{{task.taskName}}</div>
             </div>
           </Tooltip>
           <div class="task-basic-attrs-view">
@@ -683,7 +683,7 @@ export default {
     },
     //修改任务名称
     updateTaskName() {
-      updateTaskName(this.task.taskId, this.task.taskName).then((data) => {});
+      updateTaskName(this.task.taskId,this.$refs.taskName.innerHTML).then((data) => {});
     },
     //文件下载
     downLoad(fileId) {
@@ -995,8 +995,12 @@ export default {
     padding-left: 20px;
     padding-top: 20px;
     .task-title {
-      width: 655px;
+      width: 670px;
       .task-title-input {
+        white-space:normal;
+        word-wrap:break-word;
+        word-break:break-all;
+        width:670px;
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 8px;
@@ -1008,11 +1012,11 @@ export default {
         outline-style: none;
         &:not(.readonly):not(.disabled):focus {
           background-color: #f7f7f7;
-          width: 655px;
+          width: 670px;
         }
         &:not(.readonly):not(.disabled):hover {
           background-color: #f7f7f7;
-          width: 655px;
+          width: 670px;
         }
       }
     }
