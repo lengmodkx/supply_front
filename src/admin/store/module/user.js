@@ -9,14 +9,14 @@ import {
   restoreTrash,
   getUnreadCount
 } from '../../api/user'
-import { setToken, getToken } from '../../libs/util'
+import { setTokenNew, getTokenNew } from '../../libs/util'
 
 export default {
   state: {
     accountName: '',
     userId: '',
     avatorImgPath: '',
-    token: getToken(),
+    token: getTokenNew(),
     access: '',
     hasGetInfo: false,
     unreadCount: 0,
@@ -38,9 +38,9 @@ export default {
     setAccess (state, access) {
       state.access = access
     },
-    setToken (state, token) {
+    setTokenNew (state, token) {
       state.token = token
-      setToken(token)
+      setTokenNew(token)
     },
     setHasGetInfo (state, status) {
       state.hasGetInfo = status
@@ -82,7 +82,7 @@ export default {
           password
         }).then(res => {
           const data = res.data
-          commit('setToken', data.accessToken)
+          commit('setTokenNew', data.accessToken)
           commit('setAvator', data.userInfo.image)
           commit('setUserName', data.userInfo.userName)
           // commit('setUserId', data.userInfo.userId)
@@ -98,7 +98,7 @@ export default {
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
         logout().then(() => {
-          commit('setToken', '')
+          commit('setTokenNew', '')
           commit('setAccess', [])
           resolve()
         }).catch(err => {

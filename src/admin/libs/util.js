@@ -6,6 +6,16 @@ const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
 
+export const setTokenNew = (token) => {
+  sessionStorage.setItem(TOKEN_KEY, token) 
+}
+
+export const getTokenNew = () => {
+  const token = sessionStorage.getItem(TOKEN_KEY) 
+  if (token) return token
+  else return false
+}
+
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
 }
