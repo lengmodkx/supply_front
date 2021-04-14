@@ -1,7 +1,7 @@
 <template>
   <div class="file-contant" v-if="files != null">
     <Row class="file-list" v-if="files.length > 0 && showView == 'view'" type="flex" :gutter="10" justify="start">
-      <Col class="file-list-col" v-for="(file, index) in files" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)">
+      <Col class="file-list-col" v-for="(file, index) in files" :key="index" :xl="{ span: 3}" :xxl="{ span: 2}" @click.native="fileDetail(file, index)" v-preventReClick>
         <div class="img-box" :class="{ checked: fileArr.includes(file.fileId) }">
           <Icon type="ios-checkbox" class="ios-check" size="28"  :class="{ showIcon: fileArr.includes(file.fileId) }" @click.native.stop="iosCheck(file, index)" />
           <Button icon="ios-arrow-down" class="file-more_opt" :class="{ showIcon: isactive2 == index }" @click.stop="getFileid($event,file, index)"></Button>
@@ -588,6 +588,9 @@ export default {
 };
 </script>
 <style lang="less">
+.disable {
+    pointer-events: none;
+}
 .checked {
   border: 2px solid #1b9aee !important;
 }

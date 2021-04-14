@@ -10,6 +10,7 @@ const store = {
         users: [], //项目全部成员
         roles: [],
         symbolData:[],//@中项目成员
+        roleKey:''
     },
     mutations: {
         init(state, data) {
@@ -22,6 +23,9 @@ const store = {
         initUser(state, data) {
             state.users = data
         
+        },
+        initroleKey(state,data){
+            state.roleKey=data
         },
         initSymbol(state, data) {
             
@@ -69,6 +73,8 @@ const store = {
                 if (res.result === 1) {
                     commit('initUser', res.data);
                     commit('initSymbol', res.data);
+                    commit('initroleKey', res.roleKey);
+
                 }
             })
         },

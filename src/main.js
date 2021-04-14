@@ -10,7 +10,7 @@ import "./components/public/common"; //挂载common下组件到全局
 import moment from "moment";
 import gobal from "./global";
 import WebIM from './utils/WebIM';
-
+import preventReClick from './store/modules/preventReClick' //防多次点击，重复提交
 moment.updateLocale("zh-cn", {
     weekdaysShort: '周日_周一_周二_周三_周四_周五_周六'.split('_'),
     longDateFormat: {
