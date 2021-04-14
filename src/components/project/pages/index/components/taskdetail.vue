@@ -473,7 +473,7 @@
                       {{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}
                     </p>
                   </div>
-                  <Upload ref="upload" :show-upload-list="false"
+                  <Upload ref="upload" :show-upload-list="false" multiple
                       :before-upload="handleBeforeUpload" :action="host"
                       :data="uploadData"  :on-success="handleSuccess"
                        type="drag">
