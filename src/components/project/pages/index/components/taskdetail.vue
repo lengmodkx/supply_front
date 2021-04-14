@@ -261,7 +261,7 @@
                         <Checkbox v-model="i.taskStatus"></Checkbox>
                       </div>
                       <div class="sonInput fl" @click.stop="showaa(i.taskId)">
-                        <Tooltip content="点击即可编辑" placement="top">
+                        <Tooltip content="进入详情" placement="top">
                           <div class="sonCon" ref="sonCon" style>
                             {{ i.taskName }}
                           </div>
@@ -473,9 +473,14 @@
                       {{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}
                     </p>
                   </div>
-                  <div style="width: 117px;height:117px;line-height: 117px;border: 1px solid #e5e5e5;display: flex;align-items: center;justify-content: center" @click="showCommon = true">
-                    <Icon type="md-add" size="40" style="margin-right: 0px"></Icon>
-                  </div>
+                  <Upload ref="upload" :show-upload-list="false"
+                      :before-upload="handleBeforeUpload" :action="host"
+                      :data="uploadData"  :on-success="handleSuccess"
+                       type="drag">
+                      <div style="width: 117px; height: 117px; display:flex;justify-content: center;align-items: center">
+                          <Icon type="ios-add" size="20" />
+                      </div>
+                  </Upload>
                 </div>
               </div>
             </div>
@@ -548,7 +553,6 @@ import log from "@/components/public/log";
 import publick from "@/components/public/Publish";
 import fileDetail from "./fileDetail";
 import { mapState, mapActions } from "vuex";
-import commonFile from "./commonfile.vue";
 import Loading from "@/components/public/common/Loading.vue";
 import {
   updateTaskName,
@@ -564,8 +568,9 @@ import {
   cancle,
   progress,
 } from "@/axios/api";
-import { setSysClip } from "@/axios/api2.js";
+import { setSysClip,bind_files } from "@/axios/api2.js";
 import { downloadFile, getFileDetails,deleteFile } from "@/axios/fileApi";
+import { oss } from "@/axios/ossweb";
 export default {
   components: {
     fileDetail,
@@ -620,7 +625,11 @@ export default {
       beizhuContent: "",
       backButton: false, //是否显示返回按钮
       file: {},
-      projectId: this.$route.params.id
+      projectId: this.$route.params.id,
+      uploadList:[],
+      host:'',
+      uploadData:{},
+      files:[]
     };
   },
   mounted() {
@@ -634,6 +643,38 @@ export default {
   },
   methods: {
     ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
+    handleBeforeUpload(file) {
+       var that = this;
+      let dir = 'upload/file/'
+      return oss(dir, file.name).then(res => {
+          this.host = res.host;
+          this.uploadData = res;
+          var myfile = {};
+          myfile.fileName = file.name;
+          myfile.fileUrl = res.key;
+          myfile.size = that.renderSize(file.size);
+          myfile.projectId = that.projectId;
+          myfile.ext = file.name.substr(file.name.indexOf("."),file.name.length);
+          myfile.publicId = that.task.taskId;
+          that.files.push(myfile);
+      });
+    },
+    handleSuccess(res, file){
+      let params = {
+        files: JSON.stringify(this.files),
+        publicId: this.task.taskId,
+        projectId: this.projectId
+      };
+      bind_files(params).then(res => {
+        if (res.result === 1) {
+          this.$refs.upload.clearFiles();
+          this.files = [];
+          this.$Notice.success({title: "上传成功"});
+          this.files.splice(0, this.files.length);
+        }
+      });
+    },
+
     //进度
     scheduleChange(data) {
       this.showSchedule = true;
@@ -766,11 +807,7 @@ export default {
     },
     showaa(taskId) {
       this.backButton = true;
-      const msg = this.$Message.loading("正在加载中...", 0);
-      setTimeout(msg, 10000);
-      this.$store.dispatch("task/editTask", taskId).then(() => {
-        clearTimeout(msg);
-      });
+      this.$store.dispatch("task/editTask", taskId);
     },
     changePriority(priority) {
       updatePriority(this.task.taskId, priority).then((item) => {});
@@ -1021,5 +1058,19 @@ export default {
       }
     }
   }
+}
+.demo-upload-list {
+  display: inline-block;
+  width: 164px;
+  height: 110px;
+  text-align: center;
+  line-height: 110px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin-right: 4px;
 }
 </style>
