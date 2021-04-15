@@ -15,7 +15,7 @@
         <div class="recycle-list" v-for="(info, index) in dataList" :key="index">
           <div class="name"><span>{{ info.publicName }}</span><span v-if="info.ext">{{info.ext}}</span></div>
           <p class="time">{{ $moment(info.updateTime).format("YYYY-MM-DD") }}</p>
-          <Poptip class="task-menuwrapper" placement="bottom" transfer trigger="hover" :ref="info.id">
+          <Poptip class="task-menuwrapper" placement="bottom" transfer trigger="hover">
             <div slot="content" class="task-menuwrapper-content">
               <div class="recyTitle">
                 恢复内容
@@ -114,7 +114,6 @@ data: function() {
       groupList: [],
       menuList: [],
       model1: "",
-      aa:'',
     };
   },
   mounted() {
@@ -265,9 +264,6 @@ data: function() {
               this.dataList = res.data;
             });
             this.$Message.success("成功");
-            console.log(this.$refs[publicId][0])
-            this.aa=publicId
-            this.$refs[this.aa][0].handleClose();
           }
         });
       } else {
