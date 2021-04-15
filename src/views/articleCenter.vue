@@ -7,8 +7,14 @@
                     <div class="profile-header">
                         <img src="../assets/images/articles/center.png" class="bg-header">
                         <div class="white-content">
-                            <img :src="userInfo.image" class="avatar">
-                            <div class="userName">{{userInfo.nickName}}</div>
+                            <div class="left-content">
+                                <img :src="userInfo.image" class="avatar">
+                                <div class="userName">{{userInfo.nickName}}</div>
+                            </div>
+                            <div class="right-btns" v-if="showBtnContent">
+                                <Button type="primary" v-if="!showfollowbtns" @click="FollowAuthor" icon="md-add">关注</Button>
+                                <Button type="info" v-else icon="md-checkmark" @click="FollowAuthor">已关注</Button>
+                            </div>
                         </div>
                     </div>
                     <div class="tabContent">
@@ -55,8 +61,9 @@
                                             <img :src="item.image" alt="">
                                             <div>{{item.userName}}</div>
                                         </div>
-                                        <div class="btns" :class="item.isAttention==0?'no':'yes'" v-if="pageType != 'other'"
-                                            @click="operation(item,index)">{{item.isAttention==0?'未关注':'已关注'}}</div>
+                                        <div class="btns" :class="item.isAttention==0?'no':'yes'"
+                                            v-if="pageType != 'other'" @click="operation(item,index)">
+                                            {{item.isAttention==0?'未关注':'已关注'}}</div>
                                     </div>
                                     <div class="no-more" v-if="!flag">没有更多了</div>
                                 </div>
@@ -95,7 +102,8 @@
         attentionUserStatus,
         myArticle,
         deleteArticle,
-        workBenchInfo
+        workBenchInfo,
+        judgeIsAttention
     } from '@/axios/api'
     export default {
         data() {
@@ -144,7 +152,9 @@
                     acId: '',
                     memberId: ''
                 },
-                pageType: ''
+                pageType: '',
+                showBtnContent:false,
+                showfollowbtns: true,
             }
         },
         components: {
@@ -155,9 +165,17 @@
             this.pageType = this.$route.query.type
             if (this.pageType == 'other') {
                 this.param.memberId = this.$route.query.id
+                let userId=localStorage.getItem('userId')
+                if(this.param.memberId==userId){
+                    this.showBtnContent=false
+                }else {
+                    this.showBtnContent=true
+                    this.attentionPaid()
+                }
                 this.articleParam.memberId = this.$route.query.id
                 this.getUser()
             } else {
+                this.showBtnContent=false  //我自己的个人主页,不显示关注按钮
                 this.userInfo = this.$route.params.userInfo
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
@@ -167,7 +185,7 @@
                 let scrollTop = document.querySelector('#center-box').scrollTop || document.body.scrollTop;
                 let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 let scrollHeight = document.querySelector('#center-box').scrollHeight || document.body.scrollHeight;
-                if (scrollTop + windowHeight==scrollHeight + 48 && _this.flag == true) { 
+                if (scrollTop + windowHeight == scrollHeight + 48 && _this.flag == true) {
                     if (_this.center) {
                         _this.articleParam.pageNum++;
                         _this.getMyArticle()
@@ -194,7 +212,7 @@
                 myArticle(this.articleParam).then(response => {
                     if (response.data.records.length < 20) {
                         this.flag = false
-                    }else {
+                    } else {
                         this.flag = true
                     }
                     response.data.records.forEach((item) => {
@@ -251,7 +269,7 @@
             getUser() {
                 let param = {
                     orgId: localStorage.companyId,
-                    memberId:this.param.memberId
+                    memberId: this.param.memberId
                 }
                 workBenchInfo(param).then(res => {
                     if (res.result == 1) {
@@ -259,6 +277,22 @@
                     }
                 });
             },
+            FollowAuthor() {
+                attentionUserStatus({
+                    'memberId': this.param.memberId
+                }).then(response => {
+                    this.showfollowbtns=!this.showfollowbtns
+                })
+            },
+            attentionPaid(){
+                judgeIsAttention({
+                    'memberId': this.param.memberId
+                }).then(response => {
+                    console.log(response.data)
+                    this.showfollowbtns=response.data
+                })
+            }
+
         },
 
 
@@ -275,6 +309,7 @@
         box-sizing: border-box;
         overflow: auto;
         flex: 1;
+
         .center-left {
             .profile-header {
                 position: relative;
@@ -290,25 +325,40 @@
                     display: flex;
                     height: 56px;
                     width: 100%;
-                    padding-left: 24px;
+                    padding: 0 24px;
                     box-sizing: border-box;
                     background: #FFFFFF;
                     position: absolute;
                     bottom: 0;
+                    justify-content: space-between;
 
-                    .avatar {
-                        width: 52px;
-                        height: 52px;
-                        border-radius: 50%;
-                        margin-top: -26px;
-                        margin-right: 20px;
-                        background: #ffffff;
+                    .left-content {
+                        display: flex;
+
+                        .avatar {
+                            width: 52px;
+                            height: 52px;
+                            border-radius: 50%;
+                            margin-top: -26px;
+                            margin-right: 20px;
+                            background: #ffffff;
+                        }
+
+                        .userName {
+                            font-weight: 400;
+                            color: #333333;
+                            font-size: 14px;
+                        }
                     }
 
-                    .userName {
-                        font-weight: 400;
-                        color: #333333;
-                        font-size: 14px;
+                    .right-btns {
+                        margin-top: -16px;
+
+                        .ivu-btn-info {
+                            color: #999;
+                            background: #e8e8e8;
+                            border-color: #e8e8e8;
+                        }
                     }
                 }
             }

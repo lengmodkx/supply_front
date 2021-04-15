@@ -10,7 +10,8 @@
             <span class="task-header-flag">任务</span>
           </div>
           <div class="task-header-back">
-            <span class="backEdit" @click="back" v-show="backButton"> <Icon type="ios-arrow-back"/>返回上一级</span>
+            <span class="backEdit" @click="back" v-show="backButton">
+              <Icon type="ios-arrow-back" />返回上一级</span>
           </div>
         </div>
 
@@ -37,7 +38,8 @@
         <div class="task-content-left">
           <Tooltip content="点击即可编辑" placement="top">
             <div class="task-title">
-              <div  class="task-title-input"  @blur="updateTaskName()" ref="taskName" spellcheck="false" contenteditable="true">{{task.taskName}}</div>
+              <div class="task-title-input" @blur="updateTaskName()" ref="taskName" spellcheck="false"
+                contenteditable="true">{{task.taskName}}</div>
             </div>
           </Tooltip>
           <div class="task-basic-attrs-view">
@@ -51,10 +53,13 @@
                   <div class="object-field__right">
                     <Dropdown trigger="click" @on-click="updateTaskStatus(task.taskId, task.taskStatus)">
                       <div class="task-is-finish">
-                        <svg-icon name="task-not-finish" class="task-not-finish" v-if="task.taskStatus == false"></svg-icon>
-                        <svg-icon name="task-not-finish-hover" class="task-not-finish-hover" v-if="task.taskStatus == false"></svg-icon>
+                        <svg-icon name="task-not-finish" class="task-not-finish" v-if="task.taskStatus == false">
+                        </svg-icon>
+                        <svg-icon name="task-not-finish-hover" class="task-not-finish-hover"
+                          v-if="task.taskStatus == false"></svg-icon>
                         <svg-icon name="task-finish" class="task-finish" v-if="task.taskStatus == true"></svg-icon>
-                        <svg-icon name="task-finish-hover" class="task-finish-hover" v-if="task.taskStatus == true"></svg-icon>
+                        <svg-icon name="task-finish-hover" class="task-finish-hover" v-if="task.taskStatus == true">
+                        </svg-icon>
                         <span v-if="task.taskStatus == false">未完成</span>
                         <span v-else class="task-status-title">已完成</span>
                       </div>
@@ -88,7 +93,8 @@
                       <div class="content__3gKP circle">
                         <div class="executor__2pBD">
                           <div class="executor-handler not-assigned">
-                            <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor" :task="task" v-model="task.executor"> </SetExecutor>
+                            <SetExecutor @choose="chooseZxz" :id="task.projectId" :taskId="task.taskId" ref="executor"
+                              :task="task" v-model="task.executor"> </SetExecutor>
                           </div>
                         </div>
                       </div>
@@ -104,7 +110,8 @@
                   </div>
                   <div class="object-field__right">
                     <div class="task-date-wrapper">
-                      <DateTimePicker type="start" @on-change="startDate" :options="options1" @clear="clearTime('开始')" :datetime="task.startTime" :max="task.endTime" @confirm="confirm1">
+                      <DateTimePicker type="start" @on-change="startDate" :options="options1" @clear="clearTime('开始')"
+                        :datetime="task.startTime" :max="task.endTime" @confirm="confirm1">
                         <div class="init" v-if="!task.startTime">
                           设置开始时间
                         </div>
@@ -135,7 +142,8 @@
                         </div>
                       </DateTimePicker>
                       <span class="dividingLine">-</span>
-                      <DateTimePicker @on-change="endDate" :options="options2" @clear="clearTime('截止')" type="end" :datetime="task.endTime" :min="task.startTime" @confirm="confirm2">
+                      <DateTimePicker @on-change="endDate" :options="options2" @clear="clearTime('截止')" type="end"
+                        :datetime="task.endTime" :min="task.startTime" @confirm="confirm2">
                         <div class="init" v-if="!task.endTime">
                           设置截止时间
                         </div>
@@ -184,7 +192,8 @@
               </div>
               <div class="note-section detail-infos-content flex-space">
                 <div class="note-adder-set">
-                  <div class="add-note-handler" @click="showEditor = true" v-if="!showEditor" v-html="task.remarks ? task.remarks : '待添加'"></div>
+                  <div class="add-note-handler" @click="showEditor = true" v-if="!showEditor"
+                    v-html="task.remarks ? task.remarks : '待添加'"></div>
                   <div class="editor-wrap" v-if="showEditor">
                     <Simditor :contents="task.remarks" ref="editor" class="fl editBox"></Simditor>
                     <div style="margin-top: 5px">
@@ -224,8 +233,12 @@
                   <span class="worktime-title">进度</span>
                 </div>
                 <div class="task-worktime-wrap progress-infos-content flex-fill">
-                  <Input-number class="scheduleTop" :max="100" :min="0" v-model="task.progress" @on-change="scheduleChange"  :formatter="value => `${value}%`"
-            :parser="value => value.replace('%', '')" placeholder="请填写进度，0至100"></Input-number>
+                  <!-- <Input-number class="scheduleTop" :max="100" :min="0" v-model="task.progress" @on-change="scheduleChange"  :formatter="value => `${value}%`"
+            :parser="value => value.replace('%', '')" placeholder="请填写进度，0至100"></Input-number> -->
+                  <div>
+                    <Slider v-model="task.progress" show-input @on-change="scheduleChange"></Slider>
+                  </div>
+
                   <div class="scheduleBottom" v-show="showSchedule">
                     <Button style="padding:6px 20px;" @click="scheduleCancel">取消</Button>
                     <Button type="primary" style="padding:6px 20px;" @click="scheduleSave">保存</Button>
@@ -240,7 +253,8 @@
                   <span class="priority-title">标签</span>
                 </div>
                 <div class="priority-wrap detail-infos-content">
-                  <Tags class="fl" :taglist="task.tagList" :publicId="task.taskId" :publicType="publicType" :projectId="task.projectId" v-if="task.tagList" ref="tags"></Tags>
+                  <Tags class="fl" :taglist="task.tagList" :publicId="task.taskId" :publicType="publicType"
+                    :projectId="task.projectId" v-if="task.tagList" ref="tags"></Tags>
                 </div>
               </div>
             </section>
@@ -256,7 +270,8 @@
                   <li class="sontask_list" v-for="(i, index) in task.taskList" :key="index">
                     <!-- 点击之前 -->
                     <div class="clearfix subtask-wrap" v-show="isEdit">
-                      <div class="addicon fl" @click.stop.prevent="updateTaskStatus(i.taskId, i.taskStatus, true, index)">
+                      <div class="addicon fl"
+                        @click.stop.prevent="updateTaskStatus(i.taskId, i.taskStatus, true, index)">
                         <!-- @on-change="updateTaskStatus(i.taskId, i.taskStatus, true)" -->
                         <Checkbox v-model="i.taskStatus"></Checkbox>
                       </div>
@@ -267,7 +282,8 @@
                           </div>
                         </Tooltip>
                       </div>
-                      <DateTimePicker class="sonDate fl" type="start" :max="i.endTime" @confirm="confirmSonDate" @clear="clearSonDate">
+                      <DateTimePicker class="sonDate fl" type="start" :max="i.endTime" @confirm="confirmSonDate"
+                        @clear="clearSonDate">
                         <div>
                           <Icon class="icon" type="calendar" v-if="!i.sontaskDate" size="20"></Icon>
                           <span v-else class="timeBox">
@@ -296,14 +312,16 @@
                           </span>
                         </div>
                       </DateTimePicker>
-                      <SetExecutor @choose="ZrwChooseZxz" :id="task.projectId" :taskId="i.taskId" :task="i" ref="executor" v-model="i.executor"></SetExecutor>
+                      <SetExecutor @choose="ZrwChooseZxz" :id="task.projectId" :taskId="i.taskId" :task="i"
+                        ref="executor" v-model="i.executor"></SetExecutor>
                       <div class="enterDetail fl">
                         <Icon type="ios-arrow-right"></Icon>
                       </div>
                     </div>
                   </li>
                 </ul>
-                <div class="addChildTask" @click="showSontask = false" v-if="showSontask"><Icon type="md-add" />添加子任务</div>
+                <div class="addChildTask" @click="showSontask = false" v-if="showSontask">
+                  <Icon type="md-add" />添加子任务</div>
                 <!-- 添加子任务 -->
                 <div class="sonBox clearfix" v-if="!showSontask">
                   <div class="newSon clearfix">
@@ -312,14 +330,10 @@
                     </div>
                   </div>
                   <div class="btnss">
-                    <Button
-                      type="text"
-                      @click="
+                    <Button type="text" @click="
                         showSontask = true;
                         son = '';
-                      "
-                      >取消</Button
-                    >
+                      ">取消</Button>
                     <Button type="primary" @click="submitSontask" style="padding:6px 20px;">保存</Button>
                   </div>
                 </div>
@@ -441,9 +455,11 @@
                 </li>
               </ul>
               <div class="subtask-card-main">
-                <div class="addLink" @click="relationModal = true"><Icon type="md-add" />添加关联</div>
+                <div class="addLink" @click="relationModal = true">
+                  <Icon type="md-add" />添加关联</div>
                 <Modal v-model="relationModal" footer-hide class="relationModal" id="relationModal" width="850">
-                  <AddRelation :publicId="task.taskId" :fromType="publicType" @close="relationModal = false"></AddRelation>
+                  <AddRelation :publicId="task.taskId" :fromType="publicType" @close="relationModal = false">
+                  </AddRelation>
                 </Modal>
               </div>
             </div>
@@ -458,7 +474,8 @@
                 <div class="addfile" v-if="task.fileList">
                   <div class="file-lsit" v-for="(f, i) in task.fileList" :key="i">
                     <div class="file-img">
-                      <img v-if="images_suffix.indexOf(f.ext) > -1" :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt />
+                      <img v-if="images_suffix.indexOf(f.ext) > -1"
+                        :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt />
                       <img v-else src="@/icons/img/moren.png" alt="文件" />
                       <div class="zhezhao">
                         <Icon type="md-cloud-download" @click="downLoad(f.fileId)" />
@@ -510,7 +527,8 @@
                     </Tooltip>
                   </div>
                   <div class="addButton fl">
-                    <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId" @save="saveInvolveMember"></InvolveMember>
+                    <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId"
+                      @save="saveInvolveMember"></InvolveMember>
                   </div>
                 </div>
               </div>
@@ -519,11 +537,13 @@
             </div>
           </div>
           <div class="footer">
-            <publick @scroll="scrollToBottom" :publicId="task.taskId" :projectId="task.projectId" :publicType="publicType"></publick>
+            <publick @scroll="scrollToBottom" :publicId="task.taskId" :projectId="task.projectId"
+              :publicType="publicType"></publick>
           </div>
         </div>
       </div>
-      <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
+      <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer
+        :width="500">
         <common-file @close="showCommon = false" :projectId="task.projectId" :publicId="task.taskId"></common-file>
       </Modal>
       <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
@@ -537,116 +557,128 @@
   </div>
 </template>
 <script>
-import SetRepeat from "./SetRepeat";
-import TaskWarn from "./TaskWarn";
-import rcModal from "@/components/project/schedule/EditRicheng";
-import AddRelation from "@/components/public/common/AddRelation";
-import Tags from "@/components/public/Tags";
-import workHour from "@/components/public/workHour";
-import insertText from "@/utils/insertText";
-import Emoji from "@/components/public/common/emoji/Emoji";
-import SingleTaskMenu from "./SingleTaskMenu.vue";
-import SetExecutor from "./SetExecutor";
-import Simditor from "@/components/resource/Simditor";
-import myModel from "./EditList";
-import log from "@/components/public/log";
-import publick from "@/components/public/Publish";
-import fileDetail from "./fileDetail";
-import { mapState, mapActions } from "vuex";
-import Loading from "@/components/public/common/Loading.vue";
-import {
-  updateTaskName,
-  updatePriority,
-  cancelcompleteTask,
-  completeTask,
-  updateRepeat,
-  updateTaskJoin,
-  fabulous,
-  cancelFabulous,
-  updateTaskRemarks,
-  taskExecutor,
-  cancle,
-  progress,
-} from "@/axios/api";
-import { setSysClip,bind_files } from "@/axios/api2.js";
-import { downloadFile, getFileDetails,deleteFile } from "@/axios/fileApi";
-import { oss } from "@/axios/ossweb";
-export default {
-  components: {
-    fileDetail,
-    SetRepeat,
-    TaskWarn,
-    Tags,
-    workHour,
-    Emoji,
-    Simditor,
-    SingleTaskMenu,
-    SetExecutor,
-    AddRelation,
-    myModel,
-    publick,
-    log,
-    commonFile: (resolve) => require(["./commonfile.vue"], resolve),
-    Loading,
-    rcModal
-  },
-  data() {
-    return {
-      selectValue: "未完成",
-      showSchedule: false,
-      options1: {},
-      options2: {},
-      glPop: false,
-      zan: false,
-      showRemind: false,
-      showRCModal: false,
-      childTaskData: null,
-      complete: false,
-      hoverExecutor: false,
-      editorValue: "123",
-      showFileDetail: false,
-      fileId: "",
-      showEditor: false,
-      maxFileSize: 1024 * 1024 * 100,
-      isShowFileList: true,
-      type: "task",
-      modal1: false,
-      relationModal: false,
-      talkvalue: "",
-      son: "",
-      showSontask: true,
-      sonComplete: false,
-      isEdit: true,
-      newCon: "",
-      ept: "",
-      publicType: "任务",
-      involveDataList: [],
-      showCommon: false,
-      beizhuContent: "",
-      backButton: false, //是否显示返回按钮
-      file: {},
-      projectId: this.$route.params.id,
-      uploadList:[],
-      host:'',
-      uploadData:{},
-      files:[]
-    };
-  },
-  mounted() {
-    this.editTask(this.taskId);
-  },
-  computed: {
-    ...mapState("task", ["task", "joinInfoIds", "images_suffix", "taskId"]),
-    vuexTask() {
-      return this.$store.state.task.joinInfo;
+  import SetRepeat from "./SetRepeat";
+  import TaskWarn from "./TaskWarn";
+  import rcModal from "@/components/project/schedule/EditRicheng";
+  import AddRelation from "@/components/public/common/AddRelation";
+  import Tags from "@/components/public/Tags";
+  import workHour from "@/components/public/workHour";
+  import insertText from "@/utils/insertText";
+  import Emoji from "@/components/public/common/emoji/Emoji";
+  import SingleTaskMenu from "./SingleTaskMenu.vue";
+  import SetExecutor from "./SetExecutor";
+  import Simditor from "@/components/resource/Simditor";
+  import myModel from "./EditList";
+  import log from "@/components/public/log";
+  import publick from "@/components/public/Publish";
+  import fileDetail from "./fileDetail";
+  import {
+    mapState,
+    mapActions
+  } from "vuex";
+  import Loading from "@/components/public/common/Loading.vue";
+  import {
+    updateTaskName,
+    updatePriority,
+    cancelcompleteTask,
+    completeTask,
+    updateRepeat,
+    updateTaskJoin,
+    fabulous,
+    cancelFabulous,
+    updateTaskRemarks,
+    taskExecutor,
+    cancle,
+    progress,
+  } from "@/axios/api";
+  import {
+    setSysClip,
+    bind_files
+  } from "@/axios/api2.js";
+  import {
+    downloadFile,
+    getFileDetails,
+    deleteFile
+  } from "@/axios/fileApi";
+  import {
+    oss
+  } from "@/axios/ossweb";
+  export default {
+    components: {
+      fileDetail,
+      SetRepeat,
+      TaskWarn,
+      Tags,
+      workHour,
+      Emoji,
+      Simditor,
+      SingleTaskMenu,
+      SetExecutor,
+      AddRelation,
+      myModel,
+      publick,
+      log,
+      commonFile: (resolve) => require(["./commonfile.vue"], resolve),
+      Loading,
+      rcModal
     },
-  },
-  methods: {
-    ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
-    handleBeforeUpload(file) {
-       var that = this;
-      let dir = 'upload/file/'
-      return oss(dir, file.name).then(res => {
+    data() {
+      return {
+        selectValue: "未完成",
+        showSchedule: false,
+        options1: {},
+        options2: {},
+        glPop: false,
+        zan: false,
+        showRemind: false,
+        showRCModal: false,
+        childTaskData: null,
+        complete: false,
+        hoverExecutor: false,
+        editorValue: "123",
+        showFileDetail: false,
+        fileId: "",
+        showEditor: false,
+        maxFileSize: 1024 * 1024 * 100,
+        isShowFileList: true,
+        type: "task",
+        modal1: false,
+        relationModal: false,
+        talkvalue: "",
+        son: "",
+        showSontask: true,
+        sonComplete: false,
+        isEdit: true,
+        newCon: "",
+        ept: "",
+        publicType: "任务",
+        involveDataList: [],
+        showCommon: false,
+        beizhuContent: "",
+        backButton: false, //是否显示返回按钮
+        file: {},
+        projectId: this.$route.params.id,
+        uploadList: [],
+        host: '',
+        uploadData: {},
+        files: []
+      };
+    },
+    mounted() {
+      this.editTask(this.taskId);
+    },
+    computed: {
+      ...mapState("task", ["task", "joinInfoIds", "images_suffix", "taskId"]),
+      vuexTask() {
+        return this.$store.state.task.joinInfo;
+      },
+    },
+    methods: {
+      ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
+      handleBeforeUpload(file) {
+        var that = this;
+        let dir = 'upload/file/'
+        return oss(dir, file.name).then(res => {
           this.host = res.host;
           this.uploadData = res;
           var myfile = {};
@@ -654,423 +686,444 @@ export default {
           myfile.fileUrl = res.key;
           myfile.size = that.renderSize(file.size);
           myfile.projectId = that.projectId;
-          myfile.ext = file.name.substr(file.name.indexOf("."),file.name.length);
+          myfile.ext = file.name.substr(file.name.indexOf("."), file.name.length);
           myfile.publicId = that.task.taskId;
           that.files.push(myfile);
-      });
-    },
-    handleSuccess(res, file){
-      let params = {
-        files: JSON.stringify(this.files),
-        publicId: this.task.taskId,
-        projectId: this.projectId
-      };
-      bind_files(params).then(res => {
-        if (res.result === 1) {
-          this.$refs.upload.clearFiles();
-          this.files = [];
-          this.$Notice.success({title: "上传成功"});
-          this.files.splice(0, this.files.length);
-        }
-      });
-    },
+        });
+      },
+      handleSuccess(res, file) {
+        let params = {
+          files: JSON.stringify(this.files),
+          publicId: this.task.taskId,
+          projectId: this.projectId
+        };
+        bind_files(params).then(res => {
+          if (res.result === 1) {
+            this.$refs.upload.clearFiles();
+            this.files = [];
+            this.$Notice.success({
+              title: "上传成功"
+            });
+            this.files.splice(0, this.files.length);
+          }
+        });
+      },
 
-    //进度
-    scheduleChange(data) {
-      this.showSchedule = true;
-    },
-    scheduleCancel() {
-      this.editTask(this.taskId);
-      this.showSchedule = false;
-    },
-    scheduleSave() {
-      const data = {
-        taskId: this.task.taskId,
-        progress: this.task.progress,
-      };
-      progress(data).then((res) => {
+      //进度
+      scheduleChange(data) {
+        this.showSchedule = true;
+      },
+      scheduleCancel() {
+        this.editTask(this.taskId);
         this.showSchedule = false;
-        this.$Message.success("保存进度成功");
-      });
-    },
-    // 设置开始时间小于结束时间
-    closeThisModal() {
-      this.$emit("close");
-    },
-    startDate(date) {
-      this.startTime = date;
-      this.options2 = {
-        disabledDate(date1) {
-          return date1.valueOf() < new Date(date).getTime();
-        },
-      };
-    },
-    endDate(date) {
-      this.endTime = date;
-      this.options1 = {
-        disabledDate(date1) {
-          return date1.valueOf() > new Date(date).getTime() - 86400000;
-        },
-      };
-    },
-    scrollToBottom() {
-      // this.$refs.scrollbox.scrollTop = this.$refs.heightbox.clientHeight;
-    },
-    //返回
-    back() {
-      this.backButton = false;
-      this.editTask(this.task.parentId);
-      this.$Message.loading("正在加载中...", 0);
-    },
-    //修改任务名称
-    updateTaskName() {
-      updateTaskName(this.task.taskId,this.$refs.taskName.innerHTML).then((data) => {});
-    },
-    //文件下载
-    downLoad(fileId) {
-      var url = "";
-      if (process.env.NODE_ENV == "test") {
-        url = process.env.VUE_APP_TEST_URL;
-      } else if (process.env.NODE_ENV == "production") {
-        url = process.env.VUE_APP_URL;
-      } else {
-        url = "/api";
-      }
-      window.location.href = url + "/files/" + fileId + "/download";
-    },
-    getFileDetail(fileId) {
-      getFileDetails(fileId).then((res) => {
-        if (res.result == 1) {
-          this.showFileDetail = true;
-          this.file = res.data;
+      },
+      scheduleSave() {
+        const data = {
+          taskId: this.task.taskId,
+          progress: this.task.progress,
+        };
+        progress(data).then((res) => {
+          this.showSchedule = false;
+          this.$Message.success("保存进度成功");
+        });
+      },
+      // 设置开始时间小于结束时间
+      closeThisModal() {
+        this.$emit("close");
+      },
+      startDate(date) {
+        this.startTime = date;
+        this.options2 = {
+          disabledDate(date1) {
+            return date1.valueOf() < new Date(date).getTime();
+          },
+        };
+      },
+      endDate(date) {
+        this.endTime = date;
+        this.options1 = {
+          disabledDate(date1) {
+            return date1.valueOf() > new Date(date).getTime() - 86400000;
+          },
+        };
+      },
+      scrollToBottom() {
+        // this.$refs.scrollbox.scrollTop = this.$refs.heightbox.clientHeight;
+      },
+      //返回
+      back() {
+        this.backButton = false;
+        this.editTask(this.task.parentId);
+        this.$Message.loading("正在加载中...", 0);
+      },
+      //修改任务名称
+      updateTaskName() {
+        updateTaskName(this.task.taskId, this.$refs.taskName.innerHTML).then((data) => {});
+      },
+      //文件下载
+      downLoad(fileId) {
+        var url = "";
+        if (process.env.NODE_ENV == "test") {
+          url = process.env.VUE_APP_TEST_URL;
+        } else if (process.env.NODE_ENV == "production") {
+          url = process.env.VUE_APP_URL;
+        } else {
+          url = "/api";
         }
-      });
-    },
-    deleteFiles(fileId){
+        window.location.href = url + "/files/" + fileId + "/download";
+      },
+      getFileDetail(fileId) {
+        getFileDetails(fileId).then((res) => {
+          if (res.result == 1) {
+            this.showFileDetail = true;
+            this.file = res.data;
+          }
+        });
+      },
+      deleteFiles(fileId) {
         deleteFile(fileId).then(res => {
-        if (res.result == 1) {
-           this.$Message.success("删除成功");
-          this.editTask(this.taskId);
-        }
-      });
-    },
-    //弹出日程详情框
-    editSchedule(id) {
-      this.$store.dispatch("schedule/getScheduleById", id);
-      this.showRCModal = true;
-    },
-    // 添加备注
-    addBeizhu() {
-      if (this.$refs.editor.content == null || this.$refs.editor.content == "") {
-        this.$Message.error("请输入内容");
-        return;
-      }
-      this.beizhuContent = this.$refs.editor.content;
-      updateTaskRemarks(this.task.taskId, this.beizhuContent).then((res) => {
-        if (res.result === 1) {
-          this.showEditor = false;
-        }
-      });
-    },
-    // 删除执行者
-    deleteExecutor() {
-      taskExecutor(this.task.taskId, "").then((res) => {});
-    },
-    // 子任务执行者
-    ZrwChooseZxz(data, taskid) {
-      taskExecutor(taskid, data).then((res) => {
-        // console.log(res);
-      });
-    },
-    // 选择执行者
-    chooseZxz(data, taskid) {
-      taskExecutor(taskid, data).then((res) => {
-        // console.log(res);
-      });
-    },
-    //取消关联
-    cancle(id) {
-      cancle(id, this.projectId, this.publicType, this.task.taskId).then((res) => {
-        if (res.result === 1) {
-          this.$Message.success("已取消");
-        }
-      });
-    },
-    //复制关联
-    clone(id) {
-      let url = "http://" + process.env.NODE_ENV == "development" ? "/tasks/" + id : process.env.VUE_APP_URL + "/tasks/" + id;
-      setSysClip(url).then((res) => {
-        if (res.result === 1) {
-          this.$Message.success(res.msg);
-        }
-      });
-    },
-    showaa(taskId) {
-      this.backButton = true;
-      this.$store.dispatch("task/editTask", taskId);
-    },
-    changePriority(priority) {
-      updatePriority(this.task.taskId, priority).then((item) => {});
-    },
-    //更改任务的重复性
-    updateRepeat(repeat) {
-      updateRepeat(this.task.taskId, repeat);
-    },
-    //更改任务的状态
-    updateTaskStatus(taskId, taskStatus, isChild, index) {
-      var label = 0;
-      if (isChild) {
-        label = 1;
-      }
-      if (!taskStatus) {
-        completeTask(this.projectId, taskId, label).then((res) => {
-          if (res.result !== 1) {
-            this.$Message.error(res.msg);
+          if (res.result == 1) {
+            this.$Message.success("删除成功");
+            this.editTask(this.taskId);
           }
         });
-      } else {
-        cancelcompleteTask(this.projectId, taskId, label).then((res) => {
-          if (res.result !== 1) {
-            this.$Message.error(res.msg);
+      },
+      //弹出日程详情框
+      editSchedule(id) {
+        this.$store.dispatch("schedule/getScheduleById", id);
+        this.showRCModal = true;
+      },
+      // 添加备注
+      addBeizhu() {
+        if (this.$refs.editor.content == null || this.$refs.editor.content == "") {
+          this.$Message.error("请输入内容");
+          return;
+        }
+        this.beizhuContent = this.$refs.editor.content;
+        updateTaskRemarks(this.task.taskId, this.beizhuContent).then((res) => {
+          if (res.result === 1) {
+            this.showEditor = false;
           }
         });
-      }
-    },
-    // 添加子任务
-    submitSontask() {
-      if (this.son == "") {
-        this.$Message.error("请输入子任务内容");
-        return;
-      }
-      this.addChildrenTask({ taskId: this.task.taskId, taskName: this.son,projectId:this.projectId });
-      this.showSontask = false;
-      this.son = "";
-      this.$Message.success("保存成功");
-    },
-    confirmSonDate(date) {
-      this.task.sontaskDate = date;
-    },
-    clearSonDate() {
-      this.task.sontaskDate = "";
-    },
-    confirm1(date) {
-      this.updateStartTime({
-        taskId: `${this.task.taskId}`,
-        date: new Date(date).getTime(),
-      });
-      // this.task.startTime = date
-      // this.$forceUpdate()
-    },
-    // 清空时间
-    clearTime(type) {
-      if (type === "截止") {
-        this.updateEndTime({
-          taskId: `${this.task.taskId}`,
-          date: "0",
+      },
+      // 删除执行者
+      deleteExecutor() {
+        taskExecutor(this.task.taskId, "").then((res) => {});
+      },
+      // 子任务执行者
+      ZrwChooseZxz(data, taskid) {
+        taskExecutor(taskid, data).then((res) => {
+          // console.log(res);
         });
-      } else if (type === "开始") {
+      },
+      // 选择执行者
+      chooseZxz(data, taskid) {
+        taskExecutor(taskid, data).then((res) => {
+          // console.log(res);
+        });
+      },
+      //取消关联
+      cancle(id) {
+        cancle(id, this.projectId, this.publicType, this.task.taskId).then((res) => {
+          if (res.result === 1) {
+            this.$Message.success("已取消");
+          }
+        });
+      },
+      //复制关联
+      clone(id) {
+        let url = "http://" + process.env.NODE_ENV == "development" ? "/tasks/" + id : process.env.VUE_APP_URL +
+          "/tasks/" + id;
+        setSysClip(url).then((res) => {
+          if (res.result === 1) {
+            this.$Message.success(res.msg);
+          }
+        });
+      },
+      showaa(taskId) {
+        this.backButton = true;
+        this.$store.dispatch("task/editTask", taskId);
+      },
+      changePriority(priority) {
+        updatePriority(this.task.taskId, priority).then((item) => {});
+      },
+      //更改任务的重复性
+      updateRepeat(repeat) {
+        updateRepeat(this.task.taskId, repeat);
+      },
+      //更改任务的状态
+      updateTaskStatus(taskId, taskStatus, isChild, index) {
+        var label = 0;
+        if (isChild) {
+          label = 1;
+        }
+        if (!taskStatus) {
+          completeTask(this.projectId, taskId, label).then((res) => {
+            if (res.result !== 1) {
+              this.$Message.error(res.msg);
+            }
+          });
+        } else {
+          cancelcompleteTask(this.projectId, taskId, label).then((res) => {
+            if (res.result !== 1) {
+              this.$Message.error(res.msg);
+            }
+          });
+        }
+      },
+      // 添加子任务
+      submitSontask() {
+        if (this.son == "") {
+          this.$Message.error("请输入子任务内容");
+          return;
+        }
+        this.addChildrenTask({
+          taskId: this.task.taskId,
+          taskName: this.son,
+          projectId: this.projectId
+        });
+        this.showSontask = false;
+        this.son = "";
+        this.$Message.success("保存成功");
+      },
+      confirmSonDate(date) {
+        this.task.sontaskDate = date;
+      },
+      clearSonDate() {
+        this.task.sontaskDate = "";
+      },
+      confirm1(date) {
         this.updateStartTime({
           taskId: `${this.task.taskId}`,
-          date: "0",
+          date: new Date(date).getTime(),
         });
-      }
-    },
-    confirm2(date) {
-      this.updateEndTime({
-        taskId: `${this.task.taskId}`,
-        date: new Date(date).getTime(),
-      });
-    },
-    deleteStart() {
-      this.task.startDate = "";
-    },
-    deleteEnd() {
-      this.task.endDate = "";
-    },
-    dianZan() {
-      if (!this.task.isFabulous) {
-        //发请求点赞
-        fabulous(this.task.taskId).then((res) => {
-          if (res.result === 1) {
-            this.task.isFabulous = true;
-            this.task.fabulousCount++;
-          }
-        });
-      } else {
-        //发请求取消点赞
-        cancelFabulous(this.task.taskId).then((res) => {
-          if (res.result === 1) {
-            this.task.isFabulous = false;
-            this.task.fabulousCount--;
-          }
-        });
-      }
-    },
-    deleteInvolve(id) {
-      // if (id == 3) return; //需获取当前登录用户id判断
-      let index = this.joinInfoIds.indexOf(id);
-      this.joinInfoIds.splice(index, 1);
-      updateTaskJoin(this.task.taskId, this.joinInfoIds.join(",")).then((res) => {});
-    },
-    // editorSave(val) {
-    //   this.editorValue = val;
-    //   this.showEditor = false;
-    // },
-    showwaitAdd() {
-      this.showEditor = true;
-    },
-    chooseEmoji(name) {
-      insertText(this.$refs.textarea.$el.children[1], name);
-    },
-    editson() {
-      this.isEdit = false;
-    },
-    saveSon() {
-      this.isEdit = true;
-      //然后发请求
-    },
-    confirmWarnList(warn, user) {
-      this.$nextTick((_) => {
-        this.modal1 = false;
-      });
-    },
-    // 添加参与者
-    saveInvolveMember(detailList) {
-      updateTaskJoin(this.task.taskId, detailList).then((res) => {
-        if (res.result === 1) {
-          // this.task.joinInfo.unshift(res.data)
+        // this.task.startTime = date
+        // this.$forceUpdate()
+      },
+      // 清空时间
+      clearTime(type) {
+        if (type === "截止") {
+          this.updateEndTime({
+            taskId: `${this.task.taskId}`,
+            date: "0",
+          });
+        } else if (type === "开始") {
+          this.updateStartTime({
+            taskId: `${this.task.taskId}`,
+            date: "0",
+          });
         }
-      });
+      },
+      confirm2(date) {
+        this.updateEndTime({
+          taskId: `${this.task.taskId}`,
+          date: new Date(date).getTime(),
+        });
+      },
+      deleteStart() {
+        this.task.startDate = "";
+      },
+      deleteEnd() {
+        this.task.endDate = "";
+      },
+      dianZan() {
+        if (!this.task.isFabulous) {
+          //发请求点赞
+          fabulous(this.task.taskId).then((res) => {
+            if (res.result === 1) {
+              this.task.isFabulous = true;
+              this.task.fabulousCount++;
+            }
+          });
+        } else {
+          //发请求取消点赞
+          cancelFabulous(this.task.taskId).then((res) => {
+            if (res.result === 1) {
+              this.task.isFabulous = false;
+              this.task.fabulousCount--;
+            }
+          });
+        }
+      },
+      deleteInvolve(id) {
+        // if (id == 3) return; //需获取当前登录用户id判断
+        let index = this.joinInfoIds.indexOf(id);
+        this.joinInfoIds.splice(index, 1);
+        updateTaskJoin(this.task.taskId, this.joinInfoIds.join(",")).then((res) => {});
+      },
+      // editorSave(val) {
+      //   this.editorValue = val;
+      //   this.showEditor = false;
+      // },
+      showwaitAdd() {
+        this.showEditor = true;
+      },
+      chooseEmoji(name) {
+        insertText(this.$refs.textarea.$el.children[1], name);
+      },
+      editson() {
+        this.isEdit = false;
+      },
+      saveSon() {
+        this.isEdit = true;
+        //然后发请求
+      },
+      confirmWarnList(warn, user) {
+        this.$nextTick((_) => {
+          this.modal1 = false;
+        });
+      },
+      // 添加参与者
+      saveInvolveMember(detailList) {
+        updateTaskJoin(this.task.taskId, detailList).then((res) => {
+          if (res.result === 1) {
+            // this.task.joinInfo.unshift(res.data)
+          }
+        });
+      },
+      random_string(len) {
+        len = len || 32;
+        var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+        var maxPos = chars.length;
+        var pwd = "";
+        for (var i = 0; i < len; i++) {
+          pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+        return pwd;
+      },
+      get_suffix(filename) {
+        var pos = filename.lastIndexOf(".");
+        var suffix = "";
+        if (pos !== -1) {
+          suffix = filename.substring(pos);
+        }
+        return suffix;
+      },
+      // 去分享详情
+      goShareDetail(shareId) {
+        // alert(shareId);
+        this.$router.push(`/project/${this.$route.params.id}/share_detail/${shareId}`);
+      },
+      closeModal() {
+        this.$emit("close");
+      },
+      //修改任务状态
+      taskStatusChange() {},
     },
-    random_string(len) {
-      len = len || 32;
-      var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-      var maxPos = chars.length;
-      var pwd = "";
-      for (var i = 0; i < len; i++) {
-        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-      }
-      return pwd;
-    },
-    get_suffix(filename) {
-      var pos = filename.lastIndexOf(".");
-      var suffix = "";
-      if (pos !== -1) {
-        suffix = filename.substring(pos);
-      }
-      return suffix;
-    },
-    // 去分享详情
-    goShareDetail(shareId) {
-      // alert(shareId);
-      this.$router.push(`/project/${this.$route.params.id}/share_detail/${shareId}`);
-    },
-    closeModal() {
-      this.$emit("close");
-    },
-    //修改任务状态
-    taskStatusChange() {},
-  },
-};
+  };
 </script>
 <style lang="less" scoped>
-@import "./taskdetail";
-.task-header {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #e8eaec;
-  height: 60px;
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  .details-scenario-config {
-    background: #f2fbff;
-    border-radius: 4px;
-    padding: 4px 8px 4px 4px;
-    cursor: not-allowed;
-    width: 64px;
-    height: 28px;
-    text-align: center;
-    
-    .task-header-flag {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: #1b9aee;
-      font-weight: 500;
+  @import "./taskdetail";
+
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e8eaec;
+    height: 60px;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    .details-scenario-config {
+      background: #f2fbff;
+      border-radius: 4px;
+      padding: 4px 8px 4px 4px;
+      cursor: not-allowed;
+      width: 64px;
+      height: 28px;
+      text-align: center;
+
+      .task-header-flag {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #1b9aee;
+        font-weight: 500;
+      }
     }
-  }
-  .task-header-back {
+
+    .task-header-back {
       display: flex;
       align-items: center;
       margin-left: 10px;
+
       &:hover {
         color: #1b9aee;
       }
+
       .backEdit {
         cursor: pointer;
       }
     }
-  .task-header-handle {
-    i {
-      color: "#999";
-      &:hover {
-        background-color: #ecf6fe;
-        color: #1b9aee;
-        border-radius: 4px;
-      }
-    }
-  }
-}
-.task-content {
-  display: flex;
-  .task-content-left {
-    height: calc(100vh - 130px);
-    flex: 6;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-left: 20px;
-    padding-top: 20px;
-    .task-title {
-      width: 670px;
-      .task-title-input {
-        white-space:normal;
-        word-wrap:break-word;
-        word-break:break-all;
-        width:670px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        padding-left: 8px;
-        color: #262626;
-        position: relative;
-        word-break: break-word;
-        font-size: 20px;
-        border: 0 none;
-        outline-style: none;
-        &:not(.readonly):not(.disabled):focus {
-          background-color: #f7f7f7;
-          width: 670px;
-        }
-        &:not(.readonly):not(.disabled):hover {
-          background-color: #f7f7f7;
-          width: 670px;
+
+    .task-header-handle {
+      i {
+        color: "#999";
+
+        &:hover {
+          background-color: #ecf6fe;
+          color: #1b9aee;
+          border-radius: 4px;
         }
       }
     }
   }
-}
-.demo-upload-list {
-  display: inline-block;
-  width: 164px;
-  height: 110px;
-  text-align: center;
-  line-height: 110px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
-  position: relative;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  margin-right: 4px;
-}
+
+  .task-content {
+    display: flex;
+
+    .task-content-left {
+      height: calc(100vh - 130px);
+      flex: 6;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-left: 20px;
+      padding-top: 20px;
+
+      .task-title {
+        width: 670px;
+
+        .task-title-input {
+          white-space: normal;
+          word-wrap: break-word;
+          word-break: break-all;
+          width: 670px;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          padding-left: 8px;
+          color: #262626;
+          position: relative;
+          word-break: break-word;
+          font-size: 20px;
+          border: 0 none;
+          outline-style: none;
+
+          &:not(.readonly):not(.disabled):focus {
+            background-color: #f7f7f7;
+            width: 670px;
+          }
+
+          &:not(.readonly):not(.disabled):hover {
+            background-color: #f7f7f7;
+            width: 670px;
+          }
+        }
+      }
+    }
+  }
+
+  .demo-upload-list {
+    display: inline-block;
+    width: 164px;
+    height: 110px;
+    text-align: center;
+    line-height: 110px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-right: 4px;
+  }
 </style>

@@ -1789,7 +1789,16 @@ export function articleClass(data) {
 //关注/取关
 export function attentionUserStatus(data) {
     return fetch({
-        url: `/article/attentionUserStatus`,
+        url: `/article/attentionUser`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//判断是否关注过目标用户
+export function judgeIsAttention(data) {
+    return fetch({
+        url: `/article/judgeIsAttention`,
         method: 'get', // 请求方法
         params: data
     })
