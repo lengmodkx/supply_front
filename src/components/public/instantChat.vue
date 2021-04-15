@@ -24,7 +24,8 @@
         <TabPane label="群聊" name="group">
           <div>
             <ul class="chat-list">
-              <li class="chat-list-item df" :class="{ check: index == listIndex }" v-for="(item, index) in userList['group']" :key="item.groupid" @click="select2(item, item.groupid, index)">
+              <!-- userList['group'] -->
+              <li class="chat-list-item df" :class="{ check: index == listIndex }" v-for="(item, index) in groupList" :key="item.groupid" @click="select2(item, item.groupid, index)">
                 <img src="../../assets/images/instantChat.png" alt />
                 <div class="text-content">
                   <div>
@@ -149,10 +150,10 @@
 import Emoji from "@/components/public/common/emoji/Emoji";
 import insertText from "@/utils/insertText";
 import upFile from "../project/pages/index/chatUpFile";
-import { sendChat, getChat, recall } from "../../axios/api";
+import { sendChat, getChat, recall, saveWebIM } from "../../axios/api";
 import { mapActions, mapState, mapGetters } from "vuex";
 import moment from "moment";
-
+import { getGroups } from "@/axios/companyApi";
 export default {
   name: "App",
   components: { Emoji, upFile },
@@ -172,13 +173,31 @@ export default {
       filetip: false,
       progressPer: 0, //进度条
       fileName: "",
+      groupData: [],
+      webIMgroupId: "", //当前选择的环信群组id
+      aldgroupId:'', //当前选择的阿拉丁群组id
+      groupList: [],
+
     };
   },
   mounted() {
     if (this.changeName == "group") {
-          this.getGroupUserList().then((res) => {
-            this.select2(this.userList[this.changeName][0], this.userList[this.changeName][0].groupid, 0);
+      this.getGroupUserList().then((res) => {
+        //获取群组信息
+        getGroups(localStorage.companyId).then((res) => {
+          this.groupData = res.data;
+          //筛选出本企业的群聊
+          this.groupData.map((p) => {
+            this.userList[this.changeName].map((v) => {
+              if (p.consulGroup == v.groupid) {
+                v.aldgroupId = p.groupId;
+                this.groupList.push(v);
+              }
+            });
           });
+          this.select2(this.groupList[0], this.groupList[0].groupid, 0);
+        });
+      });
     } else {
       this.projectName = this.userInfoList.userEntity.userName;
       this.select();
@@ -293,6 +312,7 @@ export default {
               });
             }, 500);
           }
+          this.saveWebIMMessage();
         });
       }
     },
@@ -354,6 +374,8 @@ export default {
       if (this.changeName == "group") {
         this.projectName = key.name;
         this.listIndex = listIndex;
+        this.webIMgroupId = index;
+        this.aldgroupId=key.aldgroupId
       }
       this.select(key);
       this.$data.activedKey[this.changeName] = key;
@@ -423,15 +445,16 @@ export default {
       this.$nextTick(() => {
         var div = document.getElementById("data-list-content");
         div.scrollTop = div.scrollHeight + 1;
+        this.saveWebIMMessage()
         if (this.changeName == "group") {
           setTimeout(() => {
-            console.log('进入群组回调')
+            console.log("进入群组回调");
             this.select2(this.$data.activedKey[this.changeName], this.projectName, this.listIndex);
           }, 500);
         }
         if (this.changeName == "contact") {
           setTimeout(() => {
-            console.log('进入单聊回调')
+            console.log("进入单聊回调");
             this.onGetCurrentChatObjMsg({
               type: this.changeName,
               id: this.userInfoList.userEntity.accountName,
@@ -439,6 +462,23 @@ export default {
           }, 500);
         }
       });
+    },
+    saveWebIMMessage() {
+      if (this.changeName === "group") {
+        //获取群组信息
+        let data = {
+          contentFrom: 1,
+          hxGroupId: this.webIMgroupId,
+          groupId: this.aldgroupId,
+        };
+        saveWebIM(data);
+      } else if (this.changeName === "contact") {
+        let data = {
+          memberId: this.userInfoList.userEntity.userName,
+          contentFrom: 0,
+        };
+        saveWebIM(data);
+      }
     },
   },
 };

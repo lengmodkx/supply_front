@@ -25,6 +25,7 @@
     "jszip": "^3.2.0",
     "mockjs": "^1.1.0",
     "moment": "^2.24.0",
+    "mqtt": "^4.2.6",
     "quill": "^1.3.7",
     "sockjs-client": "^1.0.0",
     "stompjs": "^2.3.3",

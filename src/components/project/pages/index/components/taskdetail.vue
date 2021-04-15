@@ -490,11 +490,13 @@
                       {{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}
                     </p>
                   </div>
-                  <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" :action="host"
-                    :data="uploadData" :on-success="handleSuccess" type="drag">
-                    <div style="width: 117px; height: 117px; display:flex;justify-content: center;align-items: center">
-                      <Icon type="ios-add" size="20" />
-                    </div>
+                  <Upload ref="upload" :show-upload-list="false" multiple
+                      :before-upload="handleBeforeUpload" :action="host"
+                      :data="uploadData"  :on-success="handleSuccess"
+                       type="drag">
+                      <div style="width: 117px; height: 117px; display:flex;justify-content: center;align-items: center">
+                          <Icon type="ios-add" size="20" />
+                      </div>
                   </Upload>
                 </div>
               </div>
