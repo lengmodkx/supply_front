@@ -374,10 +374,10 @@
           <CheckboxGroup v-model="social" @on-change="peopleCheck">
             <li v-for="(item, index) in allOrgPeople" :key="index" @click="checkedPeople(index)">
               <div>
-                <Checkbox :label="item.userEntity.userId" class="df people-check">
+                <Checkbox :label="item.memberId" class="df people-check">
                   <div class="df">
-                    <img :src="item.userEntity.image" alt />
-                    <p>{{ item.userEntity.userName }}</p>
+                    <img :src="item.image" alt />
+                    <p>{{ item.userName }}</p>
                   </div>
                 </Checkbox>
               </div>
@@ -611,7 +611,7 @@ export default {
     ...mapActions(["addfirend"]),
 
     mdClose(index) {
-      this.$set(this.peopleList[index].userEntity, "visible", false);
+      this.$set(this.peopleList[index], "visible", false);
     },
     returnBack() {
       this.visible = false;
@@ -651,6 +651,7 @@ export default {
             i.isChecked = false;
           });
           this.peopleList = res.data.members;
+          this.peopleList = this.peopleList.map(item=>{item.visible=false;return item;})
           this.allOrgPeople = res.data.members;
           this.departmentTreeNew = res.data.partment;
           if (this.$route.query.from == "home") {
@@ -1226,16 +1227,17 @@ export default {
     },
     //单聊
     startChat() {
-      addFriend(
-        localStorage.accountName,
-        this.userInfoList.userEntity.accountName
-      ).then(val => {
-        if (val.uri) {
-          this.showGroupChat = true;
-          this.groupStepInfo = false;
-          this.changeName = "contact";
-        }
-      });
+      this.$Message.info('此功能待开发！');
+      // addFriend(
+      //   localStorage.accountName,
+      //   this.userInfoList.userEntity.accountName
+      // ).then(val => {
+      //   if (val.uri) {
+      //     this.showGroupChat = true;
+      //     this.groupStepInfo = false;
+      //     this.changeName = "contact";
+      //   }
+      // });
     },
     loginWebIm() {
       this.onLogin({
