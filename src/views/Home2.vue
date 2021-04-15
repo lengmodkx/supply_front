@@ -278,7 +278,6 @@
         },
         articleInfoList: {},
         searchBarFixed: false,
-        fatherWidth: '0px',
         tabName: 'dt',
         tabList: [{
             label: '动态',
@@ -328,10 +327,6 @@
     mounted() {
       this.mountedMethods()
       let _this = this
-      this.fatherWidth = this.$refs.father.offsetWidth + 'px'
-      window.onresize = () => {
-        this.fatherWidth = this.$refs.father.offsetWidth + 'px'
-      }
       document.querySelector('#layout-right').addEventListener('scroll', this.handleScroll)
     },
     methods: {
