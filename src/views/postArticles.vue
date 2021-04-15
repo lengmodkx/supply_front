@@ -276,7 +276,9 @@
                 headers: {
                     "x-auth-token": localStorage.token
                 },
-                name: ""
+                name: "",
+                uploadListHtml: [],
+
             };
         },
         mounted() {
@@ -516,6 +518,40 @@
                     }
                 ]
             }, ]
+             this.editor.customConfig.zIndex = 1;
+                // 将图片大小限制为 2M
+                this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024
+                var that = this;
+                // this.editor.customConfig.uploadImgServer = '/upload'  // 上传图片到服务器
+                this.editor.customConfig.customUploadImg = function (files, insert) {
+                    // files 是 input 中选中的文件列表
+                    // insert 是获取图片 url 后，插入到编辑器的方法
+                    that.uploadListHtml = files
+                    that.uploadListHtml.forEach((file, index) => {
+                        let dir = ''
+                        dir = "upload/articles/" + that.$moment().format('YYYY-MM-DD') + "/";
+                        return oss(dir, file.name).then(res => {
+                            //创建一个空对象实例
+                            var formData = new FormData();
+                            formData.append('key', res.key); //存储在oss的文件路径
+                            formData.append('OSSAccessKeyId', res.OSSAccessKeyId); //accessKeyId
+                            formData.append('policy', res.policy); //policy
+                            formData.append('signature', res.signature); //签名
+                            formData.append('success_action_status', '200'); //成功后返回的操作码
+                            // 将文件存入file下面，这个一定要放到最后！！！不然会出错
+                            formData.append("file", file);
+                            var url = res.host
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('post', url, true);
+                            xhr.send(formData)
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState == 4 && xhr.status == 200) {
+                                   insert(res.host + '/' + res.key)
+                                }
+                            }
+                        });
+                    });
+                }
             this.editor.create();
             if (this.$route.params.type == "edit") {
                 this.editMethod();
@@ -969,5 +1005,12 @@
         font-family: SimSun;
         font-size: 14px;
         color: #ed4014;
+    }
+    .w-e-text {
+        p {
+            img {
+                max-width: 100%;
+            }
+        }
     }
 </style>
