@@ -134,11 +134,11 @@
               <Col span="9">
                 <div class="group-people-con">
                   <Checkbox :label="item.memberId" :disabled="item.organizationLable==1">
-                    <img :src="item.userEntity.image" alt />
+                    <img :src="item.image" alt />
                   </Checkbox>
                   <div @click="showUserInfoModal(item)" style="width:100%;">
-                    <p class="userName">{{ item.userEntity.userName }}</p>
-                    <div class="userPhone">{{item.userEntity.accountName}}</div>
+                    <p class="userName">{{ item.userName }}</p>
+                    <div class="userPhone">{{item.phone}}</div>
                   </div>
                   <!-- </Checkbox> -->
                 </div>
@@ -165,7 +165,7 @@
                   placement="bottom"
                   transfer
                   width="280"
-                  v-model="item.userEntity.visible"
+                  v-model="item.visible"
                   popper-class="operationBubble"
                 >
                   <a href="javascript:void(0)">
@@ -210,7 +210,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div slot="content" v-show=" visible " style="padding:8px 16px;">
+                  <div slot="content" v-show="visible " style="padding:8px 16px;">
                     <div style="margin-top:10px;margin-bottom:10px">
                       <span>
                         添加至
@@ -396,7 +396,6 @@ import { changeUser } from "@/axios/api2.js";
 import {
   initOrgMemberNew,
   addBranchPeople,
-  removeBranchPeople,
   searchOrgMembers,
   lockUser
 } from "@/axios/companyApi";
@@ -454,8 +453,7 @@ export default {
   },
   created() {
     this.getDepartmentTree({ orgId: localStorage.companyId, departmentId: "" });
-    this.actionUrl =
-      "/api/organization/members/impUser/" + localStorage.companyId;
+    this.actionUrl = "/api/organization/members/impUser/" + localStorage.companyId;
     this.loading = true;
     this.flag = 0;
     this.getList();
@@ -468,6 +466,7 @@ export default {
       initOrgMemberNew(localStorage.companyId, this.flag,memberLabel).then(res => {
         if (res.result == 1) {
           this.peopleList = res.data.members;
+          this.peopleList = this.peopleList.map(item=>{item.visible=false;return item;})
           this.departmentTreeNew = res.data.partment;
         }
         this.loading = false;
