@@ -574,7 +574,8 @@
   import fileDetail from "./fileDetail";
   import {
     mapState,
-    mapActions
+    mapActions,
+    mapMutations
   } from "vuex";
   import Loading from "@/components/public/common/Loading.vue";
   import {
@@ -675,6 +676,7 @@
     },
     methods: {
       ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
+      ...mapMutations("task", ["setTaskId"]),
       handleBeforeUpload(file) {
         var that = this;
         let dir = 'upload/file/'
@@ -752,9 +754,9 @@
       },
       //返回
       back() {
+        this.setTaskId(this.task.parentId);
         this.backButton = false;
         this.editTask(this.task.parentId);
-        this.$Message.loading("正在加载中...", 0);
       },
       //修改任务名称
       updateTaskName() {
@@ -841,6 +843,7 @@
         });
       },
       showaa(taskId) {
+        this.setTaskId(taskId);
         this.backButton = true;
         this.$store.dispatch("task/editTask", taskId);
       },
