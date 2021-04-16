@@ -153,7 +153,7 @@
                 joinBidding(this.param).then(response => {
                     this.$Message.success('参与竞标成功!');
                     //跳支付
-                    // this.$router.push("/org/" + localStorage.companyId);
+                    this.$router.push("/ipostedit");
                 })
 
             }

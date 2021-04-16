@@ -48,7 +48,7 @@
                             <div class="text-muted">报价：{{item.bid}}</div>
                             <div class="df ac jsb">
                                 <div class="text-muted">联系电话：{{item.organizationPhone}}</div>
-                                <Button type="primary" size="small">达成合作</Button>
+                                <Button type="primary" size="small" @click="cooperation(item)" v-if="item.memberId !=userId">达成合作</Button>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,8 @@
     import Loading from "../components/public/common/Loading.vue";
 
     import {
-        demandInfos
+        demandInfos,
+        reachCooperation
     } from '@/axios/api'
     export default {
         components: {
@@ -120,6 +121,18 @@
                     this.bidingList = response.data.bidList
                     this.loading = false
 
+                })
+            },
+            cooperation(item) {
+                let data = {
+                    demandId: this.demandInfo.demandId,
+                    id: item.id
+                }
+                reachCooperation(data).then(response => {
+                    this.$Message.success('已达成合作')
+                    this.$router.push({
+                        path: '/ipostedit',
+                    })
                 })
             }
         }

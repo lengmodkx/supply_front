@@ -1914,6 +1914,16 @@ export function demandRemove(data) {
     })
 }
 
+//达成合作
+export function reachCooperation(data) {
+    return fetch({
+        url: `/demandBid/successBidding`,
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+
 //保存问答
 export function questionAdd(data) {
     return fetch({
