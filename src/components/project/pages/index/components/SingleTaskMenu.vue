@@ -200,7 +200,7 @@
     props: ["data"],
     data() {
       return {
-        link: "https://www.baidu.com",
+        link: "",
         initCom: true,
         visible: false,
         unlock: true,
@@ -223,7 +223,8 @@
         model10: "",
         model1: "",
         model2: "",
-        model3: ""
+        model3: "",
+        projectId: this.$route.params.id
       };
     },
     computed: {
@@ -232,11 +233,6 @@
       }
     },
     mounted() {
-      // if (this.unlock) {
-      //   this.data.privacyPattern = 0;
-      // } else {
-      //   this.data.privacyPattern = 1;
-      // }
       if (this.data.privacyPattern == 0) {
         this.unlock = true
       } else {
@@ -261,7 +257,7 @@
       updatePrivate() {
         this.unlock = !this.unlock;
         var privacy = this.unlock ? 0 : 1;
-        updateTaskPrivacy(this.data.taskId, privacy);
+        updateTaskPrivacy(this.data.taskId, privacy,this.projectId);
       },
       saveTitle() {
         this.visible = false;
@@ -346,7 +342,6 @@
       //任务移入回收站
       recycle() {
         this.active = "";
-        //taskToRecycle(this.data.taskId);
         var data = {
           publicId: this.data.taskId,
           publicType: 'task',

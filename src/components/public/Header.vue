@@ -143,7 +143,8 @@
                   this.$store.commit("project/deleteProject", result.object);
                   break;
                 default:
-                  this.$store.commit("news/addNews", result.message);
+                  console.log(result)
+                  this.$store.commit("news/getNewsCount", result.data);
                   break;
               }
             });

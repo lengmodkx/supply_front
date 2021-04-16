@@ -75,16 +75,9 @@
 </template>
 <script>
 import {
-  collectTask,
-  updateTaskPrivacy,
-  cancelCollect,
-  taskToRecycle,
   getStarProjectList,
   getGroupList,
   getMenuList,
-  copyTask,
-  moveTask,
-  delProject,
   delRWProject,
   delFXProject,
   delRCProject,

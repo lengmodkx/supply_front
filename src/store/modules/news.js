@@ -19,30 +19,6 @@ const store = {
                     state.news.splice(i,1)
                 }
             })
-        },
-        addNews(state,data){
-            var i = 0
-            if(state.news.length === 0){
-                state.newsCount++
-                state.news.push(data)
-            } else{
-                state.news.forEach((n,index) => {
-                    if(n.newsId === data.newsId){
-                        state.news[index].newsContent = data.newsContent
-                        state.news[index].newsName = data.newsName
-                        state.news[index].updateTime = data.updateTime
-                        state.news[index].newsFromUser.defaultImage = data.newsFromUser.defaultImage
-                        state.news[index].newsCount++
-                        state.news[index].newsHandle = 0
-                        state.newsCount++
-                        i = 1;
-                    }
-                })
-                if(i === 0){
-                    state.newsCount++
-                    state.news.unshift(data)
-                }
-            }
         }
     },
     actions:{

@@ -233,7 +233,7 @@
 </template>
 <script>
 import { editMenuName, addMenu, setAllTaskEndTime, moveAllTask, copyAllTask } from "@/axios/relation";
-import { collectTask, updateTaskPrivacy, cancelCollect, taskToRecycle, getStarProjectList, getGroupList, getMenuList, copyTask, getmemberList, moveTask, taskAllToRecycle } from "@/axios/api";
+import { getStarProjectList, getGroupList, getMenuList, getmemberList, taskAllToRecycle } from "@/axios/api";
 
 import { setAllTaskExecutor, deleteList } from "@/axios/relation";
 import { debuglog } from "util";
