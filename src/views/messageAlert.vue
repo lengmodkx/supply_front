@@ -54,7 +54,7 @@
               @click.prevent.native="handleCheckAll"
             >&nbsp;&nbsp;公告标题</Checkbox>
           </Col>
-          <Col span="5">时间</Col>
+          <Col span="5">更新时间</Col>
           <Col span="10">操作</Col>
         </Row>
         <div class="scroll-box">
@@ -76,7 +76,7 @@
                   </Checkbox>
                 </div>
               </Col>
-              <Col span="5">{{ $moment(item.createTime).format("YYYY年MM月DD日") }}</Col>
+              <Col span="5">{{ $moment(item.updateTime).format("YYYY年MM月DD日 HH:mm:ss") }}</Col>
               <Col span="10">{{ item.newsContent }}</Col>
             </Row>
           </CheckboxGroup>
