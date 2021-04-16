@@ -236,7 +236,7 @@
                   <!-- <Input-number class="scheduleTop" :max="100" :min="0" v-model="task.progress" @on-change="scheduleChange"  :formatter="value => `${value}%`"
             :parser="value => value.replace('%', '')" placeholder="请填写进度，0至100"></Input-number> -->
                   <div>
-                    <Slider v-model="task.progress" show-input @on-change="scheduleChange"></Slider>
+                    <Slider v-model="task.progress" @on-change="scheduleChange" :tip-format="format"></Slider>
                   </div>
 
                   <div class="scheduleBottom" v-show="showSchedule">
@@ -542,10 +542,10 @@
           </div>
         </div>
       </div>
-      <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer
+      <!-- <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer
         :width="500">
         <common-file @close="showCommon = false" :projectId="task.projectId" :publicId="task.taskId"></common-file>
-      </Modal>
+      </Modal> -->
       <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
         <fileDetail v-if="showFileDetail" :file="file"></fileDetail>
       </Modal>
@@ -591,13 +591,15 @@
     taskExecutor,
     cancle,
     progress,
+    upStartTime,
+    upEndTime,
+    addChildTask
   } from "@/axios/api";
   import {
     setSysClip,
     bind_files
   } from "@/axios/api2.js";
   import {
-    downloadFile,
     getFileDetails,
     deleteFile
   } from "@/axios/fileApi";
@@ -675,7 +677,7 @@
       },
     },
     methods: {
-      ...mapActions("task", ["editTask", "updateStartTime", "updateEndTime", "addChildrenTask"]),
+      ...mapActions("task", ["editTask"]),
       ...mapMutations("task", ["setTaskId"]),
       handleBeforeUpload(file) {
         var that = this;
@@ -712,6 +714,9 @@
       },
 
       //进度
+      format (val) {
+        return '进度为: ' + val + '%';
+      },
       scheduleChange(data) {
         this.showSchedule = true;
       },
@@ -723,6 +728,7 @@
         const data = {
           taskId: this.task.taskId,
           progress: this.task.progress,
+          projectId: this.projectId
         };
         progress(data).then((res) => {
           this.showSchedule = false;
@@ -760,7 +766,7 @@
       },
       //修改任务名称
       updateTaskName() {
-        updateTaskName(this.task.taskId, this.$refs.taskName.innerHTML).then((data) => {});
+        updateTaskName(this.task.taskId, this.$refs.taskName.innerHTML,this.projectId).then((data) => {});
       },
       //文件下载
       downLoad(fileId) {
@@ -802,7 +808,7 @@
           return;
         }
         this.beizhuContent = this.$refs.editor.content;
-        updateTaskRemarks(this.task.taskId, this.beizhuContent).then((res) => {
+        updateTaskRemarks(this.task.taskId, this.beizhuContent,this.projectId).then((res) => {
           if (res.result === 1) {
             this.showEditor = false;
           }
@@ -810,19 +816,15 @@
       },
       // 删除执行者
       deleteExecutor(taskId) {
-        taskExecutor(taskId, "").then((res) => {});
+        taskExecutor(taskId, "",this.projectId);
       },
       // 子任务执行者
-      ZrwChooseZxz(data, taskid) {
-        taskExecutor(taskid, data).then((res) => {
-          // console.log(res);
-        });
+      ZrwChooseZxz(data, taskId) {
+        taskExecutor(taskId, data,this.projectId);
       },
       // 选择执行者
-      chooseZxz(data, taskid) {
-        taskExecutor(taskid, data).then((res) => {
-          // console.log(res);
-        });
+      chooseZxz(data, taskId) {
+        taskExecutor(taskId, data,this.projectId);
       },
       //取消关联
       cancle(id) {
@@ -848,11 +850,11 @@
         this.$store.dispatch("task/editTask", taskId);
       },
       changePriority(priority) {
-        updatePriority(this.task.taskId, priority).then((item) => {});
+        updatePriority(this.task.taskId, priority,this.projectId);
       },
       //更改任务的重复性
       updateRepeat(repeat) {
-        updateRepeat(this.task.taskId, repeat);
+        updateRepeat(this.task.taskId, repeat,this.projectId);
       },
       //更改任务的状态
       updateTaskStatus(taskId, taskStatus, isChild, index) {
@@ -880,14 +882,10 @@
           this.$Message.error("请输入子任务内容");
           return;
         }
-        this.addChildrenTask({
-          taskId: this.task.taskId,
-          taskName: this.son,
-          projectId: this.projectId
-        });
+        addChildTask(this.task.taskId,this.son,this.projectId);
         this.showSontask = false;
         this.son = "";
-        this.$Message.success("保存成功");
+        this.$Message.success("添加成功");
       },
       confirmSonDate(date) {
         this.task.sontaskDate = date;
@@ -896,32 +894,18 @@
         this.task.sontaskDate = "";
       },
       confirm1(date) {
-        this.updateStartTime({
-          taskId: `${this.task.taskId}`,
-          date: new Date(date).getTime(),
-        });
-        // this.task.startTime = date
-        // this.$forceUpdate()
+        upStartTime(this.task.taskId,new Date(date).getTime(),this.projectId);
       },
       // 清空时间
       clearTime(type) {
         if (type === "截止") {
-          this.updateEndTime({
-            taskId: `${this.task.taskId}`,
-            date: "0",
-          });
+          upEndTime(this.task.taskId,"0",this.projectId);
         } else if (type === "开始") {
-          this.updateStartTime({
-            taskId: `${this.task.taskId}`,
-            date: "0",
-          });
+          upStartTime(this.task.taskId,"0",this.projectId);
         }
       },
       confirm2(date) {
-        this.updateEndTime({
-          taskId: `${this.task.taskId}`,
-          date: new Date(date).getTime(),
-        });
+        upEndTime(this.task.taskId,new Date(date).getTime(),this.projectId);
       },
       deleteStart() {
         this.task.startDate = "";
@@ -952,7 +936,7 @@
         // if (id == 3) return; //需获取当前登录用户id判断
         let index = this.joinInfoIds.indexOf(id);
         this.joinInfoIds.splice(index, 1);
-        updateTaskJoin(this.task.taskId, this.joinInfoIds.join(",")).then((res) => {});
+        updateTaskJoin(this.task.taskId, this.joinInfoIds.join(","),this.projectId);
       },
       // editorSave(val) {
       //   this.editorValue = val;
@@ -978,11 +962,7 @@
       },
       // 添加参与者
       saveInvolveMember(detailList) {
-        updateTaskJoin(this.task.taskId, detailList).then((res) => {
-          if (res.result === 1) {
-            // this.task.joinInfo.unshift(res.data)
-          }
-        });
+        updateTaskJoin(this.task.taskId, detailList, this.projectId);
       },
       random_string(len) {
         len = len || 32;

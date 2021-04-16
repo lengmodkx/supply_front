@@ -127,6 +127,8 @@ export default {
               case "A20":
               case "A30":
               case "A31":
+              case "A32":
+              case "A33":
                 this.$store.dispatch("task/changeTask", result.object);
                 break;
               case "A13":

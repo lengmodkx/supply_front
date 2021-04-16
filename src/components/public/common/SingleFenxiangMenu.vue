@@ -110,7 +110,7 @@
 <script>
 import Clipboard from "clipboard";
 import addShare from "../../project/share/AddShare";
-import { collectTask, cancelCollect, taskToRecycle, getStarProjectList, getGroupList, getMenuList, copyShare, moveShare, recycleShare, privacyShare, topShare } from "@/axios/api";
+import { collectTask, cancelCollect, getStarProjectList, getGroupList, getMenuList, copyShare, moveShare, recycleShare, privacyShare, topShare } from "@/axios/api";
 
 export default {
   props: ["data", "name", "projectId"],

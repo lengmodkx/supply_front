@@ -116,7 +116,7 @@
 <script>
     import Clipboard from 'clipboard'
     import {copyRc, removeRc, recycleRc, privacy} from '@/axios/scheduleApi'
-    import {collectTask,cancelCollect,taskToRecycle,getStarProjectList,getGroupList,getMenuList,copyTask} from "@/axios/api";
+    import {collectTask,cancelCollect,getStarProjectList,getGroupList,getMenuList} from "@/axios/api";
 
     export default {
         props: ['data','name'],

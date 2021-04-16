@@ -3,17 +3,8 @@ import {
     getmemberList,
     initEditTask,
     getTaskFiles,
-    upStartTime,
-    upEndTime,
-    addChildTask,
     group
 } from "../../axios/api.js";
-import {
-    resolve
-} from "url";
-import {
-    reject
-} from "q";
 const store = {
     namespaced: true,
     state: {
@@ -447,24 +438,7 @@ const store = {
                 }
             })
         },
-        // 更新任务开始时间
-        updateStartTime({
-            commit
-        }, value) {
-            upStartTime(value.taskId, value.date);
-        },
-        // 更新任务结束时间
-        updateEndTime({
-            commit
-        }, value) {
-            upEndTime(value.taskId, value.date);
-        },
-        // 添加子任务
-        addChildrenTask({
-            commit
-        }, value) {
-            addChildTask(value.taskId, value.taskName,value.projectId);
-        },
+
         changeTask({
             dispatch,
             commit

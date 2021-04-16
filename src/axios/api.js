@@ -423,51 +423,46 @@ export function addTask(data) {
 }
 
 // 修改任务名称
-export function updateTaskName(taskId, taskName) {
+export function updateTaskName(taskId, taskName,projectId) {
     return fetch({
         url: `${api.tasks}/${taskId}/name`,
         method: "put", // 请求方法
         params: {
-            taskName: taskName
+            taskName: taskName,
+            projectId:projectId
         }
     });
 }
 
 // 修改任务名称
-export function updateRepeat(taskId, repeat) {
+export function updateRepeat(taskId, repeat,projectId) {
     return fetch({
         url: `${api.tasks}/${taskId}/repeat`,
         method: "put", // 请求方法
         params: {
-            repeat: repeat
+            repeat: repeat,
+            projectId: projectId
         }
     });
 }
 
 // 修改任务优先级
-export function updatePriority(taskId, priority) {
+export function updatePriority(taskId, priority,projectId) {
     return fetch({
         url: `${api.tasks}/${taskId}/priority`,
         method: "put", // 请求方法
         params: {
-            priority: priority
+            priority: priority,
+            projectId: projectId
         }
     });
 }
 
 // 任务移入回收站
-// export function taskToRecycle(taskId) {
-
-//     return $put(`/tasks/${taskId}/recyclebin`);
-// }
-
 export function taskToRecycle(params) {
 
     return $post(`/recycle_bin/move_task_rb`, params);
 }
-
-
-
 
 //移动所有任务到回收站
 export function taskAllToRecycle(menuId) {
@@ -724,9 +719,10 @@ export function getMenuList(groupId) {
 }
 
 /** 更新任务的参与者 */
-export function updateTaskJoin(taskId, joinIds) {
+export function updateTaskJoin(taskId, joinIds,projectId) {
     return $put(`/tasks/${taskId}/members`, {
-        taskUids: joinIds
+        taskUids: joinIds,
+        projectId: projectId
     });
 }
 
@@ -815,9 +811,10 @@ export function topShare(shareId, projectId) {
 }
 
 //更改任务的隐私模式
-export function updateTaskPrivacy(taskId, privacy) {
+export function updateTaskPrivacy(taskId, privacy,projectId) {
     return $put(`/tasks/${taskId}/privacy`, {
-        privacy: privacy
+        privacy: privacy,
+        projectId: projectId
     });
 }
 
@@ -855,15 +852,17 @@ export function members(projectId) {
     return $get(`/members/${projectId}/member`, "");
 }
 // 更新任务开始时间
-export function upStartTime(taskId, startTime) {
+export function upStartTime(taskId, startTime,projectId) {
     return $put(`tasks/${taskId}/starttime`, {
-        startTime: startTime
+        startTime: startTime,
+        projectId: projectId
     })
 }
 // 更新任务结束时间
-export function upEndTime(taskId, endtime) {
+export function upEndTime(taskId, endtime,projectId) {
     return $put(`tasks/${taskId}/endtime`, {
-        endTime: endtime
+        endTime: endtime,
+        projectId: projectId
     })
 }
 // 添加子任务
@@ -1218,23 +1217,25 @@ function $get(url, params) {
 }
 
 // 修改任务执行者
-export function taskExecutor(taskId, executor) {
+export function taskExecutor(taskId, executor,projectId) {
     return fetch({
         url: `${api.tasks}/${taskId}/executor`,
         method: "put", // 请求方法
         params: {
-            executor: executor
+            userId: executor,
+            projectId:projectId
         }
     });
 }
 
 // 修改任务备注
-export function updateTaskRemarks(taskId, data) {
+export function updateTaskRemarks(taskId, data,projectId) {
     return fetch({
         url: `${api.tasks}/${taskId}/remarks`,
         method: "put", // 请求方法
         params: {
-            remarks: data
+            remarks: data,
+            projectId: projectId
         }
     });
 }

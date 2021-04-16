@@ -155,13 +155,12 @@ export default {
       const data = {
         taskId: this.task.taskId,
         workingHours: this.planHour,
+        projectId: this.$route.params.id
       };
       workHour(data).then((res) => {
         if (res.result == 1) {
           this.showplanWorkHours = true;
           this.task.planWorkHours = this.planHour;
-        }else{
-            this.$Message.error(res.msg);
         }
       });
     },
@@ -171,6 +170,7 @@ export default {
         taskId: this.task.taskId,
         hours: this.hour==''?'0':this.hour,
         hoursDate: new Date(this.dataValue).getTime(),
+        projectId: this.$route.params.id
       };
 
       additionHour(data).then((res) => {
@@ -191,8 +191,10 @@ export default {
     delTimeList(id) {
       const data = {
         id: id,
-      };
+        taskId: this.task.taskId,
+        projectId: this.$route.params.id
 
+      };
       removeTaskWorkingHours(data).then((res) => {
         this.getTimeLise();
       });
