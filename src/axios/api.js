@@ -1317,6 +1317,15 @@ export function updateUserNews(param) {
     });
 }
 
+//解绑与绑定email and phone
+export function updateEmailAndPhone(data) {
+    return fetch({
+        url: `/updateEmailAndPhone`,
+        method: "get", // 请求方法
+        params: data
+    });
+}
+
 /*
  * 检测是否进入分组权限
  */

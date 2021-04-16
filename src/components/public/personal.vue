@@ -89,14 +89,26 @@
                 <div class="information" style="background: #ffffff;">
                     <div class="account-content">
                         <div class="textContent">邮箱账号</div>
-                        <Input v-model="emailAddress" placeholder="请输入邮箱地址"></Input>
-                        <Button type="primary" class="saveBtn" @click="bindMailbox">确认绑定</Button>
+                        <div v-if="!message.email || message.email==''">
+                            <Input v-model="emailAddress" placeholder="请输入邮箱地址"></Input>
+                            <Button type="primary" class="saveBtn" @click="bindMailbox">确认绑定</Button>
+                        </div>
+                        <div v-else style="display:flex;">
+                            <div class="email">{{message.email}}</div>
+                            <Button type="error" ghost @click="unboundMailbox">解除绑定</Button>
+                        </div>
                     </div>
                     <div class="account-content">
                         <div class="textContent">手机账号</div>
-                        <div class="userPhone">{{message.telephone}}</div>
-                        <Button type="error" ghost @click="unbundling" v-if='message.telephone'>解除绑定</Button>
-                        <div class="userPhone" v-else>暂未绑定</div>
+                        <div  v-if='message.telephone' style="display:flex;">
+                            <div class="userPhone">{{message.telephone}}</div>
+                            <Button type="error" ghost @click="unbundling">解除绑定</Button>
+                        </div>
+
+                        <div v-else>
+                            <Input v-model="mobilePhone" placeholder="请输入手机号码"></Input>
+                            <Button type="primary" class="saveBtn" @click="bindPhone">确认绑定</Button>
+                        </div>
                     </div>
 
                 </div>
@@ -144,347 +156,387 @@
     </div>
 </template>
 <script>
-import {
-    findUserInfo,
-    updateUserNews,
-    weChatLogin,
-    bindWx,
-    notBindWx,
-    changePassword,
-    changeOrganization,
-    removeOrgUser,
-    notBindPhone
-} from '@/axios/api';
-import {
-    mapState,
-    mapActions
-} from "vuex";
-import {
-    oss
-} from "@/axios/ossweb";
-export default {
-    data: function () {
-        return {
-            password: {
-                old: '',
-                new: '',
-                moreNew: ''
-            },
-            //验证
-            rulesPassword: {
-                old: [{
-                    required: true,
-                    message: "请输入旧密码",
-                    trigger: "blur"
-                }],
-                new: [{
-                    required: true,
-                    message: "请输入新密码",
-                    trigger: "blur"
-                }],
-                moreNew: [{
-                    required: true,
-                    message: "请输入新密码",
-                    trigger: "blur"
-                }],
-            },
-            loading: true,
-            imageUrl: "",
-            filename: "",
-            fileName: "",
-            dirName: "upload/avatar/",
-            pic_show: true,
-            pic_hide: false,
-            activeClass: 0,
-            activeItem: '个人信息',
-            itemList: ["个人信息", "账号密码", "第三方账号", "加入企业"],
-            message: {
+    import {
+        findUserInfo,
+        updateUserNews,
+        weChatLogin,
+        bindWx,
+        notBindWx,
+        changePassword,
+        changeOrganization,
+        removeOrgUser,
+        notBindPhone,
+        updateEmailAndPhone
+    } from '@/axios/api';
+    import {
+        mapState,
+        mapActions
+    } from "vuex";
+    import {
+        oss
+    } from "@/axios/ossweb";
+    export default {
+        data: function () {
+            return {
+                password: {
+                    old: '',
+                    new: '',
+                    moreNew: ''
+                },
+                //验证
+                rulesPassword: {
+                    old: [{
+                        required: true,
+                        message: "请输入旧密码",
+                        trigger: "blur"
+                    }],
+                    new: [{
+                        required: true,
+                        message: "请输入新密码",
+                        trigger: "blur"
+                    }],
+                    moreNew: [{
+                        required: true,
+                        message: "请输入新密码",
+                        trigger: "blur"
+                    }],
+                },
+                loading: true,
+                imageUrl: "",
+                filename: "",
+                fileName: "",
+                dirName: "upload/avatar/",
+                pic_show: true,
+                pic_hide: false,
+                activeClass: 0,
+                activeItem: '个人信息',
+                itemList: ["个人信息", "账号密码", "第三方账号", "加入企业"],
+                message: {
+                    userId: localStorage.userId,
+                    defaultImage: '',
+                    userName: '',
+                    job: '',
+                    accountName: '',
+                    birthday: '',
+                    address: '',
+                    email: '',
+                    wxOpenId: '',
+                    nickName: ''
+                },
                 userId: localStorage.userId,
-                defaultImage: '',
-                userName: '',
-                job: '',
-                accountName: '',
-                birthday: '',
-                address: '',
-                email: '',
-                wxOpenId: '',
-                nickName: ''
+                yearList: [],
+                monthList: [],
+                dayList: [],
+                //验证
+                rules: {
+                    accountName: [{
+                        required: false,
+                        validator: validatePhone,
+                        trigger: 'blur'
+                    }],
+                    email: [{
+                        required: false,
+                        validator: validateEmail,
+                        trigger: 'blur'
+                    }],
+                },
+                emailAddress: '', //邮箱地址    
+                modal3: false,
+                companyId: '',
+                uploadData: {},
+                host: "",
+                headers: {
+                    "x-auth-token": localStorage.token
+                },
+                name: "",
+                mobilePhone:'',//手机号
+            }
+        },
+        computed: {
+            ...mapState("company", ["companyList"]),
+        },
+        methods: {
+            ...mapActions("user", ["initSrc", "defaultImage"]),
+            ...mapActions("company", ["initCompany"]),
+
+            // 确认密码
+            submitPassword(name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.savePassword();
+
+                    } else {
+                        this.$Message.error('填写不正确');
+                    }
+                })
             },
-            userId: localStorage.userId,
-            yearList: [],
-            monthList: [],
-            dayList: [],
-            //验证
-            rules: {
-                accountName: [{
-                    required: false,
-                    validator: validatePhone,
-                    trigger: 'blur'
-                }],
-                email: [{
-                    required: false,
-                    validator: validateEmail,
-                    trigger: 'blur'
-                }],
+            savePassword() {
+                changePassword(this.password.old, this.password.new).then(res => {
+                    if (res.result == 1) {
+                        this.$Message.success("修改密码成功");
+                        this.password.old = ''
+                        this.password.new = ''
+                        this.password.moreNew = ''
+
+                    }
+                })
             },
-            emailAddress: '', //邮箱地址    
-            modal3: false,
-            companyId: '',
-            uploadData: {},
-            host: "",
-            headers: {
-                "x-auth-token": localStorage.token
+            bind() {
+                weChatLogin("https://work.aldbim.com/personal").then(res => {
+                    if (res.result === 1) {
+                        window.location.href = res.data
+                    }
+                })
             },
-            name: ""
-        }
-    },
-    computed: {
-        ...mapState("company", ["companyList"]),
-    },
-    methods: {
-        ...mapActions("user", ["initSrc", "defaultImage"]),
-        ...mapActions("company", ["initCompany"]),
+            notBind() {
+                notBindWx(this.message.userId).then(res => {
+                    if (res.result == 1) {
+                        this.message.wxOpenId = ''
+                        this.$Message.success(res.msg);
+                    }
+                })
+            },
+            getItem(index, item) {
+                this.activeClass = index; // 把当前点击元素的index，赋值给activeClass
+                this.activeItem = item
+            },
+            resetFile() {
+                this.showupload = true;
+                this.showProgress = false;
+                this.uploadList = [];
+                this.percentage = [];
+            },
+            handleBeforeUpload(file) {
+                let dir = ''
+                dir = "upload/personal/" + this.$moment().format('YYYY-MM-DD') + "/";
+                return oss(dir, file.name).then(res => {
+                    this.host = res.host;
+                    this.uploadData = res;
+                    this.name = res.host + '/' + res.key
+                });
 
-        // 确认密码
-        submitPassword(name) {
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    this.savePassword();
-
-                } else {
-                    this.$Message.error('填写不正确');
-                }
-            })
-        },
-        savePassword() {
-            changePassword(this.password.old, this.password.new).then(res => {
-                if (res.result == 1) {
-                    this.$Message.success("修改密码成功");
-                    this.password.old = ''
-                    this.password.new = ''
-                    this.password.moreNew = ''
-
-                }
-            })
-        },
-        bind() {
-            weChatLogin("https://work.aldbim.com/personal").then(res => {
-                if (res.result === 1) {
-                    window.location.href = res.data
-                }
-            })
-        },
-        notBind() {
-            notBindWx(this.message.userId).then(res => {
-                if (res.result == 1) {
-                    this.message.wxOpenId = ''
-                    this.$Message.success(res.msg);
-                }
-            })
-        },
-        getItem(index, item) {
-            this.activeClass = index; // 把当前点击元素的index，赋值给activeClass
-            this.activeItem = item
-        },
-        resetFile() {
-            this.showupload = true;
-            this.showProgress = false;
-            this.uploadList = [];
-            this.percentage = [];
-        },
-        handleBeforeUpload(file) {
-            let dir = ''
-            dir = "upload/personal/" + this.$moment().format('YYYY-MM-DD') + "/";
-            return oss(dir, file.name).then(res => {
-                this.host = res.host;
-                this.uploadData = res;
-                this.name = res.host + '/' + res.key
-            });
-
-        },
-        handleSuccess() {
-            let data = {
-                userId: localStorage.userId,
-                image: this.name,
-            }
-            //保存
-            updateUserNews(data).then(res => {
-                if (res.result == 1) {
-                    this.message.defaultImage = this.name
-                    this.imageUrl = this.name
-                    localStorage.userImg = this.message.defaultImage;
-                    this.initSrc(this.message.defaultImage);
-                    this.$Message.success(res.msg);
-                }else {
-                    this.$Message.error(res.msg);
-                }
-            });
-        },
-        handleMaxSize(file) {
-            this.$Notice.warning({
-                title: "超过文件大小限制",
-                desc: "文件  " + file.name + " 过大, 超过2M.",
-            });
-        },
-        handleSubmit() {
-            if (this.message.accountName != null && this.message.accountName != "") {
-                if (!/^1[345789]\d{9}$/.test(this.message.accountName)) {
-                    this.$Message.error('手机号格式不正确');
-                    return;
-                }
-            }
-
-            if (this.message.email != null && this.message.email != "") {
-                if (!/^.*@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.message.email)) {
-                    this.$Message.error('邮箱格式不正确');
-                    return;
-                }
-            }
-            if (this.message.nickName == '') {
-                this.$Message.error('请输入昵称');
-                return;
-            }
-            this.save();
-        },
-        save() {
-            var that = this;
-            if (this.message.birthday != null && this.message.birthday != "") {
-                var dataEE = new Date(this.message.birthday).toJSON();
-                var birthDay = new Date(new Date(dataEE).getTime() + 8 * 3600 * 1000).toISOString().replace(/T/g,
-                    ' ').replace(/\.[\d]{3}Z/, '');
-            }
-
-            let data = {
-                userId: localStorage.userId,
-                image: this.message.defaultImage,
-                userName: this.message.userName,
-                job: this.message.job,
-                telephone: this.message.telephone,
-                birthday: birthDay,
-                address: this.message.address,
-                email: this.message.email,
-                signature: this.message.signature,
-                nickname:this.message.nickName
-            }
-            //保存
-            updateUserNews(data).then(res => {
-                if (res.result == 1) {
-                    this.$Message.info(res.msg);
-                } else {
-                    this.$Message.warning(res.msg);
-                }
-            });
-
-        },
-        info() {
-            findUserInfo(this.message.userId).then(res => {
-                //获取信息
-                if (res.result == 1) {
-                    this.loading = false;
-                    this.message = res.data;
-                }
-            })
-        },
-        
-        //验证邮箱
-        verifyMailbox(email) {
-            var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-            return reg.test(email);
-        },
-        bindMailbox() {
-            if (this.verifyMailbox(this.emailAddress)) {
+            },
+            handleSuccess() {
                 let data = {
                     userId: localStorage.userId,
-                    email: this.emailAddress,
+                    image: this.name,
+                }
+                //保存
+                updateUserNews(data).then(res => {
+                    if (res.result == 1) {
+                        this.message.defaultImage = this.name
+                        this.imageUrl = this.name
+                        localStorage.userImg = this.message.defaultImage;
+                        this.initSrc(this.message.defaultImage);
+                        this.$Message.success(res.msg);
+                    } else {
+                        this.$Message.error(res.msg);
+                    }
+                });
+            },
+            handleMaxSize(file) {
+                this.$Notice.warning({
+                    title: "超过文件大小限制",
+                    desc: "文件  " + file.name + " 过大, 超过2M.",
+                });
+            },
+            handleSubmit() {
+                if (this.message.accountName != null && this.message.accountName != "") {
+                    if (!/^1[345789]\d{9}$/.test(this.message.accountName)) {
+                        this.$Message.error('手机号格式不正确');
+                        return;
+                    }
+                }
+
+                if (this.message.email != null && this.message.email != "") {
+                    if (!/^.*@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.message.email)) {
+                        this.$Message.error('邮箱格式不正确');
+                        return;
+                    }
+                }
+                if (this.message.nickName == '') {
+                    this.$Message.error('请输入昵称');
+                    return;
+                }
+                this.save();
+            },
+            save() {
+                var that = this;
+                if (this.message.birthday != null && this.message.birthday != "") {
+                    var dataEE = new Date(this.message.birthday).toJSON();
+                    var birthDay = new Date(new Date(dataEE).getTime() + 8 * 3600 * 1000).toISOString().replace(/T/g,
+                        ' ').replace(/\.[\d]{3}Z/, '');
+                }
+
+                let data = {
+                    userId: localStorage.userId,
+                    image: this.message.defaultImage,
+                    userName: this.message.userName,
+                    job: this.message.job,
+                    telephone: this.message.telephone,
+                    birthday: birthDay,
+                    address: this.message.address,
+                    email: this.message.email,
+                    signature: this.message.signature,
+                    nickname: this.message.nickName
                 }
                 //保存
                 updateUserNews(data).then(res => {
                     if (res.result == 1) {
                         this.$Message.info(res.msg);
-                        this.emailAddress = ''
+                    } else {
+                        this.$Message.warning(res.msg);
                     }
                 });
-            } else {
-                this.$Message.error('邮箱格式不正确');
-            }
-        },
-        goBackstage(item) {
-            localStorage.companyId = item.organizationId;
-            changeOrganization(item.organizationId).then(res => {
-                if (res.result == 1) {
-                    this.$router.push('/systemSettings')
-                }
-            });
-        },
-        signOut() {
-            removeOrgUser(localStorage.userId, this.companyId, localStorage.userId).then(res => {
-                if (res.result === 1) {
-                    this.modal3 = false
-                    this.$Message.success('退出成功');
-                    this.initCompany();
-                } else {
-                    this.$Notice.warning({
-                        title: "退出失败"
-                    });
-                }
-            });
-        },
-        unbundling() {
-            notBindPhone().then(res => {
-                if (res.result == 1) {
-                    this.$Message.success('解绑成功');
-                    this.info();
-                }
-            })
-        }
-    },
-    beforeRouteEnter(to, from, next) {
-        console.log("to====from",to,from);
-        var url = location.search; //获取url中"?"符后的字串
-        var theRequest = new Object();
-        if (url.indexOf("?") != -1) {
-            var str = url.substr(1);
-            var strs = str.split("&");
-            for (var i = 0; i < strs.length; i++) {
-                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-            }
-        }
-        var code = theRequest.code
-        next(vm => {
-            if(code){
-                console.log(vm)
-                bindWx(code, vm.userId).then(res => {
+
+            },
+            info() {
+                findUserInfo(this.message.userId).then(res => {
+                    //获取信息
                     if (res.result == 1) {
-                        vm.$Message.success(res.msg);
-                        vm.info();
+                        this.loading = false;
+                        this.message = res.data;
                     }
                 })
+            },
+
+            //验证邮箱
+            verifyMailbox(email) {
+                var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+                return reg.test(email);
+            },
+            bindMailbox() {
+                if (this.verifyMailbox(this.emailAddress)) {
+                    let data = {
+                        userId: localStorage.userId,
+                        email: this.emailAddress,
+                    }
+                    //保存
+                    updateUserNews(data).then(res => {
+                        if (res.result == 1) {
+                            this.$Message.info(res.msg);
+                            this.message.email=this.emailAddress
+                            // this.emailAddress = ''
+                        }
+                    });
+                } else {
+                    this.$Message.error('邮箱格式不正确');
+                }
+            },
+            goBackstage(item) {
+                localStorage.companyId = item.organizationId;
+                changeOrganization(item.organizationId).then(res => {
+                    if (res.result == 1) {
+                        this.$router.push('/systemSettings')
+                    }
+                });
+            },
+            signOut() {
+                removeOrgUser(localStorage.userId, this.companyId, localStorage.userId).then(res => {
+                    if (res.result === 1) {
+                        this.modal3 = false
+                        this.$Message.success('退出成功');
+                        this.initCompany();
+                    } else {
+                        this.$Notice.warning({
+                            title: "退出失败"
+                        });
+                    }
+                });
+            },
+            unbundling() {
+                notBindPhone().then(res => {
+                    if (res.result == 1) {
+                        this.$Message.success('解绑成功');
+                        this.info();
+                    }
+                })
+            },
+            unboundMailbox(){  //解绑邮箱
+                 let data = {
+                        userId: localStorage.userId,
+                        email: '',
+                    }
+                    updateEmailAndPhone(data).then(res => {
+                    if (res.result == 1) {
+                        this.message.email=''
+                        this.emailAddress=''
+                        this.$Message.success('解绑邮箱成功');
+                    } else {
+                        this.$Message.error(res.msg);
+                    }
+                });
+            },
+            bindPhone(){
+                if (this.mobilePhone != null && this.mobilePhone != "") {
+                    if (!/^1[345789]\d{9}$/.test(this.mobilePhone)) {
+                        this.$Message.error('手机号格式不正确');
+                        return;
+                    }
+                }
+                let data = {
+                    userId: localStorage.userId,
+                    telephone: this.mobilePhone,
+                }
+                //保存
+                updateUserNews(data).then(res => {
+                    if (res.result == 1) {
+                        this.$Message.info(res.msg);
+                        this.message.telephone=this.mobilePhone
+                    } else {
+                        this.$Message.warning(res.msg);
+                    }
+                });
             }
-        })
-    },
-    created() {
-        this.info();
-        this.initCompany();
+
+        },
+        beforeRouteEnter(to, from, next) {
+            console.log("to====from", to, from);
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                var strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+            var code = theRequest.code
+            next(vm => {
+                if (code) {
+                    console.log(vm)
+                    bindWx(code, vm.userId).then(res => {
+                        if (res.result == 1) {
+                            vm.$Message.success(res.msg);
+                            vm.info();
+                        }
+                    })
+                }
+            })
+        },
+        created() {
+            this.info();
+            this.initCompany();
+        }
     }
-}
-const validatePhone = (rule, value, callback) => {
-    if (!value) {
-        return callback(new Error('请输入手机号'));
-    } else if (!/^1[345789]\d{9}$/.test(value)) {
-        callback('手机号格式不正确');
-    } else {
-        callback();
+    const validatePhone = (rule, value, callback) => {
+        if (!value) {
+            return callback(new Error('请输入手机号'));
+        } else if (!/^1[345789]\d{9}$/.test(value)) {
+            callback('手机号格式不正确');
+        } else {
+            callback();
+        }
     }
-}
-const validateEmail = (rule, value, callback) => {
-    if (!value) {
-        return callback(new Error('请输入邮箱'));
-    } else if (!/^.*@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
-        callback('邮箱格式不正确');
-    } else {
-        callback();
+    const validateEmail = (rule, value, callback) => {
+        if (!value) {
+            return callback(new Error('请输入邮箱'));
+        } else if (!/^.*@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+            callback('邮箱格式不正确');
+        } else {
+            callback();
+        }
     }
-}
 </script>
 <style scoped lang="less">
     .personal-box {
@@ -692,10 +744,19 @@ const validateEmail = (rule, value, callback) => {
                         padding: 10px 12px 10px 0;
                         box-sizing: border-box;
                         width: 80px;
+
+                    }
+
+                    .email {
+                        align-items: center;
+                        display: flex;
+                        margin-right: 20px;
                     }
 
                     .userPhone {
                         margin-right: 20px;
+                        align-items: center;
+                        display: flex;
                     }
 
                     .ivu-input-wrapper {
