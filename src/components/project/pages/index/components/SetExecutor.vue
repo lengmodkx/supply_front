@@ -93,7 +93,7 @@ export default {
       });
     },
     deleteExecutor() {
-      this.$parent.deleteExecutor();
+      this.$parent.deleteExecutor(this.taskId);
     },
     popHide() {
       this.searchvalue = "";

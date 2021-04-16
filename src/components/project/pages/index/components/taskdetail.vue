@@ -809,8 +809,8 @@
         });
       },
       // 删除执行者
-      deleteExecutor() {
-        taskExecutor(this.task.taskId, "").then((res) => {});
+      deleteExecutor(taskId) {
+        taskExecutor(taskId, "").then((res) => {});
       },
       // 子任务执行者
       ZrwChooseZxz(data, taskid) {
