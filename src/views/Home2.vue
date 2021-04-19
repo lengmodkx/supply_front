@@ -39,8 +39,8 @@
         </div>
         <div class="mess-content">
           <div class="df jsb mess-item" v-for="item in messageList">
-            <div>{{item.newsName}}</div>
-            <div>{{ $moment(item.updateTime).format("MM/DD") }}</div>
+            <div class="mess-tit">{{item.newsName}}</div>
+            <div >{{ $moment(item.updateTime).format("MM/DD") }}</div>
           </div>
         </div>
       </Card>
