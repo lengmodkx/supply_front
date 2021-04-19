@@ -100,7 +100,7 @@
                     </div>
                     <div class="account-content">
                         <div class="textContent">手机账号</div>
-                        <div  v-if='message.telephone' style="display:flex;">
+                        <div  v-if="message.telephone|| message.telephone !==''" style="display:flex;">
                             <div class="userPhone">{{message.telephone}}</div>
                             <Button type="error" ghost @click="unbundling">解除绑定</Button>
                         </div>
@@ -448,6 +448,8 @@
                 notBindPhone().then(res => {
                     if (res.result == 1) {
                         this.$Message.success('解绑成功');
+                        this.message.telephone=''
+                        this.mobilePhone=''
                         this.info();
                     }
                 })
