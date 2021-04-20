@@ -10,7 +10,7 @@
         <img :src="item.memberImg" alt />
         <div class="things">
           <span>{{ item.memberName }}</span>
-          <span v-html="item.content"></span>
+          <span v-html="item.content" style="word-wrap: break-word;word-break: break-all;"></span>
         </div>
         <p class="time">{{ item.createTime | timeFilter3 }}</p>
       </div>
