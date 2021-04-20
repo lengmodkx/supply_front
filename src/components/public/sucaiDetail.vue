@@ -75,7 +75,7 @@
         </div>
         <iframe
           v-else-if="officeExt.indexOf(file.ext) > -1"
-          :src="'https://view.officeapps.live.com/op/view.aspx?src=' + url + '/files/' + file.fileId" +"/preview"
+          :src="'https://view.officeapps.live.com/op/view.aspx?src=' + url + '/files/' + file.fileId +'/preview'"
           width="100%"
           height="100%"
           frameborder="1"
