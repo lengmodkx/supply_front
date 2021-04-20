@@ -93,7 +93,7 @@
               file.data.ext.includes('ppsx') ||
               file.data.ext.includes('potx')
           "
-          :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.data.fileUrl"
+          :src="'https://view.officeapps.live.com/op/view.aspx?src=' + url + '/files/' + file.data.fileId +'/preview'"
           width="100%"
           height="100%"
           frameborder="1"
@@ -362,7 +362,8 @@ export default {
       loading: false,
       folderId: "",
       imgSize: 1,
-      showModel: false
+      showModel: false,
+      url:process.env.NODE_ENV == "test"?process.env.VUE_APP_TEST_URL:process.env.VUE_APP_URL
     };
   },
   components: { Tags, AddRelation, log, Emoji, VJstree, model, commonFile },
