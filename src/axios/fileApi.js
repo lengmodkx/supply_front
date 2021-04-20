@@ -137,11 +137,11 @@ export function deleteFile(fileId) {
     });
 }
 //更新普通文件版本
-export function updateFileVersion(fileId,fileObj) {
+export function updateFileVersion(fileId,params) {
     return fetch({
         url: `/files/${fileId}/version`,
         method: "post",
-        params: {fileObj: fileObj}
+        params: params
     });
 }
 

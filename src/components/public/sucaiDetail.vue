@@ -5,13 +5,7 @@
       <div class="f-header-left">{{ file.fileName }}</div>
       <div class="f-header-right">
         <!-- 更新版本 -->
-        <!-- <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
-          <p class="padd8"><Icon type="ios-cloud-upload-outline" />更新版本</p>
-          <DropdownMenu slot="list">
-            <DropdownItem name="model">上传模型文件</DropdownItem>
-            <DropdownItem name="commonfile">上传普通文件</DropdownItem>
-          </DropdownMenu>
-        </Dropdown> -->
+        <p class="padd8" @click="showCommonFile=true"><Icon type="ios-cloud-upload-outline" />更新版本</p>
         <!-- 下载 -->
         <p class="padd8">
           <Icon type="ios-cloud-download-outline" />
@@ -105,8 +99,9 @@
               <p>
                 <Icon type="ios-information-circle-outline" size="18" />
                 <span>{{ version.info }}</span>
-                <span v-if="version.isMaster == 1" class="is-ma">主版本</span>
+                <span v-if="version.isMaster == 1" class="is-master">主版本</span>
               </p>
+              <p class="arrow-down"><Icon type="ios-arrow-down" color="#2d8cf0" v-if="version.isMaster != 1"/></p>
             </div>
           </div>
           <!--标签-->
@@ -282,22 +277,28 @@
       </div>
       <!-- 右侧 -->
     </div>
+    <Modal v-model="showCommonFile" title="上传普通文件" class-name="file-vertical-center-modal" transfer :width="500">
+      <version-update v-if="showCommonFile" :fileId="file.fileId" :projectId="file.projectId" :fileDetail="true" ref="commonFile" @close="showCommonFile=false"></version-update>
+      <div slot="footer">
+        <Button type="primary" size="large" long @click="clearFiles">清空列表</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
-import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy,modelChange } from "@/axios/fileApi";
-import { folderChild, getProjectList, collect, cancle, sendMsg } from "@/axios/api";
+import { jionPeople, recycleBin, filePrivacy,modelChange } from "@/axios/fileApi";
+import { folderChild, collect, sendMsg } from "@/axios/api";
 import Tags from "../public/Tags.vue";
 import AddRelation from "@/components/public/common/AddRelation"; //关联
 import log from "@/components/public/log"; //标签
 import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
-import pdf from 'vue-pdf'
-import { progress } from '../../axios/api';
+import VersionUpdate from './versionUpdate.vue';
 export default {
   props: ["type"],
   data() {
     return {
+      showCommonFile:false,
       loading:false,
       privacyStatus: "已关闭",
       rublish: false,
@@ -310,7 +311,7 @@ export default {
       officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx", ".ppt"],
     };
   },
-  components: { Tags, AddRelation, log, Emoji,pdf },
+  components: { Tags, AddRelation, log, Emoji,versionUpdate: resolve => require(["./versionUpdate"], resolve), VersionUpdate, },
   computed: {
     ...mapState("file", ["joinInfoIds", "file"])
   },
@@ -324,10 +325,12 @@ export default {
     }
   },
   methods: {
+    clearFiles() {
+      this.$refs.commonFile.clearFiles();
+    },
     closeTag() {
       this.$refs.tags.closeTag();
     },
-
     popHid() {
       setTimeout(() => {
         this.rublish = false;

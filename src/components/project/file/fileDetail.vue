@@ -7,13 +7,7 @@
       </Tooltip>
 
       <div class="f-header-right">
-        <Dropdown trigger="click" class="upload-file" @on-click="showFileChoose($event)">
-          <p class="padd8"><Icon type="ios-cloud-upload-outline" />更新版本</p>
-          <DropdownMenu slot="list">
-            <DropdownItem name="model" v-if="file.data.isModel == '1'">上传模型文件</DropdownItem>
-            <DropdownItem name="commonfile" v-else-if="file.data.isModel == '0'">上传普通文件</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        <p class="padd8"><Icon type="ios-cloud-upload-outline" @click="showFileChoose($event)"/>更新版本</p>
         <p class="padd8">
           <Icon type="ios-cloud-download-outline" />
           <a style="color: gray" :download="file.data.fileName" @click="downLoad(file.data.fileId)" ref="xiazai">下载</a>
@@ -75,24 +69,7 @@
         </div>
 
         <iframe
-          v-else-if="
-            file.data.ext.includes('doc') ||
-              file.data.ext.includes('docx') ||
-              file.data.ext.includes('docm') ||
-              file.data.ext.includes('dotx') ||
-              file.data.ext.includes('dotm') ||
-              file.data.ext.includes('xls') ||
-              file.data.ext.includes('xlsm') ||
-              file.data.ext.includes('xltx') ||
-              file.data.ext.includes('xltm') ||
-              file.data.ext.includes('xlsb') ||
-              file.data.ext.includes('xlam') ||
-              file.data.ext.includes('xlsx') ||
-              file.data.ext.includes('pptx') ||
-              file.data.ext.includes('pptm') ||
-              file.data.ext.includes('ppsx') ||
-              file.data.ext.includes('potx')
-          "
+          v-else-if="officeExt.indexOf(file.data.ext)>-1"
           :src="'https://view.officeapps.live.com/op/view.aspx?src=' + url + '/files/' + file.data.fileId +'/preview'"
           width="100%"
           height="100%"
@@ -314,7 +291,7 @@
     </Modal>
     <!--上传模型文件-->
     <Modal title="上传模型文件" v-model="showModel" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
-      <model ref="model" @close="showModel = false" :fileId="file.data.fileId" :fileDetail="'true'"></model>
+      <model ref="model" @close="showModel = false" :fileId="file.data.fileId" :fileDetail="true"></model>
     </Modal>
     <!--上传普通文件-->
     <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer :width="500">
@@ -363,7 +340,8 @@ export default {
       folderId: "",
       imgSize: 1,
       showModel: false,
-      url:process.env.NODE_ENV == "test"?process.env.VUE_APP_TEST_URL:process.env.VUE_APP_URL
+      url:process.env.NODE_ENV == "test"?process.env.VUE_APP_TEST_URL:process.env.VUE_APP_URL,
+      officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx", ".ppt"],
     };
   },
   components: { Tags, AddRelation, log, Emoji, VJstree, model, commonFile },

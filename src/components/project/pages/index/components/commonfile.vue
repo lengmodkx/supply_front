@@ -21,7 +21,6 @@
 </template>
 <script>
   import {
-    uploadCommonFile,
     bind_files
   } from "@/axios/api2";
   import {
@@ -58,7 +57,6 @@
 
       handleBeforeUpload(file) {
         var that = this;
-
         this.uploadList.push(file);
         if (this.uploadList.length > 7) {
           this.$Notice.warning({
@@ -82,7 +80,7 @@
               file.name.length
             );
             myfile.publicId = that.publicId;
-            that.files.push(myfile);
+            this.files.push(myfile);
           });
         }
 

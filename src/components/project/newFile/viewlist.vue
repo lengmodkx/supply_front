@@ -196,23 +196,19 @@
 <script>
 import sucaiDetail from "../../public/sucaiDetail.vue";
 import model from "../file/model.vue";
-import commonFile from "../file/commonfile.vue";
 import fileDetail from "../file/fileDetail";
 import modelFileDetail from "../file/modelFileDetail";
 import fileCanSee from "../file/fileCanSee.vue";
 import suffix from './suffixCom.vue'
-import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
-import { getFileDetails, getChildFiles, putImportant } from "@/axios/fileApi";
-import { changeName, downloadFile, jionPeople, removeFile, cloneFile, recycleBin, filePrivacy,checkdownload } from "@/axios/fileApi";
-import { createFolder, getProjectList, folderChild, collect } from "../../../axios/api.js";
-import VJstree from "vue-jstree";
-var timer = null;
+import { mapState, mapActions, mapMutations } from "vuex";
+import { getChildFiles, putImportant } from "@/axios/fileApi";
+import { changeName, recycleBin, filePrivacy,checkdownload } from "@/axios/fileApi";
+import { createFolder, collect } from "../../../axios/api.js";
 export default {
   inject: ["reload"],
   components: {
     model,
     commonFile: resolve => require(["../file/commonfile.vue"], resolve),
-    VJstree,
     fileDetail,
     modelFileDetail,
     fileCanSee,

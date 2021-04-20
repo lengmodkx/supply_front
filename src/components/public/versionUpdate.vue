@@ -1,7 +1,7 @@
 <template>
   <div class="common-file-content">
     <Upload type="drag" ref="upload" :show-upload-list="true"
-    :before-upload="beforeUpload" multiple :action="uploadHost" :data="uploadData" :on-remove="resetFile" :on-success="handleSuccess">
+    :before-upload="beforeUpload" :action="uploadHost" :data="uploadData" :on-remove="resetFile" :on-success="handleSuccess">
       <div style="padding: 20px 0">
         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
         <p>点击或者拖拽文件进行上传</p>
@@ -10,9 +10,9 @@
   </div>
 </template>
 <script>
-import { uploadCommonFile } from "../../../axios/api2.js";
+import { uploadCommonFile } from "@/axios/api2.js";
 import { updateFileVersion } from "@/axios/fileApi";
-import { oss } from "../../../axios/ossweb.js";
+import { oss } from "@/axios/ossweb.js";
 import { mapState } from "vuex";
 export default {
   props: ["fileId", "projectId", "fileDetail"],
