@@ -75,7 +75,7 @@
         </div>
         <iframe
           v-else-if="officeExt.indexOf(file.ext) > -1"
-          :src="'https://view.officeapps.live.com/op/view.aspx?src=https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + file.fileUrl"
+          :src="'https://view.officeapps.live.com/op/view.aspx?src=' + url + '/files/' + file.fileId" +"/preview"
           width="100%"
           height="100%"
           frameborder="1"
@@ -293,6 +293,7 @@ import AddRelation from "@/components/public/common/AddRelation"; //关联
 import log from "@/components/public/log"; //标签
 import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
 import pdf from 'vue-pdf'
+import { progress } from '../../axios/api';
 export default {
   props: ["type"],
   data() {
@@ -304,6 +305,7 @@ export default {
       relationModal: false, //关联
       publicType: "文件",
       imgSize: 1,
+      url:process.env.NODE_ENV == "test"?process.env.VUE_APP_TEST_URL:process.env.VUE_APP_URL,
       imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
       officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx", ".ppt"],
     };
