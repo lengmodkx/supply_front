@@ -8,6 +8,8 @@ import DateTimePicker from "./DateTimePicker";
 import UrgentDropdown from "./UrgentDropdown";
 import InvolveMember from "./InvolveMember";
 import Loading from "./Loading";
+import UploadFileCard from "./uploadFileCard.vue";
+
 
 Vue.component("RightItem", RightItem);
 Vue.component("AddItem", AddItem);
@@ -17,3 +19,5 @@ Vue.component("DateTimePicker", DateTimePicker);
 Vue.component("UrgentDropdown", UrgentDropdown);
 Vue.component("InvolveMember", InvolveMember);
 Vue.component("Loading", Loading);
+Vue.component("UploadFileCard", UploadFileCard);
+
