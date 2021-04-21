@@ -235,9 +235,7 @@ export default {
                 });
                 break;
               case "C4":
-                this.$store.dispatch("file/initFile", {
-                  fileId: result.object.parentId
-                });
+                this.$store.dispatch("file/initFile", {fileId: result.object.parentId});
                 this.$store.dispatch("file/putOneFile", result.object.fileId);
                 break;
               case "C7":

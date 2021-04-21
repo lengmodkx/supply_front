@@ -28,17 +28,12 @@ const store = {
             state.roleKey=data
         },
         initSymbol(state, data) {
-            
-
             data.filter(v => v.memberId != localStorage.userId);
-
             state.symbolData.push(...data)
             const alluser={
                 memberName:'所有人'
             }
             state.symbolData.unshift(alluser)
-            console.log(state.symbolData,localStorage.userId)
-
         },
         initRoles(state, data) {
             state.roles = data
@@ -67,14 +62,11 @@ const store = {
         initUser({
             commit
         }, data) {
-            
             projectMembers(data).then(res => {
-                
                 if (res.result === 1) {
                     commit('initUser', res.data);
                     commit('initSymbol', res.data);
                     commit('initroleKey', res.roleKey);
-
                 }
             })
         },
@@ -82,16 +74,11 @@ const store = {
         filterUser({
             commit
         }, data) {
-            
-
             projectMembersSerach(data.id,data.key).then(res => {
-                
-                
                 if (res.result === 1) {
                     commit('initUser', res.data)
                 }
             })
-           
             // commit('filterUser', data)
         },
         getRoles({

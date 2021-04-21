@@ -5,51 +5,16 @@
       <div class="f-header-left">{{ file.fileName }}</div>
       <div class="f-header-right">
         <!-- 更新版本 -->
-        <p class="padd8" @click="showCommonFile=true"><Icon type="ios-cloud-upload-outline" />更新版本</p>
+        <upload-file-card :uploadList="uploadList" @close="handleRemove"></upload-file-card>
+        <Upload ref="upload" :show-upload-list="false"
+          :before-upload="beforeUpload" :action="uploadHost" :data="uploadData" :on-success="handleSuccess">
+           <p class="padd8"><Icon type="ios-cloud-upload-outline"/>更新版本</p>
+        </Upload>
         <!-- 下载 -->
         <p class="padd8">
           <Icon type="ios-cloud-download-outline" />
           <a style="color: gray" :download="file.fileName" @click="downLoad(file.fileId)" ref="xiazai">下载</a>
         </p>
-
-        <!-- <Poptip class="menu-file" v-model="menuShow" placement="bottom" @on-popper-hide="popHid">
-          <Icon type="ios-more" class="mr0" />
-          <div slot="content">
-            <div v-show="rublish" class="rublish">
-              <div class="rublish-header">
-                <Icon @click="rublish = false" type="ios-arrow-back" />
-                移到回收站
-                <Icon @click="menuShow = false" type="ios-close" />
-              </div>
-              <p>您确定要把该文件移到回收站吗？</p>
-              <Button long type="error" @click="putRecyclebin">移到回收站</Button>
-            </div>
-            <div v-show="!rublish">
-              <div class="menu-file-title" style="text-align:center;font-size:16px">
-                <span>文件菜单</span>
-              </div>
-              <section class="file-folder-opt">
-                <ul>
-                  <li @click="showModels('移动')">移动文件</li>
-                  <li @click="showModels('复制')">复制文件</li>
-                  <li @click="collectFile">收藏文件</li>
-                  <li @click="rublish = true">移到回收站</li>
-                </ul>
-              </section>
-              <div class="footer">
-                <div class="footer-left">
-                  <i class="ivu-icon ivu-icon-unlocked"></i>
-                  <div class="footer-privacy-text" @click="changePrivacy">
-                    <span>隐私模式</span>
-                    <span v-if="privacyStatus == '已开启'">仅参与者可见</span>
-                    <span v-else>所有成员可见</span>
-                  </div>
-                </div>
-                <span style="color:#3da8f5" @click="changePrivacy">{{ privacyStatus }}</span>
-              </div>
-            </div>
-          </div>
-        </Poptip> -->
       </div>
     </header>
 
@@ -96,22 +61,22 @@
           <div class="bbxx">
             <div><Icon type="ios-folder-open-outline" size="18" />版本信息</div>
             <div class="sp-bw" v-for="(version, index) in file.versions" :key="index">
-              <p>
+              <p @click="updateFile(version)">
                 <Icon type="ios-information-circle-outline" size="18" />
                 <span>{{ version.info }}</span>
                 <span v-if="version.isMaster == 1" class="is-master">主版本</span>
               </p>
-              <Poptip placement="left" transfer width="280" v-model="visible" popper-class="operationBubble">
+              <Poptip placement="left" transfer width="280" v-model="version.visible" popper-class="operationBubble">
                 <a href="javascript:void(0)">
                   <p class="arrow-down"><Icon type="ios-arrow-down" color="#2d8cf0" v-if="version.isMaster != 1"/></p>
                 </a>
                 <div slot="title" class="member-title">
-                <span>版本菜单</span>
-                <Icon type="md-close" size="18" class="role-md-close" @click.native="visible=false" />
-              </div>
+                  <span>版本菜单</span>
+                  <Icon type="md-close" size="18" class="role-md-close" @click.native="version.visible=false" />
+                </div>
               <div slot="content">
                 <ul class="org-role">
-                  <li>
+                  <li @click="updateVersion(version)">
                     <span>设置为主版本</span>
                   </li>
                 </ul>
@@ -292,16 +257,10 @@
       </div>
       <!-- 右侧 -->
     </div>
-    <Modal v-model="showCommonFile" title="上传普通文件" class-name="file-vertical-center-modal" transfer :width="500">
-      <version-update v-if="showCommonFile" :fileId="file.fileId" :projectId="file.projectId" :fileDetail="true" ref="commonFile" @close="showCommonFile=false"></version-update>
-      <div slot="footer">
-        <Button type="primary" size="large" long @click="clearFiles">清空列表</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
 import { jionPeople, recycleBin, filePrivacy,modelChange } from "@/axios/fileApi";
 import { folderChild, collect, sendMsg } from "@/axios/api";
 import Tags from "../public/Tags.vue";
@@ -309,6 +268,9 @@ import AddRelation from "@/components/public/common/AddRelation"; //关联
 import log from "@/components/public/log"; //标签
 import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
 import VersionUpdate from './versionUpdate.vue';
+import { oss } from "@/axios/ossweb.js";
+import { updateFileVersion,changeVersion } from "@/axios/fileApi";
+import { map } from 'highcharts';
 export default {
   props: ["type"],
   data() {
@@ -324,12 +286,17 @@ export default {
       url:process.env.NODE_ENV == "test"?process.env.VUE_APP_TEST_URL:process.env.VUE_APP_URL,
       imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
       officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx", ".ppt"],
-      visible:false
+      projectId:this.$route.params.id,
+      uploadData: {},
+      uploadHost: "",
+      dirName: 'upload/file/',
+      uploadList: [],
+      uploadFiles:[]
     };
   },
   components: { Tags, AddRelation, log, Emoji,versionUpdate: resolve => require(["./versionUpdate"], resolve), VersionUpdate, },
   computed: {
-    ...mapState("file", ["joinInfoIds", "file"])
+    ...mapState("file", ["joinInfoIds", "file","crumbs","createFileId"])
   },
   mounted() {
     // console.log(this.file);
@@ -339,10 +306,57 @@ export default {
         // console.log('xxxxxxxxxxxxxxxxxxxxx')
         modelChange(this.file.fileId);
     }
+    this.uploadList = this.$refs.upload.fileList;
   },
   methods: {
-    clearFiles() {
-      this.$refs.commonFile.clearFiles();
+    ...mapActions("file",["putOneFile"]),
+    handleRemove() {
+      this.$refs.upload.clearFiles();
+      this.uploadList = [];
+    },
+    beforeUpload(file) {
+      var dir = this.dirName + this.$moment().format('YYYY-MM-DD') + "/";
+      return oss(dir,file.name).then(res => {
+        this.uploadHost = res.host;
+        this.uploadData = res;
+        this.uploadList = this.$refs.upload.fileList;
+        var myfile = {};
+        myfile.fileName = file.name;
+        myfile.fileUrl = res.key;
+        myfile.size = this.renderSize(file.size);
+        myfile.ext = file.name.substr(file.name.indexOf("."),file.name.length);
+        myfile.level = this.crumbs.length;
+        myfile.parentId = this.createFileId
+        this.uploadFiles.push(myfile);
+      });
+    },
+    handleSuccess(res, file){
+      this.uploadServer();
+    },
+    uploadServer(){
+      let param = { projectId: this.projectId,fileId:this.file.fileId, files: JSON.stringify(this.uploadFiles) };
+      updateFileVersion(this.createFileId, param).then(res => {
+        if (res.result === 1) {
+          this.uploadFiles = [];
+          this.$Notice.success({title: "更新成功"});
+        }
+      });
+    },
+    updateVersion(version){
+      let params = {
+        projectId: this.projectId,
+        parentId: this.createFileId,
+        oldFileId:version.fileId
+      }
+      changeVersion(this.file.fileId,params).then(res=>{
+        if(res.result==1){
+
+        }
+      })
+    },
+    updateFile(version){
+      console.log(version);
+      this.putOneFile(version.fileId)
     },
     closeTag() {
       this.$refs.tags.closeTag();

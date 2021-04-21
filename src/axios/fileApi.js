@@ -145,6 +145,17 @@ export function updateFileVersion(fileId,params) {
     });
 }
 
+//切换普通文件版本
+export function changeVersion(fileId,params) {
+    return fetch({
+        url: `/files/${fileId}/version/change`,
+        method: "post",
+        params: params
+    });
+}
+
+
+
 //更新模型文件版本
 // export function updateModelVersion(fileId,params) {
 //     return fetch({
