@@ -490,9 +490,10 @@
                       {{ $moment(f.createTime).format("YYYY-MM-DD HH:mm") }}
                     </p>
                   </div>
+                  <upload-file-card :uploadList="uploadList" @close="handleRemove"></upload-file-card>
                   <Upload ref="upload" :show-upload-list="false" multiple
                       :before-upload="handleBeforeUpload" :action="host"
-                      :data="uploadData"  :on-success="handleSuccess"
+                      :data="uploadData" :on-success="handleSuccess"
                        type="drag">
                       <div style="width: 117px; height: 117px; display:flex;justify-content: center;align-items: center">
                           <Icon type="ios-add" size="20" />
@@ -542,10 +543,6 @@
           </div>
         </div>
       </div>
-      <!-- <Modal v-model="showCommon" title="上传普通文件" class-name="file-vertical-center-modal" footer-hide transfer
-        :width="500">
-        <common-file @close="showCommon = false" :projectId="task.projectId" :publicId="task.taskId"></common-file>
-      </Modal> -->
       <Modal v-model="showFileDetail" fullscreen :footer-hide="true" class-name="model-detail">
         <fileDetail v-if="showFileDetail" :file="file"></fileDetail>
       </Modal>
@@ -664,11 +661,14 @@
         uploadList: [],
         host: '',
         uploadData: {},
-        files: []
+        uploadFiles: []
       };
     },
     mounted() {
-      this.editTask(this.taskId);
+      this.editTask(this.taskId).then(res=>{
+        this.uploadList = this.$refs.upload.fileList;
+      });
+      
     },
     computed: {
       ...mapState("task", ["task", "joinInfoIds", "images_suffix", "taskId"]),
@@ -679,36 +679,35 @@
     methods: {
       ...mapActions("task", ["editTask"]),
       ...mapMutations("task", ["setTaskId"]),
+      handleRemove() {
+        this.$refs.upload.clearFiles();
+        this.uploadList = [];
+      },
       handleBeforeUpload(file) {
-        var that = this;
-        let dir = 'upload/file/'
+        let dir = 'upload/file/'+ this.$moment().format('YYYY-MM-DD') + "/";
         return oss(dir, file.name).then(res => {
           this.host = res.host;
           this.uploadData = res;
+          this.uploadList =this.$refs.upload.fileList;
           var myfile = {};
           myfile.fileName = file.name;
           myfile.fileUrl = res.key;
-          myfile.size = that.renderSize(file.size);
-          myfile.projectId = that.projectId;
+          myfile.size = this.renderSize(file.size);
+          myfile.projectId = this.projectId;
           myfile.ext = file.name.substr(file.name.indexOf("."), file.name.length);
-          myfile.publicId = that.task.taskId;
-          that.files.push(myfile);
+          myfile.publicId = this.task.taskId;
+          this.uploadFiles.push(myfile);
         });
       },
       handleSuccess(res, file) {
         let params = {
-          files: JSON.stringify(this.files),
+          files: JSON.stringify(this.uploadFiles),
           publicId: this.task.taskId,
           projectId: this.projectId
         };
         bind_files(params).then(res => {
           if (res.result === 1) {
-            this.$refs.upload.clearFiles();
             this.files = [];
-            this.$Notice.success({
-              title: "上传成功"
-            });
-            this.files.splice(0, this.files.length);
           }
         });
       },

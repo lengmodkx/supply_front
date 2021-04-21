@@ -1,5 +1,5 @@
 <template>
-    <div class="upload-card" v-if="showCard" :class="{ minimize: sizeType == 'min' }">
+    <div class="upload-card" v-if="showCard&&showcard" :class="{ minimize: sizeType == 'min' }">
         <div class="card">
             <div class="card-header">
                 <p class="card-title"><span>{{title}}</span></p>
@@ -7,11 +7,11 @@
                     <Icon type="md-expand" size="18" /></a>
                 <a class="minimize-creator icon" @click="zoomCard('min')" v-else>
                     <Icon type="md-contract" size="18" /></a>
-                <a class="close-creator icon" @click="showCard=false">
+                <a class="close-creator icon" @click="closeUpload">
                     <Icon type="md-close" size="18" /></a>
             </div>
             <ul class="work-set thin-scroll">
-                <li class="uploader-item work creating card" v-for="item in 5">
+                <li class="uploader-item work creating card" v-for="item in uploadList">
                     <div class="uploader-wrapper flex-horiz df">
                         <div class="uploader-content flex-fill">
                             <div class="file-item">
@@ -19,21 +19,23 @@
                                     <img src="../../../assets/images/wjj.png" alt="" />
                                     <!-- <suffix v-else class="fileThumbnail-box" :file="row"></suffix> -->
                                 </header>
-                                <section class="file-item-content flex-fill flex-vcenter with-collection-name">
+                                <div style="width: 100%; display:flex;justify-content: center;flex-direction: column;">
+                                  <section class="file-item-content flex-fill flex-vcenter with-collection-name">
                                     <p class="elastic-title">
-                                        <span>iview-admin-master.zip</span>
+                                        <span>{{ item.name }}</span>
                                     </p>
                                     <div class="file-info flex-static">
-                                        <span class="collection">Teambition 新手引导</span>
-                                        <span class="file-size">(3.6MB)</span>
+                                        <span class="collection">{{ projectName }}</span>
+                                        <span class="file-size">{{ "("+ renderSize(item.size)+ ")"}}</span>
                                     </div>
-                                </section>
+                                  </section>
+                                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info :stroke-width="5"></Progress>
+                                </div>
                             </div>
                         </div>
                         <div class="uploader-handlers flex-static flex-vcenter">
                             <a class="icon icon-tick">
-                                <Icon type="md-checkmark" v-if="fileSuccess" />
-                                <Icon type="md-close" v-else />
+                                <Icon type="md-checkmark" v-if="item.status === 'finished'" />
                             </a>
                         </div>
                     </div>
@@ -44,26 +46,66 @@
 </template>
 
 <script>
-    import suffix from '@/components/project/newFile/suffixCom.vue'
+import suffix from '@/components/project/newFile/suffixCom.vue'
 
-    export default {
-        components: {
-            suffix
-        },
-        data() {
-            return {
-                sizeType: 'max',
-                showCard: true,
-                fileSuccess: true,
-                title: '上传完成'
-            };
-        },
-        methods: {
-            zoomCard(type) {
-                this.sizeType = type
+import { mapState } from "vuex";
+
+export default {
+    components: {
+        suffix
+    },
+    props:["uploadList"],
+    data() {
+        return {
+            sizeType: 'max',
+            fileSuccess: true,
+            title: '等待上传..',
+            showcard:true
+        };
+    },
+    watch:{
+        uploadList:{
+          handler(val, oldVal){
+            console.log(val);
+            var newVal = val.filter(item=>item.status!='finished');
+
+            if(newVal){
+                this.title = "正在上传"+ newVal.length +"/"+this.uploadList.length
+            }
+
+            var finished = val.filter(item=>item.status=='finished');
+            if(finished.length == this.uploadList.length){
+                this.title = "上传完成"
+                this.sizeType = 'min';
+            }
+          },
+         deep:true //true 深度监听
+        }
+    },
+    
+    computed: {
+        ...mapState("project", ["projectName"]),
+        showCard:{
+            get(){
+                this.showcard = true;
+                this.sizeType = 'max';
+                return this.uploadList.length > 0;    
+            },
+            set(v){
+                this.showcard = false;
             }
         }
-    };
+    },
+    methods: {
+        zoomCard(type) {
+            this.sizeType = type
+        },
+        closeUpload(){
+            this.showCard = false;
+            this.$emit("close")
+        }
+    }
+};
 </script>
 
 <style lang="less" scoped>
@@ -76,11 +118,11 @@
         width: 480px;
         bottom: 16px;
         right: 40px;
-        z-index: 2333;
+        z-index: 9999;
         box-shadow: 0 7px 21px rgba(0, 0, 0, 0.1);
         transition: bottom 218ms ease;
         display: block;
-
+        
         .card {
             font-size: 14px;
             color: #262626;
@@ -190,7 +232,6 @@
 
                     .file-item {
                         display: flex;
-
                         .file-item-icon {
                             height: 32px;
                             margin-right: 8px;

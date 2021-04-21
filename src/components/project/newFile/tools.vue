@@ -8,18 +8,14 @@
         </div>
       </div>
       <div class="pull-box">
-        <div class="pull" @click="upload">
-          <img src="../../../assets/images/view6.png" alt="" />
-          <span>上传</span>
-          <!-- <Poptip placement="bottom" width="200" v-model="visibleTip">
-            <button class="pull-icon"><img src="../../../assets/images/button.png" alt="" /></button>
-            <div class="pull-pop" slot="content">
-              <ul>
-                <li v-for="(item, index) in pullList" :key="index" @click="upload(item)"><img :src="item.src" alt="" /> {{ item.name }}</li>
-              </ul>
-            </div>
-          </Poptip> -->
-        </div>
+        <upload-file-card :uploadList="uploadList" @close="handleRemove"></upload-file-card>
+        <Upload ref="upload" :show-upload-list="false" :before-upload="handleBeforeUpload" :action="host"
+                :data="uploadData" :on-success="handleSuccess" multiple>
+          <div class="pull">
+            <img src="../../../assets/images/view6.png" alt="" />
+            <span>上传</span>
+          </div>
+        </Upload>
       </div>
       <div class="pull-box" v-show="toolsShow">
         <div class="pull" @click="downLoad">
@@ -38,13 +34,7 @@
           <img src="../../../assets/images/view13.png" alt="" />
           <span>复制</span>
         </div>
-        <div
-          class="pull clear-border"
-          @click="
-            rublish = true;
-            modalTitle = '移到回收站';
-          "
-        >
+        <div class="pull clear-border"  @click="rublish = true;modalTitle = '移到回收站'">
           <img src="../../../assets/images/view8.png" alt="" />
           <span>移入回收站</span>
         </div>
@@ -84,16 +74,10 @@
         </Tooltip>
       </div>
     </div>
-    <Modal v-model="showModelFile" title="上传模型文件" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
+    <!-- <Modal v-model="showModelFile" title="上传模型文件" class-name="file-vertical-center-modal" :width="500" transfer footer-hide>
       <model-file @close="showModelFile = false" :fileId="createFileId"></model-file>
-    </Modal>
-    <Modal v-model="showCommonFile" title="上传普通文件" class-name="file-vertical-center-modal" transfer :width="500">
-      <common-file v-if="showCommonFile" :fileId="createFileId" :projectId="projectId" ref="commonFile"></common-file>
-      <div slot="footer">
-        <Button type="primary" size="large" long @click="clearFiles">清空列表</Button>
-      </div>
-    </Modal>
-
+    </Modal> -->
+    
     <!--创建文件夹 模态框-->
     <Modal v-model="showAddFolder" :footer-hide="true" title="创建文件夹" class-name="file-vertical-center-modal" :width="350">
       <Input v-model="folderName" placeholder="请输入文件夹名称" class="folderName" ref="input" @keyup.enter.native="handleSave" />
@@ -145,10 +129,10 @@
 import modelFile from "@/components/project/file/model.vue"; //上传模型文件
 import tree from "@/components/project/newFile/Tree_move.vue"; //树
 import { mapState, mapActions, mapMutations } from "vuex";
-import { createFolder, getProjectList, folderChild } from "../../../axios/api.js";
-
-import { removeFile, cloneFile, recycleBin, filePrivacy, checkPerm, checkdownload,download } from "../../../axios/fileApi.js";
-import VJstree from "vue-jstree";
+import { createFolder, getProjectList } from "../../../axios/api.js";
+import { oss } from "../../../axios/ossweb.js";
+import { uploadCommonFile } from "../../../axios/api2.js";
+import { removeFile, cloneFile, recycleBin, checkPerm, checkdownload } from "../../../axios/fileApi.js";
 export default {
   components: {
     commonFile: resolve => require(["../file/commonfile.vue"], resolve),
@@ -170,7 +154,6 @@ export default {
         { name: "递减" }
       ],
       thisFileId: "",
-      showCommonFile: false,
       showModelFile: false,
       showmodelMove: false, //移动弹窗
       moveTitel: "",
@@ -188,40 +171,69 @@ export default {
       asyncData: [],
       footerTxt: "跨项目移动时，部分信息不会被保留。",
       caozuo: "",
-      mProjectId: this.$route.params.id
+      mProjectId: this.$route.params.id,
+      uploadData: {},
+      host: "",
+      dirName: 'upload/file/',
+      uploadList: [],
+      uploadFiles:[]
     };
   },
   computed: {
     ...mapState("tree", ["fileTree", "showView", "slider", "mFileTree"]),
-    ...mapState("file", ["files", "fileIds", "createFileId", "toolsShow"])
+    ...mapState("file", ["files", "fileIds", "createFileId", "toolsShow","crumbs"]),
+    
   },
-
+  mounted () {
+    this.uploadList = this.$refs.upload.fileList;
+  },
   methods: {
     ...mapActions("tree", ["changeShowView", "changeSlider", "initMTree"]),
     ...mapActions("file", ["initFile", "searchFile", "initTag"]),
     ...mapMutations("file", ["changeToolsShow"]),
+
+    handleRemove() {
+      this.$refs.upload.clearFiles();
+      this.uploadList = [];
+    },
+
+    async handleBeforeUpload(file) {
+      let result = await checkPerm();
+      if (result == 0) {
+          this.$Message.error(res.msg);
+          return false;
+      } else {
+        var dir = this.dirName + this.$moment().format('YYYY-MM-DD') + "/";
+        return oss(dir, file.name).then(res => {
+            this.host = res.host;
+            this.uploadData = res;
+            this.uploadList =this.$refs.upload.fileList;
+            var myfile = {};
+            myfile.fileName = file.name;
+            myfile.fileUrl = res.key;
+            myfile.size = this.renderSize(file.size);
+            myfile.ext = file.name.substr(file.name.indexOf("."),file.name.length);
+            myfile.level = this.crumbs.length;
+            myfile.parentId = this.createFileId
+            this.uploadFiles.push(myfile);
+        });
+      }
+    },
+    handleSuccess(res, file) {
+      this.uploadServer();
+    },
+    uploadServer() {
+      let params = { projectId: this.projectId, files: JSON.stringify(this.uploadFiles) };
+      uploadCommonFile(this.createFileId, params).then(res => {
+        if (res.result === 1) {
+          this.uploadFiles = [];
+        }
+      });
+    },
+
     changeView(data) {
       this.$emit("recovery");
       this.changeShowView(data);
-    },
-    clearFiles() {
-      this.$refs.commonFile.clearFiles();
-    },
-    // 打开弹窗
-    upload() {
-      // if (item.name == "上传普通文件") {
-      //   this.showCommonFile = true;
-      // } else if (item.name == "上传模型文件") {
-      //   this.showModelFile = true;
-      // }
-      checkPerm().then(res => {
-        if (res.result == 0) {
-          this.$Message.error(res.msg);
-        } else {
-          this.visibleTip = false;
-          this.showCommonFile = true;
-        }
-      });
     },
     // 缩放
     hideFormat() {
@@ -236,21 +248,14 @@ export default {
     //创建文件夹
     handleSave() {
       if (this.folderName == null || this.folderName == "") {
-        this.$Notice.warning({
-          title: "请输入文件夹名称"
-        });
+        this.$Notice.warning({ title: "请输入文件夹名称" });
         this.$refs.input.focus();
         return false;
       }
-      let params = {
-        projectId: this.projectId,
-        folderName: this.folderName
-      };
+      let params = { projectId: this.projectId,folderName: this.folderName };
       createFolder(this.createFileId, params).then(res => {
         if (res.result == 1) {
-          this.$Notice.success({
-            title: "创建成功"
-          });
+          this.$Notice.success({ title: "创建成功" });
           this.showAddFolder = false;
           this.folderName = "";
           this.$emit("createFolder", this.createFileId);
@@ -274,12 +279,6 @@ export default {
             url = "/api";
           }
           window.location.href = url + "/files/batch/download?fileIds=" + fileIds;
-          // download(fileIds).then(res=>{
-          //   console.log(res)
-          //     //let blob = new Blob([res],{type: "application/octet-stream"});
-          //     //let url = window.URL.createObjectURL(blob);
-          //     //window.location.href = url;
-          // })
         }
       });
     },

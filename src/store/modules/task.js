@@ -432,10 +432,13 @@ const store = {
             })
         },
         editTask({commit}, data) {
-            initEditTask(data).then(res => {
-                if (res.result === 1) {
-                    commit('editTask', res.data)
-                }
+            return new Promise(resolve=>{
+                initEditTask(data).then(res => {
+                    if (res.result === 1) {
+                        commit('editTask', res.data)
+                        resolve(res);
+                    }
+                })
             })
         },
 

@@ -28,8 +28,6 @@ import Group from "./webim/group";
 import Emedia from "./webim/emedia";
 import FriendModule from "./webim/friendModule";
 
-
-
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
