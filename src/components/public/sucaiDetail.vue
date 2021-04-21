@@ -101,7 +101,22 @@
                 <span>{{ version.info }}</span>
                 <span v-if="version.isMaster == 1" class="is-master">主版本</span>
               </p>
-              <p class="arrow-down"><Icon type="ios-arrow-down" color="#2d8cf0" v-if="version.isMaster != 1"/></p>
+              <Poptip placement="left" transfer width="280" v-model="visible" popper-class="operationBubble">
+                <a href="javascript:void(0)">
+                  <p class="arrow-down"><Icon type="ios-arrow-down" color="#2d8cf0" v-if="version.isMaster != 1"/></p>
+                </a>
+                <div slot="title" class="member-title">
+                <span>版本菜单</span>
+                <Icon type="md-close" size="18" class="role-md-close" @click.native="visible=false" />
+              </div>
+              <div slot="content">
+                <ul class="org-role">
+                  <li>
+                    <span>设置为主版本</span>
+                  </li>
+                </ul>
+              </div>
+              </Poptip>
             </div>
           </div>
           <!--标签-->
@@ -309,6 +324,7 @@ export default {
       url:process.env.NODE_ENV == "test"?process.env.VUE_APP_TEST_URL:process.env.VUE_APP_URL,
       imageExt: [".gif", ".GIF", ".jpg", ".JPG", ".JPEG", ".png", ".PNG", ".bmp", ".BMP"],
       officeExt: [".doc", ".docx", ".docm", ".dotx", ".dotm", ".xls", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam", ".xlsx", ".pptx", ".pptm", ".ppsx", ".potx", ".ppt"],
+      visible:false
     };
   },
   components: { Tags, AddRelation, log, Emoji,versionUpdate: resolve => require(["./versionUpdate"], resolve), VersionUpdate, },
