@@ -15,11 +15,11 @@
             <div class="option-group-label">参与者</div>
             <ul>
               <li
-                class="member-menu-item clearfix"
+                class="member-menu-item clearfix"  :class="{noClick:item.memberId==memberId}" 
                 v-for="(item, index) in memberList"
                 :key="item.memberId"
-                v-if="checkedList.indexOf(item.memberId) >= 0"
-                @click="checkUser(index)"
+                v-if="checkedList.indexOf(item.memberId) >= 0"  
+                @click="checkUser(index,item)"  
               >
                 <div class="img fl">
                   <img :src="item.memberImg" v-if="item.memberImg" />
@@ -36,7 +36,7 @@
           <li class="select-option-group">
             <div class="option-group-label">推荐</div>
             <ul>
-              <li class="member-menu-item clearfix" v-for="(item, index) in memberList" :key="item.memberId" v-if="checkedList.indexOf(item.memberId) < 0" @click="checkUser(index)">
+              <li class="member-menu-item clearfix" v-for="(item, index) in memberList" :key="item.memberId" v-if="checkedList.indexOf(item.memberId) < 0" @click="checkUser2(index)">
                 <div class="img fl">
                   <img v-if="item.memberImg" :src="item.memberImg" alt="" />
                   <svg-icon v-else style="margin-top:3px;" name="allMember"></svg-icon>
@@ -61,7 +61,7 @@
 import { mapState, mapActions } from "vuex";
 import { projectMembersSerach, projectMembers } from "@/axios/api";
 export default {
-  props: ["checkedList", "projectId"],
+  props: ["checkedList", "projectId","memberId"],
   data() {
     return {
       visible: false,
@@ -95,9 +95,14 @@ export default {
       });
     },
 
-    checkUser(index) {
+    checkUser(index,item) {
+      if(item.memberId!=this.memberId){
+        this.memberList[index].checked = !this.memberList[index].checked;
+      }
       //if (this.memberList[index].userId == this.curUserId) return//当前用户不可点击
-      this.memberList[index].checked = !this.memberList[index].checked;
+    },
+    checkUser2(index){
+        this.memberList[index].checked = !this.memberList[index].checked;
     },
     save() {
       let arr=[]
@@ -247,5 +252,9 @@ export default {
 }
 .right {
   margin-right: 4px;
+}
+.noClick {
+  // pointer-events: none;
+  cursor: not-allowed !important;
 }
 </style>
