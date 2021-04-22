@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div ref="div">
     <div v-if="task == null" style="width: 100%;height: 100%;display:flex;justify-content: center;align-items: center">
-      <Loading></Loading>
+      <loading></loading>
     </div>
     <div v-if="task != null">
       <div class="task-header">
@@ -122,10 +122,7 @@
                               nextDay: "[明天]LT",
                               lastDay: "[昨天]LT",
                               lastWeek: (now) => {
-                                const startDate = $moment()
-                                  .week($moment().week())
-                                  .startOf("week")
-                                  .valueOf();
+                                const startDate = $moment().week($moment().week()).startOf("week").valueOf();
                                 return task.endTime <= startDate ? "[上]dddLT" : "dddLT";
                               },
                               nextWeek: (now) => {
@@ -170,7 +167,6 @@
                               sameElse: "Y年M月D日LT",
                             })
                           }}
-                          <!-- {{data.endDate}} -->
                           <span @click.stop="clearTime('截止')">&times;</span>
                         </div>
                       </DateTimePicker>
@@ -471,8 +467,8 @@
                 <span class="flex">添加附件</span>
               </div>
               <div class="subtask-card-main">
-                <div class="addfile" v-if="task.fileList">
-                  <div class="file-lsit" v-for="(f, i) in task.fileList" :key="i">
+                <div class="addfile">
+                  <div v-if="task.fileList" class="file-lsit" v-for="(f, i) in task.fileList" :key="i">
                     <div class="file-img">
                       <img v-if="images_suffix.indexOf(f.ext) > -1"
                         :src="'https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/' + f.fileUrl" alt />
@@ -493,9 +489,8 @@
                   <upload-file-card :uploadList="uploadList" @close="handleRemove"></upload-file-card>
                   <Upload ref="upload" :show-upload-list="false" multiple
                       :before-upload="handleBeforeUpload" :action="host"
-                      :data="uploadData" :on-success="handleSuccess"
-                       type="drag">
-                      <div style="width: 117px; height: 117px; display:flex;justify-content: center;align-items: center">
+                      :data="uploadData" :on-success="handleSuccess" type="drag">
+                      <div class="demo-upload-list">
                           <Icon type="ios-add" size="20" />
                       </div>
                   </Upload>
@@ -528,7 +523,7 @@
                     </Tooltip>
                   </div>
                   <div class="addButton fl">
-                    <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId"
+                    <InvolveMember ref="involveMember" :checkedList="joinInfoIds" :projectId="task.projectId" :memberId="task.memberId"
                       @save="saveInvolveMember"></InvolveMember>
                   </div>
                 </div>
@@ -565,16 +560,10 @@
   import SingleTaskMenu from "./SingleTaskMenu.vue";
   import SetExecutor from "./SetExecutor";
   import Simditor from "@/components/resource/Simditor";
-  import myModel from "./EditList";
   import log from "@/components/public/log";
   import publick from "@/components/public/Publish";
   import fileDetail from "./fileDetail";
-  import {
-    mapState,
-    mapActions,
-    mapMutations
-  } from "vuex";
-  import Loading from "@/components/public/common/Loading.vue";
+  import { mapState,mapActions,mapMutations } from "vuex";
   import {
     updateTaskName,
     updatePriority,
@@ -603,6 +592,7 @@
   import {
     oss
   } from "@/axios/ossweb";
+import Loading from '../../../../public/common/Loading.vue';
   export default {
     components: {
       fileDetail,
@@ -615,12 +605,12 @@
       SingleTaskMenu,
       SetExecutor,
       AddRelation,
-      myModel,
       publick,
       log,
       commonFile: (resolve) => require(["./commonfile.vue"], resolve),
       Loading,
-      rcModal
+      rcModal,
+        Loading
     },
     data() {
       return {
@@ -665,10 +655,10 @@
       };
     },
     mounted() {
+      this.$refs.div.click();
       this.editTask(this.taskId).then(res=>{
         this.uploadList = this.$refs.upload.fileList;
       });
-      
     },
     computed: {
       ...mapState("task", ["task", "joinInfoIds", "images_suffix", "taskId"]),
@@ -1095,17 +1085,10 @@
   }
 
   .demo-upload-list {
-    display: inline-block;
-    width: 164px;
-    height: 110px;
-    text-align: center;
-    line-height: 110px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #fff;
-    position: relative;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    margin-right: 4px;
+    display: flex;
+    width: 118px;
+    height: 118px;
+    justify-content: center;
+    align-items: center;
   }
 </style>

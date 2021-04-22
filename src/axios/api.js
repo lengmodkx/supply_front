@@ -689,6 +689,15 @@ export function dragTask(data) {
         }
     });
 }
+
+//拖拽任务排序
+export function dragTask1(data) {
+    return fetch({
+        url: `${api.tasks}/order1`,
+        method: "put", // 请求方法
+        params: data
+    });
+}
 //任务编辑弹出框初始化
 export function initEditTask(taskId) {
     return fetch({
