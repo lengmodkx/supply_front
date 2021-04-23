@@ -392,10 +392,8 @@ export function delBQProject(tagId) {
     });
 }
 //点击项目进入任务主页
-export function mView(projectId) {
-    return $get(`${api.projects}/view_member`, {
-        projectId: projectId
-    });
+export function mView(data) {
+    return $get(`${api.projects}/view_member`, data);
 }
 
 //点击项目进入任务主页

@@ -320,20 +320,17 @@ import CurrentAdd from "./components/CurrentAdd";
 import listView from "./listView";
 import timeView from "./timeView";
 import memberView from "./memberView";
-import { scrollTo, dragscroll } from "@/utils";
+import { dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import {
-  enterTask,
   sortTaskMenu,
   addnewTask,
   completeTask,
   cancelcompleteTask,
   dragTask,
   addTask,
-  group,
   addGroup,
   changeGroup,
-  getIsGroupPower,
   changRelationName,
   delRelationName,
   selectTaskByExamples,
@@ -408,7 +405,7 @@ export default {
   mounted() {
     this.taskGroupId = this.$route.params.groupId;
     this.initTasks();
-      this.updateView(null)
+    this.updateView(null)
   },
   watch: {
     allTasks(newName, oldName) {
