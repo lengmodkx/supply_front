@@ -1,57 +1,52 @@
 <template>
-  <Poptip v-model="visible"
-          popper-class="datepickerBox"
-          transfer>
+  <Poptip v-model="visible" popper-class="datepickerBox" transfer>
     <slot>选择时间</slot>
     <div slot="content">
-      <DateTimeInline
-                      :datetime="datetime"
-                      :type="type"
-                      :max="max"
-                      :min="min"
-                      @close="close"
-                      @confirm="confirm"
-                      @clear="clear"></DateTimeInline>
+      <DateTimeInline :datetime="datetime" :visible="visible"
+      :type="type" :max="max" :min="min" @close="close" @confirm="confirm" @clear="clear"></DateTimeInline>
     </div>
   </Poptip>
 </template>
 
 <script>
 export default {
-  name: 'mydatepicker',
   props: {
     datetime: {
-      type: Number
+      type: Number,
     },
     type: {
       type: String,
-      default: 'end'
+      default: "end",
     },
     max: {},
     min: {}
   },
-  data () {
+  data() {
     return {
-      visible: false
-    }
+      visible: false,
+    };
+  },
+  watch:{
+      visible(v){
+        console.log(v)
+      }
   },
   methods: {
-    close () {
-      this.$nextTick(_ => {
-        this.visible = false
-      })
+    close() {
+      this.$nextTick((_) => {
+        this.visible = false;
+      });
     },
-    confirm (date) {
-      this.$emit('confirm', date)
-      this.close()
+    confirm(date) {
+      this.$emit("confirm", date);
+      this.close();
     },
-    clear () {
-      this.$emit('clear')
-      this.close()
+    clear() {
+      this.$emit("clear");
+      this.close();
     },
-  }
-}
+  },
+};
 </script>
 
-<style lang="less">
-</style>
+<style lang="less"></style>

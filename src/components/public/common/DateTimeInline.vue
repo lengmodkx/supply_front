@@ -1,13 +1,12 @@
 <template>
   <div>
-    <DatePicker :open="visible" :value="date" confirm class="datatimeinline" @on-change="dateChange" style="width:216px">
+    <DatePicker :open="visible" :value="date" class="datatimeinline" @on-change="dateChange" style="width:216px">
       <Row class="picker-input">
         <iCol span="14">
           <input v-model="date" />
         </iCol>
         <iCol span="10">
-          <TimePicker format="HH:mm" :value="time" confirm @on-change="timeChange" ref='timePicker'>
-          </TimePicker>
+          <TimePicker format="HH:mm" :value="time" @on-change="timeChange" ref='timePicker'></TimePicker>
         </iCol>
       </Row>
       <Row class="footer">
@@ -26,7 +25,6 @@
 
 <script>
 export default {
-  name: "mydatepicker",
   props: {
     datetime: {
       type: Number
@@ -39,7 +37,7 @@ export default {
     min: {},
     visible: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {

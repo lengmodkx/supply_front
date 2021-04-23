@@ -278,13 +278,13 @@
                           </div>
                         </Tooltip>
                       </div>
-                      <DateTimePicker class="sonDate fl" type="start" :max="i.endTime" @confirm="confirmSonDate"
+                      <!-- <DateTimePicker class="sonDate fl" type="start" :max="i.endTime" @confirm="confirmSonDate"
                         @clear="clearSonDate">
                         <div>
-                          <Icon class="icon" type="calendar" v-if="!i.sontaskDate" size="20"></Icon>
+                          <Icon class="icon" type="calendar" v-if="!i.endTime" size="20"></Icon>
                           <span v-else class="timeBox">
                             {{
-                              $moment(i.sontaskDate).calendar(null, {
+                              $moment(i.endTime).calendar(null, {
                                 sameDay: "[今天]LT",
                                 nextDay: "[明天]LT",
                                 lastDay: "[昨天]LT",
@@ -293,21 +293,21 @@
                                     .week($moment().week())
                                     .startOf("week")
                                     .valueOf();
-                                  return i.sontaskDate <= startDate ? "[上]dddLT" : "dddLT";
+                                  return i.endTime <= startDate ? "[上]dddLT" : "dddLT";
                                 },
                                 nextWeek: (now) => {
                                   const endDate = $moment()
                                     .week($moment().week())
                                     .endOf("week")
                                     .valueOf();
-                                  return i.sontaskDate >= endDate ? "[下]dddLT" : "dddLT";
+                                  return i.endTime >= endDate ? "[下]dddLT" : "dddLT";
                                 },
                                 sameElse: "Y年M月D日LT",
                               })
                             }}
                           </span>
                         </div>
-                      </DateTimePicker>
+                      </DateTimePicker> -->
                       <SetExecutor @choose="ZrwChooseZxz" :id="task.projectId" :taskId="i.taskId" :task="i"
                         ref="executor" v-model="i.executor"></SetExecutor>
                       <div class="enterDetail fl">
@@ -655,7 +655,7 @@ import Loading from '../../../../public/common/Loading.vue';
       };
     },
     mounted() {
-      this.$refs.div.click();
+      // this.$refs.div.click();
       this.editTask(this.taskId).then(res=>{
         this.uploadList = this.$refs.upload.fileList;
       });
