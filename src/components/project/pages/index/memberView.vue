@@ -11,16 +11,14 @@
         fallbackClass: 'boxFallbackClass',
         forceFallback: true,
         delay: 1,
-        touchStartThreshold:10,
-        preventDragY: true // 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
+        touchStartThreshold: 10,
+        preventDragY: true, // 修改Sortable.js源码  _onTouchMove dy =  options.preventDragY?0:...
       }"
       @end="dragBox"
     >
       <div class="column" :key="k" v-for="(i, k) in allTask">
         <div style="max-height: 85vh;position:relative;" :data-index="k" v-if="i.taskList">
-          <div class="title handle">
-            {{ i.userName }} · {{ i.taskList ? i.taskList.length : "0" }}
-          </div>
+          <div class="title handle">{{ i.userName }} · {{ i.taskList ? i.taskList.length : "0" }}</div>
           <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`" :style="i.taskList.length * 60 + 42 > wHeight ? 'overflow-y: scroll' : ''">
             <draggable :list="i.taskList" :options="{ group: 'uncheckedTask', forceFallback: true, delay: 0.5, dragClass: 'dragClass', fallbackClass: 'fallbackClass' }" class="ul" @end="dragList">
               <div class="li" v-for="(a, b) in i.taskList" v-if="!a.taskStatus" :key="b" :data-id="a.taskId" @click="initTask(a.taskId)">
@@ -31,9 +29,9 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="top">
-                        <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
-                     </Tooltip>
+                    <Tooltip :content="a.executorName" placement="top">
+                      <img :src="a.executorImg" class="ava" v-if="a.executorImg" alt="" />
+                    </Tooltip>
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper">
@@ -80,9 +78,9 @@
                       <Checkbox size="small" v-model="a.taskStatus"></Checkbox>
                     </div>
                     <div class="cont">{{ a.taskName }}</div>
-                     <Tooltip :content="a.executorName"  placement="top">
-                    <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
-                     </Tooltip>
+                    <Tooltip :content="a.executorName" placement="top">
+                      <img :src="a.executorImg" class="ava" v-if="a.executorImg != null" alt="" />
+                    </Tooltip>
                   </div>
                   <!-- 小图标 -->
                   <div class="task-info-wrapper" v-if="a.taskList">
@@ -118,14 +116,13 @@
                 </div>
               </div>
             </draggable>
-            
           </div>
         </div>
       </div>
     </draggable>
     <!--加载中-->
     <div class="demo-spin-container" v-if="loading">
-      <Loading></Loading>
+      <loading></loading>
     </div>
   </div>
 </template>
@@ -139,9 +136,9 @@ import myModal from "./components/EditList.vue";
 import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
 import memberView from "./memberView";
-import { scrollTo, dragscroll } from "@/utils";
+import { dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
-import { mView,enterTask, sortTaskMenu, addnewTask, completeTask, cancelcompleteTask, dragTask, addTask, group, getIsGroupPower } from "../../../../axios/api.js";
+import { addnewTask, completeTask, cancelcompleteTask, dragTask1, addTask } from "../../../../axios/api.js";
 export default {
   name: "",
   components: {
@@ -150,13 +147,13 @@ export default {
     // FilterBox,
     // SortBox,
     TaskMenu,
-    myModal
+    myModal,
     // LeftTaskInfo,
     // CurrentAdd
   },
   computed: {
     ...mapGetters("task", ["curTaskGroup", "abc"]),
-    ...mapState("task", ["sort", "groups"]),
+    ...mapState("task", ["sort", "groups", "allTasks"]),
   },
   data() {
     return {
@@ -168,7 +165,7 @@ export default {
       currentEditId: "",
       newProTitle: "",
       taskMenuId: null,
-      taskGroupId: null,
+      taskGroupId: this.$route.params.groupId,
       projectId: this.$route.params.id,
       active: "a",
       priority: "1",
@@ -185,26 +182,48 @@ export default {
       showAddGroup: false,
       groupName: "",
       loading: true,
-      allTask: [],
       showGroupPower: "",
-      taskId: ""
+      taskId: "",
+      allTask: [],
     };
   },
   mounted() {
-    this.taskGroupId = this.$route.params.groupId;
-    mView(this.projectId).then(res => {
-        console.log(res.data)
+    let data = {
+      projectId: this.projectId,
+      groupId: this.taskGroupId,
+    };
+    this.memberView(data).then((res) => {
       this.loading = false;
-      this.allTask = res.data;
+      this.allTask = this.allTasks;
     });
     window.onscroll = () => {
       this.wHeight = window.outerHeight - 261;
     };
     dragscroll(["column-main", "scrum-stage-tasks"]);
   },
-
+  watch: {
+    allTasks(newName, oldName) {
+      this.allTask = newName;
+    },
+    deep: true,
+    view(val) {
+      if (this.viewId == null || val == "时间视图" || val == "成员视图") {
+        let data = {
+          projectId: this.projectId,
+          groupId: this.taskGroupId,
+        };
+        this.memberView(data).then((res) => {
+          this.loading = false;
+          this.allTask = this.allTasks;
+        });
+        this.viewId = null;
+      } else {
+        this.checkView(this.viewId);
+      }
+    },
+  },
   methods: {
-    ...mapActions("task", ["init", "editTask"]),
+    ...mapActions("task", ["init", "memberView"]),
     ...mapMutations("task", ["changeTask", "setTaskId"]),
     hideAddTask() {
       this.currentEditId = "";
@@ -212,10 +231,10 @@ export default {
     changeGroup(groupId) {
       this.taskGroupId = groupId;
       this.loading = true;
-      changeGroup(groupId, this.projectId).then(res => {
+      changeGroup(groupId, this.projectId).then((res) => {
         if (res.result == 1) {
           this.$router.replace(`/project/${this.projectId}/tasks/group/${groupId}`);
-          this.init(this.projectId).then(res => {
+          this.init(this.projectId).then((res) => {
             this.loading = false;
           });
         }
@@ -234,11 +253,11 @@ export default {
     handleSave() {
       this.loading = true;
       this.showAddGroup = false;
-      addGroup(this.projectId, this.groupName).then(res => {
+      addGroup(this.projectId, this.groupName).then((res) => {
         if (res.result === 1) {
           this.taskGroupId = res.groupId;
           this.$router.replace(`/project/${this.projectId}/tasks/group/${res.groupId}`);
-          this.init(this.projectId).then(res => {
+          this.init(this.projectId).then((res) => {
             this.loading = false;
           });
         }
@@ -270,9 +289,9 @@ export default {
         taskName: this.textarea,
         projectId: this.projectId,
         taskMenuId: this.taskMenuId,
-        taskGroupId: this.taskGroupId
+        taskGroupId: this.taskGroupId,
       };
-      addTask(data).then(res => {
+      addTask(data).then((res) => {
         if (res.result === 1) {
           this.textarea = "";
           this.isCreateTask = false;
@@ -284,27 +303,28 @@ export default {
       //拖拽大盒子
       //this.changeTask(this.allTask);
       //获取拖动的大盒子的id排序数组
-      let newArr = this.allTask.map(v => v.relationId).join(",");
-      sortTaskMenu(newArr).then(res => {});
+      //let newArr = this.allTask.map(v => v.relationId).join(",");
+      //sortTaskMenu(newArr).then(res => {});
     },
     dragList(evt) {
       //拖拽小的任务列表项 排序
       let targetIndex = evt.to.parentNode.parentNode.getAttribute("data-index");
       let obj = this.allTask[targetIndex];
       let listId = obj.taskList
-        .map(v => {
+        .map((v) => {
           return v.taskId;
         })
         .join(",");
       let taskId = evt.clone.getAttribute("data-id");
       let finalObj = {
         //发给后台的数据
-        newMenu: obj.relationId, //当前菜单id
+        userId: obj.userId, //当前菜单id
         taskId: taskId, //当前拖动的任务的id
         taskIds: listId, //逗号隔开的id
-        projectId: this.projectId //项目id
+        projectId: this.projectId, //项目id
       };
-      dragTask(finalObj).then(res => {
+      console.log(obj);
+      dragTask1(finalObj).then((res) => {
         console.log(res);
       });
     },
@@ -324,14 +344,14 @@ export default {
         // });
 
         //完成任务  请求
-        completeTask(this.projectId, taskId, 0).then(res => {
+        completeTask(this.projectId, taskId, 0).then((res) => {
           if (res.result == 0) {
             this.$Message.error(res.msg);
           }
         });
       } else {
         //取消完成任务 请求
-        cancelcompleteTask(this.projectId, taskId, 0).then(res => {
+        cancelcompleteTask(this.projectId, taskId, 0).then((res) => {
           if (res.result == 0) {
             this.$Message.error(res.msg);
           }
@@ -361,7 +381,7 @@ export default {
       this.isCreateTask = true;
       //这里发请求，字段有：项目id,任务分组的id,新建任务的title
       // console.log(this.projectId,this.menuGroupId,this.newProTitle)
-      addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then(res => {
+      addnewTask(this.projectId, this.taskGroupId, this.newProTitle).then((res) => {
         if (res.result == 1) {
           this.newProTitle = "";
           this.showAdd = true;
@@ -380,7 +400,7 @@ export default {
       }
       return priority;
       // return priority=='普通'?'':(priority=='紧急'?'warning':'urgent')
-    }
-  }
+    },
+  },
 };
 </script>

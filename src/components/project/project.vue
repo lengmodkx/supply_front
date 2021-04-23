@@ -24,18 +24,18 @@ export default {
     "header-project": MyHeader,
     ProjectMember,
     ProjectMenu,
-    ProjectView
+    ProjectView,
   },
   data() {
     return {
       show: -1,
-      timer:'',
+      timer: "",
       animate: true,
-      activeHeaderTag: -1
+      activeHeaderTag: -1,
     };
   },
   created() {
-    this.reconnection(this.$route.params.id)
+    this.reconnection(this.$route.params.id);
   },
   destroyed() {
     this.stompClient.disconnect(function() {
@@ -68,30 +68,30 @@ export default {
     //   this.show = false
     //   this.place = this.showMenu
     // }
-    reconnection(){
-        this.initSocket(this.$route.params.id);
-        let self = this;
-        // 断开重连机制,尝试发送消息,捕获异常发生时重连
-        this.timer = setInterval(() => {
-            try {
-                self.stompClient.send("test");
-            } catch (err) {
-                console.log("断线了: " + err);
-                self.initSocket(this.$route.params.id);
-            }
-        }, 1000*10);
+    reconnection() {
+      this.initSocket(this.$route.params.id);
+      let self = this;
+      // 断开重连机制,尝试发送消息,捕获异常发生时重连
+      this.timer = setInterval(() => {
+        try {
+          self.stompClient.send("test");
+        } catch (err) {
+          console.log("断线了: " + err);
+          self.initSocket(this.$route.params.id);
+        }
+      }, 1000 * 10);
     },
     initSocket(id) {
       // 建立连接对象
       var url = "";
-      
+
       if (process.env.NODE_ENV == "test") {
         url = process.env.VUE_APP_TEST_SOCKET;
       } else if (process.env.NODE_ENV == "production") {
         url = process.env.VUE_APP_SOCKET;
       } else {
         url = process.env.VUE_APP_SOCKET;
-       //url='http://192.168.3.112:8080/webSocketServer'
+        //url='http://192.168.3.112:8080/webSocketServer'
       }
       var socket = new SockJS(url); //连接服务端提供的通信接口，连接以后才可以订阅广播消息和个人消息
       // 获取STOMP子协议的客户端对象
@@ -99,14 +99,21 @@ export default {
       //this.stompClient.debug = function(str) {};
       this.stompClient.connect(
         {},
-        frame => {
-          this.stompClient.subscribe(`/topic/${id}`, msg => {
+        (frame) => {
+          this.stompClient.subscribe(`/topic/${id}`, (msg) => {
             var result = JSON.parse(msg.body);
             console.log(result.type);
             switch (result.type) {
               case "A1": //创建任务
               case "A27":
-                this.$store.dispatch("task/init", result.object);
+                var view = this.$store.state.app.view;
+                if (view == "看板视图") {
+                  this.$store.dispatch("task/init", result.object);
+                } else if (view == "成员视图") {
+                  console.log(this.$route.params.groupId);
+                  let data = { projectId: result.object, groupId: this.$route.params.groupId };
+                  this.$store.dispatch("task/memberView", data);
+                }
                 break;
               case "A2":
                 this.$store.dispatch("task/deleteTask", result.object);
@@ -164,7 +171,7 @@ export default {
                   this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
-              
+
               // 添加分享
               case "B1":
                 this.$store.dispatch("share/init", result.object);
@@ -214,7 +221,7 @@ export default {
                 break;
               // 移动文件
               case "C12":
-                this.$store.dispatch("file/initFile", {fileId:result.object});
+                this.$store.dispatch("file/initFile", { fileId: result.object });
                 break;
               // 文件移到回收站
               case "C13":
@@ -223,7 +230,7 @@ export default {
               // 更改 文件隐私模式
               case "C8":
                 this.$store.dispatch("file/putMimi", result.object);
-                this.$store.dispatch("tree/initTree",result.object);
+                this.$store.dispatch("tree/initTree", result.object);
                 break;
               // 改变文件参与者
               case "C9":
@@ -231,22 +238,22 @@ export default {
                 break;
               case "C3":
                 this.$store.dispatch("file/initFile", {
-                  fileId: result.object.parentId
+                  fileId: result.object.parentId,
                 });
                 break;
               case "C4":
-                this.$store.dispatch("file/initFile", {fileId: result.object.parentId});
+                this.$store.dispatch("file/initFile", { fileId: result.object.parentId });
                 this.$store.dispatch("file/putOneFile", result.object.fileId);
                 break;
               case "C7":
                 this.$store.dispatch("file/initFile", {
-                  fileId: result.object.parentId
+                  fileId: result.object.parentId,
                 });
                 break;
               //新建日程
               case "D9":
                 this.$store.dispatch("schedule/init", {
-                  projectId: result.object
+                  projectId: result.object,
                 });
                 break;
               //修改日程名称
@@ -277,31 +284,31 @@ export default {
               case "D7":
                 this.$store.dispatch("schedule/getScheduleById", result.object);
                 break;
-                case "K1":
-                  this.$store.dispatch("member/initUser", result.object.projectId);
+              case "K1":
+                this.$store.dispatch("member/initUser", result.object.projectId);
                 break;
               //复制日程
               case "D10":
               case "D11":
               case "D12":
               case "D13":
-                console.log("xxxxxxxxx")
+                console.log("xxxxxxxxx");
                 this.$store.dispatch("schedule/init", {
-                  projectId: result.object
+                  projectId: result.object,
                 });
                 break;
               // 添加标签
               case "D14":
                 if (result.object.publicType === "task") {
                   this.$store.dispatch("task/init", result.object.projectId);
-                } else{
-                   window.location.reload();
+                } else {
+                  window.location.reload();
                 }
-                
+
                 break;
               case "D15":
                 this.$store.dispatch("schedule/init", {
-                  projectId: result.object
+                  projectId: result.object,
                 });
                 break;
               case "E1":
@@ -310,7 +317,7 @@ export default {
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/bindingTag", {
                     tag: result.object.tag,
-                    fileId: result.object.publicId
+                    fileId: result.object.publicId,
                   });
                 } else if (result.object.publicType === "分享") {
                   this.$store.dispatch("share/changeShares", result.object.publicId);
@@ -325,7 +332,7 @@ export default {
                 } else if (result.object.publicType === "文件") {
                   this.$store.commit("file/removeTag", {
                     tagId: result.object.tagId,
-                    fileId: result.object.publicId
+                    fileId: result.object.publicId,
                   });
                 } else if (result.object.publicType === "分享") {
                   this.$store.dispatch("share/changeShares", result.object.publicId);
@@ -343,7 +350,7 @@ export default {
                   this.$store.dispatch("schedule/getScheduleById", result.object.publicId);
                 }
                 break;
-                 
+
               // 发消息
               case "F1":
                 if (result.object.type === "任务") {
@@ -361,7 +368,7 @@ export default {
               case "G1":
                 this.$store.commit("chat/pushMsg", {
                   chat: result.object,
-                  userId: localStorage.userId
+                  userId: localStorage.userId,
                 });
                 break;
               case "G2":
@@ -375,15 +382,15 @@ export default {
               case "H6":
               case "H7":
               case "H8":
-                  this.$store.dispatch("task/init", result.object);
+                this.$store.dispatch("task/init", result.object);
                 break;
             }
           });
         },
-        err => {}
+        (err) => {}
       );
-    }
-  }
+    },
+  },
 };
 </script>
 
