@@ -124,6 +124,10 @@
     <div class="demo-spin-container" v-if="loading">
       <loading></loading>
     </div>
+    <!-- 点击列表出来的弹框。编辑列表 :closable="false" fullscreen-->
+    <Modal v-model="showModal" class="myModal" :mask-closable="false" :closable="false" footer-hide fullscreen>
+      <task-detail v-if="showModal" @close="showModal = false"></task-detail>
+    </Modal>
   </div>
 </template>
 
@@ -132,13 +136,13 @@ import draggable from "vuedraggable";
 import FilterBox from "./components/FilterBox";
 import SortBox from "./components/SortBox";
 import TaskMenu from "./components/TaskMenu.vue";
-import myModal from "./components/EditList.vue";
 import LeftTaskInfo from "./components/LeftTaskInfo";
 import CurrentAdd from "./components/CurrentAdd";
 import memberView from "./memberView";
 import { dragscroll } from "@/utils";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import { addnewTask, completeTask, cancelcompleteTask, dragTask1, addTask } from "../../../../axios/api.js";
+import TaskDetail from "./components/taskdetail.vue";
 export default {
   name: "",
   components: {
@@ -147,7 +151,7 @@ export default {
     // FilterBox,
     // SortBox,
     TaskMenu,
-    myModal,
+    TaskDetail,
     // LeftTaskInfo,
     // CurrentAdd
   },
