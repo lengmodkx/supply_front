@@ -3,7 +3,7 @@
           class="emoji fl"
           v-model="showpop">
     <span class="smileFace">
-      <Icon type="md-happy" />
+      <Icon type="md-happy"/>
     </span>
     <div slot="content">
       <Carousel v-model="value"
@@ -90,9 +90,9 @@ export default {
   height: 25px;
   margin-top: 5px;
   margin-left: 12px;
-  color: #a6a6a6;
+  color: #ABABAB;
   i {
-    font-size: 20px;
+    font-size: 23px;
     cursor: pointer;
   }
   .smileFace {
