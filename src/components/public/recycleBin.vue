@@ -1,13 +1,13 @@
 <template>
   <div class="recycle-con">
     <ul class="recycle-left">
-      <li :class="{ checked: nowChecked === 'task' }" @click="changeNav('task')"><Icon type="md-checkbox-outline" />任务</li>
-      <li :class="{ checked: nowChecked === 'share' }" @click="changeNav('share')"><Icon type="ios-paper-outline" />分享</li>
-      <li :class="{ checked: nowChecked === 'schedule' }" @click="changeNav('schedule')"><Icon type="ios-calendar-outline" />日程</li>
-      <li :class="{ checked: nowChecked === 'file' }" @click="changeNav('file', '文件')"><Icon type="ios-document-outline" />文件</li>
-      <li :class="{ checked: nowChecked === 'folder' }" @click="changeNav('folder', '文件夹')"><Icon type="ios-folder-outline" />文件夹</li>
-      <!-- <li :class="{ checked: nowChecked === 'group' }" @click="changeNav('group')"><Icon type="ios-paper-outline" />分组</li> -->
-      <li :class="{ checked: nowChecked === 'tag' }" @click="changeNav('tag')"><Icon type="ios-pricetag-outline" />标签</li>
+      <li :class="{ recycle_checked: nowChecked === 'task' }" @click="changeNav('task')"><Icon type="md-checkbox-outline" />任务</li>
+      <li :class="{ recycle_checked: nowChecked === 'share' }" @click="changeNav('share')"><Icon type="ios-paper-outline" />分享</li>
+      <li :class="{ recycle_checked: nowChecked === 'schedule' }" @click="changeNav('schedule')"><Icon type="ios-calendar-outline" />日程</li>
+      <li :class="{ recycle_checked: nowChecked === 'file' }" @click="changeNav('file', '文件')"><Icon type="ios-document-outline" />文件</li>
+      <li :class="{ recycle_checked: nowChecked === 'folder' }" @click="changeNav('folder', '文件夹')"><Icon type="ios-folder-outline" />文件夹</li>
+      <li :class="{ recycle_checked: nowChecked === 'group' }" @click="changeNav('group')"><Icon type="ios-paper-outline" />分组</li>
+      <li :class="{ recycle_checked: nowChecked === 'tag' }" @click="changeNav('tag')"><Icon type="ios-pricetag-outline" />标签</li>
     </ul>
     <div class="recycle-right" v-if="dataList">
       <div v-if="dataList.length>0" class="has-con">
@@ -354,7 +354,7 @@ data: function() {
     width: 180px;
     height: 100%;
     border-right: 1px solid #e5e5e5;
-    .checked {
+    .recycle_checked {
       background-color: #f7f7f7;
       color: #3da8f5;
     }
