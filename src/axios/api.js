@@ -411,6 +411,14 @@ export function enterTaskNew(projectId) {
         method: "get" // 请求方法
     });
 }
+
+export function subTasks(taskId){
+    return fetch({
+        url: `tasks/${taskId}/sub`,
+        method: "get", // 请求方法
+    });
+}
+
 // 添加任务
 export function addTask(data) {
     return fetch({
