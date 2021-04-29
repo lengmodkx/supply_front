@@ -1,20 +1,13 @@
 <template>
   <Poptip class="task-menuwrapper" placement="bottom" transfer v-model="visible" @on-popper-hide="popHide">
-    <Icon class="sanjiao" type="ios-arrow-dropdown" style="color:gray;" size="20"></Icon>
+    <Icon class="sanjiao" type="ios-arrow-dropdown" style="color:gray;padding:5px" size="26"></Icon>
     <div slot="content" class="task-menuwrapper-content" v-if="initCom">
       <div class="dropdownTitle">
         <span class="back">
-          <span
-            v-if="active != ''"
-            @click="
-              active = '';
-              reset(true);
-            "
-          >
+          <span v-if="active != ''" @click="active = '';reset(true);">
             <svg-icon class="backicon" name="back"></svg-icon>
           </span>
-        </span>
-        {{ topTitle }}
+        </span>{{ topTitle }}
         <span class="guanbi" @click="reset(false)">
           <svg-icon class="closePop" name="close"></svg-icon>
         </span>
