@@ -135,6 +135,9 @@ export default {
     chooseEmoji(name) {
       // insertText(this.$refs.textarea.$el.children[1], name)
       this.$refs.textarea.innerHTML += '<img src="' + name + '" />';
+       this.$nextTick(() => {
+          this.keepLastIndex(this.$refs.textarea)
+        })
     },
     //获取成员
     searchUser() {
@@ -152,7 +155,21 @@ export default {
           this.invitUsers = res.data;
         }
       });
-    }
+    },
+    keepLastIndex(obj) {  // 解决选中表情后，失去光标问题
+        if (window.getSelection) { //ie11 10 9 ff safari
+          obj.focus(); //解决ff不获取焦点无法定位问题
+          var range = window.getSelection(); //创建range
+          range.selectAllChildren(obj); //range 选择obj下所有子内容
+          range.collapseToEnd(); //光标移至最后
+        } else if (document.selection) { //ie10 9 8 7 6 5
+          var range = document.selection.createRange(); //创建选择对象
+          //var range = document.body.createTextRange();
+          range.moveToElementText(obj); //range定位到obj
+          range.collapse(false); //光标移至最后
+          range.select();
+        }
+      }
   },
   created: function() {}
 };
