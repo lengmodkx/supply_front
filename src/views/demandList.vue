@@ -96,6 +96,7 @@
                 demandParam: {
                     pageNum: 1,
                     type: 4,
+                    userId:localStorage.userId
                 },
                 delModal: false,
                 modal_loading: false,
