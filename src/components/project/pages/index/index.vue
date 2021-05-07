@@ -139,12 +139,13 @@
                       </div>
                     </div>
                     <div class="show-sub-task" @click.stop="showSubTask(a.taskId,a)" v-if="a.childCount>0">
-                      <Icon type="ios-arrow-down" size="18"/>
+                      <Icon type="ios-arrow-down" size="18" v-if="!a.visible"/>
+                      <Icon type="ios-arrow-up" size="18" v-else/>
                     </div>
                   </div>
                 </div>
                 
-                <div class="liinner" v-for="(task, b) in subTaskList" v-if="a.visible" :key="task.taskId" :data-id="task.taskId" @click.stop="initTask(task.taskId)">
+                <div class="liinner" v-for="(task, b) in a.taskList" v-if="a.visible" :key="task.taskId" :data-id="task.taskId" @click.stop="initTask(task.taskId)">
                 <div class="task-mod" :class="renderTaskStatu(task.priority)">
                   <div class="teskCheck" @click.stop="changeSubStatus(task)"></div>
                   <div class="check">
@@ -275,8 +276,77 @@
                         </div>
                       </div>
                     </div>
+                    <div class="show-sub-task" @click.stop="showSubTask(a.taskId,a)" v-if="a.childCount>0">
+                      <Icon type="ios-arrow-down" size="18" v-if="!a.visible"/>
+                      <Icon type="ios-arrow-up" size="18" v-else/>
+                    </div>
                   </div>
                 </div>
+                <div class="liinner" v-for="(task, b) in a.taskList" v-if="a.visible" :key="task.taskId" :data-id="task.taskId" @click.stop="initTask(task.taskId)">
+                <div class="task-mod" :class="renderTaskStatu(task.priority)">
+                  <div class="teskCheck" @click.stop="changeSubStatus(task)"></div>
+                  <div class="check">
+                    <div @click.stop class="checkbox-wrap">
+                      <Checkbox size="small" v-model="task.taskStatus"></Checkbox>
+                    </div>
+                    <div class="cont">{{ task.taskName }}</div>
+                    <Tooltip :content="task.executorName" placement="top" transfer>
+                      <img :src="task.executorImg" class="ava" v-if="task.executorImg" alt="" />
+                    </Tooltip>
+                  </div>
+                  <!-- 小图标 -->
+                  <div class="task-info-wrapper">
+                    <div class="task-infos">
+                      <span class="label time-label" v-if="task.endTime">
+                        {{
+                          $moment(task.endTime).calendar(null, {
+                            sameDay: "[今天]LT",
+                            nextDay: "[明天]LT",
+                            lastDay: "[昨天]LT",
+                            lastWeek: (now) => {
+                              const startDate = $moment()
+                                .week($moment().week())
+                                .startOf("week")
+                                .valueOf();
+                              return task.endTime <= startDate ? "[上]dddLT" : "dddLT";
+                            },
+                            nextWeek: (now) => {
+                              const endDate = $moment()
+                                .week($moment().week())
+                                .endOf("week")
+                                .valueOf();
+                              return task.endTime >= endDate ? "[下]dddLT" : "dddLT";
+                            },
+                            sameElse: "Y年M月D日LT",
+                          })
+                        }}
+                      </span>
+                      <span class="label repeat-label" v-if="task.repeat !== '不重复'">{{ task.repeat }}</span>
+                      <!--<span class="label">-->
+                      <!--<Icon class="icon" type="ios-alarm-outline" size="16">11111</Icon>-->
+                      <!--</span>-->
+                      <span class="label" v-if="task.remarks" style="margin-top: -5px">
+                        <Icon type="ios-create-outline" size="18" />
+                      </span>
+                      <span class="label" style="margin-bottom: 3px" v-if="task.childCount>0">
+                        <Icon type="ios-list" size="22" />
+                        <span class="sonTask" style="line-height: 10px; padding-left: 5px">{{ task.completeCount }}/{{ task.childCount }}</span>
+                      </span>
+                      <span class="label" v-if="task.bindCount>0" style="margin-bottom: 3px">
+                        <Icon type="ios-link" size="14" />
+                      </span>
+                      <span class="label" v-if="task.fileCount>0" style="margin-bottom: 2px">
+                        <Icon type="md-paper" size="16" />
+                      </span>
+                      <div class="tag-box" v-if="task.tagList" style="margin-bottom: 5px">
+                        <div class="tag-list" v-for="tag in task.tagList" :key="tag.tagId">
+                          <i :style="{ backgroundColor: tag.bgColor }"></i><span>{{ tag.tagName }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               </div>
             </draggable>
             <div class="add" style="height: 45px" v-if="addBtns"></div>
@@ -460,9 +530,8 @@ export default {
     showSubTask(taskId,a){
         subTasks(taskId).then(res=>{
           if(res.result==1){
-            this.subTaskList = res.data;
+            a.taskList = res.data;
             a.visible = !a.visible;
-            console.log(res.data);
           }
         });
     },

@@ -25,7 +25,7 @@
                                         <span>{{ item.name }}</span>
                                     </p>
                                     <div class="file-info flex-static">
-                                        <span class="collection">{{ projectName }}</span>
+                                        <!-- <span class="collection">{{ projectName }}</span> -->
                                         <span class="file-size">{{ "("+ renderSize(item.size)+ ")"}}</span>
                                     </div>
                                   </section>
@@ -256,8 +256,11 @@ export default {
                                 display: flex;
                                 flex-direction: row;
                                 align-items: center;
-                                white-space: pre;
                                 min-width: 0;
+                                overflow: hidden;
+                                text-overflow:ellipsis;
+                                white-space: nowrap;
+                                width: 100px;
                             }
 
                             .file-info {
