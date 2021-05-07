@@ -545,6 +545,9 @@
       <Modal v-model="showRCModal" class="myModal myRcModal">
         <rc-modal></rc-modal>
       </Modal>
+      <Modal v-model="showShare" fullscreen :footer-hide="true" class-name="model-detail">
+          <shareModal v-if="showShare" :shareId='shareId'></shareModal>
+      </Modal>
     </div>
   </div>
 </template>
@@ -563,6 +566,8 @@
   import log from "@/components/public/log";
   import publick from "@/components/public/Publish";
   import fileDetail from "./fileDetail";
+  import shareModal from "@/components/project/share/shareModal";
+
   import { mapState,mapActions,mapMutations } from "vuex";
   import {
     updateTaskName,
@@ -610,7 +615,8 @@ import Loading from '../../../../public/common/Loading.vue';
       commonFile: (resolve) => require(["./commonfile.vue"], resolve),
       Loading,
       rcModal,
-        Loading
+        Loading,
+        shareModal
     },
     data() {
       return {
@@ -651,7 +657,9 @@ import Loading from '../../../../public/common/Loading.vue';
         uploadList: [],
         host: '',
         uploadData: {},
-        uploadFiles: []
+        uploadFiles: [],
+        showShare:false,// 关联的分享弹窗
+        shareId:""
       };
     },
     mounted() {
@@ -973,8 +981,9 @@ import Loading from '../../../../public/common/Loading.vue';
       },
       // 去分享详情
       goShareDetail(shareId) {
-        // alert(shareId);
-        this.$router.push(`/project/${this.$route.params.id}/share_detail/${shareId}`);
+        this.showShare=true
+        this.shareId=shareId
+        // this.$router.push(`/project/${this.$route.params.id}/share_detail/${shareId}`);
       },
       closeModal() {
         this.$emit("close");

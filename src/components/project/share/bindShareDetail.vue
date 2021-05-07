@@ -35,7 +35,7 @@
           <div class="share-list">
             <Loading v-if="loading"></Loading>
             <ul v-if="shareList.length">
-              <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index)">
+              <li v-for="(share,index) in shareList" :key="share.id" :class="{ active: index==indexNow }" @click="changeContent(index,share.id)">
                 <img class="ava" v-bind:src="share.memberImg">
                 <div class="">
                   <p class="t">{{share.title}}</p>
@@ -197,14 +197,14 @@ export default {
       this.shareList.forEach((i,n) => {
         if (this.$route.params.shareId===i.id){
           this.indexNow=n
-          this.changeShare(n);
+          this.changeShares(i.id);
         }
       })
     });
 
   },
   methods: {
-    ...mapActions("share", ["init"]),
+    ...mapActions("share", ["init", "changeShares",]),
     ...mapMutations("share", ["changeShare"]),
     clickEvent(parameter) {},
     changePrivacy() {
@@ -218,11 +218,13 @@ export default {
         this.privacyStatus = "已开启";
       }
     },
-    changeContent(index) {
+    changeContent(index,id) {
       this.indexNow = index;
-      this.changeShare(index);
+      // this.changeShare(index);
       // this.share = this.shareList[index];
-      this.$store.dispatch("member/init", this.shareList[index].joinInfo);
+      // this.$store.dispatch("member/init", this.shareList[index].joinInfo);
+      this.changeShares(id);
+
     },
     showMember() {
       this.showAddMember = !this.showAddMember;
