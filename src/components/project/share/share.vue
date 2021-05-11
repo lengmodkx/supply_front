@@ -209,8 +209,8 @@
                     </ul>
                   </div>
                   <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-                  <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true">
-                    <AddRelation :publicId="share.id" :fromType="publicType"></AddRelation>
+                  <Modal v-model="relationModal" footer-hide :closable="false" class-name="relationModal" class="add-relation" id="relationModal" width="800">
+                    <AddRelation :publicId="share.id" :fromType="publicType" @close="relationModal=false" v-if="relationModal"></AddRelation>
                   </Modal>
                 </div>
               </div>
@@ -266,7 +266,7 @@ import { shares, setSysClip } from "../../../axios/api2.js";
 import userList from "../../resource/userList.vue";
 import log from "../../public/log";
 import singleFenxiangMenu from "../../public/common/SingleFenxiangMenu.vue";
-import AddRelation from "@/components/public/common/AddRelation";
+ import AddRelation from "@/components/Relation";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { share, changeJoin, cancle } from "../../../axios/api";
 export default {
@@ -819,6 +819,20 @@ export default {
   font-size: 16px;
   img {
     margin-bottom: 15px;
+  }
+}
+.relationModal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal{
+    top: 0;
+  }
+}
+.add-relation{
+  /deep/.ivu-modal-body{
+    padding: 0px;
+    overflow: hidden;
   }
 }
 </style>

@@ -95,8 +95,8 @@
           <div class="relevance">
             <p class="name"><Icon type="ios-link-outline" />关联内容</p>
             <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-            <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true" width="850">
-              <AddRelation v-if="relationModal" @binkCallback="binkCallback" :publicId="file.fileId" :fromType="publicType"></AddRelation>
+            <Modal v-model="relationModal" class="add-relation" class-name="relationModal" :closable="false" :footer-hide="true" width="800">
+              <AddRelation v-if="relationModal" @close="relationModal = false" :publicId="file.fileId" :fromType="publicType"></AddRelation>
             </Modal>
           </div>
           <!--有关联内容-->
@@ -264,7 +264,7 @@ import { mapState,mapActions } from "vuex";
 import { jionPeople, recycleBin, filePrivacy,modelChange } from "@/axios/fileApi";
 import { folderChild, collect, sendMsg } from "@/axios/api";
 import Tags from "../public/Tags.vue";
-import AddRelation from "@/components/public/common/AddRelation"; //关联
+import AddRelation from "@/components/Relation";
 import log from "@/components/public/log"; //标签
 import Emoji from "@/components/public/common/emoji/Emoji"; //表情包
 import VersionUpdate from './versionUpdate.vue';
@@ -481,4 +481,18 @@ export default {
 
 <style scoped lang="less">
 @import "./sucaiDetail";
+.relationModal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal{
+    top: 0;
+  }
+}
+.add-relation{
+  /deep/.ivu-modal-body{
+    padding: 0px;
+    overflow: hidden;
+  }
+}
 </style>

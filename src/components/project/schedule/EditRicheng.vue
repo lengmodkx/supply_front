@@ -111,8 +111,8 @@
         <div class="relevance">
           <p class="name" style="float: none;"><Icon type="ios-link-outline"></Icon>关联内容</p>
           <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-          <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true"  width="850">
-            <AddRelation :publicId="schedule.scheduleId" :fromType="publicType"></AddRelation>
+          <Modal v-model="relationModal" footer-hide :closable="false" class-name="relationModal" class="add-relation" id="relationModal" width="800" >
+            <AddRelation :publicId="schedule.scheduleId" :fromType="publicType" @close="relationModal = false" v-if="relationModal"></AddRelation>
           </Modal>
         </div>
 
@@ -249,7 +249,7 @@
 <script>
 import SetRepeat from "@/components/project/pages/index/components/SetRepeat";
 import SetRCWarn from "@/components/project/pages/index/components/SetRiChengWarn";
-import AddRelation from "@/components/public/common/AddRelation";
+ import AddRelation from "@/components/Relation";
 //import Tags from '@/components/project/share/Tags'
 import Tags from "@/components/public/Tags.vue";
 import Emoji from "@/components/public/common/emoji/Emoji";
@@ -488,5 +488,19 @@ export default {
 .btn-box {
   display: flex;
   flex-direction: row-reverse;
+}
+.relationModal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal{
+    top: 0;
+  }
+}
+.add-relation{
+  /deep/.ivu-modal-body{
+    padding: 0px;
+    overflow: hidden;
+  }
 }
 </style>

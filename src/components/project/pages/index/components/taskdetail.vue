@@ -453,8 +453,8 @@
               <div class="subtask-card-main">
                 <div class="addLink" @click="relationModal = true">
                   <Icon type="md-add" />添加关联</div>
-                <Modal v-model="relationModal" footer-hide class="relationModal" id="relationModal" width="850">
-                  <AddRelation :publicId="task.taskId" :fromType="publicType" @close="relationModal = false">
+                <Modal v-model="relationModal" footer-hide :closable="false" class-name="relationModal" class="add-relation" id="relationModal" width="800">
+                  <AddRelation :publicId="task.taskId" :fromType="publicType" @close="relationModal = false" v-if="relationModal">
                   </AddRelation>
                 </Modal>
               </div>
@@ -555,7 +555,7 @@
   import SetRepeat from "./SetRepeat";
   import TaskWarn from "./TaskWarn";
   import rcModal from "@/components/project/schedule/EditRicheng";
-  import AddRelation from "@/components/public/common/AddRelation";
+  import AddRelation from "@/components/Relation";
   import Tags from "@/components/public/Tags";
   import workHour from "@/components/public/workHour";
   import insertText from "@/utils/insertText";
@@ -879,7 +879,14 @@ import Loading from '../../../../public/common/Loading.vue';
           this.$Message.error("请输入子任务内容");
           return;
         }
-        addChildTask(this.task.taskId,this.son,this.projectId);
+        let params = {
+          groupId: this.task.taskGroupId,
+          menuId: this.task.taskMenuId,
+          projectId: this.projectId,
+          taskName: this.son,
+          level: this.task.level + 1
+        }
+        addChildTask(this.task.taskId,params);
         this.showSontask = false;
         this.son = "";
         this.$Message.success("添加成功");
@@ -1040,7 +1047,6 @@ import Loading from '../../../../public/common/Loading.vue';
     .task-header-handle {
       i {
         color: "#999";
-
         &:hover {
           background-color: #ecf6fe;
           color: #1b9aee;
@@ -1100,4 +1106,19 @@ import Loading from '../../../../public/common/Loading.vue';
     justify-content: center;
     align-items: center;
   }
+
+.relationModal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal{
+    top: 0;
+  }
+}
+.add-relation{
+  /deep/.ivu-modal-body{
+    padding: 0px;
+    overflow: hidden;
+  }
+}
 </style>

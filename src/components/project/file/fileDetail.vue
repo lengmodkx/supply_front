@@ -109,8 +109,8 @@
           <div class="relevance">
             <p class="name"><Icon type="ios-link-outline" />关联内容</p>
             <div class="addLink" @click="relationModal = true"><Icon type="ios-add-circle-outline" />添加关联</div>
-            <Modal v-model="relationModal" class="relationModal" id="relationModal" :footer-hide="true" width="850">
-              <AddRelation v-if="relationModal" @binkCallback="binkCallback" :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
+            <Modal v-model="relationModal" footer-hide :closable="false" class-name="relationModal" class="add-relation" id="relationModal" width="800">
+              <AddRelation v-if="relationModal" @close="relationModal=false" :publicId="file.data.fileId" :fromType="publicType"></AddRelation>
             </Modal>
           </div>
           <!--有关联内容-->
@@ -304,7 +304,7 @@
 //import Tags from "@/components/project/pages/index/components/task/Tags";
 // import Tags from "./Tags.vue";
 import Tags from "../../public/Tags.vue";
-import AddRelation from "@/components/public/common/AddRelation";
+ import AddRelation from "@/components/Relation";
 import log from "@/components/public/log";
 import Emoji from "@/components/public/common/emoji/Emoji";
 import model from "./model.vue";
@@ -560,4 +560,18 @@ export default {
 
 <style scoped lang="less">
 @import "./fileDetail";
+.relationModal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ivu-modal{
+    top: 0;
+  }
+}
+.add-relation{
+  /deep/.ivu-modal-body{
+    padding: 0px;
+    overflow: hidden;
+  }
+}
 </style>

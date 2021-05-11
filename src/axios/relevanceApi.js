@@ -17,28 +17,28 @@ export function getTask(groupId) {
     });
 }
 // 获取子任务
-export function getZirenwu(taskId) {
+export function getChildTask(taskId) {
     return fetch({
         url: `/tasks/${taskId}/bind/child`,
         method: "get"
     });
 }
 // 获取 分享
-export function getShare(projectId) {
+export function shares(projectId) {
     return fetch({
         url: `/shares/${projectId}/bind`,
         method: "get"
     });
 }
 // 获取日程
-export function getSchedule(projectId) {
+export function schedules(projectId) {
     return fetch({
         url: `/schedules/${projectId}/bind`,
         method: "get"
     });
 }
 // 获取文件
-export function getFile(projectId) {
+export function files(projectId) {
     return fetch({
         url: `/files/${projectId}/bind`,
         method: "get"

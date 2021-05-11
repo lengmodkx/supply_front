@@ -881,11 +881,8 @@ export function upEndTime(taskId, endtime,projectId) {
     })
 }
 // 添加子任务
-export function addChildTask(taskId, taskName,projectId) {
-    return $post(`tasks/${taskId}/addchild`, {
-        taskName: taskName,
-        projectId:projectId
-    })
+export function addChildTask(taskId, params) {
+    return $post(`tasks/${taskId}/addchild`, params)
 }
 
 //获取当前用户消息
