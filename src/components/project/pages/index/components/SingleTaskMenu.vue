@@ -328,6 +328,7 @@
         copyTask(this.data.taskId, this.currProjectId, this.currGroupId, this.currMenuId).then(res => {
           if (res.result === 1) {
             this.$Message.success(res.msg);
+            this.visible = false;
           }
         });
       },
@@ -336,6 +337,7 @@
         moveTask(this.data.taskId, this.currProjectId, this.currGroupId, this.currMenuId).then(res => {
           if (res.result === 1) {
             this.$Message.success(res.msg);
+            this.visible = false;
           }
         });
       },
@@ -348,7 +350,11 @@
           projectId: this.data.projectId,
           action: 'move'
         }
-        taskToRecycle(data).then(res => { });
+        taskToRecycle(data).then(res => {
+          if(res.result==1){
+            this.visible = false;
+          }
+         });
 
         this.$emit("close");
       },
