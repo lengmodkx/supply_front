@@ -29,8 +29,8 @@
         <div class="menuItem" @click="listItemClick('c', '移到回收站')">
           <Icon type="ios-trash-outline" />移到回收站</div>
 
-        <div class="privacy">
-          <div class="p_left fl clearfix" @click="updatePrivate">
+        <div class="privacy clearfix" @click="updatePrivate">
+          <div class="p_left fl clearfix" >
             <div v-if="!unlock" style="overflow:hidden;">
               <Icon type="unlocked" class="fl"></Icon>
               <div class="p_title fl">

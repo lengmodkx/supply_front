@@ -35,9 +35,8 @@
                 <div class="menuItem"
                      @click="listItemClick('c','移到回收站')">
                     <Icon type="ios-trash-outline" />移到回收站</div>
-                <div class="privacy">
-                    <div class="p_left fl clearfix"
-                         @click="privacyChange">
+                <div class="privacy clearfix" @click="privacyChange">
+                    <div class="p_left fl clearfix">
                         <div v-if="data.privacyPattern" style="overflow:hidden;">
                             <Icon type="unlocked"
                                   class="fl"></Icon>
@@ -283,9 +282,8 @@
                 } else {
                     this.data.privacyPattern=1
                 }
-                console.log(this.data)
-                privacy(this.data.scheduleId,this.unlock).then(res => {
-                    console.log(res)
+                privacy(this.data.scheduleId,this.data.privacyPattern).then(res => {
+                    // console.log(res)
                 })
             },
             reset (flag) {
