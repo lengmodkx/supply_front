@@ -278,7 +278,8 @@ export default {
           } else {
             url = "/api";
           }
-          window.location.href = url + "/files/batch/download?fileIds=" + fileIds;
+          // window.location.href = url + "/files/batch/download?fileIds=" + fileIds;
+          window.open(url + "/files/batch/download?fileIds=" + fileIds,"下载")
         }
       });
     },
