@@ -36,7 +36,7 @@ import demandList from '../views/demandList.vue' //我的需求
 import bidding from '../views/bidding.vue' //发布竞标
 
 
-import createTemplate from '../views/createTemplate.vue' //新建模板
+import createTemplate from '../components/createTemplate/createTemplate.vue' //新建模板
 
 
 
