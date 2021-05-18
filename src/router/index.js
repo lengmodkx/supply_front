@@ -38,6 +38,7 @@ import bidding from '../views/bidding.vue' //发布竞标
 
 import createTemplate from '../components/createTemplate/createTemplate.vue' //新建模板
 
+import entTemplate from '../components/createTemplate/entTemplate.vue' //企业模板管理
 
 
 //后台管理的路由建的单独的js: management.js
@@ -583,6 +584,17 @@ const router = new Router({
         name:"新建模板"
       },
       component: createTemplate
+    },
+    {
+      path: "/entTemplate",
+      name: "entTemplate",
+      meta: {
+        title: "阿拉丁BIM5D云平台",
+        requireAuth: true,
+        keepAlive: false,
+        name:"企业模板管理"
+      },
+      component: entTemplate
     },
   ]
 });
