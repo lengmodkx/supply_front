@@ -11,25 +11,13 @@ export default {
 
   components: {
     newFile
-  },
-  data() {
-    return {
-    
-    };
-  },
- 
-  mounted: function() {
-    
-  },
-  methods: {
-  
   }
 };
 </script>
 <style lang="less" scoped>
 
 .box{
-  padding-top:51px;
+  padding-top:40px;
 }
 
 </style>

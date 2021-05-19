@@ -1,26 +1,11 @@
 <template>
-  <div class="file">
+  <div class="object-file-content">
     <div class="file-left">
-      <!-- 树 -->
       <tree :data="fileTree" ref="tree"  @recovery="recovery"></tree>
-      <!-- <div class="tree-box" >
-              <tree :data=userTree ></tree>
-          </div>
-          <div class="tree-box" >
-              <tree :data=tooltree ></tree>
-          </div>
-          <div class="tree-box" >
-              <tree :data=typetree ></tree>
-          </div> -->
     </div>
     <div class="file-right">
-      <!-- 头 -->
       <file-header ref="fileheader" @recovery="recovery"></file-header>
-      <!--工具 -->
       <file-tools ref="filetools" @createFolder="createFolder" @removeFolder="removeFolder"  @recovery="recovery"> </file-tools>
-      <!-- 列表内容 -->
-      <!-- <list v-if="showView == 'list'"></list> -->
-      <!-- 缩略图内容 -->
       <view-list  ref="viewlist" @updateNodeName="updateNodeName" @removeClone="removeClone"></view-list>
     </div>
   </div>
@@ -116,27 +101,24 @@ li {
     margin-top: 10px;
   }
 }
-
-.file {
-  padding-left: 227px;
-  .ztree li {
-    line-height: 28px;
+.ztree li {
+  line-height: 28px;
+}
+.tree-box {
+    margin-top: 20px;
   }
+.object-file-content {
+  display: flex;
+  justify-content: flex-start;
   .file-left {
-    position: absolute;
-    left: 0;
-    right: 0;
     width: 227px;
     height: 100vh;
     padding: 10px;
     border-right: 1px solid #efefef;
     overflow-y: auto;
-    .tree-box {
-      margin-top: 20px;
-    }
   }
   .file-right {
-    width: 100vm;
+    width: 100%;
     height: 100vh;
   }
 }

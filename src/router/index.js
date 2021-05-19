@@ -35,11 +35,6 @@ import qaDetails from '../views/qaDetails.vue' //问答详情
 import demandList from '../views/demandList.vue' //我的需求
 import bidding from '../views/bidding.vue' //发布竞标
 
-
-import createTemplate from '../components/createTemplate/createTemplate.vue' //新建模板
-
-
-
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -572,18 +567,7 @@ const router = new Router({
         name:"发布竞标"
       },
       component: bidding
-    },
-    {
-      path: "/createTemplate",
-      name: "createTemplate",
-      meta: {
-        title: "阿拉丁BIM5D云平台",
-        requireAuth: true,
-        keepAlive: false,
-        name:"新建模板"
-      },
-      component: createTemplate
-    },
+    }
   ]
 });
 router.afterEach((to, from) => {
