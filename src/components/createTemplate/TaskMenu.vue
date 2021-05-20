@@ -15,11 +15,11 @@
       <div class="task-menu-list" v-if="active == ''">
         <div class="menuItem" @click="listItemClick('a', '编辑列表')"><Icon type="md-create" size="20" />编辑列表</div>
         <div class="menuItem" @click="listItemClick('b', '添加列表')" style="border-bottom:1px solid #eee;"><Icon type="md-add" size="20" />在此后添加新列表</div>
-        <div class="menuItem" @click="listItemClick('c', '选择执行者')"><Icon type="ios-contact-outline" size="20" />设置本列表所有任务执行者</div>
+        <!-- <div class="menuItem" @click="listItemClick('c', '选择执行者')"><Icon type="ios-contact-outline" size="20" />设置本列表所有任务执行者</div>
         <div class="menuItem" @click="listItemClick('d', '选择截止时间')"><Icon type="ios-time-outline" size="20" />设置本列表所有任务截止时间</div>
         <div class="menuItem" @click="listItemClick('e', '移动本列表所有任务')"><Icon type="ios-exit-outline" size="20" />移动本列表所有任务</div>
-        <div class="menuItem" @click="listItemClick('f', '复制本列表所有任务')"><Icon type="md-copy" size="20" />复制本列表所有任务</div>
-        <div class="menuItem" @click="listItemClick('g', '移到回收站')" style="border-bottom:1px solid #eee;"><Icon type="ios-trash-outline" size="20" />本列表所有任务移到回收站</div>
+        <div class="menuItem" @click="listItemClick('f', '复制本列表所有任务')"><Icon type="md-copy" size="20" />复制本列表所有任务</div> -->
+        <div class="menuItem" @click="listItemClick('g', '删除任务')" style="border-bottom:1px solid #eee;"><Icon type="ios-trash-outline" size="20" />本列表所有任务删除</div>
         <div class="menuItem" @click="listItemClick('h', '删除列表')"><Icon type="ios-trash-outline" size="20" />删除列表</div>
       </div>
 
