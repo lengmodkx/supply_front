@@ -94,7 +94,7 @@
     <!-- 创建项目 -->
     <Modal v-model="showproject" class="newPro-modal" :mask-closable="false" width="850" footer-hide title="选择项目模板">
       <!-- <CreateProject v-if="showproject" :showProject="showproject" @hideModal="showproject = false"@getNewList="getNewList"></CreateProject> -->
-      <choose-template v-if="showproject"></choose-template>
+      <choose-template v-if="showproject" @close="closeTemplate"></choose-template>
     </Modal>
     <!--邀请成员-->
     <Modal v-model="showInviteMembers" width="360" footer-hide>
@@ -275,9 +275,7 @@ export default {
         type: value,
       });
     },
-    inputMess(val) {
-      this.projectList = this.projectList[1];
-    },
+    
     path(item) {
       this.setName(item.projectName);
       localStorage.projectName = item.projectName;
@@ -300,8 +298,9 @@ export default {
         });
       });
     },
-    getNewList(value) {
-      //this.init(value);
+    closeTemplate(value) {
+      this.showproject = false;
+      this.projectType = value
       this.orgProjectInit({
         id: this.companyId,
         type: value,

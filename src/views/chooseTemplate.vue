@@ -5,7 +5,7 @@
         <span style="font-size:16px;color:#262626">空白模板</span>
       </header>
       <section>
-        <Card class="template-null-content">
+        <Card class="template-null-content" @click.native="showproject=true">
           <div>
             <Icon type="md-add" size="20" />
             <span>空白模板</span>
@@ -39,14 +39,18 @@
     <Modal v-model="showTemplate1" fullscreen footer-hide :closable="false" class="show-template1">
       <create-template v-if="showTemplate1" :templateId="templateId" @close="showTemplate1=false"></create-template>
     </Modal>
+    <Modal v-model="showproject" :mask-closable="false" footer-hide>
+      <create-project v-if="showproject" :showProject="showproject" @hideModal="hideModal"></create-project>
+    </Modal>
   </div>
 </template>
 <script>
 import { templates } from "../axios/template.js";
 import templateType from "../components/custemplate/templateType.vue";
 import createTemplate from "../components/createTemplate/createTemplate.vue";
+import createProject from "./CreateProject.vue";
 export default {
-  components: { templateType, createTemplate },
+  components: { templateType, createTemplate,createProject },
   data() {
     return {
       templateList: [],
@@ -54,6 +58,7 @@ export default {
       showTemplate: false,
       showTemplate1: false,
       templateId: "",
+      showproject:false
     };
   },
   mounted() {
@@ -72,6 +77,10 @@ export default {
       this.showTemplate1 = true;
       this.templateId = templateId;
     },
+    hideModal(value){
+      this.showproject = false;
+      this.$emit("close",value);
+    }
   },
 };
 </script>
