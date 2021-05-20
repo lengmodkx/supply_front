@@ -232,6 +232,11 @@
                                 text: "项目权限",
                                 name: "8,4",
                                 icon: 'quanxian1'
+                            },
+                            {
+                                text: "知识库",
+                                name: "8,7",
+                                icon: 'quanxian1'
                             }
                         ]
                     },

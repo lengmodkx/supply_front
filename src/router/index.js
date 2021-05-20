@@ -35,6 +35,8 @@ import qaDetails from '../views/qaDetails.vue' //问答详情
 import demandList from '../views/demandList.vue' //我的需求
 import bidding from '../views/bidding.vue' //发布竞标
 
+import knowledge from '../components/knowledgebase/knowledge.vue';
+
 //后台管理的路由建的单独的js: management.js
 //import management from "./management";
 
@@ -45,7 +47,16 @@ Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
-  routes: [{
+  routes: [
+    {
+      path: "/knowledge",//知识库
+      component: knowledge,
+      meta: {
+        keepAlive: false,
+        name:'知识库'
+      }
+    },
+    {
       path: "/material", // 素材裤
       component: Material,
       meta: {

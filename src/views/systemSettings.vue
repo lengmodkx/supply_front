@@ -7,6 +7,7 @@
     <projectAuthority v-if="mineTag=='8,4'"></projectAuthority>
     <operationLog v-if="mineTag=='8,5'"></operationLog>
     <exportApplication v-if="mineTag=='8,6'"></exportApplication>
+    <knowledge v-if="mineTag=='8,7'"></knowledge>
   </div>
 </template>
 <script>
@@ -18,6 +19,7 @@
   import projectAuthority from "./projectAuthorityS.vue";
   import operationLog from "./operationLogS.vue";
   import exportApplication from "./exportApplicationS.vue";
+  import knowledge from "../components/knowledgebase/knowledge.vue"
   import {
     mapActions,
     mapState,
@@ -32,7 +34,8 @@
       enterpriseAuthority,
       projectAuthority,
       operationLog,
-      exportApplication
+      exportApplication,
+      knowledge
     },
     inject: ["reload"],
     data() {
