@@ -36,7 +36,7 @@
             </div>
             <div class="title">
               <span>{{ i.relationName }} · {{ i.taskList ? i.taskList.length : "0" }}</span>
-              <TaskMenu class="fr" :data="i"></TaskMenu><!-- 点击三角形出来的任务列表菜单组件 -->
+              <TaskMenu class="fr" :data="i" @success="getTemRela"></TaskMenu><!-- 点击三角形出来的任务列表菜单组件 -->
             </div>
             <div class="scrum-stage-tasks" :ref="`scrollbox${i.relationId}`"
               :style="i.taskList.length * 60 + 42 > wHeight ? 'overflow-y: scroll' : ''">
@@ -281,9 +281,9 @@
           relationName: this.newProTitle
         }).then((res) => {
           if (res.result == 1) {
+            this.getTemRela()
             this.newProTitle = "";
             this.showAdd = true;
-            this.getTemRela()
             this.isCreateTask = false;
           }
         });
@@ -304,7 +304,12 @@
         });
       },
       saveContent() {
-
+          this.$router.push({
+                        path: "/prolist/" + localStorage.companyId,
+                        query: {
+                            'checkTagName': '2,0',
+                        }
+                    });
       },
       handleMaxSize(file) {
         this.$Notice.warning({

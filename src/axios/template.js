@@ -17,7 +17,7 @@ export function template(templateId) {
 
 export function saveTemplate(data) {
     return fetch({
-        url: 'templates',
+        url: 'templates/saveTemplate',
         method: 'post', // 请求方法
         data: data
     })
@@ -120,6 +120,40 @@ export function removeTemplateTag(data) {
 export function insertChildTask(data) {
     return fetch({
         url: '/templates/insertChildTask',
+        method: 'get', // 请求方法
+        params: data
+    })
+}
+
+//删除分组列表
+export function deleteRelaList(relationId) {
+    return fetch({
+        url: `templates/relations`,
+        method: 'delete', // 请求方法
+        params: {
+            relationId:relationId
+        }
+    })
+}
+
+// 修改分组名称
+export function updateRelaName(relationId, relationName) {
+    return fetch({
+        url: `templates/relations`,
+        method: "put", // 请求方法
+        params: {
+            relationId: relationId,
+            relationName:relationName
+        }
+    });
+}
+
+
+
+//移除模板列表任务
+export function deleteRealtionAllTask(data) {
+    return fetch({
+        url: '/templates/deleteRealtionAllTask',
         method: 'get', // 请求方法
         params: data
     })
