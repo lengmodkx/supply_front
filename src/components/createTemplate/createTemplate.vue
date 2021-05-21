@@ -307,9 +307,9 @@
       saveContent() {
           this.$router.push({
                         path: "/prolist/" + localStorage.companyId,
-                        query: {
-                            'checkTagName': '2,0',
-                        }
+                        // query: {
+                        //     'checkTagName': '2,0',
+                        // }
                     });
       },
       handleMaxSize(file) {
