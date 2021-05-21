@@ -34,7 +34,7 @@
       </section>
     </div>
     <Modal v-model="showTemplate" fullscreen footer-hide class="create-template" title="创建企业模板">
-      <template-type v-if="showTemplate" @close="showTemplate = false"></template-type>
+      <template-type v-if="showTemplate" @close="showTemplate = false" @success="templates"></template-type>
     </Modal>
     <Modal v-model="showTemplate1" fullscreen footer-hide :closable="false" class="show-template1">
       <create-template v-if="showTemplate1" :templateId="templateId" @close="showTemplate1=false"></create-template>
@@ -73,7 +73,6 @@ export default {
       });
     },
     enterTask(templateId) {
-      console.log("xxxxxxxx");
       this.showTemplate1 = true;
       this.templateId = templateId;
     },

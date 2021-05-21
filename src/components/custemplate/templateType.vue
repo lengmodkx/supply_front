@@ -141,6 +141,8 @@ export default {
           this.$Message.success("保存成功");
           this.modal = false;
           this.$emit("close");
+          this.$emit("success");
+
           this.showTemplate = true;
         }
       });
