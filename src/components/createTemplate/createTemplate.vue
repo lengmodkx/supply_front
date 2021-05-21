@@ -105,7 +105,7 @@
       <div slot="header" style="color: #262626">
         <span>创建任务</span>
       </div>
-      <creat-list v-if="shwoCreate" :taskMenuId="taskMenuId" :taskGroupId="taskGroupId" @close="shwoCreate = false">
+      <creat-list v-if="shwoCreate" :taskMenuId="taskMenuId" :taskGroupId="taskGroupId" @close="shwoCreate = false" @success="getTemRela">
       </creat-list>
     </Modal>
     <Modal v-model="sureModal" width="360">

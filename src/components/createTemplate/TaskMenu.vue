@@ -43,8 +43,8 @@
           </div>
         </div>
         <div class="con7" v-if="active == 'g'">
-          <div class="ask">您确定要把列表下的所有任务移到回收站吗？</div>
-          <Button type="error" long @click="removeAllTask">移到回收站</Button>
+          <div class="ask">您确定要把列表下的所有任务删除吗？</div>
+          <Button type="error" long @click="removeAllTask">确认</Button>
         </div>
         <div class="con8" v-if="active == 'h'">
           <!-- 如果列表内容不为空，则提示要先清空所有的列表 -->
@@ -143,7 +143,10 @@
           }
         });
       },
-
+      listItemClick(index, title) {
+        this.active = index;
+        this.curTopTitle = title;
+      },
       reset(flag) {
         this.visible = flag;
         this.active = "";
@@ -158,6 +161,7 @@
         deleteRealtionAllTask({relationId:this.data.relationId}).then(res => {
           if (res.result == 1) {
             this.popHide();
+            this.$emit('success')
           }
         });
       }

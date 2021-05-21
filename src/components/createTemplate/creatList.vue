@@ -49,6 +49,7 @@
             this.isCreateTask = false;
             if (type == '2') {
               this.$emit("close");
+              this.$emit('success')
             }
           }
         });
