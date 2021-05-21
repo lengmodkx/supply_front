@@ -1,5 +1,6 @@
 <template>
-    <Modal title="完善项目信息" v-model="modal9" width="960" ok-text="完成新建">
+    <div>
+
         <div class="df">
             <div class="left-content">
                 <section class="template-task-flow flex-vert">
@@ -14,21 +15,16 @@
                     <div class="overview-title">应用</div>
                     <ul class="overview-content df">
                         <li class="template-app-plugin-item">
-                            <!-- <span class="item-icon icon-tasks"></span>  -->
                             <Icon type="md-clipboard" size="20" />
                             <span class="item-name">任务</span>
                         </li>
                         <li class="template-app-plugin-item">
-                            <!-- <span class="item-icon icon-works"></span>  -->
-                            <!-- <Icon type="ios-folder-outline" /> -->
                             <Icon type="md-folder-open" size="20" />
                             <span class="item-name">文件</span> </li>
                         <li class="template-app-plugin-item">
-                            <!-- <span class="item-icon icon-space-thoughts"></span>  -->
                             <Icon type="md-copy" size="20" />
                             <span class="item-name">文档</span> </li>
                         <li class="template-app-plugin-item">
-                            <!-- <span class="item-icon icon-startDate"></span>  -->
                             <Icon type="md-calendar" size="20" />
                             <span class="item-name">任务开始时间</span> </li>
                     </ul>
@@ -42,19 +38,45 @@
                             <Input v-model="projectName" placeholder="项目名称（必填）" class="project-name form-control" />
                         </div>
                     </div>
+                    <div class="btnIcon">
+                        <Button type="primary" @click="applyTemplate">完成新建</Button>
+                    </div>
                 </div>
+
             </div>
         </div>
-    </Modal>
+    </div>
+
 </template>
 
 <script>
+    import {
+        applyTemplate
+    } from '@/axios/template'
     export default {
         name: '',
+        props: ['templateId'],
         data() {
             return {
-                modal9: true,
                 projectName: ''
+
+            }
+        },
+        methods: {
+            applyTemplate() {
+                if (this.projectName == '') {
+                    this.$Message.warning('请填写项目名称')
+                } else {
+                    applyTemplate({
+                        templateId: this.templateId,
+                        projectName:this.projectName
+                    }).then((res) => {
+                        if (res.result == 1) {
+                            this.$Message.success('创建成功')
+                            this.$emit('success')
+                        }
+                    });
+                }
 
             }
         }
@@ -184,11 +206,18 @@
             .intro {
                 color: #595959;
                 padding: 25px 0;
+
                 .template-name {
                     color: #262626;
                     padding: 0 3px;
                 }
             }
         }
+    }
+
+    .btnIcon {
+        margin-top: 50px;
+        display: flex;
+        justify-content: flex-end;
     }
 </style>

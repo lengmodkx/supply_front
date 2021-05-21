@@ -158,3 +158,13 @@ export function deleteRealtionAllTask(data) {
         params: data
     })
 }
+
+
+//根据模板创建项目
+export function applyTemplate(data) {
+    return fetch({
+        url: `/templates/project/${data.templateId}`,
+        method: 'post', // 请求方法
+        data: data
+    })
+}

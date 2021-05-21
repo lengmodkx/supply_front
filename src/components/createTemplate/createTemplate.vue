@@ -190,7 +190,8 @@
     getRelation,
     templateInfo,
     getTemplateTaskList,
-    createNewList
+    createNewList,
+    saveTemplate
   } from "../../axios/template.js";
   export default {
     components: {

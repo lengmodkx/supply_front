@@ -54,7 +54,7 @@
                   <span class="priority-title">标签</span>
                 </div>
                 <div class="priority-wrap detail-infos-content">
-                  <Tags class="fl" :templateId='templateId' v-if="task.tagList" ref="tags" :taglist="task.tagList"
+                  <Tags class="fl" :templateId='templateId'  ref="tags" :taglist="task.tagList"
                     @bidingTag="bidingTag"></Tags>
                 </div>
               </div>
