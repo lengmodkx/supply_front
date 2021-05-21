@@ -77,14 +77,9 @@
     mapMutations
   } from "vuex";
   import {
-    allTags,
-    addnewTag,
-    addTagAndBind,
-    modifyTag,
     searchTags,
     delTag,
     removeInfoTag,
-    bindingTag
   } from "../../axios/api";
   import {
     createTemplateTag,
@@ -203,11 +198,11 @@
       },
       handleClose(event, id) {
         //移除
-        removeInfoTag(id, this.publicId, this.publicType).then(res => {
-          if (res.result === 1) {
-            this.$Message.success(res.msg);
-          }
-        });
+        // removeInfoTag(id, this.publicId, this.publicType).then(res => {
+        //   if (res.result === 1) {
+        //     this.$Message.success(res.msg);
+        //   }
+        // });
       },
       removeTag() {
         this.searchTag = "";
@@ -234,6 +229,7 @@
         //     this.$Message.error(res.msg);
         //   }
         // });
+        this.showTag=false
         this.$emit('bidingTag',tag.tagId)
       },
       finish() {

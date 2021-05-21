@@ -30,7 +30,7 @@
           <Card class="template-null-content"
             :style="`background: url(https://art1001-bim-5d.oss-cn-beijing.aliyuncs.com/${template.templateCover}) center`">
             <div class="icon-content">
-              <Icon type="md-create" color="#ffffff" @click.self.native="enterTask(template.templateId)" />
+              <Icon type="md-create" color="#ffffff" @click.stop="enterTask(template.templateId)" />
             </div>
             <div>
               <span style="color:#ffffff">{{ template.templateName }}</span>

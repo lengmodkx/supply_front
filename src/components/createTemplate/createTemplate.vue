@@ -342,6 +342,7 @@
         saveTemplate(data).then((res) => {
           if (res.result == 1) {
             this.$Message.success("保存成功");
+            this.getTemInfo()
             this.modal = false;
           }
         });
