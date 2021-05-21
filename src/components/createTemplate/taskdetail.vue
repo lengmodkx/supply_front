@@ -358,7 +358,9 @@
           taskName: this.$refs.taskName.innerHTML,
           relationId: this.relationId
         }
-        updateTaskName(data).then((data) => {});
+        updateTaskName(data).then((data) => {
+          this.$emit('success')
+        });
       },
       // 添加备注
       addBeizhu() {

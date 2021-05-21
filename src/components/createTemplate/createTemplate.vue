@@ -170,7 +170,7 @@
       </div>
     </Modal>
     <Modal v-model="showModal" class="myModal" :mask-closable="false" :closable="false" footer-hide width="860" :styles="{top: '20px'}">
-      <my-modal v-if="showModal" @close="showModal = false" :taskId="taskId" :relationId="relationId" :templateId='templateId'></my-modal>
+      <my-modal v-if="showModal" @close="showModal = false" :taskId="taskId" :relationId="relationId" :templateId='templateId' @success="getTemRela"></my-modal>
     </Modal>
   </div>
 </template>
@@ -307,9 +307,9 @@
       saveContent() {
           this.$router.push({
                         path: "/prolist/" + localStorage.companyId,
-                        // query: {
-                        //     'checkTagName': '2,0',
-                        // }
+                        query: {
+                            'checkTagName': '2,0',
+                        }
                     });
       },
       handleMaxSize(file) {
